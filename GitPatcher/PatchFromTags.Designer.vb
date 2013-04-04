@@ -26,7 +26,10 @@ Partial Class PatchFromTags
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Tag2TextBox = New System.Windows.Forms.TextBox()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.FindButton = New System.Windows.Forms.Button()
+        Me.ChangesCheckedListBox = New System.Windows.Forms.CheckedListBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.PatchButton = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'Tag1TextBox
@@ -63,21 +66,50 @@ Partial Class PatchFromTags
         Me.Tag2TextBox.TabIndex = 2
         Me.Tag2TextBox.Text = "TAG2"
         '
-        'Button1
+        'FindButton
         '
-        Me.Button1.Location = New System.Drawing.Point(57, 86)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(122, 23)
-        Me.Button1.TabIndex = 4
-        Me.Button1.Text = "Create Patch"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.FindButton.Location = New System.Drawing.Point(57, 86)
+        Me.FindButton.Name = "FindButton"
+        Me.FindButton.Size = New System.Drawing.Size(122, 23)
+        Me.FindButton.TabIndex = 4
+        Me.FindButton.Text = "Find Changes"
+        Me.FindButton.UseVisualStyleBackColor = True
+        '
+        'ChangesCheckedListBox
+        '
+        Me.ChangesCheckedListBox.FormattingEnabled = True
+        Me.ChangesCheckedListBox.Location = New System.Drawing.Point(57, 126)
+        Me.ChangesCheckedListBox.Name = "ChangesCheckedListBox"
+        Me.ChangesCheckedListBox.Size = New System.Drawing.Size(377, 394)
+        Me.ChangesCheckedListBox.TabIndex = 5
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(2, 126)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(49, 13)
+        Me.Label3.TabIndex = 6
+        Me.Label3.Text = "Changes"
+        '
+        'PatchButton
+        '
+        Me.PatchButton.Location = New System.Drawing.Point(57, 535)
+        Me.PatchButton.Name = "PatchButton"
+        Me.PatchButton.Size = New System.Drawing.Size(122, 23)
+        Me.PatchButton.TabIndex = 7
+        Me.PatchButton.Text = "Patch Selected Files"
+        Me.PatchButton.UseVisualStyleBackColor = True
         '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(441, 262)
-        Me.Controls.Add(Me.Button1)
+        Me.ClientSize = New System.Drawing.Size(446, 570)
+        Me.Controls.Add(Me.PatchButton)
+        Me.Controls.Add(Me.Label3)
+        Me.Controls.Add(Me.ChangesCheckedListBox)
+        Me.Controls.Add(Me.FindButton)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Tag2TextBox)
         Me.Controls.Add(Me.Label1)
@@ -92,5 +124,8 @@ Partial Class PatchFromTags
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Tag2TextBox As System.Windows.Forms.TextBox
-    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents FindButton As System.Windows.Forms.Button
+    Friend WithEvents ChangesCheckedListBox As System.Windows.Forms.CheckedListBox
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents PatchButton As System.Windows.Forms.Button
 End Class

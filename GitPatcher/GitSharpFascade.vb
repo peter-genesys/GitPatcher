@@ -1,6 +1,15 @@
 ﻿Imports GitSharp
- 
+
+Class Halt
+    Inherits Exception
+    Public Sub New(ByVal str As String)
+        Console.WriteLine(str) 'User defined exception
+    End Sub 'New
+End Class 'Halt
+
+
 Public Class GitSharpFascade
+    Dim halt As Exception
 
     Dim repo As GitSharp.Repository
 
@@ -32,7 +41,7 @@ Public Class GitSharpFascade
     Shared Function checkRevs(ByVal path) As String
 
         Dim repo As GitSharp.Repository
-        Dim dir As System.IO.DirectoryInfo
+        'Dim dir As System.IO.DirectoryInfo
         'dir = New IO.DirectoryInfo(path)
         repo = New Repository(path)
 
@@ -130,7 +139,7 @@ Public Class GitSharpFascade
             Console.WriteLine(change.ChangeType & ": " & change.Path)
             result = result & Chr(10) & change.ChangeType & ": " & change.Path
         Next
- 
+
         Return result
 
 
@@ -146,6 +155,48 @@ Public Class GitSharpFascade
         Return repo.CurrentBranch.ToString
 
     End Function
+
+
+    Shared Function getTagChanges(ByVal path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String) As Collection
+
+        Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
+
+        Dim result As String = Nothing
+
+        Dim t1 As Tag = repo.[Get](Of Tag)(tag1_name)
+        Dim t2 As Tag = repo.[Get](Of Tag)(tag2_name)
+
+        Dim changes As Collection = New Collection
+
+        Try
+            If Not t1.IsTag Then
+                Throw (New Halt("Tag 1 (" & tag1_name & ") does not exist."))
+            End If
+
+            If Not t2.IsTag Then
+                Throw (New Halt("Tag 2 (" & tag2_name & ") does not exist."))
+            End If
+
+            Dim c1 As Commit = repo.[Get](Of Tag)(tag1_name).Target
+            Dim c2 As Commit = repo.[Get](Of Tag)(tag2_name).Target
+ 
+
+            For Each change As Change In c1.CompareAgainst(c2)
+                If InStr(change.Path, pathmask) > 0 Then
+                    Console.WriteLine(change.ChangeType & ": " & change.Path)
+                    result = result & Chr(10) & change.ChangeType & ": " & change.Path
+                    changes.Add(change.Path)
+                End If
+            Next
+ 
+        Catch tag_not_found As Halt
+
+        End Try
+
+        Return changes
+
+    End Function
+
 
 End Class
 
