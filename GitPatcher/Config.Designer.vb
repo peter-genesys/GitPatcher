@@ -46,7 +46,7 @@ Partial Class Config
         'Repo1Label
         '
         Repo1Label.AutoSize = True
-        Repo1Label.Location = New System.Drawing.Point(6, 12)
+        Repo1Label.Location = New System.Drawing.Point(7, 9)
         Repo1Label.Name = "Repo1Label"
         Repo1Label.Size = New System.Drawing.Size(42, 13)
         Repo1Label.TabIndex = 0
@@ -143,7 +143,7 @@ Partial Class Config
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(490, 262)
+        Me.ClientSize = New System.Drawing.Size(537, 262)
         Me.Controls.Add(Me.ConfigTabs)
         Me.Name = "Config"
         Me.Text = "Config"

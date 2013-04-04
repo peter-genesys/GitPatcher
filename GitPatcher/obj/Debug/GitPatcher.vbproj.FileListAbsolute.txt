@@ -19,3 +19,5 @@ C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\ob
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\Debug\GitPatcher.xml
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\Debug\GitPatcher.pdb
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\Debug\GitPatcher.vbprojResolveAssemblyReference.cache
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\Debug\GitPatcher.Main.resources
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\Debug\GitPatcher.PatchFromTags.resources

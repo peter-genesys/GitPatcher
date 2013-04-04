@@ -76,6 +76,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GitSharpFascade.vb" />
     <Compile Include="Config.Designer.vb">
       <DependentUpon>Config.vb</DependentUpon>
     </Compile>
@@ -110,6 +111,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="PatchFromTags.Designer.vb">
+      <DependentUpon>PatchFromTags.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PatchFromTags.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Config.resx">
@@ -118,11 +125,17 @@
     <EmbeddedResource Include="GitPatcher.resx">
       <DependentUpon>GitPatcher.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PatchFromTags.resx">
+      <DependentUpon>PatchFromTags.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
