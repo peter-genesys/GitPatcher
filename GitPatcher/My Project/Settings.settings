@@ -27,5 +27,8 @@
     <Setting Name="CurrentRepo" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Repos\GitSlave1</Value>
     </Setting>
+    <Setting Name="PatchDirOffset" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\patch</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

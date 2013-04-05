@@ -128,6 +128,18 @@ Namespace My
                 Me("CurrentRepo") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("\patch")>  _
+        Public Property PatchDirOffset() As String
+            Get
+                Return CType(Me("PatchDirOffset"),String)
+            End Get
+            Set
+                Me("PatchDirOffset") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

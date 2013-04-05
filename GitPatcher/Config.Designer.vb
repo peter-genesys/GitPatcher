@@ -27,19 +27,24 @@ Partial Class Config
         Dim Repo2Label As System.Windows.Forms.Label
         Dim Label1 As System.Windows.Forms.Label
         Dim Label2 As System.Windows.Forms.Label
+        Dim Label3 As System.Windows.Forms.Label
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.Repo4TextBox = New System.Windows.Forms.TextBox()
         Me.Repo1TextBox = New System.Windows.Forms.TextBox()
         Me.Repo2TextBox = New System.Windows.Forms.TextBox()
         Me.Repo3TextBox = New System.Windows.Forms.TextBox()
+        Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.PatchOffsetTextBox = New System.Windows.Forms.TextBox()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Repo1Label = New System.Windows.Forms.Label()
         Repo2Label = New System.Windows.Forms.Label()
         Label1 = New System.Windows.Forms.Label()
         Label2 = New System.Windows.Forms.Label()
+        Label3 = New System.Windows.Forms.Label()
         Me.ConfigTabs.SuspendLayout()
         Me.TabPage1.SuspendLayout()
+        Me.TabPage2.SuspendLayout()
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -79,9 +84,19 @@ Partial Class Config
         Label2.TabIndex = 9
         Label2.Text = "Repo4:"
         '
+        'Label3
+        '
+        Label3.AutoSize = True
+        Label3.Location = New System.Drawing.Point(5, 16)
+        Label3.Name = "Label3"
+        Label3.Size = New System.Drawing.Size(69, 13)
+        Label3.TabIndex = 8
+        Label3.Text = "Patch Offset:"
+        '
         'ConfigTabs
         '
         Me.ConfigTabs.Controls.Add(Me.TabPage1)
+        Me.ConfigTabs.Controls.Add(Me.TabPage2)
         Me.ConfigTabs.Location = New System.Drawing.Point(12, 28)
         Me.ConfigTabs.Name = "ConfigTabs"
         Me.ConfigTabs.SelectedIndex = 0
@@ -135,6 +150,25 @@ Partial Class Config
         Me.Repo3TextBox.Size = New System.Drawing.Size(359, 20)
         Me.Repo3TextBox.TabIndex = 4
         '
+        'TabPage2
+        '
+        Me.TabPage2.Controls.Add(Me.PatchOffsetTextBox)
+        Me.TabPage2.Controls.Add(Label3)
+        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage2.Name = "TabPage2"
+        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage2.Size = New System.Drawing.Size(458, 208)
+        Me.TabPage2.TabIndex = 1
+        Me.TabPage2.Text = "Patch"
+        Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'PatchOffsetTextBox
+        '
+        Me.PatchOffsetTextBox.Location = New System.Drawing.Point(80, 16)
+        Me.PatchOffsetTextBox.Name = "PatchOffsetTextBox"
+        Me.PatchOffsetTextBox.Size = New System.Drawing.Size(332, 20)
+        Me.PatchOffsetTextBox.TabIndex = 9
+        '
         'MySettingsBindingSource
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
@@ -150,6 +184,8 @@ Partial Class Config
         Me.ConfigTabs.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         Me.TabPage1.PerformLayout()
+        Me.TabPage2.ResumeLayout(False)
+        Me.TabPage2.PerformLayout()
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
@@ -161,4 +197,6 @@ Partial Class Config
     Friend WithEvents Repo1TextBox As System.Windows.Forms.TextBox
     Friend WithEvents Repo2TextBox As System.Windows.Forms.TextBox
     Friend WithEvents Repo4TextBox As System.Windows.Forms.TextBox
+    Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
+    Friend WithEvents PatchOffsetTextBox As System.Windows.Forms.TextBox
 End Class

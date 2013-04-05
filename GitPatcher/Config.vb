@@ -6,9 +6,9 @@
         Repo2TextBox.DataBindings.Add("Text", My.Settings, "Repo2")
         Repo3TextBox.DataBindings.Add("Text", My.Settings, "Repo3")
         Repo4TextBox.DataBindings.Add("Text", My.Settings, "Repo4")
+        PatchOffsetTextBox.DataBindings.Add("Text", My.Settings, "PatchDirOffset")
 
     End Sub
-
 
  
 End Class
