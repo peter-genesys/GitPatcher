@@ -212,7 +212,7 @@ Public Class GitSharpFascade
     End Function
 
 
-    Shared Function exportTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As CheckedListBox.CheckedItemCollection, patchDir As String) As String
+    Shared Function exportTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As CheckedListBox.CheckedItemCollection, patchDir As String) As Collection
 
         Dim repo As GitSharp.Repository = New GitSharp.Repository(repo_path)
 
@@ -221,7 +221,7 @@ Public Class GitSharpFascade
         Dim t1 As Tag = repo.[Get](Of Tag)(tag1_name)
         Dim t2 As Tag = repo.[Get](Of Tag)(tag2_name)
 
-        Dim changes As Collection = New Collection
+        Dim filenames As Collection = New Collection
 
         Try
             If Not t1.IsTag Then
@@ -253,9 +253,11 @@ Public Class GitSharpFascade
 
                             result = result & Chr(10) & change.Path
 
+                            filenames.Add(change.Path)
+
                         End If
                     Next
- 
+
                 End If
             Next
 
@@ -263,7 +265,7 @@ Public Class GitSharpFascade
 
         End Try
 
-        Return result
+        Return filenames
 
 
     End Function
