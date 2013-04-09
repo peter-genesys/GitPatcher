@@ -218,13 +218,7 @@ Public Class PatchFromTags
 
         Dim l_file_extension As String = Nothing
         Dim l_install_file_line As String = Nothing
-
-        'Dim l_list_sorted_by_path As System.Collections.Generic.List(Of SvnDiffSummaryEventArgs)
-        'l_list_sorted_by_path = New System.Collections.Generic.List(Of SvnDiffSummaryEventArgs)(l_list)
-        'l_list_sorted_by_path.Sort(Function(p1, p2) p1.Path.CompareTo(p2.Path))
-        '
-        'Dim l_11g_db_objects As String = Nothing
-
+ 
         Dim l_all_programs As String = Nothing
 
 
@@ -361,7 +355,12 @@ Public Class PatchFromTags
 
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
-            l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database")
+            If db_schema = "SYS" Then
+                l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database as sysdba")
+            Else
+                l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database")
+            End If
+
 
             l_master_file.WriteLine("set serveroutput on;")
 
