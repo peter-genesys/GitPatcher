@@ -84,6 +84,8 @@
     <Compile Include="Config.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Host.vb" />
+    <Compile Include="Logger.vb" />
     <Compile Include="Main.vb">
       <SubType>Form</SubType>
     </Compile>

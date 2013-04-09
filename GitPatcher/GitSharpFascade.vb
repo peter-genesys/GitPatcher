@@ -221,7 +221,7 @@ Public Class GitSharpFascade
         Dim t1 As Tag = repo.[Get](Of Tag)(tag1_name)
         Dim t2 As Tag = repo.[Get](Of Tag)(tag2_name)
 
-        Dim filenames As Collection = New Collection
+        Dim filePathList As Collection = New Collection
 
         Try
             If Not t1.IsTag Then
@@ -253,7 +253,7 @@ Public Class GitSharpFascade
 
                             result = result & Chr(10) & change.Path
 
-                            filenames.Add(change.Path)
+                            filePathList.Add(change.Path)
 
                         End If
                     Next
@@ -265,7 +265,7 @@ Public Class GitSharpFascade
 
         End Try
 
-        Return filenames
+        Return filePathList
 
 
     End Function

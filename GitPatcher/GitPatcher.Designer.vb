@@ -79,6 +79,7 @@ Partial Class GitPatcher
         Me.StatusStrip = New System.Windows.Forms.StatusStrip()
         Me.ToolStripStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.LoggingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip.SuspendLayout()
         Me.ToolStrip.SuspendLayout()
         Me.StatusStrip.SuspendLayout()
@@ -275,7 +276,7 @@ Partial Class GitPatcher
         '
         'ToolsMenu
         '
-        Me.ToolsMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsToolStripMenuItem, Me.MainToolStripMenuItem, Me.ConfigToolStripMenuItem})
+        Me.ToolsMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsToolStripMenuItem, Me.MainToolStripMenuItem, Me.ConfigToolStripMenuItem, Me.LoggingToolStripMenuItem})
         Me.ToolsMenu.Name = "ToolsMenu"
         Me.ToolsMenu.Size = New System.Drawing.Size(48, 20)
         Me.ToolsMenu.Text = "&Tools"
@@ -283,19 +284,19 @@ Partial Class GitPatcher
         'OptionsToolStripMenuItem
         '
         Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
-        Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
+        Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.OptionsToolStripMenuItem.Text = "&Options"
         '
         'MainToolStripMenuItem
         '
         Me.MainToolStripMenuItem.Name = "MainToolStripMenuItem"
-        Me.MainToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
+        Me.MainToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.MainToolStripMenuItem.Text = "Main"
         '
         'ConfigToolStripMenuItem
         '
         Me.ConfigToolStripMenuItem.Name = "ConfigToolStripMenuItem"
-        Me.ConfigToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
+        Me.ConfigToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ConfigToolStripMenuItem.Text = "Config"
         '
         'WindowsMenu
@@ -470,6 +471,13 @@ Partial Class GitPatcher
         Me.ToolStripStatusLabel.Size = New System.Drawing.Size(39, 17)
         Me.ToolStripStatusLabel.Text = "Status"
         '
+        'LoggingToolStripMenuItem
+        '
+        Me.LoggingToolStripMenuItem.CheckOnClick = True
+        Me.LoggingToolStripMenuItem.Name = "LoggingToolStripMenuItem"
+        Me.LoggingToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.LoggingToolStripMenuItem.Text = "Logging"
+        '
         'GitPatcher
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -546,5 +554,6 @@ Partial Class GitPatcher
     Friend WithEvents ToolsMenu As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MainToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ConfigToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents LoggingToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

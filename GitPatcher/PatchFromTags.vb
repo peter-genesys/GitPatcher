@@ -1,9 +1,7 @@
 ﻿ 
 Public Class PatchFromTags
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles FindButton.Click
-        'GitSharpFascade.getTagDiff(Main.RepoComboBox.SelectedItem, Tag1TextBox.Text, Tag2TextBox.Text)
-        'GitSharpFascade.getTagDiff(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text)
+    Private Sub FindChanges()
         Try
             If SchemaComboBox.Text = "" Then
                 Throw (New Halt("Schema not selected"))
@@ -19,6 +17,12 @@ Public Class PatchFromTags
         Catch schema_not_selected As Halt
             MsgBox("Please select a schema")
         End Try
+    End Sub
+
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles FindButton.Click
+        FindChanges()
+
 
     End Sub
 
@@ -50,6 +54,10 @@ Public Class PatchFromTags
                            PrereqsCheckedListBox.CheckedItems, _
                            SupersedesCheckedListBox.CheckedItems, _
                            PatchDirTextBox.Text)
+
+        Host.RunExplorer(PatchDirTextBox.Text)
+
+
 
     End Sub
 
@@ -212,7 +220,7 @@ Public Class PatchFromTags
 
 
         For Each l_path In targetFiles
- 
+
             Dim l_filename As String = get_last_split(l_path, "/")
 
             'Sort the files by files extention into lists.
@@ -292,10 +300,12 @@ Public Class PatchFromTags
                         l_db_objects_misc = l_db_objects_misc & l_install_file_line
                 End Select
 
-                l_all_programs = l_all_programs & l_filename & ","
+                If String.IsNullOrEmpty(l_all_programs) Then
+                    l_all_programs = l_filename
+                Else
+                    l_all_programs = l_all_programs & "' -" & Chr(10) & "||'," & l_filename
+                End If
 
-                'Export the file
-                'client.Export(l_extract_target, l_patch_dir & "\" & l_program_path)
 
             Catch SkipTestObject As Halt
                 ' Logger.Dbg("Skip object " & l_item.path)
@@ -306,10 +316,6 @@ Public Class PatchFromTags
         Next
 
         If targetFiles.Count > 0 Then
-
-            'Dim l_db_subfolder_dir As String = i_patch_dir & "\" & i_db_subfolder
-
-            'createFolderIfNotExists(l_db_subfolder_dir)
 
             Dim l_log_filename As String = patch_name & ".log"
             Dim l_master_filename As String = "install.sql"
@@ -335,7 +341,7 @@ Public Class PatchFromTags
 
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
-            l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password}@&&database")
+            l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database")
 
             l_master_file.WriteLine("set serveroutput on;")
 
@@ -488,38 +494,66 @@ Public Class PatchFromTags
 
     End Sub
 
+    Private Sub CopySelectedChanges()
+        'Copy Selected Changes to the next list box.
+        PatchableCheckedListBox.Items.Clear()
+
+        For i As Integer = 0 To ChangesCheckedListBox.Items.Count - 1
+            If ChangesCheckedListBox.CheckedIndices.Contains(i) Then
+                'MsgBox(ChangesCheckedListBox.Items(i).ToString)
+
+                PatchableCheckedListBox.Items.Add(ChangesCheckedListBox.Items(i).ToString)
+
+            End If
+
+
+        Next
+    End Sub
+
+
     Private Sub PatchTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles PatchTabControl.SelectedIndexChanged
 
         'MessageBox.Show("you selected the fifth tab:  " & PatchTabControl.SelectedTab.Name.ToString)
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageChanges" Then
+            If ChangesCheckedListBox.Items.Count = 0 Then
+                FindChanges()
+            End If
+
+
+        End If
+
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePreReqs" Then
+            If PrereqsCheckedListBox.Items.Count = 0 Then
+                FindPreReqs()
+            End If
+
+
+        End If
+
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageSuper" Then
+            If SupersedesCheckedListBox.Items.Count = 0 Then
+                FindSuper()
+            End If
+
+
+        End If
+ 
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
             'Copy Patchable items to the next list.
 
             derivePatchName()
 
-            PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & "\" & PatchNameTextBox.Text & "\"
+            PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & PatchNameTextBox.Text & "\"
 
             UsePatchAdminCheckBox.Checked = True
 
             RerunCheckBox.Checked = True
 
-            'Copy Selected Changes to the next list box.
-            PatchableCheckedListBox.Items.Clear()
-
-            For i As Integer = 0 To ChangesCheckedListBox.Items.Count - 1
-                If ChangesCheckedListBox.CheckedIndices.Contains(i) Then
-                    'MsgBox(ChangesCheckedListBox.Items(i).ToString)
-
-                    PatchableCheckedListBox.Items.Add(ChangesCheckedListBox.Items(i).ToString)
-
-                End If
-
-
-            Next
-
-
+            If PatchableCheckedListBox.Items.Count = 0 Then
+                CopySelectedChanges()
+            End If
         End If
-
 
 
 
@@ -540,7 +574,8 @@ Public Class PatchFromTags
         derivePatchName()
     End Sub
 
-    Private Sub PreReqButton_Click(sender As Object, e As EventArgs) Handles PreReqButton.Click
+
+    Private Sub FindPreReqs()
         PrereqsCheckedListBox.Items.Clear()
         If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
 
@@ -549,10 +584,17 @@ Public Class PatchFromTags
             Next
 
         End If
+    End Sub
+
+
+    Private Sub PreReqButton_Click(sender As Object, e As EventArgs) Handles PreReqButton.Click
+        FindPreReqs()
 
     End Sub
 
-    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
+
+
+    Private Sub FindSuper()
         SupersedesCheckedListBox.Items.Clear()
         If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
 
@@ -561,5 +603,17 @@ Public Class PatchFromTags
             Next
 
         End If
+    End Sub
+
+    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
+       FindSuper
+    End Sub
+
+    Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
+        Host.executeSQLscriptInteractive("install.sql", PatchDirTextBox.Text)
+    End Sub
+
+    Private Sub CopyChangesButton_Click(sender As Object, e As EventArgs) Handles CopyChangesButton.Click
+        CopySelectedChanges()
     End Sub
 End Class
