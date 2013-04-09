@@ -1,6 +1,24 @@
 ﻿ 
 Public Class PatchFromTags
 
+
+    Public Sub New()
+        InitializeComponent()
+
+        Findtags()
+ 
+
+    End Sub
+
+
+
+    Private Sub Findtags()
+        TagsCheckedListBox.Items.Clear()
+        For Each tagname In GitSharpFascade.getTagList(My.Settings.CurrentRepo)
+            TagsCheckedListBox.Items.Add(tagname)
+        Next
+    End Sub
+
     Private Sub FindChanges()
         Try
             If SchemaComboBox.Text = "" Then
@@ -8,7 +26,7 @@ Public Class PatchFromTags
             End If
 
             ChangesCheckedListBox.Items.Clear()
-            For Each change In GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ViewFilesCheckBox.Checked)
+            For Each change In GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, False)
                 ChangesCheckedListBox.Items.Add(change)
                 ChangesCheckedListBox.SetItemChecked(ChangesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
             Next
@@ -67,6 +85,8 @@ Public Class PatchFromTags
         For Each schema In GitSharpFascade.getSchemaList(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database")
             SchemaComboBox.Items.Add(schema)
         Next
+
+        SchemaCountTextBox.Text = SchemaComboBox.Items.Count
 
         'If exactly one schema found then select it
         'otherwise force user to choose one.
@@ -514,7 +534,19 @@ Public Class PatchFromTags
     Private Sub PatchTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles PatchTabControl.SelectedIndexChanged
 
         'MessageBox.Show("you selected the fifth tab:  " & PatchTabControl.SelectedTab.Name.ToString)
+ 
+
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageTags" Then
+            If TagsCheckedListBox.Items.Count = 0 Then
+                Findtags()
+            End If
+
+
+        End If
+
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageChanges" Then
+            deriveTags()
+
             If ChangesCheckedListBox.Items.Count = 0 Then
                 FindChanges()
             End If
@@ -537,7 +569,7 @@ Public Class PatchFromTags
 
 
         End If
- 
+
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
             'Copy Patchable items to the next list.
@@ -606,7 +638,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
-       FindSuper
+        FindSuper()
     End Sub
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
@@ -615,5 +647,25 @@ Public Class PatchFromTags
 
     Private Sub CopyChangesButton_Click(sender As Object, e As EventArgs) Handles CopyChangesButton.Click
         CopySelectedChanges()
+    End Sub
+
+    Private Sub FindTagsButton_Click(sender As Object, e As EventArgs) Handles FindTagsButton.Click
+        Findtags()
+    End Sub
+
+    Private Sub deriveTags()
+        'MsgBox("TagsCheckedListBox.SelectedIndexChanged")
+
+        If TagsCheckedListBox.CheckedItems.Count > 0 Then
+            Tag1TextBox.Text = TagsCheckedListBox.CheckedItems.Item(0)
+        Else
+            Tag1TextBox.Text = ""
+        End If
+        If TagsCheckedListBox.CheckedItems.Count > 1 Then
+            Tag2TextBox.Text = TagsCheckedListBox.CheckedItems.Item(1)
+        Else
+            Tag2TextBox.Text = ""
+        End If
+
     End Sub
 End Class

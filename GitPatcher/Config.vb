@@ -2,13 +2,14 @@
 
     Public Sub New()
         InitializeComponent()
-        Repo1TextBox.DataBindings.Add("Text", My.Settings, "Repo1")
-        Repo2TextBox.DataBindings.Add("Text", My.Settings, "Repo2")
-        Repo3TextBox.DataBindings.Add("Text", My.Settings, "Repo3")
-        Repo4TextBox.DataBindings.Add("Text", My.Settings, "Repo4")
+        RepoListTextBox.DataBindings.Add("Text", My.Settings, "RepoList")
         PatchOffsetTextBox.DataBindings.Add("Text", My.Settings, "PatchDirOffset")
+        SQLpathTextBox.DataBindings.Add("Text", My.Settings, "SQLpath")
 
     End Sub
 
  
+    Private Sub RepoListTextBox_TextChanged(sender As Object, e As EventArgs) Handles RepoListTextBox.TextChanged
+        Main.loadRepos()
+    End Sub
 End Class

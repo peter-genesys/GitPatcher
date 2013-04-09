@@ -56,64 +56,13 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\GitRepo\ProjAppSrc")>  _
-        Public Property Repo1() As String
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\GitRepo\ProjAppSrc"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"F:\GitRepos\ProjAppSrc")>  _
+        Public Property RepoList() As String
             Get
-                Return CType(Me("Repo1"),String)
+                Return CType(Me("RepoList"),String)
             End Get
             Set
-                Me("Repo1") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\Repos\GitSlave1")>  _
-        Public Property Repo2() As String
-            Get
-                Return CType(Me("Repo2"),String)
-            End Get
-            Set
-                Me("Repo2") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\Repos\GitSlave2")>  _
-        Public Property Repo3() As String
-            Get
-                Return CType(Me("Repo3"),String)
-            End Get
-            Set
-                Me("Repo3") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("F:\GitRepos\ProjAppSrc")>  _
-        Public Property Repo4() As String
-            Get
-                Return CType(Me("Repo4"),String)
-            End Get
-            Set
-                Me("Repo4") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("<?xml version=""1.0"" encoding=""utf-16""?>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"<ArrayOfString xmlns:xsi=""http://www.w3."& _ 
-            "org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <s"& _ 
-            "tring>C:\GitRepo\ProjAppSrc</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>F:\GitRepos\ProjAppSrc</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>C:\Repos\GitSlave1</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>C:\Repos\GitSlave2</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&" "& _ 
-            " <string>AnotherRepo</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"</ArrayOfString>")>  _
-        Public Property Repos() As Global.System.Collections.Specialized.StringCollection
-            Get
-                Return CType(Me("Repos"),Global.System.Collections.Specialized.StringCollection)
-            End Get
-            Set
-                Me("Repos") = value
+                Me("RepoList") = value
             End Set
         End Property
         
@@ -138,6 +87,18 @@ Namespace My
             End Get
             Set
                 Me("PatchDirOffset") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\oraclexe\app\oracle\product\11.2.0\server\bin\sqlplus.exe")>  _
+        Public Property SQLpath() As String
+            Get
+                Return CType(Me("SQLpath"),String)
+            End Get
+            Set
+                Me("SQLpath") = value
             End Set
         End Property
     End Class

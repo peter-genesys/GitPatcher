@@ -2,10 +2,15 @@
 
     Public Sub New()
         InitializeComponent()
-        'RepoComboBox.DataBindings.Add("Text", My.Settings, "Repos")
+        loadRepos()
 
-        For Each repo In My.Settings.Repos
+    End Sub
+
+    Public Sub loadRepos()
+        RepoComboBox.Items.Clear()
+        For Each repo In My.Settings.RepoList.Split(Chr(10))
             repo = Trim(repo)
+            repo = repo.Replace(Chr(13), "")
             If (repo.Length > 0) Then
                 RepoComboBox.Items.Add(repo)
             End If
@@ -13,17 +18,11 @@
                 RepoComboBox.SelectedIndex = RepoComboBox.Items.Count - 1
             End If
         Next
-        ' If RepoComboBox.Items.Count > 0 And RepoComboBox.SelectedIndex Then
-        '     RepoComboBox.SelectedIndex = 0
-        ' End If
-
-
     End Sub
 
 
     Private Sub RepoComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles RepoComboBox.SelectedIndexChanged
-
-
+ 
         CurrentBranchTextBox.Text = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)
         RootPatchDirTextBox.Text = RepoComboBox.SelectedItem & My.Settings.PatchDirOffset & "\"
 

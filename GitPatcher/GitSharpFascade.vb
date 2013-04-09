@@ -23,31 +23,18 @@ Public Class GitSharpFascade
 
 
 
-    Shared Function getTagDiff(ByVal path, ByVal tag1_name, ByVal tag2_name) As String
+    Shared Function getTagList(ByVal path) As Collection
 
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
 
-        Dim result As String = Nothing
+        Dim tagnames As Collection = New Collection
+  
+        For Each Tag In repo.Tags
+            tagnames.Add(Tag.Key)
 
-        ' Get the message of the previous commit
-        'Dim msg As String = New Commit(repo, "HEAD^").Message
-        'Debug.WriteLine(msg = repo.CurrentBranch.CurrentCommit.Parent.Message)
-
-
-        'Print a list of changes between two commits c1 and c2:
-        'Dim c1 As Commit = repo.[Get](Of Commit)("04e4f1fddfd989c368430674baa5efe2e5772585")
-        'Dim c1 As Commit = repo.[Get](Of Tag)("TAG1")
-        'Dim c1 As Commit = repo.[Get](Of Commit)(repo.[Get](Of Tag)("TAG1").Hash)
-        Dim c1 As Commit = repo.[Get](Of Tag)(tag1_name).Target
-        ' <-- note: short hashes are not yet supported  
-        'Dim c2 As New Commit(repo, "3e663c85995c7d5a5e1543382ebac12da21025d8")
-        Dim c2 As Commit = repo.[Get](Of Tag)(tag2_name).Target
-        For Each change As Change In c1.CompareAgainst(c2)
-            Console.WriteLine(change.ChangeType & ": " & change.Path)
-            result = result & Chr(10) & change.ChangeType & ": " & change.Path
         Next
-
-        Return result
+ 
+        Return tagnames
 
 
     End Function

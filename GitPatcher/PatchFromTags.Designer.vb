@@ -30,7 +30,6 @@ Partial Class PatchFromTags
         Me.ChangesCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.PatchButton = New System.Windows.Forms.Button()
-        Me.ViewFilesCheckBox = New System.Windows.Forms.CheckBox()
         Me.CheckAllCheckBox = New System.Windows.Forms.CheckBox()
         Me.SchemaComboBox = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -41,7 +40,8 @@ Partial Class PatchFromTags
         Me.PatchNameTextBox = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.PatchTabControl = New System.Windows.Forms.TabControl()
-        Me.TabPageTag = New System.Windows.Forms.TabPage()
+        Me.TabPageTags = New System.Windows.Forms.TabPage()
+        Me.FindTagsButton = New System.Windows.Forms.Button()
         Me.TagsCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.TabPageChanges = New System.Windows.Forms.TabPage()
@@ -54,6 +54,7 @@ Partial Class PatchFromTags
         Me.Label14 = New System.Windows.Forms.Label()
         Me.SupersedesCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
+        Me.CopyChangesButton = New System.Windows.Forms.Button()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
@@ -69,9 +70,10 @@ Partial Class PatchFromTags
         Me.PatchDescTextBox = New System.Windows.Forms.TextBox()
         Me.TabPageExecute = New System.Windows.Forms.TabPage()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.CopyChangesButton = New System.Windows.Forms.Button()
+        Me.SchemaCountTextBox = New System.Windows.Forms.TextBox()
+        Me.Label17 = New System.Windows.Forms.Label()
         Me.PatchTabControl.SuspendLayout()
-        Me.TabPageTag.SuspendLayout()
+        Me.TabPageTags.SuspendLayout()
         Me.TabPageChanges.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
         Me.TabPageSuper.SuspendLayout()
@@ -83,9 +85,9 @@ Partial Class PatchFromTags
         '
         Me.Tag1TextBox.Location = New System.Drawing.Point(77, 485)
         Me.Tag1TextBox.Name = "Tag1TextBox"
+        Me.Tag1TextBox.ReadOnly = True
         Me.Tag1TextBox.Size = New System.Drawing.Size(139, 20)
         Me.Tag1TextBox.TabIndex = 0
-        Me.Tag1TextBox.Text = "TAG1"
         '
         'Label1
         '
@@ -109,9 +111,9 @@ Partial Class PatchFromTags
         '
         Me.Tag2TextBox.Location = New System.Drawing.Point(77, 511)
         Me.Tag2TextBox.Name = "Tag2TextBox"
+        Me.Tag2TextBox.ReadOnly = True
         Me.Tag2TextBox.Size = New System.Drawing.Size(139, 20)
         Me.Tag2TextBox.TabIndex = 2
-        Me.Tag2TextBox.Text = "TAG2"
         '
         'FindButton
         '
@@ -148,16 +150,6 @@ Partial Class PatchFromTags
         Me.PatchButton.Text = "Patch"
         Me.PatchButton.UseVisualStyleBackColor = True
         '
-        'ViewFilesCheckBox
-        '
-        Me.ViewFilesCheckBox.AutoSize = True
-        Me.ViewFilesCheckBox.Location = New System.Drawing.Point(231, 23)
-        Me.ViewFilesCheckBox.Name = "ViewFilesCheckBox"
-        Me.ViewFilesCheckBox.Size = New System.Drawing.Size(73, 17)
-        Me.ViewFilesCheckBox.TabIndex = 8
-        Me.ViewFilesCheckBox.Text = "View Files"
-        Me.ViewFilesCheckBox.UseVisualStyleBackColor = True
-        '
         'CheckAllCheckBox
         '
         Me.CheckAllCheckBox.AutoSize = True
@@ -171,7 +163,7 @@ Partial Class PatchFromTags
         'SchemaComboBox
         '
         Me.SchemaComboBox.FormattingEnabled = True
-        Me.SchemaComboBox.Location = New System.Drawing.Point(280, 511)
+        Me.SchemaComboBox.Location = New System.Drawing.Point(291, 20)
         Me.SchemaComboBox.Name = "SchemaComboBox"
         Me.SchemaComboBox.Size = New System.Drawing.Size(183, 21)
         Me.SchemaComboBox.TabIndex = 10
@@ -179,7 +171,7 @@ Partial Class PatchFromTags
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(228, 514)
+        Me.Label4.Location = New System.Drawing.Point(239, 23)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(46, 13)
         Me.Label4.TabIndex = 11
@@ -239,7 +231,7 @@ Partial Class PatchFromTags
         '
         'PatchTabControl
         '
-        Me.PatchTabControl.Controls.Add(Me.TabPageTag)
+        Me.PatchTabControl.Controls.Add(Me.TabPageTags)
         Me.PatchTabControl.Controls.Add(Me.TabPageChanges)
         Me.PatchTabControl.Controls.Add(Me.TabPagePreReqs)
         Me.PatchTabControl.Controls.Add(Me.TabPageSuper)
@@ -251,23 +243,31 @@ Partial Class PatchFromTags
         Me.PatchTabControl.Size = New System.Drawing.Size(550, 605)
         Me.PatchTabControl.TabIndex = 18
         '
-        'TabPageTag
+        'TabPageTags
         '
-        Me.TabPageTag.Controls.Add(Me.TagsCheckedListBox)
-        Me.TabPageTag.Controls.Add(Me.Label15)
-        Me.TabPageTag.Controls.Add(Me.SchemaComboBox)
-        Me.TabPageTag.Controls.Add(Me.Tag1TextBox)
-        Me.TabPageTag.Controls.Add(Me.Label1)
-        Me.TabPageTag.Controls.Add(Me.Tag2TextBox)
-        Me.TabPageTag.Controls.Add(Me.Label2)
-        Me.TabPageTag.Controls.Add(Me.Label4)
-        Me.TabPageTag.Location = New System.Drawing.Point(4, 22)
-        Me.TabPageTag.Name = "TabPageTag"
-        Me.TabPageTag.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageTag.Size = New System.Drawing.Size(542, 579)
-        Me.TabPageTag.TabIndex = 0
-        Me.TabPageTag.Text = "Tags"
-        Me.TabPageTag.UseVisualStyleBackColor = True
+        Me.TabPageTags.Controls.Add(Me.FindTagsButton)
+        Me.TabPageTags.Controls.Add(Me.TagsCheckedListBox)
+        Me.TabPageTags.Controls.Add(Me.Label15)
+        Me.TabPageTags.Controls.Add(Me.Tag1TextBox)
+        Me.TabPageTags.Controls.Add(Me.Label1)
+        Me.TabPageTags.Controls.Add(Me.Tag2TextBox)
+        Me.TabPageTags.Controls.Add(Me.Label2)
+        Me.TabPageTags.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageTags.Name = "TabPageTags"
+        Me.TabPageTags.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPageTags.Size = New System.Drawing.Size(542, 579)
+        Me.TabPageTags.TabIndex = 0
+        Me.TabPageTags.Text = "Tags"
+        Me.TabPageTags.UseVisualStyleBackColor = True
+        '
+        'FindTagsButton
+        '
+        Me.FindTagsButton.Location = New System.Drawing.Point(77, 17)
+        Me.FindTagsButton.Name = "FindTagsButton"
+        Me.FindTagsButton.Size = New System.Drawing.Size(139, 23)
+        Me.FindTagsButton.TabIndex = 14
+        Me.FindTagsButton.Text = "Find Tags"
+        Me.FindTagsButton.UseVisualStyleBackColor = True
         '
         'TagsCheckedListBox
         '
@@ -288,9 +288,12 @@ Partial Class PatchFromTags
         '
         'TabPageChanges
         '
+        Me.TabPageChanges.Controls.Add(Me.Label17)
+        Me.TabPageChanges.Controls.Add(Me.SchemaCountTextBox)
         Me.TabPageChanges.Controls.Add(Me.ChangesCheckedListBox)
+        Me.TabPageChanges.Controls.Add(Me.SchemaComboBox)
+        Me.TabPageChanges.Controls.Add(Me.Label4)
         Me.TabPageChanges.Controls.Add(Me.FindButton)
-        Me.TabPageChanges.Controls.Add(Me.ViewFilesCheckBox)
         Me.TabPageChanges.Controls.Add(Me.RemoveButton)
         Me.TabPageChanges.Controls.Add(Me.Label3)
         Me.TabPageChanges.Controls.Add(Me.CheckAllCheckBox)
@@ -409,6 +412,15 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.TabIndex = 2
         Me.TabPagePatchDefn.Text = "Patch Defn"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
+        '
+        'CopyChangesButton
+        '
+        Me.CopyChangesButton.Location = New System.Drawing.Point(77, 17)
+        Me.CopyChangesButton.Name = "CopyChangesButton"
+        Me.CopyChangesButton.Size = New System.Drawing.Size(139, 23)
+        Me.CopyChangesButton.TabIndex = 32
+        Me.CopyChangesButton.Text = "Copy Changes"
+        Me.CopyChangesButton.UseVisualStyleBackColor = True
         '
         'Label16
         '
@@ -543,26 +555,34 @@ Partial Class PatchFromTags
         Me.ExecutePatchButton.Text = "Execute Patch"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'CopyChangesButton
+        'SchemaCountTextBox
         '
-        Me.CopyChangesButton.Location = New System.Drawing.Point(77, 17)
-        Me.CopyChangesButton.Name = "CopyChangesButton"
-        Me.CopyChangesButton.Size = New System.Drawing.Size(139, 23)
-        Me.CopyChangesButton.TabIndex = 32
-        Me.CopyChangesButton.Text = "Copy Changes"
-        Me.CopyChangesButton.UseVisualStyleBackColor = True
+        Me.SchemaCountTextBox.Location = New System.Drawing.Point(291, 46)
+        Me.SchemaCountTextBox.Name = "SchemaCountTextBox"
+        Me.SchemaCountTextBox.ReadOnly = True
+        Me.SchemaCountTextBox.Size = New System.Drawing.Size(37, 20)
+        Me.SchemaCountTextBox.TabIndex = 14
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(208, 48)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(77, 13)
+        Me.Label17.TabIndex = 15
+        Me.Label17.Text = "Schema Count"
         '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(564, 622)
+        Me.ClientSize = New System.Drawing.Size(928, 622)
         Me.Controls.Add(Me.PatchTabControl)
         Me.Name = "PatchFromTags"
         Me.Text = "PatchFromTags"
         Me.PatchTabControl.ResumeLayout(False)
-        Me.TabPageTag.ResumeLayout(False)
-        Me.TabPageTag.PerformLayout()
+        Me.TabPageTags.ResumeLayout(False)
+        Me.TabPageTags.PerformLayout()
         Me.TabPageChanges.ResumeLayout(False)
         Me.TabPageChanges.PerformLayout()
         Me.TabPagePreReqs.ResumeLayout(False)
@@ -583,7 +603,6 @@ Partial Class PatchFromTags
     Friend WithEvents ChangesCheckedListBox As System.Windows.Forms.CheckedListBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents PatchButton As System.Windows.Forms.Button
-    Friend WithEvents ViewFilesCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents CheckAllCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents SchemaComboBox As System.Windows.Forms.ComboBox
     Friend WithEvents Label4 As System.Windows.Forms.Label
@@ -594,7 +613,7 @@ Partial Class PatchFromTags
     Friend WithEvents PatchNameTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents PatchTabControl As System.Windows.Forms.TabControl
-    Friend WithEvents TabPageTag As System.Windows.Forms.TabPage
+    Friend WithEvents TabPageTags As System.Windows.Forms.TabPage
     Friend WithEvents TabPageChanges As System.Windows.Forms.TabPage
     Friend WithEvents TabPagePatchDefn As System.Windows.Forms.TabPage
     Friend WithEvents TabPagePreReqs As System.Windows.Forms.TabPage
@@ -623,4 +642,7 @@ Partial Class PatchFromTags
     Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents ExecutePatchButton As System.Windows.Forms.Button
     Friend WithEvents CopyChangesButton As System.Windows.Forms.Button
+    Friend WithEvents FindTagsButton As System.Windows.Forms.Button
+    Friend WithEvents Label17 As System.Windows.Forms.Label
+    Friend WithEvents SchemaCountTextBox As System.Windows.Forms.TextBox
 End Class
