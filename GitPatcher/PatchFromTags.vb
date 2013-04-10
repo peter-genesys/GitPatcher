@@ -1,4 +1,4 @@
-﻿ 
+﻿
 Public Class PatchFromTags
 
 
@@ -6,7 +6,7 @@ Public Class PatchFromTags
         InitializeComponent()
 
         Findtags()
- 
+
 
     End Sub
 
@@ -536,7 +536,7 @@ Public Class PatchFromTags
     Private Sub PatchTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles PatchTabControl.SelectedIndexChanged
 
         'MessageBox.Show("you selected the fifth tab:  " & PatchTabControl.SelectedTab.Name.ToString)
- 
+
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageTags" Then
             If TagsCheckedListBox.Items.Count = 0 Then

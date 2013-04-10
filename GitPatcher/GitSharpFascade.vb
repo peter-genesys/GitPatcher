@@ -234,13 +234,8 @@ Public Class GitSharpFascade
                             Dim file_string_data As String = New Blob(repo, change.ChangedObject.Hash).Data
                             'MsgBox(file_string_data)
 
-                            'Write the unix file
-                            Dim l_filename As String = patchDir & "\" & change.Name
-
-                            Dim l_file As New System.IO.StreamWriter(l_filename)
-                            l_file.Write(file_string_data)
-                            l_file.Close()
-
+                            FileIO.writeFile(patchDir & "\" & change.Name, file_string_data)
+  
                             result = result & Chr(10) & change.Path
 
                             filePathList.Add(change.Path)

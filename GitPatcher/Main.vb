@@ -36,4 +36,10 @@
         newchildform.MdiParent = GitPatcher
         newchildform.Show()
     End Sub
+
+    Private Sub PatchRunnerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PatchRunnerToolStripMenuItem.Click
+        Dim newchildform As New PatchRunner
+        newchildform.MdiParent = GitPatcher
+        newchildform.Show()
+    End Sub
 End Class

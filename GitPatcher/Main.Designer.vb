@@ -31,6 +31,7 @@ Partial Class Main
         Me.CurrentBranchTextBox = New System.Windows.Forms.TextBox()
         Me.RootPatchDirTextBox = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.PatchRunnerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -45,7 +46,7 @@ Partial Class Main
         '
         'GITToolStripMenuItem
         '
-        Me.GITToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PatchFromTagsToolStripMenuItem})
+        Me.GITToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PatchFromTagsToolStripMenuItem, Me.PatchRunnerToolStripMenuItem})
         Me.GITToolStripMenuItem.Name = "GITToolStripMenuItem"
         Me.GITToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
         Me.GITToolStripMenuItem.Text = "GIT"
@@ -107,6 +108,12 @@ Partial Class Main
         Me.Label3.TabIndex = 5
         Me.Label3.Text = "Root Patch Dir"
         '
+        'PatchRunnerToolStripMenuItem
+        '
+        Me.PatchRunnerToolStripMenuItem.Name = "PatchRunnerToolStripMenuItem"
+        Me.PatchRunnerToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
+        Me.PatchRunnerToolStripMenuItem.Text = "PatchRunner"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -137,5 +144,6 @@ Partial Class Main
     Friend WithEvents CurrentBranchTextBox As System.Windows.Forms.TextBox
     Friend WithEvents RootPatchDirTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents PatchRunnerToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

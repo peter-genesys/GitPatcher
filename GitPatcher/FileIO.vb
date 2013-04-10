@@ -97,6 +97,18 @@
 
     End Sub
 
+    Shared Sub writeFile(ByVal filepath As String, ByVal file_string_data As String, Optional overwrite As Boolean = False)
+        'Write the file
+        If overwrite Then
+            deleteFileIfExists(filepath)
+        End If
+ 
+        Dim l_file As New System.IO.StreamWriter(filepath)
+        l_file.Write(file_string_data)
+        l_file.Close()
+
+    End Sub
+
 
 
 End Class

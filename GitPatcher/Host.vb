@@ -158,17 +158,22 @@
     End Sub
 
     Public Shared Sub executeSQLscript(ByVal scriptFilename As String, ByVal scriptDir As String)
-        run_command_in_dir_get_output("C:\oraclexe\app\oracle\product\11.2.0\server\bin\sqlplus.exe" & " /nolog @" & scriptFilename, scriptDir)
+        run_command_in_dir_get_output(My.Settings.SQLpath & " /nolog @" & scriptFilename, scriptDir)
     End Sub
 
     Public Shared Sub executeSQLscriptInteractive(ByVal scriptFilename As String, ByVal scriptDir As String)
 
         Dim l_message As String = Nothing
  
-        runInteractive("C:\oraclexe\app\oracle\product\11.2.0\server\bin\sqlplus.exe" & " /nolog @" & scriptFilename, l_message, scriptDir)
+        runInteractive(My.Settings.SQLpath & " /nolog @" & scriptFilename, l_message, scriptDir)
     End Sub
 
+    Public Shared Sub executeSQLdynamicScriptInteractive(ByVal masterList As String, ByVal scriptDir As String)
 
+        Dim l_message As String = Nothing
+
+        runInteractive(My.Settings.SQLpath & " /nolog <<EOF" & masterList & Chr(10) & "exit" & Chr(10) & "EOF", l_message, scriptDir)
+    End Sub
 
 
 End Class
