@@ -47,8 +47,11 @@ Public Class PatchFromTags
     Private Sub PatchButton_Click(sender As Object, e As EventArgs) Handles PatchButton.Click
 
         'Create Patch Dir
-
-        FileIO.confirmDeleteFolder(PatchDirTextBox.Text)
+        Try
+            FileIO.confirmDeleteFolder(PatchDirTextBox.Text)
+        Catch cancelled_delete As Halt
+            MsgBox("Warning: Now overwriting existing patch")
+        End Try
 
         FileIO.createFolderIfNotExists(PatchDirTextBox.Text)
 
@@ -172,7 +175,7 @@ Public Class PatchFromTags
                                   ByVal supplementary As String, _
                                   ByVal patch_desc As String, _
                                   ByVal note As String, _
-                                  ByVal use_patch_admin As String, _
+                                  ByVal use_patch_admin As Boolean, _
                                   ByVal rerunnable As Boolean, _
                                   ByRef targetFiles As Collection, _
                                   ByRef ignoreErrorFiles As CheckedListBox.CheckedItemCollection, _
@@ -218,7 +221,7 @@ Public Class PatchFromTags
 
         Dim l_file_extension As String = Nothing
         Dim l_install_file_line As String = Nothing
- 
+
         Dim l_all_programs As String = Nothing
 
 
@@ -244,12 +247,12 @@ Public Class PatchFromTags
             If ignoreErrorFiles.Contains(l_path) Then
                 l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
                                       Chr(10) & "PROMPT " & l_filename & " " & _
-                                      Chr(10) & "@" & l_filename & ";" & _
+                                      Chr(10) & "@" & patch_name & "\" & l_filename & ";" & _
                                       Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
 
             Else
                 l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
-                                      Chr(10) & "@" & l_filename & ";"
+                                      Chr(10) & "@" & patch_name & "\" & l_filename & ";"
 
             End If
 
@@ -308,7 +311,7 @@ Public Class PatchFromTags
                         l_db_objects_mviews = l_db_objects_mviews & l_install_file_line & l_show_error
                     Case "ctl", "xml"
                         l_ignored = l_ignored & l_install_file_line
-                        System.IO.File.Delete(l_filename)
+                        'System.IO.File.Delete(PatchDirTextBox.Text & l_filename)
                         Throw (New Halt("Skip this ignorable object"))
                     Case Else
                         l_db_objects_misc = l_db_objects_misc & l_install_file_line
@@ -641,7 +644,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
-        Host.executeSQLscriptInteractive("install.sql", PatchDirTextBox.Text)
+        Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Main.RootPatchDirTextBox.Text)
     End Sub
 
     Private Sub CopyChangesButton_Click(sender As Object, e As EventArgs) Handles CopyChangesButton.Click

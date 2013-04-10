@@ -45,6 +45,8 @@ Partial Class PatchFromTags
         Me.TagsCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.TabPageChanges = New System.Windows.Forms.TabPage()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.SchemaCountTextBox = New System.Windows.Forms.TextBox()
         Me.TabPagePreReqs = New System.Windows.Forms.TabPage()
         Me.PreReqButton = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -70,8 +72,6 @@ Partial Class PatchFromTags
         Me.PatchDescTextBox = New System.Windows.Forms.TextBox()
         Me.TabPageExecute = New System.Windows.Forms.TabPage()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.SchemaCountTextBox = New System.Windows.Forms.TextBox()
-        Me.Label17 = New System.Windows.Forms.Label()
         Me.PatchTabControl.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.TabPageChanges.SuspendLayout()
@@ -305,6 +305,23 @@ Partial Class PatchFromTags
         Me.TabPageChanges.TabIndex = 1
         Me.TabPageChanges.Text = "Changes"
         Me.TabPageChanges.UseVisualStyleBackColor = True
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(208, 48)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(77, 13)
+        Me.Label17.TabIndex = 15
+        Me.Label17.Text = "Schema Count"
+        '
+        'SchemaCountTextBox
+        '
+        Me.SchemaCountTextBox.Location = New System.Drawing.Point(291, 46)
+        Me.SchemaCountTextBox.Name = "SchemaCountTextBox"
+        Me.SchemaCountTextBox.ReadOnly = True
+        Me.SchemaCountTextBox.Size = New System.Drawing.Size(37, 20)
+        Me.SchemaCountTextBox.TabIndex = 14
         '
         'TabPagePreReqs
         '
@@ -555,28 +572,11 @@ Partial Class PatchFromTags
         Me.ExecutePatchButton.Text = "Execute Patch"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'SchemaCountTextBox
-        '
-        Me.SchemaCountTextBox.Location = New System.Drawing.Point(291, 46)
-        Me.SchemaCountTextBox.Name = "SchemaCountTextBox"
-        Me.SchemaCountTextBox.ReadOnly = True
-        Me.SchemaCountTextBox.Size = New System.Drawing.Size(37, 20)
-        Me.SchemaCountTextBox.TabIndex = 14
-        '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(208, 48)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(77, 13)
-        Me.Label17.TabIndex = 15
-        Me.Label17.Text = "Schema Count"
-        '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(928, 622)
+        Me.ClientSize = New System.Drawing.Size(566, 622)
         Me.Controls.Add(Me.PatchTabControl)
         Me.Name = "PatchFromTags"
         Me.Text = "PatchFromTags"

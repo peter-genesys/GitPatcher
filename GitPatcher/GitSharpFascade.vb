@@ -181,6 +181,9 @@ Public Class GitSharpFascade
                             Dim file_string_data As String = New Blob(repo, change.ChangedObject.Hash).Data
                             MsgBox(file_string_data)
 
+                            Clipboard.Clear()
+                            Clipboard.SetText(file_string_data)
+
                             result = result & Chr(10) & change.Path
 
                         End If
