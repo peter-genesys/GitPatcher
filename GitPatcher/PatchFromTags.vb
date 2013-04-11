@@ -590,7 +590,12 @@ Public Class PatchFromTags
         End If
 
 
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExecute" Then
+       
+            ExecutePatchButton.Text = "Execute Patch on " & My.Settings.CurrentDB
 
+        End If
+ 
     End Sub
 
     Private Sub derivePatchName()
@@ -644,7 +649,10 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
-        Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Main.RootPatchDirTextBox.Text)
+        'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Main.RootPatchDirTextBox.Text)
+        'Use patch runner to execute with a master script.
+        PatchRunner.RunMasterScript("DEFINE database = '" & My.Settings.CurrentDB & "'" & Chr(10) & "@" & PatchNameTextBox.Text & "\install.sql")
+
     End Sub
 
     Private Sub CopyChangesButton_Click(sender As Object, e As EventArgs) Handles CopyChangesButton.Click

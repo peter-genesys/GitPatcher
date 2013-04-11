@@ -567,7 +567,7 @@ Partial Class PatchFromTags
         '
         Me.ExecutePatchButton.Location = New System.Drawing.Point(77, 17)
         Me.ExecutePatchButton.Name = "ExecutePatchButton"
-        Me.ExecutePatchButton.Size = New System.Drawing.Size(139, 23)
+        Me.ExecutePatchButton.Size = New System.Drawing.Size(230, 23)
         Me.ExecutePatchButton.TabIndex = 0
         Me.ExecutePatchButton.Text = "Execute Patch"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True

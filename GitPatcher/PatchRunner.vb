@@ -39,6 +39,19 @@
 
     End Sub
 
+    Public Shared Sub RunMasterScript(scriptData As String)
+
+        Dim masterScriptName As String = Main.RootPatchDirTextBox.Text & "temp_master_script.sql"
+
+        FileIO.writeFile(masterScriptName, scriptData, True)
+
+        Host.executeSQLscriptInteractive(masterScriptName, Main.RootPatchDirTextBox.Text)
+
+        FileIO.deleteFileIfExists(masterScriptName)
+
+    End Sub
+
+
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
 
         'Format as script
@@ -49,14 +62,9 @@
             masterList = masterList & Chr(10) & MasterScriptListBox.Items(i).ToString()
 
         Next
- 
-        Dim masterScriptName As String = Main.RootPatchDirTextBox.Text & "temp_master_script.sql"
- 
-        FileIO.writeFile(masterScriptName, masterList, True)
- 
-        Host.executeSQLscriptInteractive(masterScriptName, Main.RootPatchDirTextBox.Text)
 
-        FileIO.deleteFileIfExists(masterScriptName)
+        RunMasterScript(masterList)
+ 
  
     End Sub
 
