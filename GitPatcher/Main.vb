@@ -3,7 +3,7 @@
     Public Sub New()
         InitializeComponent()
         loadRepos()
-
+        loadDBs()
     End Sub
 
     Public Sub loadRepos()
@@ -21,8 +21,23 @@
     End Sub
 
 
+    Public Sub loadDBs()
+        DBListComboBox.Items.Clear()
+        For Each DB In My.Settings.DBList.Split(Chr(10))
+            DB = Trim(DB)
+            DB = DB.Replace(Chr(13), "")
+            If (DB.Length > 0) Then
+                DBListComboBox.Items.Add(DB)
+            End If
+            If My.Settings.CurrentDB = DB Then
+                DBListComboBox.SelectedIndex = DBListComboBox.Items.Count - 1
+            End If
+        Next
+    End Sub
+
+
     Private Sub RepoComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles RepoComboBox.SelectedIndexChanged
- 
+
         CurrentBranchTextBox.Text = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)
         RootPatchDirTextBox.Text = RepoComboBox.SelectedItem & My.Settings.PatchDirOffset & "\"
 
@@ -41,5 +56,10 @@
         Dim newchildform As New PatchRunner
         newchildform.MdiParent = GitPatcher
         newchildform.Show()
+    End Sub
+
+    Private Sub DBListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles DBListComboBox.SelectedIndexChanged
+        My.Settings.CurrentDB = DBListComboBox.SelectedItem
+        My.Settings.Save()
     End Sub
 End Class

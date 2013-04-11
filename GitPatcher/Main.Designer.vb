@@ -25,13 +25,15 @@ Partial Class Main
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.GITToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PatchFromTagsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PatchRunnerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RepoComboBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.CurrentBranchTextBox = New System.Windows.Forms.TextBox()
         Me.RootPatchDirTextBox = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.PatchRunnerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.DBListComboBox = New System.Windows.Forms.ComboBox()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -57,6 +59,12 @@ Partial Class Main
         Me.PatchFromTagsToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
         Me.PatchFromTagsToolStripMenuItem.Text = "PatchFromTags"
         '
+        'PatchRunnerToolStripMenuItem
+        '
+        Me.PatchRunnerToolStripMenuItem.Name = "PatchRunnerToolStripMenuItem"
+        Me.PatchRunnerToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
+        Me.PatchRunnerToolStripMenuItem.Text = "PatchRunner"
+        '
         'RepoComboBox
         '
         Me.RepoComboBox.FormattingEnabled = True
@@ -77,7 +85,7 @@ Partial Class Main
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(23, 61)
+        Me.Label2.Location = New System.Drawing.Point(23, 57)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(78, 13)
         Me.Label2.TabIndex = 3
@@ -85,7 +93,7 @@ Partial Class Main
         '
         'CurrentBranchTextBox
         '
-        Me.CurrentBranchTextBox.Location = New System.Drawing.Point(103, 58)
+        Me.CurrentBranchTextBox.Location = New System.Drawing.Point(103, 54)
         Me.CurrentBranchTextBox.Name = "CurrentBranchTextBox"
         Me.CurrentBranchTextBox.ReadOnly = True
         Me.CurrentBranchTextBox.Size = New System.Drawing.Size(373, 20)
@@ -93,7 +101,7 @@ Partial Class Main
         '
         'RootPatchDirTextBox
         '
-        Me.RootPatchDirTextBox.Location = New System.Drawing.Point(103, 87)
+        Me.RootPatchDirTextBox.Location = New System.Drawing.Point(103, 80)
         Me.RootPatchDirTextBox.Name = "RootPatchDirTextBox"
         Me.RootPatchDirTextBox.ReadOnly = True
         Me.RootPatchDirTextBox.Size = New System.Drawing.Size(373, 20)
@@ -102,23 +110,36 @@ Partial Class Main
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(23, 90)
+        Me.Label3.Location = New System.Drawing.Point(23, 83)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(77, 13)
         Me.Label3.TabIndex = 5
         Me.Label3.Text = "Root Patch Dir"
         '
-        'PatchRunnerToolStripMenuItem
+        'Label4
         '
-        Me.PatchRunnerToolStripMenuItem.Name = "PatchRunnerToolStripMenuItem"
-        Me.PatchRunnerToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
-        Me.PatchRunnerToolStripMenuItem.Text = "PatchRunner"
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(23, 109)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(59, 13)
+        Me.Label4.TabIndex = 8
+        Me.Label4.Text = "Current DB"
+        '
+        'DBListComboBox
+        '
+        Me.DBListComboBox.FormattingEnabled = True
+        Me.DBListComboBox.Location = New System.Drawing.Point(103, 106)
+        Me.DBListComboBox.Name = "DBListComboBox"
+        Me.DBListComboBox.Size = New System.Drawing.Size(373, 21)
+        Me.DBListComboBox.TabIndex = 7
         '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(488, 262)
+        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.DBListComboBox)
         Me.Controls.Add(Me.RootPatchDirTextBox)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.CurrentBranchTextBox)
@@ -145,5 +166,7 @@ Partial Class Main
     Friend WithEvents RootPatchDirTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents PatchRunnerToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents DBListComboBox As System.Windows.Forms.ComboBox
 
 End Class

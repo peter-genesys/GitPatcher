@@ -43,11 +43,10 @@
 
         'Format as script
         Dim masterList As String = Nothing
-
-
+ 
         For i As Integer = 0 To MasterScriptListBox.Items.Count - 1
 
-            masterList = masterList & Chr(13) & MasterScriptListBox.Items(i).ToString()
+            masterList = masterList & Chr(10) & MasterScriptListBox.Items(i).ToString()
 
         Next
  
@@ -65,6 +64,9 @@
     Private Sub PopMasterScriptListBox()
  
         MasterScriptListBox.Items.Clear()
+
+        MasterScriptListBox.Items.Add("DEFINE database = '" & My.Settings.CurrentDB & "'")
+
         For i As Integer = 0 To ChosenPatchesListBox.Items.Count - 1
 
             MasterScriptListBox.Items.Add("@" & ChosenPatchesListBox.Items(i).ToString() & "\install.sql")

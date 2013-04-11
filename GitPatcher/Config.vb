@@ -5,6 +5,8 @@
         RepoListTextBox.DataBindings.Add("Text", My.Settings, "RepoList")
         PatchOffsetTextBox.DataBindings.Add("Text", My.Settings, "PatchDirOffset")
         SQLpathTextBox.DataBindings.Add("Text", My.Settings, "SQLpath")
+        DBListTextBox.DataBindings.Add("Text", My.Settings, "DBList")
+
 
     End Sub
 

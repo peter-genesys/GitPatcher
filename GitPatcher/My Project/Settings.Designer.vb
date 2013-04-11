@@ -56,7 +56,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\GitRepo\ProjAppSrc"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"F:\GitRepos\ProjAppSrc")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\GitRepo\ProjAppSrc"&Global.Microsoft.VisualBasic.ChrW(10)&"F:\GitRepos\ProjAppSrc")>  _
         Public Property RepoList() As String
             Get
                 Return CType(Me("RepoList"),String)
@@ -99,6 +99,30 @@ Namespace My
             End Get
             Set
                 Me("SQLpath") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("DevDays"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"isdevl")>  _
+        Public Property DBList() As String
+            Get
+                Return CType(Me("DBList"),String)
+            End Get
+            Set
+                Me("DBList") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("DevDays")>  _
+        Public Property CurrentDB() As String
+            Get
+                Return CType(Me("CurrentDB"),String)
+            End Get
+            Set
+                Me("CurrentDB") = value
             End Set
         End Property
     End Class

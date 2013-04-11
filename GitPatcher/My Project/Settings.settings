@@ -15,5 +15,12 @@ F:\GitRepos\ProjAppSrc</Value>
     <Setting Name="SQLpath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\oraclexe\app\oracle\product\11.2.0\server\bin\sqlplus.exe</Value>
     </Setting>
+    <Setting Name="DBList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DevDays
+isdevl</Value>
+    </Setting>
+    <Setting Name="CurrentDB" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DevDays</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
