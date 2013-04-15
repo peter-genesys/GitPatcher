@@ -125,6 +125,30 @@ Namespace My
                 Me("CurrentDB") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("\apex")>  _
+        Public Property ApexDirOffset() As String
+            Get
+                Return CType(Me("ApexDirOffset"),String)
+            End Get
+            Set
+                Me("ApexDirOffset") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("f101")>  _
+        Public Property CurrentApex() As String
+            Get
+                Return CType(Me("CurrentApex"),String)
+            End Get
+            Set
+                Me("CurrentApex") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

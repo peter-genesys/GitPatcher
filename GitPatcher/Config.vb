@@ -4,6 +4,7 @@
         InitializeComponent()
         RepoListTextBox.DataBindings.Add("Text", My.Settings, "RepoList")
         PatchOffsetTextBox.DataBindings.Add("Text", My.Settings, "PatchDirOffset")
+        ApexOffsetTextBox.DataBindings.Add("Text", My.Settings, "ApexDirOffset")
         SQLpathTextBox.DataBindings.Add("Text", My.Settings, "SQLpath")
         DBListTextBox.DataBindings.Add("Text", My.Settings, "DBList")
 

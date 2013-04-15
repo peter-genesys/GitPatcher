@@ -22,5 +22,11 @@ isdevl</Value>
     <Setting Name="CurrentDB" Type="System.String" Scope="User">
       <Value Profile="(Default)">DevDays</Value>
     </Setting>
+    <Setting Name="ApexDirOffset" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\apex</Value>
+    </Setting>
+    <Setting Name="CurrentApex" Type="System.String" Scope="User">
+      <Value Profile="(Default)">f101</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

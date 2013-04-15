@@ -27,26 +27,31 @@ Partial Class Config
         Dim Label3 As System.Windows.Forms.Label
         Dim Label4 As System.Windows.Forms.Label
         Dim Label1 As System.Windows.Forms.Label
+        Dim Label2 As System.Windows.Forms.Label
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
         Me.TabPageGitRepo = New System.Windows.Forms.TabPage()
         Me.RepoListTextBox = New System.Windows.Forms.TextBox()
-        Me.PatchTabPage = New System.Windows.Forms.TabPage()
-        Me.PatchOffsetTextBox = New System.Windows.Forms.TextBox()
-        Me.SQLTabPage = New System.Windows.Forms.TabPage()
-        Me.SQLpathTextBox = New System.Windows.Forms.TextBox()
-        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.DBTabPage = New System.Windows.Forms.TabPage()
         Me.DBListTextBox = New System.Windows.Forms.TextBox()
+        Me.SQLTabPage = New System.Windows.Forms.TabPage()
+        Me.SQLpathTextBox = New System.Windows.Forms.TextBox()
+        Me.PatchTabPage = New System.Windows.Forms.TabPage()
+        Me.PatchOffsetTextBox = New System.Windows.Forms.TextBox()
+        Me.ApexTabPage = New System.Windows.Forms.TabPage()
+        Me.ApexOffsetTextBox = New System.Windows.Forms.TextBox()
+        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Repo1Label = New System.Windows.Forms.Label()
         Label3 = New System.Windows.Forms.Label()
         Label4 = New System.Windows.Forms.Label()
         Label1 = New System.Windows.Forms.Label()
+        Label2 = New System.Windows.Forms.Label()
         Me.ConfigTabs.SuspendLayout()
         Me.TabPageGitRepo.SuspendLayout()
-        Me.PatchTabPage.SuspendLayout()
-        Me.SQLTabPage.SuspendLayout()
-        CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DBTabPage.SuspendLayout()
+        Me.SQLTabPage.SuspendLayout()
+        Me.PatchTabPage.SuspendLayout()
+        Me.ApexTabPage.SuspendLayout()
+        CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Repo1Label
@@ -76,12 +81,22 @@ Partial Class Config
         Label4.TabIndex = 8
         Label4.Text = "SQL exe Path:"
         '
+        'Label1
+        '
+        Label1.AutoSize = True
+        Label1.Location = New System.Drawing.Point(5, 16)
+        Label1.Name = "Label1"
+        Label1.Size = New System.Drawing.Size(75, 13)
+        Label1.TabIndex = 8
+        Label1.Text = "Database List:"
+        '
         'ConfigTabs
         '
         Me.ConfigTabs.Controls.Add(Me.TabPageGitRepo)
         Me.ConfigTabs.Controls.Add(Me.DBTabPage)
         Me.ConfigTabs.Controls.Add(Me.SQLTabPage)
         Me.ConfigTabs.Controls.Add(Me.PatchTabPage)
+        Me.ConfigTabs.Controls.Add(Me.ApexTabPage)
         Me.ConfigTabs.Location = New System.Drawing.Point(12, 28)
         Me.ConfigTabs.Name = "ConfigTabs"
         Me.ConfigTabs.SelectedIndex = 0
@@ -109,48 +124,6 @@ Partial Class Config
         Me.RepoListTextBox.Size = New System.Drawing.Size(444, 163)
         Me.RepoListTextBox.TabIndex = 7
         '
-        'PatchTabPage
-        '
-        Me.PatchTabPage.Controls.Add(Me.PatchOffsetTextBox)
-        Me.PatchTabPage.Controls.Add(Label3)
-        Me.PatchTabPage.Location = New System.Drawing.Point(4, 22)
-        Me.PatchTabPage.Name = "PatchTabPage"
-        Me.PatchTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.PatchTabPage.Size = New System.Drawing.Size(458, 208)
-        Me.PatchTabPage.TabIndex = 1
-        Me.PatchTabPage.Text = "Patch"
-        Me.PatchTabPage.UseVisualStyleBackColor = True
-        '
-        'PatchOffsetTextBox
-        '
-        Me.PatchOffsetTextBox.Location = New System.Drawing.Point(8, 32)
-        Me.PatchOffsetTextBox.Name = "PatchOffsetTextBox"
-        Me.PatchOffsetTextBox.Size = New System.Drawing.Size(444, 20)
-        Me.PatchOffsetTextBox.TabIndex = 9
-        '
-        'SQLTabPage
-        '
-        Me.SQLTabPage.Controls.Add(Me.SQLpathTextBox)
-        Me.SQLTabPage.Controls.Add(Label4)
-        Me.SQLTabPage.Location = New System.Drawing.Point(4, 22)
-        Me.SQLTabPage.Name = "SQLTabPage"
-        Me.SQLTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.SQLTabPage.Size = New System.Drawing.Size(458, 208)
-        Me.SQLTabPage.TabIndex = 2
-        Me.SQLTabPage.Text = "SQL"
-        Me.SQLTabPage.UseVisualStyleBackColor = True
-        '
-        'SQLpathTextBox
-        '
-        Me.SQLpathTextBox.Location = New System.Drawing.Point(8, 32)
-        Me.SQLpathTextBox.Name = "SQLpathTextBox"
-        Me.SQLpathTextBox.Size = New System.Drawing.Size(444, 20)
-        Me.SQLpathTextBox.TabIndex = 9
-        '
-        'MySettingsBindingSource
-        '
-        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
-        '
         'DBTabPage
         '
         Me.DBTabPage.Controls.Add(Me.DBListTextBox)
@@ -171,14 +144,75 @@ Partial Class Config
         Me.DBListTextBox.Size = New System.Drawing.Size(444, 163)
         Me.DBListTextBox.TabIndex = 9
         '
-        'Label1
+        'SQLTabPage
         '
-        Label1.AutoSize = True
-        Label1.Location = New System.Drawing.Point(5, 16)
-        Label1.Name = "Label1"
-        Label1.Size = New System.Drawing.Size(75, 13)
-        Label1.TabIndex = 8
-        Label1.Text = "Database List:"
+        Me.SQLTabPage.Controls.Add(Me.SQLpathTextBox)
+        Me.SQLTabPage.Controls.Add(Label4)
+        Me.SQLTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.SQLTabPage.Name = "SQLTabPage"
+        Me.SQLTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.SQLTabPage.Size = New System.Drawing.Size(458, 208)
+        Me.SQLTabPage.TabIndex = 2
+        Me.SQLTabPage.Text = "SQL"
+        Me.SQLTabPage.UseVisualStyleBackColor = True
+        '
+        'SQLpathTextBox
+        '
+        Me.SQLpathTextBox.Location = New System.Drawing.Point(8, 32)
+        Me.SQLpathTextBox.Name = "SQLpathTextBox"
+        Me.SQLpathTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.SQLpathTextBox.TabIndex = 9
+        '
+        'PatchTabPage
+        '
+        Me.PatchTabPage.Controls.Add(Me.PatchOffsetTextBox)
+        Me.PatchTabPage.Controls.Add(Label3)
+        Me.PatchTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.PatchTabPage.Name = "PatchTabPage"
+        Me.PatchTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.PatchTabPage.Size = New System.Drawing.Size(458, 208)
+        Me.PatchTabPage.TabIndex = 1
+        Me.PatchTabPage.Text = "Patch"
+        Me.PatchTabPage.UseVisualStyleBackColor = True
+        '
+        'PatchOffsetTextBox
+        '
+        Me.PatchOffsetTextBox.Location = New System.Drawing.Point(8, 32)
+        Me.PatchOffsetTextBox.Name = "PatchOffsetTextBox"
+        Me.PatchOffsetTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.PatchOffsetTextBox.TabIndex = 9
+        '
+        'ApexTabPage
+        '
+        Me.ApexTabPage.Controls.Add(Me.ApexOffsetTextBox)
+        Me.ApexTabPage.Controls.Add(Label2)
+        Me.ApexTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.ApexTabPage.Name = "ApexTabPage"
+        Me.ApexTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.ApexTabPage.Size = New System.Drawing.Size(458, 208)
+        Me.ApexTabPage.TabIndex = 4
+        Me.ApexTabPage.Text = "Apex"
+        Me.ApexTabPage.UseVisualStyleBackColor = True
+        '
+        'ApexOffsetTextBox
+        '
+        Me.ApexOffsetTextBox.Location = New System.Drawing.Point(8, 32)
+        Me.ApexOffsetTextBox.Name = "ApexOffsetTextBox"
+        Me.ApexOffsetTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.ApexOffsetTextBox.TabIndex = 11
+        '
+        'Label2
+        '
+        Label2.AutoSize = True
+        Label2.Location = New System.Drawing.Point(5, 16)
+        Label2.Name = "Label2"
+        Label2.Size = New System.Drawing.Size(117, 13)
+        Label2.TabIndex = 10
+        Label2.Text = "Apex Dir Relative Path:"
+        '
+        'MySettingsBindingSource
+        '
+        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
         '
         'Config
         '
@@ -191,13 +225,15 @@ Partial Class Config
         Me.ConfigTabs.ResumeLayout(False)
         Me.TabPageGitRepo.ResumeLayout(False)
         Me.TabPageGitRepo.PerformLayout()
-        Me.PatchTabPage.ResumeLayout(False)
-        Me.PatchTabPage.PerformLayout()
-        Me.SQLTabPage.ResumeLayout(False)
-        Me.SQLTabPage.PerformLayout()
-        CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.DBTabPage.ResumeLayout(False)
         Me.DBTabPage.PerformLayout()
+        Me.SQLTabPage.ResumeLayout(False)
+        Me.SQLTabPage.PerformLayout()
+        Me.PatchTabPage.ResumeLayout(False)
+        Me.PatchTabPage.PerformLayout()
+        Me.ApexTabPage.ResumeLayout(False)
+        Me.ApexTabPage.PerformLayout()
+        CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -211,4 +247,6 @@ Partial Class Config
     Friend WithEvents SQLpathTextBox As System.Windows.Forms.TextBox
     Friend WithEvents DBTabPage As System.Windows.Forms.TabPage
     Friend WithEvents DBListTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents ApexTabPage As System.Windows.Forms.TabPage
+    Friend WithEvents ApexOffsetTextBox As System.Windows.Forms.TextBox
 End Class

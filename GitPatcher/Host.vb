@@ -161,15 +161,20 @@
         run_command_in_dir_get_output(My.Settings.SQLpath & " /nolog @" & scriptFilename, scriptDir)
     End Sub
 
-    Public Shared Sub executeSQLscriptInteractive(ByVal scriptFilename As String, ByVal scriptDir As String)
+    Public Shared Sub executeSQLscriptInteractive(ByVal scriptFilename As String, ByVal scriptDir As String, Optional ByVal connection As String = "")
 
         Dim l_message As String = Nothing
- 
-        runInteractive(My.Settings.SQLpath & " /nolog @" & scriptFilename, l_message, scriptDir)
+        If String.IsNullOrEmpty(connection) Then
+            runInteractive(My.Settings.SQLpath & " /nolog @" & scriptFilename, l_message, scriptDir)
+
+        Else
+            runInteractive(My.Settings.SQLpath & " " & connection & " @" & scriptFilename, l_message, scriptDir)
+        End If
+
     End Sub
 
-    Public Shared Sub executeSQLdynamicScriptInteractive(ByVal masterList As String, ByVal scriptDir As String)
-
+    Public Shared Sub executeDynamicSQLScript(ByVal masterList As String, ByVal scriptDir As String)
+        'This is NON-INTERACTIVE
         Dim l_message As String = Nothing
 
         runInteractive(My.Settings.SQLpath & " /nolog <<EOF" & masterList & Chr(10) & "exit" & Chr(10) & "EOF", l_message, scriptDir)
