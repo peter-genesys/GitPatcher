@@ -98,7 +98,7 @@
         envSetup.Arguments = "/e,/root," & root_path
         envSetup.WorkingDirectory = ""
         envSetup.UseShellExecute = False
-
+ 
         ' Launch the tool.
         Dim shelly As Process = New Process
         shelly.StartInfo = envSetup
@@ -178,6 +178,19 @@
         Dim l_message As String = Nothing
 
         runInteractive(My.Settings.SQLpath & " /nolog <<EOF" & masterList & Chr(10) & "exit" & Chr(10) & "EOF", l_message, scriptDir)
+    End Sub
+
+
+    Public Shared Sub executeSQLplus(ByVal scriptDir As String, Optional ByVal connection As String = "")
+
+        Dim l_message As String = Nothing
+        If String.IsNullOrEmpty(connection) Then
+            runInteractive(My.Settings.SQLpath & " /nolog", l_message, scriptDir)
+
+        Else
+            runInteractive(My.Settings.SQLpath & " " & connection, l_message, scriptDir)
+        End If
+
     End Sub
 
 

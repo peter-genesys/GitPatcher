@@ -56,7 +56,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\GitRepo\ProjAppSrc"&Global.Microsoft.VisualBasic.ChrW(10)&"F:\GitRepos\ProjAppSrc")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\GitRepos\ProjAppSrc"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))>  _
         Public Property RepoList() As String
             Get
                 Return CType(Me("RepoList"),String)
@@ -68,7 +68,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\Repos\GitSlave1")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\GitRepos\ProjAppSrc")>  _
         Public Property CurrentRepo() As String
             Get
                 Return CType(Me("CurrentRepo"),String)
@@ -147,6 +147,54 @@ Namespace My
             End Get
             Set
                 Me("CurrentApex") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("127.0.0.1:1528:ORCL"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"bneoda05.thiess.aus:1521:isdevl")>  _
+        Public Property ConnectionList() As String
+            Get
+                Return CType(Me("ConnectionList"),String)
+            End Get
+            Set
+                Me("ConnectionList") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("f101")>  _
+        Public Property AppList() As String
+            Get
+                Return CType(Me("AppList"),String)
+            End Get
+            Set
+                Me("AppList") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("tpds")>  _
+        Public Property ParsingSchemaList() As String
+            Get
+                Return CType(Me("ParsingSchemaList"),String)
+            End Get
+            Set
+                Me("ParsingSchemaList") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("\oracle\jdbc\lib\ojdbc5.jar")>  _
+        Public Property JDBCjar() As String
+            Get
+                Return CType(Me("JDBCjar"),String)
+            End Get
+            Set
+                Me("JDBCjar") = value
             End Set
         End Property
     End Class

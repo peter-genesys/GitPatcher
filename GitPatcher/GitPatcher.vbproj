@@ -76,6 +76,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Apex.vb" />
     <Compile Include="FileIO.vb" />
     <Compile Include="GitSharpFascade.vb" />
     <Compile Include="Config.Designer.vb">
@@ -126,6 +127,7 @@
     <Compile Include="PatchRunner.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="TortoiseFacade.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Config.resx">

@@ -7,8 +7,11 @@
         ApexOffsetTextBox.DataBindings.Add("Text", My.Settings, "ApexDirOffset")
         SQLpathTextBox.DataBindings.Add("Text", My.Settings, "SQLpath")
         DBListTextBox.DataBindings.Add("Text", My.Settings, "DBList")
-
-
+        ConnectionTextBox.DataBindings.Add("Text", My.Settings, "ConnectionList")
+        AppListTextBox.DataBindings.Add("Text", My.Settings, "AppList")
+        ParsingSchemaTextbox.DataBindings.Add("Text", My.Settings, "ParsingSchemaList")
+        OJDBCjarFileTextBox.DataBindings.Add("Text", My.Settings, "JDBCjar")
+ 
     End Sub
 
  

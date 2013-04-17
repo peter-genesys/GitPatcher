@@ -28,23 +28,37 @@ Partial Class Config
         Dim Label4 As System.Windows.Forms.Label
         Dim Label1 As System.Windows.Forms.Label
         Dim Label2 As System.Windows.Forms.Label
+        Dim Label5 As System.Windows.Forms.Label
+        Dim Label8 As System.Windows.Forms.Label
+        Dim Label9 As System.Windows.Forms.Label
+        Dim Label10 As System.Windows.Forms.Label
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
         Me.TabPageGitRepo = New System.Windows.Forms.TabPage()
         Me.RepoListTextBox = New System.Windows.Forms.TextBox()
         Me.DBTabPage = New System.Windows.Forms.TabPage()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.ConnectionTextBox = New System.Windows.Forms.TextBox()
         Me.DBListTextBox = New System.Windows.Forms.TextBox()
         Me.SQLTabPage = New System.Windows.Forms.TabPage()
         Me.SQLpathTextBox = New System.Windows.Forms.TextBox()
         Me.PatchTabPage = New System.Windows.Forms.TabPage()
+        Me.ApexOffsetTextBox = New System.Windows.Forms.TextBox()
         Me.PatchOffsetTextBox = New System.Windows.Forms.TextBox()
         Me.ApexTabPage = New System.Windows.Forms.TabPage()
-        Me.ApexOffsetTextBox = New System.Windows.Forms.TextBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.ParsingSchemaTextbox = New System.Windows.Forms.TextBox()
+        Me.AppListTextBox = New System.Windows.Forms.TextBox()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.OJDBCjarFileTextBox = New System.Windows.Forms.TextBox()
         Repo1Label = New System.Windows.Forms.Label()
         Label3 = New System.Windows.Forms.Label()
         Label4 = New System.Windows.Forms.Label()
         Label1 = New System.Windows.Forms.Label()
         Label2 = New System.Windows.Forms.Label()
+        Label5 = New System.Windows.Forms.Label()
+        Label8 = New System.Windows.Forms.Label()
+        Label9 = New System.Windows.Forms.Label()
+        Label10 = New System.Windows.Forms.Label()
         Me.ConfigTabs.SuspendLayout()
         Me.TabPageGitRepo.SuspendLayout()
         Me.DBTabPage.SuspendLayout()
@@ -90,6 +104,42 @@ Partial Class Config
         Label1.TabIndex = 8
         Label1.Text = "Database List:"
         '
+        'Label2
+        '
+        Label2.AutoSize = True
+        Label2.Location = New System.Drawing.Point(5, 58)
+        Label2.Name = "Label2"
+        Label2.Size = New System.Drawing.Size(117, 13)
+        Label2.TabIndex = 10
+        Label2.Text = "Apex Dir Relative Path:"
+        '
+        'Label5
+        '
+        Label5.AutoSize = True
+        Label5.Location = New System.Drawing.Point(230, 16)
+        Label5.Name = "Label5"
+        Label5.Size = New System.Drawing.Size(69, 13)
+        Label5.TabIndex = 10
+        Label5.Text = "Connect List:"
+        '
+        'Label8
+        '
+        Label8.AutoSize = True
+        Label8.Location = New System.Drawing.Point(228, 16)
+        Label8.Name = "Label8"
+        Label8.Size = New System.Drawing.Size(106, 13)
+        Label8.TabIndex = 15
+        Label8.Text = "Parsing Schema List:"
+        '
+        'Label9
+        '
+        Label9.AutoSize = True
+        Label9.Location = New System.Drawing.Point(5, 16)
+        Label9.Name = "Label9"
+        Label9.Size = New System.Drawing.Size(48, 13)
+        Label9.TabIndex = 13
+        Label9.Text = "App List:"
+        '
         'ConfigTabs
         '
         Me.ConfigTabs.Controls.Add(Me.TabPageGitRepo)
@@ -126,6 +176,9 @@ Partial Class Config
         '
         'DBTabPage
         '
+        Me.DBTabPage.Controls.Add(Me.Label6)
+        Me.DBTabPage.Controls.Add(Me.ConnectionTextBox)
+        Me.DBTabPage.Controls.Add(Label5)
         Me.DBTabPage.Controls.Add(Me.DBListTextBox)
         Me.DBTabPage.Controls.Add(Label1)
         Me.DBTabPage.Location = New System.Drawing.Point(4, 22)
@@ -136,12 +189,29 @@ Partial Class Config
         Me.DBTabPage.Text = "Databases"
         Me.DBTabPage.UseVisualStyleBackColor = True
         '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(8, 182)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(234, 13)
+        Me.Label6.TabIndex = 12
+        Me.Label6.Text = "Ensure there is a Connection for each Database"
+        '
+        'ConnectionTextBox
+        '
+        Me.ConnectionTextBox.Location = New System.Drawing.Point(233, 32)
+        Me.ConnectionTextBox.Multiline = True
+        Me.ConnectionTextBox.Name = "ConnectionTextBox"
+        Me.ConnectionTextBox.Size = New System.Drawing.Size(219, 143)
+        Me.ConnectionTextBox.TabIndex = 11
+        '
         'DBListTextBox
         '
         Me.DBListTextBox.Location = New System.Drawing.Point(8, 32)
         Me.DBListTextBox.Multiline = True
         Me.DBListTextBox.Name = "DBListTextBox"
-        Me.DBListTextBox.Size = New System.Drawing.Size(444, 163)
+        Me.DBListTextBox.Size = New System.Drawing.Size(219, 143)
         Me.DBListTextBox.TabIndex = 9
         '
         'SQLTabPage
@@ -165,6 +235,10 @@ Partial Class Config
         '
         'PatchTabPage
         '
+        Me.PatchTabPage.Controls.Add(Me.OJDBCjarFileTextBox)
+        Me.PatchTabPage.Controls.Add(Label10)
+        Me.PatchTabPage.Controls.Add(Me.ApexOffsetTextBox)
+        Me.PatchTabPage.Controls.Add(Label2)
         Me.PatchTabPage.Controls.Add(Me.PatchOffsetTextBox)
         Me.PatchTabPage.Controls.Add(Label3)
         Me.PatchTabPage.Location = New System.Drawing.Point(4, 22)
@@ -172,8 +246,15 @@ Partial Class Config
         Me.PatchTabPage.Padding = New System.Windows.Forms.Padding(3)
         Me.PatchTabPage.Size = New System.Drawing.Size(458, 208)
         Me.PatchTabPage.TabIndex = 1
-        Me.PatchTabPage.Text = "Patch"
+        Me.PatchTabPage.Text = "Paths"
         Me.PatchTabPage.UseVisualStyleBackColor = True
+        '
+        'ApexOffsetTextBox
+        '
+        Me.ApexOffsetTextBox.Location = New System.Drawing.Point(8, 74)
+        Me.ApexOffsetTextBox.Name = "ApexOffsetTextBox"
+        Me.ApexOffsetTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.ApexOffsetTextBox.TabIndex = 11
         '
         'PatchOffsetTextBox
         '
@@ -184,8 +265,11 @@ Partial Class Config
         '
         'ApexTabPage
         '
-        Me.ApexTabPage.Controls.Add(Me.ApexOffsetTextBox)
-        Me.ApexTabPage.Controls.Add(Label2)
+        Me.ApexTabPage.Controls.Add(Me.Label7)
+        Me.ApexTabPage.Controls.Add(Me.ParsingSchemaTextbox)
+        Me.ApexTabPage.Controls.Add(Label8)
+        Me.ApexTabPage.Controls.Add(Me.AppListTextBox)
+        Me.ApexTabPage.Controls.Add(Label9)
         Me.ApexTabPage.Location = New System.Drawing.Point(4, 22)
         Me.ApexTabPage.Name = "ApexTabPage"
         Me.ApexTabPage.Padding = New System.Windows.Forms.Padding(3)
@@ -194,31 +278,56 @@ Partial Class Config
         Me.ApexTabPage.Text = "Apex"
         Me.ApexTabPage.UseVisualStyleBackColor = True
         '
-        'ApexOffsetTextBox
+        'Label7
         '
-        Me.ApexOffsetTextBox.Location = New System.Drawing.Point(8, 32)
-        Me.ApexOffsetTextBox.Name = "ApexOffsetTextBox"
-        Me.ApexOffsetTextBox.Size = New System.Drawing.Size(444, 20)
-        Me.ApexOffsetTextBox.TabIndex = 11
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(8, 182)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(219, 13)
+        Me.Label7.TabIndex = 17
+        Me.Label7.Text = "Ensure there is a Schema for each Apex App"
         '
-        'Label2
+        'ParsingSchemaTextbox
         '
-        Label2.AutoSize = True
-        Label2.Location = New System.Drawing.Point(5, 16)
-        Label2.Name = "Label2"
-        Label2.Size = New System.Drawing.Size(117, 13)
-        Label2.TabIndex = 10
-        Label2.Text = "Apex Dir Relative Path:"
+        Me.ParsingSchemaTextbox.Location = New System.Drawing.Point(231, 32)
+        Me.ParsingSchemaTextbox.Multiline = True
+        Me.ParsingSchemaTextbox.Name = "ParsingSchemaTextbox"
+        Me.ParsingSchemaTextbox.Size = New System.Drawing.Size(219, 143)
+        Me.ParsingSchemaTextbox.TabIndex = 16
+        '
+        'AppListTextBox
+        '
+        Me.AppListTextBox.Location = New System.Drawing.Point(8, 32)
+        Me.AppListTextBox.Multiline = True
+        Me.AppListTextBox.Name = "AppListTextBox"
+        Me.AppListTextBox.Size = New System.Drawing.Size(219, 143)
+        Me.AppListTextBox.TabIndex = 14
         '
         'MySettingsBindingSource
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
         '
+        'OJDBCjarFileTextBox
+        '
+        Me.OJDBCjarFileTextBox.Location = New System.Drawing.Point(8, 114)
+        Me.OJDBCjarFileTextBox.Name = "OJDBCjarFileTextBox"
+        Me.OJDBCjarFileTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.OJDBCjarFileTextBox.TabIndex = 13
+        '
+        'Label10
+        '
+        Label10.AutoSize = True
+        Label10.Location = New System.Drawing.Point(5, 98)
+        Label10.Name = "Label10"
+        Label10.Size = New System.Drawing.Size(75, 13)
+        Label10.TabIndex = 12
+        Label10.Text = "OJDBC jar file:"
+        '
         'Config
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(537, 262)
+        Me.ClientSize = New System.Drawing.Size(487, 275)
         Me.Controls.Add(Me.ConfigTabs)
         Me.Name = "Config"
         Me.Text = "Config"
@@ -249,4 +358,10 @@ Partial Class Config
     Friend WithEvents DBListTextBox As System.Windows.Forms.TextBox
     Friend WithEvents ApexTabPage As System.Windows.Forms.TabPage
     Friend WithEvents ApexOffsetTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents ConnectionTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label7 As System.Windows.Forms.Label
+    Friend WithEvents ParsingSchemaTextbox As System.Windows.Forms.TextBox
+    Friend WithEvents AppListTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents OJDBCjarFileTextBox As System.Windows.Forms.TextBox
 End Class

@@ -3,11 +3,11 @@
   <Profiles />
   <Settings>
     <Setting Name="RepoList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\GitRepo\ProjAppSrc
-F:\GitRepos\ProjAppSrc</Value>
+      <Value Profile="(Default)">C:\GitRepos\ProjAppSrc
+</Value>
     </Setting>
     <Setting Name="CurrentRepo" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Repos\GitSlave1</Value>
+      <Value Profile="(Default)">C:\GitRepos\ProjAppSrc</Value>
     </Setting>
     <Setting Name="PatchDirOffset" Type="System.String" Scope="User">
       <Value Profile="(Default)">\patch</Value>
@@ -27,6 +27,19 @@ isdevl</Value>
     </Setting>
     <Setting Name="CurrentApex" Type="System.String" Scope="User">
       <Value Profile="(Default)">f101</Value>
+    </Setting>
+    <Setting Name="ConnectionList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">127.0.0.1:1528:ORCL
+bneoda05.thiess.aus:1521:isdevl</Value>
+    </Setting>
+    <Setting Name="AppList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">f101</Value>
+    </Setting>
+    <Setting Name="ParsingSchemaList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">tpds</Value>
+    </Setting>
+    <Setting Name="JDBCjar" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\oracle\jdbc\lib\ojdbc5.jar</Value>
     </Setting>
   </Settings>
 </SettingsFile>
