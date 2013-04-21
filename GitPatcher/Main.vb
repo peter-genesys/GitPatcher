@@ -151,10 +151,14 @@
                   Chr(10) & "Consider which branch you are exporting to." & _
                   Chr(10) & "To commit any existing changes, CANCEL this operation and perform a GIT COMMIT.", MsgBoxStyle.OkCancel, "Export APEX application " & My.Settings.CurrentApex) = MsgBoxResult.Ok Then
 
+  
 
-            Dim password = get_password(ParsingSchemaTextBox.Text, My.Settings.CurrentDB)
+            Dim password = Main.get_password(ParsingSchemaTextBox.Text, My.Settings.CurrentDB)
 
-            Apex.ApexExportCommit(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
+            'Apex.ApexExportCommit(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
+            Apex.progress_test(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
+            'ApexExport.demo_progress_bar()
+ 
         End If
     End Sub
 End Class

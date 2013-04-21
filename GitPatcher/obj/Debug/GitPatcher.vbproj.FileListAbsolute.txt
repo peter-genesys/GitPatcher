@@ -22,3 +22,5 @@ C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\ob
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\Debug\GitPatcher.Main.resources
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\Debug\GitPatcher.PatchFromTags.resources
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\Debug\GitPatcher.PatchRunner.resources
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\Debug\GitPatcher.ApexExport.resources
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\Debug\GitPatcher.ProgressDialogue.resources
