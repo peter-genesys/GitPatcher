@@ -1,29 +1,9 @@
 ﻿Public Class ProgressDialogue
 
     Private storedProcessSteps As ProcessStep()
-    Private lastStep As Integer = 0
+    Private nextStep As Integer = 0
 
-    Public Sub popSteps(ByVal processSteps As ProcessStep())
-        storedProcessSteps = processSteps
-        Me.ProgressCheckedListBox.Items.Clear()
-        lastStep = 0
-        For i As Integer = 0 To storedProcessSteps.GetUpperBound(0) - 1
-            Me.ProgressCheckedListBox.Items.Add(storedProcessSteps(i).description)
-            lastStep = lastStep + 1
-        Next
-
-    End Sub
-
-
-    Public Sub New(ByVal progressTitle As String, ByVal processSteps As ProcessStep())
-        Me.Location = New Point(0, 0)
-        InitializeComponent()
-        Me.Text = progressTitle
-
-        popSteps(processSteps)
-
-    End Sub
-
+ 
     Public Sub New(ByVal progressTitle As String)
         Me.Location = New Point(0, 0)
         InitializeComponent()
@@ -34,11 +14,10 @@
     Public Sub addStep(ByVal description As String, ByVal percentComplete As Integer)
         Dim aStep As ProcessStep = New ProcessStep(description, percentComplete)
 
-        ReDim Preserve storedProcessSteps(lastStep)
-        'storedProcessSteps(storedProcessSteps.GetUpperBound(0)) = aStep
-        storedProcessSteps(lastStep) = aStep
+        ReDim Preserve storedProcessSteps(nextStep)
+        storedProcessSteps(nextStep) = aStep
         Me.ProgressCheckedListBox.Items.Add(aStep.description)
-        lastStep = lastStep + 1
+        nextStep = nextStep + 1
 
     End Sub
 
@@ -65,10 +44,10 @@
         For i As Integer = 0 To storedProcessSteps.GetUpperBound(0) - 1
             If i < currentStep Then
                 ProgressCheckedListBox.SetItemChecked(i, True)
+                ProgressBar.Value = storedProcessSteps(i).percentComplete
             End If
             If i = currentStep Then
                 ProgressCheckedListBox.SetSelected(i, True)
-                ProgressBar.Value = storedProcessSteps(i).percentComplete
             End If
 
         Next
@@ -76,18 +55,13 @@
 
     End Sub
 
-    Public Sub doneStep(currentStep As Integer)
+    Public Sub done(Optional percentComplete As Integer = 100, Optional doneMsg As String = "Done")
+        Me.Text = Me.Text & " - " & doneMsg
         'Same as setStep but ticks the current step too
-        For i As Integer = 0 To storedProcessSteps.GetUpperBound(0) - 1
-            If i <= currentStep Then
-                ProgressCheckedListBox.SetItemChecked(i, True)
-            End If
-            If i = currentStep Then
-                ProgressCheckedListBox.SetSelected(i, True)
-                ProgressBar.Value = storedProcessSteps(i).percentComplete
-            End If
-
+        For i As Integer = 0 To ProgressCheckedListBox.Items.Count - 1
+            ProgressCheckedListBox.SetItemChecked(i, True)
         Next
+        ProgressBar.Value = percentComplete
         pauseToRefreshProgressBar()
 
     End Sub
