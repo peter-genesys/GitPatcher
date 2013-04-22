@@ -28,8 +28,6 @@
 
     Public Shared Sub ApexExportCommit(connection, username, password, fapp_id, apex_dir)
 
-
-
         Dim ProcessSteps(5) As ProcessStep
 
         ProcessSteps(0) = New ProcessStep("Export Apex as a single file", 0)
@@ -38,52 +36,18 @@
         ProcessSteps(3) = New ProcessStep("Commit changes to GIT repository", 75)
         ProcessSteps(4) = New ProcessStep("Done", 100)
 
-        'Dim ExportProgress As ProgressDialogue = New ProgressDialogue(ProcessSteps, "Apex Export", 0)
+        Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Apex Export", ProcessSteps)
+        'Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Apex Export")
+        ExportProgress.MdiParent = GitPatcher
 
-        'ShowProgress(ExportProgress, ProcessSteps, "Apex Export", 0)
+        'ExportProgress.addStep("Export Apex as a single file", 0)
+        'ExportProgress.addStep("Splitting into components", 25)
+        'ExportProgress.addStep("Add new files to GIT repository", 50)
+        'ExportProgress.addStep("Commit changes to GIT repository", 75)
+        'ExportProgress.addStep("Done", 100)
 
-        ' ExportProgress = New ProgressDialogue(ProcessSteps, "Apex Export", 0)
-        '
-        ' ExportProgress.MdiParent = GitPatcher
-        ' 'GitPatcher.LayoutMdi(MdiLayout.Cascade)
-        ' ExportProgress.Show()
-        ' ExportProgress.Location = New Point(0, 0)
-        ' MsgBox("Percent Complete " & ExportProgress.ProgressBar.Value)
-        ' ExportProgress.Close()
-        '
-        ' ExportProgress = New ProgressDialogue(ProcessSteps, "Apex Export", 1)
-        ' ExportProgress.MdiParent = GitPatcher
-        '
-        '
-        ' ExportProgress.Show()
-        ' ExportProgress.Location = New Point(0, 0)
-        ' MsgBox("Percent Complete " & ExportProgress.ProgressBar.Value)
-        ' ExportProgress.Close()
-        '
-        ' ExportProgress = New ProgressDialogue(ProcessSteps, "Apex Export", 2)
-        ' ExportProgress.MdiParent = GitPatcher
-        '
-        ' ExportProgress.Show()
-        ' ExportProgress.Location = New Point(0, 0)
-        ' MsgBox("Percent Complete " & ExportProgress.ProgressBar.Value)
-        ' ExportProgress.Close()
-        '
-        ' ExportProgress = New ProgressDialogue(ProcessSteps, "Apex Export", 3)
-        ' ExportProgress.MdiParent = GitPatcher
-        ' ExportProgress.Show()
-        ' ExportProgress.Location = New Point(0, 0)
-        ' MsgBox("Percent Complete " & ExportProgress.ProgressBar.Value)
-        ' ExportProgress.Close()
-        '
-        ' ExportProgress = New ProgressDialogue(ProcessSteps, "Apex Export", 4)
-        ' ExportProgress.MdiParent = GitPatcher
-        ' ExportProgress.Show()
-        ' ExportProgress.Location = New Point(0, 0)
-        ' MsgBox("Percent Complete " & ExportProgress.ProgressBar.Value)
-        ' ExportProgress.Close()
-
-
-
+        ExportProgress.Show()
+ 
         ''write-host "APEX file export and commit - uses oracle.apex.APEXExport.class and java oracle.apex.APEXExportSplitter.class"
         ''Does this need to perform a pull from the master ??
         ''TortoiseGitProc.exe /command:"pull" /path:"apex_dir" | Out-Null
@@ -101,7 +65,7 @@
         Dim message As String = Nothing
 
         'PROGRESS 0
-        'ApexExport.ExportProgressBar.Value = 0
+        ExportProgress.setStep(0)
 
         'NB Not exporting application comments
         'Host.runInteractive("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
@@ -117,8 +81,7 @@
         FileIO.deleteFolderIfExists(apex_dir & fapp_id)
 
         'PROGRESS 25
-        'ShowProgress(ExportProgress, ProcessSteps, "Apex Export", 1)
-        'ApexExport.ExportProgressBar.Value = 25
+        ExportProgress.setStep(1)
 
         '
         'write-host "Splitting $APP_SQL into its composite files"
@@ -128,22 +91,19 @@
         Logger.Dbg(message, "Apex Export Splitter Error")
 
         'PROGRESS 50
-        'ShowProgress(ExportProgress, ProcessSteps, "Apex Export", 2)
-        'ApexExport.ExportProgressBar.Value = 50
+        ExportProgress.setStep(2)
 
         'Adding new files to GIT"
         TortoiseAdd(apex_dir & fapp_id, True)
 
         'PROGRESS 75
-        'ShowProgress(ExportProgress, ProcessSteps, "Apex Export", 3)
-        'ApexExport.ExportProgressBar.Value = 75
+        ExportProgress.setStep(3)
 
         'Committing changed files to GIT"
         TortoiseCommit(apex_dir & fapp_id, "App " & fapp_id & " has been exported and split", True)
 
         'PROGRESS 100
-        'ShowProgress(ExportProgress, ProcessSteps, "Apex Export", 4)
-        'ApexExport.ExportProgressBar.Value = 100
+        ExportProgress.doneStep(4)
 
     End Sub
 
@@ -162,10 +122,20 @@
         ProcessSteps(3) = New ProcessStep("Commit changes to GIT repository", 75)
         ProcessSteps(4) = New ProcessStep("Done", 100)
 
-        Dim ExportProgress As ProgressDialogue = New ProgressDialogue(ProcessSteps, "Apex Export")
+        Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Apex Export", ProcessSteps)
+        'Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Apex Export")
         ExportProgress.MdiParent = GitPatcher
+
+
+        'ExportProgress.addStep("Export Apex as a single file", 0)
+        'ExportProgress.addStep("Splitting into components", 25)
+        'ExportProgress.addStep("Add new files to GIT repository", 50)
+        'ExportProgress.addStep("Commit changes to GIT repository", 75)
+        'ExportProgress.addStep("Done", 100)
+
         ExportProgress.Show()
- 
+  
+        ExportProgress.setStep(0)
 
         ExportProgress.setStep(1)
 
@@ -175,9 +145,7 @@
 
         ExportProgress.setStep(4)
 
-        ExportProgress.setStep(5)
-
-
+        'ExportProgress.setStep(6)
 
     End Sub
 

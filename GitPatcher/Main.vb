@@ -155,8 +155,8 @@
 
             Dim password = Main.get_password(ParsingSchemaTextBox.Text, My.Settings.CurrentDB)
 
-            'Apex.ApexExportCommit(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
-            Apex.progress_test(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
+            Apex.ApexExportCommit(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
+            'Apex.progress_test(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
             'ApexExport.demo_progress_bar()
  
         End If
