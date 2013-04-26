@@ -77,12 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apex.vb" />
-    <Compile Include="ApexExport.Designer.vb">
-      <DependentUpon>ApexExport.vb</DependentUpon>
-    </Compile>
-    <Compile Include="ApexExport.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="FileIO.vb" />
     <Compile Include="GitSharpFascade.vb" />
     <Compile Include="Config.Designer.vb">
@@ -143,9 +137,6 @@
     <Compile Include="TortoiseFacade.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ApexExport.resx">
-      <DependentUpon>ApexExport.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Config.resx">
       <DependentUpon>Config.vb</DependentUpon>
     </EmbeddedResource>
