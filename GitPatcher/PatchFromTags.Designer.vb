@@ -72,6 +72,7 @@ Partial Class PatchFromTags
         Me.PatchDescTextBox = New System.Windows.Forms.TextBox()
         Me.TabPageExecute = New System.Windows.Forms.TabPage()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
+        Me.ComitButton = New System.Windows.Forms.Button()
         Me.PatchTabControl.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.TabPageChanges.SuspendLayout()
@@ -554,6 +555,7 @@ Partial Class PatchFromTags
         '
         'TabPageExecute
         '
+        Me.TabPageExecute.Controls.Add(Me.ComitButton)
         Me.TabPageExecute.Controls.Add(Me.ExecutePatchButton)
         Me.TabPageExecute.Location = New System.Drawing.Point(4, 22)
         Me.TabPageExecute.Name = "TabPageExecute"
@@ -571,6 +573,15 @@ Partial Class PatchFromTags
         Me.ExecutePatchButton.TabIndex = 0
         Me.ExecutePatchButton.Text = "Execute Patch"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
+        '
+        'ComitButton
+        '
+        Me.ComitButton.Location = New System.Drawing.Point(77, 90)
+        Me.ComitButton.Name = "ComitButton"
+        Me.ComitButton.Size = New System.Drawing.Size(230, 23)
+        Me.ComitButton.TabIndex = 1
+        Me.ComitButton.Text = "Commit Patch"
+        Me.ComitButton.UseVisualStyleBackColor = True
         '
         'PatchFromTags
         '
@@ -645,4 +656,5 @@ Partial Class PatchFromTags
     Friend WithEvents FindTagsButton As System.Windows.Forms.Button
     Friend WithEvents Label17 As System.Windows.Forms.Label
     Friend WithEvents SchemaCountTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents ComitButton As System.Windows.Forms.Button
 End Class

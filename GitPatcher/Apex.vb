@@ -77,7 +77,7 @@
         ExportProgress.setStep(3)
 
         'Committing changed files to GIT"
-        TortoiseCommit(apex_dir & fapp_id, "App " & fapp_id & " has been exported and split", True)
+        TortoiseCommit(apex_dir & fapp_id, "App " & fapp_id & " exported and split - IF YOU DIDNT CHANGE IT PLEASE DONT COMMIT IT", True)
 
         'PROGRESS 100
         ExportProgress.done()

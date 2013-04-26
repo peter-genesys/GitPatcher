@@ -11,6 +11,11 @@ Public Class PatchFromTags
     End Sub
 
 
+    Shared Sub TortoiseCommit(ByVal i_WorkingDir As String, ByVal i_logmsg As String, Optional ByVal i_wait As Boolean = True)
+        Dim Tortoise As New TortoiseFacade(i_wait)
+        Tortoise.Commit(i_WorkingDir, i_logmsg)
+    End Sub
+
 
     Private Sub Findtags()
         TagsCheckedListBox.Items.Clear()
@@ -677,5 +682,9 @@ Public Class PatchFromTags
             Tag2TextBox.Text = ""
         End If
 
+    End Sub
+
+    Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles ComitButton.Click
+        TortoiseCommit(PatchDirTextBox.Text, "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
     End Sub
 End Class
