@@ -46,6 +46,10 @@
                 ProgressCheckedListBox.SetItemChecked(i, True)
                 ProgressBar.Value = storedProcessSteps(i).percentComplete
             End If
+            'Trying to put DONE on the end of a completed step.
+            'If i = currentStep - 1 Then
+            '    ProgressCheckedListBox.Items(i).Equals = ProgressCheckedListBox.Items(i).text & " - DONE"
+            'End If
             If i = currentStep Then
                 ProgressCheckedListBox.SetSelected(i, True)
             End If

@@ -82,9 +82,7 @@
     End Sub
 
     Private Sub PatchFromTagsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PatchFromTagsToolStripMenuItem.Click
-        Dim newchildform As New PatchFromTags
-        newchildform.MdiParent = GitPatcher
-        newchildform.Show()
+        PatchFromTags.createPatchProcess()
     End Sub
 
     Private Sub PatchRunnerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PatchRunnerToolStripMenuItem.Click

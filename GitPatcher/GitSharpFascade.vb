@@ -49,6 +49,14 @@ Public Class GitSharpFascade
         Return repo.CurrentBranch.Name
 
     End Function
+ 
+    Shared Sub switchBranch(ByVal path, ByVal branchName)
+        Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
+        Dim newBranch As GitSharp.Branch = New Branch(repo, branchName)
+        repo.SwitchToBranch(newBranch)
+
+    End Sub
+
 
 
     Shared Function getSchemaList(ByVal path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String) As Collection

@@ -45,6 +45,30 @@
         execute()
     End Sub
 
+
+    ' Show log of current branch with tortoiseGit
+    Public Sub ShowLog(ByVal i_path)
+        tortoiseSetup.Arguments = "/command:log /path:""" & i_path & """ /closeonend:1"
+        execute()
+    End Sub
+
+    Public Sub Pull(ByVal i_path)
+        tortoiseSetup.Arguments = "/command:pull /path:""" & i_path & """ /closeonend:1"
+        execute()
+    End Sub
+
+    Public Sub Push(ByVal i_path)
+        tortoiseSetup.Arguments = "/command:push /path:""" & i_path & """ /closeonend:1"
+        execute()
+    End Sub
+
+    Public Sub Merge(ByVal i_path)
+        'tortoiseSetup.Arguments = "/command:merge /path:""" & i_path & """ /branch:""" & i_merge_branch & """ /closeonend:1"
+        tortoiseSetup.Arguments = "/command:merge /path:""" & i_path & """ /closeonend:1"
+        execute()
+    End Sub
+
+
     ' Start Tortoise Repo Browser
     'Public Sub Repo(ByVal i_URL)
     '    tortoiseSetup.Arguments = "/command:repobrowser /path:""" & i_URL & """ /closeonend:1"

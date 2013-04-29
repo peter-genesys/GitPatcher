@@ -16,6 +16,36 @@ Public Class PatchFromTags
         Tortoise.Commit(i_WorkingDir, i_logmsg)
     End Sub
 
+    Shared Sub TortoiseLog(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
+        Dim Tortoise As New TortoiseFacade(i_wait)
+        Tortoise.ShowLog(i_WorkingDir)
+    End Sub
+
+    Shared Sub TortoiseAdd(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
+        Dim Tortoise As New TortoiseFacade(i_wait)
+        Tortoise.Add(i_WorkingDir)
+    End Sub
+
+    Shared Sub TortoisePull(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
+        Dim Tortoise As New TortoiseFacade(i_wait)
+        Tortoise.Pull(i_WorkingDir)
+    End Sub
+
+
+    Shared Sub TortoisePush(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
+        Dim Tortoise As New TortoiseFacade(i_wait)
+        Tortoise.Push(i_WorkingDir)
+    End Sub
+
+    Shared Sub TortoiseMerge(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
+        Dim Tortoise As New TortoiseFacade(i_wait)
+        Tortoise.Merge(i_WorkingDir)
+    End Sub
+ 
+    'Shared Sub TortoiseMerge(ByVal i_WorkingDir As String, ByVal i_merge_branch As String, Optional ByVal i_wait As Boolean = True)
+    '    Dim Tortoise As New TortoiseFacade(i_wait)
+    '    Tortoise.Merge(i_WorkingDir, i_merge_branch)
+    'End Sub
 
     Private Sub Findtags()
         TagsCheckedListBox.Items.Clear()
@@ -596,11 +626,11 @@ Public Class PatchFromTags
 
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExecute" Then
-       
+
             ExecutePatchButton.Text = "Execute Patch on " & My.Settings.CurrentDB
 
         End If
- 
+
     End Sub
 
     Private Sub derivePatchName()
@@ -687,4 +717,87 @@ Public Class PatchFromTags
     Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles ComitButton.Click
         TortoiseCommit(PatchDirTextBox.Text, "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
     End Sub
+
+
+    Public Shared Sub createPatchProcess()
+
+        Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
+
+        Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create Patch")
+        createPatchProgress.MdiParent = GitPatcher
+        createPatchProgress.addStep("Review tags on the branch", 10)
+        createPatchProgress.addStep("Create edit, test", 40)
+        'createPatchProgress.addStep("Add new files", 50)
+        createPatchProgress.addStep("Commit to Feature: " & currentBranch, 50)
+        createPatchProgress.addStep("Switch to Master branch", 60)
+        createPatchProgress.addStep("Pull from Origin", 70)
+        createPatchProgress.addStep("Merge from Feature: " & currentBranch, 80)
+        createPatchProgress.addStep("Push to Origin", 90)
+        createPatchProgress.addStep("Return to Feature: " & currentBranch, 100)
+
+        createPatchProgress.Show()
+
+        createPatchProgress.setStep(0)
+
+        TortoiseLog(My.Settings.CurrentRepo)
+
+
+        createPatchProgress.setStep(1)
+
+        Dim newchildform As New PatchFromTags
+        'newchildform.MdiParent = GitPatcher
+        newchildform.ShowDialog()
+
+
+        'If BMSSplash.MyLogin.ShowDialog() = DialogResult.OK Then
+        '    ' Form was closed via OK button or similar, continue normally... '
+        '    BMSSplash.MyBuddy.Show()
+        'Else
+        '    ' Form was aborted via Cancel, Close, or some other way; do something '
+        '    ' else like quitting the application... '
+        'End If
+
+
+        'NEED TO WAIT HERE!!
+        createPatchProgress.setStep(2)
+
+
+        'Adding new files to GIT"
+        'TortoiseAdd(My.Settings.CurrentRepo)
+
+        'Committing changed files to GIT"
+        TortoiseCommit(My.Settings.CurrentRepo, "Commit any patches you've not yet committed", True)
+
+        createPatchProgress.setStep(3)
+ 
+        'switch
+        GitSharpFascade.switchBranch(My.Settings.CurrentRepo, "master")
+        createPatchProgress.setStep(4)
+        'Pull from Origin 
+        TortoisePull(My.Settings.CurrentRepo)
+
+        createPatchProgress.setStep(5)
+
+        'Merge from Feature branch
+        'TortoiseMerge(My.Settings.CurrentRepo, currentBranch)
+        TortoiseMerge(My.Settings.CurrentRepo)
+
+        createPatchProgress.setStep(6)
+
+        'Push to Origin 
+        TortoisePush(My.Settings.CurrentRepo)
+
+        createPatchProgress.setStep(7)
+
+        GitSharpFascade.switchBranch(My.Settings.CurrentRepo, currentBranch)
+
+        'Done
+        createPatchProgress.done()
+
+    End Sub
+
+
+
+
+
 End Class
