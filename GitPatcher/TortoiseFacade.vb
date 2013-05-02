@@ -73,6 +73,11 @@
         execute()
     End Sub
 
+    Public Sub Revert(ByVal i_path)
+        tortoiseSetup.Arguments = "/command:revert /path:""" & i_path & """ /closeonend:1"
+        execute()
+    End Sub
+
 
     ' Start Tortoise Repo Browser
     'Public Sub Repo(ByVal i_URL)

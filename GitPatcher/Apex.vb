@@ -5,10 +5,11 @@
  
         Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Apex Export  " & fapp_id)
         ExportProgress.MdiParent = GitPatcher
-        ExportProgress.addStep("Export Apex as a single file", 25)
-        ExportProgress.addStep("Splitting into components", 50)
-        ExportProgress.addStep("Add new files to GIT repository", 75)
-        ExportProgress.addStep("Commit changes to GIT repository", 100)
+        ExportProgress.addStep("Export Apex as a single file", 20)
+        ExportProgress.addStep("Splitting into components", 40)
+        ExportProgress.addStep("Add new files to GIT repository", 60)
+        ExportProgress.addStep("Commit valid changes to GIT repository", 80)
+        ExportProgress.addStep("Revert invalid changes from your checkout", 100)
         ExportProgress.Show()
  
         ''write-host "APEX file export and commit - uses oracle.apex.APEXExport.class and java oracle.apex.APEXExportSplitter.class"
@@ -64,6 +65,10 @@
 
         'Committing changed files to GIT"
         Tortoise.Commit(apex_dir & fapp_id, "App " & fapp_id & " exported and split - IF YOU DIDNT CHANGE IT PLEASE DONT COMMIT IT", True)
+
+        ExportProgress.setStep(4)
+
+        Tortoise.Revert(apex_dir & fapp_id)
 
         'PROGRESS 100
         ExportProgress.done()
