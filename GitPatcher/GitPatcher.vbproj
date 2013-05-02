@@ -87,6 +87,7 @@
     </Compile>
     <Compile Include="Host.vb" />
     <Compile Include="Logger.vb" />
+    <Compile Include="Mail.vb" />
     <Compile Include="Main.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -134,6 +135,7 @@
     <Compile Include="ProgressDialogue.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Tortoise.vb" />
     <Compile Include="TortoiseFacade.vb" />
   </ItemGroup>
   <ItemGroup>

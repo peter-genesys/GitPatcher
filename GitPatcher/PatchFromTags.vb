@@ -9,38 +9,7 @@ Public Class PatchFromTags
 
 
     End Sub
-
-
-    Shared Sub TortoiseCommit(ByVal i_WorkingDir As String, ByVal i_logmsg As String, Optional ByVal i_wait As Boolean = True)
-        Dim Tortoise As New TortoiseFacade(i_wait)
-        Tortoise.Commit(i_WorkingDir, i_logmsg)
-    End Sub
-
-    Shared Sub TortoiseLog(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
-        Dim Tortoise As New TortoiseFacade(i_wait)
-        Tortoise.ShowLog(i_WorkingDir)
-    End Sub
-
-    Shared Sub TortoiseAdd(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
-        Dim Tortoise As New TortoiseFacade(i_wait)
-        Tortoise.Add(i_WorkingDir)
-    End Sub
-
-    Shared Sub TortoisePull(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
-        Dim Tortoise As New TortoiseFacade(i_wait)
-        Tortoise.Pull(i_WorkingDir)
-    End Sub
-
-
-    Shared Sub TortoisePush(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
-        Dim Tortoise As New TortoiseFacade(i_wait)
-        Tortoise.Push(i_WorkingDir)
-    End Sub
-
-    Shared Sub TortoiseMerge(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
-        Dim Tortoise As New TortoiseFacade(i_wait)
-        Tortoise.Merge(i_WorkingDir)
-    End Sub
+ 
  
     'Shared Sub TortoiseMerge(ByVal i_WorkingDir As String, ByVal i_merge_branch As String, Optional ByVal i_wait As Boolean = True)
     '    Dim Tortoise As New TortoiseFacade(i_wait)
@@ -715,7 +684,17 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles ComitButton.Click
-        TortoiseCommit(PatchDirTextBox.Text, "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
+        Tortoise.Commit(PatchDirTextBox.Text, "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
+
+        'Mail.SendNotification("NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.")
+
+        'user
+        'branch
+        'tags
+        'desc
+        'note
+
+
     End Sub
 
 
@@ -739,7 +718,7 @@ Public Class PatchFromTags
 
         createPatchProgress.setStep(0)
 
-        TortoiseLog(My.Settings.CurrentRepo)
+        Tortoise.Log(My.Settings.CurrentRepo)
 
 
         createPatchProgress.setStep(1)
@@ -766,30 +745,33 @@ Public Class PatchFromTags
         'TortoiseAdd(My.Settings.CurrentRepo)
 
         'Committing changed files to GIT"
-        TortoiseCommit(My.Settings.CurrentRepo, "Commit any patches you've not yet committed", True)
+        Tortoise.Commit(My.Settings.CurrentRepo, "Commit any patches you've not yet committed", True)
 
         createPatchProgress.setStep(3)
- 
+
         'switch
-        GitSharpFascade.switchBranch(My.Settings.CurrentRepo, "master")
+        'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, "master")
+        Tortoise.Switch(My.Settings.CurrentRepo)
+
         createPatchProgress.setStep(4)
         'Pull from Origin 
-        TortoisePull(My.Settings.CurrentRepo)
+        Tortoise.Pull(My.Settings.CurrentRepo)
 
         createPatchProgress.setStep(5)
 
         'Merge from Feature branch
         'TortoiseMerge(My.Settings.CurrentRepo, currentBranch)
-        TortoiseMerge(My.Settings.CurrentRepo)
+        Tortoise.Merge(My.Settings.CurrentRepo)
 
         createPatchProgress.setStep(6)
 
         'Push to Origin 
-        TortoisePush(My.Settings.CurrentRepo)
+        Tortoise.Push(My.Settings.CurrentRepo)
 
         createPatchProgress.setStep(7)
 
-        GitSharpFascade.switchBranch(My.Settings.CurrentRepo, currentBranch)
+        'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, currentBranch)
+        Tortoise.Switch(My.Settings.CurrentRepo)
 
         'Done
         createPatchProgress.done()

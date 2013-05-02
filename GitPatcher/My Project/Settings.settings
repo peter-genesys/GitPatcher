@@ -41,5 +41,17 @@ bneoda05.thiess.aus:1521:isdevl</Value>
     <Setting Name="JDBCjar" Type="System.String" Scope="User">
       <Value Profile="(Default)">\oracle\jdbc\lib\ojdbc5.jar</Value>
     </Setting>
+    <Setting Name="SMTPhost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">mail.thiess.com.au</Value>
+    </Setting>
+    <Setting Name="SMTPport" Type="System.String" Scope="User">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="RecipientList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">pburgess</Value>
+    </Setting>
+    <Setting Name="RecipientDomain" Type="System.String" Scope="User">
+      <Value Profile="(Default)">@thiess.com.au</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -197,6 +197,54 @@ Namespace My
                 Me("JDBCjar") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("mail.thiess.com.au")>  _
+        Public Property SMTPhost() As String
+            Get
+                Return CType(Me("SMTPhost"),String)
+            End Get
+            Set
+                Me("SMTPhost") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("25")>  _
+        Public Property SMTPport() As String
+            Get
+                Return CType(Me("SMTPport"),String)
+            End Get
+            Set
+                Me("SMTPport") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("pburgess")>  _
+        Public Property RecipientList() As String
+            Get
+                Return CType(Me("RecipientList"),String)
+            End Get
+            Set
+                Me("RecipientList") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("@thiess.com.au")>  _
+        Public Property RecipientDomain() As String
+            Get
+                Return CType(Me("RecipientDomain"),String)
+            End Get
+            Set
+                Me("RecipientDomain") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

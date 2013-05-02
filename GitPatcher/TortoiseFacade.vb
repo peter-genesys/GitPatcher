@@ -68,6 +68,11 @@
         execute()
     End Sub
 
+    Public Sub Switch(ByVal i_path)
+        tortoiseSetup.Arguments = "/command:switch /path:""" & i_path & """ /closeonend:1"
+        execute()
+    End Sub
+
 
     ' Start Tortoise Repo Browser
     'Public Sub Repo(ByVal i_URL)

@@ -1,18 +1,4 @@
 ﻿Public Class Apex
-
-
-
-    Shared Sub TortoiseAdd(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
-        Dim Tortoise As New TortoiseFacade(i_wait)
-        Tortoise.Add(i_WorkingDir)
-    End Sub
-
- 
-    Shared Sub TortoiseCommit(ByVal i_WorkingDir As String, ByVal i_logmsg As String, Optional ByVal i_wait As Boolean = True)
-        Dim Tortoise As New TortoiseFacade(i_wait)
-        Tortoise.Commit(i_WorkingDir, i_logmsg)
-    End Sub
-
  
 
     Public Shared Sub ApexExportCommit(connection, username, password, fapp_id, apex_dir)
@@ -71,13 +57,13 @@
         ExportProgress.setStep(2)
 
         'Adding new files to GIT"
-        TortoiseAdd(apex_dir & fapp_id, True)
+        Tortoise.Add(apex_dir & fapp_id, True)
 
         'PROGRESS 75
         ExportProgress.setStep(3)
 
         'Committing changed files to GIT"
-        TortoiseCommit(apex_dir & fapp_id, "App " & fapp_id & " exported and split - IF YOU DIDNT CHANGE IT PLEASE DONT COMMIT IT", True)
+        Tortoise.Commit(apex_dir & fapp_id, "App " & fapp_id & " exported and split - IF YOU DIDNT CHANGE IT PLEASE DONT COMMIT IT", True)
 
         'PROGRESS 100
         ExportProgress.done()

@@ -9,7 +9,7 @@
         If Not String.IsNullOrEmpty(iString) Then
             Debug.WriteLine(iString)
             If Logger.DbgOn() Then
-                MsgBox(iString, iTitle)
+                MsgBox(iString, MsgBoxStyle.Information, iTitle)
             End If
         End If
     End Sub
