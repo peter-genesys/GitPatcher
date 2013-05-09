@@ -19,7 +19,7 @@
         'Apex
         AppListTextBox.DataBindings.Add("Text", My.Settings, "AppList")
         ParsingSchemaTextbox.DataBindings.Add("Text", My.Settings, "ParsingSchemaList")
- 
+
 
         'Mail
         SMTPhostTextBox.DataBindings.Add("Text", My.Settings, "SMTPhost")
@@ -27,11 +27,11 @@
         RecipientDomainTextBox.DataBindings.Add("Text", My.Settings, "RecipientDomain")
         RecipientTextBox.DataBindings.Add("Text", My.Settings, "RecipientList")
 
-  
- 
+
+
     End Sub
 
- 
+
     Private Sub RepoListTextBox_TextChanged(sender As Object, e As EventArgs) Handles RepoListTextBox.TextChanged
         Main.loadRepos()
     End Sub

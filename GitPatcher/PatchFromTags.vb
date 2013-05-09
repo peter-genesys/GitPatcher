@@ -57,13 +57,26 @@ Public Class PatchFromTags
             MsgBox("Warning: Now overwriting existing patch")
         End Try
 
+        Dim l_create_folder As String = Main.RootPatchDirTextBox.Text
+        For Each folder In Main.BranchGroupTextBox.Text.Split("/")
+            If String.IsNullOrEmpty(l_create_folder) Then
+                l_create_folder = folder
+            Else
+                l_create_folder = l_create_folder & "\" & folder
+            End If
+
+            'l_create_folder = l_create_folder & "\" & folder
+            FileIO.createFolderIfNotExists(l_create_folder)
+        Next
+ 
         FileIO.createFolderIfNotExists(PatchDirTextBox.Text)
 
-        Dim filenames As Collection = Nothing
 
-        filenames = GitSharpFascade.exportTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ChangesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
+            Dim filenames As Collection = Nothing
 
-        'Write the install script
+            filenames = GitSharpFascade.exportTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ChangesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
+
+            'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
                            SchemaComboBox.Text, _
                            Main.CurrentBranchTextBox.Text, _
@@ -78,9 +91,11 @@ Public Class PatchFromTags
                            PatchableCheckedListBox.CheckedItems, _
                            PrereqsCheckedListBox.CheckedItems, _
                            SupersedesCheckedListBox.CheckedItems, _
-                           PatchDirTextBox.Text)
+                           PatchDirTextBox.Text, _
+                           GroupPathTextBox.Text, _
+                           Main.BranchGroupTextBox.Text)
 
-        Host.RunExplorer(PatchDirTextBox.Text)
+            Host.RunExplorer(PatchDirTextBox.Text)
 
 
 
@@ -158,7 +173,7 @@ Public Class PatchFromTags
 
     Private Sub PatchNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchNameTextBox.TextChanged
         'PatchDirTextBox.Text = Main.RepoComboBox.SelectedItem.ToString & "\patch\" & PatchNameTextBox.Text & "\"
-        PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & PatchNameTextBox.Text & "\"
+        PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
     Shared Function get_last_split(ByVal ipath As String, ByVal idelim As String) As String
@@ -185,8 +200,9 @@ Public Class PatchFromTags
                                   ByRef ignoreErrorFiles As CheckedListBox.CheckedItemCollection, _
                                   ByRef prereq_patches As CheckedListBox.CheckedItemCollection, _
                                   ByRef supersedes_patches As CheckedListBox.CheckedItemCollection, _
-                                  ByVal patchDir As String
-)
+                                  ByVal patchDir As String, _
+                                  ByVal groupPath As String, _
+                                  ByVal group_name As String)
 
 
         Dim l_db_objects_users As String = Nothing 'user
@@ -251,12 +267,12 @@ Public Class PatchFromTags
             If ignoreErrorFiles.Contains(l_path) Then
                 l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
                                       Chr(10) & "PROMPT " & l_filename & " " & _
-                                      Chr(10) & "@" & patch_name & "\" & l_filename & ";" & _
+                                      Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";" & _
                                       Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
 
             Else
                 l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
-                                      Chr(10) & "@" & patch_name & "\" & l_filename & ";"
+                                      Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";"
 
             End If
 
@@ -377,7 +393,7 @@ Public Class PatchFromTags
                 "execute patch_admin.patch_installer.patch_started( -" _
     & Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
     & Chr(10) & " ,i_db_schema          => '" & db_schema & "' -" _
-    & Chr(10) & " ,i_branch_name        => '" & branch_name & "' -" _
+    & Chr(10) & " ,i_branch_name        => '" & group_name & branch_name & "' -" _
     & Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
     & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
     & Chr(10) & " ,i_supplementary      => '" & supplementary & "' -" _
@@ -579,10 +595,13 @@ Public Class PatchFromTags
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
             'Copy Patchable items to the next list.
+ 
+            GroupPathTextBox.Text = Replace(Main.BranchGroupTextBox.Text, "/", "\")
 
+ 
             derivePatchName()
 
-            PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & PatchNameTextBox.Text & "\"
+            PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & GroupPathTextBox.Text & PatchNameTextBox.Text & "\"
 
             UsePatchAdminCheckBox.Checked = True
 
@@ -594,11 +613,11 @@ Public Class PatchFromTags
         End If
 
 
-        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExecute" Then
+            If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExecute" Then
 
-            ExecutePatchButton.Text = "Execute Patch on " & My.Settings.CurrentDB
+                ExecutePatchButton.Text = "Execute Patch on " & My.Settings.CurrentDB
 
-        End If
+            End If
 
     End Sub
 
@@ -655,7 +674,7 @@ Public Class PatchFromTags
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
         'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Main.RootPatchDirTextBox.Text)
         'Use patch runner to execute with a master script.
-        PatchRunner.RunMasterScript("DEFINE database = '" & My.Settings.CurrentDB & "'" & Chr(10) & "@" & PatchNameTextBox.Text & "\install.sql")
+        PatchRunner.RunMasterScript("DEFINE database = '" & My.Settings.CurrentDB & "'" & Chr(10) & "@" & GroupPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
 
     End Sub
 

@@ -8,18 +8,61 @@
         Return l_last
     End Function
 
+    Private Sub RecursiveSearch(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As ListBox)
+
+        Dim strFolders() As String = System.IO.Directory.GetDirectories(strPath)
+        Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
+        Dim clsFile As FileInfoEx = Nothing
+
+        'Add the files
+        For Each strFile As String In strFiles
+            clsFile = New FileInfoEx(strFile)
+            lstTarget.Items.Add(clsFile)
+        Next
+
+        'Look through the other folders
+        For Each strFolder As String In strFolders
+            'Call the procedure again to perform the same operation
+            RecursiveSearch(strFolder, strPattern, lstTarget)
+        Next
+
+    End Sub
+
+    Private Sub RecursiveSearchContainingFolder(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As ListBox, ByVal removePath As String)
+
+        Dim strFolders() As String = System.IO.Directory.GetDirectories(strPath)
+        Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
+        Dim clsFile As FileInfoEx = Nothing
+
+        'Add the files
+        For Each strFile As String In strFiles
+            clsFile = New FileInfoEx(strFile)
+            lstTarget.Items.Add(strPath.Substring(removePath.Length))
+        Next
+
+        'Look through the other folders
+        For Each strFolder As String In strFolders
+            'Call the procedure again to perform the same operation
+            RecursiveSearchContainingFolder(strFolder, strPattern, lstTarget, removePath)
+        Next
+
+    End Sub
+
+
     Private Sub FindPatches()
         AvailablePatchesListBox.Items.Clear()
         If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
 
-            For Each foldername As String In IO.Directory.GetDirectories(Main.RootPatchDirTextBox.Text)
-                AvailablePatchesListBox.Items.Add(get_last_split(foldername, "\"))
-            Next
+            RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", AvailablePatchesListBox, Main.RootPatchDirTextBox.Text)
+ 
+            'For Each foldername As String In IO.Directory.GetDirectories(Main.RootPatchDirTextBox.Text)
+            '    AvailablePatchesListBox.Items.Add(get_last_split(foldername, "\"))
+            'Next
 
         End If
     End Sub
 
- 
+
     Private Sub PreReqButton_Click(sender As Object, e As EventArgs) Handles SearchPatchesButton.Click
         FindPatches()
     End Sub
@@ -56,7 +99,7 @@
 
         'Format as script
         Dim masterList As String = Nothing
- 
+
         For i As Integer = 0 To MasterScriptListBox.Items.Count - 1
 
             masterList = masterList & Chr(10) & MasterScriptListBox.Items(i).ToString()
@@ -64,13 +107,13 @@
         Next
 
         RunMasterScript(masterList)
- 
- 
+
+
     End Sub
 
 
     Private Sub PopMasterScriptListBox()
- 
+
         MasterScriptListBox.Items.Clear()
 
         MasterScriptListBox.Items.Add("DEFINE database = '" & My.Settings.CurrentDB & "'")
@@ -80,19 +123,19 @@
             MasterScriptListBox.Items.Add("@" & ChosenPatchesListBox.Items(i).ToString() & "\install.sql")
 
         Next
- 
+
 
     End Sub
 
- 
+
     Private Sub PatchRunnerTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles PatchRunnerTabControl.SelectedIndexChanged
- 
+
 
         If (PatchRunnerTabControl.SelectedTab.Name.ToString) = "RunTabPage" Then
             PopMasterScriptListBox()
- 
+
         End If
- 
+
     End Sub
 
 End Class

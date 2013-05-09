@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apex.vb" />
+    <Compile Include="FileInfoEx.vb" />
     <Compile Include="FileIO.vb" />
     <Compile Include="GitSharpFascade.vb" />
     <Compile Include="Config.Designer.vb">

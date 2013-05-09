@@ -45,6 +45,8 @@ Partial Class Main
         Me.Label7 = New System.Windows.Forms.Label()
         Me.ParsingSchemaTextBox = New System.Windows.Forms.TextBox()
         Me.Label8 = New System.Windows.Forms.Label()
+        Me.BranchGroupTextBox = New System.Windows.Forms.TextBox()
+        Me.Label9 = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -115,15 +117,15 @@ Partial Class Main
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(12, 57)
+        Me.Label2.Location = New System.Drawing.Point(12, 83)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(70, 13)
+        Me.Label2.Size = New System.Drawing.Size(72, 13)
         Me.Label2.TabIndex = 3
-        Me.Label2.Text = "Repo Branch"
+        Me.Label2.Text = "Branch Name"
         '
         'CurrentBranchTextBox
         '
-        Me.CurrentBranchTextBox.Location = New System.Drawing.Point(103, 54)
+        Me.CurrentBranchTextBox.Location = New System.Drawing.Point(103, 80)
         Me.CurrentBranchTextBox.Name = "CurrentBranchTextBox"
         Me.CurrentBranchTextBox.ReadOnly = True
         Me.CurrentBranchTextBox.Size = New System.Drawing.Size(373, 20)
@@ -131,7 +133,7 @@ Partial Class Main
         '
         'RootPatchDirTextBox
         '
-        Me.RootPatchDirTextBox.Location = New System.Drawing.Point(103, 80)
+        Me.RootPatchDirTextBox.Location = New System.Drawing.Point(103, 106)
         Me.RootPatchDirTextBox.Name = "RootPatchDirTextBox"
         Me.RootPatchDirTextBox.ReadOnly = True
         Me.RootPatchDirTextBox.Size = New System.Drawing.Size(373, 20)
@@ -140,7 +142,7 @@ Partial Class Main
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(12, 83)
+        Me.Label3.Location = New System.Drawing.Point(12, 109)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(77, 13)
         Me.Label3.TabIndex = 5
@@ -149,7 +151,7 @@ Partial Class Main
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(12, 135)
+        Me.Label4.Location = New System.Drawing.Point(12, 161)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(53, 13)
         Me.Label4.TabIndex = 8
@@ -158,7 +160,7 @@ Partial Class Main
         'DBListComboBox
         '
         Me.DBListComboBox.FormattingEnabled = True
-        Me.DBListComboBox.Location = New System.Drawing.Point(103, 132)
+        Me.DBListComboBox.Location = New System.Drawing.Point(103, 158)
         Me.DBListComboBox.Name = "DBListComboBox"
         Me.DBListComboBox.Size = New System.Drawing.Size(373, 21)
         Me.DBListComboBox.TabIndex = 7
@@ -166,7 +168,7 @@ Partial Class Main
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(12, 188)
+        Me.Label5.Location = New System.Drawing.Point(12, 214)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(53, 13)
         Me.Label5.TabIndex = 10
@@ -175,14 +177,14 @@ Partial Class Main
         'ApexListComboBox
         '
         Me.ApexListComboBox.FormattingEnabled = True
-        Me.ApexListComboBox.Location = New System.Drawing.Point(103, 185)
+        Me.ApexListComboBox.Location = New System.Drawing.Point(103, 211)
         Me.ApexListComboBox.Name = "ApexListComboBox"
         Me.ApexListComboBox.Size = New System.Drawing.Size(373, 21)
         Me.ApexListComboBox.TabIndex = 9
         '
         'RootApexDirTextBox
         '
-        Me.RootApexDirTextBox.Location = New System.Drawing.Point(103, 106)
+        Me.RootApexDirTextBox.Location = New System.Drawing.Point(103, 132)
         Me.RootApexDirTextBox.Name = "RootApexDirTextBox"
         Me.RootApexDirTextBox.ReadOnly = True
         Me.RootApexDirTextBox.Size = New System.Drawing.Size(373, 20)
@@ -191,7 +193,7 @@ Partial Class Main
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(12, 109)
+        Me.Label6.Location = New System.Drawing.Point(12, 135)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(73, 13)
         Me.Label6.TabIndex = 11
@@ -199,7 +201,7 @@ Partial Class Main
         '
         'CurrentConnectionTextBox
         '
-        Me.CurrentConnectionTextBox.Location = New System.Drawing.Point(103, 159)
+        Me.CurrentConnectionTextBox.Location = New System.Drawing.Point(103, 185)
         Me.CurrentConnectionTextBox.Name = "CurrentConnectionTextBox"
         Me.CurrentConnectionTextBox.ReadOnly = True
         Me.CurrentConnectionTextBox.Size = New System.Drawing.Size(373, 20)
@@ -208,7 +210,7 @@ Partial Class Main
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(12, 162)
+        Me.Label7.Location = New System.Drawing.Point(12, 188)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(61, 13)
         Me.Label7.TabIndex = 13
@@ -216,7 +218,7 @@ Partial Class Main
         '
         'ParsingSchemaTextBox
         '
-        Me.ParsingSchemaTextBox.Location = New System.Drawing.Point(103, 212)
+        Me.ParsingSchemaTextBox.Location = New System.Drawing.Point(103, 238)
         Me.ParsingSchemaTextBox.Name = "ParsingSchemaTextBox"
         Me.ParsingSchemaTextBox.ReadOnly = True
         Me.ParsingSchemaTextBox.Size = New System.Drawing.Size(373, 20)
@@ -225,17 +227,36 @@ Partial Class Main
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(12, 215)
+        Me.Label8.Location = New System.Drawing.Point(12, 241)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(84, 13)
         Me.Label8.TabIndex = 15
         Me.Label8.Text = "Parsing Schema"
         '
+        'BranchGroupTextBox
+        '
+        Me.BranchGroupTextBox.Location = New System.Drawing.Point(103, 54)
+        Me.BranchGroupTextBox.Name = "BranchGroupTextBox"
+        Me.BranchGroupTextBox.ReadOnly = True
+        Me.BranchGroupTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.BranchGroupTextBox.TabIndex = 18
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(12, 57)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(73, 13)
+        Me.Label9.TabIndex = 17
+        Me.Label9.Text = "Branch Group"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(488, 262)
+        Me.ClientSize = New System.Drawing.Size(488, 307)
+        Me.Controls.Add(Me.BranchGroupTextBox)
+        Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.ParsingSchemaTextBox)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.CurrentConnectionTextBox)
@@ -285,5 +306,7 @@ Partial Class Main
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents ParsingSchemaTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents BranchGroupTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label9 As System.Windows.Forms.Label
 
 End Class
