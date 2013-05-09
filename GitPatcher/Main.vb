@@ -72,24 +72,28 @@
 
     Private Sub RepoComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles RepoComboBox.SelectedIndexChanged
 
-        Dim l_CurrentBranch As String = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)
-        Dim l_group As String = Nothing
-        CurrentBranchTextBox.Text = Nothing
-        For Each folder In l_CurrentBranch.Split("/")
-            If String.IsNullOrEmpty(l_group) Then
-                l_group = CurrentBranchTextBox.Text
-            Else
-                l_group = l_group & "/" & CurrentBranchTextBox.Text
-            End If
- 
-            CurrentBranchTextBox.Text = folder
-        Next
+        BranchPathTextBox.Text = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)
 
-        If String.IsNullOrEmpty(l_group) Then
-            BranchGroupTextBox.Text = Nothing
-        Else
-            BranchGroupTextBox.Text = l_group & "/"
-        End If
+        CurrentBranchTextBox.Text = PatchFromTags.get_last_split(BranchPathTextBox.Text, "/")
+ 
+        'Dim l_CurrentBranch As String = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)
+        'Dim l_group As String = Nothing
+        'CurrentBranchTextBox.Text = Nothing
+        'For Each folder In l_CurrentBranch.Split("/")
+        '    If String.IsNullOrEmpty(l_group) Then
+        '        l_group = CurrentBranchTextBox.Text
+        '    Else
+        '        l_group = l_group & "/" & CurrentBranchTextBox.Text
+        '    End If
+        '
+        '    CurrentBranchTextBox.Text = folder
+        'Next
+
+        'If String.IsNullOrEmpty(l_group) Then
+        '    BranchPathTextBox.Text = Nothing
+        'Else
+        '    BranchPathTextBox.Text = l_group & "/"
+        'End If
  
         'CurrentBranchTextBox.Text = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)
         RootPatchDirTextBox.Text = RepoComboBox.SelectedItem & My.Settings.PatchDirOffset & "\"
@@ -178,4 +182,6 @@
  
         End If
     End Sub
+
+ 
 End Class

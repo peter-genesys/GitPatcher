@@ -58,7 +58,7 @@ Public Class PatchFromTags
         End Try
 
         Dim l_create_folder As String = Main.RootPatchDirTextBox.Text
-        For Each folder In Main.BranchGroupTextBox.Text.Split("/")
+        For Each folder In Main.BranchPathTextBox.Text.Split("/")
             If String.IsNullOrEmpty(l_create_folder) Then
                 l_create_folder = folder
             Else
@@ -68,18 +68,18 @@ Public Class PatchFromTags
             'l_create_folder = l_create_folder & "\" & folder
             FileIO.createFolderIfNotExists(l_create_folder)
         Next
- 
+
         FileIO.createFolderIfNotExists(PatchDirTextBox.Text)
 
 
-            Dim filenames As Collection = Nothing
+        Dim filenames As Collection = Nothing
 
-            filenames = GitSharpFascade.exportTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ChangesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
+        filenames = GitSharpFascade.exportTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ChangesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
 
-            'Write the install script
+        'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
                            SchemaComboBox.Text, _
-                           Main.CurrentBranchTextBox.Text, _
+                           Main.BranchPathTextBox.Text, _
                            Tag1TextBox.Text, _
                            Tag2TextBox.Text, _
                            SupIdTextBox.Text, _
@@ -92,10 +92,9 @@ Public Class PatchFromTags
                            PrereqsCheckedListBox.CheckedItems, _
                            SupersedesCheckedListBox.CheckedItems, _
                            PatchDirTextBox.Text, _
-                           GroupPathTextBox.Text, _
-                           Main.BranchGroupTextBox.Text)
+                           PatchPathTextBox.Text)
 
-            Host.RunExplorer(PatchDirTextBox.Text)
+        Host.RunExplorer(PatchDirTextBox.Text)
 
 
 
@@ -176,7 +175,7 @@ Public Class PatchFromTags
         PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
-    Shared Function get_last_split(ByVal ipath As String, ByVal idelim As String) As String
+    Public Shared Function get_last_split(ByVal ipath As String, ByVal idelim As String) As String
         Dim Path() As String = ipath.Split(idelim)
         Dim SplitCount = Path.Length
         Dim l_last As String = ipath.Split(idelim)(SplitCount - 1)
@@ -188,7 +187,7 @@ Public Class PatchFromTags
 
     Shared Sub writeInstallScript(ByVal patch_name As String, _
                                   ByVal db_schema As String, _
-                                  ByVal branch_name As String, _
+                                  ByVal branch_path As String, _
                                   ByVal tag1_name As String, _
                                   ByVal tag2_name As String, _
                                   ByVal supplementary As String, _
@@ -201,8 +200,7 @@ Public Class PatchFromTags
                                   ByRef prereq_patches As CheckedListBox.CheckedItemCollection, _
                                   ByRef supersedes_patches As CheckedListBox.CheckedItemCollection, _
                                   ByVal patchDir As String, _
-                                  ByVal groupPath As String, _
-                                  ByVal group_name As String)
+                                  ByVal groupPath As String )
 
 
         Dim l_db_objects_users As String = Nothing 'user
@@ -393,7 +391,7 @@ Public Class PatchFromTags
                 "execute patch_admin.patch_installer.patch_started( -" _
     & Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
     & Chr(10) & " ,i_db_schema          => '" & db_schema & "' -" _
-    & Chr(10) & " ,i_branch_name        => '" & group_name & branch_name & "' -" _
+    & Chr(10) & " ,i_branch_name        => '" & branch_path & "' -" _
     & Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
     & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
     & Chr(10) & " ,i_supplementary      => '" & supplementary & "' -" _
@@ -595,13 +593,13 @@ Public Class PatchFromTags
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
             'Copy Patchable items to the next list.
- 
-            GroupPathTextBox.Text = Replace(Main.BranchGroupTextBox.Text, "/", "\")
 
- 
+            PatchPathTextBox.Text = Replace(Main.BranchPathTextBox.Text, "/", "\") & "\"
+
+
             derivePatchName()
 
-            PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & GroupPathTextBox.Text & PatchNameTextBox.Text & "\"
+            PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
 
             UsePatchAdminCheckBox.Checked = True
 
@@ -613,11 +611,11 @@ Public Class PatchFromTags
         End If
 
 
-            If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExecute" Then
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExecute" Then
 
-                ExecutePatchButton.Text = "Execute Patch on " & My.Settings.CurrentDB
+            ExecutePatchButton.Text = "Execute Patch on " & My.Settings.CurrentDB
 
-            End If
+        End If
 
     End Sub
 
@@ -674,7 +672,7 @@ Public Class PatchFromTags
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
         'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Main.RootPatchDirTextBox.Text)
         'Use patch runner to execute with a master script.
-        PatchRunner.RunMasterScript("DEFINE database = '" & My.Settings.CurrentDB & "'" & Chr(10) & "@" & GroupPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
+        PatchRunner.RunMasterScript("DEFINE database = '" & My.Settings.CurrentDB & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
 
     End Sub
 

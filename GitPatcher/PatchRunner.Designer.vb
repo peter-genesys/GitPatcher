@@ -31,9 +31,9 @@ Partial Class PatchRunner
         Me.Label2 = New System.Windows.Forms.Label()
         Me.ChosenPatchesListBox = New System.Windows.Forms.ListBox()
         Me.RunTabPage = New System.Windows.Forms.TabPage()
+        Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.PatchRunnerTabControl.SuspendLayout()
         Me.PatchSelectorTabPage.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -50,7 +50,7 @@ Partial Class PatchRunner
         Me.PatchRunnerTabControl.Location = New System.Drawing.Point(12, 12)
         Me.PatchRunnerTabControl.Name = "PatchRunnerTabControl"
         Me.PatchRunnerTabControl.SelectedIndex = 0
-        Me.PatchRunnerTabControl.Size = New System.Drawing.Size(464, 451)
+        Me.PatchRunnerTabControl.Size = New System.Drawing.Size(583, 451)
         Me.PatchRunnerTabControl.TabIndex = 0
         '
         'PatchSelectorTabPage
@@ -59,7 +59,7 @@ Partial Class PatchRunner
         Me.PatchSelectorTabPage.Location = New System.Drawing.Point(4, 22)
         Me.PatchSelectorTabPage.Name = "PatchSelectorTabPage"
         Me.PatchSelectorTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.PatchSelectorTabPage.Size = New System.Drawing.Size(456, 425)
+        Me.PatchSelectorTabPage.Size = New System.Drawing.Size(575, 425)
         Me.PatchSelectorTabPage.TabIndex = 0
         Me.PatchSelectorTabPage.Text = "Selection"
         Me.PatchSelectorTabPage.UseVisualStyleBackColor = True
@@ -80,8 +80,8 @@ Partial Class PatchRunner
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label2)
         Me.SplitContainer1.Panel2.Controls.Add(Me.ChosenPatchesListBox)
-        Me.SplitContainer1.Size = New System.Drawing.Size(450, 419)
-        Me.SplitContainer1.SplitterDistance = 217
+        Me.SplitContainer1.Size = New System.Drawing.Size(569, 419)
+        Me.SplitContainer1.SplitterDistance = 274
         Me.SplitContainer1.TabIndex = 0
         '
         'Label1
@@ -107,7 +107,7 @@ Partial Class PatchRunner
         Me.AvailablePatchesListBox.FormattingEnabled = True
         Me.AvailablePatchesListBox.Location = New System.Drawing.Point(7, 61)
         Me.AvailablePatchesListBox.Name = "AvailablePatchesListBox"
-        Me.AvailablePatchesListBox.Size = New System.Drawing.Size(211, 355)
+        Me.AvailablePatchesListBox.Size = New System.Drawing.Size(264, 355)
         Me.AvailablePatchesListBox.TabIndex = 0
         '
         'Label2
@@ -124,7 +124,7 @@ Partial Class PatchRunner
         Me.ChosenPatchesListBox.FormattingEnabled = True
         Me.ChosenPatchesListBox.Location = New System.Drawing.Point(3, 61)
         Me.ChosenPatchesListBox.Name = "ChosenPatchesListBox"
-        Me.ChosenPatchesListBox.Size = New System.Drawing.Size(211, 355)
+        Me.ChosenPatchesListBox.Size = New System.Drawing.Size(285, 355)
         Me.ChosenPatchesListBox.TabIndex = 1
         '
         'RunTabPage
@@ -139,6 +139,14 @@ Partial Class PatchRunner
         Me.RunTabPage.TabIndex = 1
         Me.RunTabPage.Text = "Run"
         Me.RunTabPage.UseVisualStyleBackColor = True
+        '
+        'MasterScriptListBox
+        '
+        Me.MasterScriptListBox.FormattingEnabled = True
+        Me.MasterScriptListBox.Location = New System.Drawing.Point(24, 43)
+        Me.MasterScriptListBox.Name = "MasterScriptListBox"
+        Me.MasterScriptListBox.Size = New System.Drawing.Size(413, 316)
+        Me.MasterScriptListBox.TabIndex = 4
         '
         'Label3
         '
@@ -158,19 +166,11 @@ Partial Class PatchRunner
         Me.ExecutePatchButton.Text = "Execute Patches"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'MasterScriptListBox
-        '
-        Me.MasterScriptListBox.FormattingEnabled = True
-        Me.MasterScriptListBox.Location = New System.Drawing.Point(24, 43)
-        Me.MasterScriptListBox.Name = "MasterScriptListBox"
-        Me.MasterScriptListBox.Size = New System.Drawing.Size(413, 316)
-        Me.MasterScriptListBox.TabIndex = 4
-        '
         'PatchRunner
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(488, 475)
+        Me.ClientSize = New System.Drawing.Size(607, 475)
         Me.Controls.Add(Me.PatchRunnerTabControl)
         Me.Name = "PatchRunner"
         Me.Text = "PatchRunner"

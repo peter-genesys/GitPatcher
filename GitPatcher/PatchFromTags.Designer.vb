@@ -56,6 +56,8 @@ Partial Class PatchFromTags
         Me.Label14 = New System.Windows.Forms.Label()
         Me.SupersedesCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
+        Me.PatchPathTextBox = New System.Windows.Forms.TextBox()
+        Me.Label18 = New System.Windows.Forms.Label()
         Me.CopyChangesButton = New System.Windows.Forms.Button()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
@@ -73,8 +75,6 @@ Partial Class PatchFromTags
         Me.TabPageExecute = New System.Windows.Forms.TabPage()
         Me.ComitButton = New System.Windows.Forms.Button()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.GroupPathTextBox = New System.Windows.Forms.TextBox()
-        Me.Label18 = New System.Windows.Forms.Label()
         Me.PatchTabControl.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.TabPageChanges.SuspendLayout()
@@ -406,7 +406,7 @@ Partial Class PatchFromTags
         '
         'TabPagePatchDefn
         '
-        Me.TabPagePatchDefn.Controls.Add(Me.GroupPathTextBox)
+        Me.TabPagePatchDefn.Controls.Add(Me.PatchPathTextBox)
         Me.TabPagePatchDefn.Controls.Add(Me.Label18)
         Me.TabPagePatchDefn.Controls.Add(Me.CopyChangesButton)
         Me.TabPagePatchDefn.Controls.Add(Me.Label16)
@@ -434,6 +434,23 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.TabIndex = 2
         Me.TabPagePatchDefn.Text = "Patch Defn"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
+        '
+        'PatchPathTextBox
+        '
+        Me.PatchPathTextBox.Location = New System.Drawing.Point(80, 384)
+        Me.PatchPathTextBox.Name = "PatchPathTextBox"
+        Me.PatchPathTextBox.ReadOnly = True
+        Me.PatchPathTextBox.Size = New System.Drawing.Size(401, 20)
+        Me.PatchPathTextBox.TabIndex = 33
+        '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Location = New System.Drawing.Point(10, 387)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(60, 13)
+        Me.Label18.TabIndex = 34
+        Me.Label18.Text = "Patch Path"
         '
         'CopyChangesButton
         '
@@ -587,23 +604,6 @@ Partial Class PatchFromTags
         Me.ExecutePatchButton.Text = "Execute Patch"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'GroupPathTextBox
-        '
-        Me.GroupPathTextBox.Location = New System.Drawing.Point(80, 384)
-        Me.GroupPathTextBox.Name = "GroupPathTextBox"
-        Me.GroupPathTextBox.ReadOnly = True
-        Me.GroupPathTextBox.Size = New System.Drawing.Size(401, 20)
-        Me.GroupPathTextBox.TabIndex = 33
-        '
-        'Label18
-        '
-        Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(10, 387)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(61, 13)
-        Me.Label18.TabIndex = 34
-        Me.Label18.Text = "Group Path"
-        '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -678,6 +678,6 @@ Partial Class PatchFromTags
     Friend WithEvents Label17 As System.Windows.Forms.Label
     Friend WithEvents SchemaCountTextBox As System.Windows.Forms.TextBox
     Friend WithEvents ComitButton As System.Windows.Forms.Button
-    Friend WithEvents GroupPathTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents PatchPathTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label18 As System.Windows.Forms.Label
 End Class
