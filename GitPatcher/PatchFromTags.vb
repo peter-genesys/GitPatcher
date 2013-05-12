@@ -404,14 +404,14 @@ Public Class PatchFromTags
     & Chr(10))
 
 
-
+                Dim l_prereq_short_name As String = Nothing
                 For Each l_prereq_patch In prereq_patches
-
+                    l_prereq_short_name = PatchFromTags.get_last_split(l_prereq_patch, "\")
                     l_master_file.WriteLine("PROMPT")
-                    l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_patch)
+                    l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
                     l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_prereq( -")
                     l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
-                    l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_patch & "' );")
+                    l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
 
                 Next
 
@@ -511,14 +511,14 @@ Public Class PatchFromTags
 
                 l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed;")
 
-
+                Dim l_sup_short_name As String = Nothing
                 For Each l_sup_patch In supersedes_patches
-
+                    l_sup_short_name = PatchFromTags.get_last_split(l_sup_patch, "\")
                     l_master_file.WriteLine("PROMPT")
-                    l_master_file.WriteLine("PROMPT Superseding patch " & l_sup_patch)
+                    l_master_file.WriteLine("PROMPT Superseding patch " & l_sup_short_name)
                     l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")
                     l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
-                    l_master_file.WriteLine(",i_supersedes_patch  => '" & l_sup_patch & "' );")
+                    l_master_file.WriteLine(",i_supersedes_patch  => '" & l_sup_short_name & "' );")
 
                 Next
 
@@ -639,9 +639,11 @@ Public Class PatchFromTags
         PrereqsCheckedListBox.Items.Clear()
         If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
 
-            For Each foldername As String In IO.Directory.GetDirectories(Main.RootPatchDirTextBox.Text)
-                PrereqsCheckedListBox.Items.Add(get_last_split(foldername, "\"))
-            Next
+            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", PrereqsCheckedListBox, Main.RootPatchDirTextBox.Text)
+
+            'For Each foldername As String In IO.Directory.GetDirectories(Main.RootPatchDirTextBox.Text)
+            '    PrereqsCheckedListBox.Items.Add(get_last_split(foldername, "\"))
+            'Next
 
         End If
     End Sub
@@ -658,9 +660,10 @@ Public Class PatchFromTags
         SupersedesCheckedListBox.Items.Clear()
         If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
 
-            For Each foldername As String In IO.Directory.GetDirectories(Main.RootPatchDirTextBox.Text)
-                SupersedesCheckedListBox.Items.Add(get_last_split(foldername, "\"))
-            Next
+            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", SupersedesCheckedListBox, Main.RootPatchDirTextBox.Text)
+            'For Each foldername As String In IO.Directory.GetDirectories(Main.RootPatchDirTextBox.Text)
+            '    SupersedesCheckedListBox.Items.Add(get_last_split(foldername, "\"))
+            'Next
 
         End If
     End Sub

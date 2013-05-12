@@ -28,7 +28,7 @@
 
     End Sub
 
-    Private Sub RecursiveSearchContainingFolder(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As ListBox, ByVal removePath As String)
+    Public Sub RecursiveSearchContainingFolder(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As ListBox, ByVal removePath As String)
 
         Dim strFolders() As String = System.IO.Directory.GetDirectories(strPath)
         Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
