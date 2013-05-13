@@ -415,6 +415,11 @@ Public Class PatchFromTags
 
                 Next
 
+                l_prereq_short_name = My.Settings.MinPatch
+                l_master_file.WriteLine("PROMPT Ensure Patch Admin is late enough for this patch")
+                l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_prereq( -")
+                l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
+                l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
 
             End If
 
@@ -509,6 +514,7 @@ Public Class PatchFromTags
 
             If use_patch_admin Then
 
+                l_master_file.WriteLine("execute patch_admin.patch_invoker.compile_post_patch;")
                 l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed;")
 
                 Dim l_sup_short_name As String = Nothing

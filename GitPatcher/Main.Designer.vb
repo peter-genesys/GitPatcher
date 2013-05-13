@@ -47,12 +47,14 @@ Partial Class Main
         Me.Label8 = New System.Windows.Forms.Label()
         Me.BranchPathTextBox = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
+        Me.GITToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GITToolStripMenuItem, Me.APEXToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GITToolStripMenuItem, Me.APEXToolStripMenuItem, Me.GITToolStripMenuItem1})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(488, 24)
@@ -63,8 +65,8 @@ Partial Class Main
         '
         Me.GITToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PatchFromTagsToolStripMenuItem, Me.PatchRunnerToolStripMenuItem})
         Me.GITToolStripMenuItem.Name = "GITToolStripMenuItem"
-        Me.GITToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
-        Me.GITToolStripMenuItem.Text = "GIT"
+        Me.GITToolStripMenuItem.Size = New System.Drawing.Size(58, 20)
+        Me.GITToolStripMenuItem.Text = "PATCH"
         '
         'PatchFromTagsToolStripMenuItem
         '
@@ -88,13 +90,13 @@ Partial Class Main
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
+        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ImportToolStripMenuItem.Text = "Import"
         '
         'ExportToolStripMenuItem
         '
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
+        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ExportToolStripMenuItem.Text = "Export"
         '
         'RepoComboBox
@@ -250,6 +252,19 @@ Partial Class Main
         Me.Label9.TabIndex = 17
         Me.Label9.Text = "Branch Path"
         '
+        'GITToolStripMenuItem1
+        '
+        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MergeAndPushFeatureToolStripMenuItem})
+        Me.GITToolStripMenuItem1.Name = "GITToolStripMenuItem1"
+        Me.GITToolStripMenuItem1.Size = New System.Drawing.Size(37, 20)
+        Me.GITToolStripMenuItem1.Text = "GIT"
+        '
+        'MergeAndPushFeatureToolStripMenuItem
+        '
+        Me.MergeAndPushFeatureToolStripMenuItem.Name = "MergeAndPushFeatureToolStripMenuItem"
+        Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -308,5 +323,7 @@ Partial Class Main
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents BranchPathTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents GITToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents MergeAndPushFeatureToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

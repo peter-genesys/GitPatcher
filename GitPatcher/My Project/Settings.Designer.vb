@@ -245,6 +245,15 @@ Namespace My
                 Me("RecipientDomain") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(), _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.Configuration.DefaultSettingValueAttribute("PATCH_ADMIN_PRJROV-77_02_03")> _
+        Public ReadOnly Property MinPatch() As String
+            Get
+                Return CType(Me("MinPatch"), String)
+            End Get
+        End Property
     End Class
 End Namespace
 

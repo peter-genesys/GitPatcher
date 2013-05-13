@@ -184,4 +184,49 @@
     End Sub
 
  
+    Private Sub MergeAndPushFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MergeAndPushFeatureToolStripMenuItem.Click
+ 
+        Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
+
+        Dim mergeAndPush As ProgressDialogue = New ProgressDialogue("Merge and Push branch:  " & currentBranch)
+        mergeAndPush.MdiParent = GitPatcher
+        mergeAndPush.addStep("Switch to Master branch", 20)
+        mergeAndPush.addStep("Pull from Origin", 40)
+        mergeAndPush.addStep("Merge from branch: " & currentBranch, 60)
+        mergeAndPush.addStep("Push to Origin", 80)
+        mergeAndPush.addStep("Return to branch: " & currentBranch, 100)
+
+        mergeAndPush.Show()
+
+        mergeAndPush.setStep(0)
+ 
+
+        'switch
+        'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, "master")
+        Tortoise.Switch(My.Settings.CurrentRepo)
+
+        mergeAndPush.setStep(1)
+        'Pull from Origin 
+        Tortoise.Pull(My.Settings.CurrentRepo)
+
+        mergeAndPush.setStep(2)
+
+        'Merge from Feature branch
+        'TortoiseMerge(My.Settings.CurrentRepo, currentBranch)
+        Tortoise.Merge(My.Settings.CurrentRepo)
+
+        mergeAndPush.setStep(3)
+
+        'Push to Origin 
+        Tortoise.Push(My.Settings.CurrentRepo)
+
+        mergeAndPush.setStep(4)
+
+        'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, currentBranch)
+        Tortoise.Switch(My.Settings.CurrentRepo)
+
+        'Done
+        mergeAndPush.done()
+
+    End Sub
 End Class
