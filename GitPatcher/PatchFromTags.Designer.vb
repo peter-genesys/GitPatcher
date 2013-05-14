@@ -267,7 +267,7 @@ Partial Class PatchFromTags
         '
         Me.FindTagsButton.Location = New System.Drawing.Point(77, 17)
         Me.FindTagsButton.Name = "FindTagsButton"
-        Me.FindTagsButton.Size = New System.Drawing.Size(139, 23)
+        Me.FindTagsButton.Size = New System.Drawing.Size(230, 23)
         Me.FindTagsButton.TabIndex = 14
         Me.FindTagsButton.Text = "Find Tags"
         Me.FindTagsButton.UseVisualStyleBackColor = True

@@ -8,6 +8,14 @@
         Return l_last
     End Function
 
+    Shared Function get_first_split(ByVal ipath As String, ByVal idelim As String) As String
+
+        Dim l_first As String = ipath.Split(idelim)(0)
+
+        Return l_first
+    End Function
+
+
     Private Sub RecursiveSearch(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As ListBox)
 
         Dim strFolders() As String = System.IO.Directory.GetDirectories(strPath)

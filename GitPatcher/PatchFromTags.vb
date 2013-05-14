@@ -5,6 +5,8 @@ Public Class PatchFromTags
     Public Sub New()
         InitializeComponent()
 
+        FindTagsButton.Text = "Find Tags like " & Main.CurrentBranchTextBox.Text & ".XX"
+
         Findtags()
 
 
@@ -19,7 +21,9 @@ Public Class PatchFromTags
     Private Sub Findtags()
         TagsCheckedListBox.Items.Clear()
         For Each tagname In GitSharpFascade.getTagList(My.Settings.CurrentRepo)
-            TagsCheckedListBox.Items.Add(tagname)
+            If PatchRunner.get_first_split(tagname, ".") = Main.CurrentBranchTextBox.Text Then
+                TagsCheckedListBox.Items.Add(tagname)
+            End If
         Next
     End Sub
 
@@ -626,11 +630,12 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub derivePatchName()
-        If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
 
-            PatchNameTextBox.Text = SchemaComboBox.SelectedItem.ToString & "_" & Main.CurrentBranchTextBox.Text & "_" & Tag1TextBox.Text & "_" & Tag2TextBox.Text & "_" & SupIdTextBox.Text
-        Else
-            PatchNameTextBox.Text = SchemaComboBox.SelectedItem.ToString & "_" & Main.CurrentBranchTextBox.Text & "_" & Tag1TextBox.Text & "_" & Tag2TextBox.Text
+        PatchNameTextBox.Text = SchemaComboBox.SelectedItem.ToString & "_" & Main.CurrentBranchTextBox.Text & "_" & get_last_split(Tag1TextBox.Text, ".") & "_" & get_last_split(Tag2TextBox.Text, ".")
+
+        If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
+            PatchNameTextBox.Text = PatchNameTextBox.Text & "_" & SupIdTextBox.Text
+
         End If
 
     End Sub
