@@ -1,7 +1,7 @@
 ﻿Public Class Host
 
 
-    Public Shared Sub runInteractive(ByVal command, ByRef message, ByVal workingDir)
+    Public Shared Sub runInteractive(ByVal command As String, ByRef message As String, ByVal workingDir As String, Optional ByVal wait As Boolean = True)
 
         Logger.Dbg(command)
 
@@ -23,8 +23,9 @@
         Dim myProcess As Process = Process.Start(starter)
 
         'message = myProcess.StandardOutput.ReadToEnd()
-
-        myProcess.WaitForExit()
+        If wait Then
+            myProcess.WaitForExit()
+        End If
 
         'Logger.Dbg("runInteractive:" & Chr(10) & message)
         'Logger.Dbg("Error (if any):" & Chr(10) & myProcess.StandardError.ReadToEnd())
@@ -161,34 +162,34 @@
         run_command_in_dir_get_output(My.Settings.SQLpath & " /nolog @" & scriptFilename, scriptDir)
     End Sub
 
-    Public Shared Sub executeSQLscriptInteractive(ByVal scriptFilename As String, ByVal scriptDir As String, Optional ByVal connection As String = "")
+    Public Shared Sub executeSQLscriptInteractive(ByVal scriptFilename As String, ByVal scriptDir As String, Optional ByVal connection As String = "", Optional ByVal wait As Boolean = True)
 
         Dim l_message As String = Nothing
         If String.IsNullOrEmpty(connection) Then
-            runInteractive(My.Settings.SQLpath & " /nolog @" & scriptFilename, l_message, scriptDir)
+            runInteractive(My.Settings.SQLpath & " /nolog @" & scriptFilename, l_message, scriptDir, wait)
 
         Else
-            runInteractive(My.Settings.SQLpath & " " & connection & " @" & scriptFilename, l_message, scriptDir)
+            runInteractive(My.Settings.SQLpath & " " & connection & " @" & scriptFilename, l_message, scriptDir, wait)
         End If
 
     End Sub
 
-    Public Shared Sub executeDynamicSQLScript(ByVal masterList As String, ByVal scriptDir As String)
+    Public Shared Sub executeDynamicSQLScript(ByVal masterList As String, ByVal scriptDir As String, Optional ByVal wait As Boolean = True)
         'This is NON-INTERACTIVE
         Dim l_message As String = Nothing
 
-        runInteractive(My.Settings.SQLpath & " /nolog <<EOF" & masterList & Chr(10) & "exit" & Chr(10) & "EOF", l_message, scriptDir)
+        runInteractive(My.Settings.SQLpath & " /nolog <<EOF" & masterList & Chr(10) & "exit" & Chr(10) & "EOF", l_message, scriptDir, wait)
     End Sub
 
 
-    Public Shared Sub executeSQLplus(ByVal scriptDir As String, Optional ByVal connection As String = "")
+    Public Shared Sub executeSQLplus(ByVal scriptDir As String, Optional ByVal connection As String = "", Optional ByVal wait As Boolean = True)
 
         Dim l_message As String = Nothing
         If String.IsNullOrEmpty(connection) Then
-            runInteractive(My.Settings.SQLpath & " /nolog", l_message, scriptDir)
+            runInteractive(My.Settings.SQLpath & " /nolog", l_message, scriptDir, wait)
 
         Else
-            runInteractive(My.Settings.SQLpath & " " & connection, l_message, scriptDir)
+            runInteractive(My.Settings.SQLpath & " " & connection, l_message, scriptDir, wait)
         End If
 
     End Sub
