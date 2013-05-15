@@ -52,7 +52,16 @@ Public Class GitSharpFascade
  
     Shared Sub switchBranch(ByVal path, ByVal branchName)
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
-        Dim newBranch As GitSharp.Branch = New Branch(repo, branchName)
+        Dim existingBranch As GitSharp.Branch = New Branch(repo, branchName)
+        repo.SwitchToBranch(existingBranch)
+
+    End Sub
+
+
+    Shared Sub createBranch(ByVal path, ByVal branchName)
+        Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
+        Dim newBranch As GitSharp.Branch = GitSharp.Branch.Create(repo, branchName)
+ 
         repo.SwitchToBranch(newBranch)
 
     End Sub

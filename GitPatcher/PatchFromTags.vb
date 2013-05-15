@@ -738,12 +738,12 @@ Public Class PatchFromTags
         createPatchProgress.addStep("Review tags on the branch", 10)
         createPatchProgress.addStep("Create edit, test", 40)
         'createPatchProgress.addStep("Add new files", 50)
-        createPatchProgress.addStep("Commit to Feature: " & currentBranch, 50)
+        createPatchProgress.addStep("Commit to Branch: " & currentBranch, 50)
         createPatchProgress.addStep("Switch to Master branch", 60)
         createPatchProgress.addStep("Pull from Origin", 70)
-        createPatchProgress.addStep("Merge from Feature: " & currentBranch, 80)
+        createPatchProgress.addStep("Merge from Branch: " & currentBranch, 80)
         createPatchProgress.addStep("Push to Origin", 90)
-        createPatchProgress.addStep("Return to Feature: " & currentBranch, 100)
+        createPatchProgress.addStep("Return to Branch: " & currentBranch, 100)
 
         createPatchProgress.Show()
 

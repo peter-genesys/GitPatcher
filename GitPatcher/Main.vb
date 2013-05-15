@@ -229,4 +229,43 @@
         mergeAndPush.done()
 
     End Sub
+
+    Private Sub NewFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewFeatureToolStripMenuItem.Click
+        If MsgBox("Would you like to create a new Feature Branch with the standardised naming feature/JIRA?", MsgBoxStyle.OkCancel, "Create a new Feature Branch") = MsgBoxResult.Ok Then
+
+            Dim featureName As String = InputBox("Enter the Jira Id.", "Jira Id for new Feature Branch")
+
+            If Not String.IsNullOrEmpty(featureName) Then
+ 
+                Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new Feature branch:  " & featureName)
+                newFeature.MdiParent = GitPatcher
+                newFeature.addStep("Switch to Master branch", 33)
+                newFeature.addStep("Pull from Origin", 66)
+                newFeature.addStep("Create and switch to Feature branch: " & featureName, 100)
+  
+                newFeature.Show()
+
+                newFeature.setStep(0)
+
+                'switch to master - manual
+                Tortoise.Switch(My.Settings.CurrentRepo)
+
+                newFeature.setStep(1)
+                'Pull from Origin 
+                Tortoise.Pull(My.Settings.CurrentRepo)
+
+                newFeature.setStep(2)
+
+                'Create Feature branch
+                GitSharpFascade.createBranch(My.Settings.CurrentRepo, "feature/" & featureName)
+ 
+                'Done
+                newFeature.done()
+
+ 
+
+            End If
+
+        End If
+    End Sub
 End Class

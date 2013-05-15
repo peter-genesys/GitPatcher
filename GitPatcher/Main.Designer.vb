@@ -29,6 +29,8 @@ Partial Class Main
         Me.APEXToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GITToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RepoComboBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -47,8 +49,7 @@ Partial Class Main
         Me.Label8 = New System.Windows.Forms.Label()
         Me.BranchPathTextBox = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.GITToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.NewFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -90,14 +91,27 @@ Partial Class Main
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
         Me.ImportToolStripMenuItem.Text = "Import"
         '
         'ExportToolStripMenuItem
         '
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
         Me.ExportToolStripMenuItem.Text = "Export"
+        '
+        'GITToolStripMenuItem1
+        '
+        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MergeAndPushFeatureToolStripMenuItem, Me.NewFeatureToolStripMenuItem})
+        Me.GITToolStripMenuItem1.Name = "GITToolStripMenuItem1"
+        Me.GITToolStripMenuItem1.Size = New System.Drawing.Size(37, 20)
+        Me.GITToolStripMenuItem1.Text = "GIT"
+        '
+        'MergeAndPushFeatureToolStripMenuItem
+        '
+        Me.MergeAndPushFeatureToolStripMenuItem.Name = "MergeAndPushFeatureToolStripMenuItem"
+        Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature"
         '
         'RepoComboBox
         '
@@ -252,18 +266,11 @@ Partial Class Main
         Me.Label9.TabIndex = 17
         Me.Label9.Text = "Branch Path"
         '
-        'GITToolStripMenuItem1
+        'NewFeatureToolStripMenuItem
         '
-        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MergeAndPushFeatureToolStripMenuItem})
-        Me.GITToolStripMenuItem1.Name = "GITToolStripMenuItem1"
-        Me.GITToolStripMenuItem1.Size = New System.Drawing.Size(37, 20)
-        Me.GITToolStripMenuItem1.Text = "GIT"
-        '
-        'MergeAndPushFeatureToolStripMenuItem
-        '
-        Me.MergeAndPushFeatureToolStripMenuItem.Name = "MergeAndPushFeatureToolStripMenuItem"
-        Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature"
+        Me.NewFeatureToolStripMenuItem.Name = "NewFeatureToolStripMenuItem"
+        Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.NewFeatureToolStripMenuItem.Text = "New Feature"
         '
         'Main
         '
@@ -325,5 +332,6 @@ Partial Class Main
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents GITToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MergeAndPushFeatureToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents NewFeatureToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class
