@@ -39,5 +39,10 @@
         Dim client As New TortoiseFacade(i_wait)
         client.Revert(i_WorkingDir)
     End Sub
+
+    Public Shared Sub Tag(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
+        Dim client As New TortoiseFacade(i_wait)
+        client.Tag(i_WorkingDir)
+    End Sub
  
 End Class

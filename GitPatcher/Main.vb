@@ -239,9 +239,10 @@
  
                 Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new Feature branch:  " & featureName)
                 newFeature.MdiParent = GitPatcher
-                newFeature.addStep("Switch to Master branch", 33)
-                newFeature.addStep("Pull from Origin", 66)
-                newFeature.addStep("Create and switch to Feature branch: " & featureName, 100)
+                newFeature.addStep("Switch to Master branch", 25)
+                newFeature.addStep("Pull from Origin", 50)
+                newFeature.addStep("Create and switch to Feature branch: " & featureName, 75)
+                newFeature.addStep("Create intial Tag: " & featureName & ".00", 100)
   
                 newFeature.Show()
 
@@ -258,6 +259,11 @@
 
                 'Create Feature branch
                 GitSharpFascade.createBranch(My.Settings.CurrentRepo, "feature/" & featureName)
+
+                newFeature.setStep(3)
+                'Create the tag
+                Tortoise.Tag(My.Settings.CurrentRepo)
+
  
                 'Done
                 newFeature.done()

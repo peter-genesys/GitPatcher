@@ -67,6 +67,14 @@ Public Class GitSharpFascade
     End Sub
 
 
+    'Shared Sub createTag(ByVal path, ByVal tagName)
+    '    Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
+    '    Dim newTag As GitSharp.Tag = GitSharp.Tag.
+    '
+    '
+    'End Sub
+
+
 
     Shared Function getSchemaList(ByVal path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String) As Collection
 
