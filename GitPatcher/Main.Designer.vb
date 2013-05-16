@@ -31,6 +31,7 @@ Partial Class Main
         Me.ExportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GITToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.NewFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RepoComboBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -49,7 +50,8 @@ Partial Class Main
         Me.Label8 = New System.Windows.Forms.Label()
         Me.BranchPathTextBox = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.NewFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MinPatchTextBox = New System.Windows.Forms.TextBox()
+        Me.Label10 = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -112,6 +114,12 @@ Partial Class Main
         Me.MergeAndPushFeatureToolStripMenuItem.Name = "MergeAndPushFeatureToolStripMenuItem"
         Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature"
+        '
+        'NewFeatureToolStripMenuItem
+        '
+        Me.NewFeatureToolStripMenuItem.Name = "NewFeatureToolStripMenuItem"
+        Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.NewFeatureToolStripMenuItem.Text = "New Feature"
         '
         'RepoComboBox
         '
@@ -266,17 +274,30 @@ Partial Class Main
         Me.Label9.TabIndex = 17
         Me.Label9.Text = "Branch Path"
         '
-        'NewFeatureToolStripMenuItem
+        'MinPatchTextBox
         '
-        Me.NewFeatureToolStripMenuItem.Name = "NewFeatureToolStripMenuItem"
-        Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.NewFeatureToolStripMenuItem.Text = "New Feature"
+        Me.MinPatchTextBox.Location = New System.Drawing.Point(103, 264)
+        Me.MinPatchTextBox.Name = "MinPatchTextBox"
+        Me.MinPatchTextBox.ReadOnly = True
+        Me.MinPatchTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.MinPatchTextBox.TabIndex = 20
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(12, 267)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(79, 13)
+        Me.Label10.TabIndex = 19
+        Me.Label10.Text = "Minimum Patch"
         '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(488, 307)
+        Me.Controls.Add(Me.MinPatchTextBox)
+        Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.BranchPathTextBox)
         Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.ParsingSchemaTextBox)
@@ -333,5 +354,7 @@ Partial Class Main
     Friend WithEvents GITToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MergeAndPushFeatureToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents NewFeatureToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents MinPatchTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label10 As System.Windows.Forms.Label
 
 End Class

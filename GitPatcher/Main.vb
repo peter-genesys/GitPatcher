@@ -5,6 +5,7 @@
         loadRepos()
         loadDBs()
         loadApexApps()
+        MinPatchTextBox.Text = My.Settings.MinPatch
     End Sub
 
     Public Sub loadRepos()

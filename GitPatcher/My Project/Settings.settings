@@ -54,7 +54,7 @@ bneoda05.thiess.aus:1521:isdevl</Value>
       <Value Profile="(Default)">@thiess.com.au</Value>
     </Setting>
     <Setting Name="MinPatch" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">PATCH_ADMIN_PRJROV-77_02_03</Value>
+      <Value Profile="(Default)">PATCH_ADMIN_PRJROV-72_00_01</Value>
     </Setting>
   </Settings>
 </SettingsFile>

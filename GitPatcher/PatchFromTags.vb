@@ -404,7 +404,9 @@ Public Class PatchFromTags
     & Chr(10) & " ,i_patch_create_date  => '" & DateString & "' -" _
     & Chr(10) & " ,i_patch_created_by   => '" & Environment.UserName & "' -" _
     & Chr(10) & " ,i_note               => '" & note & "' -" _
-    & Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "');" _
+    & Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
+    & Chr(10) & " ,i_remove_prereqs     => 'N' -" _
+    & Chr(10) & " ,i_remove_sups        => 'N'); " _
     & Chr(10))
 
 
