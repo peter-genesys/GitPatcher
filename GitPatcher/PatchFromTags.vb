@@ -515,11 +515,8 @@ Public Class PatchFromTags
 
             l_master_file.WriteLine("COMMIT;")
 
-            l_master_file.WriteLine("PROMPT ")
-            l_master_file.WriteLine("PROMPT " & l_master_filename & " - COMPLETED.")
-
             If use_patch_admin Then
-
+                l_master_file.WriteLine("PROMPT Compiling objects in schema " & db_schema)
                 l_master_file.WriteLine("execute patch_admin.patch_invoker.compile_post_patch;")
                 l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed;")
 
@@ -533,14 +530,19 @@ Public Class PatchFromTags
                     l_master_file.WriteLine(",i_supersedes_patch  => '" & l_sup_short_name & "' );")
 
                 Next
-
-
-                l_master_file.WriteLine("spool off;")
-
-
-                l_master_file.Close()
-
             End If
+
+            l_master_file.WriteLine("COMMIT;")
+
+            l_master_file.WriteLine("PROMPT ")
+            l_master_file.WriteLine("PROMPT " & l_master_filename & " - COMPLETED.")
+
+            l_master_file.WriteLine("spool off;")
+
+
+            l_master_file.Close()
+
+
         End If
 
 
