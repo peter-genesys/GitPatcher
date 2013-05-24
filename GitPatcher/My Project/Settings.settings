@@ -33,10 +33,12 @@ isdevl</Value>
 bneoda05.thiess.aus:1521:isdevl</Value>
     </Setting>
     <Setting Name="AppList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">f101</Value>
+      <Value Profile="(Default)">f101
+f100</Value>
     </Setting>
     <Setting Name="ParsingSchemaList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">tpds</Value>
+      <Value Profile="(Default)">tpds
+tpds</Value>
     </Setting>
     <Setting Name="JDBCjar" Type="System.String" Scope="User">
       <Value Profile="(Default)">\oracle\jdbc\lib\ojdbc5.jar</Value>
@@ -55,6 +57,21 @@ bneoda05.thiess.aus:1521:isdevl</Value>
     </Setting>
     <Setting Name="MinPatch" Type="System.String" Scope="Application">
       <Value Profile="(Default)">PATCH_ADMIN_PRJROV-72_00_01</Value>
+    </Setting>
+    <Setting Name="ApplicationsList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Prism
+Prism Mobile</Value>
+    </Setting>
+    <Setting Name="PatchSchemaList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SYS,PATCH_ADMIN,TSDM
+SYS,PATCH_ADMIN,TSDM</Value>
+    </Setting>
+    <Setting Name="CurrentApp" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Prism</Value>
+    </Setting>
+    <Setting Name="PatchSetList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">prism
+prismmobile</Value>
     </Setting>
   </Settings>
 </SettingsFile>

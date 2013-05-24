@@ -40,11 +40,9 @@
 
         Dim strFolders() As String = System.IO.Directory.GetDirectories(strPath)
         Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
-        Dim clsFile As FileInfoEx = Nothing
 
         'Add the files
         For Each strFile As String In strFiles
-            clsFile = New FileInfoEx(strFile)
             lstTarget.Items.Add(strPath.Substring(removePath.Length))
         Next
 

@@ -36,13 +36,19 @@ Partial Class Config
         Dim Label5 As System.Windows.Forms.Label
         Dim Repo1Label As System.Windows.Forms.Label
         Dim Label14 As System.Windows.Forms.Label
+        Dim Label15 As System.Windows.Forms.Label
+        Dim Label16 As System.Windows.Forms.Label
+        Dim Label17 As System.Windows.Forms.Label
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.MailTabPage = New System.Windows.Forms.TabPage()
+        Me.TestMailButton = New System.Windows.Forms.Button()
         Me.RecipientDomainTextBox = New System.Windows.Forms.TextBox()
         Me.SMTPportTextBox = New System.Windows.Forms.TextBox()
         Me.SMTPhostTextBox = New System.Windows.Forms.TextBox()
         Me.RecipientTextBox = New System.Windows.Forms.TextBox()
-        Me.ApexTabPage = New System.Windows.Forms.TabPage()
+        Me.AppsTabPage = New System.Windows.Forms.TabPage()
+        Me.PatchSchemasTextBox = New System.Windows.Forms.TextBox()
+        Me.ApplicationsTextBox = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.ParsingSchemaTextbox = New System.Windows.Forms.TextBox()
         Me.AppListTextBox = New System.Windows.Forms.TextBox()
@@ -58,7 +64,7 @@ Partial Class Config
         Me.TabPageGitRepo = New System.Windows.Forms.TabPage()
         Me.RepoListTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
-        Me.TestMailButton = New System.Windows.Forms.Button()
+        Me.PatchSetTextBox = New System.Windows.Forms.TextBox()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -72,9 +78,12 @@ Partial Class Config
         Label5 = New System.Windows.Forms.Label()
         Repo1Label = New System.Windows.Forms.Label()
         Label14 = New System.Windows.Forms.Label()
+        Label15 = New System.Windows.Forms.Label()
+        Label16 = New System.Windows.Forms.Label()
+        Label17 = New System.Windows.Forms.Label()
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MailTabPage.SuspendLayout()
-        Me.ApexTabPage.SuspendLayout()
+        Me.AppsTabPage.SuspendLayout()
         Me.PatchTabPage.SuspendLayout()
         Me.DBTabPage.SuspendLayout()
         Me.TabPageGitRepo.SuspendLayout()
@@ -111,20 +120,20 @@ Partial Class Config
         'Label9
         '
         Label9.AutoSize = True
-        Label9.Location = New System.Drawing.Point(5, 16)
+        Label9.Location = New System.Drawing.Point(369, 16)
         Label9.Name = "Label9"
-        Label9.Size = New System.Drawing.Size(48, 13)
+        Label9.Size = New System.Drawing.Size(41, 13)
         Label9.TabIndex = 13
-        Label9.Text = "App List:"
+        Label9.Text = "App Id:"
         '
         'Label8
         '
         Label8.AutoSize = True
-        Label8.Location = New System.Drawing.Point(228, 16)
+        Label8.Location = New System.Drawing.Point(450, 16)
         Label8.Name = "Label8"
-        Label8.Size = New System.Drawing.Size(106, 13)
+        Label8.Size = New System.Drawing.Size(87, 13)
         Label8.TabIndex = 15
-        Label8.Text = "Parsing Schema List:"
+        Label8.Text = "Parsing Schema:"
         '
         'Label3
         '
@@ -198,6 +207,24 @@ Partial Class Config
         Label14.TabIndex = 16
         Label14.Text = "Recipient Default Domain:"
         '
+        'Label15
+        '
+        Label15.AutoSize = True
+        Label15.Location = New System.Drawing.Point(3, 16)
+        Label15.Name = "Label15"
+        Label15.Size = New System.Drawing.Size(67, 13)
+        Label15.TabIndex = 19
+        Label15.Text = "Applications:"
+        '
+        'Label16
+        '
+        Label16.AutoSize = True
+        Label16.Location = New System.Drawing.Point(84, 16)
+        Label16.Name = "Label16"
+        Label16.Size = New System.Drawing.Size(85, 13)
+        Label16.TabIndex = 20
+        Label16.Text = "Patch Schemas:"
+        '
         'MySettingsBindingSource
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
@@ -215,10 +242,19 @@ Partial Class Config
         Me.MailTabPage.Controls.Add(Label11)
         Me.MailTabPage.Location = New System.Drawing.Point(4, 22)
         Me.MailTabPage.Name = "MailTabPage"
-        Me.MailTabPage.Size = New System.Drawing.Size(458, 280)
+        Me.MailTabPage.Size = New System.Drawing.Size(534, 280)
         Me.MailTabPage.TabIndex = 5
         Me.MailTabPage.Text = "Mail"
         Me.MailTabPage.UseVisualStyleBackColor = True
+        '
+        'TestMailButton
+        '
+        Me.TestMailButton.Location = New System.Drawing.Point(411, 165)
+        Me.TestMailButton.Name = "TestMailButton"
+        Me.TestMailButton.Size = New System.Drawing.Size(41, 104)
+        Me.TestMailButton.TabIndex = 18
+        Me.TestMailButton.Text = "Send Test Mail"
+        Me.TestMailButton.UseVisualStyleBackColor = True
         '
         'RecipientDomainTextBox
         '
@@ -249,20 +285,42 @@ Partial Class Config
         Me.RecipientTextBox.Size = New System.Drawing.Size(397, 104)
         Me.RecipientTextBox.TabIndex = 9
         '
-        'ApexTabPage
+        'AppsTabPage
         '
-        Me.ApexTabPage.Controls.Add(Me.Label7)
-        Me.ApexTabPage.Controls.Add(Me.ParsingSchemaTextbox)
-        Me.ApexTabPage.Controls.Add(Me.AppListTextBox)
-        Me.ApexTabPage.Controls.Add(Label8)
-        Me.ApexTabPage.Controls.Add(Label9)
-        Me.ApexTabPage.Location = New System.Drawing.Point(4, 22)
-        Me.ApexTabPage.Name = "ApexTabPage"
-        Me.ApexTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.ApexTabPage.Size = New System.Drawing.Size(458, 280)
-        Me.ApexTabPage.TabIndex = 4
-        Me.ApexTabPage.Text = "Apex"
-        Me.ApexTabPage.UseVisualStyleBackColor = True
+        Me.AppsTabPage.Controls.Add(Me.PatchSetTextBox)
+        Me.AppsTabPage.Controls.Add(Label17)
+        Me.AppsTabPage.Controls.Add(Me.PatchSchemasTextBox)
+        Me.AppsTabPage.Controls.Add(Label16)
+        Me.AppsTabPage.Controls.Add(Label15)
+        Me.AppsTabPage.Controls.Add(Me.ApplicationsTextBox)
+        Me.AppsTabPage.Controls.Add(Me.Label7)
+        Me.AppsTabPage.Controls.Add(Me.ParsingSchemaTextbox)
+        Me.AppsTabPage.Controls.Add(Me.AppListTextBox)
+        Me.AppsTabPage.Controls.Add(Label8)
+        Me.AppsTabPage.Controls.Add(Label9)
+        Me.AppsTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.AppsTabPage.Name = "AppsTabPage"
+        Me.AppsTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.AppsTabPage.Size = New System.Drawing.Size(534, 280)
+        Me.AppsTabPage.TabIndex = 4
+        Me.AppsTabPage.Text = "Apps"
+        Me.AppsTabPage.UseVisualStyleBackColor = True
+        '
+        'PatchSchemasTextBox
+        '
+        Me.PatchSchemasTextBox.Location = New System.Drawing.Point(87, 32)
+        Me.PatchSchemasTextBox.Multiline = True
+        Me.PatchSchemasTextBox.Name = "PatchSchemasTextBox"
+        Me.PatchSchemasTextBox.Size = New System.Drawing.Size(198, 229)
+        Me.PatchSchemasTextBox.TabIndex = 21
+        '
+        'ApplicationsTextBox
+        '
+        Me.ApplicationsTextBox.Location = New System.Drawing.Point(6, 32)
+        Me.ApplicationsTextBox.Multiline = True
+        Me.ApplicationsTextBox.Name = "ApplicationsTextBox"
+        Me.ApplicationsTextBox.Size = New System.Drawing.Size(75, 229)
+        Me.ApplicationsTextBox.TabIndex = 18
         '
         'Label7
         '
@@ -275,18 +333,18 @@ Partial Class Config
         '
         'ParsingSchemaTextbox
         '
-        Me.ParsingSchemaTextbox.Location = New System.Drawing.Point(231, 32)
+        Me.ParsingSchemaTextbox.Location = New System.Drawing.Point(453, 32)
         Me.ParsingSchemaTextbox.Multiline = True
         Me.ParsingSchemaTextbox.Name = "ParsingSchemaTextbox"
-        Me.ParsingSchemaTextbox.Size = New System.Drawing.Size(219, 229)
+        Me.ParsingSchemaTextbox.Size = New System.Drawing.Size(75, 229)
         Me.ParsingSchemaTextbox.TabIndex = 16
         '
         'AppListTextBox
         '
-        Me.AppListTextBox.Location = New System.Drawing.Point(8, 32)
+        Me.AppListTextBox.Location = New System.Drawing.Point(372, 32)
         Me.AppListTextBox.Multiline = True
         Me.AppListTextBox.Name = "AppListTextBox"
-        Me.AppListTextBox.Size = New System.Drawing.Size(219, 229)
+        Me.AppListTextBox.Size = New System.Drawing.Size(75, 229)
         Me.AppListTextBox.TabIndex = 14
         '
         'PatchTabPage
@@ -302,7 +360,7 @@ Partial Class Config
         Me.PatchTabPage.Location = New System.Drawing.Point(4, 22)
         Me.PatchTabPage.Name = "PatchTabPage"
         Me.PatchTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.PatchTabPage.Size = New System.Drawing.Size(458, 280)
+        Me.PatchTabPage.Size = New System.Drawing.Size(534, 280)
         Me.PatchTabPage.TabIndex = 1
         Me.PatchTabPage.Text = "Paths"
         Me.PatchTabPage.UseVisualStyleBackColor = True
@@ -345,7 +403,7 @@ Partial Class Config
         Me.DBTabPage.Location = New System.Drawing.Point(4, 22)
         Me.DBTabPage.Name = "DBTabPage"
         Me.DBTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.DBTabPage.Size = New System.Drawing.Size(458, 280)
+        Me.DBTabPage.Size = New System.Drawing.Size(534, 280)
         Me.DBTabPage.TabIndex = 3
         Me.DBTabPage.Text = "Databases"
         Me.DBTabPage.UseVisualStyleBackColor = True
@@ -383,7 +441,7 @@ Partial Class Config
         Me.TabPageGitRepo.Location = New System.Drawing.Point(4, 22)
         Me.TabPageGitRepo.Name = "TabPageGitRepo"
         Me.TabPageGitRepo.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageGitRepo.Size = New System.Drawing.Size(458, 280)
+        Me.TabPageGitRepo.Size = New System.Drawing.Size(534, 280)
         Me.TabPageGitRepo.TabIndex = 0
         Me.TabPageGitRepo.Text = "Git Repos"
         Me.TabPageGitRepo.UseVisualStyleBackColor = True
@@ -401,36 +459,44 @@ Partial Class Config
         Me.ConfigTabs.Controls.Add(Me.TabPageGitRepo)
         Me.ConfigTabs.Controls.Add(Me.DBTabPage)
         Me.ConfigTabs.Controls.Add(Me.PatchTabPage)
-        Me.ConfigTabs.Controls.Add(Me.ApexTabPage)
+        Me.ConfigTabs.Controls.Add(Me.AppsTabPage)
         Me.ConfigTabs.Controls.Add(Me.MailTabPage)
         Me.ConfigTabs.Location = New System.Drawing.Point(12, 28)
         Me.ConfigTabs.Name = "ConfigTabs"
         Me.ConfigTabs.SelectedIndex = 0
-        Me.ConfigTabs.Size = New System.Drawing.Size(466, 306)
+        Me.ConfigTabs.Size = New System.Drawing.Size(542, 306)
         Me.ConfigTabs.TabIndex = 0
         '
-        'TestMailButton
+        'PatchSetTextBox
         '
-        Me.TestMailButton.Location = New System.Drawing.Point(411, 165)
-        Me.TestMailButton.Name = "TestMailButton"
-        Me.TestMailButton.Size = New System.Drawing.Size(41, 104)
-        Me.TestMailButton.TabIndex = 18
-        Me.TestMailButton.Text = "Send Test Mail"
-        Me.TestMailButton.UseVisualStyleBackColor = True
+        Me.PatchSetTextBox.Location = New System.Drawing.Point(291, 32)
+        Me.PatchSetTextBox.Multiline = True
+        Me.PatchSetTextBox.Name = "PatchSetTextBox"
+        Me.PatchSetTextBox.Size = New System.Drawing.Size(75, 229)
+        Me.PatchSetTextBox.TabIndex = 23
+        '
+        'Label17
+        '
+        Label17.AutoSize = True
+        Label17.Location = New System.Drawing.Point(288, 16)
+        Label17.Name = "Label17"
+        Label17.Size = New System.Drawing.Size(51, 13)
+        Label17.TabIndex = 22
+        Label17.Text = "PatchSet"
         '
         'Config
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(482, 346)
+        Me.ClientSize = New System.Drawing.Size(566, 346)
         Me.Controls.Add(Me.ConfigTabs)
         Me.Name = "Config"
         Me.Text = "Config"
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MailTabPage.ResumeLayout(False)
         Me.MailTabPage.PerformLayout()
-        Me.ApexTabPage.ResumeLayout(False)
-        Me.ApexTabPage.PerformLayout()
+        Me.AppsTabPage.ResumeLayout(False)
+        Me.AppsTabPage.PerformLayout()
         Me.PatchTabPage.ResumeLayout(False)
         Me.PatchTabPage.PerformLayout()
         Me.DBTabPage.ResumeLayout(False)
@@ -447,7 +513,7 @@ Partial Class Config
     Friend WithEvents SMTPportTextBox As System.Windows.Forms.TextBox
     Friend WithEvents SMTPhostTextBox As System.Windows.Forms.TextBox
     Friend WithEvents RecipientTextBox As System.Windows.Forms.TextBox
-    Friend WithEvents ApexTabPage As System.Windows.Forms.TabPage
+    Friend WithEvents AppsTabPage As System.Windows.Forms.TabPage
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents ParsingSchemaTextbox As System.Windows.Forms.TextBox
     Friend WithEvents AppListTextBox As System.Windows.Forms.TextBox
@@ -464,4 +530,7 @@ Partial Class Config
     Friend WithEvents RepoListTextBox As System.Windows.Forms.TextBox
     Friend WithEvents ConfigTabs As System.Windows.Forms.TabControl
     Friend WithEvents TestMailButton As System.Windows.Forms.Button
+    Friend WithEvents PatchSchemasTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents ApplicationsTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents PatchSetTextBox As System.Windows.Forms.TextBox
 End Class

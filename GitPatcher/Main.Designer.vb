@@ -26,6 +26,7 @@ Partial Class Main
         Me.GITToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PatchFromTagsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PatchRunnerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateDBPatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.APEXToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -41,7 +42,7 @@ Partial Class Main
         Me.Label4 = New System.Windows.Forms.Label()
         Me.DBListComboBox = New System.Windows.Forms.ComboBox()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.ApexListComboBox = New System.Windows.Forms.ComboBox()
+        Me.ApplicationListComboBox = New System.Windows.Forms.ComboBox()
         Me.RootApexDirTextBox = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.CurrentConnectionTextBox = New System.Windows.Forms.TextBox()
@@ -52,6 +53,13 @@ Partial Class Main
         Me.Label9 = New System.Windows.Forms.Label()
         Me.MinPatchTextBox = New System.Windows.Forms.TextBox()
         Me.Label10 = New System.Windows.Forms.Label()
+        Me.ApexAppTextBox = New System.Windows.Forms.TextBox()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.PatchSchemasTextBox = New System.Windows.Forms.TextBox()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.PatchSetTextBox = New System.Windows.Forms.TextBox()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.DBPatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -66,7 +74,7 @@ Partial Class Main
         '
         'GITToolStripMenuItem
         '
-        Me.GITToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PatchFromTagsToolStripMenuItem, Me.PatchRunnerToolStripMenuItem})
+        Me.GITToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PatchFromTagsToolStripMenuItem, Me.PatchRunnerToolStripMenuItem, Me.CreateDBPatchSetToolStripMenuItem, Me.DBPatchSetToolStripMenuItem})
         Me.GITToolStripMenuItem.Name = "GITToolStripMenuItem"
         Me.GITToolStripMenuItem.Size = New System.Drawing.Size(58, 20)
         Me.GITToolStripMenuItem.Text = "PATCH"
@@ -74,14 +82,20 @@ Partial Class Main
         'PatchFromTagsToolStripMenuItem
         '
         Me.PatchFromTagsToolStripMenuItem.Name = "PatchFromTagsToolStripMenuItem"
-        Me.PatchFromTagsToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
-        Me.PatchFromTagsToolStripMenuItem.Text = "PatchFromTags"
+        Me.PatchFromTagsToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.PatchFromTagsToolStripMenuItem.Text = "Create DB Patch"
         '
         'PatchRunnerToolStripMenuItem
         '
         Me.PatchRunnerToolStripMenuItem.Name = "PatchRunnerToolStripMenuItem"
-        Me.PatchRunnerToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
+        Me.PatchRunnerToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
         Me.PatchRunnerToolStripMenuItem.Text = "PatchRunner"
+        '
+        'CreateDBPatchSetToolStripMenuItem
+        '
+        Me.CreateDBPatchSetToolStripMenuItem.Name = "CreateDBPatchSetToolStripMenuItem"
+        Me.CreateDBPatchSetToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.CreateDBPatchSetToolStripMenuItem.Text = "Create DB Patch Set"
         '
         'APEXToolStripMenuItem
         '
@@ -93,13 +107,13 @@ Partial Class Main
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
+        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ImportToolStripMenuItem.Text = "Import"
         '
         'ExportToolStripMenuItem
         '
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
+        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ExportToolStripMenuItem.Text = "Export"
         '
         'GITToolStripMenuItem1
@@ -194,17 +208,17 @@ Partial Class Main
         Me.Label5.AutoSize = True
         Me.Label5.Location = New System.Drawing.Point(12, 214)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(53, 13)
+        Me.Label5.Size = New System.Drawing.Size(59, 13)
         Me.Label5.TabIndex = 10
-        Me.Label5.Text = "Apex App"
+        Me.Label5.Text = "Application"
         '
-        'ApexListComboBox
+        'ApplicationListComboBox
         '
-        Me.ApexListComboBox.FormattingEnabled = True
-        Me.ApexListComboBox.Location = New System.Drawing.Point(103, 211)
-        Me.ApexListComboBox.Name = "ApexListComboBox"
-        Me.ApexListComboBox.Size = New System.Drawing.Size(373, 21)
-        Me.ApexListComboBox.TabIndex = 9
+        Me.ApplicationListComboBox.FormattingEnabled = True
+        Me.ApplicationListComboBox.Location = New System.Drawing.Point(103, 211)
+        Me.ApplicationListComboBox.Name = "ApplicationListComboBox"
+        Me.ApplicationListComboBox.Size = New System.Drawing.Size(373, 21)
+        Me.ApplicationListComboBox.TabIndex = 9
         '
         'RootApexDirTextBox
         '
@@ -242,7 +256,7 @@ Partial Class Main
         '
         'ParsingSchemaTextBox
         '
-        Me.ParsingSchemaTextBox.Location = New System.Drawing.Point(103, 238)
+        Me.ParsingSchemaTextBox.Location = New System.Drawing.Point(103, 316)
         Me.ParsingSchemaTextBox.Name = "ParsingSchemaTextBox"
         Me.ParsingSchemaTextBox.ReadOnly = True
         Me.ParsingSchemaTextBox.Size = New System.Drawing.Size(373, 20)
@@ -251,7 +265,7 @@ Partial Class Main
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(12, 241)
+        Me.Label8.Location = New System.Drawing.Point(12, 319)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(84, 13)
         Me.Label8.TabIndex = 15
@@ -276,7 +290,7 @@ Partial Class Main
         '
         'MinPatchTextBox
         '
-        Me.MinPatchTextBox.Location = New System.Drawing.Point(103, 264)
+        Me.MinPatchTextBox.Location = New System.Drawing.Point(103, 342)
         Me.MinPatchTextBox.Name = "MinPatchTextBox"
         Me.MinPatchTextBox.ReadOnly = True
         Me.MinPatchTextBox.Size = New System.Drawing.Size(373, 20)
@@ -285,17 +299,80 @@ Partial Class Main
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(12, 267)
+        Me.Label10.Location = New System.Drawing.Point(12, 345)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(79, 13)
         Me.Label10.TabIndex = 19
         Me.Label10.Text = "Minimum Patch"
         '
+        'ApexAppTextBox
+        '
+        Me.ApexAppTextBox.Location = New System.Drawing.Point(103, 290)
+        Me.ApexAppTextBox.Name = "ApexAppTextBox"
+        Me.ApexAppTextBox.ReadOnly = True
+        Me.ApexAppTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.ApexAppTextBox.TabIndex = 22
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Location = New System.Drawing.Point(12, 293)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(53, 13)
+        Me.Label11.TabIndex = 21
+        Me.Label11.Text = "Apex App"
+        '
+        'PatchSchemasTextBox
+        '
+        Me.PatchSchemasTextBox.Location = New System.Drawing.Point(103, 238)
+        Me.PatchSchemasTextBox.Name = "PatchSchemasTextBox"
+        Me.PatchSchemasTextBox.ReadOnly = True
+        Me.PatchSchemasTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.PatchSchemasTextBox.TabIndex = 24
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Location = New System.Drawing.Point(12, 241)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(82, 13)
+        Me.Label12.TabIndex = 23
+        Me.Label12.Text = "Patch Schemas"
+        '
+        'PatchSetTextBox
+        '
+        Me.PatchSetTextBox.Location = New System.Drawing.Point(103, 264)
+        Me.PatchSetTextBox.Name = "PatchSetTextBox"
+        Me.PatchSetTextBox.ReadOnly = True
+        Me.PatchSetTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.PatchSetTextBox.TabIndex = 26
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(12, 267)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(54, 13)
+        Me.Label13.TabIndex = 25
+        Me.Label13.Text = "Patch Set"
+        '
+        'DBPatchSetToolStripMenuItem
+        '
+        Me.DBPatchSetToolStripMenuItem.Name = "DBPatchSetToolStripMenuItem"
+        Me.DBPatchSetToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.DBPatchSetToolStripMenuItem.Text = "DBPatchSet"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(488, 307)
+        Me.ClientSize = New System.Drawing.Size(488, 377)
+        Me.Controls.Add(Me.PatchSetTextBox)
+        Me.Controls.Add(Me.Label13)
+        Me.Controls.Add(Me.PatchSchemasTextBox)
+        Me.Controls.Add(Me.Label12)
+        Me.Controls.Add(Me.ApexAppTextBox)
+        Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.MinPatchTextBox)
         Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.BranchPathTextBox)
@@ -307,7 +384,7 @@ Partial Class Main
         Me.Controls.Add(Me.RootApexDirTextBox)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.ApexListComboBox)
+        Me.Controls.Add(Me.ApplicationListComboBox)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.DBListComboBox)
         Me.Controls.Add(Me.RootPatchDirTextBox)
@@ -342,7 +419,7 @@ Partial Class Main
     Friend WithEvents ImportToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ExportToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents ApexListComboBox As System.Windows.Forms.ComboBox
+    Friend WithEvents ApplicationListComboBox As System.Windows.Forms.ComboBox
     Friend WithEvents RootApexDirTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents CurrentConnectionTextBox As System.Windows.Forms.TextBox
@@ -356,5 +433,13 @@ Partial Class Main
     Friend WithEvents NewFeatureToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MinPatchTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label10 As System.Windows.Forms.Label
+    Friend WithEvents CreateDBPatchSetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ApexAppTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents PatchSchemasTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents PatchSetTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents DBPatchSetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

@@ -2,6 +2,7 @@
 
     Private storedProcessSteps As ProcessStep()
     Private nextStep As Integer = 0
+    Private activeStep As Integer = 0
 
  
     Public Sub New(ByVal progressTitle As String)
@@ -39,10 +40,10 @@
     End Sub
 
 
-    Public Sub setStep(currentStep As Integer)
+    Public Sub setStep(gotoStep As Integer)
 
         For i As Integer = 0 To storedProcessSteps.GetUpperBound(0) - 1
-            If i < currentStep Then
+            If i < gotoStep Then
                 ProgressCheckedListBox.SetItemChecked(i, True)
                 ProgressBar.Value = storedProcessSteps(i).percentComplete
             End If
@@ -50,12 +51,21 @@
             'If i = currentStep - 1 Then
             '    ProgressCheckedListBox.Items(i).Equals = ProgressCheckedListBox.Items(i).text & " - DONE"
             'End If
-            If i = currentStep Then
+            If i = gotoStep Then
                 ProgressCheckedListBox.SetSelected(i, True)
             End If
 
         Next
+
+        activeStep = gotoStep
+
         pauseToRefreshProgressBar()
+
+    End Sub
+
+    Public Sub gonext()
+
+        setStep(activeStep + 1)
 
     End Sub
 

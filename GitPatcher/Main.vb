@@ -39,34 +39,21 @@
 
 
     Public Sub loadApexApps()
-        'ApexListComboBox.Items.Clear()
-        'Original method was to look up dirs
-        'If IO.Directory.Exists(RootApexDirTextBox.Text) Then
-        '
-        '    For Each foldername As String In IO.Directory.GetDirectories(RootApexDirTextBox.Text)
-        '        Dim apexApp As String = PatchRunner.get_last_split(foldername, "\")
-        '        ApexListComboBox.Items.Add(apexApp)
-        '
-        '        If My.Settings.CurrentApex = apexApp Then
-        '            ApexListComboBox.SelectedIndex = ApexListComboBox.Items.Count - 1
-        '        End If
-        '    Next
-        '
-        'End If
+ 
 
         'Now stored as a settings list instead.
-        ApexListComboBox.Items.Clear()
-        For Each apexApp In My.Settings.AppList.Split(Chr(10))
-            apexApp = Trim(apexApp)
-            apexApp = apexApp.Replace(Chr(13), "")
-            If (apexApp.Length > 0) Then
-                ApexListComboBox.Items.Add(apexApp)
+        ApplicationListComboBox.Items.Clear()
+        For Each App In My.Settings.ApplicationsList.Split(Chr(10))
+            App = Trim(App)
+            App = App.Replace(Chr(13), "")
+            If (App.Length > 0) Then
+                ApplicationListComboBox.Items.Add(App)
             End If
-            If My.Settings.CurrentApex = apexApp Then
-                ApexListComboBox.SelectedIndex = ApexListComboBox.Items.Count - 1
+            If My.Settings.CurrentApp = App Then
+                ApplicationListComboBox.SelectedIndex = ApplicationListComboBox.Items.Count - 1
             End If
         Next
- 
+
 
     End Sub
 
@@ -77,25 +64,7 @@
 
         CurrentBranchTextBox.Text = PatchFromTags.get_last_split(BranchPathTextBox.Text, "/")
  
-        'Dim l_CurrentBranch As String = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)
-        'Dim l_group As String = Nothing
-        'CurrentBranchTextBox.Text = Nothing
-        'For Each folder In l_CurrentBranch.Split("/")
-        '    If String.IsNullOrEmpty(l_group) Then
-        '        l_group = CurrentBranchTextBox.Text
-        '    Else
-        '        l_group = l_group & "/" & CurrentBranchTextBox.Text
-        '    End If
-        '
-        '    CurrentBranchTextBox.Text = folder
-        'Next
 
-        'If String.IsNullOrEmpty(l_group) Then
-        '    BranchPathTextBox.Text = Nothing
-        'Else
-        '    BranchPathTextBox.Text = l_group & "/"
-        'End If
- 
         'CurrentBranchTextBox.Text = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)
         RootPatchDirTextBox.Text = RepoComboBox.SelectedItem & My.Settings.PatchDirOffset & "\"
         RootApexDirTextBox.Text = RepoComboBox.SelectedItem & My.Settings.ApexDirOffset & "\"
@@ -123,11 +92,19 @@
 
     End Sub
 
-    Private Sub ApexListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ApexListComboBox.SelectedIndexChanged
-        My.Settings.CurrentApex = ApexListComboBox.SelectedItem
+    Private Sub ApplicationListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ApplicationListComboBox.SelectedIndexChanged
+        My.Settings.CurrentApp = ApplicationListComboBox.SelectedItem
         My.Settings.Save()
 
-        ParsingSchemaTextBox.Text = My.Settings.ParsingSchemaList.Split(Chr(10))(ApexListComboBox.SelectedIndex)
+        'Patch Schemas
+        PatchSchemasTextBox.Text = My.Settings.PatchSchemaList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)
+        'Patch Set
+        PatchSetTextBox.Text = My.Settings.PatchSetList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)
+
+
+        ApexAppTextBox.Text = My.Settings.AppList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)
+        My.Settings.CurrentApex = ApexAppTextBox.Text
+        ParsingSchemaTextBox.Text = My.Settings.ParsingSchemaList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)
 
     End Sub
 
@@ -157,11 +134,11 @@
                   Chr(10) & "This will overwrite the existing APEX application." & Chr(10) & _
                   Chr(10) & "Consider creating a VM snapshot as a restore point." & _
                   Chr(10) & "To save any existing changes, CANCEL this operation and perform an EXPORT.", MsgBoxStyle.OkCancel, "Import APEX application " & My.Settings.CurrentApex) = MsgBoxResult.Ok Then
- 
+
             Host.executeSQLscriptInteractive("install.sql" _
                                            , RootApexDirTextBox.Text & My.Settings.CurrentApex _
-                                           ,get_connect_string(ParsingSchemaTextBox.Text, My.Settings.CurrentDB) )
- 
+                                           , get_connect_string(ParsingSchemaTextBox.Text, My.Settings.CurrentDB))
+
         End If
 
     End Sub
@@ -173,20 +150,20 @@
                   Chr(10) & "Consider which branch you are exporting to." & _
                   Chr(10) & "To commit any existing changes, CANCEL this operation and perform a GIT COMMIT.", MsgBoxStyle.OkCancel, "Export APEX application " & My.Settings.CurrentApex) = MsgBoxResult.Ok Then
 
-  
+
 
             Dim password = Main.get_password(ParsingSchemaTextBox.Text, My.Settings.CurrentDB)
 
             Apex.ApexExportCommit(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
             'Apex.progress_test(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
             'ApexExport.demo_progress_bar()
- 
+
         End If
     End Sub
 
- 
+
     Private Sub MergeAndPushFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MergeAndPushFeatureToolStripMenuItem.Click
- 
+
         Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
 
         Dim mergeAndPush As ProgressDialogue = New ProgressDialogue("Merge and Push branch:  " & currentBranch)
@@ -200,7 +177,7 @@
         mergeAndPush.Show()
 
         mergeAndPush.setStep(0)
- 
+
 
         'switch
         'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, "master")
@@ -237,14 +214,14 @@
             Dim featureName As String = InputBox("Enter the Jira Id.", "Jira Id for new Feature Branch")
 
             If Not String.IsNullOrEmpty(featureName) Then
- 
+
                 Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new Feature branch:  " & featureName)
                 newFeature.MdiParent = GitPatcher
                 newFeature.addStep("Switch to Master branch", 25)
                 newFeature.addStep("Pull from Origin", 50)
                 newFeature.addStep("Create and switch to Feature branch: " & featureName, 75)
                 newFeature.addStep("Create intial Tag: " & featureName & ".00", 100)
-  
+
                 newFeature.Show()
 
                 newFeature.setStep(0)
@@ -265,14 +242,23 @@
                 'Create the tag
                 Tortoise.Tag(My.Settings.CurrentRepo)
 
- 
+
                 'Done
                 newFeature.done()
 
- 
+
 
             End If
 
         End If
+    End Sub
+
+    Private Sub CreateDBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBPatchSetToolStripMenuItem.Click
+        CreatePatchCollection.createCollectionProcess("patchset", "feature,hotfix", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix", "patchset,feature,hotfix")
+    End Sub
+
+    Private Sub DBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DBPatchSetToolStripMenuItem.Click
+        Dim Wizard As New CreatePatchCollection("patchset", "feature,hotfix", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix", "patchset,feature,hotfix")
+        Wizard.ShowDialog()
     End Sub
 End Class

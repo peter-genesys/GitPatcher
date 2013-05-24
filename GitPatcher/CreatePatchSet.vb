@@ -1,18 +1,30 @@
 ﻿
-Public Class PatchFromTags
+Public Class CreatePatchCollection
+    Private pCreatePatchType As String = Nothing
+    Private pFindPatchTypes As String = Nothing
+    Private pFindPatchFilters As String = Nothing
+    Private pPrereqPatchTypes As String = Nothing
+    Private pSupPatchTypes As String = Nothing
+
+    Public Sub New(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
 
 
-    Public Sub New()
+        pCreatePatchType = iCreatePatchType
+        pFindPatchTypes = iFindPatchTypes
+        pFindPatchFilters = iFindPatchFilters
+        pPrereqPatchTypes = iPrereqPatchTypes
+        pSupPatchTypes = iSupPatchTypes
+
         InitializeComponent()
 
-        FindTagsButton.Text = "Find Tags like " & Main.CurrentBranchTextBox.Text & ".XX"
+        FindTagsButton.Text = "Find Tags like " & Main.ApplicationListComboBox.SelectedItem & "-X.XX.XX"
 
         Findtags()
 
 
     End Sub
- 
- 
+
+
     'Shared Sub TortoiseMerge(ByVal i_WorkingDir As String, ByVal i_merge_branch As String, Optional ByVal i_wait As Boolean = True)
     '    Dim Tortoise As New TortoiseFacade(i_wait)
     '    Tortoise.Merge(i_WorkingDir, i_merge_branch)
@@ -21,33 +33,132 @@ Public Class PatchFromTags
     Private Sub Findtags()
         TagsCheckedListBox.Items.Clear()
         For Each tagname In GitSharpFascade.getTagList(My.Settings.CurrentRepo)
-            If PatchRunner.get_first_split(tagname, ".") = Main.CurrentBranchTextBox.Text Then
+            If PatchRunner.get_first_split(tagname, "-") = Main.CurrentBranchTextBox.Text Then
                 TagsCheckedListBox.Items.Add(tagname)
             End If
         Next
     End Sub
 
-    Private Sub FindChanges()
-        Try
-            If SchemaComboBox.Text = "" Then
-                Throw (New Halt("Schema not selected"))
-            End If
 
-            ChangesCheckedListBox.Items.Clear()
-            For Each change In GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, False)
-                ChangesCheckedListBox.Items.Add(change)
-                ChangesCheckedListBox.SetItemChecked(ChangesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
-            Next
+    Public Sub RecursiveSearchContainingFolder(ByVal strPath As String, ByVal strPattern As String, ByRef patches As Collection, ByVal removePath As String)
 
+        Dim strFolders() As String = System.IO.Directory.GetDirectories(strPath)
+        Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
 
-        Catch schema_not_selected As Halt
-            MsgBox("Please select a schema")
-        End Try
+        'Add the files
+        For Each strFile As String In strFiles
+            patches.Add(strPath.Substring(removePath.Length))
+            'Logger.Dbg(strPath.Substring(removePath.Length), "All Patches")
+        Next
+
+        'Look through the other folders
+        For Each strFolder As String In strFolders
+            'Call the procedure again to perform the same operation
+            RecursiveSearchContainingFolder(strFolder, strPattern, patches, removePath)
+        Next
+
     End Sub
 
 
+
+    '  Private Sub FindPatches()
+    '
+    '
+    '      Dim allPatches As New Collection()
+    '
+    '      If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
+    '
+    '          RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", allPatches, Main.RootPatchDirTextBox.Text)
+    '
+    '      End If
+    '
+    '      'Try
+    '      'If SchemaComboBox.Text = "" Then
+    '      '    Throw (New Halt("Schema not selected"))
+    '      'End If
+    '
+    '      PatchesCheckedListBox.Items.Clear()
+    '
+    '      'For Each patchname As String In allPatches
+    '      '    PatchesCheckedListBox.Items.Add(patchname)
+    '      '    PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
+    '      '    'For Each change In GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, patchname, False)
+    '      '    'PatchesCheckedListBox.Items.Add(change)
+    '      '    'PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
+    '      '    'Next
+    '      'Next
+    '
+    '      For Each change In GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
+    '          For Each patchname As String In allPatches
+    '              If change.contains(Replace(patchname, "\", "/")) And change.contains("install.sql") Then
+    '                  PatchesCheckedListBox.Items.Add(change)
+    '                  PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
+    '              End If
+    '          Next
+    '      Next
+    '
+    '
+    '      'Catch schema_not_selected As Halt
+    '      'MsgBox("Please select a schema")
+    '      'End Try
+    '  End Sub
+
+
+    Function stringContainsSetMember(iString As String, iSet As String, idelim As String) As Boolean
+        Dim lResult As Boolean = False
+        For Each member In iSet.Split(idelim)
+            lResult = lResult Or iString.Contains(member)
+        Next
+
+        Return lResult
+
+    End Function
+
+
+    Private Sub FindPatches()
+
+
+
+        PatchesCheckedListBox.Items.Clear()
+
+        If Not String.IsNullOrEmpty(Tag1TextBox.Text) And Not String.IsNullOrEmpty(Tag2TextBox.Text) Then
+
+            For Each change In GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
+
+                If change.contains("install.sql") And stringContainsSetMember(change, pFindPatchTypes, ",") And stringContainsSetMember(change, pFindPatchFilters, ",") Then
+                    'PatchesCheckedListBox.Items.Add(change)
+                    PatchesCheckedListBox.Items.Add(dropLastSegment(dropFirstSegment(change, "/"), "/"))
+                    'PatchesCheckedListBox.Items.Add(dropFirstSegment(change, "/"))
+                    'PatchesCheckedListBox.Items.Add(dropLastSegment(change, "/"))
+
+                    PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
+                End If
+
+            Next
+
+        Else
+
+            Dim allPatches As New Collection()
+
+            If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
+
+                RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", allPatches, Main.RootPatchDirTextBox.Text)
+
+            End If
+            For Each patchname As String In allPatches
+                If stringContainsSetMember(patchname, pFindPatchTypes, ",") And stringContainsSetMember(patchname, pFindPatchFilters, ",") Then
+                    PatchesCheckedListBox.Items.Add(patchname)
+                    PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
+                End If
+            Next
+
+        End If
+
+
+    End Sub
+
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles FindButton.Click
-        FindChanges()
+        FindPatches()
 
 
     End Sub
@@ -78,7 +189,7 @@ Public Class PatchFromTags
 
         Dim filenames As Collection = Nothing
 
-        filenames = GitSharpFascade.exportTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ChangesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
+        filenames = GitSharpFascade.exportTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
 
         'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
@@ -104,66 +215,66 @@ Public Class PatchFromTags
 
     End Sub
 
-    Private Sub deriveSchemas()
-        SchemaComboBox.Items.Clear()
-        SchemaComboBox.Text = ""
-        For Each schema In GitSharpFascade.getSchemaList(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database")
-            SchemaComboBox.Items.Add(schema)
-        Next
-
-        SchemaCountTextBox.Text = SchemaComboBox.Items.Count
-
-        'If exactly one schema found then select it
-        'otherwise force user to choose one.
-        If SchemaComboBox.Items.Count = 1 Then
-            SchemaComboBox.SelectedIndex = 0
-        End If
-    End Sub
+    ' Private Sub deriveSchemas()
+    '     SchemaComboBox.Items.Clear()
+    '     SchemaComboBox.Text = ""
+    '     For Each schema In GitSharpFascade.getSchemaList(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database")
+    '         SchemaComboBox.Items.Add(schema)
+    '     Next
+    '
+    '     SchemaCountTextBox.Text = SchemaComboBox.Items.Count
+    '
+    '     'If exactly one schema found then select it
+    '     'otherwise force user to choose one.
+    '     If SchemaComboBox.Items.Count = 1 Then
+    '         SchemaComboBox.SelectedIndex = 0
+    '     End If
+    ' End Sub
 
     Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckAllCheckBox.CheckedChanged
         'Loop thru items.
-        For i As Integer = 0 To ChangesCheckedListBox.Items.Count - 1
-            ChangesCheckedListBox.SetItemChecked(i, CheckAllCheckBox.Checked)
+        For i As Integer = 0 To PatchesCheckedListBox.Items.Count - 1
+            PatchesCheckedListBox.SetItemChecked(i, CheckAllCheckBox.Checked)
 
         Next
     End Sub
 
     Private Sub Tag2TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag2TextBox.TextChanged
 
-        deriveSchemas()
+        ' deriveSchemas()
 
     End Sub
 
     Private Sub Tag1TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag1TextBox.TextChanged
-        deriveSchemas()
+        ' deriveSchemas()
     End Sub
 
     Private Sub ViewButton_Click(sender As Object, e As EventArgs) Handles ViewButton.Click
-        MsgBox(GitSharpFascade.viewTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ChangesCheckedListBox.CheckedItems))
+        MsgBox(GitSharpFascade.viewTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchesCheckedListBox.CheckedItems))
     End Sub
 
     Private Sub RemoveButton_Click(sender As Object, e As EventArgs) Handles RemoveButton.Click
         Dim temp As Collection = New Collection
 
 
-        For i As Integer = 0 To ChangesCheckedListBox.Items.Count - 1
-            If Not ChangesCheckedListBox.CheckedIndices.Contains(i) Then
+        For i As Integer = 0 To PatchesCheckedListBox.Items.Count - 1
+            If Not PatchesCheckedListBox.CheckedIndices.Contains(i) Then
                 'MsgBox(ChangesCheckedListBox.Items(i).ToString)
-                temp.Add(ChangesCheckedListBox.Items(i).ToString)
+                temp.Add(PatchesCheckedListBox.Items(i).ToString)
 
             End If
 
 
         Next
 
-        ChangesCheckedListBox.Items.Clear()
+        PatchesCheckedListBox.Items.Clear()
 
         For i As Integer = 1 To temp.Count
-            If Not ChangesCheckedListBox.CheckedIndices.Contains(i) Then
+            If Not PatchesCheckedListBox.CheckedIndices.Contains(i) Then
                 'MsgBox(ChangesCheckedListBox.Items(i).ToString)
                 ' temp.Add(ChangesCheckedListBox.Items(i).ToString)
 
-                ChangesCheckedListBox.Items.Add(temp(i), CheckAllCheckBox.Checked)
+                PatchesCheckedListBox.Items.Add(temp(i), CheckAllCheckBox.Checked)
 
             End If
 
@@ -179,7 +290,7 @@ Public Class PatchFromTags
         PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
-    Public Shared Function get_last_split(ByVal ipath As String, ByVal idelim As String) As String
+    Public Shared Function getLastSegment(ByVal ipath As String, ByVal idelim As String) As String
         Dim Path() As String = ipath.Split(idelim)
         Dim SplitCount = Path.Length
         Dim l_last As String = ipath.Split(idelim)(SplitCount - 1)
@@ -187,16 +298,28 @@ Public Class PatchFromTags
         Return l_last
     End Function
 
-    Public Shared Function get_from_first_split(ByVal ipath As String, ByVal idelim As String) As String
- 
+    Public Shared Function dropFirstSegment(ByVal ipath As String, ByVal idelim As String) As String
+
         Dim l_from_first As String = Nothing
         Dim delim_pos As Integer = ipath.IndexOf(idelim)
         If delim_pos > 0 Then
-            l_from_first = ipath.Remove(1, delim_pos)
+            l_from_first = ipath.Remove(0, delim_pos + 1)
         End If
- 
+
         Return l_from_first
     End Function
+
+    Public Shared Function dropLastSegment(ByVal ipath As String, ByVal idelim As String) As String
+
+        Dim l_to_last As String = Nothing
+        Dim delim_pos As Integer = ipath.LastIndexOf(idelim)
+        If delim_pos > 0 Then
+            l_to_last = ipath.Remove(delim_pos, ipath.Length - delim_pos)
+        End If
+
+        Return l_to_last
+    End Function
+
 
 
 
@@ -215,7 +338,7 @@ Public Class PatchFromTags
                                   ByRef prereq_patches As CheckedListBox.CheckedItemCollection, _
                                   ByRef supersedes_patches As CheckedListBox.CheckedItemCollection, _
                                   ByVal patchDir As String, _
-                                  ByVal groupPath As String )
+                                  ByVal groupPath As String)
 
 
         Dim l_db_objects_users As String = Nothing 'user
@@ -271,7 +394,7 @@ Public Class PatchFromTags
 
         For Each l_path In targetFiles
 
-            Dim l_filename As String = get_last_split(l_path, "/")
+            Dim l_filename As String = getLastSegment(l_path, "/")
 
             'Sort the files by files extention into lists.
 
@@ -563,11 +686,11 @@ Public Class PatchFromTags
         'Copy Selected Changes to the next list box.
         PatchableCheckedListBox.Items.Clear()
 
-        For i As Integer = 0 To ChangesCheckedListBox.Items.Count - 1
-            If ChangesCheckedListBox.CheckedIndices.Contains(i) Then
+        For i As Integer = 0 To PatchesCheckedListBox.Items.Count - 1
+            If PatchesCheckedListBox.CheckedIndices.Contains(i) Then
                 'MsgBox(ChangesCheckedListBox.Items(i).ToString)
 
-                PatchableCheckedListBox.Items.Add(ChangesCheckedListBox.Items(i).ToString)
+                PatchableCheckedListBox.Items.Add(PatchesCheckedListBox.Items(i).ToString)
 
             End If
 
@@ -589,11 +712,11 @@ Public Class PatchFromTags
 
         End If
 
-        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageChanges" Then
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatches" Then
             deriveTags()
 
-            If ChangesCheckedListBox.Items.Count = 0 Then
-                FindChanges()
+            If PatchesCheckedListBox.Items.Count = 0 Then
+                FindPatches()
             End If
 
 
@@ -646,7 +769,7 @@ Public Class PatchFromTags
 
     Private Sub derivePatchName()
 
-        PatchNameTextBox.Text = SchemaComboBox.SelectedItem.ToString & "_" & Main.CurrentBranchTextBox.Text & "_" & get_from_first_split(Tag1TextBox.Text, ".") & "_" & get_from_first_split(Tag2TextBox.Text, ".")
+        PatchNameTextBox.Text = Tag2TextBox.Text
 
         If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
             PatchNameTextBox.Text = PatchNameTextBox.Text & "_" & SupIdTextBox.Text
@@ -665,7 +788,7 @@ Public Class PatchFromTags
         PrereqsCheckedListBox.Items.Clear()
         If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
 
-            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", PrereqsCheckedListBox, Main.RootPatchDirTextBox.Text)
+            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text & "patchset\", "install.sql", PrereqsCheckedListBox, Main.RootPatchDirTextBox.Text & "patchset\")
 
             'For Each foldername As String In IO.Directory.GetDirectories(Main.RootPatchDirTextBox.Text)
             '    PrereqsCheckedListBox.Items.Add(get_last_split(foldername, "\"))
@@ -686,7 +809,7 @@ Public Class PatchFromTags
         SupersedesCheckedListBox.Items.Clear()
         If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
 
-            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", SupersedesCheckedListBox, Main.RootPatchDirTextBox.Text)
+            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text & "patchset\", "install.sql", SupersedesCheckedListBox, Main.RootPatchDirTextBox.Text & "patchset\")
             'For Each foldername As String In IO.Directory.GetDirectories(Main.RootPatchDirTextBox.Text)
             '    SupersedesCheckedListBox.Items.Add(get_last_split(foldername, "\"))
             'Next
@@ -744,83 +867,81 @@ Public Class PatchFromTags
     End Sub
 
 
-    Public Shared Sub createPatchProcess()
+    Public Shared Sub createCollectionProcess(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
+
 
         Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
 
-        Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create Patch")
-        createPatchProgress.MdiParent = GitPatcher
-        createPatchProgress.addStep("Review tags on the branch", 10)
-        createPatchProgress.addStep("Create edit, test", 40)
-        'createPatchProgress.addStep("Add new files", 50)
-        createPatchProgress.addStep("Commit to Branch: " & currentBranch, 50)
-        createPatchProgress.addStep("Switch to Master branch", 60)
-        createPatchProgress.addStep("Pull from Origin", 70)
-        createPatchProgress.addStep("Merge from Branch: " & currentBranch, 80)
-        createPatchProgress.addStep("Push to Origin", 90)
-        createPatchProgress.addStep("Return to Branch: " & currentBranch, 100)
+        Dim createPatchSetProgress As ProgressDialogue = New ProgressDialogue("Create DB " & iCreatePatchType)
+        createPatchSetProgress.MdiParent = GitPatcher
 
-        createPatchProgress.Show()
+        createPatchSetProgress.addStep("Switch to Master branch", 10)
+        createPatchSetProgress.addStep("Pull from origin", 20)
+        createPatchSetProgress.addStep("Create tag on master branch: " & Main.PatchSetTextBox.Text & ".X.XX.XX", 30)
+        createPatchSetProgress.addStep("Create and Switch to " & iCreatePatchType & " Branch: " & iCreatePatchType & "/" & Main.PatchSetTextBox.Text, 40)
+        createPatchSetProgress.addStep("Create, edit and test " & iCreatePatchType, 50)
+        createPatchSetProgress.addStep("Commit to " & iCreatePatchType & " Branch: " & iCreatePatchType & "/" & Main.PatchSetTextBox.Text, 60)
+        createPatchSetProgress.addStep("Switch to Master branch", 70)
+        createPatchSetProgress.addStep("Pull from origin", 80)
+        createPatchSetProgress.addStep("Merge from " & iCreatePatchType & " Branch: " & iCreatePatchType & "/" & Main.PatchSetTextBox.Text, 90)
+        createPatchSetProgress.addStep("Push to origin", 95)
+        createPatchSetProgress.addStep("Execute on target database.", 100)
 
-        createPatchProgress.setStep(0)
+        createPatchSetProgress.Show()
 
-        Tortoise.Log(My.Settings.CurrentRepo)
+        'createPatchSetProgress.setStep(0)
 
-
-        createPatchProgress.setStep(1)
-
-        Dim Wizard As New PatchFromTags
-        'newchildform.MdiParent = GitPatcher
-        Wizard.ShowDialog()
-
-
-        'If BMSSplash.MyLogin.ShowDialog() = DialogResult.OK Then
-        '    ' Form was closed via OK button or similar, continue normally... '
-        '    BMSSplash.MyBuddy.Show()
-        'Else
-        '    ' Form was aborted via Cancel, Close, or some other way; do something '
-        '    ' else like quitting the application... '
-        'End If
-
-
-        'NEED TO WAIT HERE!!
-        createPatchProgress.setStep(2)
-
-
-        'Adding new files to GIT"
-        'TortoiseAdd(My.Settings.CurrentRepo)
-
-        'Committing changed files to GIT"
-        Tortoise.Commit(My.Settings.CurrentRepo, "Commit any patches you've not yet committed", True)
-
-        createPatchProgress.setStep(3)
-
-        'switch
-        'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, "master")
+        'Switch to Master branch
         Tortoise.Switch(My.Settings.CurrentRepo)
 
-        createPatchProgress.setStep(4)
+        createPatchSetProgress.gonext()
+
+        'Create collection branch
+        GitSharpFascade.createBranch(My.Settings.CurrentRepo, iCreatePatchType & "/" & "tag123")
+
+
         'Pull from Origin 
         Tortoise.Pull(My.Settings.CurrentRepo)
 
-        createPatchProgress.setStep(5)
+        createPatchSetProgress.gonext()
 
-        'Merge from Feature branch
-        'TortoiseMerge(My.Settings.CurrentRepo, currentBranch)
+        'Switch to patchset Branch
+        Tortoise.Switch(My.Settings.CurrentRepo)
+
+        createPatchSetProgress.gonext()
+
+        'Merge from master
         Tortoise.Merge(My.Settings.CurrentRepo)
 
-        createPatchProgress.setStep(6)
+        createPatchSetProgress.gonext()
+
+        'Show log, to create a tag
+        Tortoise.Log(My.Settings.CurrentRepo)
+
+        createPatchSetProgress.gonext()
+
+        Dim Wizard As New CreatePatchCollection(iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes, iSupPatchTypes)
+        Wizard.ShowDialog()
+
+        'NEED TO WAIT HERE!!
+        createPatchSetProgress.gonext()
+
+
+        'Committing changed files to GIT"
+        Tortoise.Commit(My.Settings.CurrentRepo, "Commit any patch sets you've not yet committed", True)
+
+        createPatchSetProgress.gonext()
 
         'Push to Origin 
         Tortoise.Push(My.Settings.CurrentRepo)
 
-        createPatchProgress.setStep(7)
+        createPatchSetProgress.gonext()
 
-        'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, currentBranch)
+        'Switch back to master
         Tortoise.Switch(My.Settings.CurrentRepo)
 
         'Done
-        createPatchProgress.done()
+        createPatchSetProgress.done()
 
     End Sub
 

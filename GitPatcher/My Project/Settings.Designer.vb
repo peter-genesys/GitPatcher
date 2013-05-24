@@ -164,7 +164,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("f101")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("f101"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"f100")>  _
         Public Property AppList() As String
             Get
                 Return CType(Me("AppList"),String)
@@ -176,7 +176,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("tpds")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("tpds"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"tpds")>  _
         Public Property ParsingSchemaList() As String
             Get
                 Return CType(Me("ParsingSchemaList"),String)
@@ -253,6 +253,54 @@ Namespace My
             Get
                 Return CType(Me("MinPatch"),String)
             End Get
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Prism"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Prism Mobile")>  _
+        Public Property ApplicationsList() As String
+            Get
+                Return CType(Me("ApplicationsList"),String)
+            End Get
+            Set
+                Me("ApplicationsList") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("SYS,PATCH_ADMIN,TSDM"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"SYS,PATCH_ADMIN,TSDM")>  _
+        Public Property PatchSchemaList() As String
+            Get
+                Return CType(Me("PatchSchemaList"),String)
+            End Get
+            Set
+                Me("PatchSchemaList") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Prism")>  _
+        Public Property CurrentApp() As String
+            Get
+                Return CType(Me("CurrentApp"),String)
+            End Get
+            Set
+                Me("CurrentApp") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("prism"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"prismmobile")>  _
+        Public Property PatchSetList() As String
+            Get
+                Return CType(Me("PatchSetList"),String)
+            End Get
+            Set
+                Me("PatchSetList") = value
+            End Set
         End Property
     End Class
 End Namespace

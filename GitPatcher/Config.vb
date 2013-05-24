@@ -16,7 +16,10 @@
         OJDBCjarFileTextBox.DataBindings.Add("Text", My.Settings, "JDBCjar")
         SQLpathTextBox.DataBindings.Add("Text", My.Settings, "SQLpath")
 
-        'Apex
+        'Apps
+        ApplicationsTextBox.DataBindings.Add("Text", My.Settings, "ApplicationsList")
+        PatchSchemasTextBox.DataBindings.Add("Text", My.Settings, "PatchSchemaList")
+        PatchSetTextBox.DataBindings.Add("Text", My.Settings, "PatchSetList")
         AppListTextBox.DataBindings.Add("Text", My.Settings, "AppList")
         ParsingSchemaTextbox.DataBindings.Add("Text", My.Settings, "ParsingSchemaList")
 
