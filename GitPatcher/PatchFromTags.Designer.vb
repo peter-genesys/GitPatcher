@@ -150,7 +150,7 @@ Partial Class PatchFromTags
         Me.PatchButton.Name = "PatchButton"
         Me.PatchButton.Size = New System.Drawing.Size(142, 23)
         Me.PatchButton.TabIndex = 7
-        Me.PatchButton.Text = "Patch"
+        Me.PatchButton.Text = "Create Patch"
         Me.PatchButton.UseVisualStyleBackColor = True
         '
         'CheckAllCheckBox

@@ -27,14 +27,7 @@ Partial Class CreatePatchCollection
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Tag2TextBox = New System.Windows.Forms.TextBox()
         Me.FindButton = New System.Windows.Forms.Button()
-        Me.PatchesCheckedListBox = New System.Windows.Forms.CheckedListBox()
-        Me.Label3 = New System.Windows.Forms.Label()
         Me.PatchButton = New System.Windows.Forms.Button()
-        Me.CheckAllCheckBox = New System.Windows.Forms.CheckBox()
-        Me.SchemaComboBox = New System.Windows.Forms.ComboBox()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.ViewButton = New System.Windows.Forms.Button()
-        Me.RemoveButton = New System.Windows.Forms.Button()
         Me.PatchDirTextBox = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.PatchNameTextBox = New System.Windows.Forms.TextBox()
@@ -45,13 +38,20 @@ Partial Class CreatePatchCollection
         Me.TagsCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.TabPagePatches = New System.Windows.Forms.TabPage()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.SchemaCountTextBox = New System.Windows.Forms.TextBox()
+        Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.AvailablePatchesListBox = New System.Windows.Forms.ListBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.ChosenPatchesListBox = New System.Windows.Forms.ListBox()
         Me.TabPagePreReqs = New System.Windows.Forms.TabPage()
+        Me.PreReqPatchTypeComboBox = New System.Windows.Forms.ComboBox()
+        Me.Label20 = New System.Windows.Forms.Label()
         Me.PreReqButton = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.PrereqsCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.TabPageSuper = New System.Windows.Forms.TabPage()
+        Me.SupPatchTypeComboBox = New System.Windows.Forms.ComboBox()
+        Me.Label17 = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.SupersedesCheckedListBox = New System.Windows.Forms.CheckedListBox()
@@ -78,6 +78,10 @@ Partial Class CreatePatchCollection
         Me.PatchTabControl.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.TabPagePatches.SuspendLayout()
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer1.Panel1.SuspendLayout()
+        Me.SplitContainer1.Panel2.SuspendLayout()
+        Me.SplitContainer1.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
         Me.TabPageSuper.SuspendLayout()
         Me.TabPagePatchDefn.SuspendLayout()
@@ -86,7 +90,7 @@ Partial Class CreatePatchCollection
         '
         'Tag1TextBox
         '
-        Me.Tag1TextBox.Location = New System.Drawing.Point(77, 485)
+        Me.Tag1TextBox.Location = New System.Drawing.Point(596, 20)
         Me.Tag1TextBox.Name = "Tag1TextBox"
         Me.Tag1TextBox.ReadOnly = True
         Me.Tag1TextBox.Size = New System.Drawing.Size(139, 20)
@@ -95,24 +99,24 @@ Partial Class CreatePatchCollection
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(20, 488)
+        Me.Label1.Location = New System.Drawing.Point(313, 23)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(52, 13)
+        Me.Label1.Size = New System.Drawing.Size(184, 13)
         Me.Label1.TabIndex = 1
-        Me.Label1.Text = "From Tag"
+        Me.Label1.Text = "From Tag - Find Patches after this tag"
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(20, 514)
+        Me.Label2.Location = New System.Drawing.Point(302, 49)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(42, 13)
+        Me.Label2.Size = New System.Drawing.Size(288, 13)
         Me.Label2.TabIndex = 3
-        Me.Label2.Text = "To Tag"
+        Me.Label2.Text = "* To Tag - Find patches before this tag, also name of patch."
         '
         'Tag2TextBox
         '
-        Me.Tag2TextBox.Location = New System.Drawing.Point(77, 511)
+        Me.Tag2TextBox.Location = New System.Drawing.Point(596, 46)
         Me.Tag2TextBox.Name = "Tag2TextBox"
         Me.Tag2TextBox.ReadOnly = True
         Me.Tag2TextBox.Size = New System.Drawing.Size(139, 20)
@@ -127,80 +131,18 @@ Partial Class CreatePatchCollection
         Me.FindButton.Text = "Find Patches"
         Me.FindButton.UseVisualStyleBackColor = True
         '
-        'ChangesCheckedListBox
-        '
-        Me.PatchesCheckedListBox.FormattingEnabled = True
-        Me.PatchesCheckedListBox.Location = New System.Drawing.Point(77, 76)
-        Me.PatchesCheckedListBox.Name = "ChangesCheckedListBox"
-        Me.PatchesCheckedListBox.Size = New System.Drawing.Size(397, 394)
-        Me.PatchesCheckedListBox.TabIndex = 5
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(22, 76)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(49, 13)
-        Me.Label3.TabIndex = 6
-        Me.Label3.Text = "Changes"
-        '
         'PatchButton
         '
-        Me.PatchButton.Location = New System.Drawing.Point(80, 533)
+        Me.PatchButton.Location = New System.Drawing.Point(77, 664)
         Me.PatchButton.Name = "PatchButton"
         Me.PatchButton.Size = New System.Drawing.Size(142, 23)
         Me.PatchButton.TabIndex = 7
-        Me.PatchButton.Text = "Patch"
+        Me.PatchButton.Text = "Create Patch"
         Me.PatchButton.UseVisualStyleBackColor = True
-        '
-        'CheckAllCheckBox
-        '
-        Me.CheckAllCheckBox.AutoSize = True
-        Me.CheckAllCheckBox.Location = New System.Drawing.Point(77, 46)
-        Me.CheckAllCheckBox.Name = "CheckAllCheckBox"
-        Me.CheckAllCheckBox.Size = New System.Drawing.Size(71, 17)
-        Me.CheckAllCheckBox.TabIndex = 9
-        Me.CheckAllCheckBox.Text = "Check All"
-        Me.CheckAllCheckBox.UseVisualStyleBackColor = True
-        '
-        'SchemaComboBox
-        '
-        Me.SchemaComboBox.FormattingEnabled = True
-        Me.SchemaComboBox.Location = New System.Drawing.Point(291, 20)
-        Me.SchemaComboBox.Name = "SchemaComboBox"
-        Me.SchemaComboBox.Size = New System.Drawing.Size(183, 21)
-        Me.SchemaComboBox.TabIndex = 10
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(239, 23)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(46, 13)
-        Me.Label4.TabIndex = 11
-        Me.Label4.Text = "Schema"
-        '
-        'ViewButton
-        '
-        Me.ViewButton.Location = New System.Drawing.Point(77, 476)
-        Me.ViewButton.Name = "ViewButton"
-        Me.ViewButton.Size = New System.Drawing.Size(142, 23)
-        Me.ViewButton.TabIndex = 12
-        Me.ViewButton.Text = "View Selected Files"
-        Me.ViewButton.UseVisualStyleBackColor = True
-        '
-        'RemoveButton
-        '
-        Me.RemoveButton.Location = New System.Drawing.Point(77, 505)
-        Me.RemoveButton.Name = "RemoveButton"
-        Me.RemoveButton.Size = New System.Drawing.Size(142, 23)
-        Me.RemoveButton.TabIndex = 13
-        Me.RemoveButton.Text = "Remove Selected Files"
-        Me.RemoveButton.UseVisualStyleBackColor = True
         '
         'PatchDirTextBox
         '
-        Me.PatchDirTextBox.Location = New System.Drawing.Point(80, 436)
+        Me.PatchDirTextBox.Location = New System.Drawing.Point(77, 567)
         Me.PatchDirTextBox.Name = "PatchDirTextBox"
         Me.PatchDirTextBox.ReadOnly = True
         Me.PatchDirTextBox.Size = New System.Drawing.Size(401, 20)
@@ -209,7 +151,7 @@ Partial Class CreatePatchCollection
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(10, 439)
+        Me.Label5.Location = New System.Drawing.Point(7, 570)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(51, 13)
         Me.Label5.TabIndex = 15
@@ -217,7 +159,7 @@ Partial Class CreatePatchCollection
         '
         'PatchNameTextBox
         '
-        Me.PatchNameTextBox.Location = New System.Drawing.Point(80, 411)
+        Me.PatchNameTextBox.Location = New System.Drawing.Point(77, 542)
         Me.PatchNameTextBox.Name = "PatchNameTextBox"
         Me.PatchNameTextBox.ReadOnly = True
         Me.PatchNameTextBox.Size = New System.Drawing.Size(401, 20)
@@ -226,7 +168,7 @@ Partial Class CreatePatchCollection
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(10, 414)
+        Me.Label6.Location = New System.Drawing.Point(7, 545)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(66, 13)
         Me.Label6.TabIndex = 17
@@ -243,7 +185,7 @@ Partial Class CreatePatchCollection
         Me.PatchTabControl.Location = New System.Drawing.Point(12, 12)
         Me.PatchTabControl.Name = "PatchTabControl"
         Me.PatchTabControl.SelectedIndex = 0
-        Me.PatchTabControl.Size = New System.Drawing.Size(550, 605)
+        Me.PatchTabControl.Size = New System.Drawing.Size(760, 738)
         Me.PatchTabControl.TabIndex = 18
         '
         'TabPageTags
@@ -258,7 +200,7 @@ Partial Class CreatePatchCollection
         Me.TabPageTags.Location = New System.Drawing.Point(4, 22)
         Me.TabPageTags.Name = "TabPageTags"
         Me.TabPageTags.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageTags.Size = New System.Drawing.Size(542, 579)
+        Me.TabPageTags.Size = New System.Drawing.Size(752, 712)
         Me.TabPageTags.TabIndex = 0
         Me.TabPageTags.Text = "Tags"
         Me.TabPageTags.UseVisualStyleBackColor = True
@@ -277,7 +219,7 @@ Partial Class CreatePatchCollection
         Me.TagsCheckedListBox.FormattingEnabled = True
         Me.TagsCheckedListBox.Location = New System.Drawing.Point(77, 76)
         Me.TagsCheckedListBox.Name = "TagsCheckedListBox"
-        Me.TagsCheckedListBox.Size = New System.Drawing.Size(397, 394)
+        Me.TagsCheckedListBox.Size = New System.Drawing.Size(658, 619)
         Me.TagsCheckedListBox.TabIndex = 12
         '
         'Label15
@@ -291,53 +233,101 @@ Partial Class CreatePatchCollection
         '
         'TabPagePatches
         '
-        Me.TabPagePatches.Controls.Add(Me.Label17)
-        Me.TabPagePatches.Controls.Add(Me.SchemaCountTextBox)
-        Me.TabPagePatches.Controls.Add(Me.PatchesCheckedListBox)
-        Me.TabPagePatches.Controls.Add(Me.SchemaComboBox)
-        Me.TabPagePatches.Controls.Add(Me.Label4)
-        Me.TabPagePatches.Controls.Add(Me.FindButton)
-        Me.TabPagePatches.Controls.Add(Me.RemoveButton)
-        Me.TabPagePatches.Controls.Add(Me.Label3)
-        Me.TabPagePatches.Controls.Add(Me.CheckAllCheckBox)
-        Me.TabPagePatches.Controls.Add(Me.ViewButton)
+        Me.TabPagePatches.Controls.Add(Me.SplitContainer1)
         Me.TabPagePatches.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePatches.Name = "TabPagePatches"
         Me.TabPagePatches.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePatches.Size = New System.Drawing.Size(542, 579)
+        Me.TabPagePatches.Size = New System.Drawing.Size(752, 712)
         Me.TabPagePatches.TabIndex = 1
         Me.TabPagePatches.Text = "Patches"
         Me.TabPagePatches.UseVisualStyleBackColor = True
         '
-        'Label17
+        'SplitContainer1
         '
-        Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(208, 48)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(77, 13)
-        Me.Label17.TabIndex = 15
-        Me.Label17.Text = "Schema Count"
+        Me.SplitContainer1.Location = New System.Drawing.Point(6, 6)
+        Me.SplitContainer1.Name = "SplitContainer1"
         '
-        'SchemaCountTextBox
+        'SplitContainer1.Panel1
         '
-        Me.SchemaCountTextBox.Location = New System.Drawing.Point(291, 46)
-        Me.SchemaCountTextBox.Name = "SchemaCountTextBox"
-        Me.SchemaCountTextBox.ReadOnly = True
-        Me.SchemaCountTextBox.Size = New System.Drawing.Size(37, 20)
-        Me.SchemaCountTextBox.TabIndex = 14
+        Me.SplitContainer1.Panel1.Controls.Add(Me.Label3)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.AvailablePatchesListBox)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.FindButton)
+        Me.SplitContainer1.Panel1MinSize = 50
+        '
+        'SplitContainer1.Panel2
+        '
+        Me.SplitContainer1.Panel2.Controls.Add(Me.Label4)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.ChosenPatchesListBox)
+        Me.SplitContainer1.Panel2MinSize = 50
+        Me.SplitContainer1.Size = New System.Drawing.Size(740, 700)
+        Me.SplitContainer1.SplitterDistance = 372
+        Me.SplitContainer1.TabIndex = 5
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(0, 40)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(92, 13)
+        Me.Label3.TabIndex = 6
+        Me.Label3.Text = "Available Patches"
+        '
+        'AvailablePatchesListBox
+        '
+        Me.AvailablePatchesListBox.FormattingEnabled = True
+        Me.AvailablePatchesListBox.Location = New System.Drawing.Point(3, 56)
+        Me.AvailablePatchesListBox.Name = "AvailablePatchesListBox"
+        Me.AvailablePatchesListBox.Size = New System.Drawing.Size(350, 628)
+        Me.AvailablePatchesListBox.TabIndex = 5
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(2, 40)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(85, 13)
+        Me.Label4.TabIndex = 37
+        Me.Label4.Text = "Chosen Patches"
+        '
+        'ChosenPatchesListBox
+        '
+        Me.ChosenPatchesListBox.FormattingEnabled = True
+        Me.ChosenPatchesListBox.Location = New System.Drawing.Point(3, 56)
+        Me.ChosenPatchesListBox.Name = "ChosenPatchesListBox"
+        Me.ChosenPatchesListBox.Size = New System.Drawing.Size(350, 628)
+        Me.ChosenPatchesListBox.TabIndex = 36
         '
         'TabPagePreReqs
         '
+        Me.TabPagePreReqs.Controls.Add(Me.PreReqPatchTypeComboBox)
+        Me.TabPagePreReqs.Controls.Add(Me.Label20)
         Me.TabPagePreReqs.Controls.Add(Me.PreReqButton)
         Me.TabPagePreReqs.Controls.Add(Me.Label13)
         Me.TabPagePreReqs.Controls.Add(Me.PrereqsCheckedListBox)
         Me.TabPagePreReqs.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePreReqs.Name = "TabPagePreReqs"
         Me.TabPagePreReqs.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePreReqs.Size = New System.Drawing.Size(542, 579)
+        Me.TabPagePreReqs.Size = New System.Drawing.Size(752, 712)
         Me.TabPagePreReqs.TabIndex = 3
         Me.TabPagePreReqs.Text = "Pre-Requisites"
         Me.TabPagePreReqs.UseVisualStyleBackColor = True
+        '
+        'PreReqPatchTypeComboBox
+        '
+        Me.PreReqPatchTypeComboBox.FormattingEnabled = True
+        Me.PreReqPatchTypeComboBox.Location = New System.Drawing.Point(291, 19)
+        Me.PreReqPatchTypeComboBox.Name = "PreReqPatchTypeComboBox"
+        Me.PreReqPatchTypeComboBox.Size = New System.Drawing.Size(183, 21)
+        Me.PreReqPatchTypeComboBox.TabIndex = 34
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(223, 22)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(62, 13)
+        Me.Label20.TabIndex = 35
+        Me.Label20.Text = "Patch Type"
         '
         'PreReqButton
         '
@@ -362,21 +352,40 @@ Partial Class CreatePatchCollection
         Me.PrereqsCheckedListBox.FormattingEnabled = True
         Me.PrereqsCheckedListBox.Location = New System.Drawing.Point(77, 76)
         Me.PrereqsCheckedListBox.Name = "PrereqsCheckedListBox"
-        Me.PrereqsCheckedListBox.Size = New System.Drawing.Size(397, 394)
+        Me.PrereqsCheckedListBox.Size = New System.Drawing.Size(669, 619)
         Me.PrereqsCheckedListBox.TabIndex = 31
         '
         'TabPageSuper
         '
+        Me.TabPageSuper.Controls.Add(Me.SupPatchTypeComboBox)
+        Me.TabPageSuper.Controls.Add(Me.Label17)
         Me.TabPageSuper.Controls.Add(Me.Button1)
         Me.TabPageSuper.Controls.Add(Me.Label14)
         Me.TabPageSuper.Controls.Add(Me.SupersedesCheckedListBox)
         Me.TabPageSuper.Location = New System.Drawing.Point(4, 22)
         Me.TabPageSuper.Name = "TabPageSuper"
         Me.TabPageSuper.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageSuper.Size = New System.Drawing.Size(542, 579)
+        Me.TabPageSuper.Size = New System.Drawing.Size(752, 712)
         Me.TabPageSuper.TabIndex = 4
         Me.TabPageSuper.Text = "Supersedes"
         Me.TabPageSuper.UseVisualStyleBackColor = True
+        '
+        'SupPatchTypeComboBox
+        '
+        Me.SupPatchTypeComboBox.FormattingEnabled = True
+        Me.SupPatchTypeComboBox.Location = New System.Drawing.Point(291, 19)
+        Me.SupPatchTypeComboBox.Name = "SupPatchTypeComboBox"
+        Me.SupPatchTypeComboBox.Size = New System.Drawing.Size(183, 21)
+        Me.SupPatchTypeComboBox.TabIndex = 36
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(223, 22)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(62, 13)
+        Me.Label17.TabIndex = 37
+        Me.Label17.Text = "Patch Type"
         '
         'Button1
         '
@@ -401,7 +410,7 @@ Partial Class CreatePatchCollection
         Me.SupersedesCheckedListBox.FormattingEnabled = True
         Me.SupersedesCheckedListBox.Location = New System.Drawing.Point(77, 76)
         Me.SupersedesCheckedListBox.Name = "SupersedesCheckedListBox"
-        Me.SupersedesCheckedListBox.Size = New System.Drawing.Size(397, 394)
+        Me.SupersedesCheckedListBox.Size = New System.Drawing.Size(669, 619)
         Me.SupersedesCheckedListBox.TabIndex = 31
         '
         'TabPagePatchDefn
@@ -430,14 +439,14 @@ Partial Class CreatePatchCollection
         Me.TabPagePatchDefn.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePatchDefn.Name = "TabPagePatchDefn"
         Me.TabPagePatchDefn.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePatchDefn.Size = New System.Drawing.Size(542, 579)
+        Me.TabPagePatchDefn.Size = New System.Drawing.Size(752, 712)
         Me.TabPagePatchDefn.TabIndex = 2
         Me.TabPagePatchDefn.Text = "Patch Defn"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
         '
         'PatchPathTextBox
         '
-        Me.PatchPathTextBox.Location = New System.Drawing.Point(80, 384)
+        Me.PatchPathTextBox.Location = New System.Drawing.Point(77, 515)
         Me.PatchPathTextBox.Name = "PatchPathTextBox"
         Me.PatchPathTextBox.ReadOnly = True
         Me.PatchPathTextBox.Size = New System.Drawing.Size(401, 20)
@@ -446,7 +455,7 @@ Partial Class CreatePatchCollection
         'Label18
         '
         Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(10, 387)
+        Me.Label18.Location = New System.Drawing.Point(7, 518)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(60, 13)
         Me.Label18.TabIndex = 34
@@ -458,13 +467,13 @@ Partial Class CreatePatchCollection
         Me.CopyChangesButton.Name = "CopyChangesButton"
         Me.CopyChangesButton.Size = New System.Drawing.Size(139, 23)
         Me.CopyChangesButton.TabIndex = 32
-        Me.CopyChangesButton.Text = "Copy Changes"
+        Me.CopyChangesButton.Text = "Copy Patches"
         Me.CopyChangesButton.UseVisualStyleBackColor = True
         '
         'Label16
         '
         Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(137, 358)
+        Me.Label16.Location = New System.Drawing.Point(134, 489)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(407, 13)
         Me.Label16.TabIndex = 31
@@ -476,31 +485,31 @@ Partial Class CreatePatchCollection
         Me.Label12.AutoSize = True
         Me.Label12.Location = New System.Drawing.Point(10, 76)
         Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(49, 13)
+        Me.Label12.Size = New System.Drawing.Size(46, 13)
         Me.Label12.TabIndex = 30
-        Me.Label12.Text = "Changes"
+        Me.Label12.Text = "Patches"
         '
         'Label11
         '
         Me.Label11.AutoSize = True
         Me.Label11.Location = New System.Drawing.Point(77, 43)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(163, 13)
+        Me.Label11.Size = New System.Drawing.Size(152, 13)
         Me.Label11.TabIndex = 29
-        Me.Label11.Text = "All listed changes will be patched"
+        Me.Label11.Text = "All listed patches will be called."
         '
         'PatchableCheckedListBox
         '
         Me.PatchableCheckedListBox.FormattingEnabled = True
         Me.PatchableCheckedListBox.Location = New System.Drawing.Point(77, 76)
         Me.PatchableCheckedListBox.Name = "PatchableCheckedListBox"
-        Me.PatchableCheckedListBox.Size = New System.Drawing.Size(397, 274)
+        Me.PatchableCheckedListBox.Size = New System.Drawing.Size(661, 409)
         Me.PatchableCheckedListBox.TabIndex = 26
         '
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(10, 358)
+        Me.Label8.Location = New System.Drawing.Point(7, 489)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(38, 13)
         Me.Label8.TabIndex = 23
@@ -511,13 +520,13 @@ Partial Class CreatePatchCollection
         Me.Label10.AutoSize = True
         Me.Label10.Location = New System.Drawing.Point(77, 60)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(269, 13)
+        Me.Label10.Size = New System.Drawing.Size(268, 13)
         Me.Label10.TabIndex = 27
-        Me.Label10.Text = "A check indicates errors are to be ignored for this script."
+        Me.Label10.Text = "Uncheck a patch to comment it out in the master script."
         '
         'NoteTextBox
         '
-        Me.NoteTextBox.Location = New System.Drawing.Point(80, 507)
+        Me.NoteTextBox.Location = New System.Drawing.Point(77, 638)
         Me.NoteTextBox.Name = "NoteTextBox"
         Me.NoteTextBox.Size = New System.Drawing.Size(401, 20)
         Me.NoteTextBox.TabIndex = 24
@@ -525,7 +534,7 @@ Partial Class CreatePatchCollection
         'UsePatchAdminCheckBox
         '
         Me.UsePatchAdminCheckBox.AutoSize = True
-        Me.UsePatchAdminCheckBox.Location = New System.Drawing.Point(80, 462)
+        Me.UsePatchAdminCheckBox.Location = New System.Drawing.Point(77, 593)
         Me.UsePatchAdminCheckBox.Name = "UsePatchAdminCheckBox"
         Me.UsePatchAdminCheckBox.Size = New System.Drawing.Size(108, 17)
         Me.UsePatchAdminCheckBox.TabIndex = 19
@@ -535,7 +544,7 @@ Partial Class CreatePatchCollection
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(10, 510)
+        Me.Label9.Location = New System.Drawing.Point(7, 641)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(35, 13)
         Me.Label9.TabIndex = 25
@@ -544,7 +553,7 @@ Partial Class CreatePatchCollection
         'RerunCheckBox
         '
         Me.RerunCheckBox.AutoSize = True
-        Me.RerunCheckBox.Location = New System.Drawing.Point(194, 462)
+        Me.RerunCheckBox.Location = New System.Drawing.Point(191, 593)
         Me.RerunCheckBox.Name = "RerunCheckBox"
         Me.RerunCheckBox.Size = New System.Drawing.Size(81, 17)
         Me.RerunCheckBox.TabIndex = 18
@@ -554,7 +563,7 @@ Partial Class CreatePatchCollection
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(10, 484)
+        Me.Label7.Location = New System.Drawing.Point(7, 615)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(60, 13)
         Me.Label7.TabIndex = 21
@@ -562,14 +571,14 @@ Partial Class CreatePatchCollection
         '
         'SupIdTextBox
         '
-        Me.SupIdTextBox.Location = New System.Drawing.Point(80, 358)
+        Me.SupIdTextBox.Location = New System.Drawing.Point(77, 489)
         Me.SupIdTextBox.Name = "SupIdTextBox"
         Me.SupIdTextBox.Size = New System.Drawing.Size(51, 20)
         Me.SupIdTextBox.TabIndex = 22
         '
         'PatchDescTextBox
         '
-        Me.PatchDescTextBox.Location = New System.Drawing.Point(80, 481)
+        Me.PatchDescTextBox.Location = New System.Drawing.Point(77, 612)
         Me.PatchDescTextBox.Name = "PatchDescTextBox"
         Me.PatchDescTextBox.Size = New System.Drawing.Size(401, 20)
         Me.PatchDescTextBox.TabIndex = 20
@@ -581,7 +590,7 @@ Partial Class CreatePatchCollection
         Me.TabPageExecute.Location = New System.Drawing.Point(4, 22)
         Me.TabPageExecute.Name = "TabPageExecute"
         Me.TabPageExecute.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageExecute.Size = New System.Drawing.Size(542, 579)
+        Me.TabPageExecute.Size = New System.Drawing.Size(752, 712)
         Me.TabPageExecute.TabIndex = 5
         Me.TabPageExecute.Text = "Execute Patch"
         Me.TabPageExecute.UseVisualStyleBackColor = True
@@ -604,19 +613,24 @@ Partial Class CreatePatchCollection
         Me.ExecutePatchButton.Text = "Execute Patch"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'CreatePatchSet
+        'CreatePatchCollection
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(566, 622)
+        Me.ClientSize = New System.Drawing.Size(784, 762)
         Me.Controls.Add(Me.PatchTabControl)
-        Me.Name = "CreatePatchSet"
-        Me.Text = "CreatePatchSet"
+        Me.Name = "CreatePatchCollection"
+        Me.Text = "CreatePatchCollection"
         Me.PatchTabControl.ResumeLayout(False)
         Me.TabPageTags.ResumeLayout(False)
         Me.TabPageTags.PerformLayout()
         Me.TabPagePatches.ResumeLayout(False)
-        Me.TabPagePatches.PerformLayout()
+        Me.SplitContainer1.Panel1.ResumeLayout(False)
+        Me.SplitContainer1.Panel1.PerformLayout()
+        Me.SplitContainer1.Panel2.ResumeLayout(False)
+        Me.SplitContainer1.Panel2.PerformLayout()
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer1.ResumeLayout(False)
         Me.TabPagePreReqs.ResumeLayout(False)
         Me.TabPagePreReqs.PerformLayout()
         Me.TabPageSuper.ResumeLayout(False)
@@ -632,14 +646,7 @@ Partial Class CreatePatchCollection
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Tag2TextBox As System.Windows.Forms.TextBox
     Friend WithEvents FindButton As System.Windows.Forms.Button
-    Friend WithEvents PatchesCheckedListBox As System.Windows.Forms.CheckedListBox
-    Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents PatchButton As System.Windows.Forms.Button
-    Friend WithEvents CheckAllCheckBox As System.Windows.Forms.CheckBox
-    Friend WithEvents SchemaComboBox As System.Windows.Forms.ComboBox
-    Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents ViewButton As System.Windows.Forms.Button
-    Friend WithEvents RemoveButton As System.Windows.Forms.Button
     Friend WithEvents PatchDirTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents PatchNameTextBox As System.Windows.Forms.TextBox
@@ -675,9 +682,16 @@ Partial Class CreatePatchCollection
     Friend WithEvents ExecutePatchButton As System.Windows.Forms.Button
     Friend WithEvents CopyChangesButton As System.Windows.Forms.Button
     Friend WithEvents FindTagsButton As System.Windows.Forms.Button
-    Friend WithEvents Label17 As System.Windows.Forms.Label
-    Friend WithEvents SchemaCountTextBox As System.Windows.Forms.TextBox
     Friend WithEvents ComitButton As System.Windows.Forms.Button
     Friend WithEvents PatchPathTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label18 As System.Windows.Forms.Label
+    Friend WithEvents PreReqPatchTypeComboBox As System.Windows.Forms.ComboBox
+    Friend WithEvents Label20 As System.Windows.Forms.Label
+    Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents AvailablePatchesListBox As System.Windows.Forms.ListBox
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents ChosenPatchesListBox As System.Windows.Forms.ListBox
+    Friend WithEvents SupPatchTypeComboBox As System.Windows.Forms.ComboBox
+    Friend WithEvents Label17 As System.Windows.Forms.Label
 End Class

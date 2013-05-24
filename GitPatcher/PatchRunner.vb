@@ -61,10 +61,6 @@
 
             RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", AvailablePatchesListBox, Main.RootPatchDirTextBox.Text)
  
-            'For Each foldername As String In IO.Directory.GetDirectories(Main.RootPatchDirTextBox.Text)
-            '    AvailablePatchesListBox.Items.Add(get_last_split(foldername, "\"))
-            'Next
-
         End If
     End Sub
 
@@ -144,4 +140,5 @@
 
     End Sub
 
+ 
 End Class

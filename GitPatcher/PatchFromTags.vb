@@ -392,7 +392,7 @@ Public Class PatchFromTags
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
             If db_schema = "SYS" Then
-                l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database as sysdba")
+                l_master_file.WriteLine("CONNECT APEX_SYS/&&APEX_SYS_password@&&database as sysdba")
             Else
                 l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database")
             End If

@@ -17,6 +17,29 @@ Public Class CreatePatchCollection
 
         InitializeComponent()
 
+
+        PreReqPatchTypeComboBox.Items.Clear()
+        For Each PatchType In pPrereqPatchTypes.Split(",")
+            PatchType = Trim(PatchType)
+            PatchType = PatchType.Replace(Chr(13), "")
+            If (PatchType.Length > 0) Then
+                PreReqPatchTypeComboBox.Items.Add(PatchType)
+                PreReqPatchTypeComboBox.SelectedIndex = 0
+            End If
+        Next
+
+
+        SupPatchTypeComboBox.Items.Clear()
+        For Each PatchType In pSupPatchTypes.Split(",")
+            PatchType = Trim(PatchType)
+            PatchType = PatchType.Replace(Chr(13), "")
+            If (PatchType.Length > 0) Then
+                SupPatchTypeComboBox.Items.Add(PatchType)
+                SupPatchTypeComboBox.SelectedIndex = 0
+            End If
+        Next
+
+
         FindTagsButton.Text = "Find Tags like " & Main.ApplicationListComboBox.SelectedItem & "-X.XX.XX"
 
         Findtags()
@@ -119,7 +142,7 @@ Public Class CreatePatchCollection
 
 
 
-        PatchesCheckedListBox.Items.Clear()
+        AvailablePatchesListBox.Items.Clear()
 
         If Not String.IsNullOrEmpty(Tag1TextBox.Text) And Not String.IsNullOrEmpty(Tag2TextBox.Text) Then
 
@@ -127,11 +150,11 @@ Public Class CreatePatchCollection
 
                 If change.contains("install.sql") And stringContainsSetMember(change, pFindPatchTypes, ",") And stringContainsSetMember(change, pFindPatchFilters, ",") Then
                     'PatchesCheckedListBox.Items.Add(change)
-                    PatchesCheckedListBox.Items.Add(dropLastSegment(dropFirstSegment(change, "/"), "/"))
+                    AvailablePatchesListBox.Items.Add(dropLastSegment(dropFirstSegment(change, "/"), "/"))
                     'PatchesCheckedListBox.Items.Add(dropFirstSegment(change, "/"))
                     'PatchesCheckedListBox.Items.Add(dropLastSegment(change, "/"))
 
-                    PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
+                    ' AvailablePatchesListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
                 End If
 
             Next
@@ -147,8 +170,8 @@ Public Class CreatePatchCollection
             End If
             For Each patchname As String In allPatches
                 If stringContainsSetMember(patchname, pFindPatchTypes, ",") And stringContainsSetMember(patchname, pFindPatchFilters, ",") Then
-                    PatchesCheckedListBox.Items.Add(patchname)
-                    PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
+                    AvailablePatchesListBox.Items.Add(patchname)
+                    'PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
                 End If
             Next
 
@@ -156,6 +179,22 @@ Public Class CreatePatchCollection
 
 
     End Sub
+
+    Private Sub AvailablePatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AvailablePatchesListBox.DoubleClick
+        If Not ChosenPatchesListBox.Items.Contains(AvailablePatchesListBox.SelectedItem) Then
+            ChosenPatchesListBox.Items.Add(AvailablePatchesListBox.SelectedItem)
+        End If
+
+    End Sub
+
+    Private Sub ChosenPatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ChosenPatchesListBox.DoubleClick
+
+        If ChosenPatchesListBox.Items.Count > 0 Then
+            ChosenPatchesListBox.Items.RemoveAt(ChosenPatchesListBox.SelectedIndex)
+        End If
+
+    End Sub
+
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles FindButton.Click
         FindPatches()
@@ -186,14 +225,26 @@ Public Class CreatePatchCollection
 
         FileIO.createFolderIfNotExists(PatchDirTextBox.Text)
 
+        'Iterate through the PatchableCheckedListBox
+        'convert Patchable items to a collection
+        Dim filenames As Collection = New Collection
+ 
+        For i = 0 To PatchableCheckedListBox.Items.Count - 1
+            filenames.Add(PatchableCheckedListBox.Items(i))
 
-        Dim filenames As Collection = Nothing
+        Next
+ 
 
-        filenames = GitSharpFascade.exportTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
+        'Create filenames from the ChosenPatches
+
+        'filenames = GitSharpFascade.exportTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
+
+
+
 
         'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
-                           SchemaComboBox.Text, _
+                           "PATCH_ADMIN", _
                            Main.BranchPathTextBox.Text, _
                            Tag1TextBox.Text, _
                            Tag2TextBox.Text, _
@@ -231,13 +282,13 @@ Public Class CreatePatchCollection
     '     End If
     ' End Sub
 
-    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckAllCheckBox.CheckedChanged
-        'Loop thru items.
-        For i As Integer = 0 To PatchesCheckedListBox.Items.Count - 1
-            PatchesCheckedListBox.SetItemChecked(i, CheckAllCheckBox.Checked)
-
-        Next
-    End Sub
+    ' Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs)
+    '     'Loop thru items.
+    '     For i As Integer = 0 To PatchesCheckedListBox.Items.Count - 1
+    '         PatchesCheckedListBox.SetItemChecked(i, CheckAllCheckBox.Checked)
+    '
+    '     Next
+    ' End Sub
 
     Private Sub Tag2TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag2TextBox.TextChanged
 
@@ -249,41 +300,41 @@ Public Class CreatePatchCollection
         ' deriveSchemas()
     End Sub
 
-    Private Sub ViewButton_Click(sender As Object, e As EventArgs) Handles ViewButton.Click
-        MsgBox(GitSharpFascade.viewTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchesCheckedListBox.CheckedItems))
-    End Sub
+    'Private Sub ViewButton_Click(sender As Object, e As EventArgs)
+    '    MsgBox(GitSharpFascade.viewTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchesCheckedListBox.CheckedItems))
+    'End Sub
 
-    Private Sub RemoveButton_Click(sender As Object, e As EventArgs) Handles RemoveButton.Click
-        Dim temp As Collection = New Collection
-
-
-        For i As Integer = 0 To PatchesCheckedListBox.Items.Count - 1
-            If Not PatchesCheckedListBox.CheckedIndices.Contains(i) Then
-                'MsgBox(ChangesCheckedListBox.Items(i).ToString)
-                temp.Add(PatchesCheckedListBox.Items(i).ToString)
-
-            End If
-
-
-        Next
-
-        PatchesCheckedListBox.Items.Clear()
-
-        For i As Integer = 1 To temp.Count
-            If Not PatchesCheckedListBox.CheckedIndices.Contains(i) Then
-                'MsgBox(ChangesCheckedListBox.Items(i).ToString)
-                ' temp.Add(ChangesCheckedListBox.Items(i).ToString)
-
-                PatchesCheckedListBox.Items.Add(temp(i), CheckAllCheckBox.Checked)
-
-            End If
-
-
-        Next
-
-
-
-    End Sub
+    ' Private Sub RemoveButton_Click(sender As Object, e As EventArgs)
+    '     Dim temp As Collection = New Collection
+    '
+    '
+    '     For i As Integer = 0 To PatchesCheckedListBox.Items.Count - 1
+    '         If Not PatchesCheckedListBox.CheckedIndices.Contains(i) Then
+    '             'MsgBox(ChangesCheckedListBox.Items(i).ToString)
+    '             temp.Add(PatchesCheckedListBox.Items(i).ToString)
+    '
+    '         End If
+    '
+    '
+    '     Next
+    '
+    '     PatchesCheckedListBox.Items.Clear()
+    '
+    '     For i As Integer = 1 To temp.Count
+    '         If Not PatchesCheckedListBox.CheckedIndices.Contains(i) Then
+    '             'MsgBox(ChangesCheckedListBox.Items(i).ToString)
+    '             ' temp.Add(ChangesCheckedListBox.Items(i).ToString)
+    '
+    '             PatchesCheckedListBox.Items.Add(temp(i), CheckAllCheckBox.Checked)
+    '
+    '         End If
+    '
+    '
+    '     Next
+    '
+    '
+    '
+    ' End Sub
 
     Private Sub PatchNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchNameTextBox.TextChanged
         'PatchDirTextBox.Text = Main.RepoComboBox.SelectedItem.ToString & "\patch\" & PatchNameTextBox.Text & "\"
@@ -334,52 +385,20 @@ Public Class CreatePatchCollection
                                   ByVal use_patch_admin As Boolean, _
                                   ByVal rerunnable As Boolean, _
                                   ByRef targetFiles As Collection, _
-                                  ByRef ignoreErrorFiles As CheckedListBox.CheckedItemCollection, _
+                                  ByRef iSkipFiles As CheckedListBox.CheckedItemCollection, _
                                   ByRef prereq_patches As CheckedListBox.CheckedItemCollection, _
                                   ByRef supersedes_patches As CheckedListBox.CheckedItemCollection, _
                                   ByVal patchDir As String, _
                                   ByVal groupPath As String)
 
 
-        Dim l_db_objects_users As String = Nothing 'user
-        Dim l_db_objects_tables As String = Nothing 'tab
-        Dim l_db_objects_sequences As String = Nothing 'seq
-        Dim l_db_objects_type_specs As String = Nothing 'tps
-        Dim l_db_objects_type_bodies As String = Nothing 'tpb
-        Dim l_db_objects_grants As String = Nothing 'grt
-        Dim l_db_objects_data As String = Nothing 'sql
-
-        Dim l_db_objects_package_specs As String = Nothing 'pks,pls
-        Dim l_db_objects_functions As String = Nothing 'fnc
-        Dim l_db_objects_procedures As String = Nothing 'prc
-
-        Dim l_db_objects_views As String = Nothing 'vw
-        Dim l_db_objects_synonyms As String = Nothing 'syn
-        Dim l_db_objects_package_bodies As String = Nothing 'pkb,plb
-        Dim l_db_objects_triggers As String = Nothing 'trg
-
-        Dim l_db_objects_primary_keys As String = Nothing 'pk
-        Dim l_db_objects_unique_keys As String = Nothing 'uk
-        Dim l_db_objects_non_unique_keys As String = Nothing 'nk
-        Dim l_db_objects_indexes As String = Nothing 'idx
-        Dim l_db_objects_foreign_keys As String = Nothing 'fk
-        Dim l_db_objects_constraints As String = Nothing 'con
-        Dim l_db_objects_configuration As String = Nothing 'sdl
-        Dim l_db_objects_roles As String = Nothing 'rg, rol
-        Dim l_db_objects_jobs As String = Nothing 'job
-        Dim l_db_objects_dblinks As String = Nothing 'dblink
-        Dim l_db_objects_mviews As String = Nothing 'mv
-
-
-        Dim l_ignored As String = Nothing 'ctl
-        Dim l_db_objects_misc As String = Nothing 'everything else
 
 
         Dim l_file_extension As String = Nothing
         Dim l_install_file_line As String = Nothing
 
         Dim l_all_programs As String = Nothing
-
+        Dim l_patches As String = Nothing
 
         Dim l_show_error As String = Chr(10) & "Show error;"
 
@@ -395,96 +414,27 @@ Public Class CreatePatchCollection
         For Each l_path In targetFiles
 
             Dim l_filename As String = getLastSegment(l_path, "/")
+            Dim l_dos_path As String = Replace(l_path, "/", "\")
 
-            'Sort the files by files extention into lists.
-
-            l_file_extension = l_filename.Split(".")(1)
-
-            If ignoreErrorFiles.Contains(l_path) Then
-                l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
-                                      Chr(10) & "PROMPT " & l_filename & " " & _
-                                      Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";" & _
-                                      Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
+            If iSkipFiles.Contains(l_path) Then
+                l_install_file_line = Chr(10) & "PROMPT SKIPPED FOR TESTING " & l_filename & " " & _
+                                      Chr(10) & "--@" & l_dos_path & "\install.sql;"
 
             Else
                 l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
-                                      Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";"
+                                      Chr(10) & "@" & l_dos_path & "\install.sql;"
 
             End If
 
-            Try
-
-                Select Case l_file_extension
-                    Case "user"
-                        l_db_objects_users = l_db_objects_users & l_install_file_line
-                    Case "tab"
-                        l_db_objects_tables = l_db_objects_tables & l_install_file_line
-                    Case "seq"
-                        l_db_objects_sequences = l_db_objects_sequences & l_install_file_line
-                    Case "tps"
-                        l_db_objects_type_specs = l_db_objects_type_specs & l_install_file_line & l_show_error
-                    Case "grt"
-                        l_db_objects_grants = l_db_objects_grants & l_install_file_line
-                    Case "sql"
-                        l_db_objects_data = l_db_objects_data & l_install_file_line
-                    Case "pks", "pls"
-                        l_db_objects_package_specs = l_db_objects_package_specs & l_install_file_line & l_show_error
-                    Case "fnc"
-                        l_db_objects_functions = l_db_objects_functions & l_install_file_line & l_show_error
-                    Case "prc"
-                        l_db_objects_procedures = l_db_objects_procedures & l_install_file_line & l_show_error
-                    Case "vw"
-                        l_db_objects_views = l_db_objects_views & l_install_file_line & l_show_error
-                    Case "syn"
-                        l_db_objects_synonyms = l_db_objects_synonyms & l_install_file_line
-                    Case "tpb"
-                        l_db_objects_type_bodies = l_db_objects_type_bodies & l_install_file_line & l_show_error
-                    Case "pkb", "plb"
-                        l_db_objects_package_bodies = l_db_objects_package_bodies & l_install_file_line & l_show_error
-                    Case "trg"
-                        l_db_objects_triggers = l_db_objects_triggers & l_install_file_line & l_show_error
-                    Case "pk"
-                        l_db_objects_primary_keys = l_db_objects_primary_keys & l_install_file_line
-                    Case "uk"
-                        l_db_objects_unique_keys = l_db_objects_unique_keys & l_install_file_line
-                    Case "nk"
-                        l_db_objects_non_unique_keys = l_db_objects_non_unique_keys & l_install_file_line
-                    Case "idx"
-                        l_db_objects_indexes = l_db_objects_indexes & l_install_file_line
-                    Case "fk"
-                        l_db_objects_foreign_keys = l_db_objects_foreign_keys & l_install_file_line
-                    Case "con"
-                        l_db_objects_constraints = l_db_objects_constraints & l_install_file_line
-                    Case "sdl"
-                        l_db_objects_configuration = l_db_objects_configuration & l_install_file_line
-                    Case "rg", "rol"
-                        l_db_objects_roles = l_db_objects_roles & l_install_file_line
-                    Case "job"
-                        l_db_objects_jobs = l_db_objects_jobs & l_install_file_line
-                    Case "dblink"
-                        l_db_objects_dblinks = l_db_objects_dblinks & l_install_file_line & l_show_error
-                    Case "mv"
-                        l_db_objects_mviews = l_db_objects_mviews & l_install_file_line & l_show_error
-                    Case "ctl", "xml"
-                        l_ignored = l_ignored & l_install_file_line
-                        'System.IO.File.Delete(PatchDirTextBox.Text & l_filename)
-                        Throw (New Halt("Skip this ignorable object"))
-                    Case Else
-                        l_db_objects_misc = l_db_objects_misc & l_install_file_line
-                End Select
-
-                If String.IsNullOrEmpty(l_all_programs) Then
-                    l_all_programs = l_filename
-                Else
-                    l_all_programs = l_all_programs & "' -" & Chr(10) & "||'," & l_filename
-                End If
-
-
-            Catch SkipTestObject As Halt
-                ' Logger.Dbg("Skip object " & l_item.path)
-                ' l_all_programs = l_all_programs & "XX " & l_program_name & "NOT PATCHED" & Chr(10)
-            End Try
-
+ 
+            l_patches = l_patches & l_install_file_line
+            
+            If String.IsNullOrEmpty(l_all_programs) Then
+                l_all_programs = l_filename
+            Else
+                l_all_programs = l_all_programs & "' -" & Chr(10) & "||'," & l_filename
+            End If
+ 
 
         Next
 
@@ -515,7 +465,7 @@ Public Class CreatePatchCollection
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
             If db_schema = "SYS" Then
-                l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database as sysdba")
+                l_master_file.WriteLine("CONNECT APEX_SYS/&&APEX_SYS_password@&&database as sysdba")
             Else
                 l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database")
             End If
@@ -566,92 +516,13 @@ Public Class CreatePatchCollection
             l_master_file.WriteLine("select user||'@'||global_name Connection from global_name;")
             'Write the list of files to execute.
 
-
-            If Not String.IsNullOrEmpty(l_db_objects_users) Then
-                l_master_file.WriteLine("Prompt installing USERS" & Chr(10) & l_db_objects_users)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_tables) Then
-                l_master_file.WriteLine("Prompt installing TABLES" & Chr(10) & l_db_objects_tables)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_sequences) Then
-                l_master_file.WriteLine("Prompt installing SEQUENCES" & Chr(10) & l_db_objects_sequences)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_type_specs) Then
-                l_master_file.WriteLine("Prompt installing TYPE SPECS" & Chr(10) & l_db_objects_type_specs)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_roles) Then
-                l_master_file.WriteLine("Prompt installing ROLES" & Chr(10) & l_db_objects_roles)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_dblinks) Then
-                l_master_file.WriteLine("Prompt installing DB_LINKS" & Chr(10) & l_db_objects_dblinks)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_functions) Then
-                l_master_file.WriteLine("Prompt installing FUNCTIONS" & Chr(10) & l_db_objects_functions)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_procedures) Then
-                l_master_file.WriteLine("Prompt installing PROCEDURES" & Chr(10) & l_db_objects_procedures)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_package_specs) Then
-                l_master_file.WriteLine("Prompt installing PACKAGE SPECS" & Chr(10) & l_db_objects_package_specs)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_views) Then
-                l_master_file.WriteLine("Prompt installing VIEWS" & Chr(10) & l_db_objects_views)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_mviews) Then
-                l_master_file.WriteLine("Prompt installing MATERIALISED VIEWS" & Chr(10) & l_db_objects_mviews)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_grants) Then
-                l_master_file.WriteLine("Prompt installing GRANTS" & Chr(10) & l_db_objects_grants)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_synonyms) Then
-                l_master_file.WriteLine("Prompt installing SYNONYMS" & Chr(10) & l_db_objects_synonyms)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_type_bodies) Then
-                l_master_file.WriteLine("Prompt installing TYPE BODIES" & Chr(10) & l_db_objects_type_bodies)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_package_bodies) Then
-                l_master_file.WriteLine("Prompt installing PACKAGE BODIES" & Chr(10) & l_db_objects_package_bodies)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_triggers) Then
-                l_master_file.WriteLine("Prompt installing TRIGGERS" & Chr(10) & l_db_objects_triggers)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_indexes) Then
-                l_master_file.WriteLine("Prompt installing INDEXES" & Chr(10) & l_db_objects_indexes)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_primary_keys) Then
-                l_master_file.WriteLine("Prompt installing PRIMARY KEYS" & Chr(10) & l_db_objects_primary_keys)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_unique_keys) Then
-                l_master_file.WriteLine("Prompt installing UNIQUE KEYS" & Chr(10) & l_db_objects_unique_keys)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_non_unique_keys) Then
-                l_master_file.WriteLine("Prompt installing NON-UNIQUE KEYS" & Chr(10) & l_db_objects_non_unique_keys)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_data) Then
-                l_master_file.WriteLine("Prompt installing DATA" & Chr(10) & l_db_objects_data)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_foreign_keys) Then
-                l_master_file.WriteLine("Prompt installing FOREIGN KEYS" & Chr(10) & l_db_objects_foreign_keys)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_constraints) Then
-                l_master_file.WriteLine("Prompt installing CONSTRAINTS" & Chr(10) & l_db_objects_constraints)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_configuration) Then
-                l_master_file.WriteLine("Prompt installing CONFIGURATION" & Chr(10) & l_db_objects_configuration)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_jobs) Then
-                l_master_file.WriteLine("Prompt installing JOBS" & Chr(10) & l_db_objects_jobs)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_misc) Then
-                l_master_file.WriteLine("Prompt installing MISCELLANIOUS" & Chr(10) & l_db_objects_misc)
-            End If
-
+            l_master_file.WriteLine("Prompt installing PATCHES" & Chr(10) & l_patches)
+ 
 
             l_master_file.WriteLine("COMMIT;")
 
             If use_patch_admin Then
-                l_master_file.WriteLine("PROMPT Compiling objects in schema " & db_schema)
-                l_master_file.WriteLine("execute patch_admin.patch_invoker.compile_post_patch;")
+ 
                 l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed;")
 
                 Dim l_sup_short_name As String = Nothing
@@ -686,15 +557,10 @@ Public Class CreatePatchCollection
         'Copy Selected Changes to the next list box.
         PatchableCheckedListBox.Items.Clear()
 
-        For i As Integer = 0 To PatchesCheckedListBox.Items.Count - 1
-            If PatchesCheckedListBox.CheckedIndices.Contains(i) Then
-                'MsgBox(ChangesCheckedListBox.Items(i).ToString)
-
-                PatchableCheckedListBox.Items.Add(PatchesCheckedListBox.Items(i).ToString)
-
-            End If
-
-
+        For i As Integer = 0 To ChosenPatchesListBox.Items.Count - 1
+ 
+                PatchableCheckedListBox.Items.Add(ChosenPatchesListBox.Items(i).ToString)
+ 
         Next
     End Sub
 
@@ -715,7 +581,7 @@ Public Class CreatePatchCollection
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatches" Then
             deriveTags()
 
-            If PatchesCheckedListBox.Items.Count = 0 Then
+            If AvailablePatchesListBox.Items.Count = 0 Then
                 FindPatches()
             End If
 
@@ -769,6 +635,8 @@ Public Class CreatePatchCollection
 
     Private Sub derivePatchName()
 
+
+
         PatchNameTextBox.Text = Tag2TextBox.Text
 
         If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
@@ -785,15 +653,16 @@ Public Class CreatePatchCollection
 
 
     Private Sub FindPreReqs()
+        Dim searchPath As String = Nothing
+        If PreReqPatchTypeComboBox.SelectedItem <> "ALL" Then
+            searchPath = PreReqPatchTypeComboBox.SelectedItem & "\"
+        End If
+ 
         PrereqsCheckedListBox.Items.Clear()
         If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
 
-            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text & "patchset\", "install.sql", PrereqsCheckedListBox, Main.RootPatchDirTextBox.Text & "patchset\")
-
-            'For Each foldername As String In IO.Directory.GetDirectories(Main.RootPatchDirTextBox.Text)
-            '    PrereqsCheckedListBox.Items.Add(get_last_split(foldername, "\"))
-            'Next
-
+            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text & searchPath, "install.sql", PrereqsCheckedListBox, Main.RootPatchDirTextBox.Text)
+ 
         End If
     End Sub
 
@@ -806,15 +675,22 @@ Public Class CreatePatchCollection
 
 
     Private Sub FindSuper()
+ 
+        Dim searchPath As String = Nothing
+        If SupPatchTypeComboBox.SelectedItem <> "ALL" Then
+            searchPath = SupPatchTypeComboBox.SelectedItem & "\"
+        End If
+
         SupersedesCheckedListBox.Items.Clear()
         If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
 
-            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text & "patchset\", "install.sql", SupersedesCheckedListBox, Main.RootPatchDirTextBox.Text & "patchset\")
-            'For Each foldername As String In IO.Directory.GetDirectories(Main.RootPatchDirTextBox.Text)
-            '    SupersedesCheckedListBox.Items.Add(get_last_split(foldername, "\"))
-            'Next
+            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text & searchPath, "install.sql", SupersedesCheckedListBox, Main.RootPatchDirTextBox.Text)
 
         End If
+
+
+
+
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
@@ -839,15 +715,35 @@ Public Class CreatePatchCollection
     Private Sub deriveTags()
         'MsgBox("TagsCheckedListBox.SelectedIndexChanged")
 
-        If TagsCheckedListBox.CheckedItems.Count > 0 Then
-            Tag1TextBox.Text = TagsCheckedListBox.CheckedItems.Item(0)
-        Else
+        'If TagsCheckedListBox.CheckedItems.Count > 0 Then
+        '    Tag1TextBox.Text = TagsCheckedListBox.CheckedItems.Item(0)
+        'Else
+        '    Tag1TextBox.Text = ""
+        'End If
+        'If TagsCheckedListBox.CheckedItems.Count > 1 Then
+        '    Tag2TextBox.Text = TagsCheckedListBox.CheckedItems.Item(1)
+        'Else
+        '    Tag2TextBox.Text = ""
+        'End If
+
+        If TagsCheckedListBox.CheckedItems.Count = 0 Then
+            'Nothing checked so select no tags
             Tag1TextBox.Text = ""
-        End If
-        If TagsCheckedListBox.CheckedItems.Count > 1 Then
-            Tag2TextBox.Text = TagsCheckedListBox.CheckedItems.Item(1)
-        Else
             Tag2TextBox.Text = ""
+            If TagsCheckedListBox.Items.Count > 0 Then
+                'But select the last available tag as the tag2, to be used as patch_name
+                Tag2TextBox.Text = TagsCheckedListBox.Items(TagsCheckedListBox.Items.Count - 1)
+            End If
+
+        ElseIf TagsCheckedListBox.CheckedItems.Count = 1 Then
+            'Only 1 tag selected set as the tag2, to be used as patch_name
+            Tag1TextBox.Text = ""
+            Tag2TextBox.Text = TagsCheckedListBox.CheckedItems.Item(0)
+
+        ElseIf TagsCheckedListBox.CheckedItems.Count > 1 Then
+            'Select 1st and 2nd checked tags as tag1 and tag2
+            Tag1TextBox.Text = TagsCheckedListBox.CheckedItems.Item(0)
+            Tag2TextBox.Text = TagsCheckedListBox.CheckedItems.Item(1)
         End If
 
     End Sub
@@ -946,7 +842,5 @@ Public Class CreatePatchCollection
     End Sub
 
 
-
-
-
+ 
 End Class

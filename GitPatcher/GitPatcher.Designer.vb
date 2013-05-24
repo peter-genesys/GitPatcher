@@ -51,8 +51,8 @@ Partial Class GitPatcher
         Me.ToolBarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusBarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolsMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MainToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ConfigToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MainToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoggingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SQLplusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.WindowsMenu = New System.Windows.Forms.ToolStripMenuItem()
@@ -91,7 +91,7 @@ Partial Class GitPatcher
         Me.MenuStrip.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip.MdiWindowListItem = Me.WindowsMenu
         Me.MenuStrip.Name = "MenuStrip"
-        Me.MenuStrip.Size = New System.Drawing.Size(669, 24)
+        Me.MenuStrip.Size = New System.Drawing.Size(834, 24)
         Me.MenuStrip.TabIndex = 5
         Me.MenuStrip.Text = "MenuStrip"
         '
@@ -281,29 +281,29 @@ Partial Class GitPatcher
         Me.ToolsMenu.Size = New System.Drawing.Size(48, 20)
         Me.ToolsMenu.Text = "&Tools"
         '
-        'MainToolStripMenuItem
-        '
-        Me.MainToolStripMenuItem.Name = "MainToolStripMenuItem"
-        Me.MainToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.MainToolStripMenuItem.Text = "Main"
-        '
         'ConfigToolStripMenuItem
         '
         Me.ConfigToolStripMenuItem.Name = "ConfigToolStripMenuItem"
-        Me.ConfigToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ConfigToolStripMenuItem.Size = New System.Drawing.Size(118, 22)
         Me.ConfigToolStripMenuItem.Text = "Config"
+        '
+        'MainToolStripMenuItem
+        '
+        Me.MainToolStripMenuItem.Name = "MainToolStripMenuItem"
+        Me.MainToolStripMenuItem.Size = New System.Drawing.Size(118, 22)
+        Me.MainToolStripMenuItem.Text = "Main"
         '
         'LoggingToolStripMenuItem
         '
         Me.LoggingToolStripMenuItem.CheckOnClick = True
         Me.LoggingToolStripMenuItem.Name = "LoggingToolStripMenuItem"
-        Me.LoggingToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.LoggingToolStripMenuItem.Size = New System.Drawing.Size(118, 22)
         Me.LoggingToolStripMenuItem.Text = "Logging"
         '
         'SQLplusToolStripMenuItem
         '
         Me.SQLplusToolStripMenuItem.Name = "SQLplusToolStripMenuItem"
-        Me.SQLplusToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.SQLplusToolStripMenuItem.Size = New System.Drawing.Size(118, 22)
         Me.SQLplusToolStripMenuItem.Text = "SQLplus"
         '
         'WindowsMenu
@@ -395,7 +395,7 @@ Partial Class GitPatcher
         Me.ToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.OpenToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator1, Me.PrintToolStripButton, Me.PrintPreviewToolStripButton, Me.ToolStripSeparator2, Me.HelpToolStripButton})
         Me.ToolStrip.Location = New System.Drawing.Point(0, 24)
         Me.ToolStrip.Name = "ToolStrip"
-        Me.ToolStrip.Size = New System.Drawing.Size(669, 25)
+        Me.ToolStrip.Size = New System.Drawing.Size(834, 25)
         Me.ToolStrip.TabIndex = 6
         Me.ToolStrip.Text = "ToolStrip"
         '
@@ -466,9 +466,9 @@ Partial Class GitPatcher
         'StatusStrip
         '
         Me.StatusStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabel})
-        Me.StatusStrip.Location = New System.Drawing.Point(0, 786)
+        Me.StatusStrip.Location = New System.Drawing.Point(0, 790)
         Me.StatusStrip.Name = "StatusStrip"
-        Me.StatusStrip.Size = New System.Drawing.Size(669, 22)
+        Me.StatusStrip.Size = New System.Drawing.Size(834, 22)
         Me.StatusStrip.TabIndex = 7
         Me.StatusStrip.Text = "StatusStrip"
         '
@@ -482,7 +482,7 @@ Partial Class GitPatcher
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(669, 808)
+        Me.ClientSize = New System.Drawing.Size(834, 812)
         Me.Controls.Add(Me.ToolStrip)
         Me.Controls.Add(Me.MenuStrip)
         Me.Controls.Add(Me.StatusStrip)

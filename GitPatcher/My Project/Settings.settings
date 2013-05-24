@@ -63,8 +63,8 @@ tpds</Value>
 Prism Mobile</Value>
     </Setting>
     <Setting Name="PatchSchemaList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">SYS,PATCH_ADMIN,TSDM
-SYS,PATCH_ADMIN,TSDM</Value>
+      <Value Profile="(Default)">SYS,PATCH_ADMIN,TPDS
+SYS,PATCH_ADMIN,TPDS</Value>
     </Setting>
     <Setting Name="CurrentApp" Type="System.String" Scope="User">
       <Value Profile="(Default)">Prism</Value>

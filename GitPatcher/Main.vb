@@ -97,7 +97,12 @@
         My.Settings.Save()
 
         'Patch Schemas
-        PatchSchemasTextBox.Text = My.Settings.PatchSchemaList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)
+        PatchSchemasTextBox.Text = Trim(My.Settings.PatchSchemaList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)).Replace(Chr(13), "")
+
+
+        'repo = Trim(repo)
+        'repo = repo.Replace(Chr(13), "")
+
         'Patch Set
         PatchSetTextBox.Text = My.Settings.PatchSetList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)
 
@@ -254,11 +259,11 @@
     End Sub
 
     Private Sub CreateDBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBPatchSetToolStripMenuItem.Click
-        CreatePatchCollection.createCollectionProcess("patchset", "feature,hotfix", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix", "patchset,feature,hotfix")
+        CreatePatchCollection.createCollectionProcess("patchset", "feature,hotfix", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
     End Sub
 
     Private Sub DBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DBPatchSetToolStripMenuItem.Click
-        Dim Wizard As New CreatePatchCollection("patchset", "feature,hotfix", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix", "patchset,feature,hotfix")
+        Dim Wizard As New CreatePatchCollection("patchset", "feature,hotfix", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
         Wizard.ShowDialog()
     End Sub
 End Class
