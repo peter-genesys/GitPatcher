@@ -62,7 +62,7 @@
 
         BranchPathTextBox.Text = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)
 
-        CurrentBranchTextBox.Text = PatchFromTags.get_last_split(BranchPathTextBox.Text, "/")
+        CurrentBranchTextBox.Text = PatchFromTags.getLastSegment(BranchPathTextBox.Text, "/")
  
 
         'CurrentBranchTextBox.Text = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)
@@ -104,10 +104,11 @@
         'repo = repo.Replace(Chr(13), "")
 
         'Patch Set
-        PatchSetTextBox.Text = My.Settings.PatchSetList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)
+        AppCodeTextBox.Text = Trim(My.Settings.PatchSetList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)).Replace(Chr(13), "")
 
 
-        ApexAppTextBox.Text = My.Settings.AppList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)
+        ApexAppTextBox.Text = Trim(My.Settings.AppList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)).Replace(Chr(13), "")
+ 
         My.Settings.CurrentApex = ApexAppTextBox.Text
         ParsingSchemaTextBox.Text = My.Settings.ParsingSchemaList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)
 
@@ -173,7 +174,7 @@
 
         Dim mergeAndPush As ProgressDialogue = New ProgressDialogue("Merge and Push branch:  " & currentBranch)
         mergeAndPush.MdiParent = GitPatcher
-        mergeAndPush.addStep("Switch to Master branch", 20)
+        mergeAndPush.addStep("Switch to develop branch", 20)
         mergeAndPush.addStep("Pull from Origin", 40)
         mergeAndPush.addStep("Merge from branch: " & currentBranch, 60)
         mergeAndPush.addStep("Push to Origin", 80)
@@ -181,72 +182,66 @@
 
         mergeAndPush.Show()
 
-        mergeAndPush.setStep(0)
+        'Switch to develop branch
+        GitBash.Switch(My.Settings.CurrentRepo, "develop")
+        mergeAndPush.goNextStep()
 
-
-        'switch
-        'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, "master")
-        Tortoise.Switch(My.Settings.CurrentRepo)
-
-        mergeAndPush.setStep(1)
-        'Pull from Origin 
-        Tortoise.Pull(My.Settings.CurrentRepo)
-
-        mergeAndPush.setStep(2)
+        'Pull from origin/develop
+        GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+        mergeAndPush.goNextStep()
 
         'Merge from Feature branch
         'TortoiseMerge(My.Settings.CurrentRepo, currentBranch)
         Tortoise.Merge(My.Settings.CurrentRepo)
 
-        mergeAndPush.setStep(3)
+        mergeAndPush.goNextStep()
 
-        'Push to Origin 
-        Tortoise.Push(My.Settings.CurrentRepo)
+        'Push to origin/develop 
+        GitBash.Push(My.Settings.CurrentRepo, "origin", "develop")
+        mergeAndPush.goNextStep()
 
-        mergeAndPush.setStep(4)
-
+        'Return to branch
         'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, currentBranch)
-        Tortoise.Switch(My.Settings.CurrentRepo)
+        GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
 
         'Done
         mergeAndPush.done()
 
     End Sub
 
-    Private Sub NewFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewFeatureToolStripMenuItem.Click
-        If MsgBox("Would you like to create a new Feature Branch with the standardised naming feature/JIRA?", MsgBoxStyle.OkCancel, "Create a new Feature Branch") = MsgBoxResult.Ok Then
+    Private Sub createNewBranch(iBranchType As String)
 
-            Dim featureName As String = InputBox("Enter the Jira Id.", "Jira Id for new Feature Branch")
+        If MsgBox("Would you like to create a new " & iBranchType & " Branch with the standardised naming " & iBranchType & "/" & Me.AppCodeTextBox.Text & "/JIRA?", MsgBoxStyle.OkCancel, "Create a new " & iBranchType & " Branch") = MsgBoxResult.Ok Then
 
-            If Not String.IsNullOrEmpty(featureName) Then
+            Dim branchName As String = InputBox("Enter the Jira Id.", "Jira Id for new " & iBranchType & " Branch")
+            Dim newBranch As String = iBranchType & "/" & Me.AppCodeTextBox.Text & "/" & branchName
 
-                Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new Feature branch:  " & featureName)
+            If Not String.IsNullOrEmpty(branchName) Then
+
+                Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new " & iBranchType & " branch:  " & branchName)
                 newFeature.MdiParent = GitPatcher
-                newFeature.addStep("Switch to Master branch", 25)
+                newFeature.addStep("Switch to develop branch", 25)
                 newFeature.addStep("Pull from Origin", 50)
-                newFeature.addStep("Create and switch to Feature branch: " & featureName, 75)
-                newFeature.addStep("Create intial Tag: " & featureName & ".00", 100)
+                newFeature.addStep("Create and switch to branch: " & newBranch, 75)
+                newFeature.addStep("Create intial Tag: " & branchName & ".00", 100)
 
                 newFeature.Show()
 
-                newFeature.setStep(0)
+                'Switch to develop branch
+                GitBash.Switch(My.Settings.CurrentRepo, "develop")
+                newFeature.goNextStep()
 
-                'switch to master - manual
-                Tortoise.Switch(My.Settings.CurrentRepo)
+                'Pull from origin/develop
+                GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+                newFeature.goNextStep()
 
-                newFeature.setStep(1)
-                'Pull from Origin 
-                Tortoise.Pull(My.Settings.CurrentRepo)
+                'Create and Switch to new branch
+                GitBash.createBranch(My.Settings.CurrentRepo, newBranch)
+                newFeature.goNextStep()
 
-                newFeature.setStep(2)
-
-                'Create Feature branch
-                GitSharpFascade.createBranch(My.Settings.CurrentRepo, "feature/" & featureName)
-
-                newFeature.setStep(3)
-                'Create the tag
-                Tortoise.Tag(My.Settings.CurrentRepo)
-
+                'Create the initial tag
+                GitBash.Tag(My.Settings.CurrentRepo, branchName & ".00", "Initial tag on new " & Me.ApplicationListComboBox.SelectedItem & " " & iBranchType & " " & branchName)
+                newFeature.goNextStep()
 
                 'Done
                 newFeature.done()
@@ -258,12 +253,29 @@
         End If
     End Sub
 
+    Private Sub NewFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewFeatureToolStripMenuItem.Click
+        createNewBranch("feature")
+    End Sub
+
     Private Sub CreateDBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBPatchSetToolStripMenuItem.Click
         CreatePatchCollection.createCollectionProcess("patchset", "feature,hotfix", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
     End Sub
 
-    Private Sub DBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DBPatchSetToolStripMenuItem.Click
-        Dim Wizard As New CreatePatchCollection("patchset", "feature,hotfix", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
+    Private Sub DBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs)
+        Dim Wizard As New CreatePatchCollection("", "patchset", "feature,hotfix", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
         Wizard.ShowDialog()
+    End Sub
+
+    Private Sub DBPatchSetAllTypesToolStripMenuItem_Click(sender As Object, e As EventArgs)
+        Dim Wizard As New CreatePatchCollection("", "patchset", "", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
+        Wizard.ShowDialog()
+    End Sub
+
+    Private Sub CreateDBMinorReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBMinorReleaseToolStripMenuItem.Click
+        CreatePatchCollection.createCollectionProcess("minor", "patchset", Me.PatchSchemasTextBox.Text, "minor,patchset,feature,hotfix,ALL", "minor,patchset,feature,hotfix,ALL")
+    End Sub
+
+    Private Sub NewHotfixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewHotfixToolStripMenuItem.Click
+        createNewBranch("hotfix")
     End Sub
 End Class

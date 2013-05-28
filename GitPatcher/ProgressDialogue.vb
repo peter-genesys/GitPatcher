@@ -22,6 +22,21 @@
 
     End Sub
 
+    Public Sub updateStep(ByVal stepNo As Integer, ByVal description As String, ByVal percentComplete As Integer, ByVal success As Boolean, ByVal fail As Boolean, ByVal skip As Boolean)
+        Dim aStep As ProcessStep = New ProcessStep(description, percentComplete)
+
+        storedProcessSteps(stepNo) = aStep
+        If success Then
+            Me.ProgressCheckedListBox.Items(stepNo) = description & " - Success"
+        ElseIf fail Then
+            Me.ProgressCheckedListBox.Items(stepNo) = description & " - Failed"
+        ElseIf skip Then
+            Me.ProgressCheckedListBox.Items(stepNo) = description & " - Skipped"
+        End If
+
+
+    End Sub
+
 
     Private Shared Sub wait(ByVal interval As Integer)
         Dim sw As New Stopwatch
@@ -36,7 +51,7 @@
 
     ' Loops for a specificied period of time (milliseconds)
     Private Shared Sub pauseToRefreshProgressBar()
-        wait(2000)
+        wait(1000)
     End Sub
 
 
@@ -63,7 +78,7 @@
 
     End Sub
 
-    Public Sub gonext()
+    Public Sub goNextStep()
 
         setStep(activeStep + 1)
 

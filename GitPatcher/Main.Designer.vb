@@ -57,9 +57,10 @@ Partial Class Main
         Me.Label11 = New System.Windows.Forms.Label()
         Me.PatchSchemasTextBox = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
-        Me.PatchSetTextBox = New System.Windows.Forms.TextBox()
+        Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.DBPatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateDBMinorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.NewHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -68,13 +69,13 @@ Partial Class Main
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GITToolStripMenuItem, Me.APEXToolStripMenuItem, Me.GITToolStripMenuItem1})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(488, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(486, 24)
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.Text = "MenuStrip1"
         '
         'GITToolStripMenuItem
         '
-        Me.GITToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PatchFromTagsToolStripMenuItem, Me.PatchRunnerToolStripMenuItem, Me.CreateDBPatchSetToolStripMenuItem, Me.DBPatchSetToolStripMenuItem})
+        Me.GITToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PatchFromTagsToolStripMenuItem, Me.CreateDBPatchSetToolStripMenuItem, Me.CreateDBMinorReleaseToolStripMenuItem, Me.PatchRunnerToolStripMenuItem})
         Me.GITToolStripMenuItem.Name = "GITToolStripMenuItem"
         Me.GITToolStripMenuItem.Size = New System.Drawing.Size(58, 20)
         Me.GITToolStripMenuItem.Text = "PATCH"
@@ -82,19 +83,19 @@ Partial Class Main
         'PatchFromTagsToolStripMenuItem
         '
         Me.PatchFromTagsToolStripMenuItem.Name = "PatchFromTagsToolStripMenuItem"
-        Me.PatchFromTagsToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.PatchFromTagsToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.PatchFromTagsToolStripMenuItem.Text = "Create DB Patch"
         '
         'PatchRunnerToolStripMenuItem
         '
         Me.PatchRunnerToolStripMenuItem.Name = "PatchRunnerToolStripMenuItem"
-        Me.PatchRunnerToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.PatchRunnerToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.PatchRunnerToolStripMenuItem.Text = "PatchRunner"
         '
         'CreateDBPatchSetToolStripMenuItem
         '
         Me.CreateDBPatchSetToolStripMenuItem.Name = "CreateDBPatchSetToolStripMenuItem"
-        Me.CreateDBPatchSetToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.CreateDBPatchSetToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.CreateDBPatchSetToolStripMenuItem.Text = "Create DB Patch Set"
         '
         'APEXToolStripMenuItem
@@ -118,7 +119,7 @@ Partial Class Main
         '
         'GITToolStripMenuItem1
         '
-        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MergeAndPushFeatureToolStripMenuItem, Me.NewFeatureToolStripMenuItem})
+        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.NewHotfixToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem})
         Me.GITToolStripMenuItem1.Name = "GITToolStripMenuItem1"
         Me.GITToolStripMenuItem1.Size = New System.Drawing.Size(37, 20)
         Me.GITToolStripMenuItem1.Text = "GIT"
@@ -126,8 +127,8 @@ Partial Class Main
         'MergeAndPushFeatureToolStripMenuItem
         '
         Me.MergeAndPushFeatureToolStripMenuItem.Name = "MergeAndPushFeatureToolStripMenuItem"
-        Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature"
+        Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
+        Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature/Hotfix"
         '
         'NewFeatureToolStripMenuItem
         '
@@ -324,7 +325,7 @@ Partial Class Main
         '
         'PatchSchemasTextBox
         '
-        Me.PatchSchemasTextBox.Location = New System.Drawing.Point(103, 238)
+        Me.PatchSchemasTextBox.Location = New System.Drawing.Point(103, 267)
         Me.PatchSchemasTextBox.Name = "PatchSchemasTextBox"
         Me.PatchSchemasTextBox.ReadOnly = True
         Me.PatchSchemasTextBox.Size = New System.Drawing.Size(373, 20)
@@ -333,41 +334,47 @@ Partial Class Main
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(12, 241)
+        Me.Label12.Location = New System.Drawing.Point(12, 270)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(82, 13)
         Me.Label12.TabIndex = 23
         Me.Label12.Text = "Patch Schemas"
         '
-        'PatchSetTextBox
+        'AppCodeTextBox
         '
-        Me.PatchSetTextBox.Location = New System.Drawing.Point(103, 264)
-        Me.PatchSetTextBox.Name = "PatchSetTextBox"
-        Me.PatchSetTextBox.ReadOnly = True
-        Me.PatchSetTextBox.Size = New System.Drawing.Size(373, 20)
-        Me.PatchSetTextBox.TabIndex = 26
+        Me.AppCodeTextBox.Location = New System.Drawing.Point(103, 241)
+        Me.AppCodeTextBox.Name = "AppCodeTextBox"
+        Me.AppCodeTextBox.ReadOnly = True
+        Me.AppCodeTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.AppCodeTextBox.TabIndex = 26
         '
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(12, 267)
+        Me.Label13.Location = New System.Drawing.Point(12, 244)
         Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(54, 13)
+        Me.Label13.Size = New System.Drawing.Size(32, 13)
         Me.Label13.TabIndex = 25
-        Me.Label13.Text = "Patch Set"
+        Me.Label13.Text = "Code"
         '
-        'DBPatchSetToolStripMenuItem
+        'CreateDBMinorReleaseToolStripMenuItem
         '
-        Me.DBPatchSetToolStripMenuItem.Name = "DBPatchSetToolStripMenuItem"
-        Me.DBPatchSetToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
-        Me.DBPatchSetToolStripMenuItem.Text = "DBPatchSet"
+        Me.CreateDBMinorReleaseToolStripMenuItem.Name = "CreateDBMinorReleaseToolStripMenuItem"
+        Me.CreateDBMinorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.CreateDBMinorReleaseToolStripMenuItem.Text = "Create DB Minor Release"
+        '
+        'NewHotfixToolStripMenuItem
+        '
+        Me.NewHotfixToolStripMenuItem.Name = "NewHotfixToolStripMenuItem"
+        Me.NewHotfixToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.NewHotfixToolStripMenuItem.Text = "New Hotfix"
         '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(488, 377)
-        Me.Controls.Add(Me.PatchSetTextBox)
+        Me.ClientSize = New System.Drawing.Size(486, 377)
+        Me.Controls.Add(Me.AppCodeTextBox)
         Me.Controls.Add(Me.Label13)
         Me.Controls.Add(Me.PatchSchemasTextBox)
         Me.Controls.Add(Me.Label12)
@@ -438,8 +445,9 @@ Partial Class Main
     Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents PatchSchemasTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents PatchSetTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents AppCodeTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents DBPatchSetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents CreateDBMinorReleaseToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents NewHotfixToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

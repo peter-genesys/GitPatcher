@@ -28,7 +28,7 @@ Partial Class ProgressDialogue
         '
         'ProgressBar
         '
-        Me.ProgressBar.Location = New System.Drawing.Point(12, 159)
+        Me.ProgressBar.Location = New System.Drawing.Point(12, 325)
         Me.ProgressBar.Name = "ProgressBar"
         Me.ProgressBar.Size = New System.Drawing.Size(375, 23)
         Me.ProgressBar.TabIndex = 0
@@ -39,14 +39,14 @@ Partial Class ProgressDialogue
         Me.ProgressCheckedListBox.FormattingEnabled = True
         Me.ProgressCheckedListBox.Location = New System.Drawing.Point(12, 12)
         Me.ProgressCheckedListBox.Name = "ProgressCheckedListBox"
-        Me.ProgressCheckedListBox.Size = New System.Drawing.Size(375, 139)
+        Me.ProgressCheckedListBox.Size = New System.Drawing.Size(375, 304)
         Me.ProgressCheckedListBox.TabIndex = 1
         '
         'ProgressDialogue
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(399, 194)
+        Me.ClientSize = New System.Drawing.Size(399, 360)
         Me.Controls.Add(Me.ProgressCheckedListBox)
         Me.Controls.Add(Me.ProgressBar)
         Me.Name = "ProgressDialogue"

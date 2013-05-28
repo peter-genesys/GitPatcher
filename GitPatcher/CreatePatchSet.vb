@@ -1,12 +1,21 @@
 ﻿
 Public Class CreatePatchCollection
+    Private pPatchName As String = Nothing
     Private pCreatePatchType As String = Nothing
     Private pFindPatchTypes As String = Nothing
     Private pFindPatchFilters As String = Nothing
     Private pPrereqPatchTypes As String = Nothing
     Private pSupPatchTypes As String = Nothing
 
-    Public Sub New(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
+    Public Sub New(ByVal iPatchName As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
+
+        If String.IsNullOrEmpty(iPatchName) Then
+            Dim l_app_version = InputBox("Please enter a new version for " & Main.AppCodeTextBox.Text & " in the format: 2.17.01", "New " & Main.ApplicationListComboBox.SelectedItem & " Version")
+
+            pPatchName = Main.AppCodeTextBox.Text & "-" & l_app_version
+        Else
+            pPatchName = iPatchName
+        End If
 
 
         pCreatePatchType = iCreatePatchType
@@ -40,7 +49,7 @@ Public Class CreatePatchCollection
         Next
 
 
-        FindTagsButton.Text = "Find Tags like " & Main.ApplicationListComboBox.SelectedItem & "-X.XX.XX"
+        FindTagsButton.Text = "Find Tags like " & Main.AppCodeTextBox.Text & "-X.XX.XX"
 
         Findtags()
 
@@ -54,12 +63,23 @@ Public Class CreatePatchCollection
     'End Sub
 
     Private Sub Findtags()
+
+        Dim tagsearch As String = Replace(RTrim(Main.AppCodeTextBox.Text), Chr(13), "")
+        Dim tagseg As String = Nothing
+
         TagsCheckedListBox.Items.Clear()
         For Each tagname In GitSharpFascade.getTagList(My.Settings.CurrentRepo)
-            If PatchRunner.get_first_split(tagname, "-") = Main.CurrentBranchTextBox.Text Then
+            tagseg = getFirstSegment(tagname, "-")
+            If tagseg = tagsearch Then
                 TagsCheckedListBox.Items.Add(tagname)
             End If
         Next
+
+        TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
+
+        TagsCheckedListBox.Items.Add("HEAD")
+
+        TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
     End Sub
 
 
@@ -169,7 +189,7 @@ Public Class CreatePatchCollection
 
             End If
             For Each patchname As String In allPatches
-                If stringContainsSetMember(patchname, pFindPatchTypes, ",") And stringContainsSetMember(patchname, pFindPatchFilters, ",") Then
+                If (String.IsNullOrEmpty(pFindPatchTypes) Or stringContainsSetMember(patchname, pFindPatchTypes, ",")) And stringContainsSetMember(patchname, pFindPatchFilters, ",") Then
                     AvailablePatchesListBox.Items.Add(patchname)
                     'PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
                 End If
@@ -228,12 +248,12 @@ Public Class CreatePatchCollection
         'Iterate through the PatchableCheckedListBox
         'convert Patchable items to a collection
         Dim filenames As Collection = New Collection
- 
+
         For i = 0 To PatchableCheckedListBox.Items.Count - 1
             filenames.Add(PatchableCheckedListBox.Items(i))
 
         Next
- 
+
 
         'Create filenames from the ChosenPatches
 
@@ -244,6 +264,7 @@ Public Class CreatePatchCollection
 
         'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
+                           pCreatePatchType, _
                            "PATCH_ADMIN", _
                            Main.BranchPathTextBox.Text, _
                            Tag1TextBox.Text, _
@@ -341,6 +362,13 @@ Public Class CreatePatchCollection
         PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
+
+    Public Shared Function getFirstSegment(ByVal ipath As String, ByVal idelim As String) As String
+
+        Return ipath.Split(idelim)(0)
+    End Function
+
+
     Public Shared Function getLastSegment(ByVal ipath As String, ByVal idelim As String) As String
         Dim Path() As String = ipath.Split(idelim)
         Dim SplitCount = Path.Length
@@ -375,6 +403,7 @@ Public Class CreatePatchCollection
 
 
     Shared Sub writeInstallScript(ByVal patch_name As String, _
+                                  ByVal patch_type As String, _
                                   ByVal db_schema As String, _
                                   ByVal branch_path As String, _
                                   ByVal tag1_name As String, _
@@ -426,15 +455,15 @@ Public Class CreatePatchCollection
 
             End If
 
- 
+
             l_patches = l_patches & l_install_file_line
-            
+
             If String.IsNullOrEmpty(l_all_programs) Then
                 l_all_programs = l_filename
             Else
                 l_all_programs = l_all_programs & "' -" & Chr(10) & "||'," & l_filename
             End If
- 
+
 
         Next
 
@@ -478,6 +507,7 @@ Public Class CreatePatchCollection
                 l_master_file.WriteLine( _
                 "execute patch_admin.patch_installer.patch_started( -" _
     & Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
+    & Chr(10) & " ,i_patch_type         => '" & patch_type & "' -" _
     & Chr(10) & " ,i_db_schema          => '" & db_schema & "' -" _
     & Chr(10) & " ,i_branch_name        => '" & branch_path & "' -" _
     & Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
@@ -496,7 +526,7 @@ Public Class CreatePatchCollection
 
                 Dim l_prereq_short_name As String = Nothing
                 For Each l_prereq_patch In prereq_patches
-                    l_prereq_short_name = PatchFromTags.get_last_split(l_prereq_patch, "\")
+                    l_prereq_short_name = getLastSegment(l_prereq_patch, "\")
                     l_master_file.WriteLine("PROMPT")
                     l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
                     l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_prereq( -")
@@ -517,17 +547,17 @@ Public Class CreatePatchCollection
             'Write the list of files to execute.
 
             l_master_file.WriteLine("Prompt installing PATCHES" & Chr(10) & l_patches)
- 
+
 
             l_master_file.WriteLine("COMMIT;")
 
             If use_patch_admin Then
- 
-                l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed;")
+
+                l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
 
                 Dim l_sup_short_name As String = Nothing
                 For Each l_sup_patch In supersedes_patches
-                    l_sup_short_name = PatchFromTags.get_last_split(l_sup_patch, "\")
+                    l_sup_short_name = getLastSegment(l_sup_patch, "\")
                     l_master_file.WriteLine("PROMPT")
                     l_master_file.WriteLine("PROMPT Superseding patch " & l_sup_short_name)
                     l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")
@@ -558,9 +588,9 @@ Public Class CreatePatchCollection
         PatchableCheckedListBox.Items.Clear()
 
         For i As Integer = 0 To ChosenPatchesListBox.Items.Count - 1
- 
-                PatchableCheckedListBox.Items.Add(ChosenPatchesListBox.Items(i).ToString)
- 
+
+            PatchableCheckedListBox.Items.Add(ChosenPatchesListBox.Items(i).ToString)
+
         Next
     End Sub
 
@@ -579,6 +609,7 @@ Public Class CreatePatchCollection
         End If
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatches" Then
+            Application.DoEvents()
             deriveTags()
 
             If AvailablePatchesListBox.Items.Count = 0 Then
@@ -608,8 +639,7 @@ Public Class CreatePatchCollection
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
             'Copy Patchable items to the next list.
 
-            PatchPathTextBox.Text = Replace(Main.BranchPathTextBox.Text, "/", "\") & "\"
-
+            PatchPathTextBox.Text = pCreatePatchType & "\" & Main.AppCodeTextBox.Text & "\" 'Replace(Main.BranchPathTextBox.Text, "/", "\") & "\"
 
             derivePatchName()
 
@@ -617,7 +647,7 @@ Public Class CreatePatchCollection
 
             UsePatchAdminCheckBox.Checked = True
 
-            RerunCheckBox.Checked = True
+            RerunCheckBox.Checked = False
 
             If PatchableCheckedListBox.Items.Count = 0 Then
                 CopySelectedChanges()
@@ -637,7 +667,7 @@ Public Class CreatePatchCollection
 
 
 
-        PatchNameTextBox.Text = Tag2TextBox.Text
+        PatchNameTextBox.Text = pPatchName
 
         If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
             PatchNameTextBox.Text = PatchNameTextBox.Text & "_" & SupIdTextBox.Text
@@ -657,12 +687,12 @@ Public Class CreatePatchCollection
         If PreReqPatchTypeComboBox.SelectedItem <> "ALL" Then
             searchPath = PreReqPatchTypeComboBox.SelectedItem & "\"
         End If
- 
+
         PrereqsCheckedListBox.Items.Clear()
         If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
 
             PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text & searchPath, "install.sql", PrereqsCheckedListBox, Main.RootPatchDirTextBox.Text)
- 
+
         End If
     End Sub
 
@@ -675,7 +705,7 @@ Public Class CreatePatchCollection
 
 
     Private Sub FindSuper()
- 
+
         Dim searchPath As String = Nothing
         If SupPatchTypeComboBox.SelectedItem <> "ALL" Then
             searchPath = SupPatchTypeComboBox.SelectedItem & "\"
@@ -766,75 +796,135 @@ Public Class CreatePatchCollection
     Public Shared Sub createCollectionProcess(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
 
 
+        Dim l_app_version = InputBox("Please enter a new version for " & Main.AppCodeTextBox.Text & " in the format: 2.17.01", "New " & Main.ApplicationListComboBox.SelectedItem & " Version")
+
+        l_app_version = Main.AppCodeTextBox.Text & "-" & l_app_version
+
+        Dim newBranch As String = "release/" & iCreatePatchType & "/" & Main.AppCodeTextBox.Text & "/" & l_app_version
+
         Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
 
         Dim createPatchSetProgress As ProgressDialogue = New ProgressDialogue("Create DB " & iCreatePatchType)
         createPatchSetProgress.MdiParent = GitPatcher
 
-        createPatchSetProgress.addStep("Switch to Master branch", 10)
-        createPatchSetProgress.addStep("Pull from origin", 20)
-        createPatchSetProgress.addStep("Create tag on master branch: " & Main.PatchSetTextBox.Text & ".X.XX.XX", 30)
-        createPatchSetProgress.addStep("Create and Switch to " & iCreatePatchType & " Branch: " & iCreatePatchType & "/" & Main.PatchSetTextBox.Text, 40)
-        createPatchSetProgress.addStep("Create, edit and test " & iCreatePatchType, 50)
-        createPatchSetProgress.addStep("Commit to " & iCreatePatchType & " Branch: " & iCreatePatchType & "/" & Main.PatchSetTextBox.Text, 60)
-        createPatchSetProgress.addStep("Switch to Master branch", 70)
-        createPatchSetProgress.addStep("Pull from origin", 80)
-        createPatchSetProgress.addStep("Merge from " & iCreatePatchType & " Branch: " & iCreatePatchType & "/" & Main.PatchSetTextBox.Text, 90)
-        createPatchSetProgress.addStep("Push to origin", 95)
-        createPatchSetProgress.addStep("Execute on target database.", 100)
+        createPatchSetProgress.addStep("Switch to develop branch", 5)
+        createPatchSetProgress.addStep("Pull from origin/develop", 10)
+        createPatchSetProgress.addStep("Create and Switch to release Branch: " & newBranch, 15)
+        createPatchSetProgress.addStep("Create, edit and test " & iCreatePatchType, 20)
+        createPatchSetProgress.addStep("Bump Apex version to " & l_app_version, 25)
+        createPatchSetProgress.addStep("Commit Apex version " & l_app_version, 30)
+        createPatchSetProgress.addStep("Tag this release as " & l_app_version, 35)
+        createPatchSetProgress.addStep("Push to origin/" & newBranch, 40)
+
+        createPatchSetProgress.addStep("Switch to develop branch", 45)
+        createPatchSetProgress.addStep("Pull from origin/develop", 50)
+        createPatchSetProgress.addStep("Merge from release Branch: " & newBranch, 55)
+        createPatchSetProgress.addStep("Commit - incase of merge conflict", 60)
+        createPatchSetProgress.addStep("Push to origin/develop", 65)
+
+
+        createPatchSetProgress.addStep("Manually Execute " & iCreatePatchType & " " & l_app_version & " on target database.", 70)
+        createPatchSetProgress.addStep("Manually Import Apex " & l_app_version & " into target database.", 100)
+        'Import
 
         createPatchSetProgress.Show()
 
-        'createPatchSetProgress.setStep(0)
+        'Switch to develop branch
+        GitBash.Switch(My.Settings.CurrentRepo, "develop")
+        createPatchSetProgress.goNextStep()
 
-        'Switch to Master branch
-        Tortoise.Switch(My.Settings.CurrentRepo)
+        'Pull from origin/develop
+        GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+        createPatchSetProgress.goNextStep()
 
-        createPatchSetProgress.gonext()
+        'Create and Switch to new collection branch
+        GitBash.createBranch(My.Settings.CurrentRepo, newBranch)
+        createPatchSetProgress.goNextStep()
 
-        'Create collection branch
-        GitSharpFascade.createBranch(My.Settings.CurrentRepo, iCreatePatchType & "/" & "tag123")
+
+        'Create, edit And test collection
+        Dim Wizard As New CreatePatchCollection(l_app_version, iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes, iSupPatchTypes)
+        Wizard.ShowDialog() 'WAITING HERE!!
+        createPatchSetProgress.goNextStep()
 
 
-        'Pull from Origin 
-        Tortoise.Pull(My.Settings.CurrentRepo)
+        'Bump Apex version 
+        '  open script create_application.sql
+        '  read input line at a time until line starting "  p_flow_version=> "
+        '  replace this line with " p_flow_version=> " & new_version & " " & today
+        '  write rest of file and close it.
 
-        createPatchSetProgress.gonext()
+        Dim l_create_application_new As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\application\create_application.sql"
+        Dim l_create_application_old As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\application\create_application.sql.old"
 
-        'Switch to patchset Branch
-        Tortoise.Switch(My.Settings.CurrentRepo)
+        FileIO.deleteFileIfExists(l_create_application_old)
+        My.Computer.FileSystem.RenameFile(l_create_application_new, "create_application.sql.old")
 
-        createPatchSetProgress.gonext()
 
-        'Merge from master
+        Dim l_old_file As New System.IO.StreamReader(l_create_application_old)
+        Dim l_new_file As New System.IO.StreamWriter(l_create_application_new)
+        Dim l_line As String = Nothing
+
+        Do
+            'For each line
+            If l_old_file.EndOfStream Then Exit Do
+
+            l_line = l_old_file.ReadLine()
+            If l_line.Contains("p_flow_version") Then
+                l_line = "  p_flow_version=> '" & l_app_version & " " & Today.ToString("dd-MMM-yyyy") & "',"
+            End If
+
+
+            l_new_file.WriteLine(l_line)
+
+        Loop
+
+        l_old_file.Close()
+        l_new_file.Close()
+
+        FileIO.deleteFileIfExists(l_create_application_old)
+
+        createPatchSetProgress.goNextStep()
+
+        'Commit Apex version 
+        Tortoise.Commit(My.Settings.CurrentRepo, "Bump Apex " & Main.ApexAppTextBox.Text & " to " & l_app_version)
+        createPatchSetProgress.goNextStep()
+
+        'Tag this commit
+        GitBash.Tag(My.Settings.CurrentRepo, l_app_version, "New " & Main.ApplicationListComboBox.SelectedItem & " " & iCreatePatchType & " " & l_app_version)
+        createPatchSetProgress.goNextStep()
+
+        'Push release to origin with tags
+        GitBash.Push(My.Settings.CurrentRepo, "origin", newBranch, True)
+        createPatchSetProgress.goNextStep()
+
+        'Switch to develop branch
+        GitBash.Switch(My.Settings.CurrentRepo, "develop")
+        createPatchSetProgress.goNextStep()
+
+        'Pull from origin/develop
+        GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+        createPatchSetProgress.goNextStep()
+
+        'Merge from release
         Tortoise.Merge(My.Settings.CurrentRepo)
+        createPatchSetProgress.goNextStep()
 
-        createPatchSetProgress.gonext()
+        'Commit - incase of merge conflict
+        Tortoise.Commit(My.Settings.CurrentRepo, "Merge " & newBranch & " CANCEL IF NO MERGE CONFLICTS")
+        createPatchSetProgress.goNextStep()
 
-        'Show log, to create a tag
-        Tortoise.Log(My.Settings.CurrentRepo)
+        'Push to origin/develop 
+        GitBash.Push(My.Settings.CurrentRepo, "origin", "develop")
+        createPatchSetProgress.goNextStep()
 
-        createPatchSetProgress.gonext()
-
-        Dim Wizard As New CreatePatchCollection(iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes, iSupPatchTypes)
-        Wizard.ShowDialog()
-
-        'NEED TO WAIT HERE!!
-        createPatchSetProgress.gonext()
+        'MsgBox("Execute " & iCreatePatchType & " on target database.")
+        'createPatchSetProgress.goNextStep()
+        '
+        'MsgBox("Execute " & iCreatePatchType & " on target database.")
+        'createPatchSetProgress.goNextStep()
 
 
-        'Committing changed files to GIT"
-        Tortoise.Commit(My.Settings.CurrentRepo, "Commit any patch sets you've not yet committed", True)
-
-        createPatchSetProgress.gonext()
-
-        'Push to Origin 
-        Tortoise.Push(My.Settings.CurrentRepo)
-
-        createPatchSetProgress.gonext()
-
-        'Switch back to master
-        Tortoise.Switch(My.Settings.CurrentRepo)
 
         'Done
         createPatchSetProgress.done()
@@ -842,5 +932,4 @@ Public Class CreatePatchCollection
     End Sub
 
 
- 
 End Class

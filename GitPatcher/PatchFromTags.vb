@@ -82,6 +82,7 @@ Public Class PatchFromTags
 
         'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
+                           getFirstSegment(Main.BranchPathTextBox.Text, "/"), _
                            SchemaComboBox.Text, _
                            Main.BranchPathTextBox.Text, _
                            Tag1TextBox.Text, _
@@ -179,7 +180,31 @@ Public Class PatchFromTags
         PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
-    Public Shared Function get_last_split(ByVal ipath As String, ByVal idelim As String) As String
+    ' Public Shared Function get_last_split(ByVal ipath As String, ByVal idelim As String) As String
+    '     Dim Path() As String = ipath.Split(idelim)
+    '     Dim SplitCount = Path.Length
+    '     Dim l_last As String = ipath.Split(idelim)(SplitCount - 1)
+    '
+    '     Return l_last
+    ' End Function
+    '
+    ' Public Shared Function get_from_first_split(ByVal ipath As String, ByVal idelim As String) As String
+    '
+    '     Dim l_from_first As String = Nothing
+    '     Dim delim_pos As Integer = ipath.IndexOf(idelim)
+    '     If delim_pos > 0 Then
+    '         l_from_first = ipath.Remove(1, delim_pos)
+    '     End If
+    '
+    '     Return l_from_first
+    ' End Function
+
+    Public Shared Function getFirstSegment(ByVal ipath As String, ByVal idelim As String) As String
+
+        Return ipath.Split(idelim)(0)
+    End Function
+
+    Public Shared Function getLastSegment(ByVal ipath As String, ByVal idelim As String) As String
         Dim Path() As String = ipath.Split(idelim)
         Dim SplitCount = Path.Length
         Dim l_last As String = ipath.Split(idelim)(SplitCount - 1)
@@ -187,20 +212,32 @@ Public Class PatchFromTags
         Return l_last
     End Function
 
-    Public Shared Function get_from_first_split(ByVal ipath As String, ByVal idelim As String) As String
- 
+    Public Shared Function dropFirstSegment(ByVal ipath As String, ByVal idelim As String) As String
+
         Dim l_from_first As String = Nothing
         Dim delim_pos As Integer = ipath.IndexOf(idelim)
         If delim_pos > 0 Then
-            l_from_first = ipath.Remove(1, delim_pos)
+            l_from_first = ipath.Remove(0, delim_pos + 1)
         End If
- 
+
         Return l_from_first
+    End Function
+
+    Public Shared Function dropLastSegment(ByVal ipath As String, ByVal idelim As String) As String
+
+        Dim l_to_last As String = Nothing
+        Dim delim_pos As Integer = ipath.LastIndexOf(idelim)
+        If delim_pos > 0 Then
+            l_to_last = ipath.Remove(delim_pos, ipath.Length - delim_pos)
+        End If
+
+        Return l_to_last
     End Function
 
 
 
     Shared Sub writeInstallScript(ByVal patch_name As String, _
+                                  ByVal patch_type As String, _
                                   ByVal db_schema As String, _
                                   ByVal branch_path As String, _
                                   ByVal tag1_name As String, _
@@ -215,7 +252,7 @@ Public Class PatchFromTags
                                   ByRef prereq_patches As CheckedListBox.CheckedItemCollection, _
                                   ByRef supersedes_patches As CheckedListBox.CheckedItemCollection, _
                                   ByVal patchDir As String, _
-                                  ByVal groupPath As String )
+                                  ByVal groupPath As String)
 
 
         Dim l_db_objects_users As String = Nothing 'user
@@ -267,11 +304,12 @@ Public Class PatchFromTags
             rerunnable_yn = "Y"
         End If
 
+        Dim l_patch_started As String = Nothing
 
 
         For Each l_path In targetFiles
 
-            Dim l_filename As String = get_last_split(l_path, "/")
+            Dim l_filename As String = getLastSegment(l_path, "/")
 
             'Sort the files by files extention into lists.
 
@@ -400,30 +438,36 @@ Public Class PatchFromTags
 
             l_master_file.WriteLine("set serveroutput on;")
 
+
+ 
             If use_patch_admin Then
 
-                l_master_file.WriteLine( _
-                "execute patch_admin.patch_installer.patch_started( -" _
-    & Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
-    & Chr(10) & " ,i_db_schema          => '" & db_schema & "' -" _
-    & Chr(10) & " ,i_branch_name        => '" & branch_path & "' -" _
-    & Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
-    & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
-    & Chr(10) & " ,i_supplementary      => '" & supplementary & "' -" _
-    & Chr(10) & " ,i_patch_desc         => '" & patch_desc & "' -" _
-    & Chr(10) & " ,i_patch_componants   => '" & l_all_programs & "' -" _
-    & Chr(10) & " ,i_patch_create_date  => '" & DateString & "' -" _
-    & Chr(10) & " ,i_patch_created_by   => '" & Environment.UserName & "' -" _
-    & Chr(10) & " ,i_note               => '" & note & "' -" _
-    & Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
-    & Chr(10) & " ,i_remove_prereqs     => 'N' -" _
-    & Chr(10) & " ,i_remove_sups        => 'N'); " _
-    & Chr(10))
+                l_patch_started = _
+                    "execute patch_admin.patch_installer.patch_started( -" _
+        & Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
+        & Chr(10) & " ,i_patch_type         => '" & patch_type & "' -" _
+        & Chr(10) & " ,i_db_schema          => '" & db_schema & "' -" _
+        & Chr(10) & " ,i_branch_name        => '" & branch_path & "' -" _
+        & Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
+        & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
+        & Chr(10) & " ,i_supplementary      => '" & supplementary & "' -" _
+        & Chr(10) & " ,i_patch_desc         => '" & patch_desc & "' -" _
+        & Chr(10) & " ,i_patch_componants   => '" & l_all_programs & "' -" _
+        & Chr(10) & " ,i_patch_create_date  => '" & DateString & "' -" _
+        & Chr(10) & " ,i_patch_created_by   => '" & Environment.UserName & "' -" _
+        & Chr(10) & " ,i_note               => '" & note & "' -" _
+        & Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
+        & Chr(10) & " ,i_remove_prereqs     => 'N' -" _
+        & Chr(10) & " ,i_remove_sups        => 'N'); " _
+        & Chr(10)
 
+ 
+                l_master_file.WriteLine(l_patch_started)
+    
 
                 Dim l_prereq_short_name As String = Nothing
                 For Each l_prereq_patch In prereq_patches
-                    l_prereq_short_name = PatchFromTags.get_last_split(l_prereq_patch, "\")
+                    l_prereq_short_name = PatchFromTags.getLastSegment(l_prereq_patch, "\")
                     l_master_file.WriteLine("PROMPT")
                     l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
                     l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_prereq( -")
@@ -527,13 +571,20 @@ Public Class PatchFromTags
             l_master_file.WriteLine("COMMIT;")
 
             If use_patch_admin Then
+  
                 l_master_file.WriteLine("PROMPT Compiling objects in schema " & db_schema)
                 l_master_file.WriteLine("execute patch_admin.patch_invoker.compile_post_patch;")
-                l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed;")
+
+                If db_schema = "PATCH_ADMIN" Then
+                    l_master_file.WriteLine("--PATCH_ADMIN patches are likely to loose the session state of patch_installer, so complete using the patch_name parm.")
+                    l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
+                Else
+                    l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed;")
+                End If
 
                 Dim l_sup_short_name As String = Nothing
                 For Each l_sup_patch In supersedes_patches
-                    l_sup_short_name = PatchFromTags.get_last_split(l_sup_patch, "\")
+                    l_sup_short_name = PatchFromTags.getLastSegment(l_sup_patch, "\")
                     l_master_file.WriteLine("PROMPT")
                     l_master_file.WriteLine("PROMPT Superseding patch " & l_sup_short_name)
                     l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")
@@ -619,9 +670,10 @@ Public Class PatchFromTags
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
             'Copy Patchable items to the next list.
 
-            PatchPathTextBox.Text = Replace(Main.BranchPathTextBox.Text, "/", "\") & "\"
+            PatchPathTextBox.Text = Replace(Main.BranchPathTextBox.Text, "/", "\") & "\" & Main.AppCodeTextBox.Text & "\"
 
-
+            PatchPathTextBox.Text = getFirstSegment(Main.BranchPathTextBox.Text, "/") & "\" & Main.AppCodeTextBox.Text & "\" & getLastSegment(Main.BranchPathTextBox.Text, "/") & "\"
+ 
             derivePatchName()
 
             PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
@@ -646,7 +698,7 @@ Public Class PatchFromTags
 
     Private Sub derivePatchName()
 
-        PatchNameTextBox.Text = SchemaComboBox.SelectedItem.ToString & "_" & Main.CurrentBranchTextBox.Text & "_" & get_from_first_split(Tag1TextBox.Text, ".") & "_" & get_from_first_split(Tag2TextBox.Text, ".")
+        PatchNameTextBox.Text = Main.CurrentBranchTextBox.Text & "_" & dropFirstSegment(Tag1TextBox.Text, ".") & "_" & dropFirstSegment(Tag2TextBox.Text, ".") & "_" & SchemaComboBox.SelectedItem.ToString
 
         If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
             PatchNameTextBox.Text = PatchNameTextBox.Text & "_" & SupIdTextBox.Text
@@ -754,20 +806,18 @@ Public Class PatchFromTags
         createPatchProgress.addStep("Create edit, test", 40)
         'createPatchProgress.addStep("Add new files", 50)
         createPatchProgress.addStep("Commit to Branch: " & currentBranch, 50)
-        createPatchProgress.addStep("Switch to Master branch", 60)
+        createPatchProgress.addStep("Switch to develop branch", 60)
         createPatchProgress.addStep("Pull from Origin", 70)
         createPatchProgress.addStep("Merge from Branch: " & currentBranch, 80)
         createPatchProgress.addStep("Push to Origin", 90)
         createPatchProgress.addStep("Return to Branch: " & currentBranch, 100)
 
         createPatchProgress.Show()
-
-        createPatchProgress.setStep(0)
-
+ 
         Tortoise.Log(My.Settings.CurrentRepo)
 
 
-        createPatchProgress.setStep(1)
+        createPatchProgress.goNextStep()
 
         Dim Wizard As New PatchFromTags
         'newchildform.MdiParent = GitPatcher
@@ -784,7 +834,7 @@ Public Class PatchFromTags
 
 
         'NEED TO WAIT HERE!!
-        createPatchProgress.setStep(2)
+        createPatchProgress.goNextStep()
 
 
         'Adding new files to GIT"
@@ -793,31 +843,32 @@ Public Class PatchFromTags
         'Committing changed files to GIT"
         Tortoise.Commit(My.Settings.CurrentRepo, "Commit any patches you've not yet committed", True)
 
-        createPatchProgress.setStep(3)
+        createPatchProgress.goNextStep()
 
         'switch
         'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, "master")
-        Tortoise.Switch(My.Settings.CurrentRepo)
-
-        createPatchProgress.setStep(4)
-        'Pull from Origin 
-        Tortoise.Pull(My.Settings.CurrentRepo)
-
-        createPatchProgress.setStep(5)
+        'Tortoise.Switch(My.Settings.CurrentRepo)
+        'Switch to develop branch
+        GitBash.Switch(My.Settings.CurrentRepo, "develop")
+        createPatchProgress.goNextStep()
+ 
+        'Pull from origin/develop
+        GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+        createPatchProgress.goNextStep()
 
         'Merge from Feature branch
         'TortoiseMerge(My.Settings.CurrentRepo, currentBranch)
         Tortoise.Merge(My.Settings.CurrentRepo)
 
-        createPatchProgress.setStep(6)
+        createPatchProgress.goNextStep()
 
-        'Push to Origin 
-        Tortoise.Push(My.Settings.CurrentRepo)
+        'Push to origin/develop 
+        GitBash.Push(My.Settings.CurrentRepo, "origin", "develop")
 
-        createPatchProgress.setStep(7)
+        createPatchProgress.goNextStep()
 
         'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, currentBranch)
-        Tortoise.Switch(My.Settings.CurrentRepo)
+        GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
 
         'Done
         createPatchProgress.done()

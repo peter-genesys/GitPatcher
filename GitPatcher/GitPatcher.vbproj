@@ -77,6 +77,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apex.vb" />
+    <Compile Include="GitBash.vb" />
+    <Compile Include="GitBashFascade.vb" />
     <Compile Include="CreatePatchSet.Designer.vb">
       <DependentUpon>CreatePatchSet.vb</DependentUpon>
     </Compile>
@@ -143,7 +145,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Tortoise.vb" />
-    <Compile Include="TortoiseFacade.vb" />
+    <Compile Include="TortoiseFascade.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Config.resx">
