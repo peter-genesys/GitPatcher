@@ -62,7 +62,7 @@
 
         BranchPathTextBox.Text = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)
 
-        CurrentBranchTextBox.Text = PatchFromTags.getLastSegment(BranchPathTextBox.Text, "/")
+        CurrentBranchTextBox.Text = Common.getLastSegment(BranchPathTextBox.Text, "/")
  
 
         'CurrentBranchTextBox.Text = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)

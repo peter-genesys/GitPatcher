@@ -25,3 +25,4 @@ C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\ob
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\Debug\GitPatcher.ProgressDialogue.resources
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\Debug\GitPatcher.CreatePatchCollection.resources
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\Debug\GitPatcher.ChoiceDialog.resources
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bin\Debug\Oracle.DataAccess.dll

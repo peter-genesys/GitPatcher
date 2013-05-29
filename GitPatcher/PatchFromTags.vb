@@ -82,7 +82,7 @@ Public Class PatchFromTags
 
         'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
-                           getFirstSegment(Main.BranchPathTextBox.Text, "/"), _
+                           Common.getFirstSegment(Main.BranchPathTextBox.Text, "/"), _
                            SchemaComboBox.Text, _
                            Main.BranchPathTextBox.Text, _
                            Tag1TextBox.Text, _
@@ -198,43 +198,7 @@ Public Class PatchFromTags
     '
     '     Return l_from_first
     ' End Function
-
-    Public Shared Function getFirstSegment(ByVal ipath As String, ByVal idelim As String) As String
-
-        Return ipath.Split(idelim)(0)
-    End Function
-
-    Public Shared Function getLastSegment(ByVal ipath As String, ByVal idelim As String) As String
-        Dim Path() As String = ipath.Split(idelim)
-        Dim SplitCount = Path.Length
-        Dim l_last As String = ipath.Split(idelim)(SplitCount - 1)
-
-        Return l_last
-    End Function
-
-    Public Shared Function dropFirstSegment(ByVal ipath As String, ByVal idelim As String) As String
-
-        Dim l_from_first As String = Nothing
-        Dim delim_pos As Integer = ipath.IndexOf(idelim)
-        If delim_pos > 0 Then
-            l_from_first = ipath.Remove(0, delim_pos + 1)
-        End If
-
-        Return l_from_first
-    End Function
-
-    Public Shared Function dropLastSegment(ByVal ipath As String, ByVal idelim As String) As String
-
-        Dim l_to_last As String = Nothing
-        Dim delim_pos As Integer = ipath.LastIndexOf(idelim)
-        If delim_pos > 0 Then
-            l_to_last = ipath.Remove(delim_pos, ipath.Length - delim_pos)
-        End If
-
-        Return l_to_last
-    End Function
-
-
+ 
 
     Shared Sub writeInstallScript(ByVal patch_name As String, _
                                   ByVal patch_type As String, _
@@ -309,7 +273,7 @@ Public Class PatchFromTags
 
         For Each l_path In targetFiles
 
-            Dim l_filename As String = getLastSegment(l_path, "/")
+            Dim l_filename As String = Common.getLastSegment(l_path, "/")
 
             'Sort the files by files extention into lists.
 
@@ -467,7 +431,7 @@ Public Class PatchFromTags
 
                 Dim l_prereq_short_name As String = Nothing
                 For Each l_prereq_patch In prereq_patches
-                    l_prereq_short_name = PatchFromTags.getLastSegment(l_prereq_patch, "\")
+                    l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
                     l_master_file.WriteLine("PROMPT")
                     l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
                     l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_prereq( -")
@@ -584,7 +548,7 @@ Public Class PatchFromTags
 
                 Dim l_sup_short_name As String = Nothing
                 For Each l_sup_patch In supersedes_patches
-                    l_sup_short_name = PatchFromTags.getLastSegment(l_sup_patch, "\")
+                    l_sup_short_name = Common.getLastSegment(l_sup_patch, "\")
                     l_master_file.WriteLine("PROMPT")
                     l_master_file.WriteLine("PROMPT Superseding patch " & l_sup_short_name)
                     l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")
@@ -672,7 +636,7 @@ Public Class PatchFromTags
 
             PatchPathTextBox.Text = Replace(Main.BranchPathTextBox.Text, "/", "\") & "\" & Main.AppCodeTextBox.Text & "\"
 
-            PatchPathTextBox.Text = getFirstSegment(Main.BranchPathTextBox.Text, "/") & "\" & Main.AppCodeTextBox.Text & "\" & getLastSegment(Main.BranchPathTextBox.Text, "/") & "\"
+            PatchPathTextBox.Text = Common.getFirstSegment(Main.BranchPathTextBox.Text, "/") & "\" & Main.AppCodeTextBox.Text & "\" & Common.getLastSegment(Main.BranchPathTextBox.Text, "/") & "\"
  
             derivePatchName()
 
@@ -698,7 +662,7 @@ Public Class PatchFromTags
 
     Private Sub derivePatchName()
 
-        PatchNameTextBox.Text = Main.CurrentBranchTextBox.Text & "_" & dropFirstSegment(Tag1TextBox.Text, ".") & "_" & dropFirstSegment(Tag2TextBox.Text, ".") & "_" & SchemaComboBox.SelectedItem.ToString
+        PatchNameTextBox.Text = Main.CurrentBranchTextBox.Text & "_" & Common.dropFirstSegment(Tag1TextBox.Text, ".") & "_" & Common.dropFirstSegment(Tag2TextBox.Text, ".") & "_" & SchemaComboBox.SelectedItem.ToString
 
         If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
             PatchNameTextBox.Text = PatchNameTextBox.Text & "_" & SupIdTextBox.Text

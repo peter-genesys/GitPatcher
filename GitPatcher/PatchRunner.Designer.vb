@@ -34,6 +34,7 @@ Partial Class PatchRunner
         Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
+        Me.IgnoreInstalledCheckBox = New System.Windows.Forms.CheckBox()
         Me.PatchRunnerTabControl.SuspendLayout()
         Me.PatchSelectorTabPage.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -72,6 +73,7 @@ Partial Class PatchRunner
         '
         'SplitContainer1.Panel1
         '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.IgnoreInstalledCheckBox)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label1)
         Me.SplitContainer1.Panel1.Controls.Add(Me.SearchPatchesButton)
         Me.SplitContainer1.Panel1.Controls.Add(Me.AvailablePatchesListBox)
@@ -166,6 +168,18 @@ Partial Class PatchRunner
         Me.ExecutePatchButton.Text = "Execute Patches"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
+        'IgnoreInstalledCheckBox
+        '
+        Me.IgnoreInstalledCheckBox.AutoSize = True
+        Me.IgnoreInstalledCheckBox.Checked = True
+        Me.IgnoreInstalledCheckBox.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.IgnoreInstalledCheckBox.Location = New System.Drawing.Point(246, 15)
+        Me.IgnoreInstalledCheckBox.Name = "IgnoreInstalledCheckBox"
+        Me.IgnoreInstalledCheckBox.Size = New System.Drawing.Size(98, 17)
+        Me.IgnoreInstalledCheckBox.TabIndex = 35
+        Me.IgnoreInstalledCheckBox.Text = "Ignore Installed"
+        Me.IgnoreInstalledCheckBox.UseVisualStyleBackColor = True
+        '
         'PatchRunner
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -199,4 +213,5 @@ Partial Class PatchRunner
     Friend WithEvents ExecutePatchButton As System.Windows.Forms.Button
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents MasterScriptListBox As System.Windows.Forms.ListBox
+    Friend WithEvents IgnoreInstalledCheckBox As System.Windows.Forms.CheckBox
 End Class

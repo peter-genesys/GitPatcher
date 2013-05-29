@@ -77,4 +77,76 @@
         ' Return the numbers, then the chars.
         Return l_nums.TrimEnd(",") & "," & l_chrs.TrimEnd(",")
     End Function
+
+
+    Public Shared Function stringContainsSetMember(iString As String, iSet As String, idelim As String) As Boolean
+        Dim lResult As Boolean = False
+        For Each member In iSet.Split(idelim)
+            lResult = lResult Or iString.Contains(member)
+        Next
+
+        Return lResult
+
+    End Function
+
+
+    Public Shared Function getFirstSegment(ByVal ipath As String, ByVal idelim As String) As String
+
+        Return ipath.Split(idelim)(0)
+    End Function
+
+    Public Shared Function getNthSegment(ByVal ipath As String, ByVal idelim As String, ByVal n As Integer) As String
+
+        Return ipath.Split(idelim)(n - 1)
+    End Function
+
+
+    Public Shared Function getLastSegment(ByVal ipath As String, ByVal idelim As String) As String
+        Dim Path() As String = ipath.Split(idelim)
+        Dim SplitCount = Path.Length
+        Dim l_last As String = ipath.Split(idelim)(SplitCount - 1)
+
+        Return l_last
+    End Function
+
+    Public Shared Function dropFirstSegment(ByVal ipath As String, ByVal idelim As String) As String
+
+        Dim l_from_first As String = Nothing
+        Dim delim_pos As Integer = ipath.IndexOf(idelim)
+        If delim_pos > 0 Then
+            l_from_first = ipath.Remove(0, delim_pos + 1)
+        End If
+
+        Return l_from_first
+    End Function
+
+    Public Shared Function dropLastSegment(ByVal ipath As String, ByVal idelim As String) As String
+
+        Dim l_to_last As String = Nothing
+        Dim delim_pos As Integer = ipath.LastIndexOf(idelim)
+        If delim_pos > 0 Then
+            l_to_last = ipath.Remove(delim_pos, ipath.Length - delim_pos)
+        End If
+
+        Return l_to_last
+    End Function
+
+    Public Shared Function getHost() As String
+ 
+        Return getNthSegment(Main.CurrentConnectionTextBox.Text, ":", 1)
+
+    End Function
+
+    Public Shared Function getPort() As String
+
+        Return getNthSegment(Main.CurrentConnectionTextBox.Text, ":", 2)
+
+    End Function
+
+    Public Shared Function getSid() As String
+
+        Return getNthSegment(Main.CurrentConnectionTextBox.Text, ":", 3)
+
+    End Function
+
 End Class

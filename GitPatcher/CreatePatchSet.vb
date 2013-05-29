@@ -69,7 +69,7 @@ Public Class CreatePatchCollection
 
         TagsCheckedListBox.Items.Clear()
         For Each tagname In GitSharpFascade.getTagList(My.Settings.CurrentRepo)
-            tagseg = getFirstSegment(tagname, "-")
+            tagseg = Common.getFirstSegment(tagname, "-")
             If tagseg = tagsearch Then
                 TagsCheckedListBox.Items.Add(tagname)
             End If
@@ -147,15 +147,7 @@ Public Class CreatePatchCollection
     '  End Sub
 
 
-    Function stringContainsSetMember(iString As String, iSet As String, idelim As String) As Boolean
-        Dim lResult As Boolean = False
-        For Each member In iSet.Split(idelim)
-            lResult = lResult Or iString.Contains(member)
-        Next
 
-        Return lResult
-
-    End Function
 
 
     Private Sub FindPatches()
@@ -168,9 +160,9 @@ Public Class CreatePatchCollection
 
             For Each change In GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
 
-                If change.contains("install.sql") And stringContainsSetMember(change, pFindPatchTypes, ",") And stringContainsSetMember(change, pFindPatchFilters, ",") Then
+                If change.contains("install.sql") And Common.stringContainsSetMember(change, pFindPatchTypes, ",") And Common.stringContainsSetMember(change, pFindPatchFilters, ",") Then
                     'PatchesCheckedListBox.Items.Add(change)
-                    AvailablePatchesListBox.Items.Add(dropLastSegment(dropFirstSegment(change, "/"), "/"))
+                    AvailablePatchesListBox.Items.Add(Common.dropLastSegment(Common.dropFirstSegment(change, "/"), "/"))
                     'PatchesCheckedListBox.Items.Add(dropFirstSegment(change, "/"))
                     'PatchesCheckedListBox.Items.Add(dropLastSegment(change, "/"))
 
@@ -189,7 +181,7 @@ Public Class CreatePatchCollection
 
             End If
             For Each patchname As String In allPatches
-                If (String.IsNullOrEmpty(pFindPatchTypes) Or stringContainsSetMember(patchname, pFindPatchTypes, ",")) And stringContainsSetMember(patchname, pFindPatchFilters, ",") Then
+                If (String.IsNullOrEmpty(pFindPatchTypes) Or Common.stringContainsSetMember(patchname, pFindPatchTypes, ",")) And Common.stringContainsSetMember(patchname, pFindPatchFilters, ",") Then
                     AvailablePatchesListBox.Items.Add(patchname)
                     'PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
                 End If
@@ -363,41 +355,6 @@ Public Class CreatePatchCollection
     End Sub
 
 
-    Public Shared Function getFirstSegment(ByVal ipath As String, ByVal idelim As String) As String
-
-        Return ipath.Split(idelim)(0)
-    End Function
-
-
-    Public Shared Function getLastSegment(ByVal ipath As String, ByVal idelim As String) As String
-        Dim Path() As String = ipath.Split(idelim)
-        Dim SplitCount = Path.Length
-        Dim l_last As String = ipath.Split(idelim)(SplitCount - 1)
-
-        Return l_last
-    End Function
-
-    Public Shared Function dropFirstSegment(ByVal ipath As String, ByVal idelim As String) As String
-
-        Dim l_from_first As String = Nothing
-        Dim delim_pos As Integer = ipath.IndexOf(idelim)
-        If delim_pos > 0 Then
-            l_from_first = ipath.Remove(0, delim_pos + 1)
-        End If
-
-        Return l_from_first
-    End Function
-
-    Public Shared Function dropLastSegment(ByVal ipath As String, ByVal idelim As String) As String
-
-        Dim l_to_last As String = Nothing
-        Dim delim_pos As Integer = ipath.LastIndexOf(idelim)
-        If delim_pos > 0 Then
-            l_to_last = ipath.Remove(delim_pos, ipath.Length - delim_pos)
-        End If
-
-        Return l_to_last
-    End Function
 
 
 
@@ -442,7 +399,7 @@ Public Class CreatePatchCollection
 
         For Each l_path In targetFiles
 
-            Dim l_filename As String = getLastSegment(l_path, "/")
+            Dim l_filename As String = Common.getLastSegment(l_path, "/")
             Dim l_dos_path As String = Replace(l_path, "/", "\")
 
             If iSkipFiles.Contains(l_path) Then
@@ -526,7 +483,7 @@ Public Class CreatePatchCollection
 
                 Dim l_prereq_short_name As String = Nothing
                 For Each l_prereq_patch In prereq_patches
-                    l_prereq_short_name = getLastSegment(l_prereq_patch, "\")
+                    l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
                     l_master_file.WriteLine("PROMPT")
                     l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
                     l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_prereq( -")
@@ -557,7 +514,7 @@ Public Class CreatePatchCollection
 
                 Dim l_sup_short_name As String = Nothing
                 For Each l_sup_patch In supersedes_patches
-                    l_sup_short_name = getLastSegment(l_sup_patch, "\")
+                    l_sup_short_name = Common.getLastSegment(l_sup_patch, "\")
                     l_master_file.WriteLine("PROMPT")
                     l_master_file.WriteLine("PROMPT Superseding patch " & l_sup_short_name)
                     l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")

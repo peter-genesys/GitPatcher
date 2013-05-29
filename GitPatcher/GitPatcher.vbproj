@@ -52,6 +52,7 @@
     <Reference Include="GitSharp.Core">
       <HintPath>..\..\GitSharp\GitSharp.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Oracle.DataAccess, Version=4.112.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=x86" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
