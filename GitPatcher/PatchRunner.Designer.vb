@@ -25,7 +25,6 @@ Partial Class PatchRunner
         Me.PatchRunnerTabControl = New System.Windows.Forms.TabControl()
         Me.PatchSelectorTabPage = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
-        Me.IgnoreInstalledCheckBox = New System.Windows.Forms.CheckBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.SearchPatchesButton = New System.Windows.Forms.Button()
         Me.AvailablePatchesListBox = New System.Windows.Forms.ListBox()
@@ -35,7 +34,10 @@ Partial Class PatchRunner
         Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.IgnoreUnpromotedCheckBox = New System.Windows.Forms.CheckBox()
+        Me.RadioButtonUnapplied = New System.Windows.Forms.RadioButton()
+        Me.RadioButtonUninstalled = New System.Windows.Forms.RadioButton()
+        Me.RadioButtonAll = New System.Windows.Forms.RadioButton()
+        Me.PatchFilterGroupBox = New System.Windows.Forms.GroupBox()
         Me.PatchRunnerTabControl.SuspendLayout()
         Me.PatchSelectorTabPage.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -43,6 +45,7 @@ Partial Class PatchRunner
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
         Me.RunTabPage.SuspendLayout()
+        Me.PatchFilterGroupBox.SuspendLayout()
         Me.SuspendLayout()
         '
         'PatchRunnerTabControl
@@ -74,8 +77,7 @@ Partial Class PatchRunner
         '
         'SplitContainer1.Panel1
         '
-        Me.SplitContainer1.Panel1.Controls.Add(Me.IgnoreUnpromotedCheckBox)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.IgnoreInstalledCheckBox)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.PatchFilterGroupBox)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label1)
         Me.SplitContainer1.Panel1.Controls.Add(Me.SearchPatchesButton)
         Me.SplitContainer1.Panel1.Controls.Add(Me.AvailablePatchesListBox)
@@ -88,22 +90,10 @@ Partial Class PatchRunner
         Me.SplitContainer1.SplitterDistance = 359
         Me.SplitContainer1.TabIndex = 0
         '
-        'IgnoreInstalledCheckBox
-        '
-        Me.IgnoreInstalledCheckBox.AutoSize = True
-        Me.IgnoreInstalledCheckBox.Checked = True
-        Me.IgnoreInstalledCheckBox.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.IgnoreInstalledCheckBox.Location = New System.Drawing.Point(246, 15)
-        Me.IgnoreInstalledCheckBox.Name = "IgnoreInstalledCheckBox"
-        Me.IgnoreInstalledCheckBox.Size = New System.Drawing.Size(98, 17)
-        Me.IgnoreInstalledCheckBox.TabIndex = 35
-        Me.IgnoreInstalledCheckBox.Text = "Ignore Installed"
-        Me.IgnoreInstalledCheckBox.UseVisualStyleBackColor = True
-        '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(4, 45)
+        Me.Label1.Location = New System.Drawing.Point(4, 97)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(92, 13)
         Me.Label1.TabIndex = 2
@@ -111,7 +101,7 @@ Partial Class PatchRunner
         '
         'SearchPatchesButton
         '
-        Me.SearchPatchesButton.Location = New System.Drawing.Point(100, 10)
+        Me.SearchPatchesButton.Location = New System.Drawing.Point(7, 10)
         Me.SearchPatchesButton.Name = "SearchPatchesButton"
         Me.SearchPatchesButton.Size = New System.Drawing.Size(139, 23)
         Me.SearchPatchesButton.TabIndex = 34
@@ -121,15 +111,15 @@ Partial Class PatchRunner
         'AvailablePatchesListBox
         '
         Me.AvailablePatchesListBox.FormattingEnabled = True
-        Me.AvailablePatchesListBox.Location = New System.Drawing.Point(7, 61)
+        Me.AvailablePatchesListBox.Location = New System.Drawing.Point(7, 113)
         Me.AvailablePatchesListBox.Name = "AvailablePatchesListBox"
-        Me.AvailablePatchesListBox.Size = New System.Drawing.Size(349, 641)
+        Me.AvailablePatchesListBox.Size = New System.Drawing.Size(349, 589)
         Me.AvailablePatchesListBox.TabIndex = 0
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(3, 45)
+        Me.Label2.Location = New System.Drawing.Point(3, 97)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(85, 13)
         Me.Label2.TabIndex = 35
@@ -138,9 +128,9 @@ Partial Class PatchRunner
         'ChosenPatchesListBox
         '
         Me.ChosenPatchesListBox.FormattingEnabled = True
-        Me.ChosenPatchesListBox.Location = New System.Drawing.Point(3, 61)
+        Me.ChosenPatchesListBox.Location = New System.Drawing.Point(3, 113)
         Me.ChosenPatchesListBox.Name = "ChosenPatchesListBox"
-        Me.ChosenPatchesListBox.Size = New System.Drawing.Size(377, 641)
+        Me.ChosenPatchesListBox.Size = New System.Drawing.Size(377, 589)
         Me.ChosenPatchesListBox.TabIndex = 1
         '
         'RunTabPage
@@ -175,24 +165,57 @@ Partial Class PatchRunner
         '
         'ExecutePatchButton
         '
-        Me.ExecutePatchButton.Location = New System.Drawing.Point(100, 10)
+        Me.ExecutePatchButton.Location = New System.Drawing.Point(7, 10)
         Me.ExecutePatchButton.Name = "ExecutePatchButton"
         Me.ExecutePatchButton.Size = New System.Drawing.Size(139, 23)
         Me.ExecutePatchButton.TabIndex = 1
         Me.ExecutePatchButton.Text = "Execute Patches"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'IgnoreUnpromotedCheckBox
+        'RadioButtonUnapplied
         '
-        Me.IgnoreUnpromotedCheckBox.AutoSize = True
-        Me.IgnoreUnpromotedCheckBox.Checked = True
-        Me.IgnoreUnpromotedCheckBox.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.IgnoreUnpromotedCheckBox.Location = New System.Drawing.Point(246, 38)
-        Me.IgnoreUnpromotedCheckBox.Name = "IgnoreUnpromotedCheckBox"
-        Me.IgnoreUnpromotedCheckBox.Size = New System.Drawing.Size(117, 17)
-        Me.IgnoreUnpromotedCheckBox.TabIndex = 36
-        Me.IgnoreUnpromotedCheckBox.Text = "Ignore Unpromoted"
-        Me.IgnoreUnpromotedCheckBox.UseVisualStyleBackColor = True
+        Me.RadioButtonUnapplied.AutoSize = True
+        Me.RadioButtonUnapplied.Location = New System.Drawing.Point(27, 19)
+        Me.RadioButtonUnapplied.Name = "RadioButtonUnapplied"
+        Me.RadioButtonUnapplied.Size = New System.Drawing.Size(73, 17)
+        Me.RadioButtonUnapplied.TabIndex = 35
+        Me.RadioButtonUnapplied.TabStop = True
+        Me.RadioButtonUnapplied.Text = "Unapplied"
+        Me.RadioButtonUnapplied.UseVisualStyleBackColor = True
+        '
+        'RadioButtonUninstalled
+        '
+        Me.RadioButtonUninstalled.AutoSize = True
+        Me.RadioButtonUninstalled.Location = New System.Drawing.Point(27, 42)
+        Me.RadioButtonUninstalled.Name = "RadioButtonUninstalled"
+        Me.RadioButtonUninstalled.Size = New System.Drawing.Size(77, 17)
+        Me.RadioButtonUninstalled.TabIndex = 36
+        Me.RadioButtonUninstalled.TabStop = True
+        Me.RadioButtonUninstalled.Text = "Uninstalled"
+        Me.RadioButtonUninstalled.UseVisualStyleBackColor = True
+        '
+        'RadioButtonAll
+        '
+        Me.RadioButtonAll.AutoSize = True
+        Me.RadioButtonAll.Location = New System.Drawing.Point(27, 65)
+        Me.RadioButtonAll.Name = "RadioButtonAll"
+        Me.RadioButtonAll.Size = New System.Drawing.Size(36, 17)
+        Me.RadioButtonAll.TabIndex = 37
+        Me.RadioButtonAll.TabStop = True
+        Me.RadioButtonAll.Text = "All"
+        Me.RadioButtonAll.UseVisualStyleBackColor = True
+        '
+        'PatchFilterGroupBox
+        '
+        Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUnapplied)
+        Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonAll)
+        Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUninstalled)
+        Me.PatchFilterGroupBox.Location = New System.Drawing.Point(163, 10)
+        Me.PatchFilterGroupBox.Name = "PatchFilterGroupBox"
+        Me.PatchFilterGroupBox.Size = New System.Drawing.Size(182, 93)
+        Me.PatchFilterGroupBox.TabIndex = 1
+        Me.PatchFilterGroupBox.TabStop = False
+        Me.PatchFilterGroupBox.Text = "Filter"
         '
         'PatchRunner
         '
@@ -212,6 +235,8 @@ Partial Class PatchRunner
         Me.SplitContainer1.ResumeLayout(False)
         Me.RunTabPage.ResumeLayout(False)
         Me.RunTabPage.PerformLayout()
+        Me.PatchFilterGroupBox.ResumeLayout(False)
+        Me.PatchFilterGroupBox.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -227,6 +252,8 @@ Partial Class PatchRunner
     Friend WithEvents ExecutePatchButton As System.Windows.Forms.Button
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents MasterScriptListBox As System.Windows.Forms.ListBox
-    Friend WithEvents IgnoreInstalledCheckBox As System.Windows.Forms.CheckBox
-    Friend WithEvents IgnoreUnpromotedCheckBox As System.Windows.Forms.CheckBox
+    Friend WithEvents PatchFilterGroupBox As System.Windows.Forms.GroupBox
+    Friend WithEvents RadioButtonUnapplied As System.Windows.Forms.RadioButton
+    Friend WithEvents RadioButtonAll As System.Windows.Forms.RadioButton
+    Friend WithEvents RadioButtonUninstalled As System.Windows.Forms.RadioButton
 End Class
