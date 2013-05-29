@@ -77,6 +77,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apex.vb" />
+    <Compile Include="ChoiceDialog.Designer.vb">
+      <DependentUpon>ChoiceDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ChoiceDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common.vb" />
     <Compile Include="GitBash.vb" />
     <Compile Include="GitBashFascade.vb" />
     <Compile Include="CreatePatchSet.Designer.vb">

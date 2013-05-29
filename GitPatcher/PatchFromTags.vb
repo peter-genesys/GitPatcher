@@ -61,8 +61,8 @@ Public Class PatchFromTags
             MsgBox("Warning: Now overwriting existing patch")
         End Try
 
-        Dim l_create_folder As String = Main.RootPatchDirTextBox.Text
-        For Each folder In Main.BranchPathTextBox.Text.Split("/")
+        Dim l_create_folder As String = Nothing
+        For Each folder In PatchDirTextBox.Text.Split("\")
             If String.IsNullOrEmpty(l_create_folder) Then
                 l_create_folder = folder
             Else
@@ -676,7 +676,7 @@ Public Class PatchFromTags
  
             derivePatchName()
 
-            PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
+            derivePatchDir()
 
             UsePatchAdminCheckBox.Checked = True
 
@@ -707,9 +707,13 @@ Public Class PatchFromTags
 
     End Sub
 
+    Private Sub derivePatchDir()
+        PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
+    End Sub
 
     Private Sub SupIdTextBox_TextChanged(sender As Object, e As EventArgs) Handles SupIdTextBox.TextChanged
         derivePatchName()
+        derivePatchDir()
     End Sub
 
 
@@ -813,7 +817,9 @@ Public Class PatchFromTags
         createPatchProgress.addStep("Return to Branch: " & currentBranch, 100)
 
         createPatchProgress.Show()
- 
+
+        createPatchProgress.setStep(0)
+
         Tortoise.Log(My.Settings.CurrentRepo)
 
 
@@ -851,7 +857,7 @@ Public Class PatchFromTags
         'Switch to develop branch
         GitBash.Switch(My.Settings.CurrentRepo, "develop")
         createPatchProgress.goNextStep()
- 
+
         'Pull from origin/develop
         GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
         createPatchProgress.goNextStep()

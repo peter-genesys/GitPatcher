@@ -141,9 +141,10 @@
                   Chr(10) & "Consider creating a VM snapshot as a restore point." & _
                   Chr(10) & "To save any existing changes, CANCEL this operation and perform an EXPORT.", MsgBoxStyle.OkCancel, "Import APEX application " & My.Settings.CurrentApex) = MsgBoxResult.Ok Then
 
-            Host.executeSQLscriptInteractive("install.sql" _
-                                           , RootApexDirTextBox.Text & My.Settings.CurrentApex _
-                                           , get_connect_string(ParsingSchemaTextBox.Text, My.Settings.CurrentDB))
+
+            Dim password = Main.get_password(ParsingSchemaTextBox.Text, My.Settings.CurrentDB)
+
+            Apex.ApexImportFromTag(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
 
         End If
 
@@ -161,8 +162,7 @@
             Dim password = Main.get_password(ParsingSchemaTextBox.Text, My.Settings.CurrentDB)
 
             Apex.ApexExportCommit(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
-            'Apex.progress_test(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
-            'ApexExport.demo_progress_bar()
+ 
 
         End If
     End Sub
