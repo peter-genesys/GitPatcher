@@ -75,7 +75,7 @@
 
     End Sub
 
-    Public Shared Sub ApexImportFromTag(connection, username, password, fapp_id, apex_dir)
+    Public Shared Sub ApexImportFromTag(fapp_id)
 
         Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
 
@@ -87,18 +87,30 @@
         ImportProgress.addStep("Return to branch: " & currentBranch, 100)
         ImportProgress.Show()
 
+        ImportProgress.setStep(0)
+
         Dim tagnames As Collection = New Collection
-        tagnames = GitSharpFascade.getTagList(My.Settings.CurrentRepo, "", tagnames)
- 
-        'Dim tagApexVersion As String = Nothing
-        'tagApexVersion = ChoiceDialog.Ask("Please choose a tag for apex install", GetDBList(appl, all_dbs), "HEAD", "Choose tag")
+        tagnames.Add("HEAD")
+        tagnames = GitSharpFascade.getTagList(My.Settings.CurrentRepo, tagnames, Main.CurrentBranchTextBox.Text)
+        tagnames = GitSharpFascade.getTagList(My.Settings.CurrentRepo, tagnames, Main.AppCodeTextBox.Text)
+
+
+        Dim tagApexVersion As String = Nothing
+        tagApexVersion = ChoiceDialog.Ask("Please choose a tag for apex install", tagnames, "HEAD", "Choose tag")
 
         ImportProgress.goNextStep()
- 
-        Host.executeSQLscriptInteractive("install.sql" _
-                                       , apex_dir & fapp_id _
-                                       , Main.connect_string(username, password, connection))
 
+        GitBash.Switch(My.Settings.CurrentRepo, tagApexVersion)
+
+        ImportProgress.goNextStep()
+
+        Host.executeSQLscriptInteractive("install.sql" _
+                                       , Main.RootApexDirTextBox.Text & My.Settings.CurrentApex _
+                                       , Main.get_connect_string(Main.ParsingSchemaTextBox.Text, My.Settings.CurrentDB))
+
+
+        ImportProgress.goNextStep()
+        GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
 
 
         '

@@ -61,4 +61,20 @@ Public Class ChoiceDialog
         Ask = ChoiceDialog.ChoiceComboBox.SelectedItem
     End Function
 
+
+    Shared Function Ask(ByVal i_question As String, ByVal i_Choices As Collection, ByVal i_default As String, ByVal i_title As String)
+
+        Dim lCVSchoices As String = Nothing
+        For Each choice In i_Choices
+            If String.IsNullOrEmpty(lCVSchoices) Then
+                lCVSchoices = choice
+            Else
+                lCVSchoices = lCVSchoices & "," & choice
+            End If
+
+        Next
+
+        Ask = Ask(i_question, lCVSchoices, i_default, i_title)
+    End Function
+
 End Class

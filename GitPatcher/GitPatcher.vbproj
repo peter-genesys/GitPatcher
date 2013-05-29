@@ -155,6 +155,9 @@
     <Compile Include="TortoiseFascade.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ChoiceDialog.resx">
+      <DependentUpon>ChoiceDialog.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Config.resx">
       <DependentUpon>Config.vb</DependentUpon>
     </EmbeddedResource>

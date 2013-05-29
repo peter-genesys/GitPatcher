@@ -140,11 +140,8 @@
                   Chr(10) & "This will overwrite the existing APEX application." & Chr(10) & _
                   Chr(10) & "Consider creating a VM snapshot as a restore point." & _
                   Chr(10) & "To save any existing changes, CANCEL this operation and perform an EXPORT.", MsgBoxStyle.OkCancel, "Import APEX application " & My.Settings.CurrentApex) = MsgBoxResult.Ok Then
-
-
-            Dim password = Main.get_password(ParsingSchemaTextBox.Text, My.Settings.CurrentDB)
-
-            Apex.ApexImportFromTag(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
+ 
+            Apex.ApexImportFromTag(My.Settings.CurrentApex)
 
         End If
 

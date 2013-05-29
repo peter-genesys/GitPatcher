@@ -21,18 +21,13 @@ Public Class GitSharpFascade
 
     End Sub
 
-
-
-    Shared Function getTagList(ByVal path As String, Optional ByVal filter As String = Nothing, Optional ByVal currentTags As Collection = Nothing) As Collection
+ 
+    Shared Function getTagList(ByVal path As String, ByVal currentTags As Collection, Optional ByVal filter As String = Nothing) As Collection
 
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
 
-        Dim tagnames As Collection = New Collection
-
-        'If currentTags.Count > 0 Then
-        '    tagnames = currentTags
-        'End If
-
+        Dim tagnames As Collection = currentTags
+ 
         For Each Tag In repo.Tags
             If String.IsNullOrEmpty(filter) Then
                 tagnames.Add(Tag.Key)
@@ -45,6 +40,15 @@ Public Class GitSharpFascade
         Return tagnames
 
     End Function
+
+    Shared Function getTagList(ByVal path As String, Optional ByVal filter As String = Nothing) As Collection
+ 
+        Dim tagnames As Collection = New Collection
+ 
+        Return getTagList(path, tagnames, filter)
+
+    End Function
+
 
     Shared Function isRepo(ByVal path) As Boolean
         ' Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
