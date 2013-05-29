@@ -8,7 +8,7 @@
     Public Sub New(ByVal i_GitDir As String, Optional ByVal i_wait As Boolean = True)
         GitBash = New Process
         GitBashSetup = New ProcessStartInfo
-        GitBashSetup.FileName = "C:\Program Files (x86)\Git\bin\git.exe"
+        GitBashSetup.FileName = My.Settings.GITpath
         GitBashSetup.UseShellExecute = False
         GitBashSetup.WorkingDirectory = i_GitDir
         BashWait = i_wait

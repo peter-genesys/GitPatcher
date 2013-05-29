@@ -62,6 +62,11 @@
             RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", AvailablePatchesListBox, Main.RootPatchDirTextBox.Text)
  
         End If
+
+        'Now remove patches that have already been applied to the database.
+
+
+
     End Sub
 
 

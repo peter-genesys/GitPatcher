@@ -99,7 +99,7 @@ Partial Class CreatePatchCollection
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(313, 23)
+        Me.Label1.Location = New System.Drawing.Point(396, 20)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(184, 13)
         Me.Label1.TabIndex = 1
@@ -108,11 +108,11 @@ Partial Class CreatePatchCollection
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(302, 49)
+        Me.Label2.Location = New System.Drawing.Point(396, 46)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(288, 13)
+        Me.Label2.Size = New System.Drawing.Size(173, 13)
         Me.Label2.TabIndex = 3
-        Me.Label2.Text = "* To Tag - Find patches before this tag, also name of patch."
+        Me.Label2.Text = "To Tag - Find patches upto this tag"
         '
         'Tag2TextBox
         '

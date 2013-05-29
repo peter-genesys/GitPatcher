@@ -39,6 +39,7 @@ Partial Class Config
         Dim Label15 As System.Windows.Forms.Label
         Dim Label16 As System.Windows.Forms.Label
         Dim Label17 As System.Windows.Forms.Label
+        Dim Label18 As System.Windows.Forms.Label
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.MailTabPage = New System.Windows.Forms.TabPage()
         Me.TestMailButton = New System.Windows.Forms.Button()
@@ -47,6 +48,7 @@ Partial Class Config
         Me.SMTPhostTextBox = New System.Windows.Forms.TextBox()
         Me.RecipientTextBox = New System.Windows.Forms.TextBox()
         Me.AppsTabPage = New System.Windows.Forms.TabPage()
+        Me.PatchSetTextBox = New System.Windows.Forms.TextBox()
         Me.PatchSchemasTextBox = New System.Windows.Forms.TextBox()
         Me.ApplicationsTextBox = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -64,7 +66,7 @@ Partial Class Config
         Me.TabPageGitRepo = New System.Windows.Forms.TabPage()
         Me.RepoListTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
-        Me.PatchSetTextBox = New System.Windows.Forms.TextBox()
+        Me.GitExeTextBox = New System.Windows.Forms.TextBox()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -81,6 +83,7 @@ Partial Class Config
         Label15 = New System.Windows.Forms.Label()
         Label16 = New System.Windows.Forms.Label()
         Label17 = New System.Windows.Forms.Label()
+        Label18 = New System.Windows.Forms.Label()
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MailTabPage.SuspendLayout()
         Me.AppsTabPage.SuspendLayout()
@@ -225,6 +228,15 @@ Partial Class Config
         Label16.TabIndex = 20
         Label16.Text = "Patch Schemas:"
         '
+        'Label17
+        '
+        Label17.AutoSize = True
+        Label17.Location = New System.Drawing.Point(288, 16)
+        Label17.Name = "Label17"
+        Label17.Size = New System.Drawing.Size(51, 13)
+        Label17.TabIndex = 22
+        Label17.Text = "PatchSet"
+        '
         'MySettingsBindingSource
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
@@ -306,6 +318,14 @@ Partial Class Config
         Me.AppsTabPage.Text = "Apps"
         Me.AppsTabPage.UseVisualStyleBackColor = True
         '
+        'PatchSetTextBox
+        '
+        Me.PatchSetTextBox.Location = New System.Drawing.Point(291, 32)
+        Me.PatchSetTextBox.Multiline = True
+        Me.PatchSetTextBox.Name = "PatchSetTextBox"
+        Me.PatchSetTextBox.Size = New System.Drawing.Size(75, 229)
+        Me.PatchSetTextBox.TabIndex = 23
+        '
         'PatchSchemasTextBox
         '
         Me.PatchSchemasTextBox.Location = New System.Drawing.Point(87, 32)
@@ -349,6 +369,8 @@ Partial Class Config
         '
         'PatchTabPage
         '
+        Me.PatchTabPage.Controls.Add(Me.GitExeTextBox)
+        Me.PatchTabPage.Controls.Add(Label18)
         Me.PatchTabPage.Controls.Add(Me.SQLpathTextBox)
         Me.PatchTabPage.Controls.Add(Me.OJDBCjarFileTextBox)
         Me.PatchTabPage.Controls.Add(Me.ApexOffsetTextBox)
@@ -467,22 +489,21 @@ Partial Class Config
         Me.ConfigTabs.Size = New System.Drawing.Size(542, 306)
         Me.ConfigTabs.TabIndex = 0
         '
-        'PatchSetTextBox
+        'GitExeTextBox
         '
-        Me.PatchSetTextBox.Location = New System.Drawing.Point(291, 32)
-        Me.PatchSetTextBox.Multiline = True
-        Me.PatchSetTextBox.Name = "PatchSetTextBox"
-        Me.PatchSetTextBox.Size = New System.Drawing.Size(75, 229)
-        Me.PatchSetTextBox.TabIndex = 23
+        Me.GitExeTextBox.Location = New System.Drawing.Point(8, 200)
+        Me.GitExeTextBox.Name = "GitExeTextBox"
+        Me.GitExeTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.GitExeTextBox.TabIndex = 15
         '
-        'Label17
+        'Label18
         '
-        Label17.AutoSize = True
-        Label17.Location = New System.Drawing.Point(288, 16)
-        Label17.Name = "Label17"
-        Label17.Size = New System.Drawing.Size(51, 13)
-        Label17.TabIndex = 22
-        Label17.Text = "PatchSet"
+        Label18.AutoSize = True
+        Label18.Location = New System.Drawing.Point(5, 184)
+        Label18.Name = "Label18"
+        Label18.Size = New System.Drawing.Size(68, 13)
+        Label18.TabIndex = 14
+        Label18.Text = "Git exe Path:"
         '
         'Config
         '
@@ -533,4 +554,5 @@ Partial Class Config
     Friend WithEvents PatchSchemasTextBox As System.Windows.Forms.TextBox
     Friend WithEvents ApplicationsTextBox As System.Windows.Forms.TextBox
     Friend WithEvents PatchSetTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents GitExeTextBox As System.Windows.Forms.TextBox
 End Class
