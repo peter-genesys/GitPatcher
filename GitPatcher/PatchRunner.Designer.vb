@@ -25,6 +25,7 @@ Partial Class PatchRunner
         Me.PatchRunnerTabControl = New System.Windows.Forms.TabControl()
         Me.PatchSelectorTabPage = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.IgnoreInstalledCheckBox = New System.Windows.Forms.CheckBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.SearchPatchesButton = New System.Windows.Forms.Button()
         Me.AvailablePatchesListBox = New System.Windows.Forms.ListBox()
@@ -34,7 +35,7 @@ Partial Class PatchRunner
         Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.IgnoreInstalledCheckBox = New System.Windows.Forms.CheckBox()
+        Me.IgnoreUnpromotedCheckBox = New System.Windows.Forms.CheckBox()
         Me.PatchRunnerTabControl.SuspendLayout()
         Me.PatchSelectorTabPage.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -73,6 +74,7 @@ Partial Class PatchRunner
         '
         'SplitContainer1.Panel1
         '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.IgnoreUnpromotedCheckBox)
         Me.SplitContainer1.Panel1.Controls.Add(Me.IgnoreInstalledCheckBox)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label1)
         Me.SplitContainer1.Panel1.Controls.Add(Me.SearchPatchesButton)
@@ -85,6 +87,18 @@ Partial Class PatchRunner
         Me.SplitContainer1.Size = New System.Drawing.Size(746, 706)
         Me.SplitContainer1.SplitterDistance = 359
         Me.SplitContainer1.TabIndex = 0
+        '
+        'IgnoreInstalledCheckBox
+        '
+        Me.IgnoreInstalledCheckBox.AutoSize = True
+        Me.IgnoreInstalledCheckBox.Checked = True
+        Me.IgnoreInstalledCheckBox.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.IgnoreInstalledCheckBox.Location = New System.Drawing.Point(246, 15)
+        Me.IgnoreInstalledCheckBox.Name = "IgnoreInstalledCheckBox"
+        Me.IgnoreInstalledCheckBox.Size = New System.Drawing.Size(98, 17)
+        Me.IgnoreInstalledCheckBox.TabIndex = 35
+        Me.IgnoreInstalledCheckBox.Text = "Ignore Installed"
+        Me.IgnoreInstalledCheckBox.UseVisualStyleBackColor = True
         '
         'Label1
         '
@@ -168,17 +182,17 @@ Partial Class PatchRunner
         Me.ExecutePatchButton.Text = "Execute Patches"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'IgnoreInstalledCheckBox
+        'IgnoreUnpromotedCheckBox
         '
-        Me.IgnoreInstalledCheckBox.AutoSize = True
-        Me.IgnoreInstalledCheckBox.Checked = True
-        Me.IgnoreInstalledCheckBox.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.IgnoreInstalledCheckBox.Location = New System.Drawing.Point(246, 15)
-        Me.IgnoreInstalledCheckBox.Name = "IgnoreInstalledCheckBox"
-        Me.IgnoreInstalledCheckBox.Size = New System.Drawing.Size(98, 17)
-        Me.IgnoreInstalledCheckBox.TabIndex = 35
-        Me.IgnoreInstalledCheckBox.Text = "Ignore Installed"
-        Me.IgnoreInstalledCheckBox.UseVisualStyleBackColor = True
+        Me.IgnoreUnpromotedCheckBox.AutoSize = True
+        Me.IgnoreUnpromotedCheckBox.Checked = True
+        Me.IgnoreUnpromotedCheckBox.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.IgnoreUnpromotedCheckBox.Location = New System.Drawing.Point(246, 38)
+        Me.IgnoreUnpromotedCheckBox.Name = "IgnoreUnpromotedCheckBox"
+        Me.IgnoreUnpromotedCheckBox.Size = New System.Drawing.Size(117, 17)
+        Me.IgnoreUnpromotedCheckBox.TabIndex = 36
+        Me.IgnoreUnpromotedCheckBox.Text = "Ignore Unpromoted"
+        Me.IgnoreUnpromotedCheckBox.UseVisualStyleBackColor = True
         '
         'PatchRunner
         '
@@ -214,4 +228,5 @@ Partial Class PatchRunner
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents MasterScriptListBox As System.Windows.Forms.ListBox
     Friend WithEvents IgnoreInstalledCheckBox As System.Windows.Forms.CheckBox
+    Friend WithEvents IgnoreUnpromotedCheckBox As System.Windows.Forms.CheckBox
 End Class

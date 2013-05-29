@@ -59,10 +59,10 @@ Public Class PatchRunner
     End Sub
 
 
-    Private Sub FindPatches(Optional ByVal iHideInstalled As Boolean = False)
+    Private Sub FindPatches(ByVal iHideInstalled As Boolean, ByVal iHideUnpromoted As Boolean)
 
         'Dim oradb As String = "Data Source=" & Main.CurrentConnectionTextBox.Text & ";User Id=patch_admin;Password=patch_admin;"
- 
+
         Dim oradb As String = "Data Source=(DESCRIPTION=" _
            + "(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=" & Common.getHost & ")(PORT=" & Common.getPort & ")))" _
            + "(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=" & Common.getSid & ")));" _
@@ -73,6 +73,7 @@ Public Class PatchRunner
         Dim cmd As OracleCommand
         Dim dr As OracleDataReader
 
+
         AvailablePatchesListBox.Items.Clear()
         If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
 
@@ -80,11 +81,14 @@ Public Class PatchRunner
 
         End If
 
-        If iHideInstalled Then
+        If iHideInstalled Or iHideUnpromoted Then
 
             'http://www.oracle.com/technetwork/articles/dotnet/cook-dotnet-101788.html
 
             'Now remove patches that have already been applied to the database.
+
+            Dim patchInstalled As Boolean = False
+            Dim patchUnpromoted As Boolean = False
 
             Try
 
@@ -94,6 +98,8 @@ Public Class PatchRunner
                 For i As Integer = AvailablePatchesListBox.Items.Count - 1 To 0 Step -1
 
                     'Check whether the patch has been successfully installed.
+                    patchInstalled = False
+
                     sql = "select max(success_yn)  success_yn from patches where patch_name = '" & Common.getLastSegment(AvailablePatchesListBox.Items(i), "\") & "'"
                     cmd = New OracleCommand(sql, conn)
                     cmd.CommandType = CommandType.Text
@@ -103,10 +109,35 @@ Public Class PatchRunner
                     If Not IsDBNull(dr.Item("success_yn")) Then
                         If dr.Item("success_yn") = "Y" Then
                             'patch is already successfully installed so remove it from the list.
-                            AvailablePatchesListBox.Items.RemoveAt(i)
+                            patchInstalled = True
 
                         End If
                     End If
+
+                    'Check whether the patch has been promoted.
+                    patchUnpromoted = False
+
+                    sql = "select max(success_yn) success_yn from patches_unpromoted_v where patch_name = '" & Common.getLastSegment(AvailablePatchesListBox.Items(i), "\") & "'"
+                    cmd = New OracleCommand(sql, conn)
+                    cmd.CommandType = CommandType.Text
+                    dr = cmd.ExecuteReader()
+                    dr.Read()
+
+                    If Not IsDBNull(dr.Item("success_yn")) Then
+                        If dr.Item("success_yn") = "Y" Then
+                            'patch is not yet promoted to the next DB.
+                            patchUnpromoted = True
+
+                        End If
+                    End If
+
+
+                    If (iHideInstalled And patchInstalled) Or (iHideUnpromoted And patchUnpromoted) Then
+                        'patch is to be filtered from the list.
+                        AvailablePatchesListBox.Items.RemoveAt(i)
+
+                    End If
+
 
 
                 Next
@@ -133,7 +164,7 @@ Public Class PatchRunner
 
 
     Private Sub SearchPatchesButton_Click(sender As Object, e As EventArgs) Handles SearchPatchesButton.Click
-        FindPatches(IgnoreInstalledCheckBox.Checked)
+        FindPatches(IgnoreInstalledCheckBox.Checked, IgnoreUnpromotedCheckBox.Checked)
     End Sub
 
     Private Sub AvailablePatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AvailablePatchesListBox.DoubleClick
