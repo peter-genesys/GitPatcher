@@ -3,11 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="RepoList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\GitRepos\ProjAppSrc
-</Value>
+      <Value Profile="(Default)">C:\Dev\apex_apps</Value>
     </Setting>
     <Setting Name="CurrentRepo" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\GitRepos\ProjAppSrc</Value>
+      <Value Profile="(Default)">C:\Dev\apex_apps</Value>
     </Setting>
     <Setting Name="PatchDirOffset" Type="System.String" Scope="User">
       <Value Profile="(Default)">\patch</Value>

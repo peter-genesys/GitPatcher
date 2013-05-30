@@ -56,7 +56,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\GitRepos\ProjAppSrc"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\Dev\apex_apps")>  _
         Public Property RepoList() As String
             Get
                 Return CType(Me("RepoList"),String)
@@ -68,7 +68,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\GitRepos\ProjAppSrc")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\Dev\apex_apps")>  _
         Public Property CurrentRepo() As String
             Get
                 Return CType(Me("CurrentRepo"),String)
