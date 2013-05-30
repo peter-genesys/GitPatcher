@@ -819,7 +819,8 @@ Public Class CreatePatchCollection
         createPatchSetProgress.goNextStep()
 
         'Tag this commit
-        GitBash.Tag(My.Settings.CurrentRepo, l_app_version, "New " & Main.ApplicationListComboBox.SelectedItem & " " & iCreatePatchType & " " & l_app_version)
+        GitBash.TagSimple(My.Settings.CurrentRepo, l_app_version)
+        'GitBash.TagAnnotated(My.Settings.CurrentRepo, l_app_version, "New " & Main.ApplicationListComboBox.SelectedItem & " " & iCreatePatchType & " " & l_app_version)
         createPatchSetProgress.goNextStep()
 
         'Push release to origin with tags

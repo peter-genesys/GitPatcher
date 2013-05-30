@@ -150,9 +150,11 @@
         If Not tagApexVersion.Contains(Main.AppCodeTextBox.Text) Then
 
             Dim l_label As String = Nothing
-            Host.check_StdOut("""" & My.Settings.GITpath & """ describe --tags", l_label, My.Settings.CurrentRepo, True)
+            'Host.check_StdOut("""" & My.Settings.GITpath & """ describe --tags", l_label, My.Settings.CurrentRepo, True)
             'alternative method
             'l_label = Host.getOutput("""" & My.Settings.GITpath & """ describe --tags", My.Settings.CurrentRepo) 
+
+            l_label = GitBash.describeTags(My.Settings.CurrentRepo)
 
             relabelApex("GIT Tag: " & l_label)
 

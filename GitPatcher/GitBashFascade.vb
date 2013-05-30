@@ -94,10 +94,16 @@
     '       execute()
     '   End Sub
     '
-    Public Sub Tag(ByVal iTag As String, ByVal iTagMessage As String)
-        GitBashSetup.Arguments = "tag -a " & iTag & " -m '" & iTagMessage & "'"  'git tag -a v1.4 -m 'my version 1.4'
+    Public Sub TagSimple(ByVal iTag As String)
+        GitBashSetup.Arguments = "tag " & iTag 'git tag v1.4
         execute()
     End Sub
+
+    'DOES NOT WORK FOR SOME REASON - TOO MANY PARAMS returned when using logging.
+    'Public Sub TagAnnotated(ByVal iTag As String, ByVal iTagMessage As String)
+    '    GitBashSetup.Arguments = "tag -a " & iTag & " -m '" & iTagMessage & "'"  'git tag -a v1.4 -m 'my version 1.4'
+    '    execute()
+    'End Sub
 
 
     ' Start Tortoise Repo Browser

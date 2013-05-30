@@ -53,6 +53,7 @@ Partial Class PatchRunner
         Me.PatchRunnerTabControl.Controls.Add(Me.PatchSelectorTabPage)
         Me.PatchRunnerTabControl.Controls.Add(Me.RunTabPage)
         Me.PatchRunnerTabControl.Location = New System.Drawing.Point(12, 12)
+        Me.PatchRunnerTabControl.MaximumSize = New System.Drawing.Size(1000, 1000)
         Me.PatchRunnerTabControl.Name = "PatchRunnerTabControl"
         Me.PatchRunnerTabControl.SelectedIndex = 0
         Me.PatchRunnerTabControl.Size = New System.Drawing.Size(760, 738)

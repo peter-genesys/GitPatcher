@@ -25,14 +25,16 @@ Partial Class Main
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.GITToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PatchFromTagsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PatchRunnerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBPatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateDBMinorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PatchRunnerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.APEXToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GITToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NewFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.NewHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RepoComboBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -59,8 +61,6 @@ Partial Class Main
         Me.Label12 = New System.Windows.Forms.Label()
         Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.CreateDBMinorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NewHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -86,17 +86,23 @@ Partial Class Main
         Me.PatchFromTagsToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.PatchFromTagsToolStripMenuItem.Text = "Create DB Patch"
         '
-        'PatchRunnerToolStripMenuItem
-        '
-        Me.PatchRunnerToolStripMenuItem.Name = "PatchRunnerToolStripMenuItem"
-        Me.PatchRunnerToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.PatchRunnerToolStripMenuItem.Text = "PatchRunner"
-        '
         'CreateDBPatchSetToolStripMenuItem
         '
         Me.CreateDBPatchSetToolStripMenuItem.Name = "CreateDBPatchSetToolStripMenuItem"
         Me.CreateDBPatchSetToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.CreateDBPatchSetToolStripMenuItem.Text = "Create DB Patch Set"
+        '
+        'CreateDBMinorReleaseToolStripMenuItem
+        '
+        Me.CreateDBMinorReleaseToolStripMenuItem.Name = "CreateDBMinorReleaseToolStripMenuItem"
+        Me.CreateDBMinorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.CreateDBMinorReleaseToolStripMenuItem.Text = "Create DB Minor Release"
+        '
+        'PatchRunnerToolStripMenuItem
+        '
+        Me.PatchRunnerToolStripMenuItem.Name = "PatchRunnerToolStripMenuItem"
+        Me.PatchRunnerToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.PatchRunnerToolStripMenuItem.Text = "PatchRunner"
         '
         'APEXToolStripMenuItem
         '
@@ -108,13 +114,13 @@ Partial Class Main
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
         Me.ImportToolStripMenuItem.Text = "Import"
         '
         'ExportToolStripMenuItem
         '
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
         Me.ExportToolStripMenuItem.Text = "Export"
         '
         'GITToolStripMenuItem1
@@ -124,17 +130,23 @@ Partial Class Main
         Me.GITToolStripMenuItem1.Size = New System.Drawing.Size(37, 20)
         Me.GITToolStripMenuItem1.Text = "GIT"
         '
+        'NewFeatureToolStripMenuItem
+        '
+        Me.NewFeatureToolStripMenuItem.Name = "NewFeatureToolStripMenuItem"
+        Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
+        Me.NewFeatureToolStripMenuItem.Text = "New Feature"
+        '
+        'NewHotfixToolStripMenuItem
+        '
+        Me.NewHotfixToolStripMenuItem.Name = "NewHotfixToolStripMenuItem"
+        Me.NewHotfixToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
+        Me.NewHotfixToolStripMenuItem.Text = "New Hotfix"
+        '
         'MergeAndPushFeatureToolStripMenuItem
         '
         Me.MergeAndPushFeatureToolStripMenuItem.Name = "MergeAndPushFeatureToolStripMenuItem"
         Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
         Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature/Hotfix"
-        '
-        'NewFeatureToolStripMenuItem
-        '
-        Me.NewFeatureToolStripMenuItem.Name = "NewFeatureToolStripMenuItem"
-        Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.NewFeatureToolStripMenuItem.Text = "New Feature"
         '
         'RepoComboBox
         '
@@ -356,18 +368,6 @@ Partial Class Main
         Me.Label13.Size = New System.Drawing.Size(32, 13)
         Me.Label13.TabIndex = 25
         Me.Label13.Text = "Code"
-        '
-        'CreateDBMinorReleaseToolStripMenuItem
-        '
-        Me.CreateDBMinorReleaseToolStripMenuItem.Name = "CreateDBMinorReleaseToolStripMenuItem"
-        Me.CreateDBMinorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.CreateDBMinorReleaseToolStripMenuItem.Text = "Create DB Minor Release"
-        '
-        'NewHotfixToolStripMenuItem
-        '
-        Me.NewHotfixToolStripMenuItem.Name = "NewHotfixToolStripMenuItem"
-        Me.NewHotfixToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.NewHotfixToolStripMenuItem.Text = "New Hotfix"
         '
         'Main
         '

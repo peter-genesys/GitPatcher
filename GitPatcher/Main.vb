@@ -237,7 +237,8 @@
                 newFeature.goNextStep()
 
                 'Create the initial tag
-                GitBash.Tag(My.Settings.CurrentRepo, branchName & ".00", "Initial tag on new " & Me.ApplicationListComboBox.SelectedItem & " " & iBranchType & " " & branchName)
+                GitBash.TagSimple(My.Settings.CurrentRepo, branchName & ".00")
+                'GitBash.TagAnnotated(My.Settings.CurrentRepo, branchName & ".00", "Initial tag on new " & Me.ApplicationListComboBox.SelectedItem & " " & iBranchType & " " & branchName)
                 newFeature.goNextStep()
 
                 'Done
@@ -274,5 +275,9 @@
 
     Private Sub NewHotfixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewHotfixToolStripMenuItem.Click
         createNewBranch("hotfix")
+    End Sub
+
+    Private Sub TagtestToolStripMenuItem_Click(sender As Object, e As EventArgs)
+        GitBash.TagSimple(My.Settings.CurrentRepo, "DEMOTAG")
     End Sub
 End Class

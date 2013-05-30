@@ -48,9 +48,45 @@
     '     client.Revert(i_WorkingDir)
     ' End Sub
     '
-    Public Shared Sub Tag(ByVal i_WorkingDir As String, ByVal iTag As String, ByVal iTagMessage As String, Optional ByVal i_wait As Boolean = True)
+
+
+    Public Shared Function callGit(ByVal i_WorkingDir As String, ByVal icommand As String)
+        Dim lResult As String = Nothing
+        Host.check_StdOut("""" & My.Settings.GITpath & """ " & icommand, lResult, i_WorkingDir, True)
+
+        Return lResult
+    End Function
+
+    Public Shared Function describe(ByVal i_WorkingDir As String)
+
+        Return callGit(i_WorkingDir, " describe")
+
+    End Function
+
+    Public Shared Function describeTags(ByVal i_WorkingDir As String)
+
+        Return callGit(i_WorkingDir, " describe --tags")
+
+    End Function
+
+    Public Shared Sub TagSimple(ByVal i_WorkingDir As String, ByVal iTag As String, Optional ByVal i_wait As Boolean = True)
         Dim client As New GitBashFascade(i_WorkingDir, i_wait)
-        client.Tag(iTag, iTagMessage)
+        client.TagSimple(iTag)
+
+        'WORKS
+        'callGit(i_WorkingDir, "tag " & iTag)
+
     End Sub
+
+    'DOES NOT WORK
+    'Public Shared Sub TagAnnotated(ByVal i_WorkingDir As String, ByVal iTag As String, ByVal iTagMessage As String, Optional ByVal i_wait As Boolean = True)
+    '    Dim client As New GitBashFascade(i_WorkingDir, i_wait)
+    '    client.TagAnnotated(iTag, iTagMessage)
+    '
+    '    'DOES NOT WORK
+    '    'callGit(i_WorkingDir, "tag -a " & iTag & " -m '" & iTagMessage & "'") 'may push this down to gitbashfascade.
+    '
+    'End Sub
+
 
 End Class

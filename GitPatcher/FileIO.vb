@@ -118,6 +118,8 @@
         file_string_data = l_file.ReadToEnd()
         l_file.Close()
 
+        Return file_string_data
+
     End Function
 
     Public Shared Function readFileLine1(ByVal filepath As String) As String
@@ -127,6 +129,8 @@
         Dim l_file As New System.IO.StreamReader(filepath)
         file_string_data = l_file.ReadLine()
         l_file.Close()
+
+        Return file_string_data
 
     End Function
 
