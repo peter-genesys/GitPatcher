@@ -25,6 +25,10 @@ Partial Class PatchRunner
         Me.PatchRunnerTabControl = New System.Windows.Forms.TabControl()
         Me.PatchSelectorTabPage = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.PatchFilterGroupBox = New System.Windows.Forms.GroupBox()
+        Me.RadioButtonUnapplied = New System.Windows.Forms.RadioButton()
+        Me.RadioButtonAll = New System.Windows.Forms.RadioButton()
+        Me.RadioButtonUninstalled = New System.Windows.Forms.RadioButton()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.SearchPatchesButton = New System.Windows.Forms.Button()
         Me.AvailablePatchesListBox = New System.Windows.Forms.ListBox()
@@ -34,18 +38,14 @@ Partial Class PatchRunner
         Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.RadioButtonUnapplied = New System.Windows.Forms.RadioButton()
-        Me.RadioButtonUninstalled = New System.Windows.Forms.RadioButton()
-        Me.RadioButtonAll = New System.Windows.Forms.RadioButton()
-        Me.PatchFilterGroupBox = New System.Windows.Forms.GroupBox()
         Me.PatchRunnerTabControl.SuspendLayout()
         Me.PatchSelectorTabPage.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
-        Me.RunTabPage.SuspendLayout()
         Me.PatchFilterGroupBox.SuspendLayout()
+        Me.RunTabPage.SuspendLayout()
         Me.SuspendLayout()
         '
         'PatchRunnerTabControl
@@ -87,8 +87,53 @@ Partial Class PatchRunner
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label2)
         Me.SplitContainer1.Panel2.Controls.Add(Me.ChosenPatchesListBox)
         Me.SplitContainer1.Size = New System.Drawing.Size(746, 706)
-        Me.SplitContainer1.SplitterDistance = 359
+        Me.SplitContainer1.SplitterDistance = 362
         Me.SplitContainer1.TabIndex = 0
+        '
+        'PatchFilterGroupBox
+        '
+        Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUnapplied)
+        Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonAll)
+        Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUninstalled)
+        Me.PatchFilterGroupBox.Location = New System.Drawing.Point(163, 10)
+        Me.PatchFilterGroupBox.Name = "PatchFilterGroupBox"
+        Me.PatchFilterGroupBox.Size = New System.Drawing.Size(182, 93)
+        Me.PatchFilterGroupBox.TabIndex = 1
+        Me.PatchFilterGroupBox.TabStop = False
+        Me.PatchFilterGroupBox.Text = "Filter"
+        '
+        'RadioButtonUnapplied
+        '
+        Me.RadioButtonUnapplied.AutoSize = True
+        Me.RadioButtonUnapplied.Location = New System.Drawing.Point(27, 19)
+        Me.RadioButtonUnapplied.Name = "RadioButtonUnapplied"
+        Me.RadioButtonUnapplied.Size = New System.Drawing.Size(73, 17)
+        Me.RadioButtonUnapplied.TabIndex = 35
+        Me.RadioButtonUnapplied.TabStop = True
+        Me.RadioButtonUnapplied.Text = "Unapplied"
+        Me.RadioButtonUnapplied.UseVisualStyleBackColor = True
+        '
+        'RadioButtonAll
+        '
+        Me.RadioButtonAll.AutoSize = True
+        Me.RadioButtonAll.Location = New System.Drawing.Point(27, 65)
+        Me.RadioButtonAll.Name = "RadioButtonAll"
+        Me.RadioButtonAll.Size = New System.Drawing.Size(36, 17)
+        Me.RadioButtonAll.TabIndex = 37
+        Me.RadioButtonAll.TabStop = True
+        Me.RadioButtonAll.Text = "All"
+        Me.RadioButtonAll.UseVisualStyleBackColor = True
+        '
+        'RadioButtonUninstalled
+        '
+        Me.RadioButtonUninstalled.AutoSize = True
+        Me.RadioButtonUninstalled.Location = New System.Drawing.Point(27, 42)
+        Me.RadioButtonUninstalled.Name = "RadioButtonUninstalled"
+        Me.RadioButtonUninstalled.Size = New System.Drawing.Size(77, 17)
+        Me.RadioButtonUninstalled.TabIndex = 36
+        Me.RadioButtonUninstalled.TabStop = True
+        Me.RadioButtonUninstalled.Text = "Uninstalled"
+        Me.RadioButtonUninstalled.UseVisualStyleBackColor = True
         '
         'Label1
         '
@@ -113,7 +158,7 @@ Partial Class PatchRunner
         Me.AvailablePatchesListBox.FormattingEnabled = True
         Me.AvailablePatchesListBox.Location = New System.Drawing.Point(7, 113)
         Me.AvailablePatchesListBox.Name = "AvailablePatchesListBox"
-        Me.AvailablePatchesListBox.Size = New System.Drawing.Size(349, 589)
+        Me.AvailablePatchesListBox.Size = New System.Drawing.Size(523, 589)
         Me.AvailablePatchesListBox.TabIndex = 0
         '
         'Label2
@@ -130,7 +175,7 @@ Partial Class PatchRunner
         Me.ChosenPatchesListBox.FormattingEnabled = True
         Me.ChosenPatchesListBox.Location = New System.Drawing.Point(3, 113)
         Me.ChosenPatchesListBox.Name = "ChosenPatchesListBox"
-        Me.ChosenPatchesListBox.Size = New System.Drawing.Size(377, 589)
+        Me.ChosenPatchesListBox.Size = New System.Drawing.Size(559, 589)
         Me.ChosenPatchesListBox.TabIndex = 1
         '
         'RunTabPage
@@ -172,51 +217,6 @@ Partial Class PatchRunner
         Me.ExecutePatchButton.Text = "Execute Patches"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'RadioButtonUnapplied
-        '
-        Me.RadioButtonUnapplied.AutoSize = True
-        Me.RadioButtonUnapplied.Location = New System.Drawing.Point(27, 19)
-        Me.RadioButtonUnapplied.Name = "RadioButtonUnapplied"
-        Me.RadioButtonUnapplied.Size = New System.Drawing.Size(73, 17)
-        Me.RadioButtonUnapplied.TabIndex = 35
-        Me.RadioButtonUnapplied.TabStop = True
-        Me.RadioButtonUnapplied.Text = "Unapplied"
-        Me.RadioButtonUnapplied.UseVisualStyleBackColor = True
-        '
-        'RadioButtonUninstalled
-        '
-        Me.RadioButtonUninstalled.AutoSize = True
-        Me.RadioButtonUninstalled.Location = New System.Drawing.Point(27, 42)
-        Me.RadioButtonUninstalled.Name = "RadioButtonUninstalled"
-        Me.RadioButtonUninstalled.Size = New System.Drawing.Size(77, 17)
-        Me.RadioButtonUninstalled.TabIndex = 36
-        Me.RadioButtonUninstalled.TabStop = True
-        Me.RadioButtonUninstalled.Text = "Uninstalled"
-        Me.RadioButtonUninstalled.UseVisualStyleBackColor = True
-        '
-        'RadioButtonAll
-        '
-        Me.RadioButtonAll.AutoSize = True
-        Me.RadioButtonAll.Location = New System.Drawing.Point(27, 65)
-        Me.RadioButtonAll.Name = "RadioButtonAll"
-        Me.RadioButtonAll.Size = New System.Drawing.Size(36, 17)
-        Me.RadioButtonAll.TabIndex = 37
-        Me.RadioButtonAll.TabStop = True
-        Me.RadioButtonAll.Text = "All"
-        Me.RadioButtonAll.UseVisualStyleBackColor = True
-        '
-        'PatchFilterGroupBox
-        '
-        Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUnapplied)
-        Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonAll)
-        Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUninstalled)
-        Me.PatchFilterGroupBox.Location = New System.Drawing.Point(163, 10)
-        Me.PatchFilterGroupBox.Name = "PatchFilterGroupBox"
-        Me.PatchFilterGroupBox.Size = New System.Drawing.Size(182, 93)
-        Me.PatchFilterGroupBox.TabIndex = 1
-        Me.PatchFilterGroupBox.TabStop = False
-        Me.PatchFilterGroupBox.Text = "Filter"
-        '
         'PatchRunner
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -233,10 +233,10 @@ Partial Class PatchRunner
         Me.SplitContainer1.Panel2.PerformLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
-        Me.RunTabPage.ResumeLayout(False)
-        Me.RunTabPage.PerformLayout()
         Me.PatchFilterGroupBox.ResumeLayout(False)
         Me.PatchFilterGroupBox.PerformLayout()
+        Me.RunTabPage.ResumeLayout(False)
+        Me.RunTabPage.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
