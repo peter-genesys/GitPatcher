@@ -33,7 +33,7 @@
     End Sub
 
 
-    Public Shared Sub check_StdOut(ByVal command, ByRef message, ByVal workingDir)
+    Public Shared Sub check_StdOut(ByVal command As String, ByRef message As String, ByVal workingDir As String, Optional ByVal oneline As Boolean = False)
 
         Logger.Dbg(command)
 
@@ -54,14 +54,62 @@
 
         Dim myProcess As Process = Process.Start(starter)
 
-        message = myProcess.StandardOutput.ReadToEnd()
-
+        If oneline Then
+            message = myProcess.StandardOutput.ReadLine()
+        Else
+            message = myProcess.StandardOutput.ReadToEnd()
+        End If
+ 
         myProcess.WaitForExit()
 
         Logger.Dbg("check_StdOut:" & Chr(10) & message)
         Logger.Dbg("Error (if any):" & Chr(10) & myProcess.StandardError.ReadToEnd())
 
     End Sub
+
+ 
+    Public Shared Function getOutput(ByVal command As String, ByVal workingDir As String) As String
+
+        Dim l_output As String = Nothing
+
+        Dim tempFilename As String = "c:\temp\gitpatcherOutput.txt"
+
+        Logger.Dbg(command)
+
+        Dim starter As New ProcessStartInfo("c:\windows\system32\cmd", "/k " & command & " > " & tempFilename)
+
+        If workingDir = "" Then
+            workingDir = "c:\windows\system32"
+        End If
+
+
+        With starter
+            .WorkingDirectory = workingDir
+            .RedirectStandardOutput = False
+            .RedirectStandardError = True
+            .UseShellExecute = False
+
+        End With
+
+        FileIO.deleteFileIfExists(tempFilename)
+
+        Dim myProcess As Process = Process.Start(starter)
+
+        'Message = myProcess.StandardOutput.ReadToEnd()
+
+        myProcess.WaitForExit()
+
+        l_output = FileIO.readFileLine1(tempFilename)
+
+        'Logger.Dbg("check_StdOut:" & Chr(10) & Message)
+        Logger.Dbg("Error (if any):" & Chr(10) & myProcess.StandardError.ReadToEnd())
+
+        Return l_output
+
+    End Function
+
+
+
 
     Public Shared Sub check_StdErr(ByVal command, ByRef message, ByVal workingDir)
 
@@ -99,7 +147,7 @@
         envSetup.Arguments = "/e,/root," & root_path
         envSetup.WorkingDirectory = ""
         envSetup.UseShellExecute = False
- 
+
         ' Launch the tool.
         Dim shelly As Process = New Process
         shelly.StartInfo = envSetup

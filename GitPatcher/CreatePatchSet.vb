@@ -749,6 +749,12 @@ Public Class CreatePatchCollection
 
     End Sub
 
+ 
+    Public Shared Sub bumpApexVersion(ByVal i_app_version As String)
+        Apex.relabelApex(i_app_version & " " & Today.ToString("dd-MMM-yyyy"))
+    End Sub
+
+ 
 
     Public Shared Sub createCollectionProcess(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
 
@@ -803,43 +809,8 @@ Public Class CreatePatchCollection
         Dim Wizard As New CreatePatchCollection(l_app_version, iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes, iSupPatchTypes)
         Wizard.ShowDialog() 'WAITING HERE!!
         createPatchSetProgress.goNextStep()
-
-
-        'Bump Apex version 
-        '  open script create_application.sql
-        '  read input line at a time until line starting "  p_flow_version=> "
-        '  replace this line with " p_flow_version=> " & new_version & " " & today
-        '  write rest of file and close it.
-
-        Dim l_create_application_new As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\application\create_application.sql"
-        Dim l_create_application_old As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\application\create_application.sql.old"
-
-        FileIO.deleteFileIfExists(l_create_application_old)
-        My.Computer.FileSystem.RenameFile(l_create_application_new, "create_application.sql.old")
-
-
-        Dim l_old_file As New System.IO.StreamReader(l_create_application_old)
-        Dim l_new_file As New System.IO.StreamWriter(l_create_application_new)
-        Dim l_line As String = Nothing
-
-        Do
-            'For each line
-            If l_old_file.EndOfStream Then Exit Do
-
-            l_line = l_old_file.ReadLine()
-            If l_line.Contains("p_flow_version") Then
-                l_line = "  p_flow_version=> '" & l_app_version & " " & Today.ToString("dd-MMM-yyyy") & "',"
-            End If
-
-
-            l_new_file.WriteLine(l_line)
-
-        Loop
-
-        l_old_file.Close()
-        l_new_file.Close()
-
-        FileIO.deleteFileIfExists(l_create_application_old)
+ 
+        bumpApexVersion(l_app_version)
 
         createPatchSetProgress.goNextStep()
 

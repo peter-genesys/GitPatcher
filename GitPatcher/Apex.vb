@@ -1,5 +1,46 @@
 ﻿Public Class Apex
  
+    Public Shared Sub relabelApex(ByVal i_label As String)
+
+
+        'Relabel Apex 
+        '  open script create_application.sql
+        '  read input line at a time until line starting "  p_flow_version=> "
+        '  replace this line with " p_flow_version=> " & new_version & " " & today
+        '  write rest of file and close it.
+
+        Dim l_create_application_new As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\application\create_application.sql"
+        Dim l_create_application_old As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\application\create_application.sql.old"
+
+        FileIO.deleteFileIfExists(l_create_application_old)
+        My.Computer.FileSystem.RenameFile(l_create_application_new, "create_application.sql.old")
+
+
+        Dim l_old_file As New System.IO.StreamReader(l_create_application_old)
+        Dim l_new_file As New System.IO.StreamWriter(l_create_application_new)
+        Dim l_line As String = Nothing
+
+        Do
+            'For each line
+            If l_old_file.EndOfStream Then Exit Do
+
+            l_line = l_old_file.ReadLine()
+            If l_line.Contains("p_flow_version") Then
+                l_line = "  p_flow_version=> '" & i_label & "',"
+            End If
+
+
+            l_new_file.WriteLine(l_line)
+
+        Loop
+
+        l_old_file.Close()
+        l_new_file.Close()
+
+        FileIO.deleteFileIfExists(l_create_application_old)
+
+    End Sub
+
 
     Public Shared Sub ApexExportCommit(connection, username, password, fapp_id, apex_dir)
  
@@ -83,6 +124,7 @@
         ImportProgress.MdiParent = GitPatcher
         ImportProgress.addStep("Choose a tag to import from", 20)
         ImportProgress.addStep("Checkout the tag", 40)
+        ImportProgress.addStep("If tag not like " & Main.AppCodeTextBox.Text & " relabel apex", 50)
         ImportProgress.addStep("Import Apex", 60)
         ImportProgress.addStep("Return to branch: " & currentBranch, 100)
         ImportProgress.Show()
@@ -101,6 +143,20 @@
         ImportProgress.goNextStep()
 
         GitBash.Switch(My.Settings.CurrentRepo, tagApexVersion)
+        ImportProgress.goNextStep()
+
+        'If tag not like Main.AppCodeTextBox.Text relabel apex
+
+        If Not tagApexVersion.Contains(Main.AppCodeTextBox.Text) Then
+
+            Dim l_label As String = Nothing
+            Host.check_StdOut("""" & My.Settings.GITpath & """ describe --tags", l_label, My.Settings.CurrentRepo, True)
+            'alternative method
+            'l_label = Host.getOutput("""" & My.Settings.GITpath & """ describe --tags", My.Settings.CurrentRepo) 
+
+            relabelApex("GIT Tag: " & l_label)
+
+        End If
 
         ImportProgress.goNextStep()
 
@@ -111,68 +167,7 @@
 
         ImportProgress.goNextStep()
         GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
-
-
-        '
-        '
-        '      ''write-host "APEX file export and commit - uses oracle.apex.APEXExport.class and java oracle.apex.APEXExportSplitter.class"
-        '      ''Does this need to perform a pull from the master ??
-        '      ''TortoiseGitProc.exe /command:"pull" /path:"apex_dir" | Out-Null
-        '      ''add ojdbc5.jar to the CLASSPATH, in this case its on the checkout path
-        '
-        '      Dim classpath As String = Environment.GetEnvironmentVariable("CLASSPATH")
-        '      'EG \oracle\jdbc\lib\ojdbc5.jar
-        '      If Not classpath.Contains(apex_dir & My.Settings.JDBCjar) Then
-        '          classpath = classpath & ";" & apex_dir & My.Settings.JDBCjar
-        '          Environment.SetEnvironmentVariable("CLASSPATH", classpath)
-        '      End If
-        '
-        '      Dim app_id As String = fapp_id.Split("f")(1)
-        '      Dim fapp_sql As String = fapp_id & ".sql"
-        '      Dim message As String = Nothing
-        '
-        '      'PROGRESS 0
-        '      ImportProgress.setStep(0)
-        '
-        '      'NB Not exporting application comments
-        '      'Host.runInteractive("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
-        '      '                  , message, apex_dir)
-        '      Host.check_StdErr("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
-        '                , message, apex_dir)
-        '      Logger.Dbg(message, "Apex Export Error")
-        '
-        '      'write-host "Remove the application directory apex_dir\fapp_id" 
-        '
-        '
-        '      'Remove-Item -Recurse -Force -ErrorAction 0 @("apex_dir\fapp_id")
-        '      FileIO.deleteFolderIfExists(apex_dir & fapp_id)
-        '
-        '      'PROGRESS 25
-        '      ImportProgress.setStep(1)
-        '
-        '      '
-        '      'write-host "Splitting $APP_SQL into its composite files"
-        '      'java oracle.apex.APEXExportSplitter $APP_SQL 
-        '      Host.check_StdErr("java oracle.apex.APEXExportSplitter " & fapp_sql, message, apex_dir)
-        '
-        '      Logger.Dbg(message, "Apex Export Splitter Error")
-        '
-        '      'PROGRESS 50
-        '      ImportProgress.setStep(2)
-        '
-        '      'Adding new files to GIT"
-        '      Tortoise.Add(apex_dir & fapp_id, True)
-        '
-        '      'PROGRESS 75
-        '      ImportProgress.setStep(3)
-        '
-        '      'Committing changed files to GIT"
-        '      Tortoise.Commit(apex_dir & fapp_id, "App " & fapp_id & " exported and split - IF YOU DIDNT CHANGE IT PLEASE DONT COMMIT IT", True)
-        '
-        '      ImportProgress.setStep(4)
-        '
-        '      Tortoise.Revert(apex_dir & fapp_id)
-
+ 
         'PROGRESS 100
         ImportProgress.done()
 
