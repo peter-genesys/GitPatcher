@@ -96,9 +96,7 @@
         My.Settings.CurrentApp = ApplicationListComboBox.SelectedItem
         My.Settings.Save()
 
-        'Patch Schemas
-        PatchSchemasTextBox.Text = Trim(My.Settings.PatchSchemaList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)).Replace(Chr(13), "")
-
+ 
 
         'repo = Trim(repo)
         'repo = repo.Replace(Chr(13), "")
@@ -256,21 +254,21 @@
     End Sub
 
     Private Sub CreateDBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBPatchSetToolStripMenuItem.Click
-        CreatePatchCollection.createCollectionProcess("patchset", "feature,hotfix", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
+        CreatePatchCollection.createCollectionProcess("patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
     End Sub
 
-    Private Sub DBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        Dim Wizard As New CreatePatchCollection("", "patchset", "feature,hotfix", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
-        Wizard.ShowDialog()
-    End Sub
+    'Private Sub DBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs)
+    '    Dim Wizard As New CreatePatchCollection("", "patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
+    '    Wizard.ShowDialog()
+    'End Sub
 
-    Private Sub DBPatchSetAllTypesToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        Dim Wizard As New CreatePatchCollection("", "patchset", "", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
-        Wizard.ShowDialog()
-    End Sub
+    'Private Sub DBPatchSetAllTypesToolStripMenuItem_Click(sender As Object, e As EventArgs)
+    '    Dim Wizard As New CreatePatchCollection("", "patchset", "", Me.PatchSchemasTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
+    '    Wizard.ShowDialog()
+    'End Sub
 
     Private Sub CreateDBMinorReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBMinorReleaseToolStripMenuItem.Click
-        CreatePatchCollection.createCollectionProcess("minor", "patchset", Me.PatchSchemasTextBox.Text, "minor,patchset,feature,hotfix,ALL", "minor,patchset,feature,hotfix,ALL")
+        CreatePatchCollection.createCollectionProcess("minor", "patchset", Me.AppCodeTextBox.Text, "minor,patchset,feature,hotfix,ALL", "minor,patchset,feature,hotfix,ALL")
     End Sub
 
     Private Sub NewHotfixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewHotfixToolStripMenuItem.Click
@@ -279,5 +277,9 @@
 
     Private Sub TagtestToolStripMenuItem_Click(sender As Object, e As EventArgs)
         GitBash.TagSimple(My.Settings.CurrentRepo, "DEMOTAG")
+    End Sub
+
+    Private Sub ShowindexToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowindexToolStripMenuItem.Click
+        GitSharpFascade.getIndexedChanges(My.Settings.CurrentRepo)
     End Sub
 End Class

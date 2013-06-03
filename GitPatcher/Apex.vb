@@ -19,6 +19,14 @@
         Dim l_old_file As New System.IO.StreamReader(l_create_application_old)
         Dim l_new_file As New System.IO.StreamWriter(l_create_application_new)
         Dim l_line As String = Nothing
+        Dim l_build_status As String = Nothing
+ 
+        If Main.CurrentConnectionTextBox.Text.Contains("isdevl") Then
+            l_build_status = "RUN_ONLY"
+        Else
+            l_build_status = "RUN_AND_BUILD"
+        End If
+ 
 
         Do
             'For each line
@@ -29,6 +37,9 @@
                 l_line = "  p_flow_version=> '" & i_label & "',"
             End If
 
+            If l_line.Contains("p_build_status") Then
+                l_line = "  p_build_status=> '" & l_build_status & "',"
+            End If
 
             l_new_file.WriteLine(l_line)
 
@@ -161,7 +172,7 @@
         End If
 
         ImportProgress.goNextStep()
-
+ 
         Host.executeSQLscriptInteractive("install.sql" _
                                        , Main.RootApexDirTextBox.Text & My.Settings.CurrentApex _
                                        , Main.get_connect_string(Main.ParsingSchemaTextBox.Text, My.Settings.CurrentDB))

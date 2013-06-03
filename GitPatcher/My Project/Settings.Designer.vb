@@ -269,18 +269,6 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("SYS,PATCH_ADMIN,TPDS"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"SYS,PATCH_ADMIN,TPDS")>  _
-        Public Property PatchSchemaList() As String
-            Get
-                Return CType(Me("PatchSchemaList"),String)
-            End Get
-            Set
-                Me("PatchSchemaList") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("Prism")>  _
         Public Property CurrentApp() As String
             Get

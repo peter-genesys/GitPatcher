@@ -21,13 +21,13 @@ Public Class GitSharpFascade
 
     End Sub
 
- 
+
     Shared Function getTagList(ByVal path As String, ByVal currentTags As Collection, Optional ByVal filter As String = Nothing) As Collection
 
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
 
         Dim tagnames As Collection = currentTags
- 
+
         For Each Tag In repo.Tags
             If String.IsNullOrEmpty(filter) Then
                 tagnames.Add(Tag.Key)
@@ -42,9 +42,9 @@ Public Class GitSharpFascade
     End Function
 
     Shared Function getTagList(ByVal path As String, Optional ByVal filter As String = Nothing) As Collection
- 
+
         Dim tagnames As Collection = New Collection
- 
+
         Return getTagList(path, tagnames, filter)
 
     End Function
@@ -60,7 +60,7 @@ Public Class GitSharpFascade
         Return repo.CurrentBranch.Name
 
     End Function
- 
+
     Shared Sub switchBranch(ByVal path, ByVal branchName)
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
         Dim existingBranch As GitSharp.Branch = New Branch(repo, branchName)
@@ -72,7 +72,7 @@ Public Class GitSharpFascade
     Shared Sub createBranch(ByVal path, ByVal branchName)
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
         Dim newBranch As GitSharp.Branch = GitSharp.Branch.Create(repo, branchName)
- 
+
         repo.SwitchToBranch(newBranch)
 
     End Sub
@@ -86,6 +86,24 @@ Public Class GitSharpFascade
     'End Sub
 
 
+    Shared Sub getIndexedChanges(ByVal path As String)
+
+        Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
+ 
+
+        For Each entry In repo.Index.Entries
+            MsgBox(entry)
+            Dim x As GitSharp.PathStatus = New GitSharp.PathStatus(repo, entry)
+            If x.WorkingPathStatus <> 0 Or x.IndexPathStatus <> 0 Then
+
+                MsgBox(entry & " WorkingPathStatus " & x.WorkingPathStatus)
+                MsgBox(entry & " IndexPathStatus " & x.IndexPathStatus)
+            End If
+
+        Next
+
+
+    End Sub
 
     Shared Function getSchemaList(ByVal path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String) As Collection
 
@@ -116,7 +134,7 @@ Public Class GitSharpFascade
                 If InStr(change.Path, pathmask) > 0 And change.ChangeType <> ChangeType.Deleted Then
 
                     schema = change.Path.Split("/")(1)
- 
+
                     If Not schemas.Contains(schema) Then
                         schemas.Add(schema, schema)
                         Console.WriteLine(schema)
@@ -133,7 +151,7 @@ Public Class GitSharpFascade
 
     End Function
 
- 
+
 
     Shared Function getTagChanges(ByVal path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByVal viewFiles As Boolean) As Collection
 
@@ -271,7 +289,7 @@ Public Class GitSharpFascade
                             'MsgBox(file_string_data)
 
                             FileIO.writeFile(patchDir & "\" & change.Name, file_string_data)
-  
+
                             result = result & Chr(10) & change.Path
 
                             filePathList.Add(change.Path)
@@ -291,7 +309,7 @@ Public Class GitSharpFascade
 
     End Function
 
- 
+
 
 End Class
 

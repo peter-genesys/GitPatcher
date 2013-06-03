@@ -37,7 +37,6 @@ Partial Class Config
         Dim Repo1Label As System.Windows.Forms.Label
         Dim Label14 As System.Windows.Forms.Label
         Dim Label15 As System.Windows.Forms.Label
-        Dim Label16 As System.Windows.Forms.Label
         Dim Label17 As System.Windows.Forms.Label
         Dim Label18 As System.Windows.Forms.Label
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
@@ -49,12 +48,12 @@ Partial Class Config
         Me.RecipientTextBox = New System.Windows.Forms.TextBox()
         Me.AppsTabPage = New System.Windows.Forms.TabPage()
         Me.PatchSetTextBox = New System.Windows.Forms.TextBox()
-        Me.PatchSchemasTextBox = New System.Windows.Forms.TextBox()
         Me.ApplicationsTextBox = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.ParsingSchemaTextbox = New System.Windows.Forms.TextBox()
         Me.AppListTextBox = New System.Windows.Forms.TextBox()
         Me.PatchTabPage = New System.Windows.Forms.TabPage()
+        Me.GitExeTextBox = New System.Windows.Forms.TextBox()
         Me.SQLpathTextBox = New System.Windows.Forms.TextBox()
         Me.OJDBCjarFileTextBox = New System.Windows.Forms.TextBox()
         Me.ApexOffsetTextBox = New System.Windows.Forms.TextBox()
@@ -66,7 +65,6 @@ Partial Class Config
         Me.TabPageGitRepo = New System.Windows.Forms.TabPage()
         Me.RepoListTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
-        Me.GitExeTextBox = New System.Windows.Forms.TextBox()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -81,7 +79,6 @@ Partial Class Config
         Repo1Label = New System.Windows.Forms.Label()
         Label14 = New System.Windows.Forms.Label()
         Label15 = New System.Windows.Forms.Label()
-        Label16 = New System.Windows.Forms.Label()
         Label17 = New System.Windows.Forms.Label()
         Label18 = New System.Windows.Forms.Label()
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -219,23 +216,23 @@ Partial Class Config
         Label15.TabIndex = 19
         Label15.Text = "Applications:"
         '
-        'Label16
-        '
-        Label16.AutoSize = True
-        Label16.Location = New System.Drawing.Point(84, 16)
-        Label16.Name = "Label16"
-        Label16.Size = New System.Drawing.Size(85, 13)
-        Label16.TabIndex = 20
-        Label16.Text = "Patch Schemas:"
-        '
         'Label17
         '
         Label17.AutoSize = True
         Label17.Location = New System.Drawing.Point(288, 16)
         Label17.Name = "Label17"
-        Label17.Size = New System.Drawing.Size(51, 13)
+        Label17.Size = New System.Drawing.Size(32, 13)
         Label17.TabIndex = 22
-        Label17.Text = "PatchSet"
+        Label17.Text = "Code"
+        '
+        'Label18
+        '
+        Label18.AutoSize = True
+        Label18.Location = New System.Drawing.Point(5, 184)
+        Label18.Name = "Label18"
+        Label18.Size = New System.Drawing.Size(68, 13)
+        Label18.TabIndex = 14
+        Label18.Text = "Git exe Path:"
         '
         'MySettingsBindingSource
         '
@@ -301,8 +298,6 @@ Partial Class Config
         '
         Me.AppsTabPage.Controls.Add(Me.PatchSetTextBox)
         Me.AppsTabPage.Controls.Add(Label17)
-        Me.AppsTabPage.Controls.Add(Me.PatchSchemasTextBox)
-        Me.AppsTabPage.Controls.Add(Label16)
         Me.AppsTabPage.Controls.Add(Label15)
         Me.AppsTabPage.Controls.Add(Me.ApplicationsTextBox)
         Me.AppsTabPage.Controls.Add(Me.Label7)
@@ -326,20 +321,12 @@ Partial Class Config
         Me.PatchSetTextBox.Size = New System.Drawing.Size(75, 229)
         Me.PatchSetTextBox.TabIndex = 23
         '
-        'PatchSchemasTextBox
-        '
-        Me.PatchSchemasTextBox.Location = New System.Drawing.Point(87, 32)
-        Me.PatchSchemasTextBox.Multiline = True
-        Me.PatchSchemasTextBox.Name = "PatchSchemasTextBox"
-        Me.PatchSchemasTextBox.Size = New System.Drawing.Size(198, 229)
-        Me.PatchSchemasTextBox.TabIndex = 21
-        '
         'ApplicationsTextBox
         '
         Me.ApplicationsTextBox.Location = New System.Drawing.Point(6, 32)
         Me.ApplicationsTextBox.Multiline = True
         Me.ApplicationsTextBox.Name = "ApplicationsTextBox"
-        Me.ApplicationsTextBox.Size = New System.Drawing.Size(75, 229)
+        Me.ApplicationsTextBox.Size = New System.Drawing.Size(279, 229)
         Me.ApplicationsTextBox.TabIndex = 18
         '
         'Label7
@@ -386,6 +373,13 @@ Partial Class Config
         Me.PatchTabPage.TabIndex = 1
         Me.PatchTabPage.Text = "Paths"
         Me.PatchTabPage.UseVisualStyleBackColor = True
+        '
+        'GitExeTextBox
+        '
+        Me.GitExeTextBox.Location = New System.Drawing.Point(8, 200)
+        Me.GitExeTextBox.Name = "GitExeTextBox"
+        Me.GitExeTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.GitExeTextBox.TabIndex = 15
         '
         'SQLpathTextBox
         '
@@ -489,22 +483,6 @@ Partial Class Config
         Me.ConfigTabs.Size = New System.Drawing.Size(542, 306)
         Me.ConfigTabs.TabIndex = 0
         '
-        'GitExeTextBox
-        '
-        Me.GitExeTextBox.Location = New System.Drawing.Point(8, 200)
-        Me.GitExeTextBox.Name = "GitExeTextBox"
-        Me.GitExeTextBox.Size = New System.Drawing.Size(444, 20)
-        Me.GitExeTextBox.TabIndex = 15
-        '
-        'Label18
-        '
-        Label18.AutoSize = True
-        Label18.Location = New System.Drawing.Point(5, 184)
-        Label18.Name = "Label18"
-        Label18.Size = New System.Drawing.Size(68, 13)
-        Label18.TabIndex = 14
-        Label18.Text = "Git exe Path:"
-        '
         'Config
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -551,7 +529,6 @@ Partial Class Config
     Friend WithEvents RepoListTextBox As System.Windows.Forms.TextBox
     Friend WithEvents ConfigTabs As System.Windows.Forms.TabControl
     Friend WithEvents TestMailButton As System.Windows.Forms.Button
-    Friend WithEvents PatchSchemasTextBox As System.Windows.Forms.TextBox
     Friend WithEvents ApplicationsTextBox As System.Windows.Forms.TextBox
     Friend WithEvents PatchSetTextBox As System.Windows.Forms.TextBox
     Friend WithEvents GitExeTextBox As System.Windows.Forms.TextBox

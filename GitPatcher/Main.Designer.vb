@@ -35,6 +35,7 @@ Partial Class Main
         Me.NewFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NewHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowindexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RepoComboBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -57,8 +58,6 @@ Partial Class Main
         Me.Label10 = New System.Windows.Forms.Label()
         Me.ApexAppTextBox = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
-        Me.PatchSchemasTextBox = New System.Windows.Forms.TextBox()
-        Me.Label12 = New System.Windows.Forms.Label()
         Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
@@ -125,7 +124,7 @@ Partial Class Main
         '
         'GITToolStripMenuItem1
         '
-        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.NewHotfixToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem})
+        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.NewHotfixToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem})
         Me.GITToolStripMenuItem1.Name = "GITToolStripMenuItem1"
         Me.GITToolStripMenuItem1.Size = New System.Drawing.Size(37, 20)
         Me.GITToolStripMenuItem1.Text = "GIT"
@@ -148,6 +147,12 @@ Partial Class Main
         Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
         Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature/Hotfix"
         '
+        'ShowindexToolStripMenuItem
+        '
+        Me.ShowindexToolStripMenuItem.Name = "ShowindexToolStripMenuItem"
+        Me.ShowindexToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
+        Me.ShowindexToolStripMenuItem.Text = "showindex"
+        '
         'RepoComboBox
         '
         Me.RepoComboBox.FormattingEnabled = True
@@ -168,7 +173,7 @@ Partial Class Main
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(12, 83)
+        Me.Label2.Location = New System.Drawing.Point(25, 83)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(72, 13)
         Me.Label2.TabIndex = 3
@@ -176,24 +181,24 @@ Partial Class Main
         '
         'CurrentBranchTextBox
         '
-        Me.CurrentBranchTextBox.Location = New System.Drawing.Point(103, 80)
+        Me.CurrentBranchTextBox.Location = New System.Drawing.Point(134, 80)
         Me.CurrentBranchTextBox.Name = "CurrentBranchTextBox"
         Me.CurrentBranchTextBox.ReadOnly = True
-        Me.CurrentBranchTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.CurrentBranchTextBox.Size = New System.Drawing.Size(342, 20)
         Me.CurrentBranchTextBox.TabIndex = 4
         '
         'RootPatchDirTextBox
         '
-        Me.RootPatchDirTextBox.Location = New System.Drawing.Point(103, 106)
+        Me.RootPatchDirTextBox.Location = New System.Drawing.Point(134, 106)
         Me.RootPatchDirTextBox.Name = "RootPatchDirTextBox"
         Me.RootPatchDirTextBox.ReadOnly = True
-        Me.RootPatchDirTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.RootPatchDirTextBox.Size = New System.Drawing.Size(342, 20)
         Me.RootPatchDirTextBox.TabIndex = 6
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(12, 109)
+        Me.Label3.Location = New System.Drawing.Point(25, 109)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(77, 13)
         Me.Label3.TabIndex = 5
@@ -235,16 +240,16 @@ Partial Class Main
         '
         'RootApexDirTextBox
         '
-        Me.RootApexDirTextBox.Location = New System.Drawing.Point(103, 132)
+        Me.RootApexDirTextBox.Location = New System.Drawing.Point(134, 132)
         Me.RootApexDirTextBox.Name = "RootApexDirTextBox"
         Me.RootApexDirTextBox.ReadOnly = True
-        Me.RootApexDirTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.RootApexDirTextBox.Size = New System.Drawing.Size(342, 20)
         Me.RootApexDirTextBox.TabIndex = 12
         '
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(12, 135)
+        Me.Label6.Location = New System.Drawing.Point(25, 135)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(73, 13)
         Me.Label6.TabIndex = 11
@@ -252,16 +257,16 @@ Partial Class Main
         '
         'CurrentConnectionTextBox
         '
-        Me.CurrentConnectionTextBox.Location = New System.Drawing.Point(103, 185)
+        Me.CurrentConnectionTextBox.Location = New System.Drawing.Point(134, 185)
         Me.CurrentConnectionTextBox.Name = "CurrentConnectionTextBox"
         Me.CurrentConnectionTextBox.ReadOnly = True
-        Me.CurrentConnectionTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.CurrentConnectionTextBox.Size = New System.Drawing.Size(342, 20)
         Me.CurrentConnectionTextBox.TabIndex = 14
         '
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(12, 188)
+        Me.Label7.Location = New System.Drawing.Point(25, 188)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(61, 13)
         Me.Label7.TabIndex = 13
@@ -269,16 +274,16 @@ Partial Class Main
         '
         'ParsingSchemaTextBox
         '
-        Me.ParsingSchemaTextBox.Location = New System.Drawing.Point(103, 316)
+        Me.ParsingSchemaTextBox.Location = New System.Drawing.Point(134, 293)
         Me.ParsingSchemaTextBox.Name = "ParsingSchemaTextBox"
         Me.ParsingSchemaTextBox.ReadOnly = True
-        Me.ParsingSchemaTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.ParsingSchemaTextBox.Size = New System.Drawing.Size(342, 20)
         Me.ParsingSchemaTextBox.TabIndex = 16
         '
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(12, 319)
+        Me.Label8.Location = New System.Drawing.Point(25, 296)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(84, 13)
         Me.Label8.TabIndex = 15
@@ -286,16 +291,16 @@ Partial Class Main
         '
         'BranchPathTextBox
         '
-        Me.BranchPathTextBox.Location = New System.Drawing.Point(103, 54)
+        Me.BranchPathTextBox.Location = New System.Drawing.Point(134, 54)
         Me.BranchPathTextBox.Name = "BranchPathTextBox"
         Me.BranchPathTextBox.ReadOnly = True
-        Me.BranchPathTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.BranchPathTextBox.Size = New System.Drawing.Size(342, 20)
         Me.BranchPathTextBox.TabIndex = 18
         '
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(12, 57)
+        Me.Label9.Location = New System.Drawing.Point(25, 57)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(66, 13)
         Me.Label9.TabIndex = 17
@@ -303,7 +308,7 @@ Partial Class Main
         '
         'MinPatchTextBox
         '
-        Me.MinPatchTextBox.Location = New System.Drawing.Point(103, 342)
+        Me.MinPatchTextBox.Location = New System.Drawing.Point(103, 319)
         Me.MinPatchTextBox.Name = "MinPatchTextBox"
         Me.MinPatchTextBox.ReadOnly = True
         Me.MinPatchTextBox.Size = New System.Drawing.Size(373, 20)
@@ -312,7 +317,7 @@ Partial Class Main
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(12, 345)
+        Me.Label10.Location = New System.Drawing.Point(12, 322)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(79, 13)
         Me.Label10.TabIndex = 19
@@ -320,50 +325,33 @@ Partial Class Main
         '
         'ApexAppTextBox
         '
-        Me.ApexAppTextBox.Location = New System.Drawing.Point(103, 290)
+        Me.ApexAppTextBox.Location = New System.Drawing.Point(134, 267)
         Me.ApexAppTextBox.Name = "ApexAppTextBox"
         Me.ApexAppTextBox.ReadOnly = True
-        Me.ApexAppTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.ApexAppTextBox.Size = New System.Drawing.Size(342, 20)
         Me.ApexAppTextBox.TabIndex = 22
         '
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(12, 293)
+        Me.Label11.Location = New System.Drawing.Point(25, 270)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(53, 13)
         Me.Label11.TabIndex = 21
         Me.Label11.Text = "Apex App"
         '
-        'PatchSchemasTextBox
-        '
-        Me.PatchSchemasTextBox.Location = New System.Drawing.Point(103, 267)
-        Me.PatchSchemasTextBox.Name = "PatchSchemasTextBox"
-        Me.PatchSchemasTextBox.ReadOnly = True
-        Me.PatchSchemasTextBox.Size = New System.Drawing.Size(373, 20)
-        Me.PatchSchemasTextBox.TabIndex = 24
-        '
-        'Label12
-        '
-        Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(12, 270)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(82, 13)
-        Me.Label12.TabIndex = 23
-        Me.Label12.Text = "Patch Schemas"
-        '
         'AppCodeTextBox
         '
-        Me.AppCodeTextBox.Location = New System.Drawing.Point(103, 241)
+        Me.AppCodeTextBox.Location = New System.Drawing.Point(134, 241)
         Me.AppCodeTextBox.Name = "AppCodeTextBox"
         Me.AppCodeTextBox.ReadOnly = True
-        Me.AppCodeTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.AppCodeTextBox.Size = New System.Drawing.Size(342, 20)
         Me.AppCodeTextBox.TabIndex = 26
         '
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(12, 244)
+        Me.Label13.Location = New System.Drawing.Point(25, 244)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(32, 13)
         Me.Label13.TabIndex = 25
@@ -373,11 +361,9 @@ Partial Class Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(486, 377)
+        Me.ClientSize = New System.Drawing.Size(486, 350)
         Me.Controls.Add(Me.AppCodeTextBox)
         Me.Controls.Add(Me.Label13)
-        Me.Controls.Add(Me.PatchSchemasTextBox)
-        Me.Controls.Add(Me.Label12)
         Me.Controls.Add(Me.ApexAppTextBox)
         Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.MinPatchTextBox)
@@ -443,11 +429,10 @@ Partial Class Main
     Friend WithEvents CreateDBPatchSetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ApexAppTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents PatchSchemasTextBox As System.Windows.Forms.TextBox
-    Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents AppCodeTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents CreateDBMinorReleaseToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents NewHotfixToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ShowindexToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

@@ -19,7 +19,6 @@
 
         'Apps
         ApplicationsTextBox.DataBindings.Add("Text", My.Settings, "ApplicationsList")
-        PatchSchemasTextBox.DataBindings.Add("Text", My.Settings, "PatchSchemaList")
         PatchSetTextBox.DataBindings.Add("Text", My.Settings, "PatchSetList")
         AppListTextBox.DataBindings.Add("Text", My.Settings, "AppList")
         ParsingSchemaTextbox.DataBindings.Add("Text", My.Settings, "ParsingSchemaList")
