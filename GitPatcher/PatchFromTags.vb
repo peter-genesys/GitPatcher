@@ -770,9 +770,13 @@ Public Class PatchFromTags
 
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create Patch")
         createPatchProgress.MdiParent = GitPatcher
-        createPatchProgress.addStep("Review tags on the branch", 10)
+        createPatchProgress.addStep("Switch to develop branch", 5)
+        createPatchProgress.addStep("Pull from Origin", 10)
+        createPatchProgress.addStep("Return to branch: " & currentBranch, 15)
+        createPatchProgress.addStep("Rebase Branch: " & currentBranch, 20)
+        createPatchProgress.addStep("Use PatchRunner to run Unapplied/Uninstalled Patches", 25)
+        createPatchProgress.addStep("Review tags on the branch", 30)
         createPatchProgress.addStep("Create edit, test", 40)
-        'createPatchProgress.addStep("Add new files", 50)
         createPatchProgress.addStep("Commit to Branch: " & currentBranch, 50)
         createPatchProgress.addStep("Switch to develop branch", 60)
         createPatchProgress.addStep("Pull from Origin", 70)
@@ -782,67 +786,91 @@ Public Class PatchFromTags
 
         createPatchProgress.Show()
 
-        createPatchProgress.setStep(0)
+        If createPatchProgress.toDoNextStep() Then
+            'Switch to develop branch
+            GitBash.Switch(My.Settings.CurrentRepo, "develop")
+        End If
+        If createPatchProgress.toDoNextStep() Then
+            'Pull from origin/develop
+            GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+        End If
+        If createPatchProgress.toDoNextStep() Then
+            'Return to branch
+            GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
+        End If
+ 
+        If createPatchProgress.toDoNextStep() Then
+            'Rebase branch
+            Tortoise.Rebase(My.Settings.CurrentRepo)
+        End If
+        If createPatchProgress.toDoNextStep() Then
+            'Use PatchRunner to run Unapplied/Uninstalled Patches
+            Dim newchildform As New PatchRunner
+            newchildform.MdiParent = GitPatcher
+            newchildform.ShowDialog() 'NEED TO WAIT HERE!!
+ 
+        End If
+        If createPatchProgress.toDoNextStep() Then
+            Tortoise.Log(My.Settings.CurrentRepo)
+        End If
+ 
+        If createPatchProgress.toDoNextStep() Then
 
-        Tortoise.Log(My.Settings.CurrentRepo)
+            Dim Wizard As New PatchFromTags
+            'newchildform.MdiParent = GitPatcher
+            Wizard.ShowDialog() 'NEED TO WAIT HERE!!
 
 
-        createPatchProgress.goNextStep()
-
-        Dim Wizard As New PatchFromTags
-        'newchildform.MdiParent = GitPatcher
-        Wizard.ShowDialog()
-
-
-        'If BMSSplash.MyLogin.ShowDialog() = DialogResult.OK Then
-        '    ' Form was closed via OK button or similar, continue normally... '
-        '    BMSSplash.MyBuddy.Show()
-        'Else
-        '    ' Form was aborted via Cancel, Close, or some other way; do something '
-        '    ' else like quitting the application... '
-        'End If
+            'If BMSSplash.MyLogin.ShowDialog() = DialogResult.OK Then
+            '    ' Form was closed via OK button or similar, continue normally... '
+            '    BMSSplash.MyBuddy.Show()
+            'Else
+            '    ' Form was aborted via Cancel, Close, or some other way; do something '
+            '    ' else like quitting the application... '
+            'End If
+        End If
 
 
-        'NEED TO WAIT HERE!!
-        createPatchProgress.goNextStep()
+        If createPatchProgress.toDoNextStep() Then
 
 
-        'Adding new files to GIT"
-        'TortoiseAdd(My.Settings.CurrentRepo)
+            'Committing changed files to GIT"
+            Tortoise.Commit(My.Settings.CurrentRepo, "Commit any patches you've not yet committed", True)
+        End If
 
-        'Committing changed files to GIT"
-        Tortoise.Commit(My.Settings.CurrentRepo, "Commit any patches you've not yet committed", True)
 
-        createPatchProgress.goNextStep()
+        If createPatchProgress.toDoNextStep() Then
+            'switch
+            'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, "master")
+            'Tortoise.Switch(My.Settings.CurrentRepo)
+            'Switch to develop branch
+            GitBash.Switch(My.Settings.CurrentRepo, "develop")
+        End If
 
-        'switch
-        'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, "master")
-        'Tortoise.Switch(My.Settings.CurrentRepo)
-        'Switch to develop branch
-        GitBash.Switch(My.Settings.CurrentRepo, "develop")
-        createPatchProgress.goNextStep()
+        If createPatchProgress.toDoNextStep() Then
+            'Pull from origin/develop
+            GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+        End If
 
-        'Pull from origin/develop
-        GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
-        createPatchProgress.goNextStep()
+        If createPatchProgress.toDoNextStep() Then
+            'Merge from Feature branch
+            Tortoise.Merge(My.Settings.CurrentRepo)
+        End If
 
-        'Merge from Feature branch
-        'TortoiseMerge(My.Settings.CurrentRepo, currentBranch)
-        Tortoise.Merge(My.Settings.CurrentRepo)
+        If createPatchProgress.toDoNextStep() Then
+            'Push to origin/develop 
+            GitBash.Push(My.Settings.CurrentRepo, "origin", "develop")
+        End If
 
-        createPatchProgress.goNextStep()
+        If createPatchProgress.toDoNextStep() Then
+            'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, currentBranch)
+            GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
+        End If
 
-        'Push to origin/develop 
-        GitBash.Push(My.Settings.CurrentRepo, "origin", "develop")
+        'Finish
+        createPatchProgress.toDoNextStep()
 
-        createPatchProgress.goNextStep()
-
-        'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, currentBranch)
-        GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
-
-        'Done
-        createPatchProgress.done()
-
+ 
     End Sub
 
 

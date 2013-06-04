@@ -784,79 +784,99 @@ Public Class CreatePatchCollection
         createPatchSetProgress.addStep("Merge from release Branch: " & newBranch, 55)
         createPatchSetProgress.addStep("Commit - incase of merge conflict", 60)
         createPatchSetProgress.addStep("Push to origin/develop", 65)
-
-
+ 
         createPatchSetProgress.addStep("Manually Execute " & iCreatePatchType & " " & l_app_version & " on target database.", 70)
         createPatchSetProgress.addStep("Manually Import Apex " & l_app_version & " into target database.", 100)
         'Import
 
         createPatchSetProgress.Show()
 
-        'Switch to develop branch
-        GitBash.Switch(My.Settings.CurrentRepo, "develop")
-        createPatchSetProgress.goNextStep()
-
-        'Pull from origin/develop
-        GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
-        createPatchSetProgress.goNextStep()
-
-        'Create and Switch to new collection branch
-        GitBash.createBranch(My.Settings.CurrentRepo, newBranch)
-        createPatchSetProgress.goNextStep()
-
-
-        'Create, edit And test collection
-        Dim Wizard As New CreatePatchCollection(l_app_version, iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes, iSupPatchTypes)
-        Wizard.ShowDialog() 'WAITING HERE!!
-        createPatchSetProgress.goNextStep()
+        If createPatchSetProgress.toDoNextStep() Then
+            'Switch to develop branch
+            GitBash.Switch(My.Settings.CurrentRepo, "develop")
  
-        bumpApexVersion(l_app_version)
-
-        createPatchSetProgress.goNextStep()
-
-        'Commit Apex version 
-        Tortoise.Commit(My.Settings.CurrentRepo, "Bump Apex " & Main.ApexAppTextBox.Text & " to " & l_app_version)
-        createPatchSetProgress.goNextStep()
-
-        'Tag this commit
-        GitBash.TagSimple(My.Settings.CurrentRepo, l_app_version)
-        'GitBash.TagAnnotated(My.Settings.CurrentRepo, l_app_version, "New " & Main.ApplicationListComboBox.SelectedItem & " " & iCreatePatchType & " " & l_app_version)
-        createPatchSetProgress.goNextStep()
-
-        'Push release to origin with tags
-        GitBash.Push(My.Settings.CurrentRepo, "origin", newBranch, True)
-        createPatchSetProgress.goNextStep()
-
-        'Switch to develop branch
-        GitBash.Switch(My.Settings.CurrentRepo, "develop")
-        createPatchSetProgress.goNextStep()
-
-        'Pull from origin/develop
-        GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
-        createPatchSetProgress.goNextStep()
-
-        'Merge from release
-        Tortoise.Merge(My.Settings.CurrentRepo)
-        createPatchSetProgress.goNextStep()
-
-        'Commit - incase of merge conflict
-        Tortoise.Commit(My.Settings.CurrentRepo, "Merge " & newBranch & " CANCEL IF NO MERGE CONFLICTS")
-        createPatchSetProgress.goNextStep()
-
-        'Push to origin/develop 
-        GitBash.Push(My.Settings.CurrentRepo, "origin", "develop")
-        createPatchSetProgress.goNextStep()
-
-        'MsgBox("Execute " & iCreatePatchType & " on target database.")
-        'createPatchSetProgress.goNextStep()
-        '
-        'MsgBox("Execute " & iCreatePatchType & " on target database.")
-        'createPatchSetProgress.goNextStep()
+        End If
+        If createPatchSetProgress.toDoNextStep() Then
+            'Pull from origin/develop
+            GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+         
+        End If
+        If createPatchSetProgress.toDoNextStep() Then
+            'Create and Switch to new collection branch
+            GitBash.createBranch(My.Settings.CurrentRepo, newBranch)
 
 
+        End If
+        If createPatchSetProgress.toDoNextStep() Then
 
+            'Create, edit And test collection
+            Dim Wizard As New CreatePatchCollection(l_app_version, iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes, iSupPatchTypes)
+            Wizard.ShowDialog() 'WAITING HERE!!
+
+
+        End If
+        If createPatchSetProgress.toDoNextStep() Then
+            'Bump Apex version 
+            bumpApexVersion(l_app_version)
+
+        End If
+        If createPatchSetProgress.toDoNextStep() Then
+            'Commit Apex version 
+            Tortoise.Commit(My.Settings.CurrentRepo, "Bump Apex " & Main.ApexAppTextBox.Text & " to " & l_app_version)
+
+
+        End If
+        If createPatchSetProgress.toDoNextStep() Then
+            'Tag this commit
+            GitBash.TagSimple(My.Settings.CurrentRepo, l_app_version)
+            'GitBash.TagAnnotated(My.Settings.CurrentRepo, l_app_version, "New " & Main.ApplicationListComboBox.SelectedItem & " " & iCreatePatchType & " " & l_app_version)
+
+
+        End If
+        If createPatchSetProgress.toDoNextStep() Then
+            'Push release to origin with tags
+            GitBash.Push(My.Settings.CurrentRepo, "origin", newBranch, True)
+ 
+        End If
+        If createPatchSetProgress.toDoNextStep() Then
+            'Switch to develop branch
+            GitBash.Switch(My.Settings.CurrentRepo, "develop")
+
+
+        End If
+        If createPatchSetProgress.toDoNextStep() Then
+            'Pull from origin/develop
+            GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+
+
+        End If
+        If createPatchSetProgress.toDoNextStep() Then
+            'Merge from release
+            Tortoise.Merge(My.Settings.CurrentRepo)
+             
+        End If
+        If createPatchSetProgress.toDoNextStep() Then
+            'Commit - incase of merge conflict
+            Tortoise.Commit(My.Settings.CurrentRepo, "Merge " & newBranch & " CANCEL IF NO MERGE CONFLICTS")
+
+
+        End If
+        If createPatchSetProgress.toDoNextStep() Then
+            'Push to origin/develop 
+            GitBash.Push(My.Settings.CurrentRepo, "origin", "develop")
+
+
+        End If
+
+
+        'Manually Execute patch
+        createPatchSetProgress.toDoNextStep()
+
+        'Manually Import Apex
+        createPatchSetProgress.toDoNextStep()
+ 
         'Done
-        createPatchSetProgress.done()
+        createPatchSetProgress.toDoNextStep()
 
     End Sub
 

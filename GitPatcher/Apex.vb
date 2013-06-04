@@ -81,49 +81,53 @@
         Dim message As String = Nothing
 
         'PROGRESS 0
-        ExportProgress.setStep(0)
+        If ExportProgress.toDoNextStep() Then
+            'Export Apex as a single file
+            'NB Not exporting application comments
+            'Host.runInteractive("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
+            '                  , message, apex_dir)
+            Host.check_StdErr("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
+                      , message, apex_dir)
+            Logger.Dbg(message, "Apex Export Error")
 
-        'NB Not exporting application comments
-        'Host.runInteractive("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
-        '                  , message, apex_dir)
-        Host.check_StdErr("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
-                  , message, apex_dir)
-        Logger.Dbg(message, "Apex Export Error")
-
-        'write-host "Remove the application directory apex_dir\fapp_id" 
+            'write-host "Remove the application directory apex_dir\fapp_id" 
 
 
-        'Remove-Item -Recurse -Force -ErrorAction 0 @("apex_dir\fapp_id")
-        FileIO.deleteFolderIfExists(apex_dir & fapp_id)
+            'Remove-Item -Recurse -Force -ErrorAction 0 @("apex_dir\fapp_id")
+            FileIO.deleteFolderIfExists(apex_dir & fapp_id)
 
-        'PROGRESS 25
-        ExportProgress.setStep(1)
+        End If
+ 
 
-        '
-        'write-host "Splitting $APP_SQL into its composite files"
-        'java oracle.apex.APEXExportSplitter $APP_SQL 
-        Host.check_StdErr("java oracle.apex.APEXExportSplitter " & fapp_sql, message, apex_dir)
+        If ExportProgress.toDoNextStep() Then
+            'Splitting into components 
+ 
+            'write-host "Splitting $APP_SQL into its composite files"
+            'java oracle.apex.APEXExportSplitter $APP_SQL 
+            Host.check_StdErr("java oracle.apex.APEXExportSplitter " & fapp_sql, message, apex_dir)
 
-        Logger.Dbg(message, "Apex Export Splitter Error")
+            Logger.Dbg(message, "Apex Export Splitter Error")
 
-        'PROGRESS 50
-        ExportProgress.setStep(2)
+        End If
 
-        'Adding new files to GIT"
-        Tortoise.Add(apex_dir & fapp_id, True)
+        If ExportProgress.toDoNextStep() Then
+            'Add new files to GIT repository 
+            Tortoise.Add(apex_dir & fapp_id, True)
 
-        'PROGRESS 75
-        ExportProgress.setStep(3)
+        End If
 
-        'Committing changed files to GIT"
-        Tortoise.Commit(apex_dir & fapp_id, "App " & fapp_id & " exported and split - IF YOU DIDNT CHANGE IT PLEASE DONT COMMIT IT", True)
+        If ExportProgress.toDoNextStep() Then
+            'Commit valid changes to GIT repository  
+            Tortoise.Commit(apex_dir & fapp_id, "App " & fapp_id & " exported and split - IF YOU DIDNT CHANGE IT PLEASE DONT COMMIT IT", True)
 
-        ExportProgress.setStep(4)
+        End If
 
-        Tortoise.Revert(apex_dir & fapp_id)
+        If ExportProgress.toDoNextStep() Then
+            'Revert invalid changes from your checkout
+            Tortoise.Revert(apex_dir & fapp_id)
+        End If
 
-        'PROGRESS 100
-        ExportProgress.done()
+        ExportProgress.toDoNextStep()
 
     End Sub
 
@@ -133,7 +137,7 @@
 
         Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Apex Import " & fapp_id)
         ImportProgress.MdiParent = GitPatcher
-        ImportProgress.addStep("Choose a tag to import from", 20, False)
+        ImportProgress.addStep("Choose a tag to import from", 20)
         ImportProgress.addStep("Checkout the tag", 40)
         ImportProgress.addStep("If tag not like " & Main.AppCodeTextBox.Text & " relabel apex", 50)
         ImportProgress.addStep("Import Apex", 60)

@@ -177,31 +177,38 @@
 
         mergeAndPush.Show()
 
-        'Switch to develop branch
-        GitBash.Switch(My.Settings.CurrentRepo, "develop")
-        mergeAndPush.goNextStep()
+        If mergeAndPush.toDoNextStep() Then
+            'Switch to develop branch
+            GitBash.Switch(My.Settings.CurrentRepo, "develop")
 
-        'Pull from origin/develop
-        GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
-        mergeAndPush.goNextStep()
+        End If
 
-        'Merge from Feature branch
-        'TortoiseMerge(My.Settings.CurrentRepo, currentBranch)
-        Tortoise.Merge(My.Settings.CurrentRepo)
+        If mergeAndPush.toDoNextStep() Then
+            'Pull from origin/develop
+            GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
 
-        mergeAndPush.goNextStep()
+        End If
 
-        'Push to origin/develop 
-        GitBash.Push(My.Settings.CurrentRepo, "origin", "develop")
-        mergeAndPush.goNextStep()
+        If mergeAndPush.toDoNextStep() Then
+            'Merge from Feature branch
+            'TortoiseMerge(My.Settings.CurrentRepo, currentBranch)
+            Tortoise.Merge(My.Settings.CurrentRepo)
+        End If
 
-        'Return to branch
-        'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, currentBranch)
-        GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
+        If mergeAndPush.toDoNextStep() Then
+            'Push to origin/develop 
+            GitBash.Push(My.Settings.CurrentRepo, "origin", "develop")
 
-        'Done
-        mergeAndPush.done()
+        End If
 
+        If mergeAndPush.toDoNextStep() Then
+            'Return to branch
+            'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, currentBranch)
+            GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
+        End If
+
+        mergeAndPush.toDoNextStep() 
+ 
     End Sub
 
     Private Sub createNewBranch(iBranchType As String)
@@ -222,29 +229,35 @@
 
                 newFeature.Show()
 
-                'Switch to develop branch
-                GitBash.Switch(My.Settings.CurrentRepo, "develop")
-                newFeature.goNextStep()
+                If newFeature.toDoNextStep() Then
+                    'Switch to develop branch
+                    GitBash.Switch(My.Settings.CurrentRepo, "develop")
 
-                'Pull from origin/develop
-                GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
-                newFeature.goNextStep()
+                End If
 
-                'Create and Switch to new branch
-                GitBash.createBranch(My.Settings.CurrentRepo, newBranch)
-                newFeature.goNextStep()
+                If newFeature.toDoNextStep() Then
+                    'Pull from origin/develop
+                    GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
 
-                'Create the initial tag
-                GitBash.TagSimple(My.Settings.CurrentRepo, branchName & ".00")
-                'GitBash.TagAnnotated(My.Settings.CurrentRepo, branchName & ".00", "Initial tag on new " & Me.ApplicationListComboBox.SelectedItem & " " & iBranchType & " " & branchName)
-                newFeature.goNextStep()
+                End If
 
-                'Done
-                newFeature.done()
+                If newFeature.toDoNextStep() Then
+                    'Create and Switch to new branch
+                    GitBash.createBranch(My.Settings.CurrentRepo, newBranch)
 
+                End If
 
+                If newFeature.toDoNextStep() Then
+                    'Create the initial tag
+                    GitBash.TagSimple(My.Settings.CurrentRepo, branchName & ".00")
+                    'GitBash.TagAnnotated(My.Settings.CurrentRepo, branchName & ".00", "Initial tag on new " & Me.ApplicationListComboBox.SelectedItem & " " & iBranchType & " " & branchName)
 
-            End If
+                End If
+
+                newFeature.toDoNextStep()  
+ 
+
+        End If
 
         End If
     End Sub

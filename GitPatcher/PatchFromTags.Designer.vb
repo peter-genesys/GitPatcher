@@ -129,6 +129,7 @@ Partial Class PatchFromTags
         '
         'ChangesCheckedListBox
         '
+        Me.ChangesCheckedListBox.CheckOnClick = True
         Me.ChangesCheckedListBox.FormattingEnabled = True
         Me.ChangesCheckedListBox.Location = New System.Drawing.Point(77, 76)
         Me.ChangesCheckedListBox.Name = "ChangesCheckedListBox"
@@ -360,6 +361,7 @@ Partial Class PatchFromTags
         '
         'PrereqsCheckedListBox
         '
+        Me.PrereqsCheckedListBox.CheckOnClick = True
         Me.PrereqsCheckedListBox.FormattingEnabled = True
         Me.PrereqsCheckedListBox.Location = New System.Drawing.Point(77, 76)
         Me.PrereqsCheckedListBox.Name = "PrereqsCheckedListBox"
@@ -399,6 +401,7 @@ Partial Class PatchFromTags
         '
         'SupersedesCheckedListBox
         '
+        Me.SupersedesCheckedListBox.CheckOnClick = True
         Me.SupersedesCheckedListBox.FormattingEnabled = True
         Me.SupersedesCheckedListBox.Location = New System.Drawing.Point(77, 76)
         Me.SupersedesCheckedListBox.Name = "SupersedesCheckedListBox"
@@ -492,6 +495,7 @@ Partial Class PatchFromTags
         '
         'PatchableCheckedListBox
         '
+        Me.PatchableCheckedListBox.CheckOnClick = True
         Me.PatchableCheckedListBox.FormattingEnabled = True
         Me.PatchableCheckedListBox.Location = New System.Drawing.Point(77, 76)
         Me.PatchableCheckedListBox.Name = "PatchableCheckedListBox"

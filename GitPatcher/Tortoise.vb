@@ -44,5 +44,10 @@
         Dim client As New TortoiseFascade(i_wait)
         client.Tag(i_WorkingDir)
     End Sub
+
+    Public Shared Sub Rebase(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
+        Dim client As New TortoiseFascade(i_wait)
+        client.Rebase(i_WorkingDir)
+    End Sub
  
 End Class

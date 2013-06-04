@@ -216,6 +216,7 @@ Partial Class CreatePatchCollection
         '
         'TagsCheckedListBox
         '
+        Me.TagsCheckedListBox.CheckOnClick = True
         Me.TagsCheckedListBox.FormattingEnabled = True
         Me.TagsCheckedListBox.Location = New System.Drawing.Point(77, 76)
         Me.TagsCheckedListBox.Name = "TagsCheckedListBox"
@@ -349,6 +350,7 @@ Partial Class CreatePatchCollection
         '
         'PrereqsCheckedListBox
         '
+        Me.PrereqsCheckedListBox.CheckOnClick = True
         Me.PrereqsCheckedListBox.FormattingEnabled = True
         Me.PrereqsCheckedListBox.Location = New System.Drawing.Point(77, 76)
         Me.PrereqsCheckedListBox.Name = "PrereqsCheckedListBox"
@@ -407,6 +409,7 @@ Partial Class CreatePatchCollection
         '
         'SupersedesCheckedListBox
         '
+        Me.SupersedesCheckedListBox.CheckOnClick = True
         Me.SupersedesCheckedListBox.FormattingEnabled = True
         Me.SupersedesCheckedListBox.Location = New System.Drawing.Point(77, 76)
         Me.SupersedesCheckedListBox.Name = "SupersedesCheckedListBox"
@@ -500,6 +503,7 @@ Partial Class CreatePatchCollection
         '
         'PatchableCheckedListBox
         '
+        Me.PatchableCheckedListBox.CheckOnClick = True
         Me.PatchableCheckedListBox.FormattingEnabled = True
         Me.PatchableCheckedListBox.Location = New System.Drawing.Point(77, 76)
         Me.PatchableCheckedListBox.Name = "PatchableCheckedListBox"
