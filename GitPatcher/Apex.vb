@@ -133,56 +133,59 @@
 
         Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Apex Import " & fapp_id)
         ImportProgress.MdiParent = GitPatcher
-        ImportProgress.addStep("Choose a tag to import from", 20)
+        ImportProgress.addStep("Choose a tag to import from", 20, False)
         ImportProgress.addStep("Checkout the tag", 40)
         ImportProgress.addStep("If tag not like " & Main.AppCodeTextBox.Text & " relabel apex", 50)
         ImportProgress.addStep("Import Apex", 60)
         ImportProgress.addStep("Return to branch: " & currentBranch, 100)
         ImportProgress.Show()
 
-        ImportProgress.setStep(0)
+        If ImportProgress.toDoStep(0) Then
 
-        Dim tagnames As Collection = New Collection
-        tagnames.Add("HEAD")
-        tagnames = GitSharpFascade.getTagList(My.Settings.CurrentRepo, tagnames, Main.CurrentBranchTextBox.Text)
-        tagnames = GitSharpFascade.getTagList(My.Settings.CurrentRepo, tagnames, Main.AppCodeTextBox.Text)
+            Dim tagnames As Collection = New Collection
+            tagnames.Add("HEAD")
+            tagnames = GitSharpFascade.getTagList(My.Settings.CurrentRepo, tagnames, Main.CurrentBranchTextBox.Text)
+            tagnames = GitSharpFascade.getTagList(My.Settings.CurrentRepo, tagnames, Main.AppCodeTextBox.Text)
 
 
-        Dim tagApexVersion As String = Nothing
-        tagApexVersion = ChoiceDialog.Ask("Please choose a tag for apex install", tagnames, "HEAD", "Choose tag")
+            Dim tagApexVersion As String = Nothing
+            tagApexVersion = ChoiceDialog.Ask("Please choose a tag for apex install", tagnames, "HEAD", "Choose tag")
 
-        ImportProgress.goNextStep()
+            If ImportProgress.toDoStep(1) Then
+ 
+                GitBash.Switch(My.Settings.CurrentRepo, tagApexVersion)
+                If ImportProgress.toDoStep(2) Then
 
-        GitBash.Switch(My.Settings.CurrentRepo, tagApexVersion)
-        ImportProgress.goNextStep()
+                    'If tag not like Main.AppCodeTextBox.Text relabel apex
 
-        'If tag not like Main.AppCodeTextBox.Text relabel apex
+                    If Not tagApexVersion.Contains(Main.AppCodeTextBox.Text) Then
 
-        If Not tagApexVersion.Contains(Main.AppCodeTextBox.Text) Then
+                        Dim l_label As String = Nothing
+                        'Host.check_StdOut("""" & My.Settings.GITpath & """ describe --tags", l_label, My.Settings.CurrentRepo, True)
+                        'alternative method
+                        'l_label = Host.getOutput("""" & My.Settings.GITpath & """ describe --tags", My.Settings.CurrentRepo) 
 
-            Dim l_label As String = Nothing
-            'Host.check_StdOut("""" & My.Settings.GITpath & """ describe --tags", l_label, My.Settings.CurrentRepo, True)
-            'alternative method
-            'l_label = Host.getOutput("""" & My.Settings.GITpath & """ describe --tags", My.Settings.CurrentRepo) 
+                        l_label = GitBash.describeTags(My.Settings.CurrentRepo)
 
-            l_label = GitBash.describeTags(My.Settings.CurrentRepo)
-
-            relabelApex("GIT Tag: " & l_label)
-
+                        relabelApex("GIT Tag: " & l_label)
+                    End If
+                End If
+            End If
         End If
 
-        ImportProgress.goNextStep()
- 
-        Host.executeSQLscriptInteractive("install.sql" _
-                                       , Main.RootApexDirTextBox.Text & My.Settings.CurrentApex _
-                                       , Main.get_connect_string(Main.ParsingSchemaTextBox.Text, My.Settings.CurrentDB))
 
+        If ImportProgress.toDoStep(3) Then
 
-        ImportProgress.goNextStep()
-        GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
- 
-        'PROGRESS 100
-        ImportProgress.done()
+            Host.executeSQLscriptInteractive("install.sql" _
+                                           , Main.RootApexDirTextBox.Text & My.Settings.CurrentApex _
+                                           , Main.get_connect_string(Main.ParsingSchemaTextBox.Text, My.Settings.CurrentDB))
+
+        End If
+        If ImportProgress.toDoStep(4) Then
+            GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
+        End If
+
+        ImportProgress.toDoNextStep()
 
     End Sub
 

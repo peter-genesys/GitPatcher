@@ -35,7 +35,7 @@ Partial Class ProgressDialogue
         '
         'ProgressCheckedListBox
         '
-        Me.ProgressCheckedListBox.Enabled = False
+        Me.ProgressCheckedListBox.CheckOnClick = True
         Me.ProgressCheckedListBox.FormattingEnabled = True
         Me.ProgressCheckedListBox.Location = New System.Drawing.Point(12, 12)
         Me.ProgressCheckedListBox.Name = "ProgressCheckedListBox"
@@ -50,7 +50,7 @@ Partial Class ProgressDialogue
         Me.Controls.Add(Me.ProgressCheckedListBox)
         Me.Controls.Add(Me.ProgressBar)
         Me.Name = "ProgressDialogue"
-        Me.Text = "Progress"
+        Me.Text = "Workflow"
         Me.ResumeLayout(False)
 
     End Sub

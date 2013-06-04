@@ -274,6 +274,7 @@ Partial Class PatchFromTags
         '
         'TagsCheckedListBox
         '
+        Me.TagsCheckedListBox.CheckOnClick = True
         Me.TagsCheckedListBox.FormattingEnabled = True
         Me.TagsCheckedListBox.Location = New System.Drawing.Point(77, 76)
         Me.TagsCheckedListBox.Name = "TagsCheckedListBox"

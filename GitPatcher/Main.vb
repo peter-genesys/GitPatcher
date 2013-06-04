@@ -282,4 +282,169 @@
     Private Sub ShowindexToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowindexToolStripMenuItem.Click
         GitSharpFascade.getIndexedChanges(My.Settings.CurrentRepo)
     End Sub
+
+    ' Private Sub TestworkflowToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestworkflowToolStripMenuItem.Click
+    '  
+    '     Dim testWorkflow As ProgressDialogue = New ProgressDialogue("test variable workflow")
+    '     testWorkflow.MdiParent = GitPatcher
+    '     testWorkflow.addStep("Choose a tag to import from", 20)
+    '     testWorkflow.addStep("Checkout the tag", 40, False)
+    '     testWorkflow.addStep("If tag not like ", 50)
+    '     testWorkflow.addStep("Import Apex", 6, False)
+    '     testWorkflow.addStep("Return to branch:", 100)
+    '
+    '     Try
+    '         testWorkflow.Show()
+    '
+    '         MsgBox("wait")
+    '
+    '         Try
+    '             testWorkflow.setStep(0)
+    '             MsgBox("doing 0")
+    '
+    '         Catch exc As ProgressDialogue.SkipStepException
+    '             Logger.Note("SkipStepException: ", exc.Message)
+    '         End Try
+    '
+    '         Try
+    '             testWorkflow.goNextStep()
+    '             MsgBox("doing 1")
+    '
+    '         Catch exc As ProgressDialogue.SkipStepException
+    '             Logger.Note("SkipStepException: ", exc.Message)
+    '         End Try
+    '
+    '
+    '         Try
+    '             testWorkflow.goNextStep()
+    '             MsgBox("doing 2")
+    '
+    '         Catch exc As ProgressDialogue.SkipStepException
+    '             Logger.Note("SkipStepException: ", exc.Message)
+    '         End Try
+    '
+    '
+    '         Try
+    '             testWorkflow.goNextStep()
+    '             MsgBox("doing 3")
+    '
+    '         Catch exc As ProgressDialogue.SkipStepException
+    '             Logger.Note("SkipStepException: ", exc.Message)
+    '         End Try
+    '
+    '         Try
+    '             testWorkflow.goNextStep()
+    '             MsgBox("doing 4")
+    '
+    '         Catch exc As ProgressDialogue.SkipStepException
+    '             Logger.Note("SkipStepException: ", exc.Message)
+    '         End Try
+    '
+    '         testWorkflow.done()
+    '
+    '     Catch exc As ProgressDialogue.EndWorkflowException
+    '         Logger.Note("EndWorkflowException: ", exc.Message)
+    '     End Try
+    '
+    '
+    '
+    ' End Sub
+
+    '
+    'Private Sub TestworkflowToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestworkflowToolStripMenuItem.Click
+    '
+    '    Dim testWorkflow As ProgressDialogue = New ProgressDialogue("test variable workflow")
+    '    testWorkflow.MdiParent = GitPatcher
+    '    testWorkflow.addStep("Choose a tag to import from", 20)
+    '    testWorkflow.addStep("Checkout the tag", 40, False)
+    '    testWorkflow.addStep("If tag not like ", 60)
+    '    testWorkflow.addStep("Import Apex", 80, False)
+    '    testWorkflow.addStep("Return to branch:", 100)
+    '
+    '
+    '    testWorkflow.Show()
+    '
+    '    MsgBox("wait")
+    '
+    '    If testWorkflow.toDoStep(0) Then
+    '        MsgBox("doing 0")
+    '
+    '    End If
+    '    If testWorkflow.toDoStep(1) Then
+    '        MsgBox("doing 1")
+    '
+    '    End If
+    '
+    '    If testWorkflow.toDoStep(2) Then
+    '        MsgBox("doing 2")
+    '
+    '    End If
+    '    If testWorkflow.toDoStep(3) Then
+    '        MsgBox("doing 3")
+    '
+    '    End If
+    '
+    '    If testWorkflow.toDoStep(4) Then
+    '        MsgBox("doing 4")
+    '
+    '    End If
+    '
+    '    testWorkflow.toDoStep(5)
+    '    'testWorkflow.toDoNextStep()
+    '
+    '
+    '
+    '
+    '
+    '
+    'End Sub
+
+    Private Sub TestworkflowToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestworkflowToolStripMenuItem.Click
+
+        Dim testWorkflow As ProgressDialogue = New ProgressDialogue("test variable workflow")
+        testWorkflow.MdiParent = GitPatcher
+        testWorkflow.addStep("Choose a tag to import from", 20)
+        testWorkflow.addStep("Checkout the tag", 40, False)
+        testWorkflow.addStep("If tag not like ", 60)
+        testWorkflow.addStep("Import Apex", 80, False)
+        testWorkflow.addStep("Return to branch:", 100)
+
+
+        testWorkflow.Show()
+
+        MsgBox("wait")
+
+        If testWorkflow.toDoNextStep() Then
+            MsgBox("doing 0")
+
+        End If
+        If testWorkflow.toDoNextStep() Then
+            MsgBox("doing 1")
+
+        End If
+
+        If testWorkflow.toDoNextStep() Then
+            MsgBox("doing 2")
+
+        End If
+        If testWorkflow.toDoNextStep() Then
+            MsgBox("doing 3")
+
+        End If
+
+        If testWorkflow.toDoNextStep() Then
+            MsgBox("doing 4")
+
+        End If
+
+        testWorkflow.toDoNextStep()
+        'testWorkflow.toDoNextStep()
+
+
+
+
+
+
+    End Sub
+
 End Class

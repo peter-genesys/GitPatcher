@@ -60,6 +60,7 @@ Partial Class Main
         Me.Label11 = New System.Windows.Forms.Label()
         Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
+        Me.TestworkflowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -124,7 +125,7 @@ Partial Class Main
         '
         'GITToolStripMenuItem1
         '
-        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.NewHotfixToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem})
+        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.NewHotfixToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem, Me.TestworkflowToolStripMenuItem})
         Me.GITToolStripMenuItem1.Name = "GITToolStripMenuItem1"
         Me.GITToolStripMenuItem1.Size = New System.Drawing.Size(37, 20)
         Me.GITToolStripMenuItem1.Text = "GIT"
@@ -357,6 +358,12 @@ Partial Class Main
         Me.Label13.TabIndex = 25
         Me.Label13.Text = "Code"
         '
+        'TestworkflowToolStripMenuItem
+        '
+        Me.TestworkflowToolStripMenuItem.Name = "TestworkflowToolStripMenuItem"
+        Me.TestworkflowToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
+        Me.TestworkflowToolStripMenuItem.Text = "testworkflow"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -434,5 +441,6 @@ Partial Class Main
     Friend WithEvents CreateDBMinorReleaseToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents NewHotfixToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ShowindexToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents TestworkflowToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class
