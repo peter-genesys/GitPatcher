@@ -68,12 +68,14 @@ Public Class PatchRunner
 
     Private Sub FindPatches(ByVal iHideApplied As Boolean, ByVal iHideInstalled As Boolean)
 
-        'Dim oradb As String = "Data Source=" & Main.CurrentConnectionTextBox.Text & ";User Id=patch_admin;Password=patch_admin;"
+        'Simple but replies on TNSNAMES File
+        Dim oradb As String = "Data Source=" & Main.DBListComboBox().SelectedItem & ";User Id=patch_admin;Password=patch_admin;"
 
-        Dim oradb As String = "Data Source=(DESCRIPTION=" _
-           + "(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=" & Common.getHost & ")(PORT=" & Common.getPort & ")))" _
-           + "(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=" & Common.getSid & ")));" _
-           + "User Id=patch_admin;Password=patch_admin;"
+        'Harder to get working but no need for TNSNAMES File
+        'Dim oradb As String = "Data Source=(DESCRIPTION=" _
+        '   + "(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=" & Common.getHost & ")(PORT=" & Common.getPort & ")))" _
+        '   + "(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=" & Common.getSid & ")));" _
+        '   + "User Id=patch_admin;Password=patch_admin;"
 
         Dim conn As New OracleConnection(oradb)
         Dim sql As String = Nothing
@@ -162,14 +164,14 @@ Public Class PatchRunner
 
     End Sub
 
-    Private Sub AvailablePatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AvailablePatchesListBox.DoubleClick
+    Private Sub AvailablePatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AvailablePatchesListBox.Click
         If Not ChosenPatchesListBox.Items.Contains(AvailablePatchesListBox.SelectedItem) Then
             ChosenPatchesListBox.Items.Add(AvailablePatchesListBox.SelectedItem)
         End If
 
     End Sub
 
-    Private Sub ChosenPatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ChosenPatchesListBox.DoubleClick
+    Private Sub ChosenPatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ChosenPatchesListBox.Click
 
         If ChosenPatchesListBox.Items.Count > 0 Then
             ChosenPatchesListBox.Items.RemoveAt(ChosenPatchesListBox.SelectedIndex)
