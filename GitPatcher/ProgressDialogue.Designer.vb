@@ -24,11 +24,12 @@ Partial Class ProgressDialogue
     Private Sub InitializeComponent()
         Me.ProgressBar = New System.Windows.Forms.ProgressBar()
         Me.ProgressCheckedListBox = New System.Windows.Forms.CheckedListBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'ProgressBar
         '
-        Me.ProgressBar.Location = New System.Drawing.Point(12, 325)
+        Me.ProgressBar.Location = New System.Drawing.Point(12, 359)
         Me.ProgressBar.Name = "ProgressBar"
         Me.ProgressBar.Size = New System.Drawing.Size(375, 23)
         Me.ProgressBar.TabIndex = 0
@@ -37,23 +38,35 @@ Partial Class ProgressDialogue
         '
         Me.ProgressCheckedListBox.CheckOnClick = True
         Me.ProgressCheckedListBox.FormattingEnabled = True
-        Me.ProgressCheckedListBox.Location = New System.Drawing.Point(12, 12)
+        Me.ProgressCheckedListBox.Location = New System.Drawing.Point(12, 46)
         Me.ProgressCheckedListBox.Name = "ProgressCheckedListBox"
         Me.ProgressCheckedListBox.Size = New System.Drawing.Size(375, 304)
         Me.ProgressCheckedListBox.TabIndex = 1
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(12, 21)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(268, 13)
+        Me.Label1.TabIndex = 2
+        Me.Label1.Text = "Uncheck to skip item, Close dialogue to skip remainder."
         '
         'ProgressDialogue
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(399, 360)
+        Me.ClientSize = New System.Drawing.Size(399, 391)
+        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.ProgressCheckedListBox)
         Me.Controls.Add(Me.ProgressBar)
         Me.Name = "ProgressDialogue"
         Me.Text = "Workflow"
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents ProgressBar As System.Windows.Forms.ProgressBar
     Friend WithEvents ProgressCheckedListBox As System.Windows.Forms.CheckedListBox
+    Friend WithEvents Label1 As System.Windows.Forms.Label
 End Class

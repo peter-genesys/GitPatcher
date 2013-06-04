@@ -36,7 +36,7 @@
 
     End Sub
 
-    Public Sub updateStep(ByVal stepNo As Integer, ByVal status As String)
+    Private Sub updateStepStatus(ByVal stepNo As Integer, ByVal status As String)
         Dim lstatus As String = status
         If stepNo > -1 And stepNo <= storedProcessSteps.GetUpperBound(0) Then
 
@@ -48,20 +48,25 @@
             End If
 
             If storedProcessSteps(stepNo).status <> "Skipped" Then
-                Me.ProgressCheckedListBox.Items(stepNo) = storedProcessSteps(stepNo).description & " - " & lstatus
                 storedProcessSteps(stepNo).setStatus(lstatus)
+                Me.ProgressCheckedListBox.Items(stepNo) = storedProcessSteps(stepNo).description & " - " & storedProcessSteps(stepNo).status
+
             End If
         End If
- 
+
     End Sub
 
-    Public Sub updateStep(ByVal stepNo As Integer, ByVal description As String, ByVal percentComplete As Integer, ByVal status As String)
-        Dim aStep As ProcessStep = New ProcessStep(description, percentComplete)
+    Public Sub updateStepDescription(ByVal stepNo As Integer, ByVal description As String)
 
-        storedProcessSteps(stepNo) = aStep
+        storedProcessSteps(stepNo).setDescription(description)
+        Me.ProgressCheckedListBox.Items(stepNo) = storedProcessSteps(stepNo).description & " - " & storedProcessSteps(stepNo).status
 
-        updateStep(stepNo, status)
- 
+    End Sub
+
+    Public Sub updateStepPercentComplete(ByVal stepNo As Integer, percentComplete As Integer)
+
+        storedProcessSteps(stepNo).setPercentComplete(percentComplete)
+
     End Sub
 
 
@@ -122,7 +127,7 @@
     Public Function toDoStep(gotoStep As Integer) As Boolean
         'Conclude preceding step
         For i As Integer = activeStep To gotoStep - 1
-            updateStep(i, "Done")
+            updateStepStatus(i, "Done")
         Next
         'updateStep(activeStep, "Done")
         activeStep = gotoStep
@@ -131,10 +136,10 @@
             'activeStep = gotoStep
             If ProgressCheckedListBox.CheckedIndices.Contains(gotoStep) Then
                 ProgressCheckedListBox.SetSelected(activeStep, True)
-                updateStep(activeStep, "Doing")
+                updateStepStatus(activeStep, "Doing")
                 Return True
             Else
-                updateStep(activeStep, "Skipped")
+                updateStepStatus(activeStep, "Skipped")
                 Return False
             End If
         Else

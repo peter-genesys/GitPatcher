@@ -1,6 +1,6 @@
 ﻿Public Class Apex
  
-    Public Shared Sub relabelApex(ByVal i_label As String)
+    Public Shared Sub relabelApex(ByVal i_label As String, ByVal i_buildStatus As String)
 
 
         'Relabel Apex 
@@ -19,26 +19,18 @@
         Dim l_old_file As New System.IO.StreamReader(l_create_application_old)
         Dim l_new_file As New System.IO.StreamWriter(l_create_application_new)
         Dim l_line As String = Nothing
-        Dim l_build_status As String = Nothing
  
-        If Main.CurrentConnectionTextBox.Text.Contains("isdevl") Then
-            l_build_status = "RUN_ONLY"
-        Else
-            l_build_status = "RUN_AND_BUILD"
-        End If
- 
-
         Do
             'For each line
             If l_old_file.EndOfStream Then Exit Do
 
             l_line = l_old_file.ReadLine()
-            If l_line.Contains("p_flow_version") Then
+            If l_line.Contains("p_flow_version") And Not String.IsNullOrEmpty(i_label) Then
                 l_line = "  p_flow_version=> '" & i_label & "',"
             End If
 
-            If l_line.Contains("p_build_status") Then
-                l_line = "  p_build_status=> '" & l_build_status & "',"
+            If l_line.Contains("p_build_status") And Not String.IsNullOrEmpty(i_buildStatus) Then
+                l_line = "  p_build_status=> '" & i_buildStatus & "',"
             End If
 
             l_new_file.WriteLine(l_line)
@@ -134,13 +126,15 @@
     Public Shared Sub ApexImportFromTag(fapp_id)
 
         Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
+        Dim runOnlyDBs As String = "isdevl,istest,isuat,isprod"
 
         Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Apex Import " & fapp_id)
         ImportProgress.MdiParent = GitPatcher
         ImportProgress.addStep("Choose a tag to import from", 20)
         ImportProgress.addStep("Checkout the tag", 40)
         ImportProgress.addStep("If tag not like " & Main.AppCodeTextBox.Text & " relabel apex", 50)
-        ImportProgress.addStep("Import Apex", 60)
+        ImportProgress.addStep("If db in " & runOnlyDBs & " set apex to RUN_ONLY", 60)
+        ImportProgress.addStep("Import Apex", 70)
         ImportProgress.addStep("Return to branch: " & currentBranch, 100)
         ImportProgress.Show()
 
@@ -169,23 +163,40 @@
                         'alternative method
                         'l_label = Host.getOutput("""" & My.Settings.GITpath & """ describe --tags", My.Settings.CurrentRepo) 
 
-                        l_label = GitBash.describeTags(My.Settings.CurrentRepo)
+                        l_label = "GIT Tag: " & GitBash.describeTags(My.Settings.CurrentRepo)
+                        ImportProgress.updateStepDescription(2, "Relabel apex with " & l_label)
 
-                        relabelApex("GIT Tag: " & l_label)
+                        relabelApex(l_label, "")
                     End If
                 End If
             End If
         End If
 
-
         If ImportProgress.toDoStep(3) Then
+ 
+            Dim l_build_status As String = Nothing
+
+            If runOnlyDBs.Contains(Main.DBListComboBox().SelectedItem.ToString.ToLower) Then
+                l_build_status = "RUN_ONLY"
+            Else
+                l_build_status = "RUN_AND_BUILD"
+            End If
+             
+            ImportProgress.updateStepDescription(3, "Set apex to " & l_build_status)
+
+            relabelApex("", l_build_status)
+
+        End If
+ 
+
+        If ImportProgress.toDoStep(4) Then
 
             Host.executeSQLscriptInteractive("install.sql" _
                                            , Main.RootApexDirTextBox.Text & My.Settings.CurrentApex _
                                            , Main.get_connect_string(Main.ParsingSchemaTextBox.Text, My.Settings.CurrentDB))
 
         End If
-        If ImportProgress.toDoStep(4) Then
+        If ImportProgress.toDoStep(5) Then
             GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
         End If
 
