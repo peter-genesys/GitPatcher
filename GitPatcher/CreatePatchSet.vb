@@ -791,6 +791,10 @@ Public Class CreatePatchCollection
 
         createPatchSetProgress.Show()
 
+        Do Until createPatchSetProgress.isStarted
+            Common.wait(1000)
+        Loop
+
         If createPatchSetProgress.toDoNextStep() Then
             'Switch to develop branch
             GitBash.Switch(My.Settings.CurrentRepo, "develop")

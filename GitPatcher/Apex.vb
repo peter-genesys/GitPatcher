@@ -16,7 +16,8 @@
         FileIO.deleteFileIfExists(l_create_application_old)
         If Not FileIO.fileExists(l_create_application_orig) Then
             'Backup the create_application.sql file
-            My.Computer.FileSystem.CopyFile(l_create_application_new, "create_application.sql.orig")
+            My.Computer.FileSystem.CopyFile(l_create_application_new, l_create_application_orig)
+
         End If
         My.Computer.FileSystem.RenameFile(l_create_application_new, "create_application.sql.old")
 
@@ -66,20 +67,20 @@
 
     Public Shared Sub ApexExportCommit()
 
-
-        If MsgBox("Exporting APEX application " & My.Settings.CurrentApex & " from parsing schema " & Main.ParsingSchemaTextBox.Text & " in DB " & My.Settings.CurrentDB & _
-                  Chr(10) & "This writes individual apex files to the GIT Repo checkout, and then prompt to add and commit the changes." & Chr(10) & _
-                  Chr(10) & "Consider which branch you are exporting to." & _
-                  Chr(10) & "To commit any existing changes, CANCEL this operation and perform a GIT COMMIT.", MsgBoxStyle.OkCancel, "Export APEX application " & My.Settings.CurrentApex) = MsgBoxResult.Ok Then
-
-
+ 
             Dim connection As String = Main.CurrentConnectionTextBox.Text
             Dim username As String = Main.ParsingSchemaTextBox.Text
-            Dim password = Main.get_password(Main.ParsingSchemaTextBox.Text, My.Settings.CurrentDB)
+
             Dim fapp_id As String = My.Settings.CurrentApex
             Dim apex_dir As String = Main.RootApexDirTextBox.Text
 
-            Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Apex Export  " & fapp_id)
+        Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Export APEX application " & fapp_id & " from DB " & My.Settings.CurrentDB, _
+            "Exporting APEX application " & My.Settings.CurrentApex & " from parsing schema " & Main.ParsingSchemaTextBox.Text & " in DB " & My.Settings.CurrentDB & Environment.NewLine & _
+            "This writes individual apex files to the GIT Repo checkout, and then prompt to add and commit the changes." & Environment.NewLine & _
+            Environment.NewLine & _
+            "Consider which branch you are exporting to." & Environment.NewLine & _
+            "To commit any existing changes, close this workflow and perform a GIT COMMIT.")
+ 
             ExportProgress.MdiParent = GitPatcher
             ExportProgress.addStep("Export Apex as a single file", 20)
             ExportProgress.addStep("Splitting into components", 40)
@@ -87,6 +88,10 @@
             ExportProgress.addStep("Commit valid changes to GIT repository", 80)
             ExportProgress.addStep("Revert invalid changes from your checkout", 100)
             ExportProgress.Show()
+
+            Do Until ExportProgress.isStarted
+                Common.wait(1000)
+            Loop
 
             ''write-host "APEX file export and commit - uses oracle.apex.APEXExport.class and java oracle.apex.APEXExportSplitter.class"
             ''Does this need to perform a pull from the master ??
@@ -105,22 +110,24 @@
             Dim message As String = Nothing
 
             'PROGRESS 0
-            If ExportProgress.toDoNextStep() Then
-                'Export Apex as a single file
-                'NB Not exporting application comments
-                'Host.runInteractive("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
-                '                  , message, apex_dir)
-                Host.check_StdErr("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
-                          , message, apex_dir)
-                Logger.Dbg(message, "Apex Export Error")
+        If ExportProgress.toDoNextStep() Then
 
-                'write-host "Remove the application directory apex_dir\fapp_id" 
+            Dim password = Main.get_password(Main.ParsingSchemaTextBox.Text, My.Settings.CurrentDB)
+            'Export Apex as a single file
+            'NB Not exporting application comments
+            'Host.runInteractive("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
+            '                  , message, apex_dir)
+            Host.check_StdErr("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
+                      , message, apex_dir)
+            Logger.Dbg(message, "Apex Export Error")
+
+            'write-host "Remove the application directory apex_dir\fapp_id" 
 
 
-                'Remove-Item -Recurse -Force -ErrorAction 0 @("apex_dir\fapp_id")
-                FileIO.deleteFolderIfExists(apex_dir & fapp_id)
+            'Remove-Item -Recurse -Force -ErrorAction 0 @("apex_dir\fapp_id")
+            FileIO.deleteFolderIfExists(apex_dir & fapp_id)
 
-            End If
+        End If
 
 
             If ExportProgress.toDoNextStep() Then
@@ -152,25 +159,26 @@
             End If
 
             ExportProgress.toDoNextStep()
-        End If
-
-
+      
 
     End Sub
 
     Public Shared Sub ApexImportFromTag()
 
-        If MsgBox("Importing APEX application " & My.Settings.CurrentApex & " into parsing schema " & Main.ParsingSchemaTextBox.Text & " in DB " & My.Settings.CurrentDB & _
-          Chr(10) & "This will overwrite the existing APEX application." & Chr(10) & _
-          Chr(10) & "Consider creating a VM snapshot as a restore point." & _
-          Chr(10) & "To save any existing changes, CANCEL this operation and perform an EXPORT.", MsgBoxStyle.OkCancel, "Import APEX application " & My.Settings.CurrentApex) = MsgBoxResult.Ok Then
-
+   
             Dim fapp_id As String = My.Settings.CurrentApex
 
             Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
             Dim runOnlyDBs As String = "isdevl,istest,isuat,isprod"
 
-            Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Apex Import " & fapp_id)
+            Dim ImportProgress As ProgressDialogue = New ProgressDialogue ("Import APEX application " & fapp_id & " into DB " & My.Settings.CurrentDB, _
+            "Importing APEX application " & My.Settings.CurrentApex & " into parsing schema " & Main.ParsingSchemaTextBox.Text & " in DB " & My.Settings.CurrentDB & Environment.NewLine & _
+            "This will overwrite the existing APEX application." & Environment.NewLine & _
+            Environment.NewLine & _
+            "Consider creating a VM snapshot as a restore point." & Environment.NewLine & _
+            "To save any existing changes, close this workflow and perform an APEX EXPORT.")
+ 
+
             ImportProgress.MdiParent = GitPatcher
             ImportProgress.addStep("Choose a tag to import from", 20)
             ImportProgress.addStep("Checkout the tag", 40)
@@ -181,8 +189,12 @@
             ImportProgress.addStep("Return to branch: " & currentBranch, 100)
             ImportProgress.Show()
 
-            If ImportProgress.toDoStep(0) Then
+            Do Until ImportProgress.isStarted
+                Common.wait(1000)
+            Loop
 
+            If ImportProgress.toDoStep(0) Then
+            'Choose a tag to import from
                 Dim tagnames As Collection = New Collection
                 tagnames.Add("HEAD")
                 tagnames = GitSharpFascade.getTagList(My.Settings.CurrentRepo, tagnames, Main.CurrentBranchTextBox.Text)
@@ -193,11 +205,10 @@
                 tagApexVersion = ChoiceDialog.Ask("Please choose a tag for apex install", tagnames, "HEAD", "Choose tag")
 
                 If ImportProgress.toDoStep(1) Then
-
+                'Checkout the tag
                     GitBash.Switch(My.Settings.CurrentRepo, tagApexVersion)
                     If ImportProgress.toDoStep(2) Then
-
-                        'If tag not like Main.AppCodeTextBox.Text relabel apex
+                    'If tag not like Main.AppCodeTextBox.Text relabel apex
 
                         If Not tagApexVersion.Contains(Main.AppCodeTextBox.Text) Then
 
@@ -216,7 +227,7 @@
             End If
 
             If ImportProgress.toDoStep(3) Then
-
+            'set apex to RUN MODE
                 Dim l_build_status As String = Nothing
 
                 If runOnlyDBs.Contains(Main.DBListComboBox().SelectedItem.ToString.ToLower) Then
@@ -233,7 +244,7 @@
 
 
             If ImportProgress.toDoStep(4) Then
-
+            'Import Apex
                 Host.executeSQLscriptInteractive("install.sql" _
                                                , Main.RootApexDirTextBox.Text & My.Settings.CurrentApex _
                                                , Main.get_connect_string(Main.ParsingSchemaTextBox.Text, My.Settings.CurrentDB))
@@ -246,13 +257,14 @@
             End If
 
 
-            If ImportProgress.toDoStep(6) Then
-                GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
-            End If
+        If ImportProgress.toDoStep(6) Then
+            'Return to branch
+            GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
+        End If
 
             ImportProgress.toDoNextStep()
 
-        End If
+
     End Sub
 
 

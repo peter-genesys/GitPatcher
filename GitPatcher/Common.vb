@@ -1,4 +1,16 @@
 ﻿Public Class Common
+
+    Public Shared Sub wait(ByVal interval As Integer)
+        Dim sw As New Stopwatch
+        sw.Start()
+        Do While sw.ElapsedMilliseconds < interval
+            ' Allows UI to remain responsive
+            Application.DoEvents()
+        Loop
+        sw.Stop()
+    End Sub
+
+
     Public Shared Function sortable_tag_string(ByVal i_tag_string As String) As String
         'converts a tag string "5.5.03" to a sortable string "0005.0005.0003"    
 
@@ -132,7 +144,7 @@
     End Function
 
     Public Shared Function getHost() As String
- 
+
         Return getNthSegment(Main.CurrentConnectionTextBox.Text, ":", 1)
 
     End Function

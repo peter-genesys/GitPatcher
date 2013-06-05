@@ -770,20 +770,20 @@ Public Class PatchFromTags
 
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create Patch")
         createPatchProgress.MdiParent = GitPatcher
-        createPatchProgress.addStep("Export Apex to branch: " & currentBranch, 2)
+        createPatchProgress.addStep("Export Apex to branch: " & currentBranch, 2, True, "Using the Apex Export workflow")
         createPatchProgress.addStep("Switch to develop branch", 5)
         createPatchProgress.addStep("Pull from Origin", 10)
         createPatchProgress.addStep("Return to branch: " & currentBranch, 15)
         createPatchProgress.addStep("Rebase Branch: " & currentBranch, 20)
         createPatchProgress.addStep("Use PatchRunner to run Unapplied/Uninstalled Patches", 25)
         createPatchProgress.addStep("Review tags on the branch", 30)
-        createPatchProgress.addStep("Import Apex from HEAD of branch: " & currentBranch, 35)
+        createPatchProgress.addStep("Import Apex from HEAD of branch: " & currentBranch, 35, True, "Using the Apex Import workflow")
         createPatchProgress.addStep("Create edit, test", 40)
         createPatchProgress.addStep("Commit to Branch: " & currentBranch, 50)
         createPatchProgress.addStep("Switch to develop branch", 60)
-        createPatchProgress.addStep("Pull from Origin", 70)
+        'createPatchProgress.addStep("Pull from Origin", 70)
         createPatchProgress.addStep("Merge from Branch: " & currentBranch, 80)
-        createPatchProgress.addStep("Push to Origin", 90)
+        createPatchProgress.addStep("Push to Origin", 90, True, "If at this stage there is an error because your develop branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
         createPatchProgress.addStep("Return to Branch: " & currentBranch, 100)
 
         'createPatchProgress.addStep("Change current database to ISDEVL", 25)
@@ -794,12 +794,16 @@ Public Class PatchFromTags
 
 
 
+        Do Until createPatchProgress.isStarted
+            Common.wait(1000)
+        Loop
+ 
         If createPatchProgress.toDoNextStep() Then
             'Export Apex to branch
             Apex.ApexExportCommit()
 
         End If
-  
+
         If createPatchProgress.toDoNextStep() Then
             'Switch to develop branch
             GitBash.Switch(My.Settings.CurrentRepo, "develop")
@@ -812,7 +816,7 @@ Public Class PatchFromTags
             'Return to branch
             GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
         End If
- 
+
         If createPatchProgress.toDoNextStep() Then
             'Rebase branch
             Tortoise.Rebase(My.Settings.CurrentRepo)
@@ -820,15 +824,15 @@ Public Class PatchFromTags
         If createPatchProgress.toDoNextStep() Then
             'Use PatchRunner to run Unapplied/Uninstalled Patches
             Dim newchildform As New PatchRunner
-            newchildform.MdiParent = GitPatcher
+            'newchildform.MdiParent = GitPatcher
             newchildform.ShowDialog() 'NEED TO WAIT HERE!!
- 
+
         End If
         If createPatchProgress.toDoNextStep() Then
             'Review tags on the branch
             Tortoise.Log(My.Settings.CurrentRepo)
         End If
- 
+
         If createPatchProgress.toDoNextStep() Then
             'Import Apex from HEAD of branch
             Apex.ApexImportFromTag()
@@ -853,7 +857,7 @@ Public Class PatchFromTags
 
 
         If createPatchProgress.toDoNextStep() Then
- 
+
             'Committing changed files to GIT"
             Tortoise.Commit(My.Settings.CurrentRepo, "Commit any patches you've not yet committed", True)
         End If
@@ -867,10 +871,10 @@ Public Class PatchFromTags
             GitBash.Switch(My.Settings.CurrentRepo, "develop")
         End If
 
-        If createPatchProgress.toDoNextStep() Then
-            'Pull from origin/develop
-            GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
-        End If
+        'If createPatchProgress.toDoNextStep() Then
+        '    'Pull from origin/develop
+        '    GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+        'End If
 
         If createPatchProgress.toDoNextStep() Then
             'Merge from Feature branch
@@ -890,7 +894,7 @@ Public Class PatchFromTags
         'Finish
         createPatchProgress.toDoNextStep()
 
- 
+
     End Sub
 
 

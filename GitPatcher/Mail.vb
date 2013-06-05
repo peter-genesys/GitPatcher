@@ -1,10 +1,11 @@
 ﻿Imports System
 Imports System.Net.Mail
 
+Imports Outlook = Microsoft.Office.Interop.Outlook
 
 Public Class Mail
 
-    'Shared Sub SendEmail(ByVal i_EmailFrom, ByVal i_EmailTo, ByVal i_MailSubject, ByVal i_MessageBody)
+    'Shared Sub SendEmailSMTP(ByVal i_EmailFrom, ByVal i_EmailTo, ByVal i_MailSubject, ByVal i_MessageBody)
     '
     '    'This is the code that sends out the email based on whatever server information you've set
     '    'Enclosed within Try-Catch block to catch exceptions in case of errors
@@ -43,7 +44,7 @@ Public Class Mail
     'End Class
 
 
-    Shared Sub SendEmail(ByVal i_EmailFrom, ByVal i_EmailTo, ByVal i_MailSubject, ByVal i_MessageBody)
+    Shared Sub SendEmailSMTP(ByVal i_EmailFrom, ByVal i_EmailTo, ByVal i_MailSubject, ByVal i_MessageBody)
 
         'This is the code that sends out the email based on whatever server information you've set
         'Enclosed within Try-Catch block to catch exceptions in case of errors
@@ -71,10 +72,66 @@ Public Class Mail
         'Catch ex As Exception
         '    MsgBox(ex.ToString)
         'End Try
- 
+
 
     End Sub
 
+
+
+
+    ' Private Sub CreateSendItem(OutlookApp As Outlook._Application)
+    '     Dim mail As Outlook.MailItem = Nothing
+    '     Dim mailRecipients As Outlook.Recipients = Nothing
+    '     Dim mailRecipient As Outlook.Recipient = Nothing
+    '     Try
+    '         mail = OutlookApp.CreateItem(Outlook.OlItemType.olMailItem)
+    '         mail.Subject = "A programatically generated e-mail"
+    '         mailRecipients = mail.Recipients
+    '         mailRecipient = mailRecipients.Add("Eugene Astafiev")
+    '         mailRecipient.Resolve()
+    '         If (mailRecipient.Resolved) Then
+    '             mail.Send()
+    '         Else
+    '             System.Windows.Forms.MessageBox.Show(
+    '                 "There is no such record in your address book.")
+    '         End If
+    '     Catch ex As Exception
+    '         System.Windows.Forms.MessageBox.Show(ex.Message,
+    '             "An exception is occured in the code of add-in.")
+    '     Finally
+    '         If Not IsNothing(mailRecipient) Then Marshal.ReleaseComObject(mailRecipient)
+    '         If Not IsNothing(mailRecipients) Then Marshal.ReleaseComObject(mailRecipients)
+    '         If Not IsNothing(mail) Then Marshal.ReleaseComObject(mail)
+    '     End Try
+    ' End Sub
+
+
+    Shared Sub SendEmailOutlook(ByVal i_EmailFrom, ByVal i_EmailTo, ByVal i_MailSubject, ByVal i_MessageBody)
+
+
+        Try
+
+            Dim oOutL As New Outlook.Application
+            Dim oMail As Outlook.MailItem
+
+            oMail = oOutL.CreateItem(Outlook.OlItemType.olMailItem)
+            oMail.UnRead = True
+            oMail.To = i_EmailTo
+            oMail.Subject = i_MailSubject
+            oMail.HTMLBody = True
+            oMail.Body = i_MessageBody
+            'oMail.Attachments.Add("attachement.html")
+            oMail.Send()
+
+
+        Catch ex As Exception
+
+            Throw ex
+
+        End Try
+
+
+    End Sub
 
 
     Shared Sub SendNotification(ByVal i_MailSubject, ByVal i_MessageBody)
@@ -111,7 +168,7 @@ Public Class Mail
 
         Logger.Dbg(i_MessageBody)
 
-        SendEmail(Sender, Recipients, i_MailSubject, i_MessageBody)
+        SendEmailOutlook(Sender, Recipients, i_MailSubject, i_MessageBody)
 
     End Sub
 

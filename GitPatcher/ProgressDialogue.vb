@@ -3,7 +3,7 @@
     Private storedProcessSteps As ProcessStep()
     Private nextStep As Integer = 0
     Private activeStep As Integer = -1
-
+    Private started As Boolean = False
 
     ' Public Class SkipStepException : Inherits ApplicationException
     '     Public Sub New(ByVal message As String)
@@ -17,20 +17,31 @@
     '     End Sub
     ' End Class
 
-    Public Sub New(ByVal progressTitle As String)
+    Public Sub New(ByVal progressTitle As String, Optional ByVal processMessage As String = "")
         Me.Location = New Point(0, 0)
         InitializeComponent()
         Me.Text = progressTitle
+        Me.NotesTextBox.Text = processMessage & Environment.NewLine & Environment.NewLine & _
+                               "Please review steps in this workflow, deselecting any NOT required." & Environment.NewLine & _
+                               Environment.NewLine & _
+                               "Press Start to begin."
+        CheckAllCheckBox.Checked = True
 
     End Sub
 
-    Public Sub addStep(ByVal description As String, ByVal percentComplete As Integer, Optional ByVal checked As Boolean = True)
-        Dim aStep As ProcessStep = New ProcessStep(description, percentComplete)
+    Public Function isStarted() As Boolean
+        Return started
+    End Function
+
+
+    Public Sub addStep(ByVal description As String, ByVal percentComplete As Integer, Optional ByVal checked As Boolean = True, Optional ByVal notes As String = "")
+        Dim aStep As ProcessStep = New ProcessStep(description, percentComplete, notes)
 
         ReDim Preserve storedProcessSteps(nextStep)
         storedProcessSteps(nextStep) = aStep
         Me.ProgressCheckedListBox.Items.Add(aStep.description)
         ProgressCheckedListBox.SetItemChecked(nextStep, checked)
+        'ProgressCheckedListBox.SetSelected(0, True) 'Select first item - nah this hides the initial Notes.
 
         nextStep = nextStep + 1
 
@@ -70,22 +81,12 @@
     End Sub
 
 
-
-
-    Private Shared Sub wait(ByVal interval As Integer)
-        Dim sw As New Stopwatch
-        sw.Start()
-        Do While sw.ElapsedMilliseconds < interval
-            ' Allows UI to remain responsive
-            Application.DoEvents()
-        Loop
-        sw.Stop()
-    End Sub
+ 
 
 
     ' Loops for a specificied period of time (milliseconds)
     Private Shared Sub pauseToRefreshProgressBar()
-        wait(1000)
+        Common.wait(1000)
     End Sub
 
 
@@ -166,7 +167,7 @@
     '
     '  End Sub
 
- 
+
     Private Sub ProgressDialogue_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         If activeStep <= ProgressCheckedListBox.Items.Count - 1 Then
             If MessageBox.Show("Skip remaining items?", "Close", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
@@ -179,5 +180,29 @@
             End If
         End If
     End Sub
-  
+
+    Private Sub StartButton_Click(sender As Object, e As EventArgs) Handles StartButton.Click
+        If started Then
+            Me.Close()
+        Else
+            started = True
+            StartButton.Text = "Cancel"
+        End If
+
+    End Sub
+
+    Private Sub CheckAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles CheckAllCheckBox.CheckedChanged
+        'Loop thru items.
+        For i As Integer = 0 To ProgressCheckedListBox.Items.Count - 1
+            ProgressCheckedListBox.SetItemChecked(i, CheckAllCheckBox.Checked)
+
+        Next
+    End Sub
+
+    Private Sub ProgressCheckedListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ProgressCheckedListBox.SelectedIndexChanged
+        If ProgressCheckedListBox.SelectedIndex > -1 Then
+            NotesTextBox.Text = storedProcessSteps(ProgressCheckedListBox.SelectedIndex).notes
+        End If
+
+    End Sub
 End Class

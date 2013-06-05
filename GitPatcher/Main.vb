@@ -161,6 +161,10 @@
 
         mergeAndPush.Show()
 
+        Do Until mergeAndPush.isStarted
+            Common.wait(1000)
+        Loop
+
         If mergeAndPush.toDoNextStep() Then
             'Switch to develop branch
             GitBash.Switch(My.Settings.CurrentRepo, "develop")
@@ -212,6 +216,10 @@
                 newFeature.addStep("Create intial Tag: " & branchName & ".00", 100)
 
                 newFeature.Show()
+
+                Do Until newFeature.isStarted
+                    Common.wait(1000)
+                Loop
 
                 If newFeature.toDoNextStep() Then
                     'Switch to develop branch
@@ -293,7 +301,9 @@
 
         testWorkflow.Show()
 
-        MsgBox("wait")
+        Do Until testWorkflow.isStarted
+            Common.wait(1000)
+        Loop
 
         If testWorkflow.toDoNextStep() Then
             MsgBox("doing 0")
