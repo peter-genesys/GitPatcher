@@ -770,12 +770,14 @@ Public Class PatchFromTags
 
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create Patch")
         createPatchProgress.MdiParent = GitPatcher
+        createPatchProgress.addStep("Export Apex to branch: " & currentBranch, 2)
         createPatchProgress.addStep("Switch to develop branch", 5)
         createPatchProgress.addStep("Pull from Origin", 10)
         createPatchProgress.addStep("Return to branch: " & currentBranch, 15)
         createPatchProgress.addStep("Rebase Branch: " & currentBranch, 20)
         createPatchProgress.addStep("Use PatchRunner to run Unapplied/Uninstalled Patches", 25)
         createPatchProgress.addStep("Review tags on the branch", 30)
+        createPatchProgress.addStep("Import Apex from HEAD of branch: " & currentBranch, 35)
         createPatchProgress.addStep("Create edit, test", 40)
         createPatchProgress.addStep("Commit to Branch: " & currentBranch, 50)
         createPatchProgress.addStep("Switch to develop branch", 60)
@@ -784,8 +786,20 @@ Public Class PatchFromTags
         createPatchProgress.addStep("Push to Origin", 90)
         createPatchProgress.addStep("Return to Branch: " & currentBranch, 100)
 
+        'createPatchProgress.addStep("Change current database to ISDEVL", 25)
+        'createPatchProgress.addStep("Use PatchRunner to run these Patches on ISDEVL", 25)
+        'createPatchProgress.addStep("Import Apex from HEAD of branch into ISDEVL", 25)
+
         createPatchProgress.Show()
 
+
+
+        If createPatchProgress.toDoNextStep() Then
+            'Export Apex to branch
+            Apex.ApexExportCommit()
+
+        End If
+  
         If createPatchProgress.toDoNextStep() Then
             'Switch to develop branch
             GitBash.Switch(My.Settings.CurrentRepo, "develop")
@@ -811,9 +825,16 @@ Public Class PatchFromTags
  
         End If
         If createPatchProgress.toDoNextStep() Then
+            'Review tags on the branch
             Tortoise.Log(My.Settings.CurrentRepo)
         End If
  
+        If createPatchProgress.toDoNextStep() Then
+            'Import Apex from HEAD of branch
+            Apex.ApexImportFromTag()
+
+        End If
+
         If createPatchProgress.toDoNextStep() Then
 
             Dim Wizard As New PatchFromTags
@@ -832,8 +853,7 @@ Public Class PatchFromTags
 
 
         If createPatchProgress.toDoNextStep() Then
-
-
+ 
             'Committing changed files to GIT"
             Tortoise.Commit(My.Settings.CurrentRepo, "Commit any patches you've not yet committed", True)
         End If

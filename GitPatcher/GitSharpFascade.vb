@@ -105,6 +105,22 @@ Public Class GitSharpFascade
 
     End Sub
 
+    Shared Sub revertItems(ByVal repoPath As String, ByVal itemPaths() As String)
+
+        Dim repo As GitSharp.Repository = New GitSharp.Repository(repoPath)
+
+        repo.Index.Unstage(itemPaths)
+
+    End Sub
+
+    Shared Sub revertItem(ByVal repoPath As String, ByVal itemPath As String)
+
+        Dim itemPaths() As String = {itemPath}
+
+        revertItems(repoPath, itemPaths)
+ 
+    End Sub
+
     Shared Function getSchemaList(ByVal path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String) As Collection
 
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)

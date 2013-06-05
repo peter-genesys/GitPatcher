@@ -751,7 +751,7 @@ Public Class CreatePatchCollection
 
  
     Public Shared Sub bumpApexVersion(ByVal i_app_version As String)
-        Apex.relabelApex(i_app_version & " " & Today.ToString("dd-MMM-yyyy"), "")
+        Apex.modCreateApplication(i_app_version & " " & Today.ToString("dd-MMM-yyyy"), "")
     End Sub
 
  

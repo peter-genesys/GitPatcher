@@ -133,33 +133,17 @@
 
     Private Sub ImportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportToolStripMenuItem.Click
 
-
-        If MsgBox("Importing APEX application " & My.Settings.CurrentApex & " into parsing schema " & ParsingSchemaTextBox.Text & " in DB " & My.Settings.CurrentDB & _
-                  Chr(10) & "This will overwrite the existing APEX application." & Chr(10) & _
-                  Chr(10) & "Consider creating a VM snapshot as a restore point." & _
-                  Chr(10) & "To save any existing changes, CANCEL this operation and perform an EXPORT.", MsgBoxStyle.OkCancel, "Import APEX application " & My.Settings.CurrentApex) = MsgBoxResult.Ok Then
  
-            Apex.ApexImportFromTag(My.Settings.CurrentApex)
+        Apex.ApexImportFromTag()
 
-        End If
-
+      
     End Sub
 
     Private Sub ExportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportToolStripMenuItem.Click
 
-        If MsgBox("Exporting APEX application " & My.Settings.CurrentApex & " from parsing schema " & ParsingSchemaTextBox.Text & " in DB " & My.Settings.CurrentDB & _
-                  Chr(10) & "This writes individual apex files to the GIT Repo checkout, and then prompt to add and commit the changes." & Chr(10) & _
-                  Chr(10) & "Consider which branch you are exporting to." & _
-                  Chr(10) & "To commit any existing changes, CANCEL this operation and perform a GIT COMMIT.", MsgBoxStyle.OkCancel, "Export APEX application " & My.Settings.CurrentApex) = MsgBoxResult.Ok Then
-
-
-
-            Dim password = Main.get_password(ParsingSchemaTextBox.Text, My.Settings.CurrentDB)
-
-            Apex.ApexExportCommit(CurrentConnectionTextBox.Text, ParsingSchemaTextBox.Text, password, My.Settings.CurrentApex, RootApexDirTextBox.Text)
- 
-
-        End If
+   
+            Apex.ApexExportCommit()
+  
     End Sub
 
 
@@ -295,123 +279,7 @@
     Private Sub ShowindexToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowindexToolStripMenuItem.Click
         GitSharpFascade.getIndexedChanges(My.Settings.CurrentRepo)
     End Sub
-
-    ' Private Sub TestworkflowToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestworkflowToolStripMenuItem.Click
-    '  
-    '     Dim testWorkflow As ProgressDialogue = New ProgressDialogue("test variable workflow")
-    '     testWorkflow.MdiParent = GitPatcher
-    '     testWorkflow.addStep("Choose a tag to import from", 20)
-    '     testWorkflow.addStep("Checkout the tag", 40, False)
-    '     testWorkflow.addStep("If tag not like ", 50)
-    '     testWorkflow.addStep("Import Apex", 6, False)
-    '     testWorkflow.addStep("Return to branch:", 100)
-    '
-    '     Try
-    '         testWorkflow.Show()
-    '
-    '         MsgBox("wait")
-    '
-    '         Try
-    '             testWorkflow.setStep(0)
-    '             MsgBox("doing 0")
-    '
-    '         Catch exc As ProgressDialogue.SkipStepException
-    '             Logger.Note("SkipStepException: ", exc.Message)
-    '         End Try
-    '
-    '         Try
-    '             testWorkflow.goNextStep()
-    '             MsgBox("doing 1")
-    '
-    '         Catch exc As ProgressDialogue.SkipStepException
-    '             Logger.Note("SkipStepException: ", exc.Message)
-    '         End Try
-    '
-    '
-    '         Try
-    '             testWorkflow.goNextStep()
-    '             MsgBox("doing 2")
-    '
-    '         Catch exc As ProgressDialogue.SkipStepException
-    '             Logger.Note("SkipStepException: ", exc.Message)
-    '         End Try
-    '
-    '
-    '         Try
-    '             testWorkflow.goNextStep()
-    '             MsgBox("doing 3")
-    '
-    '         Catch exc As ProgressDialogue.SkipStepException
-    '             Logger.Note("SkipStepException: ", exc.Message)
-    '         End Try
-    '
-    '         Try
-    '             testWorkflow.goNextStep()
-    '             MsgBox("doing 4")
-    '
-    '         Catch exc As ProgressDialogue.SkipStepException
-    '             Logger.Note("SkipStepException: ", exc.Message)
-    '         End Try
-    '
-    '         testWorkflow.done()
-    '
-    '     Catch exc As ProgressDialogue.EndWorkflowException
-    '         Logger.Note("EndWorkflowException: ", exc.Message)
-    '     End Try
-    '
-    '
-    '
-    ' End Sub
-
-    '
-    'Private Sub TestworkflowToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestworkflowToolStripMenuItem.Click
-    '
-    '    Dim testWorkflow As ProgressDialogue = New ProgressDialogue("test variable workflow")
-    '    testWorkflow.MdiParent = GitPatcher
-    '    testWorkflow.addStep("Choose a tag to import from", 20)
-    '    testWorkflow.addStep("Checkout the tag", 40, False)
-    '    testWorkflow.addStep("If tag not like ", 60)
-    '    testWorkflow.addStep("Import Apex", 80, False)
-    '    testWorkflow.addStep("Return to branch:", 100)
-    '
-    '
-    '    testWorkflow.Show()
-    '
-    '    MsgBox("wait")
-    '
-    '    If testWorkflow.toDoStep(0) Then
-    '        MsgBox("doing 0")
-    '
-    '    End If
-    '    If testWorkflow.toDoStep(1) Then
-    '        MsgBox("doing 1")
-    '
-    '    End If
-    '
-    '    If testWorkflow.toDoStep(2) Then
-    '        MsgBox("doing 2")
-    '
-    '    End If
-    '    If testWorkflow.toDoStep(3) Then
-    '        MsgBox("doing 3")
-    '
-    '    End If
-    '
-    '    If testWorkflow.toDoStep(4) Then
-    '        MsgBox("doing 4")
-    '
-    '    End If
-    '
-    '    testWorkflow.toDoStep(5)
-    '    'testWorkflow.toDoNextStep()
-    '
-    '
-    '
-    '
-    '
-    '
-    'End Sub
-
+ 
     Private Sub TestworkflowToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestworkflowToolStripMenuItem.Click
 
         Dim testWorkflow As ProgressDialogue = New ProgressDialogue("test variable workflow")
@@ -460,4 +328,8 @@
 
     End Sub
 
+    Private Sub TestrevertToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestrevertToolStripMenuItem.Click
+        'GitSharpFascade.revertItem(My.Settings.CurrentRepo, "apex/f101/application/create_application.sql")
+        Apex.restoreCreateApplication()
+    End Sub
 End Class
