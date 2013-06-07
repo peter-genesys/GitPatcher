@@ -138,7 +138,7 @@ Public Class Mail
 
         Catch ex As Exception
 
-            Throw ex
+            MsgBox("Delivery Failure: " & ex.Source & ex.Message)
 
         End Try
 
