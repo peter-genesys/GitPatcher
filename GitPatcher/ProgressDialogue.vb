@@ -175,6 +175,7 @@
                 For i As Integer = 0 To ProgressCheckedListBox.Items.Count - 1
                     ProgressCheckedListBox.SetItemChecked(i, False)
                 Next
+                started = True 'Have to start the dialogue so that processes that are waiting will continue, and then skip all steps.
             Else
                 e.Cancel = True
             End If

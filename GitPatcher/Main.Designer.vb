@@ -37,6 +37,8 @@ Partial Class Main
         Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowindexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TestworkflowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TestrevertToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RebaseFeatureHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RepoComboBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -61,13 +63,17 @@ Partial Class Main
         Me.Label11 = New System.Windows.Forms.Label()
         Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.TestrevertToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RELEASEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReleaseToISDEVLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReleaseToISTESTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReleaseToISUATToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReleaseToISPRODToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GITToolStripMenuItem, Me.APEXToolStripMenuItem, Me.GITToolStripMenuItem1})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GITToolStripMenuItem, Me.APEXToolStripMenuItem, Me.GITToolStripMenuItem1, Me.RELEASEToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(486, 24)
@@ -126,7 +132,7 @@ Partial Class Main
         '
         'GITToolStripMenuItem1
         '
-        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.NewHotfixToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem, Me.TestworkflowToolStripMenuItem, Me.TestrevertToolStripMenuItem})
+        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.NewHotfixToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem, Me.TestworkflowToolStripMenuItem, Me.TestrevertToolStripMenuItem, Me.RebaseFeatureHotfixToolStripMenuItem})
         Me.GITToolStripMenuItem1.Name = "GITToolStripMenuItem1"
         Me.GITToolStripMenuItem1.Size = New System.Drawing.Size(37, 20)
         Me.GITToolStripMenuItem1.Text = "GIT"
@@ -162,6 +168,19 @@ Partial Class Main
         Me.TestworkflowToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
         Me.TestworkflowToolStripMenuItem.Text = "testworkflow"
         Me.TestworkflowToolStripMenuItem.Visible = False
+        '
+        'TestrevertToolStripMenuItem
+        '
+        Me.TestrevertToolStripMenuItem.Name = "TestrevertToolStripMenuItem"
+        Me.TestrevertToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
+        Me.TestrevertToolStripMenuItem.Text = "testrevert"
+        Me.TestrevertToolStripMenuItem.Visible = False
+        '
+        'RebaseFeatureHotfixToolStripMenuItem
+        '
+        Me.RebaseFeatureHotfixToolStripMenuItem.Name = "RebaseFeatureHotfixToolStripMenuItem"
+        Me.RebaseFeatureHotfixToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
+        Me.RebaseFeatureHotfixToolStripMenuItem.Text = "Rebase Feature/Hotfix"
         '
         'RepoComboBox
         '
@@ -367,12 +386,36 @@ Partial Class Main
         Me.Label13.TabIndex = 25
         Me.Label13.Text = "Code"
         '
-        'TestrevertToolStripMenuItem
+        'RELEASEToolStripMenuItem
         '
-        Me.TestrevertToolStripMenuItem.Name = "TestrevertToolStripMenuItem"
-        Me.TestrevertToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
-        Me.TestrevertToolStripMenuItem.Text = "testrevert"
-        Me.TestrevertToolStripMenuItem.Visible = False
+        Me.RELEASEToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ReleaseToISDEVLToolStripMenuItem, Me.ReleaseToISTESTToolStripMenuItem, Me.ReleaseToISUATToolStripMenuItem, Me.ReleaseToISPRODToolStripMenuItem})
+        Me.RELEASEToolStripMenuItem.Name = "RELEASEToolStripMenuItem"
+        Me.RELEASEToolStripMenuItem.Size = New System.Drawing.Size(64, 20)
+        Me.RELEASEToolStripMenuItem.Text = "RELEASE"
+        '
+        'ReleaseToISDEVLToolStripMenuItem
+        '
+        Me.ReleaseToISDEVLToolStripMenuItem.Name = "ReleaseToISDEVLToolStripMenuItem"
+        Me.ReleaseToISDEVLToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.ReleaseToISDEVLToolStripMenuItem.Text = "Release to ISDEVL"
+        '
+        'ReleaseToISTESTToolStripMenuItem
+        '
+        Me.ReleaseToISTESTToolStripMenuItem.Name = "ReleaseToISTESTToolStripMenuItem"
+        Me.ReleaseToISTESTToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.ReleaseToISTESTToolStripMenuItem.Text = "Release to ISTEST"
+        '
+        'ReleaseToISUATToolStripMenuItem
+        '
+        Me.ReleaseToISUATToolStripMenuItem.Name = "ReleaseToISUATToolStripMenuItem"
+        Me.ReleaseToISUATToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.ReleaseToISUATToolStripMenuItem.Text = "Release to ISUAT"
+        '
+        'ReleaseToISPRODToolStripMenuItem
+        '
+        Me.ReleaseToISPRODToolStripMenuItem.Name = "ReleaseToISPRODToolStripMenuItem"
+        Me.ReleaseToISPRODToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.ReleaseToISPRODToolStripMenuItem.Text = "Release to ISPROD"
         '
         'Main
         '
@@ -453,5 +496,11 @@ Partial Class Main
     Friend WithEvents ShowindexToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestworkflowToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestrevertToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents RebaseFeatureHotfixToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents RELEASEToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ReleaseToISDEVLToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ReleaseToISTESTToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ReleaseToISUATToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ReleaseToISPRODToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

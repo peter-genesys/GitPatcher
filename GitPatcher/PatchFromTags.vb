@@ -752,7 +752,7 @@ Public Class PatchFromTags
     Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles ComitButton.Click
         Tortoise.Commit(PatchDirTextBox.Text, "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
 
-        'Mail.SendNotification("NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.")
+        Mail.SendNotification("NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.", PatchDirTextBox.Text & "install.sql," & Main.RootPatchDirTextBox.Text & PatchNameTextBox.Text & ".log")
 
         'user
         'branch
@@ -770,26 +770,17 @@ Public Class PatchFromTags
 
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create Patch")
         createPatchProgress.MdiParent = GitPatcher
-        createPatchProgress.addStep("Export Apex to branch: " & currentBranch, 2, True, "Using the Apex Export workflow")
-        createPatchProgress.addStep("Switch to develop branch", 5)
-        createPatchProgress.addStep("Pull from Origin", 10)
-        createPatchProgress.addStep("Return to branch: " & currentBranch, 15)
-        createPatchProgress.addStep("Rebase Branch: " & currentBranch, 20)
-        createPatchProgress.addStep("Use PatchRunner to run Unapplied/Uninstalled Patches", 25)
-        createPatchProgress.addStep("Review tags on the branch", 30)
-        createPatchProgress.addStep("Import Apex from HEAD of branch: " & currentBranch, 35, True, "Using the Apex Import workflow")
-        createPatchProgress.addStep("Create edit, test", 40)
-        createPatchProgress.addStep("Commit to Branch: " & currentBranch, 50)
-        createPatchProgress.addStep("Switch to develop branch", 60)
+        createPatchProgress.addStep("Rebase branch: " & currentBranch, 10, True, "Using the Rebase workflow")
+        createPatchProgress.addStep("Review tags on Branch: " & currentBranch, 20)
+        createPatchProgress.addStep("Create edit, test", 30)
+        createPatchProgress.addStep("Commit to Branch: " & currentBranch, 40)
+        createPatchProgress.addStep("Switch to develop branch", 50)
         'createPatchProgress.addStep("Pull from Origin", 70)
-        createPatchProgress.addStep("Merge from Branch: " & currentBranch, 80)
-        createPatchProgress.addStep("Push to Origin", 90, True, "If at this stage there is an error because your develop branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
-        createPatchProgress.addStep("Return to Branch: " & currentBranch, 100)
-
-        'createPatchProgress.addStep("Change current database to ISDEVL", 25)
-        'createPatchProgress.addStep("Use PatchRunner to run these Patches on ISDEVL", 25)
-        'createPatchProgress.addStep("Import Apex from HEAD of branch into ISDEVL", 25)
-
+        createPatchProgress.addStep("Merge from Branch: " & currentBranch, 60)
+        createPatchProgress.addStep("Push to Origin", 80, True, "If at this stage there is an error because your develop branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
+        createPatchProgress.addStep("Return to Branch: " & currentBranch, 90)
+        createPatchProgress.addStep("Release to ISDEVL", 100)
+ 
         createPatchProgress.Show()
 
 
@@ -799,45 +790,17 @@ Public Class PatchFromTags
         Loop
  
         If createPatchProgress.toDoNextStep() Then
-            'Export Apex to branch
-            Apex.ApexExportCommit()
-
-        End If
-
-        If createPatchProgress.toDoNextStep() Then
-            'Switch to develop branch
-            GitBash.Switch(My.Settings.CurrentRepo, "develop")
-        End If
-        If createPatchProgress.toDoNextStep() Then
-            'Pull from origin/develop
-            GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
-        End If
-        If createPatchProgress.toDoNextStep() Then
-            'Return to branch
-            GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
-        End If
-
-        If createPatchProgress.toDoNextStep() Then
             'Rebase branch
-            Tortoise.Rebase(My.Settings.CurrentRepo)
+            Main.rebaseBranch()
+ 
         End If
-        If createPatchProgress.toDoNextStep() Then
-            'Use PatchRunner to run Unapplied/Uninstalled Patches
-            Dim newchildform As New PatchRunner
-            'newchildform.MdiParent = GitPatcher
-            newchildform.ShowDialog() 'NEED TO WAIT HERE!!
 
-        End If
+     
         If createPatchProgress.toDoNextStep() Then
             'Review tags on the branch
             Tortoise.Log(My.Settings.CurrentRepo)
         End If
-
-        If createPatchProgress.toDoNextStep() Then
-            'Import Apex from HEAD of branch
-            Apex.ApexImportFromTag()
-
-        End If
+ 
 
         If createPatchProgress.toDoNextStep() Then
 
@@ -891,6 +854,11 @@ Public Class PatchFromTags
             GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
         End If
 
+        If createPatchProgress.toDoNextStep() Then
+            'Release to ISDEVL
+            Main.releaseTo("ISDEVL")
+        End If
+ 
         'Finish
         createPatchProgress.toDoNextStep()
 

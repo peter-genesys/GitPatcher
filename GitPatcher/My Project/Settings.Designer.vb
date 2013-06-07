@@ -224,7 +224,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("pburgess")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("PBurgess")>  _
         Public Property RecipientList() As String
             Get
                 Return CType(Me("RecipientList"),String)

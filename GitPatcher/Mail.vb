@@ -106,7 +106,7 @@ Public Class Mail
     ' End Sub
 
 
-    Shared Sub SendEmailOutlook(ByVal i_EmailFrom, ByVal i_EmailTo, ByVal i_MailSubject, ByVal i_MessageBody)
+    Shared Sub SendEmailOutlook(ByVal i_EmailFrom, ByVal i_EmailTo, ByVal i_MailSubject, ByVal i_MessageBody, ByVal i_attachments)
 
 
         Try
@@ -120,7 +120,19 @@ Public Class Mail
             oMail.Subject = i_MailSubject
             oMail.HTMLBody = True
             oMail.Body = i_MessageBody
-            'oMail.Attachments.Add("attachement.html")
+            If Not String.IsNullOrEmpty(i_attachments) Then
+                For Each l_attachment In i_attachments.split(",")
+                    Try
+                        oMail.Attachments.Add(l_attachment)
+                        oMail.Body = oMail.Body & Chr(10) & "Attached file: " & l_attachment
+                    Catch ex As Exception
+                        oMail.Body = oMail.Body & Chr(10) & "Failed to attached file: " & l_attachment
+                    End Try
+
+                Next
+
+            End If
+
             oMail.Send()
 
 
@@ -134,10 +146,8 @@ Public Class Mail
     End Sub
 
 
-    Shared Sub SendNotification(ByVal i_MailSubject, ByVal i_MessageBody)
-
-
-
+    Shared Sub SendNotification(ByVal i_MailSubject, ByVal i_MessageBody, Optional ByVal i_attachments = Nothing)
+ 
         Dim Sender As String = Environment.UserName & My.Settings.RecipientDomain
         Dim Recipients As String = Nothing
 
@@ -146,7 +156,7 @@ Public Class Mail
             Recipient = Trim(Recipient)
             Recipient = Recipient.Replace(Chr(13), "")
             If (Recipient.Length > 0) Then
- 
+
                 If Not Recipient.Contains("@") Then
                     Recipient = Recipient & My.Settings.RecipientDomain
                 End If
@@ -154,12 +164,12 @@ Public Class Mail
                 If String.IsNullOrEmpty(Recipients) Then
                     Recipients = Recipient
                 Else
-                    Recipients = Recipients & "," & Recipient
+                    Recipients = Recipients & ";" & Recipient
                 End If
             End If
 
         Next
- 
+
         Logger.Dbg(Sender)
 
         Logger.Dbg(Recipients)
@@ -168,7 +178,7 @@ Public Class Mail
 
         Logger.Dbg(i_MessageBody)
 
-        SendEmailOutlook(Sender, Recipients, i_MailSubject, i_MessageBody)
+        SendEmailOutlook(Sender, Recipients, i_MailSubject, i_MessageBody, i_attachments)
 
     End Sub
 

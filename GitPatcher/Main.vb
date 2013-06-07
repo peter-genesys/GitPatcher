@@ -340,6 +340,205 @@
 
     Private Sub TestrevertToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestrevertToolStripMenuItem.Click
         'GitSharpFascade.revertItem(My.Settings.CurrentRepo, "apex/f101/application/create_application.sql")
-        Apex.restoreCreateApplication()
+        Apex.restoreCreateApplicationSQL()
+    End Sub
+
+    Public Sub rebaseBranch()
+        Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
+
+        Dim rebasing As ProgressDialogue = New ProgressDialogue("Rebase branch " & currentBranch)
+
+        Dim l_tag_base As String = Nothing
+
+        rebasing.MdiParent = GitPatcher
+        rebasing.addStep("Export Apex to branch: " & currentBranch, 10, True, "Using the Apex Export workflow")
+        rebasing.addStep("Switch to develop branch", 20)
+        rebasing.addStep("Pull from Origin", 30)
+        rebasing.addStep("Tag Develop HEAD with " & CurrentBranchTextBox.Text & ".99A", 40, True, "Will Tag the develop head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & CurrentBranchTextBox.Text & ".99A")
+        rebasing.addStep("Return to branch: " & currentBranch, 50)
+        rebasing.addStep("Rebase Branch: " & currentBranch, 60)
+        rebasing.addStep("Tag Branch: " & currentBranch & " HEAD with " & CurrentBranchTextBox.Text & ".99B", 70, True, "Will Tag the feature head commit for patch comparisons. Creates tag " & CurrentBranchTextBox.Text & ".99B.")
+        rebasing.addStep("Use PatchRunner to run Unapplied/Uninstalled Patches", 80, True, "Before running patches, consider reverting to a VM snapshot prior to the development of your current work, or swapping to a unit test VM.")
+        'rebasing.addStep("Review tags on the branch", 90)
+        rebasing.addStep("Import Apex from HEAD of branch: " & currentBranch, 100, True, "Using the Apex Import workflow")
+ 
+        rebasing.Show()
+
+
+
+        Do Until rebasing.isStarted
+            Common.wait(1000)
+        Loop
+
+        If rebasing.toDoNextStep() Then
+            'Export Apex to branch
+            Apex.ApexExportCommit()
+
+        End If
+
+        If rebasing.toDoNextStep() Then
+            'Switch to develop branch
+            GitBash.Switch(My.Settings.CurrentRepo, "develop")
+        End If
+        If rebasing.toDoNextStep() Then
+            'Pull from origin/develop
+            GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+        End If
+
+        If rebasing.toDoNextStep() Then
+            'Tag the develop head
+            l_tag_base = InputBox("Tagging current HEAD of develop.  Please enter 2 digit numeric tag.", "Create Tag")
+            Dim l_tagA As String = CurrentBranchTextBox.Text & "." & l_tag_base & "A"
+            rebasing.updateStepDescription(3, "Tag Develop HEAD with " & l_tagA)
+            GitBash.TagSimple(My.Settings.CurrentRepo, l_tagA)
+
+        End If
+
+
+        If rebasing.toDoNextStep() Then
+            'Return to branch
+            GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
+        End If
+
+        If rebasing.toDoNextStep() Then
+            'Rebase branch
+            Tortoise.Rebase(My.Settings.CurrentRepo)
+        End If
+
+        If rebasing.toDoNextStep() Then
+            'Tag Branch
+            Dim l_tagB As String = CurrentBranchTextBox.Text & "." & l_tag_base & "B"
+            rebasing.updateStepDescription(6, "Tag Branch: " & currentBranch & " HEAD with " & l_tagB)
+            GitBash.TagSimple(My.Settings.CurrentRepo, l_tagB)
+
+        End If
+
+        If rebasing.toDoNextStep() Then
+            'Use PatchRunner to run Unapplied/Uninstalled Patches
+            Dim newchildform As New PatchRunner
+            'newchildform.MdiParent = GitPatcher
+            newchildform.ShowDialog() 'NEED TO WAIT HERE!!
+
+        End If
+        'If rebasing.toDoNextStep() Then
+        '    'Review tags on the branch
+        '    Tortoise.Log(My.Settings.CurrentRepo)
+        'End If
+
+        If rebasing.toDoNextStep() Then
+            'Import Apex from HEAD of branch
+            Apex.ApexImportFromTag()
+
+        End If
+ 
+        'Finish
+        rebasing.toDoNextStep()
+    End Sub
+
+
+
+    Private Sub RebaseFeatureHotfixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureHotfixToolStripMenuItem.Click
+        rebaseBranch()
+    End Sub
+
+
+    Public Sub releaseTo(iTargetDB As String)
+
+        Dim lcurrentDB As String = DBListComboBox.SelectedItem
+        Dim lTargetDB As String = iTargetDB.ToLower
+        Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
+
+        Dim releasing As ProgressDialogue = New ProgressDialogue("Release to " & iTargetDB)
+ 
+        releasing.MdiParent = GitPatcher
+        releasing.addStep("Change current DB to : " & lTargetDB, 10)
+        releasing.addStep("Switch to develop branch", 20, False)
+        releasing.addStep("Pull from Origin", 30, False)
+
+        releasing.addStep("Choose a tag to release from and checkout the tag", 40, False)
+ 
+        releasing.addStep("Use PatchRunner to run Uninstalled Patches", 40, True, "")
+        releasing.addStep("Import Apex", 50, True, "Using the Apex Import workflow")
+        releasing.addStep("Revert current DB to : " & lcurrentDB, 60)
+        releasing.Show()
+
+
+
+        Do Until releasing.isStarted
+            Common.wait(1000)
+        Loop
+
+        If releasing.toDoNextStep() Then
+            'Change current DB to release DB
+            DBListComboBox.SelectedItem = lTargetDB
+
+        End If
+
+        If releasing.toDoNextStep() Then
+            'Switch to develop branch
+            GitBash.Switch(My.Settings.CurrentRepo, "develop")
+        End If
+        If releasing.toDoNextStep() Then
+            'Pull from origin/develop
+            GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+        End If
+
+        If releasing.toDoNextStep() Then
+            'Choose a tag to import from
+            Dim tagnames As Collection = New Collection
+            tagnames.Add("HEAD")
+            tagnames = GitSharpFascade.getTagList(My.Settings.CurrentRepo, tagnames, CurrentBranchTextBox.Text)
+            tagnames = GitSharpFascade.getTagList(My.Settings.CurrentRepo, tagnames, AppCodeTextBox.Text)
+
+
+            Dim PatchTag As String = Nothing
+            PatchTag = ChoiceDialog.Ask("Please choose a tag for patch installs", tagnames, "HEAD", "Choose tag")
+
+            'Checkout the tag
+            GitBash.Switch(My.Settings.CurrentRepo, PatchTag)
+
+        End If
+
+
+        If releasing.toDoNextStep() Then
+            'Use PatchRunner to run Unapplied/Uninstalled Patches
+            Dim newchildform As New PatchRunner
+            'newchildform.MdiParent = GitPatcher
+            newchildform.ShowDialog() 'NEED TO WAIT HERE!!
+
+        End If
+
+        If releasing.toDoNextStep() Then
+            'Import Apex 
+            Apex.ApexImportFromTag()
+
+        End If
+
+        If releasing.toDoNextStep() Then
+            'Revert current DB  
+            DBListComboBox.SelectedItem = lcurrentDB
+
+        End If
+
+        'Finish
+        releasing.toDoNextStep()
+    End Sub
+
+
+
+    Private Sub ReleaseToISDEVLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISDEVLToolStripMenuItem.Click
+        releaseTo("ISDEVL")
+    End Sub
+
+    Private Sub ReleaseToISTESTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISTESTToolStripMenuItem.Click
+        releaseTo("ISTEST")
+    End Sub
+
+    Private Sub ReleaseToISUATToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISUATToolStripMenuItem.Click
+        releaseTo("ISUAT")
+    End Sub
+
+    Private Sub ReleaseToISPRODToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISPRODToolStripMenuItem.Click
+        releaseTo("ISPROD")
     End Sub
 End Class

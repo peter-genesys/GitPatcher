@@ -49,7 +49,7 @@ tpds</Value>
       <Value Profile="(Default)">25</Value>
     </Setting>
     <Setting Name="RecipientList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">pburgess</Value>
+      <Value Profile="(Default)">PBurgess</Value>
     </Setting>
     <Setting Name="RecipientDomain" Type="System.String" Scope="User">
       <Value Profile="(Default)">@thiess.com.au</Value>

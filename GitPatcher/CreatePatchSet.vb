@@ -736,8 +736,10 @@ Public Class CreatePatchCollection
     End Sub
 
     Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles ComitButton.Click
-        Tortoise.Commit(PatchDirTextBox.Text, "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
+        Tortoise.Commit(PatchDirTextBox.Text, "NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
 
+        Mail.SendNotification("NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, pCreatePatchType & " created.", PatchDirTextBox.Text & "install.sql," & Main.RootPatchDirTextBox.Text & PatchNameTextBox.Text & ".log")
+ 
         'Mail.SendNotification("NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.")
 
         'user
@@ -751,7 +753,7 @@ Public Class CreatePatchCollection
 
  
     Public Shared Sub bumpApexVersion(ByVal i_app_version As String)
-        Apex.modCreateApplication(i_app_version & " " & Today.ToString("dd-MMM-yyyy"), "")
+        Apex.modCreateApplicationSQL(i_app_version & " " & Today.ToString("dd-MMM-yyyy"), "")
     End Sub
 
  
@@ -784,9 +786,10 @@ Public Class CreatePatchCollection
         createPatchSetProgress.addStep("Merge from release Branch: " & newBranch, 55)
         createPatchSetProgress.addStep("Commit - incase of merge conflict", 60)
         createPatchSetProgress.addStep("Push to origin/develop", 65)
+
+        createPatchSetProgress.addStep("Release to ISDEVL", 70, False)
+        createPatchSetProgress.addStep("Release to ISTEST", 80, False)
  
-        createPatchSetProgress.addStep("Manually Execute " & iCreatePatchType & " " & l_app_version & " on target database.", 70)
-        createPatchSetProgress.addStep("Manually Import Apex " & l_app_version & " into target database.", 100)
         'Import
 
         createPatchSetProgress.Show()
@@ -834,8 +837,6 @@ Public Class CreatePatchCollection
             'Tag this commit
             GitBash.TagSimple(My.Settings.CurrentRepo, l_app_version)
             'GitBash.TagAnnotated(My.Settings.CurrentRepo, l_app_version, "New " & Main.ApplicationListComboBox.SelectedItem & " " & iCreatePatchType & " " & l_app_version)
-
-
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Push release to origin with tags
@@ -873,11 +874,15 @@ Public Class CreatePatchCollection
         End If
 
 
-        'Manually Execute patch
-        createPatchSetProgress.toDoNextStep()
+        If createPatchSetProgress.toDoNextStep() Then
+            'Release to ISDEVL
+            Main.releaseTo("ISDEVL")
+        End If
 
-        'Manually Import Apex
-        createPatchSetProgress.toDoNextStep()
+        If createPatchSetProgress.toDoNextStep() Then
+            'Release to ISTEST
+            Main.releaseTo("ISTEST")
+        End If
  
         'Done
         createPatchSetProgress.toDoNextStep()
