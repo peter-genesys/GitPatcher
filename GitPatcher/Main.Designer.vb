@@ -25,18 +25,21 @@ Partial Class Main
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.GITToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.NewFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateDBFeaturePatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RebaseFeatureHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowindexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TestworkflowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TestrevertToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RebaseFeatureHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HOTFIXToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HotFixToolStripComboBox = New System.Windows.Forms.ToolStripComboBox()
         Me.NewHotFixToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateDBHotFixPatchToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.RebaseHotFixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MergeAndPushHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GITToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PatchFromTagsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateDBHotFixPatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBPatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBMinorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PatchRunnerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -72,9 +75,6 @@ Partial Class Main
         Me.Label11 = New System.Windows.Forms.Label()
         Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.CreateDBHotFixPatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateDBHotFixPatchToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateDBFeaturePatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -97,8 +97,20 @@ Partial Class Main
         'NewFeatureToolStripMenuItem
         '
         Me.NewFeatureToolStripMenuItem.Name = "NewFeatureToolStripMenuItem"
-        Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
+        Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.NewFeatureToolStripMenuItem.Text = "New Feature"
+        '
+        'CreateDBFeaturePatchToolStripMenuItem
+        '
+        Me.CreateDBFeaturePatchToolStripMenuItem.Name = "CreateDBFeaturePatchToolStripMenuItem"
+        Me.CreateDBFeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.CreateDBFeaturePatchToolStripMenuItem.Text = "Create DB Feature Patch"
+        '
+        'RebaseFeatureHotfixToolStripMenuItem
+        '
+        Me.RebaseFeatureHotfixToolStripMenuItem.Name = "RebaseFeatureHotfixToolStripMenuItem"
+        Me.RebaseFeatureHotfixToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.RebaseFeatureHotfixToolStripMenuItem.Text = "Rebase Feature"
         '
         'MergeAndPushFeatureToolStripMenuItem
         '
@@ -109,7 +121,7 @@ Partial Class Main
         'ShowindexToolStripMenuItem
         '
         Me.ShowindexToolStripMenuItem.Name = "ShowindexToolStripMenuItem"
-        Me.ShowindexToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
+        Me.ShowindexToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.ShowindexToolStripMenuItem.Text = "showindex"
         Me.ShowindexToolStripMenuItem.Visible = False
         '
@@ -118,19 +130,14 @@ Partial Class Main
         Me.TestworkflowToolStripMenuItem.Name = "TestworkflowToolStripMenuItem"
         Me.TestworkflowToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.TestworkflowToolStripMenuItem.Text = "testworkflow"
+        Me.TestworkflowToolStripMenuItem.Visible = False
         '
         'TestrevertToolStripMenuItem
         '
         Me.TestrevertToolStripMenuItem.Name = "TestrevertToolStripMenuItem"
-        Me.TestrevertToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
+        Me.TestrevertToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.TestrevertToolStripMenuItem.Text = "testrevert"
         Me.TestrevertToolStripMenuItem.Visible = False
-        '
-        'RebaseFeatureHotfixToolStripMenuItem
-        '
-        Me.RebaseFeatureHotfixToolStripMenuItem.Name = "RebaseFeatureHotfixToolStripMenuItem"
-        Me.RebaseFeatureHotfixToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.RebaseFeatureHotfixToolStripMenuItem.Text = "Rebase Feature"
         '
         'HOTFIXToolStripMenuItem
         '
@@ -148,19 +155,25 @@ Partial Class Main
         'NewHotFixToolStripMenuItem1
         '
         Me.NewHotFixToolStripMenuItem1.Name = "NewHotFixToolStripMenuItem1"
-        Me.NewHotFixToolStripMenuItem1.Size = New System.Drawing.Size(195, 22)
+        Me.NewHotFixToolStripMenuItem1.Size = New System.Drawing.Size(196, 22)
         Me.NewHotFixToolStripMenuItem1.Text = "New HotFix"
+        '
+        'CreateDBHotFixPatchToolStripMenuItem1
+        '
+        Me.CreateDBHotFixPatchToolStripMenuItem1.Name = "CreateDBHotFixPatchToolStripMenuItem1"
+        Me.CreateDBHotFixPatchToolStripMenuItem1.Size = New System.Drawing.Size(196, 22)
+        Me.CreateDBHotFixPatchToolStripMenuItem1.Text = "Create DB HotFix Patch"
         '
         'RebaseHotFixToolStripMenuItem
         '
         Me.RebaseHotFixToolStripMenuItem.Name = "RebaseHotFixToolStripMenuItem"
-        Me.RebaseHotFixToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.RebaseHotFixToolStripMenuItem.Size = New System.Drawing.Size(196, 22)
         Me.RebaseHotFixToolStripMenuItem.Text = "Rebase HotFix"
         '
         'MergeAndPushHotfixToolStripMenuItem
         '
         Me.MergeAndPushHotfixToolStripMenuItem.Name = "MergeAndPushHotfixToolStripMenuItem"
-        Me.MergeAndPushHotfixToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.MergeAndPushHotfixToolStripMenuItem.Size = New System.Drawing.Size(196, 22)
         Me.MergeAndPushHotfixToolStripMenuItem.Text = "Merge and Push Hotfix"
         '
         'GITToolStripMenuItem
@@ -175,6 +188,12 @@ Partial Class Main
         Me.PatchFromTagsToolStripMenuItem.Name = "PatchFromTagsToolStripMenuItem"
         Me.PatchFromTagsToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.PatchFromTagsToolStripMenuItem.Text = "Create DB Feature Patch"
+        '
+        'CreateDBHotFixPatchToolStripMenuItem
+        '
+        Me.CreateDBHotFixPatchToolStripMenuItem.Name = "CreateDBHotFixPatchToolStripMenuItem"
+        Me.CreateDBHotFixPatchToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.CreateDBHotFixPatchToolStripMenuItem.Text = "Create DB HotFix Patch"
         '
         'CreateDBPatchSetToolStripMenuItem
         '
@@ -447,24 +466,6 @@ Partial Class Main
         Me.Label13.Size = New System.Drawing.Size(32, 13)
         Me.Label13.TabIndex = 25
         Me.Label13.Text = "Code"
-        '
-        'CreateDBHotFixPatchToolStripMenuItem
-        '
-        Me.CreateDBHotFixPatchToolStripMenuItem.Name = "CreateDBHotFixPatchToolStripMenuItem"
-        Me.CreateDBHotFixPatchToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.CreateDBHotFixPatchToolStripMenuItem.Text = "Create DB HotFix Patch"
-        '
-        'CreateDBHotFixPatchToolStripMenuItem1
-        '
-        Me.CreateDBHotFixPatchToolStripMenuItem1.Name = "CreateDBHotFixPatchToolStripMenuItem1"
-        Me.CreateDBHotFixPatchToolStripMenuItem1.Size = New System.Drawing.Size(196, 22)
-        Me.CreateDBHotFixPatchToolStripMenuItem1.Text = "Create DB HotFix Patch"
-        '
-        'CreateDBFeaturePatchToolStripMenuItem
-        '
-        Me.CreateDBFeaturePatchToolStripMenuItem.Name = "CreateDBFeaturePatchToolStripMenuItem"
-        Me.CreateDBFeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.CreateDBFeaturePatchToolStripMenuItem.Text = "Create DB Feature Patch"
         '
         'Main
         '
