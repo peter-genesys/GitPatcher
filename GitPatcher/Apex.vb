@@ -145,11 +145,11 @@
             "To commit any existing changes, close this workflow and perform a GIT COMMIT.")
 
         ExportProgress.MdiParent = GitPatcher
-        ExportProgress.addStep("Export Apex as a single file", 20)
-        ExportProgress.addStep("Splitting into components", 40)
-        ExportProgress.addStep("Add new files to GIT repository", 60)
-        ExportProgress.addStep("Commit valid changes to GIT repository", 80)
-        ExportProgress.addStep("Revert invalid changes from your checkout", 100)
+        ExportProgress.addStep("Export Apex as a single file")
+        ExportProgress.addStep("Splitting into components")
+        ExportProgress.addStep("Add new files to GIT repository")
+        ExportProgress.addStep("Commit valid changes to GIT repository")
+        ExportProgress.addStep("Revert invalid changes from your checkout")
         ExportProgress.Show()
 
         Do Until ExportProgress.isStarted
@@ -243,13 +243,13 @@
 
 
         ImportProgress.MdiParent = GitPatcher
-        ImportProgress.addStep("Choose a tag to install apex from and checkout the tag", 40)
-        ImportProgress.addStep("If tag not like " & Main.AppCodeTextBox.Text & " relabel apex", 50)
-        ImportProgress.addStep("If db in " & runOnlyDBs & " set apex to RUN_ONLY", 60)
-        ImportProgress.addStep("If db in " & l_skip_reports_DBs & " set install.sql to Skip reports queries and layouts", 60, True, "This is intended to speed up imports into " & l_skip_reports_DBs & ", where they otherwise take upto 30mins")
-        ImportProgress.addStep("Import Apex", 70)
-        ImportProgress.addStep("Restore apex settings in checkout", 80, True, "Revert changes made in steps 3, 4 and 5.  These were only required for the import.  They do not need to be committed.")
-        ImportProgress.addStep("Return to branch: " & currentBranch, 100)
+        ImportProgress.addStep("Choose a tag to install apex from and checkout the tag")
+        ImportProgress.addStep("If tag not like " & Main.AppCodeTextBox.Text & " relabel apex")
+        ImportProgress.addStep("If db in " & runOnlyDBs & " set apex to RUN_ONLY")
+        ImportProgress.addStep("If db in " & l_skip_reports_DBs & " set install.sql to Skip reports queries and layouts", True, "This is intended to speed up imports into " & l_skip_reports_DBs & ", where they otherwise take upto 30mins")
+        ImportProgress.addStep("Import Apex")
+        ImportProgress.addStep("Restore apex settings in checkout", True, "Revert changes made in steps 3, 4 and 5.  These were only required for the import.  They do not need to be committed.")
+        ImportProgress.addStep("Return to branch: " & currentBranch)
         ImportProgress.Show()
 
         Do Until ImportProgress.isStarted

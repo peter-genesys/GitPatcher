@@ -240,10 +240,10 @@
 
         Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new " & iBranchType & " branch", "Create a new " & iBranchType & " Branch with the standardised naming " & iBranchType & "/" & Me.AppCodeTextBox.Text & "/JIRA.")
         newFeature.MdiParent = GitPatcher
-        newFeature.addStep("Switch to " & iBranchFrom & " branch", 33)
-        newFeature.addStep("Pull from Origin", 60)
-        newFeature.addStep("Create and switch to " & iBranchType & " branch", 100)
-        'newFeature.addStep("Create intial Tag: " & branchName & ".00", 100)
+        newFeature.addStep("Switch to " & iBranchFrom & " branch")
+        newFeature.addStep("Pull from Origin")
+        newFeature.addStep("Create and switch to " & iBranchType & " branch")
+        'newFeature.addStep("Create intial Tag: " & branchName & ".00" )
 
  
 
@@ -328,11 +328,11 @@
 
         Dim testWorkflow As ProgressDialogue = New ProgressDialogue("test variable workflow")
         testWorkflow.MdiParent = GitPatcher
-        testWorkflow.addStep("Choose a tag to import from", 20)
-        testWorkflow.addStep("Checkout the tag", 40, False)
-        testWorkflow.addStep("If tag not like ", 60)
-        testWorkflow.addStep("Import Apex", 80, False)
-        testWorkflow.addStep("Return to branch:", 100)
+        testWorkflow.addStep("Choose a tag to import from")
+        testWorkflow.addStep("Checkout the tag", False)
+        testWorkflow.addStep("If tag not like ")
+        testWorkflow.addStep("Import Apex", False)
+        testWorkflow.addStep("Return to branch:")
 
 
         testWorkflow.Show()
@@ -387,16 +387,16 @@
         Dim l_tag_base As String = Nothing
 
         rebasing.MdiParent = GitPatcher
-        rebasing.addStep("Export Apex to branch: " & currentBranch, 10, True, "Using the Apex Export workflow")
-        rebasing.addStep("Switch to " & iRebaseBranchOn & " branch", 20)
-        rebasing.addStep("Pull from Origin", 30)
-        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & CurrentBranchTextBox.Text & ".99A", 40, True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & CurrentBranchTextBox.Text & ".99A")
-        rebasing.addStep("Return to branch: " & currentBranch, 50)
-        rebasing.addStep("Rebase Branch: " & currentBranch, 60)
-        rebasing.addStep("Tag Branch: " & currentBranch & " HEAD with " & CurrentBranchTextBox.Text & ".99B", 70, True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & CurrentBranchTextBox.Text & ".99B.")
-        rebasing.addStep("Use PatchRunner to run Unapplied/Uninstalled Patches", 80, True, "Before running patches, consider reverting to a VM snapshot prior to the development of your current work, or swapping to a unit test VM.")
-        'rebasing.addStep("Review tags on the branch", 90)
-        rebasing.addStep("Import Apex from HEAD of branch: " & currentBranch, 100, True, "Using the Apex Import workflow")
+        rebasing.addStep("Export Apex to branch: " & currentBranch, True, "Using the Apex Export workflow")
+        rebasing.addStep("Switch to " & iRebaseBranchOn & " branch")
+        rebasing.addStep("Pull from Origin")
+        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & CurrentBranchTextBox.Text & ".99A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & CurrentBranchTextBox.Text & ".99A")
+        rebasing.addStep("Return to branch: " & currentBranch)
+        rebasing.addStep("Rebase Branch: " & currentBranch)
+        rebasing.addStep("Tag Branch: " & currentBranch & " HEAD with " & CurrentBranchTextBox.Text & ".99B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & CurrentBranchTextBox.Text & ".99B.")
+        rebasing.addStep("Use PatchRunner to run Unapplied/Uninstalled Patches", True, "Before running patches, consider reverting to a VM snapshot prior to the development of your current work, or swapping to a unit test VM.")
+        'rebasing.addStep("Review tags on the branch" )
+        rebasing.addStep("Import Apex from HEAD of branch: " & currentBranch, True, "Using the Apex Import workflow")
 
         rebasing.Show()
 
@@ -487,15 +487,15 @@
         Dim releasing As ProgressDialogue = New ProgressDialogue("Release to " & iTargetDB)
  
         releasing.MdiParent = GitPatcher
-        releasing.addStep("Change current DB to : " & lTargetDB, 10)
-        releasing.addStep("Switch to develop branch", 20, False)
-        releasing.addStep("Pull from Origin", 30, False)
+        releasing.addStep("Change current DB to : " & lTargetDB)
+        releasing.addStep("Switch to develop branch", False)
+        releasing.addStep("Pull from Origin", False)
 
-        releasing.addStep("Choose a tag to release from and checkout the tag", 40, False)
+        releasing.addStep("Choose a tag to release from and checkout the tag", False)
  
-        releasing.addStep("Use PatchRunner to run Uninstalled Patches", 40, True, "")
-        releasing.addStep("Import Apex", 50, True, "Using the Apex Import workflow")
-        releasing.addStep("Revert current DB to : " & lcurrentDB, 60)
+        releasing.addStep("Use PatchRunner to run Uninstalled Patches", True, "")
+        releasing.addStep("Import Apex", True, "Using the Apex Import workflow")
+        releasing.addStep("Revert current DB to : " & lcurrentDB)
         releasing.Show()
 
 

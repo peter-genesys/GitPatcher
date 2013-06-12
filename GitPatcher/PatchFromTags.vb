@@ -770,16 +770,16 @@ Public Class PatchFromTags
 
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")
         createPatchProgress.MdiParent = GitPatcher
-        createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, 10, True, "Using the Rebase workflow")
-        createPatchProgress.addStep("Review tags on Branch: " & currentBranch, 20)
-        createPatchProgress.addStep("Create edit, test", 30)
-        createPatchProgress.addStep("Commit to Branch: " & currentBranch, 40)
-        createPatchProgress.addStep("Switch to " & iRebaseBranchOn & " branch", 50)
-        'createPatchProgress.addStep("Pull from Origin", 70)
-        createPatchProgress.addStep("Merge from Branch: " & currentBranch, 60)
-        createPatchProgress.addStep("Push to Origin", 80, True, "If at this stage there is an error because your " & iRebaseBranchOn & " branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
-        createPatchProgress.addStep("Return to Branch: " & currentBranch, 90)
-        createPatchProgress.addStep("Release to ISDEVL", 100)
+        createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow")
+        createPatchProgress.addStep("Review tags on Branch: " & currentBranch)
+        createPatchProgress.addStep("Create edit, test")
+        createPatchProgress.addStep("Commit to Branch: " & currentBranch)
+        createPatchProgress.addStep("Switch to " & iRebaseBranchOn & " branch")
+        'createPatchProgress.addStep("Pull from Origin" )
+        createPatchProgress.addStep("Merge from Branch: " & currentBranch)
+        createPatchProgress.addStep("Push to Origin", True, "If at this stage there is an error because your " & iRebaseBranchOn & " branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
+        createPatchProgress.addStep("Return to Branch: " & currentBranch)
+        createPatchProgress.addStep("Release to ISDEVL")
 
         createPatchProgress.Show()
 

@@ -4,6 +4,7 @@
     Private nextStep As Integer = 0
     Private activeStep As Integer = -1
     Private started As Boolean = False
+    Private percentComplete As Integer = 0
 
     ' Public Class SkipStepException : Inherits ApplicationException
     '     Public Sub New(ByVal message As String)
@@ -29,6 +30,17 @@
 
     End Sub
 
+    Private Function calcPercentComplete(theStep) As Integer
+        If nextStep = 0 Then
+            percentComplete = 0
+        Else
+            percentComplete = (theStep) / nextStep * 100
+        End If
+
+        Return percentComplete
+    End Function
+
+
     Public Sub updateTitle(ByVal progressTitle As String)
         Me.Text = progressTitle
     End Sub
@@ -38,8 +50,9 @@
     End Function
 
 
-    Public Sub addStep(ByVal description As String, ByVal percentComplete As Integer, Optional ByVal checked As Boolean = True, Optional ByVal notes As String = "")
-        Dim aStep As ProcessStep = New ProcessStep(description, percentComplete, notes)
+    Public Sub addStep(ByVal description As String, Optional ByVal checked As Boolean = True, Optional ByVal notes As String = "")
+
+        Dim aStep As ProcessStep = New ProcessStep(description, notes)
 
         ReDim Preserve storedProcessSteps(nextStep)
         storedProcessSteps(nextStep) = aStep
@@ -55,9 +68,12 @@
         Dim lstatus As String = status
         If stepNo > -1 And stepNo <= storedProcessSteps.GetUpperBound(0) Then
 
-            ProgressBar.Value = storedProcessSteps(activeStep).percentComplete
-            pauseToRefreshProgressBar()
-
+            If status = "Doing" Then
+                ProgressBar.Value = calcPercentComplete(stepNo)
+            Else
+                ProgressBar.Value = calcPercentComplete(stepNo + 1)
+            End If
+ 
             If String.IsNullOrEmpty(storedProcessSteps(stepNo).status) And status = "Done" Then
                 lstatus = "Skipped"
             End If
@@ -67,6 +83,9 @@
                 Me.ProgressCheckedListBox.Items(stepNo) = storedProcessSteps(stepNo).description & " - " & storedProcessSteps(stepNo).status
 
             End If
+
+            pauseToRefreshProgressBar()
+
         End If
 
     End Sub
@@ -78,19 +97,24 @@
 
     End Sub
 
-    Public Sub updateStepPercentComplete(ByVal stepNo As Integer, percentComplete As Integer)
+    'Public Sub updateStepPercentComplete(ByVal stepNo As Integer, percentComplete As Integer)
+    '
+    '    storedProcessSteps(stepNo).setPercentComplete(percentComplete)
+    '
+    'End Sub
 
-        storedProcessSteps(stepNo).setPercentComplete(percentComplete)
-
-    End Sub
-
-
-
-
-
+ 
     ' Loops for a specificied period of time (milliseconds)
-    Private Shared Sub pauseToRefreshProgressBar()
-        Common.wait(1000)
+    Private Sub pauseToRefreshProgressBar()
+        If percentComplete = 100 Then
+            StartButton.Text = "Done"
+            Common.wait(1000)
+            Me.Close()
+        Else
+            Common.wait(1000)
+        End If
+
+
     End Sub
 
 
@@ -130,14 +154,18 @@
     '  End Sub
 
     Public Function toDoStep(gotoStep As Integer) As Boolean
-        'Conclude preceding step
-        For i As Integer = activeStep To gotoStep - 1
-            updateStepStatus(i, "Done")
-        Next
+
+        Dim last_active_step As Integer = activeStep
         'updateStep(activeStep, "Done")
         activeStep = gotoStep
+
+        'Conclude preceding step
+        For i As Integer = last_active_step To activeStep - 1
+            updateStepStatus(i, "Done")
+        Next
+ 
         'If gotoStep <= storedProcessSteps.GetUpperBound(0) - 1 Then
-        If gotoStep <= storedProcessSteps.GetUpperBound(0) Then
+        If activeStep <= storedProcessSteps.GetUpperBound(0) Then
             'activeStep = gotoStep
             If ProgressCheckedListBox.CheckedIndices.Contains(gotoStep) Then
                 ProgressCheckedListBox.SetSelected(activeStep, True)
@@ -148,6 +176,7 @@
                 Return False
             End If
         Else
+            'Me.Close()
             Return False
 
         End If

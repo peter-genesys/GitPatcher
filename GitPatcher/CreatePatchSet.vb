@@ -772,23 +772,23 @@ Public Class CreatePatchCollection
         Dim createPatchSetProgress As ProgressDialogue = New ProgressDialogue("Create DB " & iCreatePatchType)
         createPatchSetProgress.MdiParent = GitPatcher
 
-        createPatchSetProgress.addStep("Switch to develop branch", 5)
-        createPatchSetProgress.addStep("Pull from origin/develop", 10)
-        createPatchSetProgress.addStep("Create and Switch to release Branch: " & newBranch, 15)
-        createPatchSetProgress.addStep("Create, edit and test " & iCreatePatchType, 20)
-        createPatchSetProgress.addStep("Bump Apex version to " & l_app_version, 25)
-        createPatchSetProgress.addStep("Commit Apex version " & l_app_version, 30)
-        createPatchSetProgress.addStep("Tag this release as " & l_app_version, 35)
-        createPatchSetProgress.addStep("Push to origin/" & newBranch, 40)
+        createPatchSetProgress.addStep("Switch to develop branch")
+        createPatchSetProgress.addStep("Pull from origin/develop")
+        createPatchSetProgress.addStep("Create and Switch to release Branch: " & newBranch)
+        createPatchSetProgress.addStep("Create, edit and test " & iCreatePatchType)
+        createPatchSetProgress.addStep("Bump Apex version to " & l_app_version)
+        createPatchSetProgress.addStep("Commit Apex version " & l_app_version)
+        createPatchSetProgress.addStep("Tag this release as " & l_app_version)
+        createPatchSetProgress.addStep("Push to origin/" & newBranch)
 
-        createPatchSetProgress.addStep("Switch to develop branch", 45)
-        createPatchSetProgress.addStep("Pull from origin/develop", 50)
-        createPatchSetProgress.addStep("Merge from release Branch: " & newBranch, 55)
-        createPatchSetProgress.addStep("Commit - incase of merge conflict", 60)
-        createPatchSetProgress.addStep("Push to origin/develop", 65)
+        createPatchSetProgress.addStep("Switch to develop branch")
+        createPatchSetProgress.addStep("Pull from origin/develop")
+        createPatchSetProgress.addStep("Merge from release Branch: " & newBranch)
+        createPatchSetProgress.addStep("Commit - incase of merge conflict")
+        createPatchSetProgress.addStep("Push to origin/develop")
 
-        createPatchSetProgress.addStep("Release to ISDEVL", 70, False)
-        createPatchSetProgress.addStep("Release to ISTEST", 80, False)
+        createPatchSetProgress.addStep("Release to ISDEVL", False)
+        createPatchSetProgress.addStep("Release to ISTEST", False)
  
         'Import
 

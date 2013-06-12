@@ -116,9 +116,8 @@ Partial Class Main
         'TestworkflowToolStripMenuItem
         '
         Me.TestworkflowToolStripMenuItem.Name = "TestworkflowToolStripMenuItem"
-        Me.TestworkflowToolStripMenuItem.Size = New System.Drawing.Size(239, 22)
+        Me.TestworkflowToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.TestworkflowToolStripMenuItem.Text = "testworkflow"
-        Me.TestworkflowToolStripMenuItem.Visible = False
         '
         'TestrevertToolStripMenuItem
         '
