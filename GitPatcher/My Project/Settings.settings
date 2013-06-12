@@ -73,5 +73,11 @@ prismmobile</Value>
     <Setting Name="GITpath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Program Files (x86)\Git\bin\git.exe</Value>
     </Setting>
+    <Setting Name="HotFixBranches" Type="System.String" Scope="User">
+      <Value Profile="(Default)">master
+uat
+test
+develop</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -299,7 +299,7 @@
                 l_build_status = "RUN_AND_BUILD"
             End If
 
-            ImportProgress.updateStepDescription(3, "Set apex to " & l_build_status)
+            ImportProgress.updateStepDescription(2, "Set apex to " & l_build_status)
 
             modCreateApplicationSQL("", l_build_status)
 
@@ -311,9 +311,9 @@
 
             If l_skip_reports_DBs.Contains(Main.DBListComboBox().SelectedItem.ToString.ToLower) Then
                 modInstallSQL()
-                ImportProgress.updateStepDescription(4, "Import will SKIP reports queries and layouts")
+                ImportProgress.updateStepDescription(3, "Import will SKIP reports queries and layouts")
             Else
-                ImportProgress.updateStepDescription(4, "Import to INCLUDE reports queries and layouts")
+                ImportProgress.updateStepDescription(3, "Import to INCLUDE reports queries and layouts")
             End If
 
         End If

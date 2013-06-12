@@ -39,7 +39,7 @@ Partial Class Config
         Dim Label15 As System.Windows.Forms.Label
         Dim Label17 As System.Windows.Forms.Label
         Dim Label18 As System.Windows.Forms.Label
-        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Dim Label16 As System.Windows.Forms.Label
         Me.MailTabPage = New System.Windows.Forms.TabPage()
         Me.TestMailButton = New System.Windows.Forms.Button()
         Me.RecipientDomainTextBox = New System.Windows.Forms.TextBox()
@@ -65,6 +65,8 @@ Partial Class Config
         Me.TabPageGitRepo = New System.Windows.Forms.TabPage()
         Me.RepoListTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
+        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.HotFixBranchesTextBox = New System.Windows.Forms.TextBox()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -81,13 +83,14 @@ Partial Class Config
         Label15 = New System.Windows.Forms.Label()
         Label17 = New System.Windows.Forms.Label()
         Label18 = New System.Windows.Forms.Label()
-        CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        Label16 = New System.Windows.Forms.Label()
         Me.MailTabPage.SuspendLayout()
         Me.AppsTabPage.SuspendLayout()
         Me.PatchTabPage.SuspendLayout()
         Me.DBTabPage.SuspendLayout()
         Me.TabPageGitRepo.SuspendLayout()
         Me.ConfigTabs.SuspendLayout()
+        CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label11
@@ -233,10 +236,6 @@ Partial Class Config
         Label18.Size = New System.Drawing.Size(68, 13)
         Label18.TabIndex = 14
         Label18.Text = "Git exe Path:"
-        '
-        'MySettingsBindingSource
-        '
-        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
         '
         'MailTabPage
         '
@@ -452,6 +451,8 @@ Partial Class Config
         'TabPageGitRepo
         '
         Me.TabPageGitRepo.AutoScroll = True
+        Me.TabPageGitRepo.Controls.Add(Me.HotFixBranchesTextBox)
+        Me.TabPageGitRepo.Controls.Add(Label16)
         Me.TabPageGitRepo.Controls.Add(Me.RepoListTextBox)
         Me.TabPageGitRepo.Controls.Add(Repo1Label)
         Me.TabPageGitRepo.Location = New System.Drawing.Point(4, 22)
@@ -467,7 +468,7 @@ Partial Class Config
         Me.RepoListTextBox.Location = New System.Drawing.Point(8, 32)
         Me.RepoListTextBox.Multiline = True
         Me.RepoListTextBox.Name = "RepoListTextBox"
-        Me.RepoListTextBox.Size = New System.Drawing.Size(444, 242)
+        Me.RepoListTextBox.Size = New System.Drawing.Size(520, 110)
         Me.RepoListTextBox.TabIndex = 7
         '
         'ConfigTabs
@@ -483,6 +484,27 @@ Partial Class Config
         Me.ConfigTabs.Size = New System.Drawing.Size(542, 306)
         Me.ConfigTabs.TabIndex = 0
         '
+        'MySettingsBindingSource
+        '
+        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
+        '
+        'HotFixBranchesTextBox
+        '
+        Me.HotFixBranchesTextBox.Location = New System.Drawing.Point(8, 164)
+        Me.HotFixBranchesTextBox.Multiline = True
+        Me.HotFixBranchesTextBox.Name = "HotFixBranchesTextBox"
+        Me.HotFixBranchesTextBox.Size = New System.Drawing.Size(520, 110)
+        Me.HotFixBranchesTextBox.TabIndex = 9
+        '
+        'Label16
+        '
+        Label16.AutoSize = True
+        Label16.Location = New System.Drawing.Point(5, 148)
+        Label16.Name = "Label16"
+        Label16.Size = New System.Drawing.Size(88, 13)
+        Label16.TabIndex = 8
+        Label16.Text = "HotFix Branches:"
+        '
         'Config
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -491,7 +513,6 @@ Partial Class Config
         Me.Controls.Add(Me.ConfigTabs)
         Me.Name = "Config"
         Me.Text = "Config"
-        CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MailTabPage.ResumeLayout(False)
         Me.MailTabPage.PerformLayout()
         Me.AppsTabPage.ResumeLayout(False)
@@ -503,6 +524,7 @@ Partial Class Config
         Me.TabPageGitRepo.ResumeLayout(False)
         Me.TabPageGitRepo.PerformLayout()
         Me.ConfigTabs.ResumeLayout(False)
+        CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -532,4 +554,5 @@ Partial Class Config
     Friend WithEvents ApplicationsTextBox As System.Windows.Forms.TextBox
     Friend WithEvents PatchSetTextBox As System.Windows.Forms.TextBox
     Friend WithEvents GitExeTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents HotFixBranchesTextBox As System.Windows.Forms.TextBox
 End Class

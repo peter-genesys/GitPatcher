@@ -29,6 +29,10 @@
 
     End Sub
 
+    Public Sub updateTitle(ByVal progressTitle As String)
+        Me.Text = progressTitle
+    End Sub
+
     Public Function isStarted() As Boolean
         Return started
     End Function
@@ -81,7 +85,7 @@
     End Sub
 
 
- 
+
 
 
     ' Loops for a specificied period of time (milliseconds)

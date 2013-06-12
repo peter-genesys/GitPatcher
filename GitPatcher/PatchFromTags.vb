@@ -764,23 +764,23 @@ Public Class PatchFromTags
     End Sub
 
 
-    Public Shared Sub createPatchProcess()
+    Public Shared Sub createPatchProcess(iBranchType As String, iRebaseBranchOn As String)
 
         Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
 
-        Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create Patch")
+        Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")
         createPatchProgress.MdiParent = GitPatcher
-        createPatchProgress.addStep("Rebase branch: " & currentBranch, 10, True, "Using the Rebase workflow")
+        createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, 10, True, "Using the Rebase workflow")
         createPatchProgress.addStep("Review tags on Branch: " & currentBranch, 20)
         createPatchProgress.addStep("Create edit, test", 30)
         createPatchProgress.addStep("Commit to Branch: " & currentBranch, 40)
-        createPatchProgress.addStep("Switch to develop branch", 50)
+        createPatchProgress.addStep("Switch to " & iRebaseBranchOn & " branch", 50)
         'createPatchProgress.addStep("Pull from Origin", 70)
         createPatchProgress.addStep("Merge from Branch: " & currentBranch, 60)
-        createPatchProgress.addStep("Push to Origin", 80, True, "If at this stage there is an error because your develop branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
+        createPatchProgress.addStep("Push to Origin", 80, True, "If at this stage there is an error because your " & iRebaseBranchOn & " branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
         createPatchProgress.addStep("Return to Branch: " & currentBranch, 90)
         createPatchProgress.addStep("Release to ISDEVL", 100)
- 
+
         createPatchProgress.Show()
 
 
@@ -788,19 +788,19 @@ Public Class PatchFromTags
         Do Until createPatchProgress.isStarted
             Common.wait(1000)
         Loop
- 
+
         If createPatchProgress.toDoNextStep() Then
             'Rebase branch
-            Main.rebaseBranch()
- 
+            Main.rebaseBranch(iBranchType, iRebaseBranchOn)
+
         End If
 
-     
+
         If createPatchProgress.toDoNextStep() Then
             'Review tags on the branch
             Tortoise.Log(My.Settings.CurrentRepo)
         End If
- 
+
 
         If createPatchProgress.toDoNextStep() Then
 
@@ -831,7 +831,7 @@ Public Class PatchFromTags
             'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, "master")
             'Tortoise.Switch(My.Settings.CurrentRepo)
             'Switch to develop branch
-            GitBash.Switch(My.Settings.CurrentRepo, "develop")
+            GitBash.Switch(My.Settings.CurrentRepo, iRebaseBranchOn)
         End If
 
         'If createPatchProgress.toDoNextStep() Then
@@ -846,7 +846,7 @@ Public Class PatchFromTags
 
         If createPatchProgress.toDoNextStep() Then
             'Push to origin/develop 
-            GitBash.Push(My.Settings.CurrentRepo, "origin", "develop")
+            GitBash.Push(My.Settings.CurrentRepo, "origin", iRebaseBranchOn)
         End If
 
         If createPatchProgress.toDoNextStep() Then
@@ -858,7 +858,7 @@ Public Class PatchFromTags
             'Release to ISDEVL
             Main.releaseTo("ISDEVL")
         End If
- 
+
         'Finish
         createPatchProgress.toDoNextStep()
 

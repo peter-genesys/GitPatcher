@@ -5,8 +5,38 @@
         loadRepos()
         loadDBs()
         loadApexApps()
+        loadHotFixBranches()
         MinPatchTextBox.Text = My.Settings.MinPatch
     End Sub
+
+
+    Private Sub HotFixToolStripComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles HotFixToolStripComboBox.SelectedIndexChanged
+
+        NewHotFixToolStripMenuItem1.Text = "New Hotfix from Branch: " & HotFixToolStripComboBox.SelectedItem
+        RebaseHotFixToolStripMenuItem.Text = "Rebase Hotfix on Branch: " & HotFixToolStripComboBox.SelectedItem
+        MergeAndPushHotfixToolStripMenuItem.Text = "Merge Hotfix to Branch: " & HotFixToolStripComboBox.SelectedItem & ", then Push"
+        CreateDBHotFixPatchToolStripMenuItem.Text = "Create DB Hotfix Patch for Branch: " & HotFixToolStripComboBox.SelectedItem
+        CreateDBHotFixPatchToolStripMenuItem1.Text = "Create DB Hotfix Patch for Branch: " & HotFixToolStripComboBox.SelectedItem
+    End Sub
+
+    Public Sub loadHotFixBranches()
+        HotFixToolStripComboBox.Items.Clear()
+        For Each branch In My.Settings.HotFixBranches.Split(Chr(10))
+            branch = Trim(branch)
+            branch = branch.Replace(Chr(13), "")
+            If (branch.Length > 0) Then
+                HotFixToolStripComboBox.Items.Add(branch)
+            End If
+            'If My.Settings.CurrentRepo = branch Then
+            '    RepoComboBox.SelectedIndex = RepoComboBox.Items.Count - 1
+            'End If
+        Next
+        HotFixToolStripComboBox.SelectedIndex = 0
+
+    End Sub
+
+
+
 
     Public Sub loadRepos()
         RepoComboBox.Items.Clear()
@@ -75,7 +105,7 @@
     End Sub
 
     Private Sub PatchFromTagsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PatchFromTagsToolStripMenuItem.Click
-        PatchFromTags.createPatchProcess()
+        PatchFromTags.createPatchProcess("feature", "develop")
     End Sub
 
     Private Sub PatchRunnerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PatchRunnerToolStripMenuItem.Click
@@ -146,14 +176,13 @@
   
     End Sub
 
-
-    Private Sub MergeAndPushFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MergeAndPushFeatureToolStripMenuItem.Click
+    Private Sub mergeAndPushBranch(iBranchType As String, iBranchTo As String)
 
         Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
 
         Dim mergeAndPush As ProgressDialogue = New ProgressDialogue("Merge and Push branch:  " & currentBranch)
         mergeAndPush.MdiParent = GitPatcher
-        mergeAndPush.addStep("Switch to develop branch", 20)
+        mergeAndPush.addStep("Switch to " & iBranchTo & " branch", 20)
         mergeAndPush.addStep("Pull from Origin", 40)
         mergeAndPush.addStep("Merge from branch: " & currentBranch, 60)
         mergeAndPush.addStep("Push to Origin", 80)
@@ -167,13 +196,13 @@
 
         If mergeAndPush.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(My.Settings.CurrentRepo, "develop")
+            GitBash.Switch(My.Settings.CurrentRepo, iBranchTo)
 
         End If
 
         If mergeAndPush.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+            GitBash.Pull(My.Settings.CurrentRepo, "origin", iBranchTo)
 
         End If
 
@@ -185,7 +214,7 @@
 
         If mergeAndPush.toDoNextStep() Then
             'Push to origin/develop 
-            GitBash.Push(My.Settings.CurrentRepo, "origin", "develop")
+            GitBash.Push(My.Settings.CurrentRepo, "origin", iBranchTo)
 
         End If
 
@@ -195,67 +224,76 @@
             GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
         End If
 
-        mergeAndPush.toDoNextStep() 
+        mergeAndPush.toDoNextStep()
+
+    End Sub
+
+
+
+    Private Sub MergeAndPushFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MergeAndPushFeatureToolStripMenuItem.Click
+
+        mergeAndPushBranch("feature", "develop")
  
     End Sub
 
-    Private Sub createNewBranch(iBranchType As String)
+    Private Sub createNewBranch(iBranchType As String, iBranchFrom As String)
 
-        If MsgBox("Would you like to create a new " & iBranchType & " Branch with the standardised naming " & iBranchType & "/" & Me.AppCodeTextBox.Text & "/JIRA?", MsgBoxStyle.OkCancel, "Create a new " & iBranchType & " Branch") = MsgBoxResult.Ok Then
+        Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new " & iBranchType & " branch", "Create a new " & iBranchType & " Branch with the standardised naming " & iBranchType & "/" & Me.AppCodeTextBox.Text & "/JIRA.")
+        newFeature.MdiParent = GitPatcher
+        newFeature.addStep("Switch to " & iBranchFrom & " branch", 33)
+        newFeature.addStep("Pull from Origin", 60)
+        newFeature.addStep("Create and switch to " & iBranchType & " branch", 100)
+        'newFeature.addStep("Create intial Tag: " & branchName & ".00", 100)
 
-            Dim branchName As String = InputBox("Enter the Jira Id.", "Jira Id for new " & iBranchType & " Branch")
-            Dim newBranch As String = iBranchType & "/" & Me.AppCodeTextBox.Text & "/" & branchName
+ 
 
-            If Not String.IsNullOrEmpty(branchName) Then
+            newFeature.Show()
 
-                Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new " & iBranchType & " branch:  " & branchName)
-                newFeature.MdiParent = GitPatcher
-                newFeature.addStep("Switch to develop branch", 25)
-                newFeature.addStep("Pull from Origin", 50)
-                newFeature.addStep("Create and switch to branch: " & newBranch, 75)
-                newFeature.addStep("Create intial Tag: " & branchName & ".00", 100)
+            Do Until newFeature.isStarted
+                Common.wait(1000)
+            Loop
 
-                newFeature.Show()
+            If newFeature.toDoNextStep() Then
+                'Switch to develop branch
+            GitBash.Switch(My.Settings.CurrentRepo, iBranchFrom)
 
-                Do Until newFeature.isStarted
-                    Common.wait(1000)
-                Loop
+            End If
 
-                If newFeature.toDoNextStep() Then
-                    'Switch to develop branch
-                    GitBash.Switch(My.Settings.CurrentRepo, "develop")
+            If newFeature.toDoNextStep() Then
+                'Pull from origin/develop
+            GitBash.Pull(My.Settings.CurrentRepo, "origin", iBranchFrom)
 
-                End If
+            End If
 
-                If newFeature.toDoNextStep() Then
-                    'Pull from origin/develop
-                    GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+            If newFeature.toDoNextStep() Then
+                'Create and Switch to new branch
+                Dim branchName As String = InputBox("Enter the Jira Id.", "Jira Id for new " & iBranchType & " Branch")
+                Dim newBranch As String = iBranchType & "/" & Me.AppCodeTextBox.Text & "/" & branchName
 
-                End If
+                If Not String.IsNullOrEmpty(branchName) Then
 
-                If newFeature.toDoNextStep() Then
-                    'Create and Switch to new branch
+                    newFeature.updateTitle("Create new " & iBranchType & " branch:  " & branchName)
+                    newFeature.updateStepDescription(2, "Create and switch to " & iBranchType & " branch: " & newBranch)
+ 
                     GitBash.createBranch(My.Settings.CurrentRepo, newBranch)
 
                 End If
 
-                If newFeature.toDoNextStep() Then
-                    'Create the initial tag
-                    GitBash.TagSimple(My.Settings.CurrentRepo, branchName & ".00")
-                    'GitBash.TagAnnotated(My.Settings.CurrentRepo, branchName & ".00", "Initial tag on new " & Me.ApplicationListComboBox.SelectedItem & " " & iBranchType & " " & branchName)
+                'If newFeature.toDoNextStep() Then
+                '    'Create the initial tag
+                '    GitBash.TagSimple(My.Settings.CurrentRepo, branchName & ".00")
+                '    'GitBash.TagAnnotated(My.Settings.CurrentRepo, branchName & ".00", "Initial tag on new " & Me.ApplicationListComboBox.SelectedItem & " " & iBranchType & " " & branchName)
+                '
+                'End If
 
-                End If
-
-                newFeature.toDoNextStep()  
+                newFeature.toDoNextStep()
  
-
         End If
-
-        End If
+         
     End Sub
 
     Private Sub NewFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewFeatureToolStripMenuItem.Click
-        createNewBranch("feature")
+        createNewBranch("feature", "develop")
     End Sub
 
     Private Sub CreateDBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBPatchSetToolStripMenuItem.Click
@@ -276,9 +314,7 @@
         CreatePatchCollection.createCollectionProcess("minor", "patchset", Me.AppCodeTextBox.Text, "minor,patchset,feature,hotfix,ALL", "minor,patchset,feature,hotfix,ALL")
     End Sub
 
-    Private Sub NewHotfixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewHotfixToolStripMenuItem.Click
-        createNewBranch("hotfix")
-    End Sub
+ 
 
     Private Sub TagtestToolStripMenuItem_Click(sender As Object, e As EventArgs)
         GitBash.TagSimple(My.Settings.CurrentRepo, "DEMOTAG")
@@ -343,7 +379,7 @@
         Apex.restoreCreateApplicationSQL()
     End Sub
 
-    Public Sub rebaseBranch()
+    Public Sub rebaseBranch(iBranchType As String, iRebaseBranchOn As String)
         Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
 
         Dim rebasing As ProgressDialogue = New ProgressDialogue("Rebase branch " & currentBranch)
@@ -352,16 +388,16 @@
 
         rebasing.MdiParent = GitPatcher
         rebasing.addStep("Export Apex to branch: " & currentBranch, 10, True, "Using the Apex Export workflow")
-        rebasing.addStep("Switch to develop branch", 20)
+        rebasing.addStep("Switch to " & iRebaseBranchOn & " branch", 20)
         rebasing.addStep("Pull from Origin", 30)
-        rebasing.addStep("Tag Develop HEAD with " & CurrentBranchTextBox.Text & ".99A", 40, True, "Will Tag the develop head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & CurrentBranchTextBox.Text & ".99A")
+        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & CurrentBranchTextBox.Text & ".99A", 40, True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & CurrentBranchTextBox.Text & ".99A")
         rebasing.addStep("Return to branch: " & currentBranch, 50)
         rebasing.addStep("Rebase Branch: " & currentBranch, 60)
-        rebasing.addStep("Tag Branch: " & currentBranch & " HEAD with " & CurrentBranchTextBox.Text & ".99B", 70, True, "Will Tag the feature head commit for patch comparisons. Creates tag " & CurrentBranchTextBox.Text & ".99B.")
+        rebasing.addStep("Tag Branch: " & currentBranch & " HEAD with " & CurrentBranchTextBox.Text & ".99B", 70, True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & CurrentBranchTextBox.Text & ".99B.")
         rebasing.addStep("Use PatchRunner to run Unapplied/Uninstalled Patches", 80, True, "Before running patches, consider reverting to a VM snapshot prior to the development of your current work, or swapping to a unit test VM.")
         'rebasing.addStep("Review tags on the branch", 90)
         rebasing.addStep("Import Apex from HEAD of branch: " & currentBranch, 100, True, "Using the Apex Import workflow")
- 
+
         rebasing.Show()
 
 
@@ -378,18 +414,18 @@
 
         If rebasing.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(My.Settings.CurrentRepo, "develop")
+            GitBash.Switch(My.Settings.CurrentRepo, iRebaseBranchOn)
         End If
         If rebasing.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+            GitBash.Pull(My.Settings.CurrentRepo, "origin", iRebaseBranchOn)
         End If
 
         If rebasing.toDoNextStep() Then
             'Tag the develop head
-            l_tag_base = InputBox("Tagging current HEAD of develop.  Please enter 2 digit numeric tag.", "Create Tag")
+            l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please enter 2 digit numeric tag for next patch.", "Create Tag for next patch")
             Dim l_tagA As String = CurrentBranchTextBox.Text & "." & l_tag_base & "A"
-            rebasing.updateStepDescription(3, "Tag Develop HEAD with " & l_tagA)
+            rebasing.updateStepDescription(3, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
             GitBash.TagSimple(My.Settings.CurrentRepo, l_tagA)
 
         End If
@@ -430,7 +466,7 @@
             Apex.ApexImportFromTag()
 
         End If
- 
+
         'Finish
         rebasing.toDoNextStep()
     End Sub
@@ -438,7 +474,7 @@
 
 
     Private Sub RebaseFeatureHotfixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureHotfixToolStripMenuItem.Click
-        rebaseBranch()
+        rebaseBranch("feature", "develop")
     End Sub
 
 
@@ -540,5 +576,29 @@
 
     Private Sub ReleaseToISPRODToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISPRODToolStripMenuItem.Click
         releaseTo("ISPROD")
+    End Sub
+
+    Private Sub NewHotfixToolStripMenuItem1_Click(sender As Object, e As EventArgs)
+        createNewBranch("hotfix", HotFixToolStripComboBox.SelectedItem)
+    End Sub
+
+    Private Sub MergeAndPushHotfixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MergeAndPushHotfixToolStripMenuItem.Click
+        mergeAndPushBranch("hotfix", HotFixToolStripComboBox.SelectedItem)
+    End Sub
+
+    Private Sub RebaseHotFixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseHotFixToolStripMenuItem.Click
+        rebaseBranch("hotfix", HotFixToolStripComboBox.SelectedItem)
+    End Sub
+
+    Private Sub CreateDBHotFixPatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBHotFixPatchToolStripMenuItem.Click
+        PatchFromTags.createPatchProcess("hotfix", HotFixToolStripComboBox.SelectedItem)
+    End Sub
+
+    Private Sub CreateDBHotFixPatchToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CreateDBHotFixPatchToolStripMenuItem1.Click
+        PatchFromTags.createPatchProcess("hotfix", HotFixToolStripComboBox.SelectedItem)
+    End Sub
+
+    Private Sub CreateDBFeaturePatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBFeaturePatchToolStripMenuItem.Click
+        PatchFromTags.createPatchProcess("feature", "develop")
     End Sub
 End Class

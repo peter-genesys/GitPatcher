@@ -5,6 +5,7 @@
 
         'Repos
         RepoListTextBox.DataBindings.Add("Text", My.Settings, "RepoList")
+        HotFixBranchesTextBox.DataBindings.Add("Text", My.Settings, "HotFixBranches")
 
         'Databases
         DBListTextBox.DataBindings.Add("Text", My.Settings, "DBList")

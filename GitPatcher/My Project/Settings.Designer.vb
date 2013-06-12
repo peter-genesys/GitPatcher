@@ -302,6 +302,18 @@ Namespace My
                 Me("GITpath") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(), _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.Configuration.DefaultSettingValueAttribute("master" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "uat" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "test" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "develop")> _
+        Public Property HotFixBranches() As String
+            Get
+                Return CType(Me("HotFixBranches"), String)
+            End Get
+            Set(value As String)
+                Me("HotFixBranches") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
