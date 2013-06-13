@@ -14,12 +14,15 @@
     <Setting Name="SQLpath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\oraclexe\app\oracle\product\11.2.0\server\bin\sqlplus.exe</Value>
     </Setting>
-    <Setting Name="DBList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">DevDays
-isdevl</Value>
+    <Setting Name="DBList" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ISPROD
+ISUAT
+ISTEST
+ISDEVL
+VM</Value>
     </Setting>
     <Setting Name="CurrentDB" Type="System.String" Scope="User">
-      <Value Profile="(Default)">DevDays</Value>
+      <Value Profile="(Default)">VM</Value>
     </Setting>
     <Setting Name="ApexDirOffset" Type="System.String" Scope="User">
       <Value Profile="(Default)">\apex</Value>
@@ -27,12 +30,12 @@ isdevl</Value>
     <Setting Name="CurrentApex" Type="System.String" Scope="User">
       <Value Profile="(Default)">f101</Value>
     </Setting>
-    <Setting Name="ConnectionList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">127.0.0.1:1528:ORCL
-bneoda05.thiess.aus:1521:isdevl
-bneoda05.thiess.aus:1521:istest
+    <Setting Name="ConnectionList" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">bneoda04.thiess.aus:1521:isprod
 bneoda05.thiess.aus:1521:isuat
-bneoda04.thiess.aus:1521:isprod</Value>
+bneoda05.thiess.aus:1521:istest
+bneoda05.thiess.aus:1521:isdevl
+127.0.0.1:1528:ORCL</Value>
     </Setting>
     <Setting Name="AppList" Type="System.String" Scope="User">
       <Value Profile="(Default)">f101
@@ -76,7 +79,7 @@ prismmobile</Value>
     <Setting Name="GITpath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Program Files (x86)\Git\bin\git.exe</Value>
     </Setting>
-    <Setting Name="HotFixBranches" Type="System.String" Scope="User">
+    <Setting Name="HotFixBranches" Type="System.String" Scope="Application">
       <Value Profile="(Default)">master
 uat
 test

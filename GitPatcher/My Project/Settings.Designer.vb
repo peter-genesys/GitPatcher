@@ -102,21 +102,18 @@ Namespace My
             End Set
         End Property
         
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("DevDays"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"isdevl")>  _
-        Public Property DBList() As String
+         Global.System.Configuration.DefaultSettingValueAttribute("ISPROD"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"ISUAT"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"ISTEST"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"ISDEVL"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"VM")>  _
+        Public ReadOnly Property DBList() As String
             Get
                 Return CType(Me("DBList"),String)
             End Get
-            Set
-                Me("DBList") = value
-            End Set
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("DevDays")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("VM")>  _
         Public Property CurrentDB() As String
             Get
                 Return CType(Me("CurrentDB"),String)
@@ -150,17 +147,14 @@ Namespace My
             End Set
         End Property
         
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("127.0.0.1:1528:ORCL"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"bneoda05.thiess.aus:1521:isdevl"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"bneoda05.thiess.aus:1521:is"& _ 
-            "test"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"bneoda05.thiess.aus:1521:isuat"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"bneoda04.thiess.aus:1521:isprod")>  _
-        Public Property ConnectionList() As String
+         Global.System.Configuration.DefaultSettingValueAttribute("bneoda04.thiess.aus:1521:isprod"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"bneoda05.thiess.aus:1521:isuat"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"bneoda05.thiess."& _ 
+            "aus:1521:istest"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"bneoda05.thiess.aus:1521:isdevl"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"127.0.0.1:1528:ORCL")>  _
+        Public ReadOnly Property ConnectionList() As String
             Get
                 Return CType(Me("ConnectionList"),String)
             End Get
-            Set
-                Me("ConnectionList") = value
-            End Set
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
@@ -304,16 +298,13 @@ Namespace My
             End Set
         End Property
         
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("master"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"uat"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"test"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"develop")>  _
-        Public Property HotFixBranches() As String
+        Public ReadOnly Property HotFixBranches() As String
             Get
                 Return CType(Me("HotFixBranches"),String)
             End Get
-            Set
-                Me("HotFixBranches") = value
-            End Set
         End Property
     End Class
 End Namespace

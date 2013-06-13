@@ -59,15 +59,15 @@ Partial Class Config
         Me.ApexOffsetTextBox = New System.Windows.Forms.TextBox()
         Me.PatchOffsetTextBox = New System.Windows.Forms.TextBox()
         Me.DBTabPage = New System.Windows.Forms.TabPage()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.HotFixBranchesTextBox = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.ConnectionTextBox = New System.Windows.Forms.TextBox()
         Me.DBListTextBox = New System.Windows.Forms.TextBox()
         Me.TabPageGitRepo = New System.Windows.Forms.TabPage()
-        Me.HotFixBranchesTextBox = New System.Windows.Forms.TextBox()
         Me.RepoListTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.Label19 = New System.Windows.Forms.Label()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -246,7 +246,6 @@ Partial Class Config
         Label16.Size = New System.Drawing.Size(77, 13)
         Label16.TabIndex = 8
         Label16.Text = "HotFix Branch:"
-
         '
         'MailTabPage
         '
@@ -437,6 +436,24 @@ Partial Class Config
         Me.DBTabPage.Text = "Databases"
         Me.DBTabPage.UseVisualStyleBackColor = True
         '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.Location = New System.Drawing.Point(6, 264)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(232, 13)
+        Me.Label19.TabIndex = 13
+        Me.Label19.Text = "Provide a Hotfix Branch, if applicable for the DB"
+        '
+        'HotFixBranchesTextBox
+        '
+        Me.HotFixBranchesTextBox.Enabled = False
+        Me.HotFixBranchesTextBox.Location = New System.Drawing.Point(368, 32)
+        Me.HotFixBranchesTextBox.Multiline = True
+        Me.HotFixBranchesTextBox.Name = "HotFixBranchesTextBox"
+        Me.HotFixBranchesTextBox.Size = New System.Drawing.Size(160, 208)
+        Me.HotFixBranchesTextBox.TabIndex = 9
+        '
         'Label6
         '
         Me.Label6.AutoSize = True
@@ -448,6 +465,7 @@ Partial Class Config
         '
         'ConnectionTextBox
         '
+        Me.ConnectionTextBox.Enabled = False
         Me.ConnectionTextBox.Location = New System.Drawing.Point(143, 32)
         Me.ConnectionTextBox.Multiline = True
         Me.ConnectionTextBox.Name = "ConnectionTextBox"
@@ -456,6 +474,7 @@ Partial Class Config
         '
         'DBListTextBox
         '
+        Me.DBListTextBox.Enabled = False
         Me.DBListTextBox.Location = New System.Drawing.Point(8, 32)
         Me.DBListTextBox.Multiline = True
         Me.DBListTextBox.Name = "DBListTextBox"
@@ -474,14 +493,6 @@ Partial Class Config
         Me.TabPageGitRepo.TabIndex = 0
         Me.TabPageGitRepo.Text = "Git Repos"
         Me.TabPageGitRepo.UseVisualStyleBackColor = True
-        '
-        'HotFixBranchesTextBox
-        '
-        Me.HotFixBranchesTextBox.Location = New System.Drawing.Point(368, 32)
-        Me.HotFixBranchesTextBox.Multiline = True
-        Me.HotFixBranchesTextBox.Name = "HotFixBranchesTextBox"
-        Me.HotFixBranchesTextBox.Size = New System.Drawing.Size(160, 208)
-        Me.HotFixBranchesTextBox.TabIndex = 9
         '
         'RepoListTextBox
         '
@@ -507,15 +518,6 @@ Partial Class Config
         'MySettingsBindingSource
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
-        '
-        'Label19
-        '
-        Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(6, 264)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(232, 13)
-        Me.Label19.TabIndex = 13
-        Me.Label19.Text = "Provide a Hotfix Branch, if applicable for the DB"
         '
         'Config
         '
