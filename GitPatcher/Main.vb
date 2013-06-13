@@ -104,7 +104,7 @@
         My.Settings.Save()
     End Sub
 
-    Private Sub PatchFromTagsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PatchFromTagsToolStripMenuItem.Click
+    Private Sub PatchFromTagsToolStripMenuItem_Click(sender As Object, e As EventArgs)
         PatchFromTags.createPatchProcess("feature", "develop")
     End Sub
 
@@ -297,7 +297,7 @@
     End Sub
 
     Private Sub CreateDBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBPatchSetToolStripMenuItem.Click
-        CreatePatchCollection.createCollectionProcess("patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
+        CreatePatchCollection.createCollectionProcess("patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL", "istest")
     End Sub
 
     'Private Sub DBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs)
@@ -311,7 +311,7 @@
     'End Sub
 
     Private Sub CreateDBMinorReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBMinorReleaseToolStripMenuItem.Click
-        CreatePatchCollection.createCollectionProcess("minor", "patchset", Me.AppCodeTextBox.Text, "minor,patchset,feature,hotfix,ALL", "minor,patchset,feature,hotfix,ALL")
+        CreatePatchCollection.createCollectionProcess("minor", "patchset", Me.AppCodeTextBox.Text, "minor,patchset,feature,hotfix,ALL", "minor,patchset,feature,hotfix,ALL", "istest")
     End Sub
 
  
@@ -590,7 +590,7 @@
         rebaseBranch("hotfix", HotFixToolStripComboBox.SelectedItem)
     End Sub
 
-    Private Sub CreateDBHotFixPatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBHotFixPatchToolStripMenuItem.Click
+    Private Sub CreateDBHotFixPatchToolStripMenuItem_Click(sender As Object, e As EventArgs)
         PatchFromTags.createPatchProcess("hotfix", HotFixToolStripComboBox.SelectedItem)
     End Sub
 

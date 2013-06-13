@@ -63,10 +63,11 @@ Partial Class Config
         Me.ConnectionTextBox = New System.Windows.Forms.TextBox()
         Me.DBListTextBox = New System.Windows.Forms.TextBox()
         Me.TabPageGitRepo = New System.Windows.Forms.TabPage()
+        Me.HotFixBranchesTextBox = New System.Windows.Forms.TextBox()
         Me.RepoListTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.HotFixBranchesTextBox = New System.Windows.Forms.TextBox()
+        Me.Label19 = New System.Windows.Forms.Label()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -186,7 +187,7 @@ Partial Class Config
         'Label5
         '
         Label5.AutoSize = True
-        Label5.Location = New System.Drawing.Point(230, 16)
+        Label5.Location = New System.Drawing.Point(140, 16)
         Label5.Name = "Label5"
         Label5.Size = New System.Drawing.Size(69, 13)
         Label5.TabIndex = 10
@@ -236,6 +237,16 @@ Partial Class Config
         Label18.Size = New System.Drawing.Size(68, 13)
         Label18.TabIndex = 14
         Label18.Text = "Git exe Path:"
+        '
+        'Label16
+        '
+        Label16.AutoSize = True
+        Label16.Location = New System.Drawing.Point(365, 16)
+        Label16.Name = "Label16"
+        Label16.Size = New System.Drawing.Size(77, 13)
+        Label16.TabIndex = 8
+        Label16.Text = "HotFix Branch:"
+
         '
         'MailTabPage
         '
@@ -410,6 +421,9 @@ Partial Class Config
         '
         'DBTabPage
         '
+        Me.DBTabPage.Controls.Add(Me.Label19)
+        Me.DBTabPage.Controls.Add(Me.HotFixBranchesTextBox)
+        Me.DBTabPage.Controls.Add(Label16)
         Me.DBTabPage.Controls.Add(Me.Label6)
         Me.DBTabPage.Controls.Add(Me.ConnectionTextBox)
         Me.DBTabPage.Controls.Add(Me.DBListTextBox)
@@ -426,18 +440,18 @@ Partial Class Config
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(6, 264)
+        Me.Label6.Location = New System.Drawing.Point(6, 243)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(234, 13)
+        Me.Label6.Size = New System.Drawing.Size(169, 13)
         Me.Label6.TabIndex = 12
-        Me.Label6.Text = "Ensure there is a Connection for each Database"
+        Me.Label6.Text = "Provide a Connection for each DB"
         '
         'ConnectionTextBox
         '
-        Me.ConnectionTextBox.Location = New System.Drawing.Point(233, 32)
+        Me.ConnectionTextBox.Location = New System.Drawing.Point(143, 32)
         Me.ConnectionTextBox.Multiline = True
         Me.ConnectionTextBox.Name = "ConnectionTextBox"
-        Me.ConnectionTextBox.Size = New System.Drawing.Size(219, 229)
+        Me.ConnectionTextBox.Size = New System.Drawing.Size(219, 208)
         Me.ConnectionTextBox.TabIndex = 11
         '
         'DBListTextBox
@@ -445,14 +459,12 @@ Partial Class Config
         Me.DBListTextBox.Location = New System.Drawing.Point(8, 32)
         Me.DBListTextBox.Multiline = True
         Me.DBListTextBox.Name = "DBListTextBox"
-        Me.DBListTextBox.Size = New System.Drawing.Size(219, 229)
+        Me.DBListTextBox.Size = New System.Drawing.Size(129, 208)
         Me.DBListTextBox.TabIndex = 9
         '
         'TabPageGitRepo
         '
         Me.TabPageGitRepo.AutoScroll = True
-        Me.TabPageGitRepo.Controls.Add(Me.HotFixBranchesTextBox)
-        Me.TabPageGitRepo.Controls.Add(Label16)
         Me.TabPageGitRepo.Controls.Add(Me.RepoListTextBox)
         Me.TabPageGitRepo.Controls.Add(Repo1Label)
         Me.TabPageGitRepo.Location = New System.Drawing.Point(4, 22)
@@ -463,12 +475,20 @@ Partial Class Config
         Me.TabPageGitRepo.Text = "Git Repos"
         Me.TabPageGitRepo.UseVisualStyleBackColor = True
         '
+        'HotFixBranchesTextBox
+        '
+        Me.HotFixBranchesTextBox.Location = New System.Drawing.Point(368, 32)
+        Me.HotFixBranchesTextBox.Multiline = True
+        Me.HotFixBranchesTextBox.Name = "HotFixBranchesTextBox"
+        Me.HotFixBranchesTextBox.Size = New System.Drawing.Size(160, 208)
+        Me.HotFixBranchesTextBox.TabIndex = 9
+        '
         'RepoListTextBox
         '
         Me.RepoListTextBox.Location = New System.Drawing.Point(8, 32)
         Me.RepoListTextBox.Multiline = True
         Me.RepoListTextBox.Name = "RepoListTextBox"
-        Me.RepoListTextBox.Size = New System.Drawing.Size(520, 110)
+        Me.RepoListTextBox.Size = New System.Drawing.Size(520, 242)
         Me.RepoListTextBox.TabIndex = 7
         '
         'ConfigTabs
@@ -488,28 +508,20 @@ Partial Class Config
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
         '
-        'HotFixBranchesTextBox
+        'Label19
         '
-        Me.HotFixBranchesTextBox.Location = New System.Drawing.Point(8, 164)
-        Me.HotFixBranchesTextBox.Multiline = True
-        Me.HotFixBranchesTextBox.Name = "HotFixBranchesTextBox"
-        Me.HotFixBranchesTextBox.Size = New System.Drawing.Size(520, 110)
-        Me.HotFixBranchesTextBox.TabIndex = 9
-        '
-        'Label16
-        '
-        Label16.AutoSize = True
-        Label16.Location = New System.Drawing.Point(5, 148)
-        Label16.Name = "Label16"
-        Label16.Size = New System.Drawing.Size(88, 13)
-        Label16.TabIndex = 8
-        Label16.Text = "HotFix Branches:"
+        Me.Label19.AutoSize = True
+        Me.Label19.Location = New System.Drawing.Point(6, 264)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(232, 13)
+        Me.Label19.TabIndex = 13
+        Me.Label19.Text = "Provide a Hotfix Branch, if applicable for the DB"
         '
         'Config
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(566, 346)
+        Me.ClientSize = New System.Drawing.Size(564, 341)
         Me.Controls.Add(Me.ConfigTabs)
         Me.Name = "Config"
         Me.Text = "Config"
@@ -555,4 +567,5 @@ Partial Class Config
     Friend WithEvents PatchSetTextBox As System.Windows.Forms.TextBox
     Friend WithEvents GitExeTextBox As System.Windows.Forms.TextBox
     Friend WithEvents HotFixBranchesTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label19 As System.Windows.Forms.Label
 End Class

@@ -795,9 +795,9 @@ Public Class CreatePatchCollection
 
  
 
-    Public Shared Sub createCollectionProcess(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
+    Public Shared Sub createCollectionProcess(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String, iTargetDB As String)
 
-
+        Dim lcurrentDB As String = Main.DBListComboBox.SelectedItem
         Dim l_app_version = InputBox("Please enter a new version for " & Main.AppCodeTextBox.Text & " in the format: 2.17.01", "New " & Main.ApplicationListComboBox.SelectedItem & " Version")
 
         l_app_version = Main.AppCodeTextBox.Text & "-" & l_app_version
@@ -812,6 +812,9 @@ Public Class CreatePatchCollection
         createPatchSetProgress.addStep("Switch to develop branch")
         createPatchSetProgress.addStep("Pull from origin/develop")
         createPatchSetProgress.addStep("Create and Switch to release Branch: " & newBranch)
+
+        createPatchSetProgress.addStep("Change current DB to : " & iTargetDB)
+
         createPatchSetProgress.addStep("Create, edit and test " & iCreatePatchType)
         createPatchSetProgress.addStep("Bump Apex version to " & l_app_version)
         createPatchSetProgress.addStep("Commit Apex version " & l_app_version)
@@ -823,10 +826,10 @@ Public Class CreatePatchCollection
         createPatchSetProgress.addStep("Merge from release Branch: " & newBranch)
         createPatchSetProgress.addStep("Commit - incase of merge conflict")
         createPatchSetProgress.addStep("Push to origin/develop")
-
+        createPatchSetProgress.addStep("Revert current DB to : " & lcurrentDB)
         createPatchSetProgress.addStep("Release to ISDEVL", False)
         createPatchSetProgress.addStep("Release to ISTEST", False)
- 
+
         'Import
 
         createPatchSetProgress.Show()
@@ -838,12 +841,12 @@ Public Class CreatePatchCollection
         If createPatchSetProgress.toDoNextStep() Then
             'Switch to develop branch
             GitBash.Switch(My.Settings.CurrentRepo, "develop")
- 
+
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Pull from origin/develop
             GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
-         
+
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Create and Switch to new collection branch
@@ -851,6 +854,13 @@ Public Class CreatePatchCollection
 
 
         End If
+
+        If createPatchSetProgress.toDoNextStep() Then
+            'Change current DB to release DB
+            Main.DBListComboBox.SelectedItem = lTargetDB
+
+        End If
+
         If createPatchSetProgress.toDoNextStep() Then
 
             'Create, edit And test collection
@@ -878,7 +888,7 @@ Public Class CreatePatchCollection
         If createPatchSetProgress.toDoNextStep() Then
             'Push release to origin with tags
             GitBash.Push(My.Settings.CurrentRepo, "origin", newBranch, True)
- 
+
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Switch to develop branch
@@ -895,7 +905,7 @@ Public Class CreatePatchCollection
         If createPatchSetProgress.toDoNextStep() Then
             'Merge from release
             Tortoise.Merge(My.Settings.CurrentRepo)
-             
+
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Commit - incase of merge conflict
@@ -910,7 +920,11 @@ Public Class CreatePatchCollection
 
         End If
 
+        If createPatchSetProgress.toDoNextStep() Then
+            'Revert current DB  
+            Main.DBListComboBox.SelectedItem = lcurrentDB
 
+        End If
         If createPatchSetProgress.toDoNextStep() Then
             'Release to ISDEVL
             Main.releaseTo("ISDEVL")
@@ -920,7 +934,7 @@ Public Class CreatePatchCollection
             'Release to ISTEST
             Main.releaseTo("ISTEST")
         End If
- 
+
         'Done
         createPatchSetProgress.toDoNextStep()
 

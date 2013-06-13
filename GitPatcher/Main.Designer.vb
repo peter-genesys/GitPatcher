@@ -31,6 +31,7 @@ Partial Class Main
         Me.ShowindexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TestworkflowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TestrevertToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TestCreatePatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HOTFIXToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HotFixToolStripComboBox = New System.Windows.Forms.ToolStripComboBox()
         Me.NewHotFixToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
@@ -38,8 +39,6 @@ Partial Class Main
         Me.RebaseHotFixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MergeAndPushHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GITToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PatchFromTagsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateDBHotFixPatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBPatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBMinorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PatchRunnerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -75,7 +74,6 @@ Partial Class Main
         Me.Label11 = New System.Windows.Forms.Label()
         Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.TestCreatePatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -140,6 +138,13 @@ Partial Class Main
         Me.TestrevertToolStripMenuItem.Text = "testrevert"
         Me.TestrevertToolStripMenuItem.Visible = False
         '
+        'TestCreatePatchSetToolStripMenuItem
+        '
+        Me.TestCreatePatchSetToolStripMenuItem.Name = "TestCreatePatchSetToolStripMenuItem"
+        Me.TestCreatePatchSetToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.TestCreatePatchSetToolStripMenuItem.Text = "testCreatePatchSet"
+        Me.TestCreatePatchSetToolStripMenuItem.Visible = False
+        '
         'HOTFIXToolStripMenuItem
         '
         Me.HOTFIXToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HotFixToolStripComboBox, Me.NewHotFixToolStripMenuItem1, Me.CreateDBHotFixPatchToolStripMenuItem1, Me.RebaseHotFixToolStripMenuItem, Me.MergeAndPushHotfixToolStripMenuItem})
@@ -179,22 +184,10 @@ Partial Class Main
         '
         'GITToolStripMenuItem
         '
-        Me.GITToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PatchFromTagsToolStripMenuItem, Me.CreateDBHotFixPatchToolStripMenuItem, Me.CreateDBPatchSetToolStripMenuItem, Me.CreateDBMinorReleaseToolStripMenuItem, Me.PatchRunnerToolStripMenuItem})
+        Me.GITToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CreateDBPatchSetToolStripMenuItem, Me.CreateDBMinorReleaseToolStripMenuItem, Me.PatchRunnerToolStripMenuItem})
         Me.GITToolStripMenuItem.Name = "GITToolStripMenuItem"
         Me.GITToolStripMenuItem.Size = New System.Drawing.Size(58, 20)
         Me.GITToolStripMenuItem.Text = "PATCH"
-        '
-        'PatchFromTagsToolStripMenuItem
-        '
-        Me.PatchFromTagsToolStripMenuItem.Name = "PatchFromTagsToolStripMenuItem"
-        Me.PatchFromTagsToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.PatchFromTagsToolStripMenuItem.Text = "Create DB Feature Patch"
-        '
-        'CreateDBHotFixPatchToolStripMenuItem
-        '
-        Me.CreateDBHotFixPatchToolStripMenuItem.Name = "CreateDBHotFixPatchToolStripMenuItem"
-        Me.CreateDBHotFixPatchToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.CreateDBHotFixPatchToolStripMenuItem.Text = "Create DB HotFix Patch"
         '
         'CreateDBPatchSetToolStripMenuItem
         '
@@ -224,13 +217,13 @@ Partial Class Main
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
+        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ImportToolStripMenuItem.Text = "Import"
         '
         'ExportToolStripMenuItem
         '
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
+        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ExportToolStripMenuItem.Text = "Export"
         '
         'RELEASEToolStripMenuItem
@@ -468,12 +461,6 @@ Partial Class Main
         Me.Label13.TabIndex = 25
         Me.Label13.Text = "Code"
         '
-        'TestCreatePatchSetToolStripMenuItem
-        '
-        Me.TestCreatePatchSetToolStripMenuItem.Name = "TestCreatePatchSetToolStripMenuItem"
-        Me.TestCreatePatchSetToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.TestCreatePatchSetToolStripMenuItem.Text = "testCreatePatchSet"
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
@@ -517,7 +504,6 @@ End Sub
     Friend WithEvents GITToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents RepoComboBox As System.Windows.Forms.ComboBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents PatchFromTagsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents CurrentBranchTextBox As System.Windows.Forms.TextBox
     Friend WithEvents RootPatchDirTextBox As System.Windows.Forms.TextBox
@@ -563,7 +549,6 @@ End Sub
     Friend WithEvents NewHotFixToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents RebaseHotFixToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MergeAndPushHotfixToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents CreateDBHotFixPatchToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CreateDBHotFixPatchToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CreateDBFeaturePatchToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestCreatePatchSetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem

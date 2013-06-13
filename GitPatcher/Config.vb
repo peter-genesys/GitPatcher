@@ -43,4 +43,5 @@
     Private Sub TestMailButton_Click(sender As Object, e As EventArgs) Handles TestMailButton.Click
         Mail.SendNotification("Test Email", "Just testing my config for email from GitPatcher")
     End Sub
+ 
 End Class

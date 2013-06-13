@@ -29,7 +29,10 @@ isdevl</Value>
     </Setting>
     <Setting Name="ConnectionList" Type="System.String" Scope="User">
       <Value Profile="(Default)">127.0.0.1:1528:ORCL
-bneoda05.thiess.aus:1521:isdevl</Value>
+bneoda05.thiess.aus:1521:isdevl
+bneoda05.thiess.aus:1521:istest
+bneoda05.thiess.aus:1521:isuat
+bneoda04.thiess.aus:1521:isprod</Value>
     </Setting>
     <Setting Name="AppList" Type="System.String" Scope="User">
       <Value Profile="(Default)">f101
