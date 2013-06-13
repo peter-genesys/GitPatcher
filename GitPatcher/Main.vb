@@ -15,8 +15,8 @@
         NewHotFixToolStripMenuItem1.Text = "New Hotfix from Branch: " & HotFixToolStripComboBox.SelectedItem
         RebaseHotFixToolStripMenuItem.Text = "Rebase Hotfix on Branch: " & HotFixToolStripComboBox.SelectedItem
         MergeAndPushHotfixToolStripMenuItem.Text = "Merge Hotfix to Branch: " & HotFixToolStripComboBox.SelectedItem & ", then Push"
-        CreateDBHotFixPatchToolStripMenuItem.Text = "Create DB Hotfix Patch for Branch: " & HotFixToolStripComboBox.SelectedItem
         CreateDBHotFixPatchToolStripMenuItem1.Text = "Create DB Hotfix Patch for Branch: " & HotFixToolStripComboBox.SelectedItem
+        MultiDBHotFixPatchToolStripMenuItem.Text = "Multi DB Hotfix Patch: " & HotFixToolStripComboBox.SelectedItem & " and Downwards"
     End Sub
 
     Public Sub loadHotFixBranches()
@@ -606,5 +606,44 @@
         'Create, edit And test collection
         Dim Wizard As New CreatePatchCollection("prism-2.17.04", "patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
         Wizard.ShowDialog() 'WAITING HERE!!
+    End Sub
+
+    Private Sub MultiDBHotFixPatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MultiDBHotFixPatchToolStripMenuItem.Click
+ 
+        Dim patchThisBranch As Boolean = False
+        Dim multiHotFix As ProgressDialogue = New ProgressDialogue("Multi HotFix Patch for " & HotFixToolStripComboBox.SelectedItem & " Downwards")
+
+        multiHotFix.MdiParent = GitPatcher
+
+        For i = 0 To HotFixToolStripComboBox.Items.Count - 1
+
+            If HotFixToolStripComboBox.Items(i) = HotFixToolStripComboBox.SelectedItem Then
+                patchThisBranch = True
+            End If
+
+            multiHotFix.addStep("Create a HotFix Patch for branch : " & HotFixToolStripComboBox.Items(i), patchThisBranch)
+
+        Next
+ 
+        multiHotFix.Show()
+
+        Do Until multiHotFix.isStarted
+            Common.wait(1000)
+        Loop
+
+        For i = 0 To HotFixToolStripComboBox.Items.Count - 1
+
+            If multiHotFix.toDoNextStep() Then
+                PatchFromTags.createPatchProcess("hotfix", HotFixToolStripComboBox.Items(i))
+            End If
+ 
+        Next
+
+ 
+        'Finish
+        multiHotFix.toDoNextStep()
+
+ 
+
     End Sub
 End Class

@@ -857,7 +857,7 @@ Public Class CreatePatchCollection
 
         If createPatchSetProgress.toDoNextStep() Then
             'Change current DB to release DB
-            Main.DBListComboBox.SelectedItem = lTargetDB
+            Main.DBListComboBox.SelectedItem = iTargetDB
 
         End If
 
