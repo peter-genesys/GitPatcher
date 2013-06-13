@@ -53,7 +53,11 @@ Public Class CreatePatchCollection
 
         Findtags()
 
-
+        TagFilterCheckBox.Checked = True
+        RadioButtonUnapplied.Checked = True
+ 
+        PatchFilterGroupBox.Text = Main.DBListComboBox.SelectedItem & " Filter"
+ 
     End Sub
 
 
@@ -152,54 +156,88 @@ Public Class CreatePatchCollection
 
     Private Sub FindPatches()
 
-
-
-        AvailablePatchesListBox.Items.Clear()
-
-        If Not String.IsNullOrEmpty(Tag1TextBox.Text) And Not String.IsNullOrEmpty(Tag2TextBox.Text) Then
-
-            For Each change In GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
-
-                If change.contains("install.sql") And Common.stringContainsSetMember(change, pFindPatchTypes, ",") And Common.stringContainsSetMember(change, pFindPatchFilters, ",") Then
-                    'PatchesCheckedListBox.Items.Add(change)
-                    AvailablePatchesListBox.Items.Add(Common.dropLastSegment(Common.dropFirstSegment(change, "/"), "/"))
-                    'PatchesCheckedListBox.Items.Add(dropFirstSegment(change, "/"))
-                    'PatchesCheckedListBox.Items.Add(dropLastSegment(change, "/"))
-
-                    ' AvailablePatchesListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
-                End If
-
-            Next
-
+        Dim taggedPatches As New Collection
+  
+        'First use the Filter box to find available patches from the file system and with reference to the current DB.
+        If RadioButtonUnapplied.Checked Then
+            PatchRunner.FindUnappliedPatches(Me.AvailablePatchesListBox)
         Else
-
-            Dim allPatches As New Collection()
-
-            If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
-
-                RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", allPatches, Main.RootPatchDirTextBox.Text)
-
-            End If
-            For Each patchname As String In allPatches
-                If (String.IsNullOrEmpty(pFindPatchTypes) Or Common.stringContainsSetMember(patchname, pFindPatchTypes, ",")) And Common.stringContainsSetMember(patchname, pFindPatchFilters, ",") Then
-                    AvailablePatchesListBox.Items.Add(patchname)
-                    'PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
-                End If
-            Next
-
+            PatchRunner.FindPatches(Me.AvailablePatchesListBox, Me.RadioButtonUninstalled.Checked)
         End If
 
 
+        'Next get a list of patches between the 2 tags and filter the orginal list by this.
+        If String.IsNullOrEmpty(Tag1TextBox.Text) Or String.IsNullOrEmpty(Tag2TextBox.Text) Then
+            TagFilterCheckBox.Checked = False
+        End If
+
+        If TagFilterCheckBox.Checked Then
+            'taggedPatches = GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
+
+            'Find patches between 2 tags
+            For Each change In GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
+                'Apply Filters
+                If change.contains("install.sql") And Common.stringContainsSetMember(change, pFindPatchTypes, ",") And Common.stringContainsSetMember(change, pFindPatchFilters, ",") Then
+
+                    taggedPatches.Add(Replace(Common.dropLastSegment(Common.dropFirstSegment(change, "/"), "/"), "/", "\"))
+                    'ChosenPatchesListBox.Items.Add(Replace(Common.dropLastSegment(Common.dropFirstSegment(change, "/"), "/"), "/", "\"))
+ 
+                End If
+
+            Next
+
+
+        End If
+
+        Dim patchMatch As Boolean = False
+        Dim patchTagged As Boolean = True
+ 
+        'process in reverse order, because removing items from the list, changes the indexes.  reverse order will not be affected.
+        For i As Integer = AvailablePatchesListBox.Items.Count - 1 To 0 Step -1
+            Dim availablePatch As String = AvailablePatchesListBox.Items(i)
+            'Check patch matches filter
+            patchMatch = False
+ 
+            If (String.IsNullOrEmpty(pFindPatchTypes) Or Common.stringContainsSetMember(availablePatch, pFindPatchTypes, ",")) And _
+                Common.stringContainsSetMember(availablePatch, pFindPatchFilters, ",") Then
+                patchMatch = True
+            End If
+ 
+            If TagFilterCheckBox.Checked Then
+                patchTagged = False
+
+                'SHOULD BE EQUIV TO LOOP BELOW, BUT DOES NOT WORK.
+                'If taggedPatches.Contains(availablePatch) Then
+                '    patchTagged = True
+                'End If
+
+                For Each change In taggedPatches
+                    If change = availablePatch Then
+                        patchTagged = True
+                    End If
+                Next
+            End If
+
+
+            If Not patchMatch Or Not patchTagged Then
+                'patch is to be filtered from the list.
+                AvailablePatchesListBox.Items.RemoveAt(i)
+
+            End If
+
+        Next
+ 
+
     End Sub
 
-    Private Sub AvailablePatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AvailablePatchesListBox.DoubleClick
+    Private Sub AvailablePatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AvailablePatchesListBox.Click
         If Not ChosenPatchesListBox.Items.Contains(AvailablePatchesListBox.SelectedItem) Then
             ChosenPatchesListBox.Items.Add(AvailablePatchesListBox.SelectedItem)
         End If
 
     End Sub
 
-    Private Sub ChosenPatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ChosenPatchesListBox.DoubleClick
+    Private Sub ChosenPatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ChosenPatchesListBox.Click
 
         If ChosenPatchesListBox.Items.Count > 0 Then
             ChosenPatchesListBox.Items.RemoveAt(ChosenPatchesListBox.SelectedIndex)
@@ -210,8 +248,7 @@ Public Class CreatePatchCollection
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles FindButton.Click
         FindPatches()
-
-
+ 
     End Sub
 
     Private Sub PatchButton_Click(sender As Object, e As EventArgs) Handles PatchButton.Click
@@ -890,4 +927,22 @@ Public Class CreatePatchCollection
     End Sub
 
 
+    Private Sub CopyAllPatches()
+        'Copy Selected Changes to the next list box.
+        ChosenPatchesListBox.Items.Clear()
+
+        For i As Integer = 0 To AvailablePatchesListBox.Items.Count - 1
+ 
+                ChosenPatchesListBox.Items.Add(AvailablePatchesListBox.Items(i).ToString)
+ 
+        Next
+    End Sub
+
+    Private Sub ChooseAllButton_Click(sender As Object, e As EventArgs) Handles ChooseAllButton.Click
+        CopyAllPatches()
+    End Sub
+
+    Private Sub ClearButton_Click(sender As Object, e As EventArgs) Handles ClearButton.Click
+        ChosenPatchesListBox.Items.Clear()
+    End Sub
 End Class

@@ -66,7 +66,7 @@ Public Class PatchRunner
     End Sub
 
 
-    Private Sub FindPatches(ByVal iHideInstalled As Boolean)
+    Public Sub FindPatches(ByRef foundPatches As ListBox, ByVal iHideInstalled As Boolean)
 
         'Simple but replies on TNSNAMES File
         Dim oradb As String = "Data Source=" & Main.DBListComboBox().SelectedItem & ";User Id=patch_admin;Password=patch_admin;"
@@ -83,10 +83,10 @@ Public Class PatchRunner
         Dim dr As OracleDataReader
 
 
-        AvailablePatchesListBox.Items.Clear()
+        foundPatches.Items.Clear()
         If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
 
-            RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", AvailablePatchesListBox, Main.RootPatchDirTextBox.Text)
+            RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", foundPatches, Main.RootPatchDirTextBox.Text)
 
         End If
 
@@ -104,7 +104,7 @@ Public Class PatchRunner
                 conn.Open()
 
                 'process in reverse order, because removing items from the list, changes the indexes.  reverse order will not be affected.
-                For i As Integer = AvailablePatchesListBox.Items.Count - 1 To 0 Step -1
+                For i As Integer = foundPatches.Items.Count - 1 To 0 Step -1
 
                     'Check whether the patch has been successfully installed.
                     patchMatch = False
@@ -112,7 +112,7 @@ Public Class PatchRunner
                     'If iHideApplied Then
                     ' sql = "select max(patch_name) patch_name from patches_unapplied_v where patch_name = '" & Common.getLastSegment(AvailablePatchesListBox.Items(i), "\") & "'"
                     'If iHideInstalled Then
-                    sql = "select max(patch_name) patch_name from patches where patch_name = '" & Common.getLastSegment(AvailablePatchesListBox.Items(i), "\") & "' and success_yn = 'Y'"
+                    sql = "select max(patch_name) patch_name from patches where patch_name = '" & Common.getLastSegment(foundPatches.Items(i), "\") & "' and success_yn = 'Y'"
 
                     ' End If
 
@@ -131,13 +131,13 @@ Public Class PatchRunner
                     'If (iHideInstalled And patchMatch) Or (iHideApplied And Not patchMatch) Then
                     If patchMatch Then
                         'patch is to be filtered from the list.
-                        AvailablePatchesListBox.Items.RemoveAt(i)
+                        foundPatches.Items.RemoveAt(i)
 
                     End If
 
 
                 Next
- 
+
 
                 conn.Close()   ' Visual Basic
                 conn.Dispose() ' Visual Basic
@@ -158,17 +158,17 @@ Public Class PatchRunner
     End Sub
 
 
-    Private Sub FindUnappliedPatches()
+    Public Sub FindUnappliedPatches(ByRef foundPatches As ListBox)
 
 
-        AvailablePatchesListBox.Items.Clear()
+        foundPatches.Items.Clear()
         Dim availableList As ListBox = New ListBox
         If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
 
             RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", availableList, Main.RootPatchDirTextBox.Text)
 
         End If
- 
+
         'Simple but replies on TNSNAMES File
         Dim oradb As String = "Data Source=" & Main.DBListComboBox().SelectedItem & ";User Id=patch_admin;Password=patch_admin;"
 
@@ -193,20 +193,20 @@ Public Class PatchRunner
             While (dr.Read())
                 Dim l_patch_name As String = dr.Item("patch_name")
                 Dim l_patch_found As Boolean = False
-       
+
                 For i As Integer = 0 To availableList.Items.Count - 1
 
                     If availableList.Items(i).ToString().Contains(l_patch_name) Then
-                        AvailablePatchesListBox.Items.Add(availableList.Items(i))
+                        foundPatches.Items.Add(availableList.Items(i))
                         l_patch_found = True
                     End If
- 
+
                 Next
 
                 If Not l_patch_found Then
                     MsgBox("WARNING: Unapplied patch " & l_patch_name & " is not present in the local checkout.")
                 End If
- 
+
             End While
 
             conn.Close()   ' Visual Basic
@@ -220,7 +220,7 @@ Public Class PatchRunner
 
         End Try
 
-         
+
 
 
     End Sub
@@ -228,9 +228,9 @@ Public Class PatchRunner
 
     Private Sub SearchPatchesButton_Click(sender As Object, e As EventArgs) Handles SearchPatchesButton.Click
         If RadioButtonUnapplied.Checked Then
-            FindUnappliedPatches()
+            FindUnappliedPatches(AvailablePatchesListBox)
         Else
-            FindPatches(RadioButtonUninstalled.Checked)
+            FindPatches(AvailablePatchesListBox, RadioButtonUninstalled.Checked)
         End If
 
         'FindPatches(True, False)

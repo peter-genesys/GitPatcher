@@ -601,4 +601,10 @@
     Private Sub CreateDBFeaturePatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBFeaturePatchToolStripMenuItem.Click
         PatchFromTags.createPatchProcess("feature", "develop")
     End Sub
+
+    Private Sub TestCreatePatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestCreatePatchSetToolStripMenuItem.Click
+        'Create, edit And test collection
+        Dim Wizard As New CreatePatchCollection("prism-2.17.04", "patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
+        Wizard.ShowDialog() 'WAITING HERE!!
+    End Sub
 End Class

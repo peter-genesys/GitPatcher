@@ -39,6 +39,11 @@ Partial Class CreatePatchCollection
         Me.Label15 = New System.Windows.Forms.Label()
         Me.TabPagePatches = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.TagFilterCheckBox = New System.Windows.Forms.CheckBox()
+        Me.PatchFilterGroupBox = New System.Windows.Forms.GroupBox()
+        Me.RadioButtonUnapplied = New System.Windows.Forms.RadioButton()
+        Me.RadioButtonAll = New System.Windows.Forms.RadioButton()
+        Me.RadioButtonUninstalled = New System.Windows.Forms.RadioButton()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.AvailablePatchesListBox = New System.Windows.Forms.ListBox()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -75,6 +80,8 @@ Partial Class CreatePatchCollection
         Me.TabPageExecute = New System.Windows.Forms.TabPage()
         Me.ComitButton = New System.Windows.Forms.Button()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
+        Me.ChooseAllButton = New System.Windows.Forms.Button()
+        Me.ClearButton = New System.Windows.Forms.Button()
         Me.PatchTabControl.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.TabPagePatches.SuspendLayout()
@@ -82,6 +89,7 @@ Partial Class CreatePatchCollection
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
+        Me.PatchFilterGroupBox.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
         Me.TabPageSuper.SuspendLayout()
         Me.TabPagePatchDefn.SuspendLayout()
@@ -124,7 +132,7 @@ Partial Class CreatePatchCollection
         '
         'FindButton
         '
-        Me.FindButton.Location = New System.Drawing.Point(77, 17)
+        Me.FindButton.Location = New System.Drawing.Point(6, 12)
         Me.FindButton.Name = "FindButton"
         Me.FindButton.Size = New System.Drawing.Size(139, 23)
         Me.FindButton.TabIndex = 4
@@ -250,6 +258,8 @@ Partial Class CreatePatchCollection
         '
         'SplitContainer1.Panel1
         '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.TagFilterCheckBox)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.PatchFilterGroupBox)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label3)
         Me.SplitContainer1.Panel1.Controls.Add(Me.AvailablePatchesListBox)
         Me.SplitContainer1.Panel1.Controls.Add(Me.FindButton)
@@ -257,6 +267,8 @@ Partial Class CreatePatchCollection
         '
         'SplitContainer1.Panel2
         '
+        Me.SplitContainer1.Panel2.Controls.Add(Me.ClearButton)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.ChooseAllButton)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label4)
         Me.SplitContainer1.Panel2.Controls.Add(Me.ChosenPatchesListBox)
         Me.SplitContainer1.Panel2MinSize = 50
@@ -264,10 +276,65 @@ Partial Class CreatePatchCollection
         Me.SplitContainer1.SplitterDistance = 372
         Me.SplitContainer1.TabIndex = 5
         '
+        'TagFilterCheckBox
+        '
+        Me.TagFilterCheckBox.AutoSize = True
+        Me.TagFilterCheckBox.Location = New System.Drawing.Point(56, 55)
+        Me.TagFilterCheckBox.Name = "TagFilterCheckBox"
+        Me.TagFilterCheckBox.Size = New System.Drawing.Size(89, 17)
+        Me.TagFilterCheckBox.TabIndex = 38
+        Me.TagFilterCheckBox.Text = "Filter by Tags"
+        Me.TagFilterCheckBox.UseVisualStyleBackColor = True
+        '
+        'PatchFilterGroupBox
+        '
+        Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUnapplied)
+        Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonAll)
+        Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUninstalled)
+        Me.PatchFilterGroupBox.Location = New System.Drawing.Point(171, 12)
+        Me.PatchFilterGroupBox.Name = "PatchFilterGroupBox"
+        Me.PatchFilterGroupBox.Size = New System.Drawing.Size(182, 95)
+        Me.PatchFilterGroupBox.TabIndex = 7
+        Me.PatchFilterGroupBox.TabStop = False
+        Me.PatchFilterGroupBox.Text = "Filter"
+        '
+        'RadioButtonUnapplied
+        '
+        Me.RadioButtonUnapplied.AutoSize = True
+        Me.RadioButtonUnapplied.Location = New System.Drawing.Point(27, 19)
+        Me.RadioButtonUnapplied.Name = "RadioButtonUnapplied"
+        Me.RadioButtonUnapplied.Size = New System.Drawing.Size(73, 17)
+        Me.RadioButtonUnapplied.TabIndex = 35
+        Me.RadioButtonUnapplied.TabStop = True
+        Me.RadioButtonUnapplied.Text = "Unapplied"
+        Me.RadioButtonUnapplied.UseVisualStyleBackColor = True
+        '
+        'RadioButtonAll
+        '
+        Me.RadioButtonAll.AutoSize = True
+        Me.RadioButtonAll.Location = New System.Drawing.Point(27, 65)
+        Me.RadioButtonAll.Name = "RadioButtonAll"
+        Me.RadioButtonAll.Size = New System.Drawing.Size(36, 17)
+        Me.RadioButtonAll.TabIndex = 37
+        Me.RadioButtonAll.TabStop = True
+        Me.RadioButtonAll.Text = "All"
+        Me.RadioButtonAll.UseVisualStyleBackColor = True
+        '
+        'RadioButtonUninstalled
+        '
+        Me.RadioButtonUninstalled.AutoSize = True
+        Me.RadioButtonUninstalled.Location = New System.Drawing.Point(27, 42)
+        Me.RadioButtonUninstalled.Name = "RadioButtonUninstalled"
+        Me.RadioButtonUninstalled.Size = New System.Drawing.Size(77, 17)
+        Me.RadioButtonUninstalled.TabIndex = 36
+        Me.RadioButtonUninstalled.TabStop = True
+        Me.RadioButtonUninstalled.Text = "Uninstalled"
+        Me.RadioButtonUninstalled.UseVisualStyleBackColor = True
+        '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(0, 40)
+        Me.Label3.Location = New System.Drawing.Point(0, 105)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(92, 13)
         Me.Label3.TabIndex = 6
@@ -276,15 +343,15 @@ Partial Class CreatePatchCollection
         'AvailablePatchesListBox
         '
         Me.AvailablePatchesListBox.FormattingEnabled = True
-        Me.AvailablePatchesListBox.Location = New System.Drawing.Point(3, 56)
+        Me.AvailablePatchesListBox.Location = New System.Drawing.Point(3, 121)
         Me.AvailablePatchesListBox.Name = "AvailablePatchesListBox"
-        Me.AvailablePatchesListBox.Size = New System.Drawing.Size(350, 628)
+        Me.AvailablePatchesListBox.Size = New System.Drawing.Size(350, 563)
         Me.AvailablePatchesListBox.TabIndex = 5
         '
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(2, 40)
+        Me.Label4.Location = New System.Drawing.Point(3, 105)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(85, 13)
         Me.Label4.TabIndex = 37
@@ -293,9 +360,9 @@ Partial Class CreatePatchCollection
         'ChosenPatchesListBox
         '
         Me.ChosenPatchesListBox.FormattingEnabled = True
-        Me.ChosenPatchesListBox.Location = New System.Drawing.Point(3, 56)
+        Me.ChosenPatchesListBox.Location = New System.Drawing.Point(3, 121)
         Me.ChosenPatchesListBox.Name = "ChosenPatchesListBox"
-        Me.ChosenPatchesListBox.Size = New System.Drawing.Size(350, 628)
+        Me.ChosenPatchesListBox.Size = New System.Drawing.Size(350, 563)
         Me.ChosenPatchesListBox.TabIndex = 36
         '
         'TabPagePreReqs
@@ -617,6 +684,24 @@ Partial Class CreatePatchCollection
         Me.ExecutePatchButton.Text = "Execute Patch"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
+        'ChooseAllButton
+        '
+        Me.ChooseAllButton.Location = New System.Drawing.Point(15, 12)
+        Me.ChooseAllButton.Name = "ChooseAllButton"
+        Me.ChooseAllButton.Size = New System.Drawing.Size(75, 23)
+        Me.ChooseAllButton.TabIndex = 38
+        Me.ChooseAllButton.Text = "Choose All"
+        Me.ChooseAllButton.UseVisualStyleBackColor = True
+        '
+        'ClearButton
+        '
+        Me.ClearButton.Location = New System.Drawing.Point(15, 41)
+        Me.ClearButton.Name = "ClearButton"
+        Me.ClearButton.Size = New System.Drawing.Size(75, 23)
+        Me.ClearButton.TabIndex = 39
+        Me.ClearButton.Text = "Clear"
+        Me.ClearButton.UseVisualStyleBackColor = True
+        '
         'CreatePatchCollection
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -635,6 +720,8 @@ Partial Class CreatePatchCollection
         Me.SplitContainer1.Panel2.PerformLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
+        Me.PatchFilterGroupBox.ResumeLayout(False)
+        Me.PatchFilterGroupBox.PerformLayout()
         Me.TabPagePreReqs.ResumeLayout(False)
         Me.TabPagePreReqs.PerformLayout()
         Me.TabPageSuper.ResumeLayout(False)
@@ -698,4 +785,11 @@ Partial Class CreatePatchCollection
     Friend WithEvents ChosenPatchesListBox As System.Windows.Forms.ListBox
     Friend WithEvents SupPatchTypeComboBox As System.Windows.Forms.ComboBox
     Friend WithEvents Label17 As System.Windows.Forms.Label
+    Friend WithEvents PatchFilterGroupBox As System.Windows.Forms.GroupBox
+    Friend WithEvents RadioButtonUnapplied As System.Windows.Forms.RadioButton
+    Friend WithEvents RadioButtonAll As System.Windows.Forms.RadioButton
+    Friend WithEvents RadioButtonUninstalled As System.Windows.Forms.RadioButton
+    Friend WithEvents TagFilterCheckBox As System.Windows.Forms.CheckBox
+    Friend WithEvents ChooseAllButton As System.Windows.Forms.Button
+    Friend WithEvents ClearButton As System.Windows.Forms.Button
 End Class
