@@ -481,13 +481,13 @@
     Public Sub releaseTo(iTargetDB As String)
 
         Dim lcurrentDB As String = DBListComboBox.SelectedItem
-        Dim lTargetDB As String = iTargetDB.ToLower
+
         Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
 
         Dim releasing As ProgressDialogue = New ProgressDialogue("Release to " & iTargetDB)
  
         releasing.MdiParent = GitPatcher
-        releasing.addStep("Change current DB to : " & lTargetDB)
+        releasing.addStep("Change current DB to : " & iTargetDB)
         releasing.addStep("Switch to develop branch", False)
         releasing.addStep("Pull from Origin", False)
 
@@ -506,7 +506,7 @@
 
         If releasing.toDoNextStep() Then
             'Change current DB to release DB
-            DBListComboBox.SelectedItem = lTargetDB
+            DBListComboBox.SelectedItem = iTargetDB
 
         End If
 

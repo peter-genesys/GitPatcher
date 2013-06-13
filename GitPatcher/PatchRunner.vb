@@ -7,6 +7,7 @@ Public Class PatchRunner
     Public Sub New()
         InitializeComponent()
         RadioButtonUnapplied.Checked = True
+        PatchFilterGroupBox.Text = Main.DBListComboBox.SelectedItem & " Filter"
     End Sub
 
 
@@ -286,7 +287,7 @@ Public Class PatchRunner
 
         MasterScriptListBox.Items.Clear()
 
-        MasterScriptListBox.Items.Add("DEFINE database = '" & My.Settings.CurrentDB & "'")
+        MasterScriptListBox.Items.Add("DEFINE database = '" & Main.DBListComboBox.SelectedItem & "'")
 
         For i As Integer = 0 To ChosenPatchesListBox.Items.Count - 1
 
