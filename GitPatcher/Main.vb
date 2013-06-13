@@ -297,7 +297,7 @@
     End Sub
 
     Private Sub CreateDBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBPatchSetToolStripMenuItem.Click
-        CreatePatchCollection.createCollectionProcess("patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL", "istest")
+        CreatePatchCollection.createCollectionProcess("patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL", "ISTEST")
     End Sub
 
     'Private Sub DBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs)
@@ -311,7 +311,7 @@
     'End Sub
 
     Private Sub CreateDBMinorReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBMinorReleaseToolStripMenuItem.Click
-        CreatePatchCollection.createCollectionProcess("minor", "patchset", Me.AppCodeTextBox.Text, "minor,patchset,feature,hotfix,ALL", "minor,patchset,feature,hotfix,ALL", "istest")
+        CreatePatchCollection.createCollectionProcess("minor", "patchset", Me.AppCodeTextBox.Text, "minor,patchset,feature,hotfix,ALL", "minor,patchset,feature,hotfix,ALL", "ISTEST")
     End Sub
 
  
@@ -506,7 +506,7 @@
 
         If releasing.toDoNextStep() Then
             'Change current DB to release DB
-            DBListComboBox.SelectedItem = iTargetDB
+            DBListComboBox.SelectedItem = iTargetDB.ToUpper
 
         End If
 
@@ -552,7 +552,7 @@
 
         If releasing.toDoNextStep() Then
             'Revert current DB  
-            DBListComboBox.SelectedItem = lcurrentDB
+            DBListComboBox.SelectedItem = lcurrentDB.ToUpper
 
         End If
 

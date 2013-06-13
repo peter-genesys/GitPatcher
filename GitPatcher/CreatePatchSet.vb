@@ -857,7 +857,7 @@ Public Class CreatePatchCollection
 
         If createPatchSetProgress.toDoNextStep() Then
             'Change current DB to release DB
-            Main.DBListComboBox.SelectedItem = iTargetDB
+            Main.DBListComboBox.SelectedItem = iTargetDB.ToUpper
 
         End If
 
@@ -922,7 +922,7 @@ Public Class CreatePatchCollection
 
         If createPatchSetProgress.toDoNextStep() Then
             'Revert current DB  
-            Main.DBListComboBox.SelectedItem = lcurrentDB
+            Main.DBListComboBox.SelectedItem = lcurrentDB.ToUpper
 
         End If
         If createPatchSetProgress.toDoNextStep() Then

@@ -38,6 +38,7 @@ Partial Class Main
         Me.CreateDBHotFixPatchToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.RebaseHotFixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MergeAndPushHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MultiDBHotFixPatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GITToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBPatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBMinorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -74,7 +75,6 @@ Partial Class Main
         Me.Label11 = New System.Windows.Forms.Label()
         Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.MultiDBHotFixPatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -182,6 +182,12 @@ Partial Class Main
         Me.MergeAndPushHotfixToolStripMenuItem.Name = "MergeAndPushHotfixToolStripMenuItem"
         Me.MergeAndPushHotfixToolStripMenuItem.Size = New System.Drawing.Size(196, 22)
         Me.MergeAndPushHotfixToolStripMenuItem.Text = "Merge and Push Hotfix"
+        '
+        'MultiDBHotFixPatchToolStripMenuItem
+        '
+        Me.MultiDBHotFixPatchToolStripMenuItem.Name = "MultiDBHotFixPatchToolStripMenuItem"
+        Me.MultiDBHotFixPatchToolStripMenuItem.Size = New System.Drawing.Size(196, 22)
+        Me.MultiDBHotFixPatchToolStripMenuItem.Text = "Multi DB HotFix Patch"
         '
         'GITToolStripMenuItem
         '
@@ -461,12 +467,6 @@ Partial Class Main
         Me.Label13.Size = New System.Drawing.Size(32, 13)
         Me.Label13.TabIndex = 25
         Me.Label13.Text = "Code"
-        '
-        'MultiDBHotFixPatchToolStripMenuItem
-        '
-        Me.MultiDBHotFixPatchToolStripMenuItem.Name = "MultiDBHotFixPatchToolStripMenuItem"
-        Me.MultiDBHotFixPatchToolStripMenuItem.Size = New System.Drawing.Size(196, 22)
-        Me.MultiDBHotFixPatchToolStripMenuItem.Text = "Multi DB HotFix Patch"
         '
         'Main
         '
