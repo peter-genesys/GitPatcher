@@ -134,11 +134,11 @@
         Dim connection As String = Main.CurrentConnectionTextBox.Text
         Dim username As String = Main.ParsingSchemaTextBox.Text
 
-        Dim fapp_id As String = My.Settings.CurrentApex
+        Dim fapp_id As String = common.currentApex
         Dim apex_dir As String = Main.RootApexDirTextBox.Text
 
-        Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Export APEX application " & fapp_id & " from DB " & My.Settings.CurrentDB, _
-            "Exporting APEX application " & My.Settings.CurrentApex & " from parsing schema " & Main.ParsingSchemaTextBox.Text & " in DB " & My.Settings.CurrentDB & Environment.NewLine & _
+        Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Export APEX application " & fapp_id & " from DB " & common.currentDB & " " & connection, _
+            "Exporting APEX application " & common.currentApex & " from parsing schema " & Main.ParsingSchemaTextBox.Text & " in DB " & common.currentDB & Environment.NewLine & _
             "This writes individual apex files to the GIT Repo checkout, and then prompt to add and commit the changes." & Environment.NewLine & _
             Environment.NewLine & _
             "Consider which branch you are exporting to." & Environment.NewLine & _
@@ -175,7 +175,7 @@
         'PROGRESS 0
         If ExportProgress.toDoNextStep() Then
 
-            Dim password = Main.get_password(Main.ParsingSchemaTextBox.Text, My.Settings.CurrentDB)
+            Dim password = Main.get_password(Main.ParsingSchemaTextBox.Text, common.currentDB)
             'Export Apex as a single file
             'NB Not exporting application comments
             'Host.runInteractive("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
@@ -228,14 +228,14 @@
 
     Public Shared Sub ApexImportFromTag()
 
-        Dim l_skip_reports_DBs As String = "isdevl"
-        Dim fapp_id As String = My.Settings.CurrentApex
+        Dim l_skip_reports_DBs As String = "ISDEVL"
+        Dim fapp_id As String = common.currentApex
 
-        Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
-        Dim runOnlyDBs As String = "isdevl,istest,isuat,isprod"
+        Dim currentBranch As String = GitSharpFascade.currentBranch(Common.currentRepo)
+        Dim runOnlyDBs As String = "ISDEVL,ISTEST,ISUAT,ISPROD"
 
-        Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import APEX application " & fapp_id & " into DB " & My.Settings.CurrentDB, _
-        "Importing APEX application " & My.Settings.CurrentApex & " into parsing schema " & Main.ParsingSchemaTextBox.Text & " in DB " & My.Settings.CurrentDB & Environment.NewLine & _
+        Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import APEX application " & fapp_id & " into DB " & Common.currentDB, _
+        "Importing APEX application " & Common.currentApex & " into parsing schema " & Main.ParsingSchemaTextBox.Text & " in DB " & Common.currentDB & Environment.NewLine & _
         "This will overwrite the existing APEX application." & Environment.NewLine & _
         Environment.NewLine & _
         "Consider creating a VM snapshot as a restore point." & Environment.NewLine & _
@@ -260,8 +260,8 @@
             'Choose a tag to import from
             Dim tagnames As Collection = New Collection
             tagnames.Add("HEAD")
-            tagnames = GitSharpFascade.getTagList(My.Settings.CurrentRepo, tagnames, Main.CurrentBranchTextBox.Text)
-            tagnames = GitSharpFascade.getTagList(My.Settings.CurrentRepo, tagnames, Main.AppCodeTextBox.Text)
+            tagnames = GitSharpFascade.getTagList(Common.currentRepo, tagnames, Main.CurrentBranchTextBox.Text)
+            tagnames = GitSharpFascade.getTagList(Common.currentRepo, tagnames, Main.AppCodeTextBox.Text)
 
 
             Dim tagApexVersion As String = Nothing
@@ -269,18 +269,18 @@
 
 
             'Checkout the tag
-            GitBash.Switch(My.Settings.CurrentRepo, tagApexVersion)
+            GitBash.Switch(Common.currentRepo, tagApexVersion)
             If ImportProgress.toDoNextStep Then
                 'If tag not like Main.AppCodeTextBox.Text relabel apex
 
                 If Not tagApexVersion.Contains(Main.AppCodeTextBox.Text) Then
 
                     Dim l_label As String = Nothing
-                    'Host.check_StdOut("""" & My.Settings.GITpath & """ describe --tags", l_label, My.Settings.CurrentRepo, True)
+                    'Host.check_StdOut("""" & My.Settings.GITpath & """ describe --tags", l_label, common.currentRepo, True)
                     'alternative method
-                    'l_label = Host.getOutput("""" & My.Settings.GITpath & """ describe --tags", My.Settings.CurrentRepo) 
+                    'l_label = Host.getOutput("""" & My.Settings.GITpath & """ describe --tags", common.currentRepo) 
 
-                    l_label = "GIT Tag: " & GitBash.describeTags(My.Settings.CurrentRepo)
+                    l_label = "GIT Tag: " & GitBash.describeTags(Common.currentRepo)
                     ImportProgress.updateStepDescription(1, "Relabel apex with " & l_label)
 
                     modCreateApplicationSQL(l_label, "")
@@ -293,7 +293,7 @@
             'set apex to RUN MODE
             Dim l_build_status As String = Nothing
 
-            If runOnlyDBs.Contains(Main.DBListComboBox().SelectedItem.ToString.ToLower) Then
+            If runOnlyDBs.Contains(Main.DBListComboBox().SelectedItem.ToString.ToUpper) Then
                 l_build_status = "RUN_ONLY"
             Else
                 l_build_status = "RUN_AND_BUILD"
@@ -309,7 +309,7 @@
         If ImportProgress.toDoNextStep Then
             'Skip reports queries and layouts
 
-            If l_skip_reports_DBs.Contains(Main.DBListComboBox().SelectedItem.ToString.ToLower) Then
+            If l_skip_reports_DBs.Contains(Main.DBListComboBox().SelectedItem.ToString.ToUpper) Then
                 modInstallSQL()
                 ImportProgress.updateStepDescription(3, "Import will SKIP reports queries and layouts")
             Else
@@ -322,8 +322,8 @@
         If ImportProgress.toDoNextStep Then
             'Import Apex
             Host.executeSQLscriptInteractive("install.sql" _
-                                           , Main.RootApexDirTextBox.Text & My.Settings.CurrentApex _
-                                           , Main.get_connect_string(Main.ParsingSchemaTextBox.Text, My.Settings.CurrentDB))
+                                           , Main.RootApexDirTextBox.Text & Common.currentApex _
+                                           , Main.get_connect_string(Main.ParsingSchemaTextBox.Text, Common.currentDB))
 
         End If
 
@@ -336,7 +336,7 @@
 
         If ImportProgress.toDoNextStep Then
             'Return to branch
-            GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
+            GitBash.Switch(Common.currentRepo, currentBranch)
         End If
 
         ImportProgress.toDoNextStep()

@@ -20,7 +20,7 @@ Public Class PatchFromTags
 
     Private Sub Findtags()
         TagsCheckedListBox.Items.Clear()
-        For Each tagname In GitSharpFascade.getTagList(My.Settings.CurrentRepo)
+        For Each tagname In GitSharpFascade.getTagList(common.currentRepo)
             If PatchRunner.get_first_split(tagname, ".") = Main.CurrentBranchTextBox.Text Then
                 TagsCheckedListBox.Items.Add(tagname)
             End If
@@ -34,7 +34,7 @@ Public Class PatchFromTags
             End If
 
             ChangesCheckedListBox.Items.Clear()
-            For Each change In GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, False)
+            For Each change In GitSharpFascade.getTagChanges(common.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, False)
                 ChangesCheckedListBox.Items.Add(change)
                 ChangesCheckedListBox.SetItemChecked(ChangesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
             Next
@@ -78,7 +78,7 @@ Public Class PatchFromTags
 
         Dim filenames As Collection = Nothing
 
-        filenames = GitSharpFascade.exportTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ChangesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
+        filenames = GitSharpFascade.exportTagChanges(common.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ChangesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
 
         'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
@@ -108,7 +108,7 @@ Public Class PatchFromTags
     Private Sub deriveSchemas()
         SchemaComboBox.Items.Clear()
         SchemaComboBox.Text = ""
-        For Each schema In GitSharpFascade.getSchemaList(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database")
+        For Each schema In GitSharpFascade.getSchemaList(common.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database")
             SchemaComboBox.Items.Add(schema)
         Next
 
@@ -140,7 +140,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub ViewButton_Click(sender As Object, e As EventArgs) Handles ViewButton.Click
-        MsgBox(GitSharpFascade.viewTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ChangesCheckedListBox.CheckedItems))
+        MsgBox(GitSharpFascade.viewTagChanges(common.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ChangesCheckedListBox.CheckedItems))
     End Sub
 
     Private Sub RemoveButton_Click(sender As Object, e As EventArgs) Handles RemoveButton.Click
@@ -198,7 +198,7 @@ Public Class PatchFromTags
     '
     '     Return l_from_first
     ' End Function
- 
+
 
     Shared Sub writeInstallScript(ByVal patch_name As String, _
                                   ByVal patch_type As String, _
@@ -403,7 +403,7 @@ Public Class PatchFromTags
             l_master_file.WriteLine("set serveroutput on;")
 
 
- 
+
             If use_patch_admin Then
 
                 l_patch_started = _
@@ -425,9 +425,9 @@ Public Class PatchFromTags
         & Chr(10) & " ,i_remove_sups        => 'N'); " _
         & Chr(10)
 
- 
+
                 l_master_file.WriteLine(l_patch_started)
-    
+
 
                 Dim l_prereq_short_name As String = Nothing
                 For Each l_prereq_patch In prereq_patches
@@ -535,7 +535,7 @@ Public Class PatchFromTags
             l_master_file.WriteLine("COMMIT;")
 
             If use_patch_admin Then
-  
+
                 l_master_file.WriteLine("PROMPT Compiling objects in schema " & db_schema)
                 l_master_file.WriteLine("execute patch_admin.patch_invoker.compile_post_patch;")
 
@@ -637,7 +637,7 @@ Public Class PatchFromTags
             PatchPathTextBox.Text = Replace(Main.BranchPathTextBox.Text, "/", "\") & "\" & Main.AppCodeTextBox.Text & "\"
 
             PatchPathTextBox.Text = Common.getFirstSegment(Main.BranchPathTextBox.Text, "/") & "\" & Main.AppCodeTextBox.Text & "\" & Common.getLastSegment(Main.BranchPathTextBox.Text, "/") & "\"
- 
+
             derivePatchName()
 
             derivePatchDir()
@@ -654,7 +654,7 @@ Public Class PatchFromTags
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExecute" Then
 
-            ExecutePatchButton.Text = "Execute Patch on " & My.Settings.CurrentDB
+            ExecutePatchButton.Text = "Execute Patch on " & common.currentDB
 
         End If
 
@@ -721,7 +721,7 @@ Public Class PatchFromTags
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
         'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Main.RootPatchDirTextBox.Text)
         'Use patch runner to execute with a master script.
-        PatchRunner.RunMasterScript("DEFINE database = '" & My.Settings.CurrentDB & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
+        PatchRunner.RunMasterScript("DEFINE database = '" & common.currentDB & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
 
     End Sub
 
@@ -766,7 +766,7 @@ Public Class PatchFromTags
 
     Public Shared Sub createPatchProcess(iBranchType As String, iRebaseBranchOn As String)
 
-        Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
+        Dim currentBranch As String = GitSharpFascade.currentBranch(common.currentRepo)
 
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")
         createPatchProgress.MdiParent = GitPatcher
@@ -798,7 +798,7 @@ Public Class PatchFromTags
 
         If createPatchProgress.toDoNextStep() Then
             'Review tags on the branch
-            Tortoise.Log(My.Settings.CurrentRepo)
+            Tortoise.Log(common.currentRepo)
         End If
 
 
@@ -822,36 +822,36 @@ Public Class PatchFromTags
         If createPatchProgress.toDoNextStep() Then
 
             'Committing changed files to GIT"
-            Tortoise.Commit(My.Settings.CurrentRepo, "Commit any patches you've not yet committed", True)
+            Tortoise.Commit(common.currentRepo, "Commit any patches you've not yet committed", True)
         End If
 
 
         If createPatchProgress.toDoNextStep() Then
             'switch
-            'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, "master")
-            'Tortoise.Switch(My.Settings.CurrentRepo)
+            'GitSharpFascade.switchBranch(common.currentRepo, "master")
+            'Tortoise.Switch(common.currentRepo)
             'Switch to develop branch
-            GitBash.Switch(My.Settings.CurrentRepo, iRebaseBranchOn)
+            GitBash.Switch(common.currentRepo, iRebaseBranchOn)
         End If
 
         'If createPatchProgress.toDoNextStep() Then
         '    'Pull from origin/develop
-        '    GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+        '    GitBash.Pull(common.currentRepo, "origin", "develop")
         'End If
 
         If createPatchProgress.toDoNextStep() Then
             'Merge from Feature branch
-            Tortoise.Merge(My.Settings.CurrentRepo)
+            Tortoise.Merge(common.currentRepo)
         End If
 
         If createPatchProgress.toDoNextStep() Then
             'Push to origin/develop 
-            GitBash.Push(My.Settings.CurrentRepo, "origin", iRebaseBranchOn)
+            GitBash.Push(common.currentRepo, "origin", iRebaseBranchOn)
         End If
 
         If createPatchProgress.toDoNextStep() Then
-            'GitSharpFascade.switchBranch(My.Settings.CurrentRepo, currentBranch)
-            GitBash.Switch(My.Settings.CurrentRepo, currentBranch)
+            'GitSharpFascade.switchBranch(common.currentRepo, currentBranch)
+            GitBash.Switch(common.currentRepo, currentBranch)
         End If
 
         If createPatchProgress.toDoNextStep() Then

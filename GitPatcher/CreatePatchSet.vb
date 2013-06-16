@@ -72,7 +72,7 @@ Public Class CreatePatchCollection
         Dim tagseg As String = Nothing
 
         TagsCheckedListBox.Items.Clear()
-        For Each tagname In GitSharpFascade.getTagList(My.Settings.CurrentRepo)
+        For Each tagname In GitSharpFascade.getTagList(common.currentRepo)
             tagseg = Common.getFirstSegment(tagname, "-")
             If tagseg = tagsearch Then
                 TagsCheckedListBox.Items.Add(tagname)
@@ -129,13 +129,13 @@ Public Class CreatePatchCollection
     '      'For Each patchname As String In allPatches
     '      '    PatchesCheckedListBox.Items.Add(patchname)
     '      '    PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
-    '      '    'For Each change In GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, patchname, False)
+    '      '    'For Each change In GitSharpFascade.getTagChanges(common.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, patchname, False)
     '      '    'PatchesCheckedListBox.Items.Add(change)
     '      '    'PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
     '      '    'Next
     '      'Next
     '
-    '      For Each change In GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
+    '      For Each change In GitSharpFascade.getTagChanges(common.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
     '          For Each patchname As String In allPatches
     '              If change.contains(Replace(patchname, "\", "/")) And change.contains("install.sql") Then
     '                  PatchesCheckedListBox.Items.Add(change)
@@ -157,7 +157,7 @@ Public Class CreatePatchCollection
     Private Sub FindPatches()
 
         Dim taggedPatches As New Collection
-  
+
         'First use the Filter box to find available patches from the file system and with reference to the current DB.
         If RadioButtonUnapplied.Checked Then
             PatchRunner.FindUnappliedPatches(Me.AvailablePatchesListBox)
@@ -172,16 +172,16 @@ Public Class CreatePatchCollection
         End If
 
         If TagFilterCheckBox.Checked Then
-            'taggedPatches = GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
+            'taggedPatches = GitSharpFascade.getTagChanges(common.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
 
             'Find patches between 2 tags
-            For Each change In GitSharpFascade.getTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
+            For Each change In GitSharpFascade.getTagChanges(common.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
                 'Apply Filters
                 If change.contains("install.sql") And Common.stringContainsSetMember(change, pFindPatchTypes, ",") And Common.stringContainsSetMember(change, pFindPatchFilters, ",") Then
 
                     taggedPatches.Add(Replace(Common.dropLastSegment(Common.dropFirstSegment(change, "/"), "/"), "/", "\"))
                     'ChosenPatchesListBox.Items.Add(Replace(Common.dropLastSegment(Common.dropFirstSegment(change, "/"), "/"), "/", "\"))
- 
+
                 End If
 
             Next
@@ -191,18 +191,18 @@ Public Class CreatePatchCollection
 
         Dim patchMatch As Boolean = False
         Dim patchTagged As Boolean = True
- 
+
         'process in reverse order, because removing items from the list, changes the indexes.  reverse order will not be affected.
         For i As Integer = AvailablePatchesListBox.Items.Count - 1 To 0 Step -1
             Dim availablePatch As String = AvailablePatchesListBox.Items(i)
             'Check patch matches filter
             patchMatch = False
- 
+
             If (String.IsNullOrEmpty(pFindPatchTypes) Or Common.stringContainsSetMember(availablePatch, pFindPatchTypes, ",")) And _
                 Common.stringContainsSetMember(availablePatch, pFindPatchFilters, ",") Then
                 patchMatch = True
             End If
- 
+
             If TagFilterCheckBox.Checked Then
                 patchTagged = False
 
@@ -226,7 +226,7 @@ Public Class CreatePatchCollection
             End If
 
         Next
- 
+
 
     End Sub
 
@@ -248,7 +248,7 @@ Public Class CreatePatchCollection
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles FindButton.Click
         FindPatches()
- 
+
     End Sub
 
     Private Sub PatchButton_Click(sender As Object, e As EventArgs) Handles PatchButton.Click
@@ -286,7 +286,7 @@ Public Class CreatePatchCollection
 
         'Create filenames from the ChosenPatches
 
-        'filenames = GitSharpFascade.exportTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
+        'filenames = GitSharpFascade.exportTagChanges(common.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
 
 
 
@@ -319,7 +319,7 @@ Public Class CreatePatchCollection
     ' Private Sub deriveSchemas()
     '     SchemaComboBox.Items.Clear()
     '     SchemaComboBox.Text = ""
-    '     For Each schema In GitSharpFascade.getSchemaList(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database")
+    '     For Each schema In GitSharpFascade.getSchemaList(common.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database")
     '         SchemaComboBox.Items.Add(schema)
     '     Next
     '
@@ -351,7 +351,7 @@ Public Class CreatePatchCollection
     End Sub
 
     'Private Sub ViewButton_Click(sender As Object, e As EventArgs)
-    '    MsgBox(GitSharpFascade.viewTagChanges(My.Settings.CurrentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchesCheckedListBox.CheckedItems))
+    '    MsgBox(GitSharpFascade.viewTagChanges(common.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchesCheckedListBox.CheckedItems))
     'End Sub
 
     ' Private Sub RemoveButton_Click(sender As Object, e As EventArgs)
@@ -776,7 +776,7 @@ Public Class CreatePatchCollection
         Tortoise.Commit(PatchDirTextBox.Text, "NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
 
         Mail.SendNotification("NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, pCreatePatchType & " created.", PatchDirTextBox.Text & "install.sql," & Main.RootPatchDirTextBox.Text & PatchNameTextBox.Text & ".log")
- 
+
         'Mail.SendNotification("NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.")
 
         'user
@@ -788,12 +788,12 @@ Public Class CreatePatchCollection
 
     End Sub
 
- 
+
     Public Shared Sub bumpApexVersion(ByVal i_app_version As String)
         Apex.modCreateApplicationSQL(i_app_version & " " & Today.ToString("dd-MMM-yyyy"), "")
     End Sub
 
- 
+
 
     Public Shared Sub createCollectionProcess(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String, iTargetDB As String)
 
@@ -804,7 +804,7 @@ Public Class CreatePatchCollection
 
         Dim newBranch As String = "release/" & iCreatePatchType & "/" & Main.AppCodeTextBox.Text & "/" & l_app_version
 
-        Dim currentBranch As String = GitSharpFascade.currentBranch(My.Settings.CurrentRepo)
+        Dim currentBranch As String = GitSharpFascade.currentBranch(common.currentRepo)
 
         Dim createPatchSetProgress As ProgressDialogue = New ProgressDialogue("Create DB " & iCreatePatchType)
         createPatchSetProgress.MdiParent = GitPatcher
@@ -840,17 +840,17 @@ Public Class CreatePatchCollection
 
         If createPatchSetProgress.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(My.Settings.CurrentRepo, "develop")
+            GitBash.Switch(common.currentRepo, "develop")
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+            GitBash.Pull(common.currentRepo, "origin", "develop")
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Create and Switch to new collection branch
-            GitBash.createBranch(My.Settings.CurrentRepo, newBranch)
+            GitBash.createBranch(common.currentRepo, newBranch)
 
 
         End If
@@ -876,46 +876,46 @@ Public Class CreatePatchCollection
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Commit Apex version 
-            Tortoise.Commit(My.Settings.CurrentRepo, "Bump Apex " & Main.ApexAppTextBox.Text & " to " & l_app_version)
+            Tortoise.Commit(common.currentRepo, "Bump Apex " & Main.ApexAppTextBox.Text & " to " & l_app_version)
 
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Tag this commit
-            GitBash.TagSimple(My.Settings.CurrentRepo, l_app_version)
-            'GitBash.TagAnnotated(My.Settings.CurrentRepo, l_app_version, "New " & Main.ApplicationListComboBox.SelectedItem & " " & iCreatePatchType & " " & l_app_version)
+            GitBash.TagSimple(common.currentRepo, l_app_version)
+            'GitBash.TagAnnotated(common.currentRepo, l_app_version, "New " & Main.ApplicationListComboBox.SelectedItem & " " & iCreatePatchType & " " & l_app_version)
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Push release to origin with tags
-            GitBash.Push(My.Settings.CurrentRepo, "origin", newBranch, True)
+            GitBash.Push(common.currentRepo, "origin", newBranch, True)
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(My.Settings.CurrentRepo, "develop")
+            GitBash.Switch(common.currentRepo, "develop")
 
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(My.Settings.CurrentRepo, "origin", "develop")
+            GitBash.Pull(common.currentRepo, "origin", "develop")
 
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Merge from release
-            Tortoise.Merge(My.Settings.CurrentRepo)
+            Tortoise.Merge(common.currentRepo)
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Commit - incase of merge conflict
-            Tortoise.Commit(My.Settings.CurrentRepo, "Merge " & newBranch & " CANCEL IF NO MERGE CONFLICTS")
+            Tortoise.Commit(common.currentRepo, "Merge " & newBranch & " CANCEL IF NO MERGE CONFLICTS")
 
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Push to origin/develop 
-            GitBash.Push(My.Settings.CurrentRepo, "origin", "develop")
+            GitBash.Push(common.currentRepo, "origin", "develop")
 
 
         End If

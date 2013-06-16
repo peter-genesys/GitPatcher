@@ -161,4 +161,26 @@
 
     End Function
 
+    Public Shared Function currentDB() As String
+
+        Return Main.DBListComboBox.SelectedItem
+
+    End Function
+    Public Shared Function currentApex() As String
+
+        Return Main.ApexAppTextBox.Text
+
+    End Function
+    Public Shared Function currentRepo() As String
+
+        Return Main.RepoComboBox.SelectedItem
+
+    End Function
+
+    Public Shared Function currentApplication() As String
+
+        Return Main.ApplicationListComboBox.SelectedItem
+
+    End Function
+ 
 End Class
