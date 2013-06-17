@@ -27,7 +27,7 @@
             If (branch.Length > 0) Then
                 HotFixToolStripComboBox.Items.Add(branch)
             End If
-            'If common.currentRepo = branch Then
+            'If Globals.currentRepo = branch Then
             '    RepoComboBox.SelectedIndex = RepoComboBox.Items.Count - 1
             'End If
         Next
@@ -102,6 +102,9 @@
         My.Settings.CurrentRepo = RepoComboBox.SelectedItem
 
         My.Settings.Save()
+
+        Globals.setRepo(RepoComboBox.SelectedItem)
+
     End Sub
 
     Private Sub PatchFromTagsToolStripMenuItem_Click(sender As Object, e As EventArgs)
@@ -119,13 +122,15 @@
         My.Settings.Save()
 
         CurrentConnectionTextBox.Text = My.Settings.ConnectionList.Split(Chr(10))(DBListComboBox.SelectedIndex)
+        Globals.setDB(DBListComboBox.SelectedItem)
 
     End Sub
 
     Private Sub ApplicationListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ApplicationListComboBox.SelectedIndexChanged
         My.Settings.CurrentApp = ApplicationListComboBox.SelectedItem
         My.Settings.Save()
- 
+        Globals.setApplication(ApplicationListComboBox.SelectedItem)
+
         'repo = Trim(repo)
         'repo = repo.Replace(Chr(13), "")
 
@@ -136,7 +141,9 @@
         ApexAppTextBox.Text = Trim(My.Settings.AppList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)).Replace(Chr(13), "")
 
         My.Settings.CurrentApex = ApexAppTextBox.Text
+        Globals.setApex(ApexAppTextBox.Text)
         ParsingSchemaTextBox.Text = My.Settings.ParsingSchemaList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)
+        Globals.setParsingSchema(ParsingSchemaTextBox.Text)
 
     End Sub
 
@@ -176,7 +183,7 @@
 
     Private Sub mergeAndPushBranch(iBranchType As String, iBranchTo As String)
 
-        Dim currentBranch As String = GitSharpFascade.currentBranch(common.currentRepo)
+        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
 
         Dim mergeAndPush As ProgressDialogue = New ProgressDialogue("Merge and Push branch:  " & currentBranch)
         mergeAndPush.MdiParent = GitPatcher
@@ -194,32 +201,32 @@
 
         If mergeAndPush.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(common.currentRepo, iBranchTo)
+            GitBash.Switch(Globals.currentRepo, iBranchTo)
 
         End If
 
         If mergeAndPush.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(common.currentRepo, "origin", iBranchTo)
+            GitBash.Pull(Globals.currentRepo, "origin", iBranchTo)
 
         End If
 
         If mergeAndPush.toDoNextStep() Then
             'Merge from Feature branch
-            'TortoiseMerge(common.currentRepo, currentBranch)
-            Tortoise.Merge(common.currentRepo)
+            'TortoiseMerge(Globals.currentRepo, currentBranch)
+            Tortoise.Merge(Globals.currentRepo)
         End If
 
         If mergeAndPush.toDoNextStep() Then
             'Push to origin/develop 
-            GitBash.Push(common.currentRepo, "origin", iBranchTo)
+            GitBash.Push(Globals.currentRepo, "origin", iBranchTo)
 
         End If
 
         If mergeAndPush.toDoNextStep() Then
             'Return to branch
-            'GitSharpFascade.switchBranch(common.currentRepo, currentBranch)
-            GitBash.Switch(common.currentRepo, currentBranch)
+            'GitSharpFascade.switchBranch(Globals.currentRepo, currentBranch)
+            GitBash.Switch(Globals.currentRepo, currentBranch)
         End If
 
         mergeAndPush.toDoNextStep()
@@ -253,13 +260,13 @@
 
         If newFeature.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(common.currentRepo, iBranchFrom)
+            GitBash.Switch(Globals.currentRepo, iBranchFrom)
 
         End If
 
         If newFeature.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(common.currentRepo, "origin", iBranchFrom)
+            GitBash.Pull(Globals.currentRepo, "origin", iBranchFrom)
 
         End If
 
@@ -273,14 +280,14 @@
                 newFeature.updateTitle("Create new " & iBranchType & " branch:  " & branchName)
                 newFeature.updateStepDescription(2, "Create and switch to " & iBranchType & " branch: " & newBranch)
 
-                GitBash.createBranch(common.currentRepo, newBranch)
+                GitBash.createBranch(Globals.currentRepo, newBranch)
 
             End If
 
             'If newFeature.toDoNextStep() Then
             '    'Create the initial tag
-            '    GitBash.TagSimple(common.currentRepo, branchName & ".00")
-            '    'GitBash.TagAnnotated(common.currentRepo, branchName & ".00", "Initial tag on new " & Me.ApplicationListComboBox.SelectedItem & " " & iBranchType & " " & branchName)
+            '    GitBash.TagSimple(Globals.currentRepo, branchName & ".00")
+            '    'GitBash.TagAnnotated(Globals.currentRepo, branchName & ".00", "Initial tag on new " & Me.ApplicationListComboBox.SelectedItem & " " & iBranchType & " " & branchName)
             '
             'End If
 
@@ -315,11 +322,11 @@
 
 
     Private Sub TagtestToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        GitBash.TagSimple(common.currentRepo, "DEMOTAG")
+        GitBash.TagSimple(Globals.currentRepo, "DEMOTAG")
     End Sub
 
     Private Sub ShowindexToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowindexToolStripMenuItem.Click
-        GitSharpFascade.getIndexedChanges(common.currentRepo)
+        GitSharpFascade.getIndexedChanges(Globals.currentRepo)
     End Sub
 
     Private Sub TestworkflowToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestworkflowToolStripMenuItem.Click
@@ -373,12 +380,12 @@
     End Sub
 
     Private Sub TestrevertToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestrevertToolStripMenuItem.Click
-        'GitSharpFascade.revertItem(common.currentRepo, "apex/f101/application/create_application.sql")
+        'GitSharpFascade.revertItem(Globals.currentRepo, "apex/f101/application/create_application.sql")
         Apex.restoreCreateApplicationSQL()
     End Sub
 
     Public Sub rebaseBranch(iBranchType As String, iRebaseBranchOn As String)
-        Dim currentBranch As String = GitSharpFascade.currentBranch(common.currentRepo)
+        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
 
         Dim rebasing As ProgressDialogue = New ProgressDialogue("Rebase branch " & currentBranch)
 
@@ -412,11 +419,11 @@
 
         If rebasing.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(common.currentRepo, iRebaseBranchOn)
+            GitBash.Switch(Globals.currentRepo, iRebaseBranchOn)
         End If
         If rebasing.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(common.currentRepo, "origin", iRebaseBranchOn)
+            GitBash.Pull(Globals.currentRepo, "origin", iRebaseBranchOn)
         End If
 
         If rebasing.toDoNextStep() Then
@@ -424,26 +431,26 @@
             l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please enter 2 digit numeric tag for next patch.", "Create Tag for next patch")
             Dim l_tagA As String = CurrentBranchTextBox.Text & "." & l_tag_base & "A"
             rebasing.updateStepDescription(3, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
-            GitBash.TagSimple(common.currentRepo, l_tagA)
+            GitBash.TagSimple(Globals.currentRepo, l_tagA)
 
         End If
 
 
         If rebasing.toDoNextStep() Then
             'Return to branch
-            GitBash.Switch(common.currentRepo, currentBranch)
+            GitBash.Switch(Globals.currentRepo, currentBranch)
         End If
 
         If rebasing.toDoNextStep() Then
             'Rebase branch
-            Tortoise.Rebase(common.currentRepo)
+            Tortoise.Rebase(Globals.currentRepo)
         End If
 
         If rebasing.toDoNextStep() Then
             'Tag Branch
             Dim l_tagB As String = CurrentBranchTextBox.Text & "." & l_tag_base & "B"
             rebasing.updateStepDescription(6, "Tag Branch: " & currentBranch & " HEAD with " & l_tagB)
-            GitBash.TagSimple(common.currentRepo, l_tagB)
+            GitBash.TagSimple(Globals.currentRepo, l_tagB)
 
         End If
 
@@ -456,7 +463,7 @@
         End If
         'If rebasing.toDoNextStep() Then
         '    'Review tags on the branch
-        '    Tortoise.Log(common.currentRepo)
+        '    Tortoise.Log(Globals.currentRepo)
         'End If
 
         If rebasing.toDoNextStep() Then
@@ -480,7 +487,7 @@
 
         Dim lcurrentDB As String = DBListComboBox.SelectedItem
 
-        Dim currentBranch As String = GitSharpFascade.currentBranch(common.currentRepo)
+        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
 
         Dim releasing As ProgressDialogue = New ProgressDialogue("Release to " & iTargetDB)
 
@@ -510,26 +517,26 @@
 
         If releasing.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(common.currentRepo, "develop")
+            GitBash.Switch(Globals.currentRepo, "develop")
         End If
         If releasing.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(common.currentRepo, "origin", "develop")
+            GitBash.Pull(Globals.currentRepo, "origin", "develop")
         End If
 
         If releasing.toDoNextStep() Then
             'Choose a tag to import from
             Dim tagnames As Collection = New Collection
             tagnames.Add("HEAD")
-            tagnames = GitSharpFascade.getTagList(common.currentRepo, tagnames, CurrentBranchTextBox.Text)
-            tagnames = GitSharpFascade.getTagList(common.currentRepo, tagnames, AppCodeTextBox.Text)
+            tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, CurrentBranchTextBox.Text)
+            tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, AppCodeTextBox.Text)
 
 
             Dim PatchTag As String = Nothing
             PatchTag = ChoiceDialog.Ask("Please choose a tag for patch installs", tagnames, "HEAD", "Choose tag")
 
             'Checkout the tag
-            GitBash.Switch(common.currentRepo, PatchTag)
+            GitBash.Switch(Globals.currentRepo, PatchTag)
 
         End If
 

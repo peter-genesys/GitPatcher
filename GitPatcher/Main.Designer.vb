@@ -224,13 +224,13 @@ Partial Class Main
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
+        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ImportToolStripMenuItem.Text = "Import"
         '
         'ExportToolStripMenuItem
         '
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
+        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ExportToolStripMenuItem.Text = "Export"
         '
         'RELEASEToolStripMenuItem

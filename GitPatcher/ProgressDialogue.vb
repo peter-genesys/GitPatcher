@@ -1,5 +1,5 @@
 ﻿Public Class ProgressDialogue
-
+    Private waitTime As Integer = 500
     Private storedProcessSteps As ProcessStep()
     Private nextStep As Integer = 0
     Private activeStep As Integer = -1
@@ -97,61 +97,22 @@
 
     End Sub
 
-    'Public Sub updateStepPercentComplete(ByVal stepNo As Integer, percentComplete As Integer)
-    '
-    '    storedProcessSteps(stepNo).setPercentComplete(percentComplete)
-    '
-    'End Sub
-
+ 
  
     ' Loops for a specificied period of time (milliseconds)
     Private Sub pauseToRefreshProgressBar()
         If percentComplete = 100 Then
             StartButton.Text = "Done"
-            Common.wait(1000)
+            Common.wait(waitTime)
             Me.Close()
         Else
-            Common.wait(1000)
+            Common.wait(waitTime)
         End If
 
 
     End Sub
 
-
-    '  Public Sub setStep(gotoStep As Integer)
-    '      If Not ProgressCheckedListBox.CheckedIndices.Contains(gotoStep) Then
-    '          activeStep = gotoStep
-    '          updateStep(activeStep, "Skipped")
-    '          'Throw (New SkipStepException("Step " & activeStep & " Skipped"))
-    '      End If
-    '
-    '      For i As Integer = 0 To storedProcessSteps.GetUpperBound(0) - 1
-    '          If i < gotoStep Then
-    '              'ProgressCheckedListBox.SetItemChecked(i, True)
-    '              ProgressBar.Value = storedProcessSteps(i).percentComplete
-    '          End If
-    '          'Trying to put DONE on the end of a completed step.
-    '          'If i = currentStep - 1 Then
-    '          '    ProgressCheckedListBox.Items(i).Equals = ProgressCheckedListBox.Items(i).text & " - DONE"
-    '          'End If
-    '          If i = gotoStep Then
-    '              ProgressCheckedListBox.SetSelected(i, True)
-    '              updateStep(activeStep, "Doing")
-    '          End If
-    '
-    '      Next
-    '
-    '      activeStep = gotoStep
-    '
-    '      pauseToRefreshProgressBar()
-    '
-    '  End Sub
-    '
-    '  Public Sub goNextStep()
-    '
-    '      setStep(activeStep + 1)
-    '
-    '  End Sub
+ 
 
     Public Function toDoStep(gotoStep As Integer) As Boolean
 
@@ -188,21 +149,11 @@
         Return toDoStep(l_gotoStep)
     End Function
 
-
-    '  Public Sub done(Optional percentComplete As Integer = 100, Optional doneMsg As String = "Done")
-    '      Me.Text = Me.Text & " - " & doneMsg
-    '      'Same as setStep but ticks the current step too
-    '      'For i As Integer = 0 To ProgressCheckedListBox.Items.Count - 1
-    '      '    ProgressCheckedListBox.SetItemChecked(i, True)
-    '      'Next
-    '      ProgressBar.Value = percentComplete
-    '      pauseToRefreshProgressBar()
-    '
-    '  End Sub
-
+ 
 
     Private Sub ProgressDialogue_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
-        If activeStep <= ProgressCheckedListBox.Items.Count - 1 Then
+        If percentComplete < 100 Then
+            'If activeStep <= ProgressCheckedListBox.Items.Count - 1 Then
             If MessageBox.Show("Skip remaining items?", "Close", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
 
                 For i As Integer = 0 To ProgressCheckedListBox.Items.Count - 1
