@@ -7,7 +7,7 @@ Public Class PatchRunner
     Public Sub New()
         InitializeComponent()
         RadioButtonUnapplied.Checked = True
-        PatchFilterGroupBox.Text = Main.DBListComboBox.SelectedItem & " Filter"
+        PatchFilterGroupBox.Text = Globals.currentDB & " Filter"
     End Sub
 
 
@@ -70,7 +70,7 @@ Public Class PatchRunner
     Public Sub FindPatches(ByRef foundPatches As ListBox, ByVal iHideInstalled As Boolean)
 
         'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Main.DBListComboBox().SelectedItem & ";User Id=patch_admin;Password=patch_admin;"
+        Dim oradb As String = "Data Source=" & Globals.currentDB & ";User Id=patch_admin;Password=patch_admin;"
 
         'Harder to get working but no need for TNSNAMES File
         'Dim oradb As String = "Data Source=(DESCRIPTION=" _
@@ -171,7 +171,7 @@ Public Class PatchRunner
         End If
 
         'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Main.DBListComboBox().SelectedItem & ";User Id=patch_admin;Password=patch_admin;"
+        Dim oradb As String = "Data Source=" & Globals.currentDB & ";User Id=patch_admin;Password=patch_admin;"
 
         Dim conn As New OracleConnection(oradb)
         Dim sql As String = Nothing
@@ -287,7 +287,7 @@ Public Class PatchRunner
 
         MasterScriptListBox.Items.Clear()
 
-        MasterScriptListBox.Items.Add("DEFINE database = '" & Main.DBListComboBox.SelectedItem & "'")
+        MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.currentDB & "'")
 
         For i As Integer = 0 To ChosenPatchesListBox.Items.Count - 1
 
@@ -310,4 +310,22 @@ Public Class PatchRunner
     End Sub
 
  
+    Private Sub CopyAllPatches()
+        'Copy Selected Changes to the next list box.
+        ChosenPatchesListBox.Items.Clear()
+
+        For i As Integer = 0 To AvailablePatchesListBox.Items.Count - 1
+
+            ChosenPatchesListBox.Items.Add(AvailablePatchesListBox.Items(i).ToString)
+
+        Next
+    End Sub
+
+    Private Sub ChooseAllButton_Click(sender As Object, e As EventArgs) Handles ChooseAllButton.Click
+        CopyAllPatches()
+    End Sub
+
+    Private Sub ClearButton_Click(sender As Object, e As EventArgs) Handles ClearButton.Click
+        ChosenPatchesListBox.Items.Clear()
+    End Sub
 End Class

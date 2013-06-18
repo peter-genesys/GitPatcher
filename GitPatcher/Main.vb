@@ -121,8 +121,10 @@
         My.Settings.CurrentDB = DBListComboBox.SelectedItem
         My.Settings.Save()
 
-        CurrentConnectionTextBox.Text = My.Settings.ConnectionList.Split(Chr(10))(DBListComboBox.SelectedIndex)
+
         Globals.setDB(DBListComboBox.SelectedItem)
+
+        CurrentConnectionTextBox.Text = Globals.deriveConnection()
 
     End Sub
 
@@ -182,7 +184,7 @@
     End Sub
 
     Private Sub mergeAndPushBranch(iBranchType As String, iBranchTo As String)
-
+        Common.checkBranch(iBranchType)
         Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
 
         Dim mergeAndPush As ProgressDialogue = New ProgressDialogue("Merge and Push branch:  " & currentBranch)
@@ -283,14 +285,7 @@
                 GitBash.createBranch(Globals.currentRepo, newBranch)
 
             End If
-
-            'If newFeature.toDoNextStep() Then
-            '    'Create the initial tag
-            '    GitBash.TagSimple(Globals.currentRepo, branchName & ".00")
-            '    'GitBash.TagAnnotated(Globals.currentRepo, branchName & ".00", "Initial tag on new " & Me.ApplicationListComboBox.SelectedItem & " " & iBranchType & " " & branchName)
-            '
-            'End If
-
+ 
             newFeature.toDoNextStep()
 
         End If
@@ -385,6 +380,9 @@
     End Sub
 
     Public Sub rebaseBranch(iBranchType As String, iRebaseBranchOn As String)
+
+        Common.checkBranch(iBranchType)
+
         Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
 
         Dim rebasing As ProgressDialogue = New ProgressDialogue("Rebase branch " & currentBranch)
@@ -397,7 +395,7 @@
         rebasing.addStep("Pull from Origin")
         rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & CurrentBranchTextBox.Text & ".99A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & CurrentBranchTextBox.Text & ".99A")
         rebasing.addStep("Return to branch: " & currentBranch)
-        rebasing.addStep("Rebase Branch: " & currentBranch)
+        rebasing.addStep("Rebase Branch: " & currentBranch & " From Branch:" & iRebaseBranchOn, True, "Please select the Branch:" & iRebaseBranchOn & " from the Tortoise Rebase Dialogue")
         rebasing.addStep("Tag Branch: " & currentBranch & " HEAD with " & CurrentBranchTextBox.Text & ".99B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & CurrentBranchTextBox.Text & ".99B.")
         rebasing.addStep("Use PatchRunner to run Unapplied/Uninstalled Patches", True, "Before running patches, consider reverting to a VM snapshot prior to the development of your current work, or swapping to a unit test VM.")
         'rebasing.addStep("Review tags on the branch" )
@@ -485,16 +483,18 @@
 
     Public Sub releaseTo(iTargetDB As String)
 
-        Dim lcurrentDB As String = DBListComboBox.SelectedItem
+        Dim lcurrentDB As String = Globals.currentDB()
 
         Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
+
+        Dim releaseFromBranch As String = Globals.deriveHotfixBranch(iTargetDB)
 
         Dim releasing As ProgressDialogue = New ProgressDialogue("Release to " & iTargetDB)
 
         releasing.MdiParent = GitPatcher
         releasing.addStep("Change current DB to : " & iTargetDB)
-        releasing.addStep("Switch to develop branch", False)
-        releasing.addStep("Pull from Origin", False)
+        releasing.addStep("Switch to " & releaseFromBranch & " branch", False)
+        releasing.addStep("Pull from Origin to " & releaseFromBranch & " branch", False)
 
         releasing.addStep("Choose a tag to release from and checkout the tag", False)
 
@@ -511,17 +511,17 @@
 
         If releasing.toDoNextStep() Then
             'Change current DB to release DB
-            DBListComboBox.SelectedItem = iTargetDB.ToUpper
+            Globals.setDB(iTargetDB.ToUpper)
 
         End If
 
         If releasing.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(Globals.currentRepo, "develop")
+            GitBash.Switch(Globals.currentRepo, releaseFromBranch)
         End If
         If releasing.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(Globals.currentRepo, "origin", "develop")
+            GitBash.Pull(Globals.currentRepo, "origin", releaseFromBranch)
         End If
 
         If releasing.toDoNextStep() Then
@@ -557,7 +557,7 @@
 
         If releasing.toDoNextStep() Then
             'Revert current DB  
-            DBListComboBox.SelectedItem = lcurrentDB.ToUpper
+            Globals.setDB(lcurrentDB.ToUpper)
 
         End If
 
@@ -583,7 +583,7 @@
         releaseTo("ISPROD")
     End Sub
 
-    Private Sub NewHotfixToolStripMenuItem1_Click(sender As Object, e As EventArgs)
+    Private Sub NewHotfixToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles NewHotFixToolStripMenuItem1.Click
         createNewBranch("hotfix", HotFixToolStripComboBox.SelectedItem)
     End Sub
 
@@ -593,10 +593,6 @@
 
     Private Sub RebaseHotFixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseHotFixToolStripMenuItem.Click
         rebaseBranch("hotfix", HotFixToolStripComboBox.SelectedItem)
-    End Sub
-
-    Private Sub CreateDBHotFixPatchToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        PatchFromTags.createPatchProcess("hotfix", HotFixToolStripComboBox.SelectedItem)
     End Sub
 
     Private Sub CreateDBHotFixPatchToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CreateDBHotFixPatchToolStripMenuItem1.Click
@@ -614,7 +610,7 @@
     End Sub
 
     Private Sub MultiDBHotFixPatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MultiDBHotFixPatchToolStripMenuItem.Click
- 
+        Common.checkBranch("hotfix")
         Dim patchThisBranch As Boolean = False
         Dim multiHotFix As ProgressDialogue = New ProgressDialogue("Multi HotFix Patch for " & HotFixToolStripComboBox.SelectedItem & " Downwards")
 
@@ -651,4 +647,6 @@
  
 
     End Sub
+
+ 
 End Class

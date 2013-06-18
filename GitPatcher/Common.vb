@@ -147,21 +147,30 @@
 
     Public Shared Function getHost() As String
 
-        Return getNthSegment(Main.CurrentConnectionTextBox.Text, ":", 1)
+        Return getNthSegment(Globals.deriveConnection, ":", 1)
 
     End Function
 
     Public Shared Function getPort() As String
 
-        Return getNthSegment(Main.CurrentConnectionTextBox.Text, ":", 2)
+        Return getNthSegment(Globals.deriveConnection, ":", 2)
 
     End Function
 
     Public Shared Function getSid() As String
 
-        Return getNthSegment(Main.CurrentConnectionTextBox.Text, ":", 3)
+        Return getNthSegment(Globals.deriveConnection, ":", 3)
 
     End Function
 
- 
+    Public Shared Sub checkBranch(i_searchString)
+        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
+
+        If Not currentBranch.Contains(i_searchString) Then
+            MsgBox("Current Branch: " & currentBranch & " is not of type " & i_searchString & Environment.NewLine & Environment.NewLine & "Please change branch manually NOW, or CANCEL this workflow.")
+
+        End If
+
+    End Sub
+
 End Class

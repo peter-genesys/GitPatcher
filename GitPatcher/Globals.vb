@@ -37,7 +37,7 @@
     Public Sub setDB(DB As String)
 
         gDB = DB
-
+ 
     End Sub
 
     Public Sub setApex(Apex As String)
@@ -61,5 +61,37 @@
         gParsingSchema = ParsingSchema
 
     End Sub
+
+
+    Public Function deriveConnection() As String
+        Dim l_Index As Integer = -1
+        For Each db In My.Settings.DBList.Split(Chr(10))
+            l_Index = l_Index + 1
+            db = Trim(db)
+            db = db.Replace(Chr(13), "")
+            If db = gDB Then
+                Return My.Settings.ConnectionList.Split(Chr(10))(l_Index)
+            End If
+        Next
+        Return ""
+
+    End Function
+
+    Public Function deriveHotfixBranch(Optional ByVal iDb As String = "") As String
+        If String.IsNullOrEmpty(iDb) Then
+            iDb = gDB
+        End If
+        Dim l_Index As Integer = -1
+        For Each db In My.Settings.DBList.Split(Chr(10))
+            l_Index = l_Index + 1
+            db = Trim(db)
+            db = db.Replace(Chr(13), "")
+            If db = iDb Then
+                Return My.Settings.HotFixBranches.Split(Chr(10))(l_Index)
+            End If
+        Next
+        Return ""
+
+    End Function
 
 End Module

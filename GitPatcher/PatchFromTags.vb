@@ -176,7 +176,6 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub PatchNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchNameTextBox.TextChanged
-        'PatchDirTextBox.Text = Main.RepoComboBox.SelectedItem.ToString & "\patch\" & PatchNameTextBox.Text & "\"
         PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
@@ -766,8 +765,10 @@ Public Class PatchFromTags
 
     Public Shared Sub createPatchProcess(iBranchType As String, iRebaseBranchOn As String)
 
-        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
+        Common.checkBranch(iBranchType)
 
+
+        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")
         createPatchProgress.MdiParent = GitPatcher
         createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow")
@@ -776,7 +777,7 @@ Public Class PatchFromTags
         createPatchProgress.addStep("Commit to Branch: " & currentBranch)
         createPatchProgress.addStep("Switch to " & iRebaseBranchOn & " branch")
         'createPatchProgress.addStep("Pull from Origin" )
-        createPatchProgress.addStep("Merge from Branch: " & currentBranch)
+        createPatchProgress.addStep("Merge from Branch: " & currentBranch, True, "Please select the Branch:" & currentBranch & " from the Tortoise Merge Dialogue")
         createPatchProgress.addStep("Push to Origin", True, "If at this stage there is an error because your " & iRebaseBranchOn & " branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
         createPatchProgress.addStep("Return to Branch: " & currentBranch)
         createPatchProgress.addStep("Release to ISDEVL")

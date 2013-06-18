@@ -224,13 +224,13 @@ Partial Class Main
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
         Me.ImportToolStripMenuItem.Text = "Import"
         '
         'ExportToolStripMenuItem
         '
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
         Me.ExportToolStripMenuItem.Text = "Export"
         '
         'RELEASEToolStripMenuItem
@@ -470,7 +470,7 @@ Partial Class Main
         '
         'Main
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(486, 350)
         Me.Controls.Add(Me.AppCodeTextBox)
@@ -501,12 +501,12 @@ Partial Class Main
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "Main"
         Me.Text = "Main"
-        Me.MenuStrip1.ResumeLayout(false)
-        Me.MenuStrip1.PerformLayout
-        Me.ResumeLayout(false)
-        Me.PerformLayout
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
+        Me.ResumeLayout(False)
+        Me.PerformLayout()
 
-End Sub
+    End Sub
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents GITToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents RepoComboBox As System.Windows.Forms.ComboBox

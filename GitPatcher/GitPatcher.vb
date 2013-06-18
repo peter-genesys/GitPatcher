@@ -103,6 +103,6 @@ Public Class GitPatcher
 
     Private Sub SQLplusToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SQLplusToolStripMenuItem.Click
  
-        Host.executeSQLplus(Main.RepoComboBox.SelectedItem, Main.get_connect_string(Main.ParsingSchemaTextBox.Text, Globals.currentDB), False)
+        Host.executeSQLplus(Globals.currentRepo, Main.get_connect_string(Globals.currentParsingSchema, Globals.currentDB), False)
     End Sub
 End Class

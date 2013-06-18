@@ -38,6 +38,8 @@ Partial Class PatchRunner
         Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
+        Me.ClearButton = New System.Windows.Forms.Button()
+        Me.ChooseAllButton = New System.Windows.Forms.Button()
         Me.PatchRunnerTabControl.SuspendLayout()
         Me.PatchSelectorTabPage.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -85,6 +87,8 @@ Partial Class PatchRunner
         '
         'SplitContainer1.Panel2
         '
+        Me.SplitContainer1.Panel2.Controls.Add(Me.ClearButton)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.ChooseAllButton)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label2)
         Me.SplitContainer1.Panel2.Controls.Add(Me.ChosenPatchesListBox)
         Me.SplitContainer1.Size = New System.Drawing.Size(746, 706)
@@ -218,6 +222,24 @@ Partial Class PatchRunner
         Me.ExecutePatchButton.Text = "Execute Patches"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
+        'ClearButton
+        '
+        Me.ClearButton.Location = New System.Drawing.Point(13, 39)
+        Me.ClearButton.Name = "ClearButton"
+        Me.ClearButton.Size = New System.Drawing.Size(75, 23)
+        Me.ClearButton.TabIndex = 41
+        Me.ClearButton.Text = "Clear"
+        Me.ClearButton.UseVisualStyleBackColor = True
+        '
+        'ChooseAllButton
+        '
+        Me.ChooseAllButton.Location = New System.Drawing.Point(13, 10)
+        Me.ChooseAllButton.Name = "ChooseAllButton"
+        Me.ChooseAllButton.Size = New System.Drawing.Size(75, 23)
+        Me.ChooseAllButton.TabIndex = 40
+        Me.ChooseAllButton.Text = "Choose All"
+        Me.ChooseAllButton.UseVisualStyleBackColor = True
+        '
         'PatchRunner
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -257,4 +279,6 @@ Partial Class PatchRunner
     Friend WithEvents RadioButtonUnapplied As System.Windows.Forms.RadioButton
     Friend WithEvents RadioButtonAll As System.Windows.Forms.RadioButton
     Friend WithEvents RadioButtonUninstalled As System.Windows.Forms.RadioButton
+    Friend WithEvents ClearButton As System.Windows.Forms.Button
+    Friend WithEvents ChooseAllButton As System.Windows.Forms.Button
 End Class

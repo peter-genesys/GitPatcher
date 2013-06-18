@@ -9,9 +9,9 @@
         '  replace this line with " p_flow_version=> " & new_version & " " & today
         '  write rest of file and close it.
 
-        Dim l_create_application_new As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\application\create_application.sql"
-        Dim l_create_application_old As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\application\create_application.sql.old"
-        Dim l_create_application_orig As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\application\create_application.sql.orig"
+        Dim l_create_application_new As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\application\create_application.sql"
+        Dim l_create_application_old As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\application\create_application.sql.old"
+        Dim l_create_application_orig As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\application\create_application.sql.orig"
 
         FileIO.deleteFileIfExists(l_create_application_old)
         If Not FileIO.fileExists(l_create_application_orig) Then
@@ -57,8 +57,8 @@
 
     Public Shared Sub restoreCreateApplicationSQL()
 
-        Dim l_create_application_new As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\application\create_application.sql"
-        Dim l_create_application_orig As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\application\create_application.sql.orig"
+        Dim l_create_application_new As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\application\create_application.sql"
+        Dim l_create_application_orig As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\application\create_application.sql.orig"
 
         If FileIO.fileExists(l_create_application_orig) Then
             'Restore Backup of create_application.sql file
@@ -75,9 +75,9 @@
         'Change the install.sql
         'For install into ISDEVL we want to skip the reports queries and layouts, to speed up the import.
  
-        Dim l_install_new As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\install.sql"
-        Dim l_install_old As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\install.sql.old"
-        Dim l_install_orig As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\install.orig"
+        Dim l_install_new As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\install.sql"
+        Dim l_install_old As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\install.sql.old"
+        Dim l_install_orig As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\install.orig"
 
         FileIO.deleteFileIfExists(l_install_old)
         If Not FileIO.fileExists(l_install_orig) Then
@@ -116,8 +116,8 @@
 
     Public Shared Sub restoreInstallSQL()
 
-        Dim l_install_new As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\install.sql"
-        Dim l_install_orig As String = Main.RootApexDirTextBox.Text & Main.ApexAppTextBox.Text & "\install.orig"
+        Dim l_install_new As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\install.sql"
+        Dim l_install_orig As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\install.orig"
 
         If FileIO.fileExists(l_install_orig) Then
             'Restore Backup of install.sql file
@@ -131,8 +131,8 @@
     Public Shared Sub ApexExportCommit()
 
 
-        Dim connection As String = Main.CurrentConnectionTextBox.Text
-        Dim username As String = Main.ParsingSchemaTextBox.Text
+        Dim connection As String = Globals.deriveConnection
+        Dim username As String = Globals.currentParsingSchema
 
         Dim fapp_id As String = Globals.currentApex
         Dim apex_dir As String = Main.RootApexDirTextBox.Text
@@ -293,7 +293,7 @@
             'set apex to RUN MODE
             Dim l_build_status As String = Nothing
 
-            If runOnlyDBs.Contains(Main.DBListComboBox().SelectedItem.ToString.ToUpper) Then
+            If runOnlyDBs.Contains(Globals.currentDB) Then
                 l_build_status = "RUN_ONLY"
             Else
                 l_build_status = "RUN_AND_BUILD"
@@ -309,7 +309,7 @@
         If ImportProgress.toDoNextStep Then
             'Skip reports queries and layouts
 
-            If l_skip_reports_DBs.Contains(Main.DBListComboBox().SelectedItem.ToString.ToUpper) Then
+            If l_skip_reports_DBs.Contains(Globals.currentDB) Then
                 modInstallSQL()
                 ImportProgress.updateStepDescription(3, "Import will SKIP reports queries and layouts")
             Else
@@ -323,7 +323,7 @@
             'Import Apex
             Host.executeSQLscriptInteractive("install.sql" _
                                            , Main.RootApexDirTextBox.Text & Globals.currentApex _
-                                           , Main.get_connect_string(Main.ParsingSchemaTextBox.Text, Globals.currentDB))
+                                           , Main.get_connect_string(Globals.currentParsingSchema, Globals.currentDB))
 
         End If
 

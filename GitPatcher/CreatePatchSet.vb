@@ -10,7 +10,7 @@ Public Class CreatePatchCollection
     Public Sub New(ByVal iPatchName As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
 
         If String.IsNullOrEmpty(iPatchName) Then
-            Dim l_app_version = InputBox("Please enter a new version for " & Main.AppCodeTextBox.Text & " in the format: 2.17.01", "New " & Main.ApplicationListComboBox.SelectedItem & " Version")
+            Dim l_app_version = InputBox("Please enter a new version for " & Main.AppCodeTextBox.Text & " in the format: 2.17.01", "New " & Globals.currentApplication & " Version")
 
             pPatchName = Main.AppCodeTextBox.Text & "-" & l_app_version
         Else
@@ -56,7 +56,7 @@ Public Class CreatePatchCollection
         TagFilterCheckBox.Checked = True
         RadioButtonUnapplied.Checked = True
  
-        PatchFilterGroupBox.Text = Main.DBListComboBox.SelectedItem & " Filter"
+        PatchFilterGroupBox.Text = Globals.currentDB & " Filter"
  
     End Sub
 
@@ -350,44 +350,10 @@ Public Class CreatePatchCollection
         ' deriveSchemas()
     End Sub
 
-    'Private Sub ViewButton_Click(sender As Object, e As EventArgs)
-    '    MsgBox(GitSharpFascade.viewTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchesCheckedListBox.CheckedItems))
-    'End Sub
-
-    ' Private Sub RemoveButton_Click(sender As Object, e As EventArgs)
-    '     Dim temp As Collection = New Collection
-    '
-    '
-    '     For i As Integer = 0 To PatchesCheckedListBox.Items.Count - 1
-    '         If Not PatchesCheckedListBox.CheckedIndices.Contains(i) Then
-    '             'MsgBox(ChangesCheckedListBox.Items(i).ToString)
-    '             temp.Add(PatchesCheckedListBox.Items(i).ToString)
-    '
-    '         End If
-    '
-    '
-    '     Next
-    '
-    '     PatchesCheckedListBox.Items.Clear()
-    '
-    '     For i As Integer = 1 To temp.Count
-    '         If Not PatchesCheckedListBox.CheckedIndices.Contains(i) Then
-    '             'MsgBox(ChangesCheckedListBox.Items(i).ToString)
-    '             ' temp.Add(ChangesCheckedListBox.Items(i).ToString)
-    '
-    '             PatchesCheckedListBox.Items.Add(temp(i), CheckAllCheckBox.Checked)
-    '
-    '         End If
-    '
-    '
-    '     Next
-    '
-    '
-    '
-    ' End Sub
+ 
 
     Private Sub PatchNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchNameTextBox.TextChanged
-        'PatchDirTextBox.Text = Main.RepoComboBox.SelectedItem.ToString & "\patch\" & PatchNameTextBox.Text & "\"
+
         PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
@@ -651,7 +617,7 @@ Public Class CreatePatchCollection
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExecute" Then
 
-            ExecutePatchButton.Text = "Execute Patch on " & Main.DBListComboBox.SelectedItem
+            ExecutePatchButton.Text = "Execute Patch on " & Globals.currentDB
 
         End If
 
@@ -724,7 +690,7 @@ Public Class CreatePatchCollection
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
         'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Main.RootPatchDirTextBox.Text)
         'Use patch runner to execute with a master script.
-        PatchRunner.RunMasterScript("DEFINE database = '" & Main.DBListComboBox.SelectedItem & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
+        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentDB & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
 
     End Sub
 
@@ -797,8 +763,8 @@ Public Class CreatePatchCollection
 
     Public Shared Sub createCollectionProcess(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String, iTargetDB As String)
 
-        Dim lcurrentDB As String = Main.DBListComboBox.SelectedItem
-        Dim l_app_version = InputBox("Please enter a new version for " & Main.AppCodeTextBox.Text & " in the format: 2.17.01", "New " & Main.ApplicationListComboBox.SelectedItem & " Version")
+        Dim lcurrentDB As String = Globals.currentDB
+        Dim l_app_version = InputBox("Please enter a new version for " & Main.AppCodeTextBox.Text & " in the format: 2.17.01", "New " & Globals.currentApplication & " Version")
 
         l_app_version = Main.AppCodeTextBox.Text & "-" & l_app_version
 
@@ -820,16 +786,14 @@ Public Class CreatePatchCollection
         createPatchSetProgress.addStep("Commit Apex version " & l_app_version)
         createPatchSetProgress.addStep("Tag this release as " & l_app_version)
         createPatchSetProgress.addStep("Push to origin/" & newBranch)
-
         createPatchSetProgress.addStep("Switch to develop branch")
         createPatchSetProgress.addStep("Pull from origin/develop")
-        createPatchSetProgress.addStep("Merge from release Branch: " & newBranch)
+        createPatchSetProgress.addStep("Merge from release Branch: " & newBranch, True, "Please select the Branch:" & newBranch & " from the Tortoise Merge Dialogue")
         createPatchSetProgress.addStep("Commit - incase of merge conflict")
         createPatchSetProgress.addStep("Push to origin/develop")
-        createPatchSetProgress.addStep("Revert current DB to : " & lcurrentDB)
         createPatchSetProgress.addStep("Release to ISDEVL", False)
         createPatchSetProgress.addStep("Release to ISTEST", False)
-
+        createPatchSetProgress.addStep("Revert current DB to : " & lcurrentDB)
         'Import
 
         createPatchSetProgress.Show()
@@ -857,8 +821,8 @@ Public Class CreatePatchCollection
 
         If createPatchSetProgress.toDoNextStep() Then
             'Change current DB to release DB
-            Main.DBListComboBox.SelectedItem = iTargetDB.ToUpper
-
+            Globals.setDB(iTargetDB.ToUpper)
+ 
         End If
 
         If createPatchSetProgress.toDoNextStep() Then
@@ -876,14 +840,14 @@ Public Class CreatePatchCollection
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Commit Apex version 
-            Tortoise.Commit(Globals.currentRepo, "Bump Apex " & Main.ApexAppTextBox.Text & " to " & l_app_version)
+            Tortoise.Commit(Globals.currentRepo, "Bump Apex " & Globals.currentApex & " to " & l_app_version)
 
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Tag this commit
             GitBash.TagSimple(Globals.currentRepo, l_app_version)
-            'GitBash.TagAnnotated(Globals.currentRepo, l_app_version, "New " & Main.ApplicationListComboBox.SelectedItem & " " & iCreatePatchType & " " & l_app_version)
+
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Push release to origin with tags
@@ -919,12 +883,7 @@ Public Class CreatePatchCollection
 
 
         End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Revert current DB  
-            Main.DBListComboBox.SelectedItem = lcurrentDB.ToUpper
-
-        End If
+ 
         If createPatchSetProgress.toDoNextStep() Then
             'Release to ISDEVL
             Main.releaseTo("ISDEVL")
@@ -933,6 +892,12 @@ Public Class CreatePatchCollection
         If createPatchSetProgress.toDoNextStep() Then
             'Release to ISTEST
             Main.releaseTo("ISTEST")
+        End If
+
+        If createPatchSetProgress.toDoNextStep() Then
+            'Revert current DB  
+            Globals.setDB(lcurrentDB.ToUpper)
+
         End If
 
         'Done
