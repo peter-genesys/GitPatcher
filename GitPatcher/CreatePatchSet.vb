@@ -308,7 +308,8 @@ Public Class CreatePatchCollection
                            PrereqsCheckedListBox.CheckedItems, _
                            SupersedesCheckedListBox.CheckedItems, _
                            PatchDirTextBox.Text, _
-                           PatchPathTextBox.Text)
+                           PatchPathTextBox.Text, _
+                           TrackPromoCheckBox.Checked)
 
         Host.RunExplorer(PatchDirTextBox.Text)
 
@@ -378,7 +379,8 @@ Public Class CreatePatchCollection
                                   ByRef prereq_patches As CheckedListBox.CheckedItemCollection, _
                                   ByRef supersedes_patches As CheckedListBox.CheckedItemCollection, _
                                   ByVal patchDir As String, _
-                                  ByVal groupPath As String)
+                                  ByVal groupPath As String, _
+                                  ByVal track_promotion As Boolean)
 
 
 
@@ -398,7 +400,10 @@ Public Class CreatePatchCollection
             rerunnable_yn = "Y"
         End If
 
-
+        Dim track_promotion_yn As String = "N"
+        If track_promotion Then
+            track_promotion_yn = "Y"
+        End If
 
         For Each l_path In targetFiles
 
@@ -480,7 +485,8 @@ Public Class CreatePatchCollection
     & Chr(10) & " ,i_note               => '" & note & "' -" _
     & Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
     & Chr(10) & " ,i_remove_prereqs     => 'N' -" _
-    & Chr(10) & " ,i_remove_sups        => 'N'); " _
+    & Chr(10) & " ,i_remove_sups        => 'N' -" _
+    & Chr(10) & " ,i_track_promotion    => '" & track_promotion_yn & "'); " _
     & Chr(10))
 
 
@@ -608,6 +614,8 @@ Public Class CreatePatchCollection
             UsePatchAdminCheckBox.Checked = True
 
             RerunCheckBox.Checked = False
+
+            TrackPromoCheckBox.Checked = True
 
             If PatchableCheckedListBox.Items.Count = 0 Then
                 CopySelectedChanges()

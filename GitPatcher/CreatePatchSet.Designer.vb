@@ -46,6 +46,8 @@ Partial Class CreatePatchCollection
         Me.RadioButtonUninstalled = New System.Windows.Forms.RadioButton()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.AvailablePatchesListBox = New System.Windows.Forms.ListBox()
+        Me.ClearButton = New System.Windows.Forms.Button()
+        Me.ChooseAllButton = New System.Windows.Forms.Button()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.ChosenPatchesListBox = New System.Windows.Forms.ListBox()
         Me.TabPagePreReqs = New System.Windows.Forms.TabPage()
@@ -80,8 +82,7 @@ Partial Class CreatePatchCollection
         Me.TabPageExecute = New System.Windows.Forms.TabPage()
         Me.ComitButton = New System.Windows.Forms.Button()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.ChooseAllButton = New System.Windows.Forms.Button()
-        Me.ClearButton = New System.Windows.Forms.Button()
+        Me.TrackPromoCheckBox = New System.Windows.Forms.CheckBox()
         Me.PatchTabControl.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.TabPagePatches.SuspendLayout()
@@ -348,6 +349,24 @@ Partial Class CreatePatchCollection
         Me.AvailablePatchesListBox.Size = New System.Drawing.Size(350, 563)
         Me.AvailablePatchesListBox.TabIndex = 5
         '
+        'ClearButton
+        '
+        Me.ClearButton.Location = New System.Drawing.Point(15, 41)
+        Me.ClearButton.Name = "ClearButton"
+        Me.ClearButton.Size = New System.Drawing.Size(75, 23)
+        Me.ClearButton.TabIndex = 39
+        Me.ClearButton.Text = "Clear"
+        Me.ClearButton.UseVisualStyleBackColor = True
+        '
+        'ChooseAllButton
+        '
+        Me.ChooseAllButton.Location = New System.Drawing.Point(15, 12)
+        Me.ChooseAllButton.Name = "ChooseAllButton"
+        Me.ChooseAllButton.Size = New System.Drawing.Size(75, 23)
+        Me.ChooseAllButton.TabIndex = 38
+        Me.ChooseAllButton.Text = "Choose All"
+        Me.ChooseAllButton.UseVisualStyleBackColor = True
+        '
         'Label4
         '
         Me.Label4.AutoSize = True
@@ -485,6 +504,7 @@ Partial Class CreatePatchCollection
         '
         'TabPagePatchDefn
         '
+        Me.TabPagePatchDefn.Controls.Add(Me.TrackPromoCheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.PatchPathTextBox)
         Me.TabPagePatchDefn.Controls.Add(Me.Label18)
         Me.TabPagePatchDefn.Controls.Add(Me.CopyChangesButton)
@@ -684,23 +704,15 @@ Partial Class CreatePatchCollection
         Me.ExecutePatchButton.Text = "Execute Patch"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'ChooseAllButton
+        'TrackPromoCheckBox
         '
-        Me.ChooseAllButton.Location = New System.Drawing.Point(15, 12)
-        Me.ChooseAllButton.Name = "ChooseAllButton"
-        Me.ChooseAllButton.Size = New System.Drawing.Size(75, 23)
-        Me.ChooseAllButton.TabIndex = 38
-        Me.ChooseAllButton.Text = "Choose All"
-        Me.ChooseAllButton.UseVisualStyleBackColor = True
-        '
-        'ClearButton
-        '
-        Me.ClearButton.Location = New System.Drawing.Point(15, 41)
-        Me.ClearButton.Name = "ClearButton"
-        Me.ClearButton.Size = New System.Drawing.Size(75, 23)
-        Me.ClearButton.TabIndex = 39
-        Me.ClearButton.Text = "Clear"
-        Me.ClearButton.UseVisualStyleBackColor = True
+        Me.TrackPromoCheckBox.AutoSize = True
+        Me.TrackPromoCheckBox.Location = New System.Drawing.Point(278, 593)
+        Me.TrackPromoCheckBox.Name = "TrackPromoCheckBox"
+        Me.TrackPromoCheckBox.Size = New System.Drawing.Size(104, 17)
+        Me.TrackPromoCheckBox.TabIndex = 36
+        Me.TrackPromoCheckBox.Text = "Track Promotion"
+        Me.TrackPromoCheckBox.UseVisualStyleBackColor = True
         '
         'CreatePatchCollection
         '
@@ -792,4 +804,5 @@ Partial Class CreatePatchCollection
     Friend WithEvents TagFilterCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents ChooseAllButton As System.Windows.Forms.Button
     Friend WithEvents ClearButton As System.Windows.Forms.Button
+    Friend WithEvents TrackPromoCheckBox As System.Windows.Forms.CheckBox
 End Class

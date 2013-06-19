@@ -75,6 +75,7 @@ Partial Class PatchFromTags
         Me.TabPageExecute = New System.Windows.Forms.TabPage()
         Me.ComitButton = New System.Windows.Forms.Button()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
+        Me.TrackPromoCheckBox = New System.Windows.Forms.CheckBox()
         Me.PatchTabControl.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.TabPageChanges.SuspendLayout()
@@ -410,6 +411,7 @@ Partial Class PatchFromTags
         '
         'TabPagePatchDefn
         '
+        Me.TabPagePatchDefn.Controls.Add(Me.TrackPromoCheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.PatchPathTextBox)
         Me.TabPagePatchDefn.Controls.Add(Me.Label18)
         Me.TabPagePatchDefn.Controls.Add(Me.CopyChangesButton)
@@ -609,6 +611,16 @@ Partial Class PatchFromTags
         Me.ExecutePatchButton.Text = "Execute Patch"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
+        'TrackPromoCheckBox
+        '
+        Me.TrackPromoCheckBox.AutoSize = True
+        Me.TrackPromoCheckBox.Location = New System.Drawing.Point(281, 462)
+        Me.TrackPromoCheckBox.Name = "TrackPromoCheckBox"
+        Me.TrackPromoCheckBox.Size = New System.Drawing.Size(104, 17)
+        Me.TrackPromoCheckBox.TabIndex = 35
+        Me.TrackPromoCheckBox.Text = "Track Promotion"
+        Me.TrackPromoCheckBox.UseVisualStyleBackColor = True
+        '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -685,4 +697,5 @@ Partial Class PatchFromTags
     Friend WithEvents ComitButton As System.Windows.Forms.Button
     Friend WithEvents PatchPathTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label18 As System.Windows.Forms.Label
+    Friend WithEvents TrackPromoCheckBox As System.Windows.Forms.CheckBox
 End Class

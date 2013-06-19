@@ -97,7 +97,8 @@ Public Class PatchFromTags
                            PrereqsCheckedListBox.CheckedItems, _
                            SupersedesCheckedListBox.CheckedItems, _
                            PatchDirTextBox.Text, _
-                           PatchPathTextBox.Text)
+                           PatchPathTextBox.Text, _
+                           TrackPromoCheckBox.Checked)
 
         Host.RunExplorer(PatchDirTextBox.Text)
 
@@ -215,7 +216,8 @@ Public Class PatchFromTags
                                   ByRef prereq_patches As CheckedListBox.CheckedItemCollection, _
                                   ByRef supersedes_patches As CheckedListBox.CheckedItemCollection, _
                                   ByVal patchDir As String, _
-                                  ByVal groupPath As String)
+                                  ByVal groupPath As String, _
+                                  ByVal track_promotion As Boolean)
 
 
         Dim l_db_objects_users As String = Nothing 'user
@@ -266,6 +268,14 @@ Public Class PatchFromTags
         If rerunnable Then
             rerunnable_yn = "Y"
         End If
+
+
+        Dim track_promotion_yn As String = "N"
+        If track_promotion Then
+            track_promotion_yn = "Y"
+        End If
+
+
 
         Dim l_patch_started As String = Nothing
 
@@ -421,7 +431,8 @@ Public Class PatchFromTags
         & Chr(10) & " ,i_note               => '" & note & "' -" _
         & Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
         & Chr(10) & " ,i_remove_prereqs     => 'N' -" _
-        & Chr(10) & " ,i_remove_sups        => 'N'); " _
+        & Chr(10) & " ,i_remove_sups        => 'N' -" _
+        & Chr(10) & " ,i_track_promotion    => '" & track_promotion_yn & "'); " _
         & Chr(10)
 
 
@@ -644,6 +655,8 @@ Public Class PatchFromTags
             UsePatchAdminCheckBox.Checked = True
 
             RerunCheckBox.Checked = True
+
+            TrackPromoCheckBox.Checked = True
 
             If PatchableCheckedListBox.Items.Count = 0 Then
                 CopySelectedChanges()

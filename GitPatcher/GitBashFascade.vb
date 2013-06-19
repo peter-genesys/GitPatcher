@@ -95,7 +95,7 @@
     '   End Sub
     '
     Public Sub TagSimple(ByVal iTag As String)
-        GitBashSetup.Arguments = "tag " & iTag 'git tag v1.4
+        GitBashSetup.Arguments = "tag " & iTag & " --force" 'git tag v1.4
         execute()
     End Sub
 
