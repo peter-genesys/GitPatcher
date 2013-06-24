@@ -112,7 +112,7 @@
     End Sub
 
     Private Sub PatchRunnerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PatchRunnerToolStripMenuItem.Click
-        Dim newchildform As New PatchRunner
+        Dim newchildform As New PatchRunner(False, False, False)
         newchildform.MdiParent = GitPatcher
         newchildform.Show()
     End Sub
@@ -397,7 +397,7 @@
         rebasing.addStep("Return to branch: " & currentBranch)
         rebasing.addStep("Rebase Branch: " & currentBranch & " From Branch:" & iRebaseBranchOn, True, "Please select the Branch:" & iRebaseBranchOn & " from the Tortoise Rebase Dialogue")
         rebasing.addStep("Tag Branch: " & currentBranch & " HEAD with " & CurrentBranchTextBox.Text & ".99B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & CurrentBranchTextBox.Text & ".99B.")
-        rebasing.addStep("Use PatchRunner to run Unapplied/Uninstalled Patches", True, "Before running patches, consider reverting to a VM snapshot prior to the development of your current work, or swapping to a unit test VM.")
+        rebasing.addStep("Use PatchRunner to run Unapplied Patches", True, "Before running patches, consider reverting to a VM snapshot prior to the development of your current work, or swapping to a unit test VM.")
         'rebasing.addStep("Review tags on the branch" )
         rebasing.addStep("Import Apex from HEAD of branch: " & currentBranch, True, "Using the Apex Import workflow")
 
@@ -453,8 +453,8 @@
         End If
 
         If rebasing.toDoNextStep() Then
-            'Use PatchRunner to run Unapplied/Uninstalled Patches
-            Dim newchildform As New PatchRunner
+            'Use PatchRunner to run Unapplied Patches
+            Dim newchildform As New PatchRunner(True, False, False)
             'newchildform.MdiParent = GitPatcher
             newchildform.ShowDialog() 'NEED TO WAIT HERE!!
 
@@ -542,8 +542,8 @@
 
 
         If releasing.toDoNextStep() Then
-            'Use PatchRunner to run Unapplied/Uninstalled Patches
-            Dim newchildform As New PatchRunner
+            'Use PatchRunner to run  Uninstalled Patches
+            Dim newchildform As New PatchRunner(False, True, False)
             'newchildform.MdiParent = GitPatcher
             newchildform.ShowDialog() 'NEED TO WAIT HERE!!
 

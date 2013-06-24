@@ -4,10 +4,13 @@ Public Class PatchRunner
 
 
 
-    Public Sub New()
+    Public Sub New(ByVal iUnapplied As Boolean, ByVal iUninstalled As Boolean, ByVal iAll As Boolean)
         InitializeComponent()
-        RadioButtonUnapplied.Checked = True
+        RadioButtonUnapplied.Checked = iUnapplied
+        RadioButtonUninstalled.Checked = iUninstalled
+        RadioButtonAll.Checked = iAll
         PatchFilterGroupBox.Text = Globals.currentDB & " Filter"
+        doSearch()
     End Sub
 
 
@@ -48,7 +51,7 @@ Public Class PatchRunner
 
     End Sub
 
-    Public Sub RecursiveSearchContainingFolder(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As ListBox, ByVal removePath As String)
+    Public Shared Sub RecursiveSearchContainingFolder(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As ListBox, ByVal removePath As String)
 
         Dim strFolders() As String = System.IO.Directory.GetDirectories(strPath)
         Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
@@ -67,7 +70,7 @@ Public Class PatchRunner
     End Sub
 
 
-    Public Sub FindPatches(ByRef foundPatches As ListBox, ByVal iHideInstalled As Boolean)
+    Public Shared Sub FindPatches(ByRef foundPatches As ListBox, ByVal iHideInstalled As Boolean)
 
         'Simple but replies on TNSNAMES File
         Dim oradb As String = "Data Source=" & Globals.currentDB & ";User Id=patch_admin;Password=patch_admin;"
@@ -153,13 +156,15 @@ Public Class PatchRunner
 
         End If
 
-
-
+        If foundPatches.Items.Count = 0 Then
+            MsgBox("No patches matched the search criteria.", MsgBoxStyle.Information, "No patches found")
+        End If
+ 
 
     End Sub
 
 
-    Public Sub FindUnappliedPatches(ByRef foundPatches As ListBox)
+    Public Shared Sub FindUnappliedPatches(ByRef foundPatches As ListBox)
 
 
         foundPatches.Items.Clear()
@@ -221,20 +226,27 @@ Public Class PatchRunner
 
         End Try
 
-
+        If foundPatches.Items.Count = 0 Then
+            MsgBox("No patches matched the search criteria.", MsgBoxStyle.Information, "No patches found")
+        End If
 
 
     End Sub
 
 
-    Private Sub SearchPatchesButton_Click(sender As Object, e As EventArgs) Handles SearchPatchesButton.Click
+    Private Sub doSearch()
         If RadioButtonUnapplied.Checked Then
             FindUnappliedPatches(AvailablePatchesListBox)
-        Else
+        ElseIf RadioButtonUninstalled.Checked Or RadioButtonAll.Checked Then
             FindPatches(AvailablePatchesListBox, RadioButtonUninstalled.Checked)
+        Else
+            MsgBox("Choose type of patch to search for.", MsgBoxStyle.Exclamation, "Choose Search criteria")
         End If
+    End Sub
 
-        'FindPatches(True, False)
+
+    Private Sub SearchPatchesButton_Click(sender As Object, e As EventArgs) Handles SearchPatchesButton.Click
+        doSearch
 
     End Sub
 
