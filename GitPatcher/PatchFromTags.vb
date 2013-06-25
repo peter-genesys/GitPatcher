@@ -793,9 +793,8 @@ Public Class PatchFromTags
         createPatchProgress.addStep("Push to Origin", True, "If at this stage there is an error because your " & iRebaseBranchOn & " branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
         createPatchProgress.addStep("Return to Branch: " & currentBranch)
         createPatchProgress.addStep("Release to ISDEVL")
-
+        createPatchProgress.addStep("Snapshot VM", True, "Create a snapshot of your current VM state, to use as your next restore point.  I label mine with the patch_name of the last applied patch.")
         createPatchProgress.Show()
-
 
 
         Do Until createPatchProgress.isStarted
@@ -870,6 +869,12 @@ Public Class PatchFromTags
         If createPatchProgress.toDoNextStep() Then
             'Release to ISDEVL
             Main.releaseTo("ISDEVL")
+        End If
+
+        If createPatchProgress.toDoNextStep() Then
+            'Snapshot VM
+            MsgBox("Create a snapshot of your current VM state, to use as your next restore point.", MsgBoxStyle.Exclamation, "Snapshot VM")
+
         End If
 
         'Finish
