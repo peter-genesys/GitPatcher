@@ -43,6 +43,9 @@ Partial Class Main
         Me.CreateDBPatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBMinorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PatchRunnerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.UnappliedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.UninstalledToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AllPatchesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.APEXToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -210,9 +213,28 @@ Partial Class Main
         '
         'PatchRunnerToolStripMenuItem
         '
+        Me.PatchRunnerToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UnappliedToolStripMenuItem, Me.UninstalledToolStripMenuItem, Me.AllPatchesToolStripMenuItem})
         Me.PatchRunnerToolStripMenuItem.Name = "PatchRunnerToolStripMenuItem"
         Me.PatchRunnerToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.PatchRunnerToolStripMenuItem.Text = "PatchRunner"
+        Me.PatchRunnerToolStripMenuItem.Text = "Run Patches"
+        '
+        'UnappliedToolStripMenuItem
+        '
+        Me.UnappliedToolStripMenuItem.Name = "UnappliedToolStripMenuItem"
+        Me.UnappliedToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.UnappliedToolStripMenuItem.Text = "Unapplied Patches"
+        '
+        'UninstalledToolStripMenuItem
+        '
+        Me.UninstalledToolStripMenuItem.Name = "UninstalledToolStripMenuItem"
+        Me.UninstalledToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.UninstalledToolStripMenuItem.Text = "Uninstalled Patches"
+        '
+        'AllPatchesToolStripMenuItem
+        '
+        Me.AllPatchesToolStripMenuItem.Name = "AllPatchesToolStripMenuItem"
+        Me.AllPatchesToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.AllPatchesToolStripMenuItem.Text = "All Patches"
         '
         'APEXToolStripMenuItem
         '
@@ -560,5 +582,8 @@ Partial Class Main
     Friend WithEvents CreateDBFeaturePatchToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestCreatePatchSetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MultiDBHotFixPatchToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents UnappliedToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents UninstalledToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents AllPatchesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

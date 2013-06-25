@@ -163,6 +163,7 @@
 
     End Function
 
+ 
     Public Shared Sub checkBranch(i_searchString)
         Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
 

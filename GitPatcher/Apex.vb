@@ -260,7 +260,7 @@
             'Choose a tag to import from
             Dim tagnames As Collection = New Collection
             tagnames.Add("HEAD")
-            tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, Main.CurrentBranchTextBox.Text)
+            tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, Globals.currentBranch)
             tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, Main.AppCodeTextBox.Text)
 
 

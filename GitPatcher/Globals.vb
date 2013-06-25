@@ -20,6 +20,13 @@
         Return gRepo
 
     End Function
+
+    Public Function currentBranch() As String
+
+        Return Common.getLastSegment(GitSharpFascade.currentBranch(gRepo), "/")
+
+    End Function
+
  
     Public Function currentApplication() As String
 

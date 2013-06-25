@@ -5,7 +5,7 @@ Public Class PatchFromTags
     Public Sub New()
         InitializeComponent()
 
-        FindTagsButton.Text = "Find Tags like " & Main.CurrentBranchTextBox.Text & ".XX"
+        FindTagsButton.Text = "Find Tags like " & Globals.currentBranch & ".XX"
 
         Findtags()
 
@@ -21,7 +21,7 @@ Public Class PatchFromTags
     Private Sub Findtags()
         TagsCheckedListBox.Items.Clear()
         For Each tagname In GitSharpFascade.getTagList(Globals.currentRepo)
-            If PatchRunner.get_first_split(tagname, ".") = Main.CurrentBranchTextBox.Text Then
+            If PatchRunner.get_first_split(tagname, ".") = Globals.currentBranch Then
                 TagsCheckedListBox.Items.Add(tagname)
             End If
         Next
@@ -674,7 +674,7 @@ Public Class PatchFromTags
 
     Private Sub derivePatchName()
 
-        PatchNameTextBox.Text = Main.CurrentBranchTextBox.Text & "_" & Common.dropFirstSegment(Tag1TextBox.Text, ".") & "_" & Common.dropFirstSegment(Tag2TextBox.Text, ".") & "_" & SchemaComboBox.SelectedItem.ToString
+        PatchNameTextBox.Text = Globals.currentBranch & "_" & Common.dropFirstSegment(Tag1TextBox.Text, ".") & "_" & Common.dropFirstSegment(Tag2TextBox.Text, ".") & "_" & SchemaComboBox.SelectedItem.ToString
 
         If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
             PatchNameTextBox.Text = PatchNameTextBox.Text & "_" & SupIdTextBox.Text
@@ -779,8 +779,7 @@ Public Class PatchFromTags
     Public Shared Sub createPatchProcess(iBranchType As String, iRebaseBranchOn As String)
 
         Common.checkBranch(iBranchType)
-
-
+ 
         Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")
         createPatchProgress.MdiParent = GitPatcher

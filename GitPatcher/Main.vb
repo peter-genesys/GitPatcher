@@ -90,12 +90,11 @@
 
     Private Sub RepoComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles RepoComboBox.SelectedIndexChanged
 
-        BranchPathTextBox.Text = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)
+        Globals.setRepo(RepoComboBox.SelectedItem)
+        BranchPathTextBox.Text = GitSharpFascade.currentBranch(Globals.currentRepo)
+        CurrentBranchTextBox.Text = Globals.currentBranch
 
-        CurrentBranchTextBox.Text = Common.getLastSegment(BranchPathTextBox.Text, "/")
-
-
-        'CurrentBranchTextBox.Text = GitSharpFascade.currentBranch(RepoComboBox.SelectedItem)
+ 
         RootPatchDirTextBox.Text = RepoComboBox.SelectedItem & My.Settings.PatchDirOffset & "\"
         RootApexDirTextBox.Text = RepoComboBox.SelectedItem & My.Settings.ApexDirOffset & "\"
 
@@ -103,20 +102,14 @@
 
         My.Settings.Save()
 
-        Globals.setRepo(RepoComboBox.SelectedItem)
+
 
     End Sub
 
     Private Sub PatchFromTagsToolStripMenuItem_Click(sender As Object, e As EventArgs)
         PatchFromTags.createPatchProcess("feature", "develop")
     End Sub
-
-    Private Sub PatchRunnerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PatchRunnerToolStripMenuItem.Click
-        Dim newchildform As New PatchRunner(False, False, False)
-        newchildform.MdiParent = GitPatcher
-        newchildform.Show()
-    End Sub
-
+ 
     Private Sub DBListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles DBListComboBox.SelectedIndexChanged
         My.Settings.CurrentDB = DBListComboBox.SelectedItem
         My.Settings.Save()
@@ -383,23 +376,25 @@
 
         Common.checkBranch(iBranchType)
 
-        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
+        Dim currentBranchLong As String = GitSharpFascade.currentBranch(Globals.currentRepo)
+        Dim currentBranchShort As String = Globals.currentBranch
 
-        Dim rebasing As ProgressDialogue = New ProgressDialogue("Rebase branch " & currentBranch)
+        Dim rebasing As ProgressDialogue = New ProgressDialogue("Rebase branch " & currentBranchLong)
 
         Dim l_tag_base As String = Nothing
 
         rebasing.MdiParent = GitPatcher
-        rebasing.addStep("Export Apex to branch: " & currentBranch, True, "Using the Apex Export workflow")
+        rebasing.addStep("Export Apex to branch: " & currentBranchLong, True, "Using the Apex Export workflow")
+        rebasing.addStep("Use QCGU to generate changed domain data: " & currentBranchLong, True, "Think hard!  Did i change domain config?  If so, i should logon to QCGU and generate that data out. Then commit it too.")
         rebasing.addStep("Switch to " & iRebaseBranchOn & " branch")
         rebasing.addStep("Pull from Origin")
-        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & CurrentBranchTextBox.Text & ".99A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & CurrentBranchTextBox.Text & ".99A")
-        rebasing.addStep("Return to branch: " & currentBranch)
-        rebasing.addStep("Rebase Branch: " & currentBranch & " From Branch:" & iRebaseBranchOn, True, "Please select the Branch:" & iRebaseBranchOn & " from the Tortoise Rebase Dialogue")
-        rebasing.addStep("Tag Branch: " & currentBranch & " HEAD with " & CurrentBranchTextBox.Text & ".99B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & CurrentBranchTextBox.Text & ".99B.")
+        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & ".99A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & CurrentBranchTextBox.Text & ".99A")
+        rebasing.addStep("Return to branch: " & currentBranchLong)
+        rebasing.addStep("Rebase Branch: " & currentBranchLong & " From Upstream:" & iRebaseBranchOn, True, "Please select the Upstream Branch:" & iRebaseBranchOn & " from the Tortoise Rebase Dialogue")
+        rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & ".99B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.")
         rebasing.addStep("Use PatchRunner to run Unapplied Patches", True, "Before running patches, consider reverting to a VM snapshot prior to the development of your current work, or swapping to a unit test VM.")
         'rebasing.addStep("Review tags on the branch" )
-        rebasing.addStep("Import Apex from HEAD of branch: " & currentBranch, True, "Using the Apex Import workflow")
+        rebasing.addStep("Import Apex from HEAD of branch: " & currentBranchLong, True, "Using the Apex Import workflow")
 
         rebasing.Show()
 
@@ -416,6 +411,12 @@
         End If
 
         If rebasing.toDoNextStep() Then
+            'QCGU
+            MsgBox("Please launch QCGU and generate Domain data", MsgBoxStyle.Exclamation, "QCGU")
+
+        End If
+
+        If rebasing.toDoNextStep() Then
             'Switch to develop branch
             GitBash.Switch(Globals.currentRepo, iRebaseBranchOn)
         End If
@@ -427,7 +428,7 @@
         If rebasing.toDoNextStep() Then
             'Tag the develop head
             l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please enter 2 digit numeric tag for next patch.", "Create Tag for next patch")
-            Dim l_tagA As String = CurrentBranchTextBox.Text & "." & l_tag_base & "A"
+            Dim l_tagA As String = currentBranchShort & "." & l_tag_base & "A"
             rebasing.updateStepDescription(3, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
             GitBash.TagSimple(Globals.currentRepo, l_tagA)
 
@@ -436,7 +437,7 @@
 
         If rebasing.toDoNextStep() Then
             'Return to branch
-            GitBash.Switch(Globals.currentRepo, currentBranch)
+            GitBash.Switch(Globals.currentRepo, currentBranchLong)
         End If
 
         If rebasing.toDoNextStep() Then
@@ -446,8 +447,8 @@
 
         If rebasing.toDoNextStep() Then
             'Tag Branch
-            Dim l_tagB As String = CurrentBranchTextBox.Text & "." & l_tag_base & "B"
-            rebasing.updateStepDescription(6, "Tag Branch: " & currentBranch & " HEAD with " & l_tagB)
+            Dim l_tagB As String = currentBranchShort & "." & l_tag_base & "B"
+            rebasing.updateStepDescription(6, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
             GitBash.TagSimple(Globals.currentRepo, l_tagB)
 
         End If
@@ -528,7 +529,7 @@
             'Choose a tag to import from
             Dim tagnames As Collection = New Collection
             tagnames.Add("HEAD")
-            tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, CurrentBranchTextBox.Text)
+            tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, Globals.currentBranch)
             tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, AppCodeTextBox.Text)
 
 
@@ -643,10 +644,25 @@
  
         'Finish
         multiHotFix.toDoNextStep()
-
  
-
     End Sub
 
  
+    Private Sub UnappliedToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UnappliedToolStripMenuItem.Click
+        Dim newchildform As New PatchRunner(True, False, False)
+        newchildform.MdiParent = GitPatcher
+        newchildform.Show()
+    End Sub
+
+    Private Sub UninstalledToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UninstalledToolStripMenuItem.Click
+        Dim newchildform As New PatchRunner(False, True, False)
+        newchildform.MdiParent = GitPatcher
+        newchildform.Show()
+    End Sub
+
+    Private Sub AllPatchesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllPatchesToolStripMenuItem.Click
+        Dim newchildform As New PatchRunner(False, False, True)
+        newchildform.MdiParent = GitPatcher
+        newchildform.Show()
+    End Sub
 End Class
