@@ -91,18 +91,11 @@
     Private Sub RepoComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles RepoComboBox.SelectedIndexChanged
 
         Globals.setRepo(RepoComboBox.SelectedItem)
-        BranchPathTextBox.Text = GitSharpFascade.currentBranch(Globals.currentRepo)
+        BranchPathTextBox.Text = Globals.currentLongBranch()
         CurrentBranchTextBox.Text = Globals.currentBranch
-
+        RootPatchDirTextBox.Text = Globals.RootPatchDir
+        RootApexDirTextBox.Text = Globals.RootApexDir
  
-        RootPatchDirTextBox.Text = RepoComboBox.SelectedItem & My.Settings.PatchDirOffset & "\"
-        RootApexDirTextBox.Text = RepoComboBox.SelectedItem & My.Settings.ApexDirOffset & "\"
-
-        My.Settings.CurrentRepo = RepoComboBox.SelectedItem
-
-        My.Settings.Save()
-
-
 
     End Sub
 
@@ -111,34 +104,21 @@
     End Sub
  
     Private Sub DBListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles DBListComboBox.SelectedIndexChanged
-        My.Settings.CurrentDB = DBListComboBox.SelectedItem
-        My.Settings.Save()
-
 
         Globals.setDB(DBListComboBox.SelectedItem)
-
-        CurrentConnectionTextBox.Text = Globals.deriveConnection()
+        CurrentConnectionTextBox.Text = Globals.currentConnection()
 
     End Sub
 
     Private Sub ApplicationListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ApplicationListComboBox.SelectedIndexChanged
-        My.Settings.CurrentApp = ApplicationListComboBox.SelectedItem
-        My.Settings.Save()
-        Globals.setApplication(ApplicationListComboBox.SelectedItem)
 
-        'repo = Trim(repo)
-        'repo = repo.Replace(Chr(13), "")
-
+        Globals.setApplication(ApplicationListComboBox.SelectedItem, ApplicationListComboBox.SelectedIndex)
+ 
         'Patch Set
-        AppCodeTextBox.Text = Trim(My.Settings.PatchSetList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)).Replace(Chr(13), "")
+        AppCodeTextBox.Text = Globals.currentAppCode
+        ApexAppTextBox.Text = Globals.currentApex
+        ParsingSchemaTextBox.Text = Globals.currentParsingSchema
 
-
-        ApexAppTextBox.Text = Trim(My.Settings.AppList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)).Replace(Chr(13), "")
-
-        My.Settings.CurrentApex = ApexAppTextBox.Text
-        Globals.setApex(ApexAppTextBox.Text)
-        ParsingSchemaTextBox.Text = My.Settings.ParsingSchemaList.Split(Chr(10))(ApplicationListComboBox.SelectedIndex)
-        Globals.setParsingSchema(ParsingSchemaTextBox.Text)
 
     End Sub
 
@@ -397,9 +377,7 @@
         rebasing.addStep("Import Apex from HEAD of branch: " & currentBranchLong, True, "Using the Apex Import workflow")
 
         rebasing.Show()
-
-
-
+ 
         Do Until rebasing.isStarted
             Common.wait(1000)
         Loop

@@ -19,10 +19,10 @@
         GitExeTextBox.DataBindings.Add("Text", My.Settings, "GITpath")
 
         'Apps
-        ApplicationsTextBox.DataBindings.Add("Text", My.Settings, "ApplicationsList")
-        PatchSetTextBox.DataBindings.Add("Text", My.Settings, "PatchSetList")
-        AppListTextBox.DataBindings.Add("Text", My.Settings, "AppList")
-        ParsingSchemaTextbox.DataBindings.Add("Text", My.Settings, "ParsingSchemaList")
+        ApplicationsTextBox.DataBindings.Add("Text", My.Settings, "ApplicationsList")   'Descriptions for Applications Eg Prism
+        AppCodeTextBox.DataBindings.Add("Text", My.Settings, "AppCodeList")             'Codes for Applications        Eg prism
+        AppListTextBox.DataBindings.Add("Text", My.Settings, "AppList")                 'Apex ids
+        ParsingSchemaTextbox.DataBindings.Add("Text", My.Settings, "ParsingSchemaList") 'Parsing schema of Apex Application
 
 
         'Mail

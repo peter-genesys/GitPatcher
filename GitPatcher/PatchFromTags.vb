@@ -82,9 +82,9 @@ Public Class PatchFromTags
 
         'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
-                           Common.getFirstSegment(Main.BranchPathTextBox.Text, "/"), _
+                           Common.getFirstSegment(Globals.currentLongBranch, "/"), _
                            SchemaComboBox.Text, _
-                           Main.BranchPathTextBox.Text, _
+                           Globals.currentLongBranch, _
                            Tag1TextBox.Text, _
                            Tag2TextBox.Text, _
                            SupIdTextBox.Text, _
@@ -177,7 +177,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub PatchNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchNameTextBox.TextChanged
-        PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & Replace(PatchNameTextBox.Text, "/", "\") & "\"
+        PatchDirTextBox.Text = Globals.RootPatchDir & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
     ' Public Shared Function get_last_split(ByVal ipath As String, ByVal idelim As String) As String
@@ -644,9 +644,9 @@ Public Class PatchFromTags
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
             'Copy Patchable items to the next list.
 
-            PatchPathTextBox.Text = Replace(Main.BranchPathTextBox.Text, "/", "\") & "\" & Main.AppCodeTextBox.Text & "\"
+            PatchPathTextBox.Text = Replace(Globals.currentLongBranch, "/", "\") & "\" & Globals.currentAppCode & "\"
 
-            PatchPathTextBox.Text = Common.getFirstSegment(Main.BranchPathTextBox.Text, "/") & "\" & Main.AppCodeTextBox.Text & "\" & Common.getLastSegment(Main.BranchPathTextBox.Text, "/") & "\"
+            PatchPathTextBox.Text = Common.getFirstSegment(Globals.currentLongBranch, "/") & "\" & Globals.currentAppCode & "\" & Globals.currentBranch & "\"
 
             derivePatchName()
 
@@ -684,7 +684,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub derivePatchDir()
-        PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
+        PatchDirTextBox.Text = Globals.RootPatchDir & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
     End Sub
 
     Private Sub SupIdTextBox_TextChanged(sender As Object, e As EventArgs) Handles SupIdTextBox.TextChanged
@@ -695,11 +695,11 @@ Public Class PatchFromTags
 
     Private Sub FindPreReqs()
         PrereqsCheckedListBox.Items.Clear()
-        If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
+        If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", PrereqsCheckedListBox, Main.RootPatchDirTextBox.Text)
+            PatchRunner.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", PrereqsCheckedListBox, Globals.RootPatchDir)
 
-            'For Each foldername As String In IO.Directory.GetDirectories(Main.RootPatchDirTextBox.Text)
+            'For Each foldername As String In IO.Directory.GetDirectories(Globals.RootPatchDir)
             '    PrereqsCheckedListBox.Items.Add(get_last_split(foldername, "\"))
             'Next
 
@@ -716,10 +716,10 @@ Public Class PatchFromTags
 
     Private Sub FindSuper()
         SupersedesCheckedListBox.Items.Clear()
-        If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
+        If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", SupersedesCheckedListBox, Main.RootPatchDirTextBox.Text)
-            'For Each foldername As String In IO.Directory.GetDirectories(Main.RootPatchDirTextBox.Text)
+            PatchRunner.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", SupersedesCheckedListBox, Globals.RootPatchDir)
+            'For Each foldername As String In IO.Directory.GetDirectories(Globals.RootPatchDir)
             '    SupersedesCheckedListBox.Items.Add(get_last_split(foldername, "\"))
             'Next
 
@@ -731,7 +731,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
-        'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Main.RootPatchDirTextBox.Text)
+        'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Globals.RootPatchDir)
         'Use patch runner to execute with a master script.
         PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentDB & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
 
@@ -764,7 +764,7 @@ Public Class PatchFromTags
     Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles ComitButton.Click
         Tortoise.Commit(PatchDirTextBox.Text, "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
 
-        Mail.SendNotification("NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.", PatchDirTextBox.Text & "install.sql," & Main.RootPatchDirTextBox.Text & PatchNameTextBox.Text & ".log")
+        Mail.SendNotification("NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
 
         'user
         'branch

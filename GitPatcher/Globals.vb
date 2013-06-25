@@ -3,31 +3,65 @@
     Private gApex As String
     Private gRepo As String
     Private gApplication As String
+    Private gAppCode As String
+    'Private gApexApp As String
     Private gParsingSchema As String
 
+ 
     Public Function currentDB() As String
 
         Return gDB
 
     End Function
+
     Public Function currentApex() As String
 
         Return gApex
 
     End Function
+    Public Function currentAppCode() As String
+
+        Return gAppCode
+
+    End Function
+
+    'Public Function currentApexApp() As String
+    '
+    '    Return gApexApp
+    '
+    'End Function
+
     Public Function currentRepo() As String
 
         Return gRepo
 
     End Function
 
+
+
+    Public Function currentLongBranch() As String
+        Return GitSharpFascade.currentBranch(gRepo)
+    End Function
+
     Public Function currentBranch() As String
 
-        Return Common.getLastSegment(GitSharpFascade.currentBranch(gRepo), "/")
+        Return Common.getLastSegment(Globals.currentLongBranch, "/")
+
+    End Function
+ 
+    Public Function RootPatchDir() As String
+
+
+        Return gRepo & My.Settings.PatchDirOffset & "\"
 
     End Function
 
- 
+    Public Function RootApexDir() As String
+
+        Return gRepo & My.Settings.ApexDirOffset & "\"
+    End Function
+
+
     Public Function currentApplication() As String
 
         Return gApplication
@@ -44,33 +78,48 @@
     Public Sub setDB(DB As String)
 
         gDB = DB
- 
-    End Sub
 
-    Public Sub setApex(Apex As String)
-
-        gApex = Apex
+        My.Settings.CurrentDB = gDB
+        My.Settings.Save()
 
     End Sub
+
+    'Public Sub setApex(Apex As String)
+    '
+    '    gApex = Apex
+    '
+    'End Sub
     Public Sub setRepo(Repo As String)
 
         gRepo = Repo
 
+        My.Settings.CurrentRepo = gRepo
+        My.Settings.Save()
+
     End Sub
-    Public Sub setApplication(Application As String)
+    Public Sub setApplication(ByVal Application As String, applicationIndex As Integer)
 
         gApplication = Application
 
-    End Sub
+        'derive when application changes
+        gAppCode = Trim(My.Settings.AppCodeList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
+        gApex = Trim(My.Settings.AppList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
+        gParsingSchema = Trim(My.Settings.ParsingSchemaList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
+
+        My.Settings.CurrentApex = gApex
+        My.Settings.CurrentApp = gApplication
+        My.Settings.Save()
  
-    Public Sub setParsingSchema(ParsingSchema As String)
-
-        gParsingSchema = ParsingSchema
-
     End Sub
 
+    'Public Sub setParsingSchema(ParsingSchema As String)
+    '
+    '    gParsingSchema = ParsingSchema
+    '
+    'End Sub
 
-    Public Function deriveConnection() As String
+
+    Public Function currentConnection() As String
         Dim l_Index As Integer = -1
         For Each db In My.Settings.DBList.Split(Chr(10))
             l_Index = l_Index + 1

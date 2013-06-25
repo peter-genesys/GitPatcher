@@ -47,7 +47,7 @@ Partial Class Config
         Me.SMTPhostTextBox = New System.Windows.Forms.TextBox()
         Me.RecipientTextBox = New System.Windows.Forms.TextBox()
         Me.AppsTabPage = New System.Windows.Forms.TabPage()
-        Me.PatchSetTextBox = New System.Windows.Forms.TextBox()
+        Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.ApplicationsTextBox = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.ParsingSchemaTextbox = New System.Windows.Forms.TextBox()
@@ -305,7 +305,7 @@ Partial Class Config
         '
         'AppsTabPage
         '
-        Me.AppsTabPage.Controls.Add(Me.PatchSetTextBox)
+        Me.AppsTabPage.Controls.Add(Me.AppCodeTextBox)
         Me.AppsTabPage.Controls.Add(Label17)
         Me.AppsTabPage.Controls.Add(Label15)
         Me.AppsTabPage.Controls.Add(Me.ApplicationsTextBox)
@@ -322,13 +322,13 @@ Partial Class Config
         Me.AppsTabPage.Text = "Apps"
         Me.AppsTabPage.UseVisualStyleBackColor = True
         '
-        'PatchSetTextBox
+        'AppCodeTextBox
         '
-        Me.PatchSetTextBox.Location = New System.Drawing.Point(291, 32)
-        Me.PatchSetTextBox.Multiline = True
-        Me.PatchSetTextBox.Name = "PatchSetTextBox"
-        Me.PatchSetTextBox.Size = New System.Drawing.Size(75, 229)
-        Me.PatchSetTextBox.TabIndex = 23
+        Me.AppCodeTextBox.Location = New System.Drawing.Point(291, 32)
+        Me.AppCodeTextBox.Multiline = True
+        Me.AppCodeTextBox.Name = "AppCodeTextBox"
+        Me.AppCodeTextBox.Size = New System.Drawing.Size(75, 229)
+        Me.AppCodeTextBox.TabIndex = 23
         '
         'ApplicationsTextBox
         '
@@ -566,7 +566,7 @@ Partial Class Config
     Friend WithEvents ConfigTabs As System.Windows.Forms.TabControl
     Friend WithEvents TestMailButton As System.Windows.Forms.Button
     Friend WithEvents ApplicationsTextBox As System.Windows.Forms.TextBox
-    Friend WithEvents PatchSetTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents AppCodeTextBox As System.Windows.Forms.TextBox
     Friend WithEvents GitExeTextBox As System.Windows.Forms.TextBox
     Friend WithEvents HotFixBranchesTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label19 As System.Windows.Forms.Label

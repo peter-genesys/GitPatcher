@@ -10,9 +10,9 @@ Public Class CreatePatchCollection
     Public Sub New(ByVal iPatchName As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
 
         If String.IsNullOrEmpty(iPatchName) Then
-            Dim l_app_version = InputBox("Please enter a new version for " & Main.AppCodeTextBox.Text & " in the format: 2.17.01", "New " & Globals.currentApplication & " Version")
+            Dim l_app_version = InputBox("Please enter a new version for " & Globals.currentAppCode & " in the format: 2.17.01", "New " & Globals.currentApplication & " Version")
 
-            pPatchName = Main.AppCodeTextBox.Text & "-" & l_app_version
+            pPatchName = Globals.currentAppCode & "-" & l_app_version
         Else
             pPatchName = iPatchName
         End If
@@ -49,7 +49,7 @@ Public Class CreatePatchCollection
         Next
 
 
-        FindTagsButton.Text = "Find Tags like " & Main.AppCodeTextBox.Text & "-X.XX.XX"
+        FindTagsButton.Text = "Find Tags like " & Globals.currentAppCode & "-X.XX.XX"
 
         Findtags()
 
@@ -68,7 +68,7 @@ Public Class CreatePatchCollection
 
     Private Sub Findtags()
 
-        Dim tagsearch As String = Replace(RTrim(Main.AppCodeTextBox.Text), Chr(13), "")
+        Dim tagsearch As String = Replace(RTrim(Globals.currentAppCode), Chr(13), "")
         Dim tagseg As String = Nothing
 
         TagsCheckedListBox.Items.Clear()
@@ -113,9 +113,9 @@ Public Class CreatePatchCollection
     '
     '      Dim allPatches As New Collection()
     '
-    '      If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
+    '      If IO.Directory.Exists(Globals.RootPatchDir) Then
     '
-    '          RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", allPatches, Main.RootPatchDirTextBox.Text)
+    '          RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", allPatches, Globals.RootPatchDir)
     '
     '      End If
     '
@@ -260,8 +260,8 @@ Public Class CreatePatchCollection
             MsgBox("Warning: Now overwriting existing patch")
         End Try
 
-        Dim l_create_folder As String = Main.RootPatchDirTextBox.Text
-        For Each folder In Main.BranchPathTextBox.Text.Split("/")
+        Dim l_create_folder As String = Globals.RootPatchDir
+        For Each folder In Globals.currentLongBranch.Split("/")
             If String.IsNullOrEmpty(l_create_folder) Then
                 l_create_folder = folder
             Else
@@ -295,7 +295,7 @@ Public Class CreatePatchCollection
         writeInstallScript(PatchNameTextBox.Text, _
                            pCreatePatchType, _
                            "PATCH_ADMIN", _
-                           Main.BranchPathTextBox.Text, _
+                           Globals.currentLongBranch, _
                            Tag1TextBox.Text, _
                            Tag2TextBox.Text, _
                            SupIdTextBox.Text, _
@@ -355,7 +355,7 @@ Public Class CreatePatchCollection
 
     Private Sub PatchNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchNameTextBox.TextChanged
 
-        PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & Replace(PatchNameTextBox.Text, "/", "\") & "\"
+        PatchDirTextBox.Text = Globals.RootPatchDir & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
 
@@ -605,11 +605,11 @@ Public Class CreatePatchCollection
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
             'Copy Patchable items to the next list.
 
-            PatchPathTextBox.Text = pCreatePatchType & "\" & Main.AppCodeTextBox.Text & "\" 'Replace(Main.BranchPathTextBox.Text, "/", "\") & "\"
+            PatchPathTextBox.Text = pCreatePatchType & "\" & Globals.currentAppCode & "\" 'Replace(Globals.currentLongBranch, "/", "\") & "\"
 
             derivePatchName()
 
-            PatchDirTextBox.Text = Main.RootPatchDirTextBox.Text & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
+            PatchDirTextBox.Text = Globals.RootPatchDir & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
 
             UsePatchAdminCheckBox.Checked = True
 
@@ -657,9 +657,9 @@ Public Class CreatePatchCollection
         End If
 
         PrereqsCheckedListBox.Items.Clear()
-        If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
+        If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text & searchPath, "install.sql", PrereqsCheckedListBox, Main.RootPatchDirTextBox.Text)
+            PatchRunner.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", PrereqsCheckedListBox, Globals.RootPatchDir)
 
         End If
     End Sub
@@ -680,9 +680,9 @@ Public Class CreatePatchCollection
         End If
 
         SupersedesCheckedListBox.Items.Clear()
-        If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
+        If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            PatchRunner.RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text & searchPath, "install.sql", SupersedesCheckedListBox, Main.RootPatchDirTextBox.Text)
+            PatchRunner.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", SupersedesCheckedListBox, Globals.RootPatchDir)
 
         End If
 
@@ -696,7 +696,7 @@ Public Class CreatePatchCollection
     End Sub
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
-        'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Main.RootPatchDirTextBox.Text)
+        'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Globals.RootPatchDir)
         'Use patch runner to execute with a master script.
         PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentDB & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
 
@@ -749,7 +749,7 @@ Public Class CreatePatchCollection
     Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles ComitButton.Click
         Tortoise.Commit(PatchDirTextBox.Text, "NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
 
-        Mail.SendNotification("NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, pCreatePatchType & " created.", PatchDirTextBox.Text & "install.sql," & Main.RootPatchDirTextBox.Text & PatchNameTextBox.Text & ".log")
+        Mail.SendNotification("NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, pCreatePatchType & " created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
 
         'Mail.SendNotification("NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.")
 
@@ -772,11 +772,11 @@ Public Class CreatePatchCollection
     Public Shared Sub createCollectionProcess(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String, iTargetDB As String)
 
         Dim lcurrentDB As String = Globals.currentDB
-        Dim l_app_version = InputBox("Please enter a new version for " & Main.AppCodeTextBox.Text & " in the format: 2.17.01", "New " & Globals.currentApplication & " Version")
+        Dim l_app_version = InputBox("Please enter a new version for " & Globals.currentAppCode & " in the format: 2.17.01", "New " & Globals.currentApplication & " Version")
 
-        l_app_version = Main.AppCodeTextBox.Text & "-" & l_app_version
+        l_app_version = Globals.currentAppCode & "-" & l_app_version
 
-        Dim newBranch As String = "release/" & iCreatePatchType & "/" & Main.AppCodeTextBox.Text & "/" & l_app_version
+        Dim newBranch As String = "release/" & iCreatePatchType & "/" & Globals.currentAppCode & "/" & l_app_version
 
         Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
 

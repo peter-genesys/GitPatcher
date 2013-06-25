@@ -88,9 +88,9 @@ Public Class PatchRunner
 
 
         foundPatches.Items.Clear()
-        If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
+        If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", foundPatches, Main.RootPatchDirTextBox.Text)
+            RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", foundPatches, Globals.RootPatchDir)
 
         End If
 
@@ -169,9 +169,9 @@ Public Class PatchRunner
 
         foundPatches.Items.Clear()
         Dim availableList As ListBox = New ListBox
-        If IO.Directory.Exists(Main.RootPatchDirTextBox.Text) Then
+        If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            RecursiveSearchContainingFolder(Main.RootPatchDirTextBox.Text, "install.sql", availableList, Main.RootPatchDirTextBox.Text)
+            RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", availableList, Globals.RootPatchDir)
 
         End If
 
@@ -267,11 +267,11 @@ Public Class PatchRunner
 
     Public Shared Sub RunMasterScript(scriptData As String)
 
-        Dim masterScriptName As String = Main.RootPatchDirTextBox.Text & "temp_master_script.sql"
+        Dim masterScriptName As String = Globals.RootPatchDir & "temp_master_script.sql"
 
         FileIO.writeFile(masterScriptName, scriptData, True)
 
-        Host.executeSQLscriptInteractive(masterScriptName, Main.RootPatchDirTextBox.Text)
+        Host.executeSQLscriptInteractive(masterScriptName, Globals.RootPatchDir)
 
         FileIO.deleteFileIfExists(masterScriptName)
 

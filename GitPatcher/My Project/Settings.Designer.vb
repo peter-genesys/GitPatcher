@@ -274,15 +274,15 @@ Namespace My
             End Set
         End Property
         
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("prism"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"prismmobile")>  _
-        Public Property PatchSetList() As String
+        <Global.System.Configuration.UserScopedSettingAttribute(), _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.Configuration.DefaultSettingValueAttribute("prism" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "prismmobile")> _
+        Public Property AppCodeList() As String
             Get
-                Return CType(Me("PatchSetList"),String)
+                Return CType(Me("AppCodeList"), String)
             End Get
-            Set
-                Me("PatchSetList") = value
+            Set(value As String)
+                Me("AppCodeList") = value
             End Set
         End Property
         

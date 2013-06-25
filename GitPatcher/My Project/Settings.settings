@@ -72,7 +72,7 @@ Prism Mobile</Value>
     <Setting Name="CurrentApp" Type="System.String" Scope="User">
       <Value Profile="(Default)">Prism</Value>
     </Setting>
-    <Setting Name="PatchSetList" Type="System.String" Scope="User">
+    <Setting Name="AppCodeList" Type="System.String" Scope="User">
       <Value Profile="(Default)">prism
 prismmobile</Value>
     </Setting>

@@ -147,19 +147,19 @@
 
     Public Shared Function getHost() As String
 
-        Return getNthSegment(Globals.deriveConnection, ":", 1)
+        Return getNthSegment(Globals.currentConnection, ":", 1)
 
     End Function
 
     Public Shared Function getPort() As String
 
-        Return getNthSegment(Globals.deriveConnection, ":", 2)
+        Return getNthSegment(Globals.currentConnection, ":", 2)
 
     End Function
 
     Public Shared Function getSid() As String
 
-        Return getNthSegment(Globals.deriveConnection, ":", 3)
+        Return getNthSegment(Globals.currentConnection, ":", 3)
 
     End Function
 

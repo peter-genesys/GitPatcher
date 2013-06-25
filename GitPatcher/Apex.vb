@@ -9,9 +9,9 @@
         '  replace this line with " p_flow_version=> " & new_version & " " & today
         '  write rest of file and close it.
 
-        Dim l_create_application_new As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\application\create_application.sql"
-        Dim l_create_application_old As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\application\create_application.sql.old"
-        Dim l_create_application_orig As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\application\create_application.sql.orig"
+        Dim l_create_application_new As String = Globals.RootApexDir & Globals.currentApex & "\application\create_application.sql"
+        Dim l_create_application_old As String = Globals.RootApexDir & Globals.currentApex & "\application\create_application.sql.old"
+        Dim l_create_application_orig As String = Globals.RootApexDir & Globals.currentApex & "\application\create_application.sql.orig"
 
         FileIO.deleteFileIfExists(l_create_application_old)
         If Not FileIO.fileExists(l_create_application_orig) Then
@@ -57,8 +57,8 @@
 
     Public Shared Sub restoreCreateApplicationSQL()
 
-        Dim l_create_application_new As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\application\create_application.sql"
-        Dim l_create_application_orig As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\application\create_application.sql.orig"
+        Dim l_create_application_new As String = Globals.RootApexDir & Globals.currentApex & "\application\create_application.sql"
+        Dim l_create_application_orig As String = Globals.RootApexDir & Globals.currentApex & "\application\create_application.sql.orig"
 
         If FileIO.fileExists(l_create_application_orig) Then
             'Restore Backup of create_application.sql file
@@ -75,9 +75,9 @@
         'Change the install.sql
         'For install into ISDEVL we want to skip the reports queries and layouts, to speed up the import.
  
-        Dim l_install_new As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\install.sql"
-        Dim l_install_old As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\install.sql.old"
-        Dim l_install_orig As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\install.orig"
+        Dim l_install_new As String = Globals.RootApexDir & Globals.currentApex & "\install.sql"
+        Dim l_install_old As String = Globals.RootApexDir & Globals.currentApex & "\install.sql.old"
+        Dim l_install_orig As String = Globals.RootApexDir & Globals.currentApex & "\install.orig"
 
         FileIO.deleteFileIfExists(l_install_old)
         If Not FileIO.fileExists(l_install_orig) Then
@@ -116,8 +116,8 @@
 
     Public Shared Sub restoreInstallSQL()
 
-        Dim l_install_new As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\install.sql"
-        Dim l_install_orig As String = Main.RootApexDirTextBox.Text & Globals.currentApex & "\install.orig"
+        Dim l_install_new As String = Globals.RootApexDir & Globals.currentApex & "\install.sql"
+        Dim l_install_orig As String = Globals.RootApexDir & Globals.currentApex & "\install.orig"
 
         If FileIO.fileExists(l_install_orig) Then
             'Restore Backup of install.sql file
@@ -131,14 +131,14 @@
     Public Shared Sub ApexExportCommit()
 
 
-        Dim connection As String = Globals.deriveConnection
+        Dim connection As String = Globals.currentConnection
         Dim username As String = Globals.currentParsingSchema
 
         Dim fapp_id As String = Globals.currentApex
-        Dim apex_dir As String = Main.RootApexDirTextBox.Text
+        Dim apex_dir As String = Globals.RootApexDir
 
         Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Export APEX application " & fapp_id & " from DB " & Globals.currentDB & " " & connection, _
-            "Exporting APEX application " & Globals.currentApex & " from parsing schema " & Main.ParsingSchemaTextBox.Text & " in DB " & Globals.currentDB & Environment.NewLine & _
+            "Exporting APEX application " & Globals.currentApex & " from parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentDB & Environment.NewLine & _
             "This writes individual apex files to the GIT Repo checkout, and then prompt to add and commit the changes." & Environment.NewLine & _
             Environment.NewLine & _
             "Consider which branch you are exporting to." & Environment.NewLine & _
@@ -175,7 +175,7 @@
         'PROGRESS 0
         If ExportProgress.toDoNextStep() Then
 
-            Dim password = Main.get_password(Main.ParsingSchemaTextBox.Text, Globals.currentDB)
+            Dim password = Main.get_password(Globals.currentParsingSchema, Globals.currentDB)
             'Export Apex as a single file
             'NB Not exporting application comments
             'Host.runInteractive("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
@@ -235,7 +235,7 @@
         Dim runOnlyDBs As String = "ISDEVL,ISTEST,ISUAT,ISPROD"
 
         Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import APEX application " & fapp_id & " into DB " & Globals.currentDB, _
-        "Importing APEX application " & Globals.currentApex & " into parsing schema " & Main.ParsingSchemaTextBox.Text & " in DB " & Globals.currentDB & Environment.NewLine & _
+        "Importing APEX application " & Globals.currentApex & " into parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentDB & Environment.NewLine & _
         "This will overwrite the existing APEX application." & Environment.NewLine & _
         Environment.NewLine & _
         "Consider creating a VM snapshot as a restore point." & Environment.NewLine & _
@@ -244,7 +244,7 @@
 
         ImportProgress.MdiParent = GitPatcher
         ImportProgress.addStep("Choose a tag to install apex from and checkout the tag")
-        ImportProgress.addStep("If tag not like " & Main.AppCodeTextBox.Text & " relabel apex")
+        ImportProgress.addStep("If tag not like " & Globals.currentAppCode & " relabel apex")
         ImportProgress.addStep("If db in " & runOnlyDBs & " set apex to RUN_ONLY")
         ImportProgress.addStep("If db in " & l_skip_reports_DBs & " set install.sql to Skip reports queries and layouts", True, "This is intended to speed up imports into " & l_skip_reports_DBs & ", where they otherwise take upto 30mins")
         ImportProgress.addStep("Import Apex")
@@ -261,7 +261,7 @@
             Dim tagnames As Collection = New Collection
             tagnames.Add("HEAD")
             tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, Globals.currentBranch)
-            tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, Main.AppCodeTextBox.Text)
+            tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, Globals.currentAppCode)
 
 
             Dim tagApexVersion As String = Nothing
@@ -271,9 +271,9 @@
             'Checkout the tag
             GitBash.Switch(Globals.currentRepo, tagApexVersion)
             If ImportProgress.toDoNextStep Then
-                'If tag not like Main.AppCodeTextBox.Text relabel apex
+                'If tag not like Globals.currentAppCode relabel apex
 
-                If Not tagApexVersion.Contains(Main.AppCodeTextBox.Text) Then
+                If Not tagApexVersion.Contains(Globals.currentAppCode) Then
 
                     Dim l_label As String = Nothing
                     'Host.check_StdOut("""" & My.Settings.GITpath & """ describe --tags", l_label, Globals.currentRepo, True)
@@ -322,7 +322,7 @@
         If ImportProgress.toDoNextStep Then
             'Import Apex
             Host.executeSQLscriptInteractive("install.sql" _
-                                           , Main.RootApexDirTextBox.Text & Globals.currentApex _
+                                           , Globals.RootApexDir & Globals.currentApex _
                                            , Main.get_connect_string(Globals.currentParsingSchema, Globals.currentDB))
 
         End If
