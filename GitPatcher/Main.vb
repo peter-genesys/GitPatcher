@@ -156,17 +156,18 @@
 
     End Sub
 
-    Private Sub mergeAndPushBranch(iBranchType As String, iBranchTo As String)
+    Public Sub mergeAndPushBranch(iBranchType As String, iBranchTo As String)
         Common.checkBranch(iBranchType)
         Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
 
         Dim mergeAndPush As ProgressDialogue = New ProgressDialogue("Merge and Push branch:  " & currentBranch)
         mergeAndPush.MdiParent = GitPatcher
-        mergeAndPush.addStep("Switch to " & iBranchTo & " branch", 20)
-        mergeAndPush.addStep("Pull from Origin", 40)
-        mergeAndPush.addStep("Merge from branch: " & currentBranch, 60)
-        mergeAndPush.addStep("Push to Origin", 80)
-        mergeAndPush.addStep("Return to branch: " & currentBranch, 100)
+        mergeAndPush.addStep("Switch to " & iBranchTo & " branch")
+        mergeAndPush.addStep("Pull from Origin")
+        mergeAndPush.addStep("Merge from branch: " & currentBranch, True, "Please select the Branch:" & currentBranch & " from the Tortoise Merge Dialogue")
+        mergeAndPush.addStep("Commit - incase of merge conflict")
+        mergeAndPush.addStep("Push to Origin")
+        mergeAndPush.addStep("Return to branch: " & currentBranch)
 
         mergeAndPush.Show()
 
@@ -190,6 +191,13 @@
             'Merge from Feature branch
             'TortoiseMerge(Globals.currentRepo, currentBranch)
             Tortoise.Merge(Globals.currentRepo)
+        End If
+
+        If mergeAndPush.toDoNextStep() Then
+            'Commit - incase of merge conflict
+            Tortoise.Commit(Globals.currentRepo, "Merged " & currentBranch & " [CANCEL IF NO MERGE CONFLICTS]")
+
+
         End If
 
         If mergeAndPush.toDoNextStep() Then

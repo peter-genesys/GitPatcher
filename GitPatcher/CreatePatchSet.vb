@@ -794,13 +794,16 @@ Public Class CreatePatchCollection
         createPatchSetProgress.addStep("Commit Apex version " & l_app_version)
         createPatchSetProgress.addStep("Tag this release as " & l_app_version)
         createPatchSetProgress.addStep("Push to origin/" & newBranch)
-        createPatchSetProgress.addStep("Switch to develop branch")
-        createPatchSetProgress.addStep("Pull from origin/develop")
-        createPatchSetProgress.addStep("Merge from release Branch: " & newBranch, True, "Please select the Branch:" & newBranch & " from the Tortoise Merge Dialogue")
-        createPatchSetProgress.addStep("Commit - incase of merge conflict")
-        createPatchSetProgress.addStep("Push to origin/develop")
+
+        createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to develop", False)
+        createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to test", True)
+        createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to uat", False)
+        createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to master", False)
+ 
         createPatchSetProgress.addStep("Release to ISDEVL", False)
-        createPatchSetProgress.addStep("Release to ISTEST", False)
+        createPatchSetProgress.addStep("Release to ISTEST", True)
+        createPatchSetProgress.addStep("Release to ISUAT", False)
+        createPatchSetProgress.addStep("Release to ISPROD", False)
         createPatchSetProgress.addStep("Revert current DB to : " & lcurrentDB)
         'Import
 
@@ -862,33 +865,28 @@ Public Class CreatePatchCollection
             GitBash.Push(Globals.currentRepo, "origin", newBranch, True)
 
         End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Switch to develop branch
-            GitBash.Switch(Globals.currentRepo, "develop")
 
+        If createPatchSetProgress.toDoNextStep() Then
+            'Merge Patchset to develop 
+            Main.mergeAndPushBranch("patchset", "develop")
 
         End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Pull from origin/develop
-            GitBash.Pull(Globals.currentRepo, "origin", "develop")
 
+        If createPatchSetProgress.toDoNextStep() Then
+            'Merge Patchset to test 
+            Main.mergeAndPushBranch("patchset", "test")
 
         End If
+
         If createPatchSetProgress.toDoNextStep() Then
-            'Merge from release
-            Tortoise.Merge(Globals.currentRepo)
+            'Merge Patchset to uat 
+            Main.mergeAndPushBranch("patchset", "uat")
 
         End If
+
         If createPatchSetProgress.toDoNextStep() Then
-            'Commit - incase of merge conflict
-            Tortoise.Commit(Globals.currentRepo, "Merge " & newBranch & " CANCEL IF NO MERGE CONFLICTS")
-
-
-        End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Push to origin/develop 
-            GitBash.Push(Globals.currentRepo, "origin", "develop")
-
+            'Merge Patchset to master 
+            Main.mergeAndPushBranch("patchset", "master")
 
         End If
  
@@ -901,6 +899,17 @@ Public Class CreatePatchCollection
             'Release to ISTEST
             Main.releaseTo("ISTEST")
         End If
+
+        If createPatchSetProgress.toDoNextStep() Then
+            'Release to ISTEST
+            Main.releaseTo("ISUAT")
+        End If
+
+        If createPatchSetProgress.toDoNextStep() Then
+            'Release to ISTEST
+            Main.releaseTo("ISPROD")
+        End If
+
 
         If createPatchSetProgress.toDoNextStep() Then
             'Revert current DB  
