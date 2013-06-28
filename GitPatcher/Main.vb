@@ -487,6 +487,7 @@
 
         releasing.addStep("Use PatchRunner to run Uninstalled Patches", True, "")
         releasing.addStep("Import Apex", True, "Using the Apex Import workflow")
+        releasing.addStep("Smoke Test", True, "Perform a quick test to verify the patched system is working in " & iTargetDB)
         releasing.addStep("Revert current DB to : " & lcurrentDB)
         releasing.Show()
 
@@ -541,6 +542,13 @@
             Apex.ApexImportFromTag()
 
         End If
+
+        If releasing.toDoNextStep() Then
+            'Smoke Test 
+            MsgBox("Perform a quick test to verify the patched system is working in " & iTargetDB, MsgBoxStyle.Information, "Smoke Test")
+
+        End If
+ 
 
         If releasing.toDoNextStep() Then
             'Revert current DB  

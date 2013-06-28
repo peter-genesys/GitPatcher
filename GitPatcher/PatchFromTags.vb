@@ -13,10 +13,6 @@ Public Class PatchFromTags
     End Sub
  
  
-    'Shared Sub TortoiseMerge(ByVal i_WorkingDir As String, ByVal i_merge_branch As String, Optional ByVal i_wait As Boolean = True)
-    '    Dim Tortoise As New TortoiseFacade(i_wait)
-    '    Tortoise.Merge(i_WorkingDir, i_merge_branch)
-    'End Sub
 
     Private Sub Findtags()
         TagsCheckedListBox.Items.Clear()
@@ -145,31 +141,11 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub RemoveButton_Click(sender As Object, e As EventArgs) Handles RemoveButton.Click
-        Dim temp As Collection = New Collection
-
-
-        For i As Integer = 0 To ChangesCheckedListBox.Items.Count - 1
-            If Not ChangesCheckedListBox.CheckedIndices.Contains(i) Then
-                'MsgBox(ChangesCheckedListBox.Items(i).ToString)
-                temp.Add(ChangesCheckedListBox.Items(i).ToString)
-
+		For i As Integer = ChangesCheckedListBox.Items.Count - 1 To 0 Step -1		
+            If ChangesCheckedListBox.CheckedIndices.Contains(i) Then
+                'This change is ticked and will be removed from the list
+                ChangesCheckedListBox.Items.RemoveAt(i)
             End If
-
-
-        Next
-
-        ChangesCheckedListBox.Items.Clear()
-
-        For i As Integer = 1 To temp.Count
-            If Not ChangesCheckedListBox.CheckedIndices.Contains(i) Then
-                'MsgBox(ChangesCheckedListBox.Items(i).ToString)
-                ' temp.Add(ChangesCheckedListBox.Items(i).ToString)
-
-                ChangesCheckedListBox.Items.Add(temp(i), CheckAllCheckBox.Checked)
-
-            End If
-
-
         Next
 
 
@@ -180,25 +156,7 @@ Public Class PatchFromTags
         PatchDirTextBox.Text = Globals.RootPatchDir & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
-    ' Public Shared Function get_last_split(ByVal ipath As String, ByVal idelim As String) As String
-    '     Dim Path() As String = ipath.Split(idelim)
-    '     Dim SplitCount = Path.Length
-    '     Dim l_last As String = ipath.Split(idelim)(SplitCount - 1)
-    '
-    '     Return l_last
-    ' End Function
-    '
-    ' Public Shared Function get_from_first_split(ByVal ipath As String, ByVal idelim As String) As String
-    '
-    '     Dim l_from_first As String = Nothing
-    '     Dim delim_pos As Integer = ipath.IndexOf(idelim)
-    '     If delim_pos > 0 Then
-    '         l_from_first = ipath.Remove(1, delim_pos)
-    '     End If
-    '
-    '     Return l_from_first
-    ' End Function
-
+ 
 
     Shared Sub writeInstallScript(ByVal patch_name As String, _
                                   ByVal patch_type As String, _
@@ -625,6 +583,9 @@ Public Class PatchFromTags
         End If
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePreReqs" Then
+
+            RestrictPreReqToBranchCheckBox.Checked = True
+
             If PrereqsCheckedListBox.Items.Count = 0 Then
                 FindPreReqs()
             End If
@@ -633,6 +594,9 @@ Public Class PatchFromTags
         End If
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageSuper" Then
+
+            RestrictSupToBranchCheckBox.Checked = True
+
             If SupersedesCheckedListBox.Items.Count = 0 Then
                 FindSuper()
             End If
@@ -698,10 +662,14 @@ Public Class PatchFromTags
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
             PatchRunner.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", PrereqsCheckedListBox, Globals.RootPatchDir)
-
-            'For Each foldername As String In IO.Directory.GetDirectories(Globals.RootPatchDir)
-            '    PrereqsCheckedListBox.Items.Add(get_last_split(foldername, "\"))
-            'Next
+            If RestrictPreReqToBranchCheckBox.Checked Then
+                For i As Integer = PrereqsCheckedListBox.Items.Count - 1 To 0 Step -1
+                    If Not PrereqsCheckedListBox.Items(i).contains(Globals.currentBranch) Then
+                        'This patch is not from this branch and will be removed from the list
+                        PrereqsCheckedListBox.Items.RemoveAt(i)
+                    End If
+                Next
+            End If
 
         End If
     End Sub
@@ -719,9 +687,16 @@ Public Class PatchFromTags
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
             PatchRunner.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", SupersedesCheckedListBox, Globals.RootPatchDir)
-            'For Each foldername As String In IO.Directory.GetDirectories(Globals.RootPatchDir)
-            '    SupersedesCheckedListBox.Items.Add(get_last_split(foldername, "\"))
-            'Next
+
+            If RestrictSupToBranchCheckBox.Checked Then
+                For i As Integer = SupersedesCheckedListBox.Items.Count - 1 To 0 Step -1
+                    If Not SupersedesCheckedListBox.Items(i).contains(Globals.currentBranch) Then
+                        'This patch is not from this branch and will be removed from the list
+                        SupersedesCheckedListBox.Items.RemoveAt(i)
+                    End If
+                Next
+            End If
+
 
         End If
     End Sub
@@ -785,7 +760,7 @@ Public Class PatchFromTags
         createPatchProgress.MdiParent = GitPatcher
         createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow")
         createPatchProgress.addStep("Review tags on Branch: " & currentBranch)
-        createPatchProgress.addStep("Create edit, test")
+        createPatchProgress.addStep("Create edit, test", True, "Now is a great time to smoke test my work before i commit the patch.")
         createPatchProgress.addStep("Commit to Branch: " & currentBranch)
         createPatchProgress.addStep("Switch to " & iRebaseBranchOn & " branch")
         'createPatchProgress.addStep("Pull from Origin" )
@@ -832,6 +807,7 @@ Public Class PatchFromTags
 
 
         If createPatchProgress.toDoNextStep() Then
+            MsgBox("Now is a great time to smoke test my work before i commit the patch.", MsgBoxStyle.Information, "Smoke Test")
 
             'Committing changed files to GIT"
             Tortoise.Commit(Globals.currentRepo, "Commit any patches you've not yet committed", True)
