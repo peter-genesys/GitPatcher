@@ -13,22 +13,7 @@ Public Class PatchRunner
         doSearch()
     End Sub
 
-
-
-    Shared Function get_last_split(ByVal ipath As String, ByVal idelim As String) As String
-        Dim Path() As String = ipath.Split(idelim)
-        Dim SplitCount = Path.Length
-        Dim l_last As String = ipath.Split(idelim)(SplitCount - 1)
-
-        Return l_last
-    End Function
-
-    Shared Function get_first_split(ByVal ipath As String, ByVal idelim As String) As String
-
-        Dim l_first As String = ipath.Split(idelim)(0)
-
-        Return l_first
-    End Function
+ 
 
 
     Private Sub RecursiveSearch(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As ListBox)
@@ -51,24 +36,7 @@ Public Class PatchRunner
 
     End Sub
 
-    Public Shared Sub RecursiveSearchContainingFolder(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As ListBox, ByVal removePath As String)
-
-        Dim strFolders() As String = System.IO.Directory.GetDirectories(strPath)
-        Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
-
-        'Add the files
-        For Each strFile As String In strFiles
-            lstTarget.Items.Add(strPath.Substring(removePath.Length))
-        Next
-
-        'Look through the other folders
-        For Each strFolder As String In strFolders
-            'Call the procedure again to perform the same operation
-            RecursiveSearchContainingFolder(strFolder, strPattern, lstTarget, removePath)
-        Next
-
-    End Sub
-
+ 
 
     Public Shared Sub FindPatches(ByRef foundPatches As ListBox, ByVal iHideInstalled As Boolean)
 
@@ -90,7 +58,7 @@ Public Class PatchRunner
         foundPatches.Items.Clear()
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", foundPatches, Globals.RootPatchDir)
+            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", foundPatches, Globals.RootPatchDir)
 
         End If
 
@@ -171,7 +139,7 @@ Public Class PatchRunner
         Dim availableList As ListBox = New ListBox
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", availableList, Globals.RootPatchDir)
+            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", availableList, Globals.RootPatchDir)
 
         End If
 

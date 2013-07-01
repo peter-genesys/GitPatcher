@@ -659,7 +659,7 @@ Public Class CreatePatchCollection
         PrereqsCheckedListBox.Items.Clear()
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            PatchRunner.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", PrereqsCheckedListBox, Globals.RootPatchDir)
+            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", PrereqsCheckedListBox, Globals.RootPatchDir)
 
         End If
     End Sub
@@ -682,7 +682,7 @@ Public Class CreatePatchCollection
         SupersedesCheckedListBox.Items.Clear()
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            PatchRunner.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", SupersedesCheckedListBox, Globals.RootPatchDir)
+            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", SupersedesCheckedListBox, Globals.RootPatchDir)
 
         End If
 

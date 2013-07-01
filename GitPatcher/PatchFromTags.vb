@@ -17,7 +17,7 @@ Public Class PatchFromTags
     Private Sub Findtags()
         TagsCheckedListBox.Items.Clear()
         For Each tagname In GitSharpFascade.getTagList(Globals.currentRepo)
-            If PatchRunner.get_first_split(tagname, ".") = Globals.currentBranch Then
+            If Common.getFirstSegment(tagname, ".") = Globals.currentBranch Then
                 TagsCheckedListBox.Items.Add(tagname)
             End If
         Next
@@ -661,7 +661,7 @@ Public Class PatchFromTags
         PrereqsCheckedListBox.Items.Clear()
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            PatchRunner.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", PrereqsCheckedListBox, Globals.RootPatchDir)
+            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", PrereqsCheckedListBox, Globals.RootPatchDir)
             If RestrictPreReqToBranchCheckBox.Checked Then
                 For i As Integer = PrereqsCheckedListBox.Items.Count - 1 To 0 Step -1
                     If Not PrereqsCheckedListBox.Items(i).contains(Globals.currentBranch) Then
@@ -686,7 +686,7 @@ Public Class PatchFromTags
         SupersedesCheckedListBox.Items.Clear()
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            PatchRunner.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", SupersedesCheckedListBox, Globals.RootPatchDir)
+            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", SupersedesCheckedListBox, Globals.RootPatchDir)
 
             If RestrictSupToBranchCheckBox.Checked Then
                 For i As Integer = SupersedesCheckedListBox.Items.Count - 1 To 0 Step -1

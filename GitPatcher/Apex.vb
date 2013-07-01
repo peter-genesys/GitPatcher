@@ -345,4 +345,114 @@
     End Sub
 
 
+    Public Shared Sub Install1Page(ApexPageName As String)
+
+        Dim applicationDir As String = Globals.RootApexDir & Globals.currentApex & "\application\"
+        Dim l_page_num As String = ApexPageName.Substring(5, 5)
+        Dim script As String = _
+            "@init.sql" _
+& Chr(10) & "@set_environment" _
+& Chr(10) & "PROMPT ...Remove page " & l_page_num & "" _
+& Chr(10) & "begin" _
+& Chr(10) & " wwv_flow_api.remove_page (p_flow_id=>wwv_flow.g_flow_id, p_page_id=>" & l_page_num & ");" _
+& Chr(10) & "end;" _
+& Chr(10) & "/" _
+& Chr(10) & "@pages/" & ApexPageName & "" _
+& Chr(10) & "@end_environment.sql" _
+& Chr(10)
+ 
+        Dim pageInstallScriptName As String = applicationDir & "temp_install_page_" & l_page_num & "_script.sql"
+
+        FileIO.writeFile(pageInstallScriptName, script, True)
+
+        'Import Apex
+        Host.executeSQLscriptInteractive(pageInstallScriptName _
+                                       , applicationDir _
+                                       , Main.get_connect_string(Globals.currentParsingSchema, Globals.currentDB))
+        'Remove the temp file again
+        FileIO.deleteFileIfExists(pageInstallScriptName)
+
+    End Sub
+
+    Public Shared Sub ApexImport1PageFromTag()
+
+        Dim applicationDir As String = Globals.RootApexDir & Globals.currentApex & "\application\"
+        Dim pagesDir As String = applicationDir & "pages\"
+
+        Dim l_skip_reports_DBs As String = "ISDEVL"
+        Dim fapp_id As String = Globals.currentApex
+
+        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
+        Dim runOnlyDBs As String = "ISDEVL,ISTEST,ISUAT,ISPROD"
+
+        Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import 1 APEX page " & fapp_id & " into DB " & Globals.currentDB, _
+        "Importing 1 APEX page of Application " & Globals.currentApex & " into parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentDB & Environment.NewLine & _
+        "This will overwrite only 1 page in APEX application." & Environment.NewLine & _
+        Environment.NewLine & _
+        "Consider creating a VM snapshot as a restore point." & Environment.NewLine & _
+        "To save any existing changes, close this workflow and perform an APEX EXPORT.")
+
+
+        ImportProgress.MdiParent = GitPatcher
+        ImportProgress.addStep("Choose a tag to install apex from and checkout the tag")
+        ImportProgress.addStep("Import Apex Page", True, "Choose Apex Page from list of pages, to apply to current DB.")
+        ImportProgress.addStep("Return to branch: " & currentBranch)
+        ImportProgress.Show()
+
+        Do Until ImportProgress.isStarted
+            Common.wait(1000)
+        Loop
+
+        Try
+
+
+            If ImportProgress.toDoStep(0) Then
+                'Choose a tag to import from
+                Dim tagnames As Collection = New Collection
+                tagnames.Add("HEAD")
+                tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, Globals.currentBranch)
+                tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, Globals.currentAppCode)
+
+
+                Dim tagApexVersion As String = Nothing
+                tagApexVersion = ChoiceDialog.Ask("Please choose a tag for apex install", tagnames, "HEAD", "Choose tag")
+ 
+            End If
+ 
+            If ImportProgress.toDoNextStep Then
+
+
+                Dim pages As Collection = New Collection
+
+                'C:\Dev\apex_apps\apex\f101\application\pages
+
+                pages = FileIO.FileList(pagesDir, "page_*.sql", pagesDir)
+
+                Dim page_file As String = Nothing
+                page_file = ChoiceDialog.Ask("Please choose a page to be installed", pages, "", "Choose Page")
+
+                ImportProgress.updateStepDescription(1, "Import Apex Page Filename: " & page_file)
+ 
+                'write a lauch page
+                Install1Page(page_file)
+
+            End If
+ 
+            If ImportProgress.toDoNextStep Then
+                'Return to branch
+                GitBash.Switch(Globals.currentRepo, currentBranch)
+            End If
+
+            ImportProgress.toDoNextStep()
+
+
+        Catch page_not_selected As Halt
+            MsgBox("No page selected")
+            ImportProgress.stopAndClose()
+        End Try
+
+
+    End Sub
+
+
 End Class

@@ -340,18 +340,16 @@
 
         End If
 
-        If testWorkflow.toDoNextStep() Then
-            MsgBox("doing 4")
+        ' If testWorkflow.toDoNextStep() Then
+        '     MsgBox("doing 4")
+        '
+        ' End If
+        '
 
-        End If
-
-        testWorkflow.toDoNextStep()
         'testWorkflow.toDoNextStep()
 
-
-
-
-
+        testWorkflow.stopAndClose()
+ 
 
     End Sub
 
@@ -666,5 +664,9 @@
         Dim newchildform As New PatchRunner(False, False, True)
         newchildform.MdiParent = GitPatcher
         newchildform.Show()
+    End Sub
+
+    Private Sub Import1PageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Import1PageToolStripMenuItem.Click
+        Apex.ApexImport1PageFromTag()
     End Sub
 End Class

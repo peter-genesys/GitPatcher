@@ -78,6 +78,7 @@ Partial Class Main
         Me.Label11 = New System.Windows.Forms.Label()
         Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
+        Me.Import1PageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -238,7 +239,7 @@ Partial Class Main
         '
         'APEXToolStripMenuItem
         '
-        Me.APEXToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportToolStripMenuItem, Me.ExportToolStripMenuItem})
+        Me.APEXToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportToolStripMenuItem, Me.Import1PageToolStripMenuItem, Me.ExportToolStripMenuItem})
         Me.APEXToolStripMenuItem.Name = "APEXToolStripMenuItem"
         Me.APEXToolStripMenuItem.Size = New System.Drawing.Size(47, 20)
         Me.APEXToolStripMenuItem.Text = "APEX"
@@ -246,14 +247,14 @@ Partial Class Main
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
-        Me.ImportToolStripMenuItem.Text = "Import"
+        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ImportToolStripMenuItem.Text = "Import Full"
         '
         'ExportToolStripMenuItem
         '
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
-        Me.ExportToolStripMenuItem.Text = "Export"
+        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ExportToolStripMenuItem.Text = "Export Full"
         '
         'RELEASEToolStripMenuItem
         '
@@ -490,6 +491,12 @@ Partial Class Main
         Me.Label13.TabIndex = 25
         Me.Label13.Text = "Code"
         '
+        'Import1PageToolStripMenuItem
+        '
+        Me.Import1PageToolStripMenuItem.Name = "Import1PageToolStripMenuItem"
+        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.Import1PageToolStripMenuItem.Text = "Import 1 page"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -585,5 +592,6 @@ Partial Class Main
     Friend WithEvents UnappliedToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents UninstalledToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents AllPatchesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents Import1PageToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

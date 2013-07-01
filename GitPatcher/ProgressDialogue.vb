@@ -191,4 +191,10 @@
         End If
 
     End Sub
+
+    Public Sub stopAndClose()
+        toDoStep(nextStep)
+    End Sub
+
+
 End Class
