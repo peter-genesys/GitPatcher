@@ -22,6 +22,7 @@ Partial Class CreatePatchCollection
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(CreatePatchCollection))
         Me.Tag1TextBox = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -63,6 +64,7 @@ Partial Class CreatePatchCollection
         Me.Label14 = New System.Windows.Forms.Label()
         Me.SupersedesCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
+        Me.TrackPromoCheckBox = New System.Windows.Forms.CheckBox()
         Me.PatchPathTextBox = New System.Windows.Forms.TextBox()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.CopyChangesButton = New System.Windows.Forms.Button()
@@ -82,7 +84,6 @@ Partial Class CreatePatchCollection
         Me.TabPageExecute = New System.Windows.Forms.TabPage()
         Me.ComitButton = New System.Windows.Forms.Button()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.TrackPromoCheckBox = New System.Windows.Forms.CheckBox()
         Me.PatchTabControl.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.TabPagePatches.SuspendLayout()
@@ -534,6 +535,16 @@ Partial Class CreatePatchCollection
         Me.TabPagePatchDefn.Text = "Patch Defn"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
         '
+        'TrackPromoCheckBox
+        '
+        Me.TrackPromoCheckBox.AutoSize = True
+        Me.TrackPromoCheckBox.Location = New System.Drawing.Point(278, 593)
+        Me.TrackPromoCheckBox.Name = "TrackPromoCheckBox"
+        Me.TrackPromoCheckBox.Size = New System.Drawing.Size(104, 17)
+        Me.TrackPromoCheckBox.TabIndex = 36
+        Me.TrackPromoCheckBox.Text = "Track Promotion"
+        Me.TrackPromoCheckBox.UseVisualStyleBackColor = True
+        '
         'PatchPathTextBox
         '
         Me.PatchPathTextBox.Location = New System.Drawing.Point(77, 515)
@@ -704,22 +715,13 @@ Partial Class CreatePatchCollection
         Me.ExecutePatchButton.Text = "Execute Patch"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'TrackPromoCheckBox
-        '
-        Me.TrackPromoCheckBox.AutoSize = True
-        Me.TrackPromoCheckBox.Location = New System.Drawing.Point(278, 593)
-        Me.TrackPromoCheckBox.Name = "TrackPromoCheckBox"
-        Me.TrackPromoCheckBox.Size = New System.Drawing.Size(104, 17)
-        Me.TrackPromoCheckBox.TabIndex = 36
-        Me.TrackPromoCheckBox.Text = "Track Promotion"
-        Me.TrackPromoCheckBox.UseVisualStyleBackColor = True
-        '
         'CreatePatchCollection
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(784, 762)
         Me.Controls.Add(Me.PatchTabControl)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "CreatePatchCollection"
         Me.Text = "CreatePatchCollection"
         Me.PatchTabControl.ResumeLayout(False)

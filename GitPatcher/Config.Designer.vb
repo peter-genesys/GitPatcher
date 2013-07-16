@@ -40,6 +40,7 @@ Partial Class Config
         Dim Label17 As System.Windows.Forms.Label
         Dim Label18 As System.Windows.Forms.Label
         Dim Label16 As System.Windows.Forms.Label
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Config))
         Me.MailTabPage = New System.Windows.Forms.TabPage()
         Me.TestMailButton = New System.Windows.Forms.Button()
         Me.RecipientDomainTextBox = New System.Windows.Forms.TextBox()
@@ -525,6 +526,7 @@ Partial Class Config
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(564, 341)
         Me.Controls.Add(Me.ConfigTabs)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Config"
         Me.Text = "Config"
         Me.MailTabPage.ResumeLayout(False)

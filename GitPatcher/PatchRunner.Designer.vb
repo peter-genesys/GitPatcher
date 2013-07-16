@@ -22,6 +22,7 @@ Partial Class PatchRunner
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PatchRunner))
         Me.PatchRunnerTabControl = New System.Windows.Forms.TabControl()
         Me.PatchSelectorTabPage = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
@@ -32,14 +33,14 @@ Partial Class PatchRunner
         Me.Label1 = New System.Windows.Forms.Label()
         Me.SearchPatchesButton = New System.Windows.Forms.Button()
         Me.AvailablePatchesListBox = New System.Windows.Forms.ListBox()
+        Me.ClearButton = New System.Windows.Forms.Button()
+        Me.ChooseAllButton = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.ChosenPatchesListBox = New System.Windows.Forms.ListBox()
         Me.RunTabPage = New System.Windows.Forms.TabPage()
         Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.ClearButton = New System.Windows.Forms.Button()
-        Me.ChooseAllButton = New System.Windows.Forms.Button()
         Me.PatchRunnerTabControl.SuspendLayout()
         Me.PatchSelectorTabPage.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -166,6 +167,24 @@ Partial Class PatchRunner
         Me.AvailablePatchesListBox.Size = New System.Drawing.Size(523, 589)
         Me.AvailablePatchesListBox.TabIndex = 0
         '
+        'ClearButton
+        '
+        Me.ClearButton.Location = New System.Drawing.Point(13, 39)
+        Me.ClearButton.Name = "ClearButton"
+        Me.ClearButton.Size = New System.Drawing.Size(75, 23)
+        Me.ClearButton.TabIndex = 41
+        Me.ClearButton.Text = "Clear"
+        Me.ClearButton.UseVisualStyleBackColor = True
+        '
+        'ChooseAllButton
+        '
+        Me.ChooseAllButton.Location = New System.Drawing.Point(13, 10)
+        Me.ChooseAllButton.Name = "ChooseAllButton"
+        Me.ChooseAllButton.Size = New System.Drawing.Size(75, 23)
+        Me.ChooseAllButton.TabIndex = 40
+        Me.ChooseAllButton.Text = "Choose All"
+        Me.ChooseAllButton.UseVisualStyleBackColor = True
+        '
         'Label2
         '
         Me.Label2.AutoSize = True
@@ -222,30 +241,13 @@ Partial Class PatchRunner
         Me.ExecutePatchButton.Text = "Execute Patches"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'ClearButton
-        '
-        Me.ClearButton.Location = New System.Drawing.Point(13, 39)
-        Me.ClearButton.Name = "ClearButton"
-        Me.ClearButton.Size = New System.Drawing.Size(75, 23)
-        Me.ClearButton.TabIndex = 41
-        Me.ClearButton.Text = "Clear"
-        Me.ClearButton.UseVisualStyleBackColor = True
-        '
-        'ChooseAllButton
-        '
-        Me.ChooseAllButton.Location = New System.Drawing.Point(13, 10)
-        Me.ChooseAllButton.Name = "ChooseAllButton"
-        Me.ChooseAllButton.Size = New System.Drawing.Size(75, 23)
-        Me.ChooseAllButton.TabIndex = 40
-        Me.ChooseAllButton.Text = "Choose All"
-        Me.ChooseAllButton.UseVisualStyleBackColor = True
-        '
         'PatchRunner
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(784, 762)
         Me.Controls.Add(Me.PatchRunnerTabControl)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "PatchRunner"
         Me.Text = "PatchRunner"
         Me.PatchRunnerTabControl.ResumeLayout(False)

@@ -83,6 +83,9 @@
     <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\GitPatcherIcon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="GitSharp">
       <HintPath>..\..\GitSharp\GitSharp.dll</HintPath>
@@ -287,6 +290,15 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GitPatcherIcon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GitPatcherIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GitPatcher.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

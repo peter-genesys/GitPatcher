@@ -22,6 +22,7 @@ Partial Class ProgressDialogue
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ProgressDialogue))
         Me.ProgressBar = New System.Windows.Forms.ProgressBar()
         Me.ProgressCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -105,6 +106,7 @@ Partial Class ProgressDialogue
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.ProgressCheckedListBox)
         Me.Controls.Add(Me.ProgressBar)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "ProgressDialogue"
         Me.Text = "Workflow"
         Me.ResumeLayout(False)

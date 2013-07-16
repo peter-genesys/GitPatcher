@@ -22,6 +22,7 @@ Partial Class Main
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.GITToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.NewFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -48,6 +49,7 @@ Partial Class Main
         Me.AllPatchesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.APEXToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Import1PageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RELEASEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReleaseToISDEVLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -78,7 +80,6 @@ Partial Class Main
         Me.Label11 = New System.Windows.Forms.Label()
         Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.Import1PageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -247,13 +248,19 @@ Partial Class Main
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.ImportToolStripMenuItem.Text = "Import Full"
+        '
+        'Import1PageToolStripMenuItem
+        '
+        Me.Import1PageToolStripMenuItem.Name = "Import1PageToolStripMenuItem"
+        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.Import1PageToolStripMenuItem.Text = "Import 1 page"
         '
         'ExportToolStripMenuItem
         '
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.ExportToolStripMenuItem.Text = "Export Full"
         '
         'RELEASEToolStripMenuItem
@@ -491,12 +498,6 @@ Partial Class Main
         Me.Label13.TabIndex = 25
         Me.Label13.Text = "Code"
         '
-        'Import1PageToolStripMenuItem
-        '
-        Me.Import1PageToolStripMenuItem.Name = "Import1PageToolStripMenuItem"
-        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.Import1PageToolStripMenuItem.Text = "Import 1 page"
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -527,6 +528,7 @@ Partial Class Main
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.RepoComboBox)
         Me.Controls.Add(Me.MenuStrip1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "Main"
         Me.Text = "Main"
