@@ -56,8 +56,8 @@ Public Class CreatePatchCollection
         TagFilterCheckBox.Checked = True
         RadioButtonUnapplied.Checked = True
  
-        PatchFilterGroupBox.Text = Globals.currentDB & " Filter"
- 
+        PatchFilterGroupBox.Text = Globals.currentTNS & " Filter"
+
     End Sub
 
 
@@ -351,7 +351,7 @@ Public Class CreatePatchCollection
         ' deriveSchemas()
     End Sub
 
- 
+
 
     Private Sub PatchNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchNameTextBox.TextChanged
 
@@ -625,7 +625,7 @@ Public Class CreatePatchCollection
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExecute" Then
 
-            ExecutePatchButton.Text = "Execute Patch on " & Globals.currentDB
+            ExecutePatchButton.Text = "Execute Patch on " & Globals.currentTNS
 
         End If
 
@@ -698,7 +698,7 @@ Public Class CreatePatchCollection
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
         'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Globals.RootPatchDir)
         'Use patch runner to execute with a master script.
-        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentDB & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
+        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
 
     End Sub
 
@@ -799,7 +799,7 @@ Public Class CreatePatchCollection
         createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to test", True)
         createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to uat", False)
         createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to master", False)
- 
+
         createPatchSetProgress.addStep("Release to ISDEVL", False)
         createPatchSetProgress.addStep("Release to ISTEST", True)
         createPatchSetProgress.addStep("Release to ISUAT", False)
@@ -833,7 +833,7 @@ Public Class CreatePatchCollection
         If createPatchSetProgress.toDoNextStep() Then
             'Change current DB to release DB
             Globals.setDB(iTargetDB.ToUpper)
- 
+
         End If
 
         If createPatchSetProgress.toDoNextStep() Then
@@ -889,25 +889,25 @@ Public Class CreatePatchCollection
             Main.mergeAndPushBranch("patchset", "master")
 
         End If
- 
+
         If createPatchSetProgress.toDoNextStep() Then
             'Release to ISDEVL
-            Main.releaseTo("ISDEVL")
+            Main.releaseTo("DEV")
         End If
 
         If createPatchSetProgress.toDoNextStep() Then
             'Release to ISTEST
-            Main.releaseTo("ISTEST")
+            Main.releaseTo("TEST")
         End If
 
         If createPatchSetProgress.toDoNextStep() Then
             'Release to ISTEST
-            Main.releaseTo("ISUAT")
+            Main.releaseTo("UAT")
         End If
 
         If createPatchSetProgress.toDoNextStep() Then
             'Release to ISTEST
-            Main.releaseTo("ISPROD")
+            Main.releaseTo("PROD")
         End If
 
 

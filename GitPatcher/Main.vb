@@ -569,19 +569,19 @@
 
 
     Private Sub ReleaseToISDEVLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISDEVLToolStripMenuItem.Click
-        releaseTo("ISDEVL")
+        releaseTo("DEV")
     End Sub
 
     Private Sub ReleaseToISTESTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISTESTToolStripMenuItem.Click
-        releaseTo("ISTEST")
+        releaseTo("TEST")
     End Sub
 
     Private Sub ReleaseToISUATToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISUATToolStripMenuItem.Click
-        releaseTo("ISUAT")
+        releaseTo("UAT")
     End Sub
 
     Private Sub ReleaseToISPRODToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISPRODToolStripMenuItem.Click
-        releaseTo("ISPROD")
+        releaseTo("PROD")
     End Sub
 
     Private Sub NewHotfixToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles NewHotFixToolStripMenuItem1.Click

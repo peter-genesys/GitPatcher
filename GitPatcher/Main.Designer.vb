@@ -273,26 +273,26 @@ Partial Class Main
         'ReleaseToISDEVLToolStripMenuItem
         '
         Me.ReleaseToISDEVLToolStripMenuItem.Name = "ReleaseToISDEVLToolStripMenuItem"
-        Me.ReleaseToISDEVLToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
-        Me.ReleaseToISDEVLToolStripMenuItem.Text = "Release to ISDEVL"
+        Me.ReleaseToISDEVLToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.ReleaseToISDEVLToolStripMenuItem.Text = "Release to DEV"
         '
         'ReleaseToISTESTToolStripMenuItem
         '
         Me.ReleaseToISTESTToolStripMenuItem.Name = "ReleaseToISTESTToolStripMenuItem"
-        Me.ReleaseToISTESTToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
-        Me.ReleaseToISTESTToolStripMenuItem.Text = "Release to ISTEST"
+        Me.ReleaseToISTESTToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.ReleaseToISTESTToolStripMenuItem.Text = "Release to TEST"
         '
         'ReleaseToISUATToolStripMenuItem
         '
         Me.ReleaseToISUATToolStripMenuItem.Name = "ReleaseToISUATToolStripMenuItem"
-        Me.ReleaseToISUATToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
-        Me.ReleaseToISUATToolStripMenuItem.Text = "Release to ISUAT"
+        Me.ReleaseToISUATToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.ReleaseToISUATToolStripMenuItem.Text = "Release to UAT"
         '
         'ReleaseToISPRODToolStripMenuItem
         '
         Me.ReleaseToISPRODToolStripMenuItem.Name = "ReleaseToISPRODToolStripMenuItem"
-        Me.ReleaseToISPRODToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
-        Me.ReleaseToISPRODToolStripMenuItem.Text = "Release to ISPROD"
+        Me.ReleaseToISPRODToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.ReleaseToISPRODToolStripMenuItem.Text = "Release to PROD"
         '
         'RepoComboBox
         '

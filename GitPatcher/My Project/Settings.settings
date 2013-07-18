@@ -14,7 +14,7 @@
     <Setting Name="SQLpath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\oraclexe\app\oracle\product\11.2.0\server\bin\sqlplus.exe</Value>
     </Setting>
-    <Setting Name="DBList" Type="System.String" Scope="Application">
+    <Setting Name="TNSList" Type="System.String" Scope="User">
       <Value Profile="(Default)">ISPROD
 ISUAT
 ISTEST
@@ -30,7 +30,7 @@ VM</Value>
     <Setting Name="CurrentApex" Type="System.String" Scope="User">
       <Value Profile="(Default)">f101</Value>
     </Setting>
-    <Setting Name="ConnectionList" Type="System.String" Scope="Application">
+    <Setting Name="ConnectionList" Type="System.String" Scope="User">
       <Value Profile="(Default)">bneoda04.thiess.aus:1521:isprod
 bneoda05.thiess.aus:1521:isuat
 bneoda05.thiess.aus:1521:istest
@@ -84,6 +84,13 @@ prismmobile</Value>
 uat
 test
 develop</Value>
+    </Setting>
+    <Setting Name="DBList" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PROD
+UAT
+TEST
+DEV
+VM</Value>
     </Setting>
   </Settings>
 </SettingsFile>

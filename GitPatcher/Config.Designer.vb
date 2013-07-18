@@ -40,6 +40,7 @@ Partial Class Config
         Dim Label17 As System.Windows.Forms.Label
         Dim Label18 As System.Windows.Forms.Label
         Dim Label16 As System.Windows.Forms.Label
+        Dim Label20 As System.Windows.Forms.Label
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Config))
         Me.MailTabPage = New System.Windows.Forms.TabPage()
         Me.TestMailButton = New System.Windows.Forms.Button()
@@ -69,6 +70,7 @@ Partial Class Config
         Me.RepoListTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.TNSListTextbox = New System.Windows.Forms.TextBox()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -86,6 +88,7 @@ Partial Class Config
         Label17 = New System.Windows.Forms.Label()
         Label18 = New System.Windows.Forms.Label()
         Label16 = New System.Windows.Forms.Label()
+        Label20 = New System.Windows.Forms.Label()
         Me.MailTabPage.SuspendLayout()
         Me.AppsTabPage.SuspendLayout()
         Me.PatchTabPage.SuspendLayout()
@@ -188,7 +191,7 @@ Partial Class Config
         'Label5
         '
         Label5.AutoSize = True
-        Label5.Location = New System.Drawing.Point(140, 16)
+        Label5.Location = New System.Drawing.Point(272, 16)
         Label5.Name = "Label5"
         Label5.Size = New System.Drawing.Size(69, 13)
         Label5.TabIndex = 10
@@ -242,7 +245,7 @@ Partial Class Config
         'Label16
         '
         Label16.AutoSize = True
-        Label16.Location = New System.Drawing.Point(365, 16)
+        Label16.Location = New System.Drawing.Point(94, 16)
         Label16.Name = "Label16"
         Label16.Size = New System.Drawing.Size(77, 13)
         Label16.TabIndex = 8
@@ -421,9 +424,11 @@ Partial Class Config
         '
         'DBTabPage
         '
-        Me.DBTabPage.Controls.Add(Me.Label19)
+        Me.DBTabPage.Controls.Add(Me.TNSListTextbox)
         Me.DBTabPage.Controls.Add(Me.HotFixBranchesTextBox)
         Me.DBTabPage.Controls.Add(Label16)
+        Me.DBTabPage.Controls.Add(Label20)
+        Me.DBTabPage.Controls.Add(Me.Label19)
         Me.DBTabPage.Controls.Add(Me.Label6)
         Me.DBTabPage.Controls.Add(Me.ConnectionTextBox)
         Me.DBTabPage.Controls.Add(Me.DBListTextBox)
@@ -449,10 +454,10 @@ Partial Class Config
         'HotFixBranchesTextBox
         '
         Me.HotFixBranchesTextBox.Enabled = False
-        Me.HotFixBranchesTextBox.Location = New System.Drawing.Point(368, 32)
+        Me.HotFixBranchesTextBox.Location = New System.Drawing.Point(97, 32)
         Me.HotFixBranchesTextBox.Multiline = True
         Me.HotFixBranchesTextBox.Name = "HotFixBranchesTextBox"
-        Me.HotFixBranchesTextBox.Size = New System.Drawing.Size(160, 208)
+        Me.HotFixBranchesTextBox.Size = New System.Drawing.Size(83, 208)
         Me.HotFixBranchesTextBox.TabIndex = 9
         '
         'Label6
@@ -460,17 +465,16 @@ Partial Class Config
         Me.Label6.AutoSize = True
         Me.Label6.Location = New System.Drawing.Point(6, 243)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(169, 13)
+        Me.Label6.Size = New System.Drawing.Size(241, 13)
         Me.Label6.TabIndex = 12
-        Me.Label6.Text = "Provide a Connection for each DB"
+        Me.Label6.Text = "Provide a TNS entry and Connection for each DB"
         '
         'ConnectionTextBox
         '
-        Me.ConnectionTextBox.Enabled = False
-        Me.ConnectionTextBox.Location = New System.Drawing.Point(143, 32)
+        Me.ConnectionTextBox.Location = New System.Drawing.Point(275, 32)
         Me.ConnectionTextBox.Multiline = True
         Me.ConnectionTextBox.Name = "ConnectionTextBox"
-        Me.ConnectionTextBox.Size = New System.Drawing.Size(219, 208)
+        Me.ConnectionTextBox.Size = New System.Drawing.Size(253, 208)
         Me.ConnectionTextBox.TabIndex = 11
         '
         'DBListTextBox
@@ -479,7 +483,7 @@ Partial Class Config
         Me.DBListTextBox.Location = New System.Drawing.Point(8, 32)
         Me.DBListTextBox.Multiline = True
         Me.DBListTextBox.Name = "DBListTextBox"
-        Me.DBListTextBox.Size = New System.Drawing.Size(129, 208)
+        Me.DBListTextBox.Size = New System.Drawing.Size(83, 208)
         Me.DBListTextBox.TabIndex = 9
         '
         'TabPageGitRepo
@@ -520,11 +524,28 @@ Partial Class Config
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
         '
+        'TNSListTextbox
+        '
+        Me.TNSListTextbox.Location = New System.Drawing.Point(186, 32)
+        Me.TNSListTextbox.Multiline = True
+        Me.TNSListTextbox.Name = "TNSListTextbox"
+        Me.TNSListTextbox.Size = New System.Drawing.Size(83, 208)
+        Me.TNSListTextbox.TabIndex = 15
+        '
+        'Label20
+        '
+        Label20.AutoSize = True
+        Label20.Location = New System.Drawing.Point(183, 16)
+        Label20.Name = "Label20"
+        Label20.Size = New System.Drawing.Size(51, 13)
+        Label20.TabIndex = 14
+        Label20.Text = "TNS List:"
+        '
         'Config
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(564, 341)
+        Me.ClientSize = New System.Drawing.Size(560, 341)
         Me.Controls.Add(Me.ConfigTabs)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Config"
@@ -572,4 +593,5 @@ Partial Class Config
     Friend WithEvents GitExeTextBox As System.Windows.Forms.TextBox
     Friend WithEvents HotFixBranchesTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label19 As System.Windows.Forms.Label
+    Friend WithEvents TNSListTextbox As System.Windows.Forms.TextBox
 End Class

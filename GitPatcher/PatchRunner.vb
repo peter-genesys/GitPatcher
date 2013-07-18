@@ -9,11 +9,11 @@ Public Class PatchRunner
         RadioButtonUnapplied.Checked = iUnapplied
         RadioButtonUninstalled.Checked = iUninstalled
         RadioButtonAll.Checked = iAll
-        PatchFilterGroupBox.Text = Globals.currentDB & " Filter"
+        PatchFilterGroupBox.Text = Globals.currentTNS & " Filter"
         doSearch()
     End Sub
 
- 
+
 
 
     Private Sub RecursiveSearch(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As ListBox)
@@ -36,12 +36,12 @@ Public Class PatchRunner
 
     End Sub
 
- 
+
 
     Public Shared Sub FindPatches(ByRef foundPatches As ListBox, ByVal iHideInstalled As Boolean)
 
         'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.currentDB & ";User Id=patch_admin;Password=patch_admin;"
+        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
 
         'Harder to get working but no need for TNSNAMES File
         'Dim oradb As String = "Data Source=(DESCRIPTION=" _
@@ -127,7 +127,7 @@ Public Class PatchRunner
         If foundPatches.Items.Count = 0 Then
             MsgBox("No patches matched the search criteria.", MsgBoxStyle.Information, "No patches found")
         End If
- 
+
 
     End Sub
 
@@ -144,7 +144,7 @@ Public Class PatchRunner
         End If
 
         'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.currentDB & ";User Id=patch_admin;Password=patch_admin;"
+        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
 
         Dim conn As New OracleConnection(oradb)
         Dim sql As String = Nothing
@@ -214,7 +214,7 @@ Public Class PatchRunner
 
 
     Private Sub SearchPatchesButton_Click(sender As Object, e As EventArgs) Handles SearchPatchesButton.Click
-        doSearch
+        doSearch()
 
     End Sub
 
@@ -267,7 +267,7 @@ Public Class PatchRunner
 
         MasterScriptListBox.Items.Clear()
 
-        MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.currentDB & "'")
+        MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.currentTNS & "'")
 
         For i As Integer = 0 To ChosenPatchesListBox.Items.Count - 1
 

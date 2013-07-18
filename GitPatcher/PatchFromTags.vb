@@ -630,7 +630,7 @@ Public Class PatchFromTags
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExecute" Then
 
-            ExecutePatchButton.Text = "Execute Patch on " & Globals.currentDB
+            ExecutePatchButton.Text = "Execute Patch on " & Globals.currentTNS
 
         End If
 
@@ -708,7 +708,7 @@ Public Class PatchFromTags
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
         'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Globals.RootPatchDir)
         'Use patch runner to execute with a master script.
-        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentDB & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
+        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
 
     End Sub
 
@@ -844,7 +844,7 @@ Public Class PatchFromTags
 
         If createPatchProgress.toDoNextStep() Then
             'Release to ISDEVL
-            Main.releaseTo("ISDEVL")
+            Main.releaseTo("DEV")
         End If
 
         If createPatchProgress.toDoNextStep() Then

@@ -137,8 +137,8 @@
         Dim fapp_id As String = Globals.currentApex
         Dim apex_dir As String = Globals.RootApexDir
 
-        Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Export APEX application " & fapp_id & " from DB " & Globals.currentDB & " " & connection, _
-            "Exporting APEX application " & Globals.currentApex & " from parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentDB & Environment.NewLine & _
+        Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Export APEX application " & fapp_id & " from DB " & Globals.currentTNS & " " & connection, _
+            "Exporting APEX application " & Globals.currentApex & " from parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentTNS & Environment.NewLine & _
             "This writes individual apex files to the GIT Repo checkout, and then prompt to add and commit the changes." & Environment.NewLine & _
             Environment.NewLine & _
             "Consider which branch you are exporting to." & Environment.NewLine & _
@@ -175,7 +175,7 @@
         'PROGRESS 0
         If ExportProgress.toDoNextStep() Then
 
-            Dim password = Main.get_password(Globals.currentParsingSchema, Globals.currentDB)
+            Dim password = Main.get_password(Globals.currentParsingSchema, Globals.currentTNS)
             'Export Apex as a single file
             'NB Not exporting application comments
             'Host.runInteractive("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
@@ -228,14 +228,14 @@
 
     Public Shared Sub ApexImportFromTag()
 
-        Dim l_skip_reports_DBs As String = "ISDEVL"
+        Dim l_skip_reports_DBs As String = "DEV"
         Dim fapp_id As String = Globals.currentApex
 
         Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
-        Dim runOnlyDBs As String = "ISDEVL,ISTEST,ISUAT,ISPROD"
+        Dim runOnlyDBs As String = "DEV,TEST,UAT,PROD"
 
-        Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import APEX application " & fapp_id & " into DB " & Globals.currentDB, _
-        "Importing APEX application " & Globals.currentApex & " into parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentDB & Environment.NewLine & _
+        Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import APEX application " & fapp_id & " into DB " & Globals.currentTNS, _
+        "Importing APEX application " & Globals.currentApex & " into parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentTNS & Environment.NewLine & _
         "This will overwrite the existing APEX application." & Environment.NewLine & _
         Environment.NewLine & _
         "Consider creating a VM snapshot as a restore point." & Environment.NewLine & _
@@ -323,7 +323,7 @@
             'Import Apex
             Host.executeSQLscriptInteractive("install.sql" _
                                            , Globals.RootApexDir & Globals.currentApex _
-                                           , Main.get_connect_string(Globals.currentParsingSchema, Globals.currentDB))
+                                           , Main.get_connect_string(Globals.currentParsingSchema, Globals.currentTNS))
 
         End If
 
@@ -360,7 +360,7 @@
 & Chr(10) & "@pages/" & ApexPageName & "" _
 & Chr(10) & "@end_environment.sql" _
 & Chr(10)
- 
+
         Dim pageInstallScriptName As String = applicationDir & "temp_install_page_" & l_page_num & "_script.sql"
 
         FileIO.writeFile(pageInstallScriptName, script, True)
@@ -368,7 +368,7 @@
         'Import Apex
         Host.executeSQLscriptInteractive(pageInstallScriptName _
                                        , applicationDir _
-                                       , Main.get_connect_string(Globals.currentParsingSchema, Globals.currentDB))
+                                       , Main.get_connect_string(Globals.currentParsingSchema, Globals.currentTNS))
         'Remove the temp file again
         FileIO.deleteFileIfExists(pageInstallScriptName)
 
@@ -385,8 +385,8 @@
         Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
         Dim runOnlyDBs As String = "ISDEVL,ISTEST,ISUAT,ISPROD"
 
-        Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import 1 APEX page " & fapp_id & " into DB " & Globals.currentDB, _
-        "Importing 1 APEX page of Application " & Globals.currentApex & " into parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentDB & Environment.NewLine & _
+        Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import 1 APEX page " & fapp_id & " into DB " & Globals.currentTNS, _
+        "Importing 1 APEX page of Application " & Globals.currentApex & " into parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentTNS & Environment.NewLine & _
         "This will overwrite only 1 page in APEX application." & Environment.NewLine & _
         Environment.NewLine & _
         "Consider creating a VM snapshot as a restore point." & Environment.NewLine & _
@@ -416,9 +416,9 @@
 
                 Dim tagApexVersion As String = Nothing
                 tagApexVersion = ChoiceDialog.Ask("Please choose a tag for apex install", tagnames, "HEAD", "Choose tag")
- 
+
             End If
- 
+
             If ImportProgress.toDoNextStep Then
 
 
@@ -432,12 +432,12 @@
                 page_file = ChoiceDialog.Ask("Please choose a page to be installed", pages, "", "Choose Page")
 
                 ImportProgress.updateStepDescription(1, "Import Apex Page Filename: " & page_file)
- 
+
                 'write a lauch page
                 Install1Page(page_file)
 
             End If
- 
+
             If ImportProgress.toDoNextStep Then
                 'Return to branch
                 GitBash.Switch(Globals.currentRepo, currentBranch)

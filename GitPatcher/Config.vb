@@ -5,12 +5,13 @@
 
         'Repos
         RepoListTextBox.DataBindings.Add("Text", My.Settings, "RepoList")
-        HotFixBranchesTextBox.DataBindings.Add("Text", My.Settings, "HotFixBranches")
-
+ 
         'Databases
         DBListTextBox.DataBindings.Add("Text", My.Settings, "DBList")
+        HotFixBranchesTextBox.DataBindings.Add("Text", My.Settings, "HotFixBranches")
+        TNSListTextbox.DataBindings.Add("Text", My.Settings, "TNSList")
         ConnectionTextBox.DataBindings.Add("Text", My.Settings, "ConnectionList")
-
+ 
         'Paths
         PatchOffsetTextBox.DataBindings.Add("Text", My.Settings, "PatchDirOffset")
         ApexOffsetTextBox.DataBindings.Add("Text", My.Settings, "ApexDirOffset")

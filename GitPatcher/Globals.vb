@@ -1,4 +1,5 @@
 ﻿Module Globals
+
     Private gDB As String
     Private gApex As String
     Private gRepo As String
@@ -7,7 +8,7 @@
     'Private gApexApp As String
     Private gParsingSchema As String
 
- 
+
     Public Function currentDB() As String
 
         Return gDB
@@ -48,7 +49,7 @@
         Return Common.getLastSegment(Globals.currentLongBranch, "/")
 
     End Function
- 
+
     Public Function RootPatchDir() As String
 
 
@@ -109,7 +110,7 @@
         My.Settings.CurrentApex = gApex
         My.Settings.CurrentApp = gApplication
         My.Settings.Save()
- 
+
     End Sub
 
     'Public Sub setParsingSchema(ParsingSchema As String)
@@ -132,6 +133,21 @@
         Return ""
 
     End Function
+
+    Public Function currentTNS() As String
+        Dim l_Index As Integer = -1
+        For Each db In My.Settings.DBList.Split(Chr(10))
+            l_Index = l_Index + 1
+            db = Trim(db)
+            db = db.Replace(Chr(13), "")
+            If db = gDB Then
+                Return My.Settings.TNSList.Split(Chr(10))(l_Index)
+            End If
+        Next
+        Return ""
+
+    End Function
+
 
     Public Function deriveHotfixBranch(Optional ByVal iDb As String = "") As String
         If String.IsNullOrEmpty(iDb) Then
