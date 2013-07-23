@@ -9,8 +9,23 @@ Public Class PatchRunner
         RadioButtonUnapplied.Checked = iUnapplied
         RadioButtonUninstalled.Checked = iUninstalled
         RadioButtonAll.Checked = iAll
-        PatchFilterGroupBox.Text = Globals.currentTNS & " Filter"
+        PatchFilterGroupBox.Text = Globals.currentTNS & " Search Criteria"
+ 
+        Logger.Note("Globals.getPatchRunnerFilter", Globals.getPatchRunnerFilter)
+        Select Case Globals.getPatchRunnerFilter
+            Case "feature"
+                RadioButtonFeature.Checked = True
+            Case "hotfix"
+                RadioButtonHotfix.Checked = True
+            Case "patchset"
+                RadioButtonPatchSet.Checked = True
+            Case "all"
+                RadioButtonAll2.Checked = True
+        End Select
+
         doSearch()
+
+
     End Sub
 
 
@@ -81,13 +96,9 @@ Public Class PatchRunner
                     'Check whether the patch has been successfully installed.
                     patchMatch = False
 
-                    'If iHideApplied Then
-                    ' sql = "select max(patch_name) patch_name from patches_unapplied_v where patch_name = '" & Common.getLastSegment(AvailablePatchesListBox.Items(i), "\") & "'"
-                    'If iHideInstalled Then
+    
                     sql = "select max(patch_name) patch_name from patches where patch_name = '" & Common.getLastSegment(foundPatches.Items(i), "\") & "' and success_yn = 'Y'"
-
-                    ' End If
-
+ 
 
                     cmd = New OracleCommand(sql, conn)
                     cmd.CommandType = CommandType.Text
@@ -98,9 +109,7 @@ Public Class PatchRunner
                         'patch matches the search
                         patchMatch = True
                     End If
-
-
-                    'If (iHideInstalled And patchMatch) Or (iHideApplied And Not patchMatch) Then
+ 
                     If patchMatch Then
                         'patch is to be filtered from the list.
                         foundPatches.Items.RemoveAt(i)
@@ -202,6 +211,41 @@ Public Class PatchRunner
     End Sub
 
 
+    Private Sub filterPatchType(ByRef foundPatches As ListBox)
+
+        Dim searchTerm As String = "all"
+        If Not RadioButtonAll2.Checked And foundPatches.Items.Count > 0 Then
+
+ 
+            If RadioButtonFeature.Checked Then
+                searchTerm = "feature"
+            ElseIf RadioButtonHotfix.Checked Then
+                searchTerm = "hotfix"
+            ElseIf RadioButtonPatchSet.Checked Then
+                searchTerm = "patchset"
+            End If
+ 
+            For i As Integer = foundPatches.Items.Count - 1 To 0 Step -1
+                If Not foundPatches.Items(i).contains(searchTerm) Then
+                    'This patch does not match the filter and will be removed from the list
+                    foundPatches.Items.RemoveAt(i)
+                End If
+            Next
+
+
+            If foundPatches.Items.Count = 0 Then
+                MsgBox("No patches matched the Filter: " & searchTerm, MsgBoxStyle.Information, "No patches found")
+            End If
+
+
+        End If
+        Globals.setPatchRunnerFilter(searchTerm)
+
+
+    End Sub
+
+
+
     Private Sub doSearch()
         If RadioButtonUnapplied.Checked Then
             FindUnappliedPatches(AvailablePatchesListBox)
@@ -210,8 +254,14 @@ Public Class PatchRunner
         Else
             MsgBox("Choose type of patch to search for.", MsgBoxStyle.Exclamation, "Choose Search criteria")
         End If
+
+        filterPatchType(AvailablePatchesListBox)
+
+
     End Sub
 
+
+ 
 
     Private Sub SearchPatchesButton_Click(sender As Object, e As EventArgs) Handles SearchPatchesButton.Click
         doSearch()
@@ -308,4 +358,6 @@ Public Class PatchRunner
     Private Sub ClearButton_Click(sender As Object, e As EventArgs) Handles ClearButton.Click
         ChosenPatchesListBox.Items.Clear()
     End Sub
+
+
 End Class

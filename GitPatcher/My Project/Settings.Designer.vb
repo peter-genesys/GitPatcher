@@ -321,6 +321,18 @@ Namespace My
                 Return CType(Me("DBList"),String)
             End Get
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("feature")>  _
+        Public Property PatchRunnerFilter() As String
+            Get
+                Return CType(Me("PatchRunnerFilter"),String)
+            End Get
+            Set
+                Me("PatchRunnerFilter") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

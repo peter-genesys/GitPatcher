@@ -98,6 +98,24 @@
         My.Settings.Save()
 
     End Sub
+
+
+    Public Sub setPatchRunnerFilter(filter As String)
+
+        Logger.Note("SAVE PatchRunnerFilter", filter)
+        My.Settings.PatchRunnerFilter = filter
+        My.Settings.Save()
+
+        getPatchRunnerFilter()
+    End Sub
+
+    Public Function getPatchRunnerFilter() As String
+        Logger.Note("My.Settings.PatchRunnerFilter", My.Settings.PatchRunnerFilter)
+        Return My.Settings.PatchRunnerFilter
+
+    End Function
+
+
     Public Sub setApplication(ByVal Application As String, applicationIndex As Integer)
 
         gApplication = Application

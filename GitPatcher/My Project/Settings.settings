@@ -92,5 +92,8 @@ TEST
 DEV
 VM</Value>
     </Setting>
+    <Setting Name="PatchRunnerFilter" Type="System.String" Scope="User">
+      <Value Profile="(Default)">feature</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
