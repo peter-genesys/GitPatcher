@@ -17,9 +17,11 @@ Public Class PatchFromTags
         gDBtarget = iDBtarget
         gRebaseBranchOn = iRebaseBranchOn
 
-        If gBranchType <> "hotfix" Then
-            PatchTabControl.TabPages.Remove(TabPageSuperBy)
-        End If
+        'NOT CURRENTLY USING THE TabPageSuperBy TABPAGE
+        PatchTabControl.TabPages.Remove(TabPageSuperBy)
+        'If gBranchType <> "hotfix" Then
+        '  PatchTabControl.TabPages.Remove(TabPageSuperBy)
+        'End If
 
     End Sub
 
