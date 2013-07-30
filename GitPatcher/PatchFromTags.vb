@@ -1,18 +1,29 @@
 ﻿
 Public Class PatchFromTags
 
+    Dim gBranchType As String
+    Dim gDBtarget As String
+    Dim gRebaseBranchOn As String
 
-    Public Sub New()
+
+    Public Sub New(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String)
         InitializeComponent()
 
         FindTagsButton.Text = "Find Tags like " & Globals.currentBranch & ".XX"
 
         Findtags()
 
+        gBranchType = iBranchType
+        gDBtarget = iDBtarget
+        gRebaseBranchOn = iRebaseBranchOn
+
+        If gBranchType <> "hotfix" Then
+            PatchTabControl.TabPages.Remove(TabPageSuperBy)
+        End If
 
     End Sub
- 
- 
+
+
 
     Private Sub Findtags()
         TagsCheckedListBox.Items.Clear()
@@ -92,6 +103,7 @@ Public Class PatchFromTags
                            PatchableCheckedListBox.CheckedItems, _
                            PrereqsCheckedListBox.CheckedItems, _
                            SupersedesCheckedListBox.CheckedItems, _
+                           SupersededByCheckedListBox.CheckedItems, _
                            PatchDirTextBox.Text, _
                            PatchPathTextBox.Text, _
                            TrackPromoCheckBox.Checked)
@@ -141,7 +153,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub RemoveButton_Click(sender As Object, e As EventArgs) Handles RemoveButton.Click
-		For i As Integer = ChangesCheckedListBox.Items.Count - 1 To 0 Step -1		
+        For i As Integer = ChangesCheckedListBox.Items.Count - 1 To 0 Step -1
             If ChangesCheckedListBox.CheckedIndices.Contains(i) Then
                 'This change is ticked and will be removed from the list
                 ChangesCheckedListBox.Items.RemoveAt(i)
@@ -156,7 +168,7 @@ Public Class PatchFromTags
         PatchDirTextBox.Text = Globals.RootPatchDir & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
- 
+
 
     Shared Sub writeInstallScript(ByVal patch_name As String, _
                                   ByVal patch_type As String, _
@@ -173,6 +185,7 @@ Public Class PatchFromTags
                                   ByRef ignoreErrorFiles As CheckedListBox.CheckedItemCollection, _
                                   ByRef prereq_patches As CheckedListBox.CheckedItemCollection, _
                                   ByRef supersedes_patches As CheckedListBox.CheckedItemCollection, _
+                                  ByRef superseded_by_patches As CheckedListBox.CheckedItemCollection, _
                                   ByVal patchDir As String, _
                                   ByVal groupPath As String, _
                                   ByVal track_promotion As Boolean)
@@ -382,11 +395,11 @@ Public Class PatchFromTags
         & Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
         & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
         & Chr(10) & " ,i_supplementary      => '" & supplementary & "' -" _
-        & Chr(10) & " ,i_patch_desc         => '" & patch_desc & "' -" _
+        & Chr(10) & " ,i_patch_desc         => '" & patch_desc.Replace("'", "''") & "' -" _
         & Chr(10) & " ,i_patch_componants   => '" & l_all_programs & "' -" _
         & Chr(10) & " ,i_patch_create_date  => '" & DateString & "' -" _
         & Chr(10) & " ,i_patch_created_by   => '" & Environment.UserName & "' -" _
-        & Chr(10) & " ,i_note               => '" & note & "' -" _
+        & Chr(10) & " ,i_note               => '" & note.Replace("'", "''") & "' -" _
         & Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
         & Chr(10) & " ,i_remove_prereqs     => 'N' -" _
         & Chr(10) & " ,i_remove_sups        => 'N' -" _
@@ -518,12 +531,23 @@ Public Class PatchFromTags
                 For Each l_sup_patch In supersedes_patches
                     l_sup_short_name = Common.getLastSegment(l_sup_patch, "\")
                     l_master_file.WriteLine("PROMPT")
-                    l_master_file.WriteLine("PROMPT Superseding patch " & l_sup_short_name)
+                    l_master_file.WriteLine("PROMPT Supersedes patch " & l_sup_short_name)
                     l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")
                     l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
                     l_master_file.WriteLine(",i_supersedes_patch  => '" & l_sup_short_name & "' );")
 
                 Next
+
+                For Each l_sup_patch In superseded_by_patches
+                    l_sup_short_name = Common.getLastSegment(l_sup_patch, "\")
+                    l_master_file.WriteLine("PROMPT")
+                    l_master_file.WriteLine("PROMPT Superseded by patch " & l_sup_short_name)
+                    l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")
+                    l_master_file.WriteLine("i_patch_name     => '" & l_sup_short_name & "' -")
+                    l_master_file.WriteLine(",i_supersedes_patch  => '" & patch_name & "' );")
+
+                Next
+
             End If
 
             l_master_file.WriteLine("COMMIT;")
@@ -605,12 +629,29 @@ Public Class PatchFromTags
         End If
 
 
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageSuperBy" Then
+
+            RestrictSupByToBranchCheckBox.Checked = True
+
+            If SupersededByCheckedListBox.Items.Count = 0 Then
+                FindSuperBy()
+            End If
+
+
+        End If
+ 
+
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
             'Copy Patchable items to the next list.
 
             PatchPathTextBox.Text = Replace(Globals.currentLongBranch, "/", "\") & "\" & Globals.currentAppCode & "\"
 
             PatchPathTextBox.Text = Common.getFirstSegment(Globals.currentLongBranch, "/") & "\" & Globals.currentAppCode & "\" & Globals.currentBranch & "\"
+
+            If gBranchType = "hotfix" Then
+                SupIdTextBox.Text = gDBtarget
+            End If
+
 
             derivePatchName()
 
@@ -657,21 +698,30 @@ Public Class PatchFromTags
     End Sub
 
 
-    Private Sub FindPreReqs()
-        PrereqsCheckedListBox.Items.Clear()
+    Private Sub FindPatches(ByRef foundPatches As CheckedListBox, byval restrictToBranch as boolean)
+        foundPatches.Items.Clear()
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", PrereqsCheckedListBox, Globals.RootPatchDir)
-            If RestrictPreReqToBranchCheckBox.Checked Then
-                For i As Integer = PrereqsCheckedListBox.Items.Count - 1 To 0 Step -1
-                    If Not PrereqsCheckedListBox.Items(i).contains(Globals.currentBranch) Then
+            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", foundPatches, Globals.RootPatchDir)
+
+            If restrictToBranch Then
+                For i As Integer = foundPatches.Items.Count - 1 To 0 Step -1
+                    If Not foundPatches.Items(i).contains(Globals.currentBranch) Then
                         'This patch is not from this branch and will be removed from the list
-                        PrereqsCheckedListBox.Items.RemoveAt(i)
+                        foundPatches.Items.RemoveAt(i)
                     End If
                 Next
             End If
 
+
         End If
+    End Sub
+
+
+ 
+
+    Private Sub FindPreReqs()
+        FindPatches(PrereqsCheckedListBox, RestrictPreReqToBranchCheckBox.Checked)
     End Sub
 
 
@@ -679,29 +729,12 @@ Public Class PatchFromTags
         FindPreReqs()
 
     End Sub
-
-
-
+ 
     Private Sub FindSuper()
-        SupersedesCheckedListBox.Items.Clear()
-        If IO.Directory.Exists(Globals.RootPatchDir) Then
-
-            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", SupersedesCheckedListBox, Globals.RootPatchDir)
-
-            If RestrictSupToBranchCheckBox.Checked Then
-                For i As Integer = SupersedesCheckedListBox.Items.Count - 1 To 0 Step -1
-                    If Not SupersedesCheckedListBox.Items(i).contains(Globals.currentBranch) Then
-                        'This patch is not from this branch and will be removed from the list
-                        SupersedesCheckedListBox.Items.RemoveAt(i)
-                    End If
-                Next
-            End If
-
-
-        End If
+        FindPatches(SupersedesCheckedListBox, RestrictSupToBranchCheckBox.Checked)
     End Sub
 
-    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles SupButton.Click
         FindSuper()
     End Sub
 
@@ -737,9 +770,15 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles ComitButton.Click
-        Tortoise.Commit(PatchDirTextBox.Text, "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
 
-        Mail.SendNotification("NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
+        Dim lUntracked As String = Nothing
+        If Not Me.TrackPromoCheckBox.Checked Then
+            lUntracked = "UNTRACKED "
+        End If
+
+        Tortoise.Commit(PatchDirTextBox.Text, lUntracked & "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
+
+        Mail.SendNotification(lUntracked & "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
 
         'user
         'branch
@@ -751,13 +790,16 @@ Public Class PatchFromTags
     End Sub
 
 
-    Public Shared Sub createPatchProcess(iBranchType As String, iRebaseBranchOn As String)
+    Public Shared Sub createPatchProcess(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String)
 
         Common.checkBranch(iBranchType)
- 
-        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
+
+
+        Dim currentBranch As String = Globals.currentLongBranch()
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")
         createPatchProgress.MdiParent = GitPatcher
+        createPatchProgress.addStep("Export Apex to branch: " & currentBranch, False, "Using the Apex Export workflow")
+        createPatchProgress.addStep("Use QCGU to generate changed domain data: " & currentBranch, False, "Think hard!  Did i change domain config?  If so, i should logon to QCGU and generate that data out. Then commit it too.")
         createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow")
         createPatchProgress.addStep("Review tags on Branch: " & currentBranch)
         createPatchProgress.addStep("Create edit, test", True, "Now is a great time to smoke test my work before i commit the patch.")
@@ -767,7 +809,7 @@ Public Class PatchFromTags
         createPatchProgress.addStep("Merge from Branch: " & currentBranch, True, "Please select the Branch:" & currentBranch & " from the Tortoise Merge Dialogue")
         createPatchProgress.addStep("Push to Origin", True, "If at this stage there is an error because your " & iRebaseBranchOn & " branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
         createPatchProgress.addStep("Return to Branch: " & currentBranch)
-        createPatchProgress.addStep("Release to ISDEVL")
+        createPatchProgress.addStep("Release to " & iDBtarget, True)
         createPatchProgress.addStep("Snapshot VM", True, "Create a snapshot of your current VM state, to use as your next restore point.  I label mine with the patch_name of the last applied patch.")
         createPatchProgress.Show()
 
@@ -775,6 +817,18 @@ Public Class PatchFromTags
         Do Until createPatchProgress.isStarted
             Common.wait(1000)
         Loop
+
+        If createPatchProgress.toDoNextStep() Then
+            'Export Apex to branch
+            Apex.ApexExportCommit()
+
+        End If
+
+        If createPatchProgress.toDoNextStep() Then
+            'QCGU
+            MsgBox("Please launch QCGU and generate Domain data", MsgBoxStyle.Exclamation, "QCGU")
+
+        End If
 
         If createPatchProgress.toDoNextStep() Then
             'Rebase branch
@@ -791,18 +845,11 @@ Public Class PatchFromTags
 
         If createPatchProgress.toDoNextStep() Then
 
-            Dim Wizard As New PatchFromTags
+            Dim Wizard As New PatchFromTags(iBranchType, iDBtarget, iRebaseBranchOn)
             'newchildform.MdiParent = GitPatcher
             Wizard.ShowDialog() 'NEED TO WAIT HERE!!
 
-
-            'If BMSSplash.MyLogin.ShowDialog() = DialogResult.OK Then
-            '    ' Form was closed via OK button or similar, continue normally... '
-            '    BMSSplash.MyBuddy.Show()
-            'Else
-            '    ' Form was aborted via Cancel, Close, or some other way; do something '
-            '    ' else like quitting the application... '
-            'End If
+ 
         End If
 
 
@@ -843,8 +890,8 @@ Public Class PatchFromTags
         End If
 
         If createPatchProgress.toDoNextStep() Then
-            'Release to ISDEVL
-            Main.releaseTo("DEV")
+            'Release to DB Target
+            Main.releaseTo(iDBtarget, iBranchType)
         End If
 
         If createPatchProgress.toDoNextStep() Then
@@ -859,8 +906,12 @@ Public Class PatchFromTags
 
     End Sub
 
+    Private Sub FindSuperBy()
+        FindPatches(SupersededByCheckedListBox, RestrictSupByToBranchCheckBox.Checked)
+    End Sub
 
 
-
-
+    Private Sub SupByButton_Click(sender As Object, e As EventArgs) Handles SupByButton.Click
+        FindSuperBy()
+    End Sub
 End Class

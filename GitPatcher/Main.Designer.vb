@@ -80,8 +80,12 @@ Partial Class Main
         Me.Label11 = New System.Windows.Forms.Label()
         Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.MenuStrip1.SuspendLayout()
-        Me.SuspendLayout()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
+        Me.MenuStrip1.SuspendLayout
+        Me.SuspendLayout
         '
         'MenuStrip1
         '
@@ -94,7 +98,7 @@ Partial Class Main
         '
         'GITToolStripMenuItem1
         '
-        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.CreateDBFeaturePatchToolStripMenuItem, Me.RebaseFeatureHotfixToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem, Me.TestworkflowToolStripMenuItem, Me.TestrevertToolStripMenuItem, Me.TestCreatePatchSetToolStripMenuItem})
+        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.CreateDBFeaturePatchToolStripMenuItem, Me.ToolStripSeparator2, Me.RebaseFeatureHotfixToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem, Me.TestworkflowToolStripMenuItem, Me.TestrevertToolStripMenuItem, Me.TestCreatePatchSetToolStripMenuItem})
         Me.GITToolStripMenuItem1.Name = "GITToolStripMenuItem1"
         Me.GITToolStripMenuItem1.Size = New System.Drawing.Size(67, 20)
         Me.GITToolStripMenuItem1.Text = "FEATURE"
@@ -104,56 +108,60 @@ Partial Class Main
         Me.NewFeatureToolStripMenuItem.Name = "NewFeatureToolStripMenuItem"
         Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.NewFeatureToolStripMenuItem.Text = "New Feature"
+        Me.NewFeatureToolStripMenuItem.ToolTipText = "Branch Feature from Develop branch"
         '
         'CreateDBFeaturePatchToolStripMenuItem
         '
         Me.CreateDBFeaturePatchToolStripMenuItem.Name = "CreateDBFeaturePatchToolStripMenuItem"
         Me.CreateDBFeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.CreateDBFeaturePatchToolStripMenuItem.Text = "Create DB Feature Patch"
+        Me.CreateDBFeaturePatchToolStripMenuItem.ToolTipText = "Create patch includes Rebase, Merge and Push to Develop"
         '
         'RebaseFeatureHotfixToolStripMenuItem
         '
         Me.RebaseFeatureHotfixToolStripMenuItem.Name = "RebaseFeatureHotfixToolStripMenuItem"
         Me.RebaseFeatureHotfixToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.RebaseFeatureHotfixToolStripMenuItem.Text = "Rebase Feature"
+        Me.RebaseFeatureHotfixToolStripMenuItem.ToolTipText = "Rebase Feature branch on Develop branch"
         '
         'MergeAndPushFeatureToolStripMenuItem
         '
         Me.MergeAndPushFeatureToolStripMenuItem.Name = "MergeAndPushFeatureToolStripMenuItem"
         Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature"
+        Me.MergeAndPushFeatureToolStripMenuItem.ToolTipText = "Merge Feature branch to Develop branch"
         '
         'ShowindexToolStripMenuItem
         '
         Me.ShowindexToolStripMenuItem.Name = "ShowindexToolStripMenuItem"
         Me.ShowindexToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.ShowindexToolStripMenuItem.Text = "showindex"
-        Me.ShowindexToolStripMenuItem.Visible = False
+        Me.ShowindexToolStripMenuItem.Visible = false
         '
         'TestworkflowToolStripMenuItem
         '
         Me.TestworkflowToolStripMenuItem.Name = "TestworkflowToolStripMenuItem"
         Me.TestworkflowToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.TestworkflowToolStripMenuItem.Text = "testworkflow"
-        Me.TestworkflowToolStripMenuItem.Visible = False
+        Me.TestworkflowToolStripMenuItem.Visible = false
         '
         'TestrevertToolStripMenuItem
         '
         Me.TestrevertToolStripMenuItem.Name = "TestrevertToolStripMenuItem"
         Me.TestrevertToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.TestrevertToolStripMenuItem.Text = "testrevert"
-        Me.TestrevertToolStripMenuItem.Visible = False
+        Me.TestrevertToolStripMenuItem.Visible = false
         '
         'TestCreatePatchSetToolStripMenuItem
         '
         Me.TestCreatePatchSetToolStripMenuItem.Name = "TestCreatePatchSetToolStripMenuItem"
         Me.TestCreatePatchSetToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.TestCreatePatchSetToolStripMenuItem.Text = "testCreatePatchSet"
-        Me.TestCreatePatchSetToolStripMenuItem.Visible = False
+        Me.TestCreatePatchSetToolStripMenuItem.Visible = false
         '
         'HOTFIXToolStripMenuItem
         '
-        Me.HOTFIXToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HotFixToolStripComboBox, Me.NewHotFixToolStripMenuItem1, Me.CreateDBHotFixPatchToolStripMenuItem1, Me.RebaseHotFixToolStripMenuItem, Me.MergeAndPushHotfixToolStripMenuItem, Me.MultiDBHotFixPatchToolStripMenuItem})
+        Me.HOTFIXToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HotFixToolStripComboBox, Me.NewHotFixToolStripMenuItem1, Me.CreateDBHotFixPatchToolStripMenuItem1, Me.MultiDBHotFixPatchToolStripMenuItem, Me.ToolStripSeparator1, Me.RebaseHotFixToolStripMenuItem, Me.MergeAndPushHotfixToolStripMenuItem})
         Me.HOTFIXToolStripMenuItem.Name = "HOTFIXToolStripMenuItem"
         Me.HOTFIXToolStripMenuItem.Size = New System.Drawing.Size(60, 20)
         Me.HOTFIXToolStripMenuItem.Text = "HOTFIX"
@@ -196,7 +204,7 @@ Partial Class Main
         '
         'GITToolStripMenuItem
         '
-        Me.GITToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CreateDBPatchSetToolStripMenuItem, Me.CreateDBMinorReleaseToolStripMenuItem, Me.PatchRunnerToolStripMenuItem})
+        Me.GITToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CreateDBPatchSetToolStripMenuItem, Me.CreateDBMinorReleaseToolStripMenuItem, Me.ToolStripSeparator4, Me.PatchRunnerToolStripMenuItem})
         Me.GITToolStripMenuItem.Name = "GITToolStripMenuItem"
         Me.GITToolStripMenuItem.Size = New System.Drawing.Size(58, 20)
         Me.GITToolStripMenuItem.Text = "PATCH"
@@ -240,7 +248,7 @@ Partial Class Main
         '
         'APEXToolStripMenuItem
         '
-        Me.APEXToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportToolStripMenuItem, Me.Import1PageToolStripMenuItem, Me.ExportToolStripMenuItem})
+        Me.APEXToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportToolStripMenuItem, Me.ExportToolStripMenuItem, Me.ToolStripSeparator3, Me.Import1PageToolStripMenuItem})
         Me.APEXToolStripMenuItem.Name = "APEXToolStripMenuItem"
         Me.APEXToolStripMenuItem.Size = New System.Drawing.Size(47, 20)
         Me.APEXToolStripMenuItem.Text = "APEX"
@@ -248,19 +256,19 @@ Partial Class Main
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ImportToolStripMenuItem.Text = "Import Full"
         '
         'Import1PageToolStripMenuItem
         '
         Me.Import1PageToolStripMenuItem.Name = "Import1PageToolStripMenuItem"
-        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.Import1PageToolStripMenuItem.Text = "Import 1 page"
         '
         'ExportToolStripMenuItem
         '
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ExportToolStripMenuItem.Text = "Export Full"
         '
         'RELEASEToolStripMenuItem
@@ -296,7 +304,7 @@ Partial Class Main
         '
         'RepoComboBox
         '
-        Me.RepoComboBox.FormattingEnabled = True
+        Me.RepoComboBox.FormattingEnabled = true
         Me.RepoComboBox.Location = New System.Drawing.Point(103, 27)
         Me.RepoComboBox.Name = "RepoComboBox"
         Me.RepoComboBox.Size = New System.Drawing.Size(373, 21)
@@ -304,7 +312,7 @@ Partial Class Main
         '
         'Label1
         '
-        Me.Label1.AutoSize = True
+        Me.Label1.AutoSize = true
         Me.Label1.Location = New System.Drawing.Point(12, 30)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(49, 13)
@@ -313,7 +321,7 @@ Partial Class Main
         '
         'Label2
         '
-        Me.Label2.AutoSize = True
+        Me.Label2.AutoSize = true
         Me.Label2.Location = New System.Drawing.Point(25, 83)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(72, 13)
@@ -324,7 +332,7 @@ Partial Class Main
         '
         Me.CurrentBranchTextBox.Location = New System.Drawing.Point(134, 80)
         Me.CurrentBranchTextBox.Name = "CurrentBranchTextBox"
-        Me.CurrentBranchTextBox.ReadOnly = True
+        Me.CurrentBranchTextBox.ReadOnly = true
         Me.CurrentBranchTextBox.Size = New System.Drawing.Size(342, 20)
         Me.CurrentBranchTextBox.TabIndex = 4
         '
@@ -332,13 +340,13 @@ Partial Class Main
         '
         Me.RootPatchDirTextBox.Location = New System.Drawing.Point(134, 106)
         Me.RootPatchDirTextBox.Name = "RootPatchDirTextBox"
-        Me.RootPatchDirTextBox.ReadOnly = True
+        Me.RootPatchDirTextBox.ReadOnly = true
         Me.RootPatchDirTextBox.Size = New System.Drawing.Size(342, 20)
         Me.RootPatchDirTextBox.TabIndex = 6
         '
         'Label3
         '
-        Me.Label3.AutoSize = True
+        Me.Label3.AutoSize = true
         Me.Label3.Location = New System.Drawing.Point(25, 109)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(77, 13)
@@ -347,7 +355,7 @@ Partial Class Main
         '
         'Label4
         '
-        Me.Label4.AutoSize = True
+        Me.Label4.AutoSize = true
         Me.Label4.Location = New System.Drawing.Point(12, 161)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(53, 13)
@@ -356,7 +364,7 @@ Partial Class Main
         '
         'DBListComboBox
         '
-        Me.DBListComboBox.FormattingEnabled = True
+        Me.DBListComboBox.FormattingEnabled = true
         Me.DBListComboBox.Location = New System.Drawing.Point(103, 158)
         Me.DBListComboBox.Name = "DBListComboBox"
         Me.DBListComboBox.Size = New System.Drawing.Size(373, 21)
@@ -364,7 +372,7 @@ Partial Class Main
         '
         'Label5
         '
-        Me.Label5.AutoSize = True
+        Me.Label5.AutoSize = true
         Me.Label5.Location = New System.Drawing.Point(12, 214)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(59, 13)
@@ -373,7 +381,7 @@ Partial Class Main
         '
         'ApplicationListComboBox
         '
-        Me.ApplicationListComboBox.FormattingEnabled = True
+        Me.ApplicationListComboBox.FormattingEnabled = true
         Me.ApplicationListComboBox.Location = New System.Drawing.Point(103, 211)
         Me.ApplicationListComboBox.Name = "ApplicationListComboBox"
         Me.ApplicationListComboBox.Size = New System.Drawing.Size(373, 21)
@@ -383,13 +391,13 @@ Partial Class Main
         '
         Me.RootApexDirTextBox.Location = New System.Drawing.Point(134, 132)
         Me.RootApexDirTextBox.Name = "RootApexDirTextBox"
-        Me.RootApexDirTextBox.ReadOnly = True
+        Me.RootApexDirTextBox.ReadOnly = true
         Me.RootApexDirTextBox.Size = New System.Drawing.Size(342, 20)
         Me.RootApexDirTextBox.TabIndex = 12
         '
         'Label6
         '
-        Me.Label6.AutoSize = True
+        Me.Label6.AutoSize = true
         Me.Label6.Location = New System.Drawing.Point(25, 135)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(73, 13)
@@ -400,13 +408,13 @@ Partial Class Main
         '
         Me.CurrentConnectionTextBox.Location = New System.Drawing.Point(134, 185)
         Me.CurrentConnectionTextBox.Name = "CurrentConnectionTextBox"
-        Me.CurrentConnectionTextBox.ReadOnly = True
+        Me.CurrentConnectionTextBox.ReadOnly = true
         Me.CurrentConnectionTextBox.Size = New System.Drawing.Size(342, 20)
         Me.CurrentConnectionTextBox.TabIndex = 14
         '
         'Label7
         '
-        Me.Label7.AutoSize = True
+        Me.Label7.AutoSize = true
         Me.Label7.Location = New System.Drawing.Point(25, 188)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(61, 13)
@@ -417,13 +425,13 @@ Partial Class Main
         '
         Me.ParsingSchemaTextBox.Location = New System.Drawing.Point(134, 293)
         Me.ParsingSchemaTextBox.Name = "ParsingSchemaTextBox"
-        Me.ParsingSchemaTextBox.ReadOnly = True
+        Me.ParsingSchemaTextBox.ReadOnly = true
         Me.ParsingSchemaTextBox.Size = New System.Drawing.Size(342, 20)
         Me.ParsingSchemaTextBox.TabIndex = 16
         '
         'Label8
         '
-        Me.Label8.AutoSize = True
+        Me.Label8.AutoSize = true
         Me.Label8.Location = New System.Drawing.Point(25, 296)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(84, 13)
@@ -434,13 +442,13 @@ Partial Class Main
         '
         Me.BranchPathTextBox.Location = New System.Drawing.Point(134, 54)
         Me.BranchPathTextBox.Name = "BranchPathTextBox"
-        Me.BranchPathTextBox.ReadOnly = True
+        Me.BranchPathTextBox.ReadOnly = true
         Me.BranchPathTextBox.Size = New System.Drawing.Size(342, 20)
         Me.BranchPathTextBox.TabIndex = 18
         '
         'Label9
         '
-        Me.Label9.AutoSize = True
+        Me.Label9.AutoSize = true
         Me.Label9.Location = New System.Drawing.Point(25, 57)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(66, 13)
@@ -451,13 +459,13 @@ Partial Class Main
         '
         Me.MinPatchTextBox.Location = New System.Drawing.Point(103, 319)
         Me.MinPatchTextBox.Name = "MinPatchTextBox"
-        Me.MinPatchTextBox.ReadOnly = True
+        Me.MinPatchTextBox.ReadOnly = true
         Me.MinPatchTextBox.Size = New System.Drawing.Size(373, 20)
         Me.MinPatchTextBox.TabIndex = 20
         '
         'Label10
         '
-        Me.Label10.AutoSize = True
+        Me.Label10.AutoSize = true
         Me.Label10.Location = New System.Drawing.Point(12, 322)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(79, 13)
@@ -468,13 +476,13 @@ Partial Class Main
         '
         Me.ApexAppTextBox.Location = New System.Drawing.Point(134, 267)
         Me.ApexAppTextBox.Name = "ApexAppTextBox"
-        Me.ApexAppTextBox.ReadOnly = True
+        Me.ApexAppTextBox.ReadOnly = true
         Me.ApexAppTextBox.Size = New System.Drawing.Size(342, 20)
         Me.ApexAppTextBox.TabIndex = 22
         '
         'Label11
         '
-        Me.Label11.AutoSize = True
+        Me.Label11.AutoSize = true
         Me.Label11.Location = New System.Drawing.Point(25, 270)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(53, 13)
@@ -485,22 +493,42 @@ Partial Class Main
         '
         Me.AppCodeTextBox.Location = New System.Drawing.Point(134, 241)
         Me.AppCodeTextBox.Name = "AppCodeTextBox"
-        Me.AppCodeTextBox.ReadOnly = True
+        Me.AppCodeTextBox.ReadOnly = true
         Me.AppCodeTextBox.Size = New System.Drawing.Size(342, 20)
         Me.AppCodeTextBox.TabIndex = 26
         '
         'Label13
         '
-        Me.Label13.AutoSize = True
+        Me.Label13.AutoSize = true
         Me.Label13.Location = New System.Drawing.Point(25, 244)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(32, 13)
         Me.Label13.TabIndex = 25
         Me.Label13.Text = "Code"
         '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(193, 6)
+        '
+        'ToolStripSeparator2
+        '
+        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(199, 6)
+        '
+        'ToolStripSeparator3
+        '
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(149, 6)
+        '
+        'ToolStripSeparator4
+        '
+        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(200, 6)
+        '
         'Main
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(486, 350)
         Me.Controls.Add(Me.AppCodeTextBox)
@@ -528,16 +556,16 @@ Partial Class Main
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.RepoComboBox)
         Me.Controls.Add(Me.MenuStrip1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "Main"
         Me.Text = "Main"
-        Me.MenuStrip1.ResumeLayout(False)
-        Me.MenuStrip1.PerformLayout()
-        Me.ResumeLayout(False)
-        Me.PerformLayout()
+        Me.MenuStrip1.ResumeLayout(false)
+        Me.MenuStrip1.PerformLayout
+        Me.ResumeLayout(false)
+        Me.PerformLayout
 
-    End Sub
+End Sub
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents GITToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents RepoComboBox As System.Windows.Forms.ComboBox
@@ -595,5 +623,9 @@ Partial Class Main
     Friend WithEvents UninstalledToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents AllPatchesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Import1PageToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents ToolStripSeparator4 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
 
 End Class

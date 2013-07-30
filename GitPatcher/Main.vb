@@ -5,31 +5,30 @@
         loadRepos()
         loadDBs()
         loadApexApps()
-        loadHotFixBranches()
+        loadHotFixDBs()
         MinPatchTextBox.Text = My.Settings.MinPatch
+ 
     End Sub
 
 
     Private Sub HotFixToolStripComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles HotFixToolStripComboBox.SelectedIndexChanged
-
-        NewHotFixToolStripMenuItem1.Text = "New Hotfix from Branch: " & HotFixToolStripComboBox.SelectedItem
-        RebaseHotFixToolStripMenuItem.Text = "Rebase Hotfix on Branch: " & HotFixToolStripComboBox.SelectedItem
-        MergeAndPushHotfixToolStripMenuItem.Text = "Merge Hotfix to Branch: " & HotFixToolStripComboBox.SelectedItem & ", then Push"
-        CreateDBHotFixPatchToolStripMenuItem1.Text = "Create DB Hotfix Patch for Branch: " & HotFixToolStripComboBox.SelectedItem
+        NewHotFixToolStripMenuItem1.Text = "New Hotfix for DB: " & HotFixToolStripComboBox.SelectedItem
+        RebaseHotFixToolStripMenuItem.Text = "Rebase Hotfix on Branch: " & Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem)
+        MergeAndPushHotfixToolStripMenuItem.Text = "Merge Hotfix to Branch: " & Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem) & ", then Push"
+        CreateDBHotFixPatchToolStripMenuItem1.Text = "Create DB Hotfix Patch for DB: " & HotFixToolStripComboBox.SelectedItem
         MultiDBHotFixPatchToolStripMenuItem.Text = "Multi DB Hotfix Patch: " & HotFixToolStripComboBox.SelectedItem & " and Downwards"
     End Sub
 
-    Public Sub loadHotFixBranches()
+    Public Sub loadHotFixDBs()
         HotFixToolStripComboBox.Items.Clear()
-        For Each branch In My.Settings.HotFixBranches.Split(Chr(10))
-            branch = Trim(branch)
-            branch = branch.Replace(Chr(13), "")
-            If (branch.Length > 0) Then
-                HotFixToolStripComboBox.Items.Add(branch)
+        For Each DB In My.Settings.DBList.Split(Chr(10))
+            DB = Trim(DB)
+            DB = DB.Replace(Chr(13), "")
+            If Globals.deriveHotfixBranch(DB).Length Then
+                'DB has an assoc hotfix branch so list it.
+                HotFixToolStripComboBox.Items.Add(DB)
             End If
-            'If Globals.currentRepo = branch Then
-            '    RepoComboBox.SelectedIndex = RepoComboBox.Items.Count - 1
-            'End If
+  
         Next
         HotFixToolStripComboBox.SelectedIndex = 0
 
@@ -99,9 +98,9 @@
 
     End Sub
 
-    Private Sub PatchFromTagsToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        PatchFromTags.createPatchProcess("feature", "develop")
-    End Sub
+    'Private Sub PatchFromTagsToolStripMenuItem_Click(sender As Object, e As EventArgs)
+    '    PatchFromTags.createPatchProcess("feature", "DEV", Globals.deriveHotfixBranch("DEV"))
+    'End Sub
  
     Private Sub DBListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles DBListComboBox.SelectedIndexChanged
 
@@ -370,8 +369,6 @@
         Dim l_tag_base As String = Nothing
 
         rebasing.MdiParent = GitPatcher
-        rebasing.addStep("Export Apex to branch: " & currentBranchLong, True, "Using the Apex Export workflow")
-        rebasing.addStep("Use QCGU to generate changed domain data: " & currentBranchLong, True, "Think hard!  Did i change domain config?  If so, i should logon to QCGU and generate that data out. Then commit it too.")
         rebasing.addStep("Switch to " & iRebaseBranchOn & " branch")
         rebasing.addStep("Pull from Origin")
         rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & ".99A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & CurrentBranchTextBox.Text & ".99A")
@@ -388,19 +385,7 @@
         Do Until rebasing.isStarted
             Common.wait(1000)
         Loop
-
-        If rebasing.toDoNextStep() Then
-            'Export Apex to branch
-            Apex.ApexExportCommit()
-
-        End If
-
-        If rebasing.toDoNextStep() Then
-            'QCGU
-            MsgBox("Please launch QCGU and generate Domain data", MsgBoxStyle.Exclamation, "QCGU")
-
-        End If
-
+ 
         If rebasing.toDoNextStep() Then
             'Switch to develop branch
             GitBash.Switch(Globals.currentRepo, iRebaseBranchOn)
@@ -414,7 +399,7 @@
             'Tag the develop head
             l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please enter 2 digit numeric tag for next patch.", "Create Tag for next patch")
             Dim l_tagA As String = currentBranchShort & "." & l_tag_base & "A"
-            rebasing.updateStepDescription(4, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
+            rebasing.updateStepDescription(2, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
             GitBash.TagSimple(Globals.currentRepo, l_tagA)
 
         End If
@@ -433,7 +418,7 @@
         If rebasing.toDoNextStep() Then
             'Tag Branch
             Dim l_tagB As String = currentBranchShort & "." & l_tag_base & "B"
-            rebasing.updateStepDescription(7, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
+            rebasing.updateStepDescription(5, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
             GitBash.TagSimple(Globals.currentRepo, l_tagB)
 
         End If
@@ -474,7 +459,7 @@
     End Sub
 
 
-    Public Sub releaseTo(iTargetDB As String)
+    Public Sub releaseTo(iTargetDB As String, Optional ByVal iBranchType As String = "")
 
         Dim lcurrentDB As String = Globals.currentDB()
 
@@ -537,7 +522,7 @@
 
         If releasing.toDoNextStep() Then
             'Use PatchRunner to run  Uninstalled Patches
-            Dim newchildform As New PatchRunner(False, True, False)
+            Dim newchildform As New PatchRunner(False, True, False, iBranchType)
             'newchildform.MdiParent = GitPatcher
             newchildform.ShowDialog() 'NEED TO WAIT HERE!!
 
@@ -554,7 +539,7 @@
             MsgBox("Perform a quick test to verify the patched system is working in " & iTargetDB, MsgBoxStyle.Information, "Smoke Test")
 
         End If
- 
+
 
         If releasing.toDoNextStep() Then
             'Revert current DB  
@@ -585,23 +570,23 @@
     End Sub
 
     Private Sub NewHotfixToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles NewHotFixToolStripMenuItem1.Click
-        createNewBranch("hotfix", HotFixToolStripComboBox.SelectedItem)
+        createNewBranch("hotfix", Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
     End Sub
 
     Private Sub MergeAndPushHotfixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MergeAndPushHotfixToolStripMenuItem.Click
-        mergeAndPushBranch("hotfix", HotFixToolStripComboBox.SelectedItem)
+        mergeAndPushBranch("hotfix", Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
     End Sub
 
     Private Sub RebaseHotFixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseHotFixToolStripMenuItem.Click
-        rebaseBranch("hotfix", HotFixToolStripComboBox.SelectedItem)
+        rebaseBranch("hotfix", Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
     End Sub
 
     Private Sub CreateDBHotFixPatchToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CreateDBHotFixPatchToolStripMenuItem1.Click
-        PatchFromTags.createPatchProcess("hotfix", HotFixToolStripComboBox.SelectedItem)
+        PatchFromTags.createPatchProcess("hotfix", HotFixToolStripComboBox.SelectedItem, Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
     End Sub
 
     Private Sub CreateDBFeaturePatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBFeaturePatchToolStripMenuItem.Click
-        PatchFromTags.createPatchProcess("feature", "develop")
+        PatchFromTags.createPatchProcess("feature", "DEV", Globals.deriveHotfixBranch("DEV"))
     End Sub
 
     Private Sub TestCreatePatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestCreatePatchSetToolStripMenuItem.Click
@@ -612,7 +597,7 @@
 
     Private Sub MultiDBHotFixPatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MultiDBHotFixPatchToolStripMenuItem.Click
         Common.checkBranch("hotfix")
-        Dim patchThisBranch As Boolean = False
+        Dim patchThisDB As Boolean = False
         Dim multiHotFix As ProgressDialogue = New ProgressDialogue("Multi HotFix Patch for " & HotFixToolStripComboBox.SelectedItem & " Downwards")
 
         multiHotFix.MdiParent = GitPatcher
@@ -620,10 +605,10 @@
         For i = 0 To HotFixToolStripComboBox.Items.Count - 1
 
             If HotFixToolStripComboBox.Items(i) = HotFixToolStripComboBox.SelectedItem Then
-                patchThisBranch = True
+                patchThisDB = True
             End If
 
-            multiHotFix.addStep("Create a HotFix Patch for branch : " & HotFixToolStripComboBox.Items(i), patchThisBranch)
+            multiHotFix.addStep("Create a HotFix Patch for DB : " & HotFixToolStripComboBox.Items(i), patchThisDB)
 
         Next
  
@@ -636,7 +621,7 @@
         For i = 0 To HotFixToolStripComboBox.Items.Count - 1
 
             If multiHotFix.toDoNextStep() Then
-                PatchFromTags.createPatchProcess("hotfix", HotFixToolStripComboBox.Items(i))
+                PatchFromTags.createPatchProcess("hotfix", HotFixToolStripComboBox.Items(i), Globals.deriveHotfixBranch(HotFixToolStripComboBox.Items(i)))
             End If
  
         Next
@@ -668,5 +653,9 @@
 
     Private Sub Import1PageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Import1PageToolStripMenuItem.Click
         Apex.ApexImport1PageFromTag()
+    End Sub
+
+    Private Sub GITToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GITToolStripMenuItem.Click
+
     End Sub
 End Class

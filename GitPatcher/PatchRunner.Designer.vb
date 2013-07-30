@@ -26,6 +26,11 @@ Partial Class PatchRunner
         Me.PatchRunnerTabControl = New System.Windows.Forms.TabControl()
         Me.PatchSelectorTabPage = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.RadioButtonAll2 = New System.Windows.Forms.RadioButton()
+        Me.RadioButtonFeature = New System.Windows.Forms.RadioButton()
+        Me.RadioButtonPatchSet = New System.Windows.Forms.RadioButton()
+        Me.RadioButtonHotfix = New System.Windows.Forms.RadioButton()
         Me.PatchFilterGroupBox = New System.Windows.Forms.GroupBox()
         Me.RadioButtonUnapplied = New System.Windows.Forms.RadioButton()
         Me.RadioButtonAll = New System.Windows.Forms.RadioButton()
@@ -41,20 +46,15 @@ Partial Class PatchRunner
         Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.RadioButtonFeature = New System.Windows.Forms.RadioButton()
-        Me.RadioButtonPatchSet = New System.Windows.Forms.RadioButton()
-        Me.RadioButtonHotfix = New System.Windows.Forms.RadioButton()
-        Me.RadioButtonAll2 = New System.Windows.Forms.RadioButton()
         Me.PatchRunnerTabControl.SuspendLayout()
         Me.PatchSelectorTabPage.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.PatchFilterGroupBox.SuspendLayout()
         Me.RunTabPage.SuspendLayout()
-        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
         'PatchRunnerTabControl
@@ -103,12 +103,67 @@ Partial Class PatchRunner
         Me.SplitContainer1.SplitterDistance = 362
         Me.SplitContainer1.TabIndex = 0
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.RadioButtonAll2)
+        Me.GroupBox1.Controls.Add(Me.RadioButtonFeature)
+        Me.GroupBox1.Controls.Add(Me.RadioButtonPatchSet)
+        Me.GroupBox1.Controls.Add(Me.RadioButtonHotfix)
+        Me.GroupBox1.Location = New System.Drawing.Point(197, 10)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(144, 120)
+        Me.GroupBox1.TabIndex = 38
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Filter"
+        '
+        'RadioButtonAll2
+        '
+        Me.RadioButtonAll2.AutoSize = True
+        Me.RadioButtonAll2.Location = New System.Drawing.Point(27, 88)
+        Me.RadioButtonAll2.Name = "RadioButtonAll2"
+        Me.RadioButtonAll2.Size = New System.Drawing.Size(36, 17)
+        Me.RadioButtonAll2.TabIndex = 38
+        Me.RadioButtonAll2.Text = "All"
+        Me.RadioButtonAll2.UseVisualStyleBackColor = True
+        '
+        'RadioButtonFeature
+        '
+        Me.RadioButtonFeature.AutoSize = True
+        Me.RadioButtonFeature.Checked = True
+        Me.RadioButtonFeature.Location = New System.Drawing.Point(27, 19)
+        Me.RadioButtonFeature.Name = "RadioButtonFeature"
+        Me.RadioButtonFeature.Size = New System.Drawing.Size(61, 17)
+        Me.RadioButtonFeature.TabIndex = 35
+        Me.RadioButtonFeature.TabStop = True
+        Me.RadioButtonFeature.Text = "Feature"
+        Me.RadioButtonFeature.UseVisualStyleBackColor = True
+        '
+        'RadioButtonPatchSet
+        '
+        Me.RadioButtonPatchSet.AutoSize = True
+        Me.RadioButtonPatchSet.Location = New System.Drawing.Point(27, 65)
+        Me.RadioButtonPatchSet.Name = "RadioButtonPatchSet"
+        Me.RadioButtonPatchSet.Size = New System.Drawing.Size(67, 17)
+        Me.RadioButtonPatchSet.TabIndex = 37
+        Me.RadioButtonPatchSet.Text = "Patchset"
+        Me.RadioButtonPatchSet.UseVisualStyleBackColor = True
+        '
+        'RadioButtonHotfix
+        '
+        Me.RadioButtonHotfix.AutoSize = True
+        Me.RadioButtonHotfix.Location = New System.Drawing.Point(27, 42)
+        Me.RadioButtonHotfix.Name = "RadioButtonHotfix"
+        Me.RadioButtonHotfix.Size = New System.Drawing.Size(52, 17)
+        Me.RadioButtonHotfix.TabIndex = 36
+        Me.RadioButtonHotfix.Text = "Hotfix"
+        Me.RadioButtonHotfix.UseVisualStyleBackColor = True
+        '
         'PatchFilterGroupBox
         '
         Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUnapplied)
         Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonAll)
         Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUninstalled)
-        Me.PatchFilterGroupBox.Location = New System.Drawing.Point(7, 10)
+        Me.PatchFilterGroupBox.Location = New System.Drawing.Point(7, 39)
         Me.PatchFilterGroupBox.Name = "PatchFilterGroupBox"
         Me.PatchFilterGroupBox.Size = New System.Drawing.Size(144, 93)
         Me.PatchFilterGroupBox.TabIndex = 1
@@ -158,7 +213,7 @@ Partial Class PatchRunner
         '
         'SearchPatchesButton
         '
-        Me.SearchPatchesButton.Location = New System.Drawing.Point(202, 136)
+        Me.SearchPatchesButton.Location = New System.Drawing.Point(7, 10)
         Me.SearchPatchesButton.Name = "SearchPatchesButton"
         Me.SearchPatchesButton.Size = New System.Drawing.Size(139, 23)
         Me.SearchPatchesButton.TabIndex = 34
@@ -247,61 +302,6 @@ Partial Class PatchRunner
         Me.ExecutePatchButton.Text = "Execute Patches"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'GroupBox1
-        '
-        Me.GroupBox1.Controls.Add(Me.RadioButtonAll2)
-        Me.GroupBox1.Controls.Add(Me.RadioButtonFeature)
-        Me.GroupBox1.Controls.Add(Me.RadioButtonPatchSet)
-        Me.GroupBox1.Controls.Add(Me.RadioButtonHotfix)
-        Me.GroupBox1.Location = New System.Drawing.Point(197, 10)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(144, 120)
-        Me.GroupBox1.TabIndex = 38
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Filter"
-        '
-        'RadioButtonFeature
-        '
-        Me.RadioButtonFeature.AutoSize = True
-        Me.RadioButtonFeature.Checked = True
-        Me.RadioButtonFeature.Location = New System.Drawing.Point(27, 19)
-        Me.RadioButtonFeature.Name = "RadioButtonFeature"
-        Me.RadioButtonFeature.Size = New System.Drawing.Size(61, 17)
-        Me.RadioButtonFeature.TabIndex = 35
-        Me.RadioButtonFeature.TabStop = True
-        Me.RadioButtonFeature.Text = "Feature"
-        Me.RadioButtonFeature.UseVisualStyleBackColor = True
-        '
-        'RadioButtonPatchSet
-        '
-        Me.RadioButtonPatchSet.AutoSize = True
-        Me.RadioButtonPatchSet.Location = New System.Drawing.Point(27, 65)
-        Me.RadioButtonPatchSet.Name = "RadioButtonPatchSet"
-        Me.RadioButtonPatchSet.Size = New System.Drawing.Size(67, 17)
-        Me.RadioButtonPatchSet.TabIndex = 37
-        Me.RadioButtonPatchSet.Text = "Patchset"
-        Me.RadioButtonPatchSet.UseVisualStyleBackColor = True
-        '
-        'RadioButtonHotfix
-        '
-        Me.RadioButtonHotfix.AutoSize = True
-        Me.RadioButtonHotfix.Location = New System.Drawing.Point(27, 42)
-        Me.RadioButtonHotfix.Name = "RadioButtonHotfix"
-        Me.RadioButtonHotfix.Size = New System.Drawing.Size(52, 17)
-        Me.RadioButtonHotfix.TabIndex = 36
-        Me.RadioButtonHotfix.Text = "Hotfix"
-        Me.RadioButtonHotfix.UseVisualStyleBackColor = True
-        '
-        'RadioButtonAll2
-        '
-        Me.RadioButtonAll2.AutoSize = True
-        Me.RadioButtonAll2.Location = New System.Drawing.Point(27, 88)
-        Me.RadioButtonAll2.Name = "RadioButtonAll2"
-        Me.RadioButtonAll2.Size = New System.Drawing.Size(36, 17)
-        Me.RadioButtonAll2.TabIndex = 38
-        Me.RadioButtonAll2.Text = "All"
-        Me.RadioButtonAll2.UseVisualStyleBackColor = True
-        '
         'PatchRunner
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -319,12 +319,12 @@ Partial Class PatchRunner
         Me.SplitContainer1.Panel2.PerformLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.PatchFilterGroupBox.ResumeLayout(False)
         Me.PatchFilterGroupBox.PerformLayout()
         Me.RunTabPage.ResumeLayout(False)
         Me.RunTabPage.PerformLayout()
-        Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub

@@ -142,10 +142,9 @@
         Dim l_Index As Integer = -1
         For Each db In My.Settings.DBList.Split(Chr(10))
             l_Index = l_Index + 1
-            db = Trim(db)
-            db = db.Replace(Chr(13), "")
+            db = Trim(db).Replace(Chr(13), "")
             If db = gDB Then
-                Return My.Settings.ConnectionList.Split(Chr(10))(l_Index)
+                Return Trim(My.Settings.ConnectionList.Split(Chr(10))(l_Index)).Replace(Chr(13), "")
             End If
         Next
         Return ""
@@ -156,10 +155,9 @@
         Dim l_Index As Integer = -1
         For Each db In My.Settings.DBList.Split(Chr(10))
             l_Index = l_Index + 1
-            db = Trim(db)
-            db = db.Replace(Chr(13), "")
+            db = Trim(db).Replace(Chr(13), "")
             If db = gDB Then
-                Return My.Settings.TNSList.Split(Chr(10))(l_Index)
+                Return Trim(My.Settings.TNSList.Split(Chr(10))(l_Index)).Replace(Chr(13), "")
             End If
         Next
         Return ""
@@ -174,10 +172,14 @@
         Dim l_Index As Integer = -1
         For Each db In My.Settings.DBList.Split(Chr(10))
             l_Index = l_Index + 1
-            db = Trim(db)
-            db = db.Replace(Chr(13), "")
+            db = Trim(db).Replace(Chr(13), "")
             If db = iDb Then
-                Return My.Settings.HotFixBranches.Split(Chr(10))(l_Index)
+                Try
+                    Return Trim(My.Settings.HotFixBranches.Split(Chr(10))(l_Index)).Replace(Chr(13), "")
+                Catch e As System.IndexOutOfRangeException
+                    Return ""
+                End Try
+
             End If
         Next
         Return ""

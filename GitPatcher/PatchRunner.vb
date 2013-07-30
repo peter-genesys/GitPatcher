@@ -2,17 +2,29 @@
 
 Public Class PatchRunner
 
+    Dim hotFixTargetDBFilter As String = Nothing
 
-
-    Public Sub New(ByVal iUnapplied As Boolean, ByVal iUninstalled As Boolean, ByVal iAll As Boolean)
+    Public Sub New(ByVal iUnapplied As Boolean, ByVal iUninstalled As Boolean, ByVal iAll As Boolean, Optional ByVal iBranchType As String = "")
         InitializeComponent()
         RadioButtonUnapplied.Checked = iUnapplied
         RadioButtonUninstalled.Checked = iUninstalled
         RadioButtonAll.Checked = iAll
         PatchFilterGroupBox.Text = Globals.currentTNS & " Search Criteria"
+
+
+        hotFixTargetDBFilter = Globals.currentDB()
+        If hotFixTargetDBFilter = "VM" Then
+            hotFixTargetDBFilter = "DEV"
+        End If
+
+        RadioButtonHotfix.Text = "Hotfixes for " & hotFixTargetDBFilter
+
+        If iBranchType = "" Then
+            iBranchType = Globals.getPatchRunnerFilter
+        End If
  
-        Logger.Note("Globals.getPatchRunnerFilter", Globals.getPatchRunnerFilter)
-        Select Case Globals.getPatchRunnerFilter
+        Logger.Note("iBranchType", iBranchType)
+        Select Case iBranchType
             Case "feature"
                 RadioButtonFeature.Checked = True
             Case "hotfix"
@@ -20,6 +32,8 @@ Public Class PatchRunner
             Case "patchset"
                 RadioButtonPatchSet.Checked = True
             Case "all"
+                RadioButtonAll2.Checked = True
+            Case Else
                 RadioButtonAll2.Checked = True
         End Select
 
@@ -95,9 +109,22 @@ Public Class PatchRunner
 
                     'Check whether the patch has been successfully installed.
                     patchMatch = False
-
+                    Dim lPatchName As String = Common.getLastSegment(foundPatches.Items(i), "\")
     
-                    sql = "select max(patch_name) patch_name from patches where patch_name = '" & Common.getLastSegment(foundPatches.Items(i), "\") & "' and success_yn = 'Y'"
+                    sql = "select max(patch_name) patch_name from patches where patch_name = '" & lPatchName & "' and success_yn = 'Y' "
+
+                    'sql = "select max(patch_name) patch_name from ( " _
+                    '    & "select patch_name from patches " _
+                    '    & "where patch_name = '" & lPatchName & "' " _
+                    '    & "and success_yn = 'Y' " _
+                    '    & "UNION " _
+                    '    & "select ps.supersedes_patch " _
+                    '    & "from patch_supersedes ps, " _
+                    '    & "patches p " _
+                    '    & "where p.patch_name = ps.patch_name " _
+                    '    & "and p.success_yn = 'Y' " _
+                    '    & "and  ps.supersedes_patch = '" & lPatchName & "') "
+
  
 
                     cmd = New OracleCommand(sql, conn)
@@ -120,8 +147,8 @@ Public Class PatchRunner
                 Next
 
 
-                conn.Close()   ' Visual Basic
-                conn.Dispose() ' Visual Basic
+                conn.Close()
+                conn.Dispose()
 
 
             Catch ex As Exception ' catches any error
@@ -192,8 +219,8 @@ Public Class PatchRunner
 
             End While
 
-            conn.Close()   ' Visual Basic
-            conn.Dispose() ' Visual Basic
+            conn.Close()
+            conn.Dispose()
 
 
         Catch ex As Exception ' catches any error
@@ -213,10 +240,11 @@ Public Class PatchRunner
 
     Private Sub filterPatchType(ByRef foundPatches As ListBox)
 
+ 
         Dim searchTerm As String = "all"
         If Not RadioButtonAll2.Checked And foundPatches.Items.Count > 0 Then
 
- 
+
             If RadioButtonFeature.Checked Then
                 searchTerm = "feature"
             ElseIf RadioButtonHotfix.Checked Then
@@ -224,13 +252,24 @@ Public Class PatchRunner
             ElseIf RadioButtonPatchSet.Checked Then
                 searchTerm = "patchset"
             End If
- 
+
             For i As Integer = foundPatches.Items.Count - 1 To 0 Step -1
                 If Not foundPatches.Items(i).contains(searchTerm) Then
                     'This patch does not match the filter and will be removed from the list
                     foundPatches.Items.RemoveAt(i)
+
+                ElseIf foundPatches.Items(i).contains("hotfix") And Not foundPatches.Items(i).contains("_" & hotFixTargetDBFilter) Then
+                    'Filter out hotfixes that do not match the current database
+                    foundPatches.Items.RemoveAt(i)
                 End If
+
+
             Next
+
+
+
+
+
 
 
             If foundPatches.Items.Count = 0 Then
