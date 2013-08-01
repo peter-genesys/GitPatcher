@@ -270,6 +270,10 @@
 
         End If
 
+        'Close and Open Main window to refresh it.
+        Me.Close()
+        GitPatcher.newMainWindow()
+
     End Sub
 
     Private Sub NewFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewFeatureToolStripMenuItem.Click

@@ -85,10 +85,14 @@ Public Class GitPatcher
 
     Private m_ChildFormNumber As Integer
 
-    Private Sub MainToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MainToolStripMenuItem.Click
+    Public Sub newMainWindow()
         Dim newchildform As New Main
         newchildform.MdiParent = Me ' 
         newchildform.Show()
+    End Sub
+
+    Private Sub MainToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MainToolStripMenuItem.Click
+        newMainWindow()
     End Sub
 
     Private Sub ConfigToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ConfigToolStripMenuItem.Click
@@ -102,7 +106,7 @@ Public Class GitPatcher
     End Sub
 
     Private Sub SQLplusToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SQLplusToolStripMenuItem.Click
- 
+
         Host.executeSQLplus(Globals.currentRepo, Main.get_connect_string(Globals.currentParsingSchema, Globals.currentTNS), False)
     End Sub
 End Class
