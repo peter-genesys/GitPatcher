@@ -41,6 +41,7 @@ Partial Class Config
         Dim Label18 As System.Windows.Forms.Label
         Dim Label16 As System.Windows.Forms.Label
         Dim Label20 As System.Windows.Forms.Label
+        Dim Label21 As System.Windows.Forms.Label
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Config))
         Me.MailTabPage = New System.Windows.Forms.TabPage()
         Me.TestMailButton = New System.Windows.Forms.Button()
@@ -61,8 +62,9 @@ Partial Class Config
         Me.ApexOffsetTextBox = New System.Windows.Forms.TextBox()
         Me.PatchOffsetTextBox = New System.Windows.Forms.TextBox()
         Me.DBTabPage = New System.Windows.Forms.TabPage()
-        Me.Label19 = New System.Windows.Forms.Label()
+        Me.TNSListTextbox = New System.Windows.Forms.TextBox()
         Me.HotFixBranchesTextBox = New System.Windows.Forms.TextBox()
+        Me.Label19 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.ConnectionTextBox = New System.Windows.Forms.TextBox()
         Me.DBListTextBox = New System.Windows.Forms.TextBox()
@@ -70,7 +72,7 @@ Partial Class Config
         Me.RepoListTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.TNSListTextbox = New System.Windows.Forms.TextBox()
+        Me.DBOffsetTextBox = New System.Windows.Forms.TextBox()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -89,6 +91,7 @@ Partial Class Config
         Label18 = New System.Windows.Forms.Label()
         Label16 = New System.Windows.Forms.Label()
         Label20 = New System.Windows.Forms.Label()
+        Label21 = New System.Windows.Forms.Label()
         Me.MailTabPage.SuspendLayout()
         Me.AppsTabPage.SuspendLayout()
         Me.PatchTabPage.SuspendLayout()
@@ -164,7 +167,7 @@ Partial Class Config
         'Label10
         '
         Label10.AutoSize = True
-        Label10.Location = New System.Drawing.Point(5, 98)
+        Label10.Location = New System.Drawing.Point(5, 142)
         Label10.Name = "Label10"
         Label10.Size = New System.Drawing.Size(75, 13)
         Label10.TabIndex = 12
@@ -173,7 +176,7 @@ Partial Class Config
         'Label4
         '
         Label4.AutoSize = True
-        Label4.Location = New System.Drawing.Point(5, 140)
+        Label4.Location = New System.Drawing.Point(5, 184)
         Label4.Name = "Label4"
         Label4.Size = New System.Drawing.Size(76, 13)
         Label4.TabIndex = 8
@@ -236,7 +239,7 @@ Partial Class Config
         'Label18
         '
         Label18.AutoSize = True
-        Label18.Location = New System.Drawing.Point(5, 184)
+        Label18.Location = New System.Drawing.Point(5, 228)
         Label18.Name = "Label18"
         Label18.Size = New System.Drawing.Size(68, 13)
         Label18.TabIndex = 14
@@ -250,6 +253,15 @@ Partial Class Config
         Label16.Size = New System.Drawing.Size(77, 13)
         Label16.TabIndex = 8
         Label16.Text = "HotFix Branch:"
+        '
+        'Label20
+        '
+        Label20.AutoSize = True
+        Label20.Location = New System.Drawing.Point(183, 16)
+        Label20.Name = "Label20"
+        Label20.Size = New System.Drawing.Size(51, 13)
+        Label20.TabIndex = 14
+        Label20.Text = "TNS List:"
         '
         'MailTabPage
         '
@@ -369,6 +381,8 @@ Partial Class Config
         '
         'PatchTabPage
         '
+        Me.PatchTabPage.Controls.Add(Me.DBOffsetTextBox)
+        Me.PatchTabPage.Controls.Add(Label21)
         Me.PatchTabPage.Controls.Add(Me.GitExeTextBox)
         Me.PatchTabPage.Controls.Add(Label18)
         Me.PatchTabPage.Controls.Add(Me.SQLpathTextBox)
@@ -389,21 +403,21 @@ Partial Class Config
         '
         'GitExeTextBox
         '
-        Me.GitExeTextBox.Location = New System.Drawing.Point(8, 200)
+        Me.GitExeTextBox.Location = New System.Drawing.Point(8, 244)
         Me.GitExeTextBox.Name = "GitExeTextBox"
         Me.GitExeTextBox.Size = New System.Drawing.Size(444, 20)
         Me.GitExeTextBox.TabIndex = 15
         '
         'SQLpathTextBox
         '
-        Me.SQLpathTextBox.Location = New System.Drawing.Point(8, 156)
+        Me.SQLpathTextBox.Location = New System.Drawing.Point(8, 200)
         Me.SQLpathTextBox.Name = "SQLpathTextBox"
         Me.SQLpathTextBox.Size = New System.Drawing.Size(444, 20)
         Me.SQLpathTextBox.TabIndex = 9
         '
         'OJDBCjarFileTextBox
         '
-        Me.OJDBCjarFileTextBox.Location = New System.Drawing.Point(8, 114)
+        Me.OJDBCjarFileTextBox.Location = New System.Drawing.Point(8, 158)
         Me.OJDBCjarFileTextBox.Name = "OJDBCjarFileTextBox"
         Me.OJDBCjarFileTextBox.Size = New System.Drawing.Size(444, 20)
         Me.OJDBCjarFileTextBox.TabIndex = 13
@@ -442,14 +456,13 @@ Partial Class Config
         Me.DBTabPage.Text = "Databases"
         Me.DBTabPage.UseVisualStyleBackColor = True
         '
-        'Label19
+        'TNSListTextbox
         '
-        Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(6, 264)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(232, 13)
-        Me.Label19.TabIndex = 13
-        Me.Label19.Text = "Provide a Hotfix Branch, if applicable for the DB"
+        Me.TNSListTextbox.Location = New System.Drawing.Point(186, 32)
+        Me.TNSListTextbox.Multiline = True
+        Me.TNSListTextbox.Name = "TNSListTextbox"
+        Me.TNSListTextbox.Size = New System.Drawing.Size(83, 208)
+        Me.TNSListTextbox.TabIndex = 15
         '
         'HotFixBranchesTextBox
         '
@@ -459,6 +472,15 @@ Partial Class Config
         Me.HotFixBranchesTextBox.Name = "HotFixBranchesTextBox"
         Me.HotFixBranchesTextBox.Size = New System.Drawing.Size(83, 208)
         Me.HotFixBranchesTextBox.TabIndex = 9
+        '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.Location = New System.Drawing.Point(6, 264)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(232, 13)
+        Me.Label19.TabIndex = 13
+        Me.Label19.Text = "Provide a Hotfix Branch, if applicable for the DB"
         '
         'Label6
         '
@@ -524,22 +546,21 @@ Partial Class Config
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
         '
-        'TNSListTextbox
+        'DBOffsetTextBox
         '
-        Me.TNSListTextbox.Location = New System.Drawing.Point(186, 32)
-        Me.TNSListTextbox.Multiline = True
-        Me.TNSListTextbox.Name = "TNSListTextbox"
-        Me.TNSListTextbox.Size = New System.Drawing.Size(83, 208)
-        Me.TNSListTextbox.TabIndex = 15
+        Me.DBOffsetTextBox.Location = New System.Drawing.Point(8, 119)
+        Me.DBOffsetTextBox.Name = "DBOffsetTextBox"
+        Me.DBOffsetTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.DBOffsetTextBox.TabIndex = 17
         '
-        'Label20
+        'Label21
         '
-        Label20.AutoSize = True
-        Label20.Location = New System.Drawing.Point(183, 16)
-        Label20.Name = "Label20"
-        Label20.Size = New System.Drawing.Size(51, 13)
-        Label20.TabIndex = 14
-        Label20.Text = "TNS List:"
+        Label21.AutoSize = True
+        Label21.Location = New System.Drawing.Point(5, 103)
+        Label21.Name = "Label21"
+        Label21.Size = New System.Drawing.Size(139, 13)
+        Label21.TabIndex = 16
+        Label21.Text = "Database Dir Relative Path:"
         '
         'Config
         '
@@ -594,4 +615,5 @@ Partial Class Config
     Friend WithEvents HotFixBranchesTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label19 As System.Windows.Forms.Label
     Friend WithEvents TNSListTextbox As System.Windows.Forms.TextBox
+    Friend WithEvents DBOffsetTextBox As System.Windows.Forms.TextBox
 End Class

@@ -15,6 +15,9 @@
         'Paths
         PatchOffsetTextBox.DataBindings.Add("Text", My.Settings, "PatchDirOffset")
         ApexOffsetTextBox.DataBindings.Add("Text", My.Settings, "ApexDirOffset")
+        DBOffsetTextBox.DataBindings.Add("Text", My.Settings, "DBDirOffset")
+
+
         OJDBCjarFileTextBox.DataBindings.Add("Text", My.Settings, "JDBCjar")
         SQLpathTextBox.DataBindings.Add("Text", My.Settings, "SQLpath")
         GitExeTextBox.DataBindings.Add("Text", My.Settings, "GITpath")

@@ -95,5 +95,8 @@ VM</Value>
     <Setting Name="PatchRunnerFilter" Type="System.String" Scope="User">
       <Value Profile="(Default)">feature</Value>
     </Setting>
+    <Setting Name="DBDirOffset" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\database</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

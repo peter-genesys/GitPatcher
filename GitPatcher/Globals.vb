@@ -62,6 +62,13 @@
         Return gRepo & My.Settings.ApexDirOffset & "\"
     End Function
 
+    Public Function RootDBDir() As String
+
+
+        Return gRepo & My.Settings.DBDirOffset & "\"
+
+    End Function
+
 
     Public Function currentApplication() As String
 

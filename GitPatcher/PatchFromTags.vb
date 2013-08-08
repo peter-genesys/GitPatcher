@@ -61,6 +61,21 @@ Public Class PatchFromTags
 
     End Sub
 
+
+    Private Sub exportExtraFiles(ByRef extrasListBox As ListBox, ByRef filenames As Collection, ByVal patch_dir As String)
+
+        Dim Filename As String = Nothing
+        For i As Integer = 0 To extrasListBox.Items.Count - 1
+            Filename = Common.getLastSegment(extrasListBox.Items(i), "\")
+
+            My.Computer.FileSystem.CopyFile(extrasListBox.Items(i), patch_dir & "\" & Filename, True)
+
+            filenames.Add(Filename)
+ 
+        Next
+  
+    End Sub
+
     Private Sub PatchButton_Click(sender As Object, e As EventArgs) Handles PatchButton.Click
 
         'Create Patch Dir
@@ -88,6 +103,12 @@ Public Class PatchFromTags
         Dim filenames As Collection = Nothing
 
         filenames = GitSharpFascade.exportTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ChangesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
+
+        'Additional file exports 
+
+        exportExtraFiles(ExtrasListBox, filenames, PatchDirTextBox.Text)
+ 
+        'Add to filenames too
 
         'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
@@ -641,7 +662,7 @@ Public Class PatchFromTags
 
 
         End If
- 
+
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
             'Copy Patchable items to the next list.
@@ -700,7 +721,7 @@ Public Class PatchFromTags
     End Sub
 
 
-    Private Sub FindPatches(ByRef foundPatches As CheckedListBox, byval restrictToBranch as boolean)
+    Private Sub FindPatches(ByRef foundPatches As CheckedListBox, ByVal restrictToBranch As Boolean)
         foundPatches.Items.Clear()
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
@@ -720,7 +741,7 @@ Public Class PatchFromTags
     End Sub
 
 
- 
+
 
     Private Sub FindPreReqs()
         FindPatches(PrereqsCheckedListBox, RestrictPreReqToBranchCheckBox.Checked)
@@ -731,7 +752,7 @@ Public Class PatchFromTags
         FindPreReqs()
 
     End Sub
- 
+
     Private Sub FindSuper()
         FindPatches(SupersedesCheckedListBox, RestrictSupToBranchCheckBox.Checked)
     End Sub
@@ -851,7 +872,7 @@ Public Class PatchFromTags
             'newchildform.MdiParent = GitPatcher
             Wizard.ShowDialog() 'NEED TO WAIT HERE!!
 
- 
+
         End If
 
 
@@ -915,5 +936,69 @@ Public Class PatchFromTags
 
     Private Sub SupByButton_Click(sender As Object, e As EventArgs) Handles SupByButton.Click
         FindSuperBy()
+    End Sub
+
+
+
+    Private Sub PopulateTreeView(ByVal dir As String, ByVal parentNode As TreeNode)
+        Dim folder As String = String.Empty
+        Try
+            Dim folders() As String = IO.Directory.GetDirectories(dir)
+            If folders.Length <> 0 Then
+                Dim childNode As TreeNode = Nothing
+                For Each folder In folders
+                    childNode = New TreeNode(folder) 'translate to relative URL
+                    parentNode.Nodes.Add(childNode)
+                    PopulateTreeView(folder, childNode)
+
+                    Dim files() As String = System.IO.Directory.GetFiles(folder) ', strPattern)
+                    Dim grandchildNode As TreeNode = Nothing
+                    For Each file In files
+                        grandchildNode = New TreeNode(file) 'translate to relative URL
+                        childNode.Nodes.Add(grandchildNode)
+                        'PopulateTreeView(folder, childNode)
+                    Next
+
+                Next
+            End If
+        Catch ex As UnauthorizedAccessException
+            parentNode.Nodes.Add(folder & ": Access Denied")
+        End Try
+    End Sub
+
+
+
+    Private Sub ButtonFindFiles_Click(sender As Object, e As EventArgs) Handles ButtonFindFiles.Click
+        'Get a list of drives
+        Dim drives As System.Collections.ObjectModel.ReadOnlyCollection(Of IO.DriveInfo) = My.Computer.FileSystem.Drives
+        Dim rootDir As String = Globals.RootDBDir()
+        'Add this drive as a root node
+        TreeViewFiles.Nodes.Add(rootDir)
+        'Populate this root node
+        PopulateTreeView(rootDir, TreeViewFiles.Nodes(0))
+
+
+        ''Now loop thru each drive and populate the treeview
+        'For i As Integer = 0 To drives.Count - 1
+        '    rootDir = drives(i).Name
+        '    'Add this drive as a root node
+        '    TreeViewFiles.Nodes.Add(rootDir)
+        '    'Populate this root node
+        '    PopulateTreeView(rootDir, TreeViewFiles.Nodes(i))
+        'Next
+    End Sub
+
+    Private Sub TreeViewFiles_DoubleClick(sender As Object, e As MouseEventArgs) Handles TreeViewFiles.DoubleClick
+        'ChangesCheckedListBox.Items.Add(TreeViewFiles.SelectedNode.Text)
+        ExtrasListBox.Items.Add(TreeViewFiles.SelectedNode.Text)
+        MsgBox("Added " & TreeViewFiles.SelectedNode.Text & " to Extras")
+
+    End Sub
+
+
+    Private Sub ExtrasListBox_Click(sender As Object, e As EventArgs) Handles ExtrasListBox.Click
+        If ExtrasListBox.Items.Count > 0 Then
+            ExtrasListBox.Items.RemoveAt(ExtrasListBox.SelectedIndex)
+        End If
     End Sub
 End Class

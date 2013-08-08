@@ -78,22 +78,30 @@ Partial Class PatchFromTags
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.PatchTabControl = New System.Windows.Forms.TabControl()
+        Me.TabPageExtras = New System.Windows.Forms.TabPage()
+        Me.ButtonFindFiles = New System.Windows.Forms.Button()
+        Me.TreeViewFiles = New System.Windows.Forms.TreeView()
         Me.TabPageSuperBy = New System.Windows.Forms.TabPage()
         Me.RestrictSupByToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.SupByButton = New System.Windows.Forms.Button()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.SupersededByCheckedListBox = New System.Windows.Forms.CheckedListBox()
+        Me.ExtrasListBox = New System.Windows.Forms.ListBox()
+        Me.Label20 = New System.Windows.Forms.Label()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPageSuper.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
         Me.TabPageChanges.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.PatchTabControl.SuspendLayout()
+        Me.TabPageExtras.SuspendLayout()
         Me.TabPageSuperBy.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabPagePatchDefn
         '
+        Me.TabPagePatchDefn.Controls.Add(Me.Label20)
+        Me.TabPagePatchDefn.Controls.Add(Me.ExtrasListBox)
         Me.TabPagePatchDefn.Controls.Add(Me.ComitButton)
         Me.TabPagePatchDefn.Controls.Add(Me.TrackPromoCheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.PatchPathTextBox)
@@ -250,7 +258,7 @@ Partial Class PatchFromTags
         Me.PatchableCheckedListBox.FormattingEnabled = True
         Me.PatchableCheckedListBox.Location = New System.Drawing.Point(80, 76)
         Me.PatchableCheckedListBox.Name = "PatchableCheckedListBox"
-        Me.PatchableCheckedListBox.Size = New System.Drawing.Size(394, 334)
+        Me.PatchableCheckedListBox.Size = New System.Drawing.Size(394, 274)
         Me.PatchableCheckedListBox.TabIndex = 26
         '
         'Label8
@@ -629,6 +637,7 @@ Partial Class PatchFromTags
         '
         Me.PatchTabControl.Controls.Add(Me.TabPageTags)
         Me.PatchTabControl.Controls.Add(Me.TabPageChanges)
+        Me.PatchTabControl.Controls.Add(Me.TabPageExtras)
         Me.PatchTabControl.Controls.Add(Me.TabPagePreReqs)
         Me.PatchTabControl.Controls.Add(Me.TabPageSuper)
         Me.PatchTabControl.Controls.Add(Me.TabPageSuperBy)
@@ -638,6 +647,34 @@ Partial Class PatchFromTags
         Me.PatchTabControl.SelectedIndex = 0
         Me.PatchTabControl.Size = New System.Drawing.Size(550, 711)
         Me.PatchTabControl.TabIndex = 18
+        '
+        'TabPageExtras
+        '
+        Me.TabPageExtras.Controls.Add(Me.ButtonFindFiles)
+        Me.TabPageExtras.Controls.Add(Me.TreeViewFiles)
+        Me.TabPageExtras.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageExtras.Name = "TabPageExtras"
+        Me.TabPageExtras.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPageExtras.Size = New System.Drawing.Size(542, 685)
+        Me.TabPageExtras.TabIndex = 6
+        Me.TabPageExtras.Text = "Extra Files"
+        Me.TabPageExtras.UseVisualStyleBackColor = True
+        '
+        'ButtonFindFiles
+        '
+        Me.ButtonFindFiles.Location = New System.Drawing.Point(77, 17)
+        Me.ButtonFindFiles.Name = "ButtonFindFiles"
+        Me.ButtonFindFiles.Size = New System.Drawing.Size(139, 23)
+        Me.ButtonFindFiles.TabIndex = 5
+        Me.ButtonFindFiles.Text = "Find Files"
+        Me.ButtonFindFiles.UseVisualStyleBackColor = True
+        '
+        'TreeViewFiles
+        '
+        Me.TreeViewFiles.Location = New System.Drawing.Point(77, 76)
+        Me.TreeViewFiles.Name = "TreeViewFiles"
+        Me.TreeViewFiles.Size = New System.Drawing.Size(397, 529)
+        Me.TreeViewFiles.TabIndex = 0
         '
         'TabPageSuperBy
         '
@@ -689,6 +726,23 @@ Partial Class PatchFromTags
         Me.SupersededByCheckedListBox.Size = New System.Drawing.Size(397, 529)
         Me.SupersededByCheckedListBox.TabIndex = 36
         '
+        'ExtrasListBox
+        '
+        Me.ExtrasListBox.FormattingEnabled = True
+        Me.ExtrasListBox.Location = New System.Drawing.Point(80, 359)
+        Me.ExtrasListBox.Name = "ExtrasListBox"
+        Me.ExtrasListBox.Size = New System.Drawing.Size(394, 43)
+        Me.ExtrasListBox.TabIndex = 36
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(12, 359)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(36, 13)
+        Me.Label20.TabIndex = 37
+        Me.Label20.Text = "Extras"
+        '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -709,6 +763,7 @@ Partial Class PatchFromTags
         Me.TabPageTags.ResumeLayout(False)
         Me.TabPageTags.PerformLayout()
         Me.PatchTabControl.ResumeLayout(False)
+        Me.TabPageExtras.ResumeLayout(False)
         Me.TabPageSuperBy.ResumeLayout(False)
         Me.TabPageSuperBy.PerformLayout()
         Me.ResumeLayout(False)
@@ -774,4 +829,9 @@ Partial Class PatchFromTags
     Friend WithEvents SupByButton As System.Windows.Forms.Button
     Friend WithEvents Label19 As System.Windows.Forms.Label
     Friend WithEvents SupersededByCheckedListBox As System.Windows.Forms.CheckedListBox
+    Friend WithEvents TabPageExtras As System.Windows.Forms.TabPage
+    Friend WithEvents TreeViewFiles As System.Windows.Forms.TreeView
+    Friend WithEvents ButtonFindFiles As System.Windows.Forms.Button
+    Friend WithEvents Label20 As System.Windows.Forms.Label
+    Friend WithEvents ExtrasListBox As System.Windows.Forms.ListBox
 End Class
