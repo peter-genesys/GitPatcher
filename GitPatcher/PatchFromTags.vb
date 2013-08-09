@@ -65,15 +65,16 @@ Public Class PatchFromTags
     Private Sub exportExtraFiles(ByRef extrasListBox As ListBox, ByRef filenames As Collection, ByVal patch_dir As String)
 
         Dim Filename As String = Nothing
-        For i As Integer = 0 To extrasListBox.Items.Count - 1
-            Filename = Common.getLastSegment(extrasListBox.Items(i), "\")
+        If extrasListBox.Items.Count > 0 Then
+            For i As Integer = 0 To extrasListBox.Items.Count - 1
+                Filename = Common.getLastSegment(extrasListBox.Items(i), "\")
 
-            My.Computer.FileSystem.CopyFile(extrasListBox.Items(i), patch_dir & "\" & Filename, True)
+                My.Computer.FileSystem.CopyFile(extrasListBox.Items(i), patch_dir & "\" & Filename, True)
 
-            filenames.Add(Filename)
- 
-        Next
-  
+                filenames.Add(Filename)
+
+            Next
+        End If
     End Sub
 
     Private Sub PatchButton_Click(sender As Object, e As EventArgs) Handles PatchButton.Click
