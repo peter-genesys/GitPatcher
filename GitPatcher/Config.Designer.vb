@@ -42,6 +42,7 @@ Partial Class Config
         Dim Label16 As System.Windows.Forms.Label
         Dim Label20 As System.Windows.Forms.Label
         Dim Label21 As System.Windows.Forms.Label
+        Dim Label22 As System.Windows.Forms.Label
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Config))
         Me.MailTabPage = New System.Windows.Forms.TabPage()
         Me.TestMailButton = New System.Windows.Forms.Button()
@@ -56,6 +57,7 @@ Partial Class Config
         Me.ParsingSchemaTextbox = New System.Windows.Forms.TextBox()
         Me.AppListTextBox = New System.Windows.Forms.TextBox()
         Me.PatchTabPage = New System.Windows.Forms.TabPage()
+        Me.DBOffsetTextBox = New System.Windows.Forms.TextBox()
         Me.GitExeTextBox = New System.Windows.Forms.TextBox()
         Me.SQLpathTextBox = New System.Windows.Forms.TextBox()
         Me.OJDBCjarFileTextBox = New System.Windows.Forms.TextBox()
@@ -72,7 +74,8 @@ Partial Class Config
         Me.RepoListTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.DBOffsetTextBox = New System.Windows.Forms.TextBox()
+        Me.ExtrasTabPage = New System.Windows.Forms.TabPage()
+        Me.ExtrasDirListTextBox = New System.Windows.Forms.TextBox()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -92,6 +95,7 @@ Partial Class Config
         Label16 = New System.Windows.Forms.Label()
         Label20 = New System.Windows.Forms.Label()
         Label21 = New System.Windows.Forms.Label()
+        Label22 = New System.Windows.Forms.Label()
         Me.MailTabPage.SuspendLayout()
         Me.AppsTabPage.SuspendLayout()
         Me.PatchTabPage.SuspendLayout()
@@ -99,6 +103,7 @@ Partial Class Config
         Me.TabPageGitRepo.SuspendLayout()
         Me.ConfigTabs.SuspendLayout()
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ExtrasTabPage.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label11
@@ -263,6 +268,15 @@ Partial Class Config
         Label20.TabIndex = 14
         Label20.Text = "TNS List:"
         '
+        'Label21
+        '
+        Label21.AutoSize = True
+        Label21.Location = New System.Drawing.Point(5, 103)
+        Label21.Name = "Label21"
+        Label21.Size = New System.Drawing.Size(139, 13)
+        Label21.TabIndex = 16
+        Label21.Text = "Database Dir Relative Path:"
+        '
         'MailTabPage
         '
         Me.MailTabPage.Controls.Add(Me.TestMailButton)
@@ -401,6 +415,13 @@ Partial Class Config
         Me.PatchTabPage.Text = "Paths"
         Me.PatchTabPage.UseVisualStyleBackColor = True
         '
+        'DBOffsetTextBox
+        '
+        Me.DBOffsetTextBox.Location = New System.Drawing.Point(8, 119)
+        Me.DBOffsetTextBox.Name = "DBOffsetTextBox"
+        Me.DBOffsetTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.DBOffsetTextBox.TabIndex = 17
+        '
         'GitExeTextBox
         '
         Me.GitExeTextBox.Location = New System.Drawing.Point(8, 244)
@@ -534,6 +555,7 @@ Partial Class Config
         Me.ConfigTabs.Controls.Add(Me.TabPageGitRepo)
         Me.ConfigTabs.Controls.Add(Me.DBTabPage)
         Me.ConfigTabs.Controls.Add(Me.PatchTabPage)
+        Me.ConfigTabs.Controls.Add(Me.ExtrasTabPage)
         Me.ConfigTabs.Controls.Add(Me.AppsTabPage)
         Me.ConfigTabs.Controls.Add(Me.MailTabPage)
         Me.ConfigTabs.Location = New System.Drawing.Point(12, 28)
@@ -546,21 +568,34 @@ Partial Class Config
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
         '
-        'DBOffsetTextBox
+        'ExtrasTabPage
         '
-        Me.DBOffsetTextBox.Location = New System.Drawing.Point(8, 119)
-        Me.DBOffsetTextBox.Name = "DBOffsetTextBox"
-        Me.DBOffsetTextBox.Size = New System.Drawing.Size(444, 20)
-        Me.DBOffsetTextBox.TabIndex = 17
+        Me.ExtrasTabPage.Controls.Add(Me.ExtrasDirListTextBox)
+        Me.ExtrasTabPage.Controls.Add(Label22)
+        Me.ExtrasTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.ExtrasTabPage.Name = "ExtrasTabPage"
+        Me.ExtrasTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.ExtrasTabPage.Size = New System.Drawing.Size(534, 280)
+        Me.ExtrasTabPage.TabIndex = 6
+        Me.ExtrasTabPage.Text = "Extras"
+        Me.ExtrasTabPage.UseVisualStyleBackColor = True
         '
-        'Label21
+        'ExtrasDirListTextBox
         '
-        Label21.AutoSize = True
-        Label21.Location = New System.Drawing.Point(5, 103)
-        Label21.Name = "Label21"
-        Label21.Size = New System.Drawing.Size(139, 13)
-        Label21.TabIndex = 16
-        Label21.Text = "Database Dir Relative Path:"
+        Me.ExtrasDirListTextBox.Location = New System.Drawing.Point(8, 32)
+        Me.ExtrasDirListTextBox.Multiline = True
+        Me.ExtrasDirListTextBox.Name = "ExtrasDirListTextBox"
+        Me.ExtrasDirListTextBox.Size = New System.Drawing.Size(444, 232)
+        Me.ExtrasDirListTextBox.TabIndex = 11
+        '
+        'Label22
+        '
+        Label22.AutoSize = True
+        Label22.Location = New System.Drawing.Point(5, 16)
+        Label22.Name = "Label22"
+        Label22.Size = New System.Drawing.Size(183, 13)
+        Label22.TabIndex = 10
+        Label22.Text = "Extra Files Search Dirs Relative Path:"
         '
         'Config
         '
@@ -583,6 +618,8 @@ Partial Class Config
         Me.TabPageGitRepo.PerformLayout()
         Me.ConfigTabs.ResumeLayout(False)
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ExtrasTabPage.ResumeLayout(False)
+        Me.ExtrasTabPage.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -616,4 +653,6 @@ Partial Class Config
     Friend WithEvents Label19 As System.Windows.Forms.Label
     Friend WithEvents TNSListTextbox As System.Windows.Forms.TextBox
     Friend WithEvents DBOffsetTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents ExtrasTabPage As System.Windows.Forms.TabPage
+    Friend WithEvents ExtrasDirListTextBox As System.Windows.Forms.TextBox
 End Class

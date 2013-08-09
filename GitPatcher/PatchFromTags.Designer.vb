@@ -24,7 +24,9 @@ Partial Class PatchFromTags
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PatchFromTags))
         Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
-        Me.ComitButton = New System.Windows.Forms.Button()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.ExtrasListBox = New System.Windows.Forms.ListBox()
+        Me.CommitButton = New System.Windows.Forms.Button()
         Me.TrackPromoCheckBox = New System.Windows.Forms.CheckBox()
         Me.PatchPathTextBox = New System.Windows.Forms.TextBox()
         Me.NoteTextBox = New System.Windows.Forms.TextBox()
@@ -32,7 +34,7 @@ Partial Class PatchFromTags
         Me.PatchDirTextBox = New System.Windows.Forms.TextBox()
         Me.SupIdTextBox = New System.Windows.Forms.TextBox()
         Me.PatchDescTextBox = New System.Windows.Forms.TextBox()
-        Me.ExecutePatchButton = New System.Windows.Forms.Button()
+        Me.ExecuteButton = New System.Windows.Forms.Button()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.CopyChangesButton = New System.Windows.Forms.Button()
         Me.Label16 = New System.Windows.Forms.Label()
@@ -86,8 +88,6 @@ Partial Class PatchFromTags
         Me.SupByButton = New System.Windows.Forms.Button()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.SupersededByCheckedListBox = New System.Windows.Forms.CheckedListBox()
-        Me.ExtrasListBox = New System.Windows.Forms.ListBox()
-        Me.Label20 = New System.Windows.Forms.Label()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPageSuper.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
@@ -102,7 +102,7 @@ Partial Class PatchFromTags
         '
         Me.TabPagePatchDefn.Controls.Add(Me.Label20)
         Me.TabPagePatchDefn.Controls.Add(Me.ExtrasListBox)
-        Me.TabPagePatchDefn.Controls.Add(Me.ComitButton)
+        Me.TabPagePatchDefn.Controls.Add(Me.CommitButton)
         Me.TabPagePatchDefn.Controls.Add(Me.TrackPromoCheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.PatchPathTextBox)
         Me.TabPagePatchDefn.Controls.Add(Me.NoteTextBox)
@@ -110,7 +110,7 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.Controls.Add(Me.PatchDirTextBox)
         Me.TabPagePatchDefn.Controls.Add(Me.SupIdTextBox)
         Me.TabPagePatchDefn.Controls.Add(Me.PatchDescTextBox)
-        Me.TabPagePatchDefn.Controls.Add(Me.ExecutePatchButton)
+        Me.TabPagePatchDefn.Controls.Add(Me.ExecuteButton)
         Me.TabPagePatchDefn.Controls.Add(Me.Label18)
         Me.TabPagePatchDefn.Controls.Add(Me.CopyChangesButton)
         Me.TabPagePatchDefn.Controls.Add(Me.Label16)
@@ -134,14 +134,31 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.Text = "Create Patch"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
         '
-        'ComitButton
+        'Label20
         '
-        Me.ComitButton.Location = New System.Drawing.Point(80, 652)
-        Me.ComitButton.Name = "ComitButton"
-        Me.ComitButton.Size = New System.Drawing.Size(230, 23)
-        Me.ComitButton.TabIndex = 1
-        Me.ComitButton.Text = "Commit Patch"
-        Me.ComitButton.UseVisualStyleBackColor = True
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(12, 359)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(36, 13)
+        Me.Label20.TabIndex = 37
+        Me.Label20.Text = "Extras"
+        '
+        'ExtrasListBox
+        '
+        Me.ExtrasListBox.FormattingEnabled = True
+        Me.ExtrasListBox.Location = New System.Drawing.Point(80, 359)
+        Me.ExtrasListBox.Name = "ExtrasListBox"
+        Me.ExtrasListBox.Size = New System.Drawing.Size(394, 43)
+        Me.ExtrasListBox.TabIndex = 36
+        '
+        'CommitButton
+        '
+        Me.CommitButton.Location = New System.Drawing.Point(80, 652)
+        Me.CommitButton.Name = "CommitButton"
+        Me.CommitButton.Size = New System.Drawing.Size(230, 23)
+        Me.CommitButton.TabIndex = 1
+        Me.CommitButton.Text = "Commit Patch"
+        Me.CommitButton.UseVisualStyleBackColor = True
         '
         'TrackPromoCheckBox
         '
@@ -198,14 +215,14 @@ Partial Class PatchFromTags
         Me.PatchDescTextBox.Size = New System.Drawing.Size(401, 20)
         Me.PatchDescTextBox.TabIndex = 20
         '
-        'ExecutePatchButton
+        'ExecuteButton
         '
-        Me.ExecutePatchButton.Location = New System.Drawing.Point(80, 623)
-        Me.ExecutePatchButton.Name = "ExecutePatchButton"
-        Me.ExecutePatchButton.Size = New System.Drawing.Size(230, 23)
-        Me.ExecutePatchButton.TabIndex = 0
-        Me.ExecutePatchButton.Text = "Execute Patch"
-        Me.ExecutePatchButton.UseVisualStyleBackColor = True
+        Me.ExecuteButton.Location = New System.Drawing.Point(80, 623)
+        Me.ExecuteButton.Name = "ExecuteButton"
+        Me.ExecuteButton.Size = New System.Drawing.Size(230, 23)
+        Me.ExecuteButton.TabIndex = 0
+        Me.ExecuteButton.Text = "Execute Patch"
+        Me.ExecuteButton.UseVisualStyleBackColor = True
         '
         'Label18
         '
@@ -726,23 +743,6 @@ Partial Class PatchFromTags
         Me.SupersededByCheckedListBox.Size = New System.Drawing.Size(397, 529)
         Me.SupersededByCheckedListBox.TabIndex = 36
         '
-        'ExtrasListBox
-        '
-        Me.ExtrasListBox.FormattingEnabled = True
-        Me.ExtrasListBox.Location = New System.Drawing.Point(80, 359)
-        Me.ExtrasListBox.Name = "ExtrasListBox"
-        Me.ExtrasListBox.Size = New System.Drawing.Size(394, 43)
-        Me.ExtrasListBox.TabIndex = 36
-        '
-        'Label20
-        '
-        Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(12, 359)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(36, 13)
-        Me.Label20.TabIndex = 37
-        Me.Label20.Text = "Extras"
-        '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -770,7 +770,7 @@ Partial Class PatchFromTags
 
     End Sub
     Friend WithEvents TabPagePatchDefn As System.Windows.Forms.TabPage
-    Friend WithEvents ComitButton As System.Windows.Forms.Button
+    Friend WithEvents CommitButton As System.Windows.Forms.Button
     Friend WithEvents TrackPromoCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents PatchPathTextBox As System.Windows.Forms.TextBox
     Friend WithEvents NoteTextBox As System.Windows.Forms.TextBox
@@ -778,7 +778,7 @@ Partial Class PatchFromTags
     Friend WithEvents PatchDirTextBox As System.Windows.Forms.TextBox
     Friend WithEvents SupIdTextBox As System.Windows.Forms.TextBox
     Friend WithEvents PatchDescTextBox As System.Windows.Forms.TextBox
-    Friend WithEvents ExecutePatchButton As System.Windows.Forms.Button
+    Friend WithEvents ExecuteButton As System.Windows.Forms.Button
     Friend WithEvents Label18 As System.Windows.Forms.Label
     Friend WithEvents CopyChangesButton As System.Windows.Forms.Button
     Friend WithEvents Label16 As System.Windows.Forms.Label

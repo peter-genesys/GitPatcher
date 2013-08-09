@@ -345,6 +345,18 @@ Namespace My
                 Me("DBDirOffset") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("\database\TPDS\Tools")>  _
+        Public Property ExtrasDirList() As String
+            Get
+                Return CType(Me("ExtrasDirList"),String)
+            End Get
+            Set
+                Me("ExtrasDirList") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

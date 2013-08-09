@@ -193,4 +193,19 @@
 
     End Function
 
+
+    Public Function extrasDirCollection() As Collection
+
+        Dim extrasDirCol As New Collection
+        Dim l_Index As Integer = -1
+        For Each dirname In My.Settings.ExtrasDirList.Split(Chr(10))
+            l_Index = l_Index + 1
+            dirname = Trim(dirname).Replace(Chr(13), "")
+            extrasDirCol.Add(dirname)
+        Next
+        Return extrasDirCol
+
+    End Function
+
+
 End Module

@@ -690,12 +690,19 @@ Public Class PatchFromTags
             If PatchableCheckedListBox.Items.Count = 0 Then
                 CopySelectedChanges()
             End If
+
+            'Show/hide buttons
+            PatchButton.Visible = Not String.IsNullOrEmpty(PatchNameTextBox.Text)
+            ExecuteButton.Visible = Not String.IsNullOrEmpty(PatchNameTextBox.Text)
+            CommitButton.Visible = Not String.IsNullOrEmpty(PatchNameTextBox.Text)
+ 
+
         End If
 
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExecute" Then
 
-            ExecutePatchButton.Text = "Execute Patch on " & Globals.currentTNS
+            ExecuteButton.Text = "Execute Patch on " & Globals.currentTNS
 
         End If
 
@@ -703,12 +710,19 @@ Public Class PatchFromTags
 
     Private Sub derivePatchName()
 
-        PatchNameTextBox.Text = Globals.currentBranch & "_" & Common.dropFirstSegment(Tag1TextBox.Text, ".") & "_" & Common.dropFirstSegment(Tag2TextBox.Text, ".") & "_" & SchemaComboBox.SelectedItem.ToString
+        If Not String.IsNullOrEmpty(Tag1TextBox.Text) And Not String.IsNullOrEmpty(Tag2TextBox.Text) Then
 
-        If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
-            PatchNameTextBox.Text = PatchNameTextBox.Text & "_" & SupIdTextBox.Text
+            PatchNameTextBox.Text = Globals.currentBranch & "_" & Common.dropFirstSegment(Tag1TextBox.Text, ".") & "_" & Common.dropFirstSegment(Tag2TextBox.Text, ".") & "_" & SchemaComboBox.SelectedItem.ToString
+
+            If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
+                PatchNameTextBox.Text = PatchNameTextBox.Text & "_" & SupIdTextBox.Text
+
+            End If
+        Else
+            MsgBox("Please select two tags, and review changes, to allow derivation of PatchName")
 
         End If
+
 
     End Sub
 
@@ -762,7 +776,7 @@ Public Class PatchFromTags
         FindSuper()
     End Sub
 
-    Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
+    Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecuteButton.Click
         'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Globals.RootPatchDir)
         'Use patch runner to execute with a master script.
         PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
@@ -793,7 +807,7 @@ Public Class PatchFromTags
 
     End Sub
 
-    Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles ComitButton.Click
+    Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles CommitButton.Click
 
         Dim lUntracked As String = Nothing
         If Not Me.TrackPromoCheckBox.Checked Then
@@ -939,11 +953,19 @@ Public Class PatchFromTags
         FindSuperBy()
     End Sub
 
-
+ 
 
     Private Sub PopulateTreeView(ByVal dir As String, ByVal parentNode As TreeNode)
         Dim folder As String = String.Empty
         Try
+ 
+            Dim files() As String = System.IO.Directory.GetFiles(dir) ', strPattern)
+            Dim fileNode As TreeNode = Nothing
+            For Each file In files
+                fileNode = New TreeNode(file) 'translate to relative URL
+                parentNode.Nodes.Add(fileNode)
+            Next
+ 
             Dim folders() As String = IO.Directory.GetDirectories(dir)
             If folders.Length <> 0 Then
                 Dim childNode As TreeNode = Nothing
@@ -951,15 +973,6 @@ Public Class PatchFromTags
                     childNode = New TreeNode(folder) 'translate to relative URL
                     parentNode.Nodes.Add(childNode)
                     PopulateTreeView(folder, childNode)
-
-                    Dim files() As String = System.IO.Directory.GetFiles(folder) ', strPattern)
-                    Dim grandchildNode As TreeNode = Nothing
-                    For Each file In files
-                        grandchildNode = New TreeNode(file) 'translate to relative URL
-                        childNode.Nodes.Add(grandchildNode)
-                        'PopulateTreeView(folder, childNode)
-                    Next
-
                 Next
             End If
         Catch ex As UnauthorizedAccessException
@@ -967,26 +980,19 @@ Public Class PatchFromTags
         End Try
     End Sub
 
-
-
+ 
     Private Sub ButtonFindFiles_Click(sender As Object, e As EventArgs) Handles ButtonFindFiles.Click
-        'Get a list of drives
-        Dim drives As System.Collections.ObjectModel.ReadOnlyCollection(Of IO.DriveInfo) = My.Computer.FileSystem.Drives
-        Dim rootDir As String = Globals.RootDBDir()
-        'Add this drive as a root node
-        TreeViewFiles.Nodes.Add(rootDir)
-        'Populate this root node
-        PopulateTreeView(rootDir, TreeViewFiles.Nodes(0))
+ 
 
+        Dim extrasDirCol As Collection = extrasDirCollection()
+   
+        For Each relDir In extrasDirCol
+            Dim aRootDir As String = Globals.currentRepo() & relDir
+            Dim aRootNode As TreeNode = New TreeNode(aRootDir)
+            TreeViewFiles.Nodes.Add(aRootNode)
+            PopulateTreeView(aRootDir, aRootNode)
+        Next
 
-        ''Now loop thru each drive and populate the treeview
-        'For i As Integer = 0 To drives.Count - 1
-        '    rootDir = drives(i).Name
-        '    'Add this drive as a root node
-        '    TreeViewFiles.Nodes.Add(rootDir)
-        '    'Populate this root node
-        '    PopulateTreeView(rootDir, TreeViewFiles.Nodes(i))
-        'Next
     End Sub
 
     Private Sub TreeViewFiles_DoubleClick(sender As Object, e As MouseEventArgs) Handles TreeViewFiles.DoubleClick

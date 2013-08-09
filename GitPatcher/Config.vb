@@ -17,6 +17,9 @@
         ApexOffsetTextBox.DataBindings.Add("Text", My.Settings, "ApexDirOffset")
         DBOffsetTextBox.DataBindings.Add("Text", My.Settings, "DBDirOffset")
 
+        'Extras
+        ExtrasDirListTextBox.DataBindings.Add("Text", My.Settings, "ExtrasDirList")
+
 
         OJDBCjarFileTextBox.DataBindings.Add("Text", My.Settings, "JDBCjar")
         SQLpathTextBox.DataBindings.Add("Text", My.Settings, "SQLpath")
