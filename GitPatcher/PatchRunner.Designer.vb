@@ -26,6 +26,7 @@ Partial Class PatchRunner
         Me.PatchRunnerTabControl = New System.Windows.Forms.TabControl()
         Me.PatchSelectorTabPage = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.AvailablePatchesTreeView = New System.Windows.Forms.TreeView()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.RadioButtonAll2 = New System.Windows.Forms.RadioButton()
         Me.RadioButtonFeature = New System.Windows.Forms.RadioButton()
@@ -65,7 +66,7 @@ Partial Class PatchRunner
         Me.PatchRunnerTabControl.MaximumSize = New System.Drawing.Size(1000, 1000)
         Me.PatchRunnerTabControl.Name = "PatchRunnerTabControl"
         Me.PatchRunnerTabControl.SelectedIndex = 0
-        Me.PatchRunnerTabControl.Size = New System.Drawing.Size(760, 738)
+        Me.PatchRunnerTabControl.Size = New System.Drawing.Size(1000, 738)
         Me.PatchRunnerTabControl.TabIndex = 0
         '
         'PatchSelectorTabPage
@@ -74,7 +75,7 @@ Partial Class PatchRunner
         Me.PatchSelectorTabPage.Location = New System.Drawing.Point(4, 22)
         Me.PatchSelectorTabPage.Name = "PatchSelectorTabPage"
         Me.PatchSelectorTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.PatchSelectorTabPage.Size = New System.Drawing.Size(752, 712)
+        Me.PatchSelectorTabPage.Size = New System.Drawing.Size(992, 712)
         Me.PatchSelectorTabPage.TabIndex = 0
         Me.PatchSelectorTabPage.Text = "Selection"
         Me.PatchSelectorTabPage.UseVisualStyleBackColor = True
@@ -87,6 +88,7 @@ Partial Class PatchRunner
         '
         'SplitContainer1.Panel1
         '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.AvailablePatchesTreeView)
         Me.SplitContainer1.Panel1.Controls.Add(Me.GroupBox1)
         Me.SplitContainer1.Panel1.Controls.Add(Me.PatchFilterGroupBox)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label1)
@@ -99,9 +101,16 @@ Partial Class PatchRunner
         Me.SplitContainer1.Panel2.Controls.Add(Me.ChooseAllButton)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label2)
         Me.SplitContainer1.Panel2.Controls.Add(Me.ChosenPatchesListBox)
-        Me.SplitContainer1.Size = New System.Drawing.Size(746, 706)
-        Me.SplitContainer1.SplitterDistance = 362
+        Me.SplitContainer1.Size = New System.Drawing.Size(986, 706)
+        Me.SplitContainer1.SplitterDistance = 640
         Me.SplitContainer1.TabIndex = 0
+        '
+        'AvailablePatchesTreeView
+        '
+        Me.AvailablePatchesTreeView.Location = New System.Drawing.Point(297, 165)
+        Me.AvailablePatchesTreeView.Name = "AvailablePatchesTreeView"
+        Me.AvailablePatchesTreeView.Size = New System.Drawing.Size(340, 537)
+        Me.AvailablePatchesTreeView.TabIndex = 39
         '
         'GroupBox1
         '
@@ -225,7 +234,7 @@ Partial Class PatchRunner
         Me.AvailablePatchesListBox.FormattingEnabled = True
         Me.AvailablePatchesListBox.Location = New System.Drawing.Point(7, 165)
         Me.AvailablePatchesListBox.Name = "AvailablePatchesListBox"
-        Me.AvailablePatchesListBox.Size = New System.Drawing.Size(523, 537)
+        Me.AvailablePatchesListBox.Size = New System.Drawing.Size(284, 537)
         Me.AvailablePatchesListBox.TabIndex = 0
         '
         'ClearButton
@@ -258,9 +267,9 @@ Partial Class PatchRunner
         'ChosenPatchesListBox
         '
         Me.ChosenPatchesListBox.FormattingEnabled = True
-        Me.ChosenPatchesListBox.Location = New System.Drawing.Point(3, 165)
+        Me.ChosenPatchesListBox.Location = New System.Drawing.Point(6, 165)
         Me.ChosenPatchesListBox.Name = "ChosenPatchesListBox"
-        Me.ChosenPatchesListBox.Size = New System.Drawing.Size(559, 537)
+        Me.ChosenPatchesListBox.Size = New System.Drawing.Size(327, 537)
         Me.ChosenPatchesListBox.TabIndex = 1
         '
         'RunTabPage
@@ -271,7 +280,7 @@ Partial Class PatchRunner
         Me.RunTabPage.Location = New System.Drawing.Point(4, 22)
         Me.RunTabPage.Name = "RunTabPage"
         Me.RunTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.RunTabPage.Size = New System.Drawing.Size(752, 712)
+        Me.RunTabPage.Size = New System.Drawing.Size(992, 712)
         Me.RunTabPage.TabIndex = 1
         Me.RunTabPage.Text = "Run"
         Me.RunTabPage.UseVisualStyleBackColor = True
@@ -306,7 +315,7 @@ Partial Class PatchRunner
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(784, 762)
+        Me.ClientSize = New System.Drawing.Size(1020, 756)
         Me.Controls.Add(Me.PatchRunnerTabControl)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "PatchRunner"
@@ -351,4 +360,5 @@ Partial Class PatchRunner
     Friend WithEvents RadioButtonFeature As System.Windows.Forms.RadioButton
     Friend WithEvents RadioButtonPatchSet As System.Windows.Forms.RadioButton
     Friend WithEvents RadioButtonHotfix As System.Windows.Forms.RadioButton
+    Friend WithEvents AvailablePatchesTreeView As System.Windows.Forms.TreeView
 End Class

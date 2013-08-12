@@ -265,13 +265,7 @@ Public Class PatchRunner
 
 
             Next
-
-
-
-
-
-
-
+ 
             If foundPatches.Items.Count = 0 Then
                 MsgBox("No patches matched the Filter: " & searchTerm, MsgBoxStyle.Information, "No patches found")
             End If
@@ -283,6 +277,80 @@ Public Class PatchRunner
 
     End Sub
 
+ 
+    Private Function SearchNodes(ByRef nodes As TreeNodeCollection, ByVal fullPath As String, ByVal remainderPath As String, Optional ByVal delim As String = "\") As Boolean
+        Dim first_segment As String = Common.getFirstSegment(remainderPath, delim)
+        Dim remainder As String = Common.dropFirstSegment(remainderPath, delim)
+
+        Dim lFound As Boolean = False
+
+        'First try to find the node
+        For Each node In nodes
+            Logger.Note("node.FullPath", node.FullPath)
+            Logger.Note("fullPath", fullPath)
+            Logger.Note("InStr", InStr(fullPath, node.FullPath))
+            If fullPath = node.FullPath Then
+                'If node.FullPath.ToString = fullPath Then
+                'Yay found it nothing to do
+                Logger.Dbg("Yay found it nothing to do")
+                Return True
+                'Node Full path must match first part of given full path, and current node must match exactly current segment
+            ElseIf InStr(fullPath, node.FullPath.ToString) = 1 And first_segment = node.text Then
+                'Found a parent node at least, lets look for children
+                Logger.Dbg("Found a parent node at least, lets look for children")
+                lFound = SearchNodes(node.nodes, fullPath, remainder)
+            End If
+
+        Next
+
+        If Not lFound And Not String.IsNullOrEmpty(first_segment) Then
+            'Need to make a node
+            Logger.Dbg("Need to make a node for " & first_segment)
+            Dim newNode As TreeNode = New TreeNode(first_segment)
+            nodes.Add(newNode)
+            'If newNode.FullPath = fullPath Then
+            If String.IsNullOrEmpty(remainder) Then
+                'We made the node!
+                Logger.Dbg("We made the node!")
+                lFound = True
+            Else
+                'Now follow this child
+                Logger.Dbg("Now follow this child")
+                lFound = SearchNodes(newNode.Nodes, fullPath, remainder)
+            End If
+
+        End If
+        If Not lFound Then
+            MsgBox("Oops not found. Bad coding?")
+        End If
+        Return lFound
+
+
+
+    End Function
+
+    Function populateTreeFromListbox(ByRef patchesTreeView As TreeView, ByRef patchesListBox As ListBox)
+ 
+        patchesTreeView.PathSeparator = "\"
+        patchesTreeView.Nodes.Clear()
+ 
+        'copy each item from listbox
+        For i As Integer = 0 To AvailablePatchesListBox.Items.Count - 1
+
+            'find or create each node for item
+ 
+            'Dim Item As String = Trim(AvailablePatchesListBox.Items(i).ToString()).Replace(Chr(13), "").Replace(Chr(10), "")
+            'If Not String.IsNullOrEmpty(Item) Then
+            '    SearchNodes(patchesTreeView.Nodes, Item, Item)
+            'End If
+
+            Dim aItem As String = AvailablePatchesListBox.Items(i).ToString()
+            SearchNodes(patchesTreeView.Nodes, aItem, aItem)
+
+
+        Next
+ 
+    End Function
 
 
     Private Sub doSearch()
@@ -296,11 +364,13 @@ Public Class PatchRunner
 
         filterPatchType(AvailablePatchesListBox)
 
+        populateTreeFromListbox(AvailablePatchesTreeView, AvailablePatchesListBox)
+
 
     End Sub
 
 
- 
+
 
     Private Sub SearchPatchesButton_Click(sender As Object, e As EventArgs) Handles SearchPatchesButton.Click
         doSearch()
@@ -378,7 +448,7 @@ Public Class PatchRunner
 
     End Sub
 
- 
+
     Private Sub CopyAllPatches()
         'Copy Selected Changes to the next list box.
         ChosenPatchesListBox.Items.Clear()
@@ -398,5 +468,17 @@ Public Class PatchRunner
         ChosenPatchesListBox.Items.Clear()
     End Sub
 
+ 
 
+    Private Sub AvailablePatchesTreeView_DoubleClick(sender As Object, e As MouseEventArgs) Handles AvailablePatchesTreeView.DoubleClick
+
+        'ExtrasListBox.Items.Add(AvailablePatchesTreeView.SelectedNode.Text)
+        'MsgBox("Added " & AvailablePatchesTreeView.SelectedNode.Text & " to Extras")
+
+        Dim aItem As String = AvailablePatchesTreeView.SelectedNode.FullPath
+        If Not ChosenPatchesListBox.Items.Contains(aItem) And AvailablePatchesTreeView.SelectedNode.Nodes.Count = 0 Then
+            ChosenPatchesListBox.Items.Add(aItem)
+        End If
+ 
+    End Sub
 End Class
