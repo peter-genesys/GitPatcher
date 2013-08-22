@@ -481,4 +481,24 @@ Public Class PatchRunner
         End If
  
     End Sub
+
+    Private Sub AvailablePatchesTreeView_DoubleClick(sender As Object, e As EventArgs) Handles AvailablePatchesTreeView.DoubleClick
+
+    End Sub
+
+    Private Sub ListButton_Click(sender As Object, e As EventArgs) Handles ListButton.Click
+        AvailablePatchesListBox.Visible = True
+        AvailablePatchesTreeView.Visible = False
+        TreeButton.Visible = True
+        ListButton.Visible = False
+
+    End Sub
+
+    Private Sub TreeButton_Click(sender As Object, e As EventArgs) Handles TreeButton.Click
+        AvailablePatchesTreeView.Visible = True
+        AvailablePatchesListBox.Visible = False
+        ListButton.Visible = True
+        TreeButton.Visible = False
+
+    End Sub
 End Class
