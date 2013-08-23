@@ -1,6 +1,12 @@
 ﻿Public Class Common
 
- 
+
+    Public Shared Function cleanString(iString) As String
+        Return Trim(iString).Replace(Chr(13), "")
+
+    End Function
+
+
 
     Public Shared Sub wait(ByVal interval As Integer)
         Dim sw As New Stopwatch

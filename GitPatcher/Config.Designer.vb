@@ -43,6 +43,7 @@ Partial Class Config
         Dim Label20 As System.Windows.Forms.Label
         Dim Label21 As System.Windows.Forms.Label
         Dim Label22 As System.Windows.Forms.Label
+        Dim Label23 As System.Windows.Forms.Label
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Config))
         Me.MailTabPage = New System.Windows.Forms.TabPage()
         Me.TestMailButton = New System.Windows.Forms.Button()
@@ -73,9 +74,10 @@ Partial Class Config
         Me.TabPageGitRepo = New System.Windows.Forms.TabPage()
         Me.RepoListTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
-        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.ExtrasTabPage = New System.Windows.Forms.TabPage()
         Me.ExtrasDirListTextBox = New System.Windows.Forms.TextBox()
+        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.JiraProjectTextBox = New System.Windows.Forms.TextBox()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -96,14 +98,15 @@ Partial Class Config
         Label20 = New System.Windows.Forms.Label()
         Label21 = New System.Windows.Forms.Label()
         Label22 = New System.Windows.Forms.Label()
+        Label23 = New System.Windows.Forms.Label()
         Me.MailTabPage.SuspendLayout()
         Me.AppsTabPage.SuspendLayout()
         Me.PatchTabPage.SuspendLayout()
         Me.DBTabPage.SuspendLayout()
         Me.TabPageGitRepo.SuspendLayout()
         Me.ConfigTabs.SuspendLayout()
-        CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ExtrasTabPage.SuspendLayout()
+        CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label11
@@ -136,7 +139,7 @@ Partial Class Config
         'Label9
         '
         Label9.AutoSize = True
-        Label9.Location = New System.Drawing.Point(369, 16)
+        Label9.Location = New System.Drawing.Point(266, 16)
         Label9.Name = "Label9"
         Label9.Size = New System.Drawing.Size(41, 13)
         Label9.TabIndex = 13
@@ -145,7 +148,7 @@ Partial Class Config
         'Label8
         '
         Label8.AutoSize = True
-        Label8.Location = New System.Drawing.Point(450, 16)
+        Label8.Location = New System.Drawing.Point(428, 16)
         Label8.Name = "Label8"
         Label8.Size = New System.Drawing.Size(87, 13)
         Label8.TabIndex = 15
@@ -235,11 +238,11 @@ Partial Class Config
         'Label17
         '
         Label17.AutoSize = True
-        Label17.Location = New System.Drawing.Point(288, 16)
+        Label17.Location = New System.Drawing.Point(185, 16)
         Label17.Name = "Label17"
-        Label17.Size = New System.Drawing.Size(32, 13)
+        Label17.Size = New System.Drawing.Size(35, 13)
         Label17.TabIndex = 22
-        Label17.Text = "Code"
+        Label17.Text = "Code:"
         '
         'Label18
         '
@@ -276,6 +279,15 @@ Partial Class Config
         Label21.Size = New System.Drawing.Size(139, 13)
         Label21.TabIndex = 16
         Label21.Text = "Database Dir Relative Path:"
+        '
+        'Label22
+        '
+        Label22.AutoSize = True
+        Label22.Location = New System.Drawing.Point(5, 16)
+        Label22.Name = "Label22"
+        Label22.Size = New System.Drawing.Size(183, 13)
+        Label22.TabIndex = 10
+        Label22.Text = "Extra Files Search Dirs Relative Path:"
         '
         'MailTabPage
         '
@@ -335,6 +347,8 @@ Partial Class Config
         '
         'AppsTabPage
         '
+        Me.AppsTabPage.Controls.Add(Me.JiraProjectTextBox)
+        Me.AppsTabPage.Controls.Add(Label23)
         Me.AppsTabPage.Controls.Add(Me.AppCodeTextBox)
         Me.AppsTabPage.Controls.Add(Label17)
         Me.AppsTabPage.Controls.Add(Label15)
@@ -354,7 +368,7 @@ Partial Class Config
         '
         'AppCodeTextBox
         '
-        Me.AppCodeTextBox.Location = New System.Drawing.Point(291, 32)
+        Me.AppCodeTextBox.Location = New System.Drawing.Point(188, 32)
         Me.AppCodeTextBox.Multiline = True
         Me.AppCodeTextBox.Name = "AppCodeTextBox"
         Me.AppCodeTextBox.Size = New System.Drawing.Size(75, 229)
@@ -365,7 +379,7 @@ Partial Class Config
         Me.ApplicationsTextBox.Location = New System.Drawing.Point(6, 32)
         Me.ApplicationsTextBox.Multiline = True
         Me.ApplicationsTextBox.Name = "ApplicationsTextBox"
-        Me.ApplicationsTextBox.Size = New System.Drawing.Size(279, 229)
+        Me.ApplicationsTextBox.Size = New System.Drawing.Size(177, 229)
         Me.ApplicationsTextBox.TabIndex = 18
         '
         'Label7
@@ -379,7 +393,7 @@ Partial Class Config
         '
         'ParsingSchemaTextbox
         '
-        Me.ParsingSchemaTextbox.Location = New System.Drawing.Point(453, 32)
+        Me.ParsingSchemaTextbox.Location = New System.Drawing.Point(431, 32)
         Me.ParsingSchemaTextbox.Multiline = True
         Me.ParsingSchemaTextbox.Name = "ParsingSchemaTextbox"
         Me.ParsingSchemaTextbox.Size = New System.Drawing.Size(75, 229)
@@ -387,7 +401,7 @@ Partial Class Config
         '
         'AppListTextBox
         '
-        Me.AppListTextBox.Location = New System.Drawing.Point(372, 32)
+        Me.AppListTextBox.Location = New System.Drawing.Point(269, 32)
         Me.AppListTextBox.Multiline = True
         Me.AppListTextBox.Name = "AppListTextBox"
         Me.AppListTextBox.Size = New System.Drawing.Size(75, 229)
@@ -564,10 +578,6 @@ Partial Class Config
         Me.ConfigTabs.Size = New System.Drawing.Size(542, 306)
         Me.ConfigTabs.TabIndex = 0
         '
-        'MySettingsBindingSource
-        '
-        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
-        '
         'ExtrasTabPage
         '
         Me.ExtrasTabPage.Controls.Add(Me.ExtrasDirListTextBox)
@@ -588,14 +598,26 @@ Partial Class Config
         Me.ExtrasDirListTextBox.Size = New System.Drawing.Size(444, 232)
         Me.ExtrasDirListTextBox.TabIndex = 11
         '
-        'Label22
+        'MySettingsBindingSource
         '
-        Label22.AutoSize = True
-        Label22.Location = New System.Drawing.Point(5, 16)
-        Label22.Name = "Label22"
-        Label22.Size = New System.Drawing.Size(183, 13)
-        Label22.TabIndex = 10
-        Label22.Text = "Extra Files Search Dirs Relative Path:"
+        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
+        '
+        'JiraProjectTextBox
+        '
+        Me.JiraProjectTextBox.Location = New System.Drawing.Point(350, 32)
+        Me.JiraProjectTextBox.Multiline = True
+        Me.JiraProjectTextBox.Name = "JiraProjectTextBox"
+        Me.JiraProjectTextBox.Size = New System.Drawing.Size(75, 229)
+        Me.JiraProjectTextBox.TabIndex = 25
+        '
+        'Label23
+        '
+        Label23.AutoSize = True
+        Label23.Location = New System.Drawing.Point(347, 16)
+        Label23.Name = "Label23"
+        Label23.Size = New System.Drawing.Size(62, 13)
+        Label23.TabIndex = 24
+        Label23.Text = "Jira Project:"
         '
         'Config
         '
@@ -617,9 +639,9 @@ Partial Class Config
         Me.TabPageGitRepo.ResumeLayout(False)
         Me.TabPageGitRepo.PerformLayout()
         Me.ConfigTabs.ResumeLayout(False)
-        CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ExtrasTabPage.ResumeLayout(False)
         Me.ExtrasTabPage.PerformLayout()
+        CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -655,4 +677,5 @@ Partial Class Config
     Friend WithEvents DBOffsetTextBox As System.Windows.Forms.TextBox
     Friend WithEvents ExtrasTabPage As System.Windows.Forms.TabPage
     Friend WithEvents ExtrasDirListTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents JiraProjectTextBox As System.Windows.Forms.TextBox
 End Class

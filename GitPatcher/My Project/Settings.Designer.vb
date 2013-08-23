@@ -357,6 +357,18 @@ Namespace My
                 Me("ExtrasDirList") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(), _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.Configuration.DefaultSettingValueAttribute("PRJROV" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "???")> _
+        Public Property JiraProject() As String
+            Get
+                Return CType(Me("JiraProject"), String)
+            End Get
+            Set(value As String)
+                Me("JiraProject") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

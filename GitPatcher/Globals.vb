@@ -7,6 +7,7 @@
     Private gAppCode As String
     'Private gApexApp As String
     Private gParsingSchema As String
+    Private gJiraProject As String
 
 
     Public Function currentDB() As String
@@ -82,6 +83,13 @@
 
     End Function
 
+    Public Function currentJiraProject() As String
+
+        Return gJiraProject
+
+    End Function
+
+
 
     Public Sub setDB(DB As String)
 
@@ -131,6 +139,7 @@
         gAppCode = Trim(My.Settings.AppCodeList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
         gApex = Trim(My.Settings.AppList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
         gParsingSchema = Trim(My.Settings.ParsingSchemaList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
+        gJiraProject = Common.cleanString((My.Settings.JiraProject.Split(Chr(10))(applicationIndex)))
 
         My.Settings.CurrentApex = gApex
         My.Settings.CurrentApp = gApplication

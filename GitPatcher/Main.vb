@@ -254,7 +254,7 @@
 
         If newFeature.toDoNextStep() Then
             'Create and Switch to new branch
-            Dim branchName As String = InputBox("Enter the Jira Id.", "Jira Id for new " & iBranchType & " Branch")
+            Dim branchName As String = InputBox("Enter the Jira Id.", "Jira Id for new " & iBranchType & " Branch", Globals.currentJiraProject & "-")
             Dim newBranch As String = iBranchType & "/" & Me.AppCodeTextBox.Text & "/" & branchName
 
             If Not String.IsNullOrEmpty(branchName) Then
