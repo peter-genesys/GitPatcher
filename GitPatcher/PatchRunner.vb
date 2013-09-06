@@ -339,11 +339,6 @@ Public Class PatchRunner
 
             'find or create each node for item
  
-            'Dim Item As String = Trim(AvailablePatchesListBox.Items(i).ToString()).Replace(Chr(13), "").Replace(Chr(10), "")
-            'If Not String.IsNullOrEmpty(Item) Then
-            '    SearchNodes(patchesTreeView.Nodes, Item, Item)
-            'End If
-
             Dim aItem As String = AvailablePatchesListBox.Items(i).ToString()
             SearchNodes(patchesTreeView.Nodes, aItem, aItem)
 
@@ -471,10 +466,7 @@ Public Class PatchRunner
  
 
     Private Sub AvailablePatchesTreeView_DoubleClick(sender As Object, e As MouseEventArgs) Handles AvailablePatchesTreeView.DoubleClick
-
-        'ExtrasListBox.Items.Add(AvailablePatchesTreeView.SelectedNode.Text)
-        'MsgBox("Added " & AvailablePatchesTreeView.SelectedNode.Text & " to Extras")
-
+ 
         Dim aItem As String = AvailablePatchesTreeView.SelectedNode.FullPath
         If Not ChosenPatchesListBox.Items.Contains(aItem) And AvailablePatchesTreeView.SelectedNode.Nodes.Count = 0 Then
             ChosenPatchesListBox.Items.Add(aItem)
@@ -482,9 +474,7 @@ Public Class PatchRunner
  
     End Sub
 
-    Private Sub AvailablePatchesTreeView_DoubleClick(sender As Object, e As EventArgs) Handles AvailablePatchesTreeView.DoubleClick
-
-    End Sub
+  
 
     Private Sub ListButton_Click(sender As Object, e As EventArgs) Handles ListButton.Click
         AvailablePatchesListBox.Visible = True

@@ -962,7 +962,7 @@ Public Class PatchFromTags
             Dim files() As String = System.IO.Directory.GetFiles(dir) ', strPattern)
             Dim fileNode As TreeNode = Nothing
             For Each file In files
-                fileNode = New TreeNode(file) 'translate to relative URL
+                fileNode = New TreeNode(Common.getLastSegment(file, "\")) 'translate to relative URL
                 parentNode.Nodes.Add(fileNode)
             Next
  
@@ -970,7 +970,7 @@ Public Class PatchFromTags
             If folders.Length <> 0 Then
                 Dim childNode As TreeNode = Nothing
                 For Each folder In folders
-                    childNode = New TreeNode(folder) 'translate to relative URL
+                    childNode = New TreeNode(Common.getLastSegment(folder, "\")) 'translate to relative URL
                     parentNode.Nodes.Add(childNode)
                     PopulateTreeView(folder, childNode)
                 Next
@@ -983,6 +983,9 @@ Public Class PatchFromTags
  
     Private Sub ButtonFindFiles_Click(sender As Object, e As EventArgs) Handles ButtonFindFiles.Click
  
+
+        TreeViewFiles.PathSeparator = "\"
+        TreeViewFiles.Nodes.Clear()
 
         Dim extrasDirCol As Collection = extrasDirCollection()
    
@@ -997,8 +1000,16 @@ Public Class PatchFromTags
 
     Private Sub TreeViewFiles_DoubleClick(sender As Object, e As MouseEventArgs) Handles TreeViewFiles.DoubleClick
         'ChangesCheckedListBox.Items.Add(TreeViewFiles.SelectedNode.Text)
-        ExtrasListBox.Items.Add(TreeViewFiles.SelectedNode.Text)
-        MsgBox("Added " & TreeViewFiles.SelectedNode.Text & " to Extras")
+
+
+        Dim aItem As String = TreeViewFiles.SelectedNode.FullPath
+        If Not ExtrasListBox.Items.Contains(aItem) And TreeViewFiles.SelectedNode.Nodes.Count = 0 Then
+            ExtrasListBox.Items.Add(aItem)
+        End If
+        MsgBox("Added " & aItem & " to Extras")
+
+        'ExtrasListBox.Items.Add(TreeViewFiles.SelectedNode.Text)
+        'MsgBox("Added " & TreeViewFiles.SelectedNode.Text & " to Extras")
 
     End Sub
 
