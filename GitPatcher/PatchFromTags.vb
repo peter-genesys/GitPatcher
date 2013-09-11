@@ -462,86 +462,86 @@ Public Class PatchFromTags
 
 
             If Not String.IsNullOrEmpty(l_db_objects_users) Then
-                l_master_file.WriteLine("Prompt installing USERS" & Chr(10) & l_db_objects_users)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing USERS" & l_db_objects_users)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_tables) Then
-                l_master_file.WriteLine("Prompt installing TABLES" & Chr(10) & l_db_objects_tables)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing TABLES" & l_db_objects_tables)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_sequences) Then
-                l_master_file.WriteLine("Prompt installing SEQUENCES" & Chr(10) & l_db_objects_sequences)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing SEQUENCES" & l_db_objects_sequences)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_type_specs) Then
-                l_master_file.WriteLine("Prompt installing TYPE SPECS" & Chr(10) & l_db_objects_type_specs)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing TYPE SPECS" & l_db_objects_type_specs)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_roles) Then
-                l_master_file.WriteLine("Prompt installing ROLES" & Chr(10) & l_db_objects_roles)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing ROLES" & l_db_objects_roles)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_dblinks) Then
-                l_master_file.WriteLine("Prompt installing DB_LINKS" & Chr(10) & l_db_objects_dblinks)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing DB_LINKS" & l_db_objects_dblinks)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_functions) Then
-                l_master_file.WriteLine("Prompt installing FUNCTIONS" & Chr(10) & l_db_objects_functions)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing FUNCTIONS" & l_db_objects_functions)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_procedures) Then
-                l_master_file.WriteLine("Prompt installing PROCEDURES" & Chr(10) & l_db_objects_procedures)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing PROCEDURES" & l_db_objects_procedures)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_package_specs) Then
-                l_master_file.WriteLine("Prompt installing PACKAGE SPECS" & Chr(10) & l_db_objects_package_specs)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing PACKAGE SPECS" & l_db_objects_package_specs)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_views) Then
-                l_master_file.WriteLine("Prompt installing VIEWS" & Chr(10) & l_db_objects_views)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing VIEWS" & l_db_objects_views)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_mviews) Then
-                l_master_file.WriteLine("Prompt installing MATERIALISED VIEWS" & Chr(10) & l_db_objects_mviews)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing MATERIALISED VIEWS" & l_db_objects_mviews)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_grants) Then
-                l_master_file.WriteLine("Prompt installing GRANTS" & Chr(10) & l_db_objects_grants)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing GRANTS" & l_db_objects_grants)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_synonyms) Then
-                l_master_file.WriteLine("Prompt installing SYNONYMS" & Chr(10) & l_db_objects_synonyms)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing SYNONYMS" & l_db_objects_synonyms)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_type_bodies) Then
-                l_master_file.WriteLine("Prompt installing TYPE BODIES" & Chr(10) & l_db_objects_type_bodies)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing TYPE BODIES" & l_db_objects_type_bodies)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_package_bodies) Then
-                l_master_file.WriteLine("Prompt installing PACKAGE BODIES" & Chr(10) & l_db_objects_package_bodies)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing PACKAGE BODIES" & l_db_objects_package_bodies)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_triggers) Then
-                l_master_file.WriteLine("Prompt installing TRIGGERS" & Chr(10) & l_db_objects_triggers)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing TRIGGERS" & l_db_objects_triggers)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_indexes) Then
-                l_master_file.WriteLine("Prompt installing INDEXES" & Chr(10) & l_db_objects_indexes)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing INDEXES" & l_db_objects_indexes)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_primary_keys) Then
-                l_master_file.WriteLine("Prompt installing PRIMARY KEYS" & Chr(10) & l_db_objects_primary_keys)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing PRIMARY KEYS" & l_db_objects_primary_keys)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_unique_keys) Then
-                l_master_file.WriteLine("Prompt installing UNIQUE KEYS" & Chr(10) & l_db_objects_unique_keys)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing UNIQUE KEYS" & l_db_objects_unique_keys)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_non_unique_keys) Then
-                l_master_file.WriteLine("Prompt installing NON-UNIQUE KEYS" & Chr(10) & l_db_objects_non_unique_keys)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing NON-UNIQUE KEYS" & l_db_objects_non_unique_keys)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_data) Then
-                l_master_file.WriteLine("Prompt installing DATA" & Chr(10) & l_db_objects_data)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing DATA" & l_db_objects_data)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_foreign_keys) Then
-                l_master_file.WriteLine("Prompt installing FOREIGN KEYS" & Chr(10) & l_db_objects_foreign_keys)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing FOREIGN KEYS" & l_db_objects_foreign_keys)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_constraints) Then
-                l_master_file.WriteLine("Prompt installing CONSTRAINTS" & Chr(10) & l_db_objects_constraints)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing CONSTRAINTS" & l_db_objects_constraints)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_configuration) Then
-                l_master_file.WriteLine("Prompt installing CONFIGURATION" & Chr(10) & l_db_objects_configuration)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing CONFIGURATION" & l_db_objects_configuration)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_jobs) Then
-                l_master_file.WriteLine("Prompt installing JOBS" & Chr(10) & l_db_objects_jobs)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing JOBS" & l_db_objects_jobs)
             End If
             If Not String.IsNullOrEmpty(l_db_objects_misc) Then
-                l_master_file.WriteLine("Prompt installing MISCELLANIOUS" & Chr(10) & l_db_objects_misc)
+                l_master_file.WriteLine(Chr(10) & "Prompt installing MISCELLANIOUS" & l_db_objects_misc)
             End If
 
 
-            l_master_file.WriteLine("COMMIT;")
+            l_master_file.WriteLine(Chr(10) & "COMMIT;")
 
             If use_patch_admin Then
 
