@@ -383,6 +383,7 @@
         rebasing.addStep("Use PatchRunner to run Unapplied Patches", True)
         'rebasing.addStep("Review tags on the branch" )
         rebasing.addStep("Import Apex from HEAD of branch: " & currentBranchLong, True, "Using the Apex Import workflow")
+        rebasing.addStep("Post-Rebase Snapshot", True, "Before creating new patches, snapshot the VM again.  Use this snapshot as a quick restore to point restest patches that have failed, on first execution.")
 
         rebasing.Show()
  
@@ -449,6 +450,12 @@
         If rebasing.toDoNextStep() Then
             'Import Apex from HEAD of branch
             Apex.ApexImportFromTag()
+
+        End If
+
+        If rebasing.toDoNextStep() Then
+            'Post-Rebase Snapshot 
+            MsgBox("Before creating new patches, snapshot the VM again.", MsgBoxStyle.Exclamation, "Post-Rebase Snapshot")
 
         End If
 

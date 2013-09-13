@@ -194,7 +194,7 @@ Public Class PatchFromTags
 
 
 
-    Shared Sub writeInstallScript(ByVal patch_name As String, _
+    Private Sub writeInstallScript(ByVal patch_name As String, _
                                   ByVal patch_type As String, _
                                   ByVal db_schema As String, _
                                   ByVal branch_path As String, _
@@ -437,11 +437,15 @@ Public Class PatchFromTags
                 Dim l_prereq_short_name As String = Nothing
                 For Each l_prereq_patch In prereq_patches
                     l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
-                    l_master_file.WriteLine("PROMPT")
-                    l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
-                    l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_prereq( -")
-                    l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
-                    l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
+                    If l_prereq_short_name = PatchNameTextBox.Text Then
+                        MsgBox("A Patch may NOT have itself as a prerequisite, skipping Prerequisite Patch: " & l_prereq_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
+                    Else
+                        l_master_file.WriteLine("PROMPT")
+                        l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
+                        l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_prereq( -")
+                        l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
+                        l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
+                    End If
 
                 Next
 
@@ -554,22 +558,29 @@ Public Class PatchFromTags
                 Dim l_sup_short_name As String = Nothing
                 For Each l_sup_patch In supersedes_patches
                     l_sup_short_name = Common.getLastSegment(l_sup_patch, "\")
-                    l_master_file.WriteLine("PROMPT")
-                    l_master_file.WriteLine("PROMPT Supersedes patch " & l_sup_short_name)
-                    l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")
-                    l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
-                    l_master_file.WriteLine(",i_supersedes_patch  => '" & l_sup_short_name & "' );")
-
+                    If l_sup_short_name = PatchNameTextBox.Text Then
+                        MsgBox("A Patch may NOT supersede itself, skipping Supersedes Patch: " & l_sup_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
+                    Else
+                        l_master_file.WriteLine("PROMPT")
+                        l_master_file.WriteLine("PROMPT Supersedes patch " & l_sup_short_name)
+                        l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")
+                        l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
+                        l_master_file.WriteLine(",i_supersedes_patch  => '" & l_sup_short_name & "' );")
+                    End If
                 Next
 
                 For Each l_sup_patch In superseded_by_patches
                     l_sup_short_name = Common.getLastSegment(l_sup_patch, "\")
-                    l_master_file.WriteLine("PROMPT")
-                    l_master_file.WriteLine("PROMPT Superseded by patch " & l_sup_short_name)
-                    l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")
-                    l_master_file.WriteLine("i_patch_name     => '" & l_sup_short_name & "' -")
-                    l_master_file.WriteLine(",i_supersedes_patch  => '" & patch_name & "' );")
+                    If l_sup_short_name = PatchNameTextBox.Text Then
+                        MsgBox("A Patch may NOT be superseded by itself, skipping Superseded By Patch: " & l_sup_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
+                    Else
 
+                        l_master_file.WriteLine("PROMPT")
+                        l_master_file.WriteLine("PROMPT Superseded by patch " & l_sup_short_name)
+                        l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")
+                        l_master_file.WriteLine("i_patch_name     => '" & l_sup_short_name & "' -")
+                        l_master_file.WriteLine(",i_supersedes_patch  => '" & patch_name & "' );")
+                    End If
                 Next
 
             End If
@@ -999,23 +1010,28 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub TreeViewFiles_DoubleClick(sender As Object, e As MouseEventArgs) Handles TreeViewFiles.DoubleClick
-        'ChangesCheckedListBox.Items.Add(TreeViewFiles.SelectedNode.Text)
+ 
+        'Ignore Doubleclick on a folder
+        If TreeViewFiles.SelectedNode.Nodes.Count = 0 Then
+
+            Dim aItem As String = TreeViewFiles.SelectedNode.FullPath
+
+            If ExtrasListBox.Items.Contains(aItem) Then
+                MsgBox(aItem & " has ALREADY been added to Extras.", MsgBoxStyle.Exclamation)
+            Else
+                ExtrasListBox.Items.Add(aItem)
+                MsgBox("Added " & aItem & " to Extras.")
+            End If
 
 
-        Dim aItem As String = TreeViewFiles.SelectedNode.FullPath
-        If Not ExtrasListBox.Items.Contains(aItem) And TreeViewFiles.SelectedNode.Nodes.Count = 0 Then
-            ExtrasListBox.Items.Add(aItem)
         End If
-        MsgBox("Added " & aItem & " to Extras")
-
-        'ExtrasListBox.Items.Add(TreeViewFiles.SelectedNode.Text)
-        'MsgBox("Added " & TreeViewFiles.SelectedNode.Text & " to Extras")
 
     End Sub
 
 
-    Private Sub ExtrasListBox_Click(sender As Object, e As EventArgs) Handles ExtrasListBox.Click
+    Private Sub ExtrasListBox_DoubleClick(sender As Object, e As EventArgs) Handles ExtrasListBox.DoubleClick
         If ExtrasListBox.Items.Count > 0 Then
+            MsgBox("Removing " & ExtrasListBox.SelectedItem & " from Extras.")
             ExtrasListBox.Items.RemoveAt(ExtrasListBox.SelectedIndex)
         End If
     End Sub
