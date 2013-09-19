@@ -622,9 +622,10 @@ Partial Class CreatePatchCollection
         Me.Label10.AutoSize = True
         Me.Label10.Location = New System.Drawing.Point(77, 60)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(268, 13)
+        Me.Label10.Size = New System.Drawing.Size(378, 13)
         Me.Label10.TabIndex = 27
-        Me.Label10.Text = "Uncheck a patch to comment it out in the master script."
+        Me.Label10.Text = "Tick a patch to skip it during patchset testing. Removal all ticks in final versi" & _
+    "on."
         '
         'NoteTextBox
         '

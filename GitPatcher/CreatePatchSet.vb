@@ -276,21 +276,15 @@ Public Class CreatePatchCollection
 
         'Iterate through the PatchableCheckedListBox
         'convert Patchable items to a collection
-        Dim filenames As Collection = New Collection
-
-        For i = 0 To PatchableCheckedListBox.Items.Count - 1
-            filenames.Add(PatchableCheckedListBox.Items(i))
-
-        Next
-
-
-        'Create filenames from the ChosenPatches
-
-        'filenames = GitSharpFascade.exportTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
+        'Dim filenames As Collection = New Collection
+        '
+        'For i = 0 To PatchableCheckedListBox.Items.Count - 1
+        '    filenames.Add(PatchableCheckedListBox.Items(i))
+        '
+        'Next
 
 
-
-
+ 
         'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
                            pCreatePatchType, _
@@ -303,7 +297,7 @@ Public Class CreatePatchCollection
                            NoteTextBox.Text, _
                            UsePatchAdminCheckBox.Checked, _
                            RerunCheckBox.Checked, _
-                           filenames, _
+                           PatchableCheckedListBox.Items, _
                            PatchableCheckedListBox.CheckedItems, _
                            PrereqsCheckedListBox.CheckedItems, _
                            SupersedesCheckedListBox.CheckedItems, _
@@ -358,10 +352,7 @@ Public Class CreatePatchCollection
         PatchDirTextBox.Text = Globals.RootPatchDir & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
-
-
-
-
+ 
 
     Shared Sub writeInstallScript(ByVal patch_name As String, _
                                   ByVal patch_type As String, _
@@ -374,7 +365,7 @@ Public Class CreatePatchCollection
                                   ByVal note As String, _
                                   ByVal use_patch_admin As Boolean, _
                                   ByVal rerunnable As Boolean, _
-                                  ByRef targetFiles As Collection, _
+                                  ByRef targetFiles As CheckedListBox.ObjectCollection, _
                                   ByRef iSkipFiles As CheckedListBox.CheckedItemCollection, _
                                   ByRef prereq_patches As CheckedListBox.CheckedItemCollection, _
                                   ByRef supersedes_patches As CheckedListBox.CheckedItemCollection, _

@@ -272,7 +272,7 @@ Public Class GitSharpFascade
     End Function
 
 
-    Shared Function exportTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As CheckedListBox.CheckedItemCollection, patchDir As String) As Collection
+    Shared Function exportTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As CheckedListBox.ObjectCollection, patchDir As String) As Collection
 
         Dim repo As GitSharp.Repository = New GitSharp.Repository(repo_path)
 

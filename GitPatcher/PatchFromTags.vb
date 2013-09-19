@@ -102,8 +102,8 @@ Public Class PatchFromTags
 
 
         Dim filenames As Collection = Nothing
-
-        filenames = GitSharpFascade.exportTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ChangesCheckedListBox.CheckedItems, PatchDirTextBox.Text)
+ 
+        filenames = GitSharpFascade.exportTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchableCheckedListBox.Items, PatchDirTextBox.Text)
 
         'Additional file exports 
 
