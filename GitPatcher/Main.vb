@@ -166,6 +166,9 @@
         mergeAndPush.addStep("Merge from branch: " & currentBranch, True, "Please select the Branch:" & currentBranch & " from the Tortoise Merge Dialogue")
         mergeAndPush.addStep("Commit - incase of merge conflict")
         mergeAndPush.addStep("Push to Origin")
+        mergeAndPush.addStep("Synch to Verify Push", True, "Should say '0 commits ahead orgin/" & iBranchTo & "'.  " _
+                                 & "If NOT, then the push FAILED. Your " & iBranchTo & " branch is now out of date, so your merged files could be stale. " _
+                                 & "In this situation, it is safest to perform a Rebase and then restart the Merge process to ensure you are pushing the lastest merged files. ")
         mergeAndPush.addStep("Return to branch: " & currentBranch)
 
         mergeAndPush.Show()
@@ -203,6 +206,12 @@
             'Push to origin/develop 
             GitBash.Push(Globals.currentRepo, "origin", iBranchTo)
 
+        End If
+
+
+        If mergeAndPush.toDoNextStep() Then
+            'Synch command to verfiy that Push was successful.
+            Tortoise.Sync(Globals.currentRepo)
         End If
 
         If mergeAndPush.toDoNextStep() Then
@@ -373,7 +382,7 @@
         Dim l_tag_base As String = Nothing
 
         rebasing.MdiParent = GitPatcher
-        rebasing.addStep("Switch to " & iRebaseBranchOn & " branch")
+        rebasing.addStep("Switch to " & iRebaseBranchOn & " branch", True, "If you get an error concerning uncommitted changes.  Please resolve the changes and then RESTART this process to ensure the switch to " & iRebaseBranchOn & " branch is successful.")
         rebasing.addStep("Pull from Origin")
         rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & ".99A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & CurrentBranchTextBox.Text & ".99A")
         rebasing.addStep("Return to branch: " & currentBranchLong)

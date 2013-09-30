@@ -848,17 +848,22 @@ Public Class PatchFromTags
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")
         createPatchProgress.MdiParent = GitPatcher
         createPatchProgress.addStep("Export Apex to branch: " & currentBranch, False, "Using the Apex Export workflow")
-        createPatchProgress.addStep("Use QCGU to generate changed domain data: " & currentBranch, False, "Think hard!  Did i change domain config?  If so, i should logon to QCGU and generate that data out. Then commit it too.")
+        createPatchProgress.addStep("Use QCGU to generate changed domain data: " & currentBranch, False, "Think hard!  Did i change any domains, tables, security or menus?  " _
+                                 & "If so, i should logon to QCGU and generate that data out. " _
+                                 & "Then commit it too." _
+                                 & "Regenerate: Menu (new pages, menu changes), Security (new pages, security changes), Tapis (table or view column changes), Domains (new or changed tables or views, new domains or domain ussage changed)")
         createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow")
         createPatchProgress.addStep("Review tags on Branch: " & currentBranch)
         createPatchProgress.addStep("Create edit, test", True, "Now is a great time to smoke test my work before i commit the patch.")
         createPatchProgress.addStep("Commit to Branch: " & currentBranch)
         createPatchProgress.addStep("Switch to " & iRebaseBranchOn & " branch")
-        'createPatchProgress.addStep("Pull from Origin" )
         createPatchProgress.addStep("Merge from Branch: " & currentBranch, True, "Please select the Branch:" & currentBranch & " from the Tortoise Merge Dialogue")
         createPatchProgress.addStep("Push to Origin", True, "If at this stage there is an error because your " & iRebaseBranchOn & " branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
-        createPatchProgress.addStep("Return to Branch: " & currentBranch)
+        createPatchProgress.addStep("Synch to Verify Push", True, "Should say '0 commits ahead orgin/" & iRebaseBranchOn & "'.  " _
+                                 & "If NOT, then the push FAILED. Your " & iRebaseBranchOn & " branch is now out of date, so is your rebase from it, and any patches COULD BE stale. " _
+                                 & "In this situation, it is safest to restart the Create Patch process to ensure you are patching the lastest merged files. ")
         createPatchProgress.addStep("Release to " & iDBtarget, True)
+        createPatchProgress.addStep("Return to Branch: " & currentBranch)
         createPatchProgress.addStep("Snapshot VM", True, "Create a snapshot of your current VM state, to use as your next restore point.  I label mine with the patch_name of the last applied patch.")
         createPatchProgress.Show()
 
@@ -917,12 +922,7 @@ Public Class PatchFromTags
             'Switch to develop branch
             GitBash.Switch(Globals.currentRepo, iRebaseBranchOn)
         End If
-
-        'If createPatchProgress.toDoNextStep() Then
-        '    'Pull from origin/develop
-        '    GitBash.Pull(Globals.currentRepo, "origin", "develop")
-        'End If
-
+ 
         If createPatchProgress.toDoNextStep() Then
             'Merge from Feature branch
             Tortoise.Merge(Globals.currentRepo)
@@ -934,13 +934,18 @@ Public Class PatchFromTags
         End If
 
         If createPatchProgress.toDoNextStep() Then
-            'GitSharpFascade.switchBranch(Globals.currentRepo, currentBranch)
-            GitBash.Switch(Globals.currentRepo, currentBranch)
+            'Synch command to verfiy that Push was successful.
+            Tortoise.Sync(Globals.currentRepo)
         End If
 
         If createPatchProgress.toDoNextStep() Then
             'Release to DB Target
             Main.releaseTo(iDBtarget, iBranchType)
+        End If
+
+        If createPatchProgress.toDoNextStep() Then
+            'GitSharpFascade.switchBranch(Globals.currentRepo, currentBranch)
+            GitBash.Switch(Globals.currentRepo, currentBranch)
         End If
 
         If createPatchProgress.toDoNextStep() Then
