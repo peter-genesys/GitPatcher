@@ -818,7 +818,7 @@ Public Class PatchFromTags
 
     End Sub
 
-    Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles CommitButton.Click
+    Private Sub CommitButton_Click(sender As Object, e As EventArgs) Handles CommitButton.Click
 
         Dim lUntracked As String = Nothing
         If Not Me.TrackPromoCheckBox.Checked Then
