@@ -54,12 +54,10 @@ Partial Class PatchFromTags
         Me.RestrictSupToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.SupButton = New System.Windows.Forms.Button()
         Me.Label14 = New System.Windows.Forms.Label()
-        Me.SupersedesCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.TabPagePreReqs = New System.Windows.Forms.TabPage()
         Me.RestrictPreReqToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.PreReqButton = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.PrereqsCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.TabPageChanges = New System.Windows.Forms.TabPage()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.SchemaCountTextBox = New System.Windows.Forms.TextBox()
@@ -87,7 +85,12 @@ Partial Class PatchFromTags
         Me.RestrictSupByToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.SupByButton = New System.Windows.Forms.Button()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.SupersededByCheckedListBox = New System.Windows.Forms.CheckedListBox()
+        Me.PreReqPatchesTreeView = New System.Windows.Forms.TreeView()
+        Me.SuperPatchesTreeView = New System.Windows.Forms.TreeView()
+        Me.SuperByPatchesTreeView = New System.Windows.Forms.TreeView()
+        Me.ButtonTreeChangePrereq = New System.Windows.Forms.Button()
+        Me.ButtonTreeChangeSuper = New System.Windows.Forms.Button()
+        Me.ButtonTreeChangeSuperBy = New System.Windows.Forms.Button()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPageSuper.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
@@ -363,10 +366,11 @@ Partial Class PatchFromTags
         '
         'TabPageSuper
         '
+        Me.TabPageSuper.Controls.Add(Me.ButtonTreeChangeSuper)
+        Me.TabPageSuper.Controls.Add(Me.SuperPatchesTreeView)
         Me.TabPageSuper.Controls.Add(Me.RestrictSupToBranchCheckBox)
         Me.TabPageSuper.Controls.Add(Me.SupButton)
         Me.TabPageSuper.Controls.Add(Me.Label14)
-        Me.TabPageSuper.Controls.Add(Me.SupersedesCheckedListBox)
         Me.TabPageSuper.Location = New System.Drawing.Point(4, 22)
         Me.TabPageSuper.Name = "TabPageSuper"
         Me.TabPageSuper.Padding = New System.Windows.Forms.Padding(3)
@@ -403,21 +407,13 @@ Partial Class PatchFromTags
         Me.Label14.TabIndex = 32
         Me.Label14.Text = "Supersedes"
         '
-        'SupersedesCheckedListBox
-        '
-        Me.SupersedesCheckedListBox.CheckOnClick = True
-        Me.SupersedesCheckedListBox.FormattingEnabled = True
-        Me.SupersedesCheckedListBox.Location = New System.Drawing.Point(77, 76)
-        Me.SupersedesCheckedListBox.Name = "SupersedesCheckedListBox"
-        Me.SupersedesCheckedListBox.Size = New System.Drawing.Size(397, 529)
-        Me.SupersedesCheckedListBox.TabIndex = 31
-        '
         'TabPagePreReqs
         '
+        Me.TabPagePreReqs.Controls.Add(Me.ButtonTreeChangePrereq)
+        Me.TabPagePreReqs.Controls.Add(Me.PreReqPatchesTreeView)
         Me.TabPagePreReqs.Controls.Add(Me.RestrictPreReqToBranchCheckBox)
         Me.TabPagePreReqs.Controls.Add(Me.PreReqButton)
         Me.TabPagePreReqs.Controls.Add(Me.Label13)
-        Me.TabPagePreReqs.Controls.Add(Me.PrereqsCheckedListBox)
         Me.TabPagePreReqs.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePreReqs.Name = "TabPagePreReqs"
         Me.TabPagePreReqs.Padding = New System.Windows.Forms.Padding(3)
@@ -453,15 +449,6 @@ Partial Class PatchFromTags
         Me.Label13.Size = New System.Drawing.Size(43, 13)
         Me.Label13.TabIndex = 32
         Me.Label13.Text = "Prereqs"
-        '
-        'PrereqsCheckedListBox
-        '
-        Me.PrereqsCheckedListBox.CheckOnClick = True
-        Me.PrereqsCheckedListBox.FormattingEnabled = True
-        Me.PrereqsCheckedListBox.Location = New System.Drawing.Point(77, 76)
-        Me.PrereqsCheckedListBox.Name = "PrereqsCheckedListBox"
-        Me.PrereqsCheckedListBox.Size = New System.Drawing.Size(397, 529)
-        Me.PrereqsCheckedListBox.TabIndex = 31
         '
         'TabPageChanges
         '
@@ -695,10 +682,11 @@ Partial Class PatchFromTags
         '
         'TabPageSuperBy
         '
+        Me.TabPageSuperBy.Controls.Add(Me.ButtonTreeChangeSuperBy)
+        Me.TabPageSuperBy.Controls.Add(Me.SuperByPatchesTreeView)
         Me.TabPageSuperBy.Controls.Add(Me.RestrictSupByToBranchCheckBox)
         Me.TabPageSuperBy.Controls.Add(Me.SupByButton)
         Me.TabPageSuperBy.Controls.Add(Me.Label19)
-        Me.TabPageSuperBy.Controls.Add(Me.SupersededByCheckedListBox)
         Me.TabPageSuperBy.Location = New System.Drawing.Point(4, 22)
         Me.TabPageSuperBy.Name = "TabPageSuperBy"
         Me.TabPageSuperBy.Size = New System.Drawing.Size(542, 685)
@@ -734,14 +722,56 @@ Partial Class PatchFromTags
         Me.Label19.TabIndex = 37
         Me.Label19.Text = "Superseded By"
         '
-        'SupersededByCheckedListBox
+        'PreReqPatchesTreeView
         '
-        Me.SupersededByCheckedListBox.CheckOnClick = True
-        Me.SupersededByCheckedListBox.FormattingEnabled = True
-        Me.SupersededByCheckedListBox.Location = New System.Drawing.Point(77, 76)
-        Me.SupersededByCheckedListBox.Name = "SupersededByCheckedListBox"
-        Me.SupersededByCheckedListBox.Size = New System.Drawing.Size(397, 529)
-        Me.SupersededByCheckedListBox.TabIndex = 36
+        Me.PreReqPatchesTreeView.CheckBoxes = True
+        Me.PreReqPatchesTreeView.Location = New System.Drawing.Point(77, 76)
+        Me.PreReqPatchesTreeView.Name = "PreReqPatchesTreeView"
+        Me.PreReqPatchesTreeView.Size = New System.Drawing.Size(397, 529)
+        Me.PreReqPatchesTreeView.TabIndex = 40
+        '
+        'SuperPatchesTreeView
+        '
+        Me.SuperPatchesTreeView.CheckBoxes = True
+        Me.SuperPatchesTreeView.Location = New System.Drawing.Point(77, 76)
+        Me.SuperPatchesTreeView.Name = "SuperPatchesTreeView"
+        Me.SuperPatchesTreeView.Size = New System.Drawing.Size(397, 529)
+        Me.SuperPatchesTreeView.TabIndex = 41
+        '
+        'SuperByPatchesTreeView
+        '
+        Me.SuperByPatchesTreeView.CheckBoxes = True
+        Me.SuperByPatchesTreeView.Location = New System.Drawing.Point(77, 76)
+        Me.SuperByPatchesTreeView.Name = "SuperByPatchesTreeView"
+        Me.SuperByPatchesTreeView.Size = New System.Drawing.Size(397, 529)
+        Me.SuperByPatchesTreeView.TabIndex = 42
+        '
+        'ButtonTreeChange
+        '
+        Me.ButtonTreeChangePrereq.Location = New System.Drawing.Point(222, 17)
+        Me.ButtonTreeChangePrereq.Name = "ButtonTreeChange"
+        Me.ButtonTreeChangePrereq.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonTreeChangePrereq.TabIndex = 44
+        Me.ButtonTreeChangePrereq.Text = "Expand"
+        Me.ButtonTreeChangePrereq.UseVisualStyleBackColor = True
+        '
+        'ButtonTreeChangeSuper
+        '
+        Me.ButtonTreeChangeSuper.Location = New System.Drawing.Point(222, 17)
+        Me.ButtonTreeChangeSuper.Name = "ButtonTreeChangeSuper"
+        Me.ButtonTreeChangeSuper.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonTreeChangeSuper.TabIndex = 44
+        Me.ButtonTreeChangeSuper.Text = "Expand"
+        Me.ButtonTreeChangeSuper.UseVisualStyleBackColor = True
+        '
+        'ButtonTreeChangeSuperBy
+        '
+        Me.ButtonTreeChangeSuperBy.Location = New System.Drawing.Point(222, 17)
+        Me.ButtonTreeChangeSuperBy.Name = "ButtonTreeChangeSuperBy"
+        Me.ButtonTreeChangeSuperBy.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonTreeChangeSuperBy.TabIndex = 44
+        Me.ButtonTreeChangeSuperBy.Text = "Expand"
+        Me.ButtonTreeChangeSuperBy.UseVisualStyleBackColor = True
         '
         'PatchFromTags
         '
@@ -798,12 +828,10 @@ Partial Class PatchFromTags
     Friend WithEvents RestrictSupToBranchCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents SupButton As System.Windows.Forms.Button
     Friend WithEvents Label14 As System.Windows.Forms.Label
-    Friend WithEvents SupersedesCheckedListBox As System.Windows.Forms.CheckedListBox
     Friend WithEvents TabPagePreReqs As System.Windows.Forms.TabPage
     Friend WithEvents RestrictPreReqToBranchCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents PreReqButton As System.Windows.Forms.Button
     Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents PrereqsCheckedListBox As System.Windows.Forms.CheckedListBox
     Friend WithEvents TabPageChanges As System.Windows.Forms.TabPage
     Friend WithEvents Label17 As System.Windows.Forms.Label
     Friend WithEvents SchemaCountTextBox As System.Windows.Forms.TextBox
@@ -828,10 +856,15 @@ Partial Class PatchFromTags
     Friend WithEvents RestrictSupByToBranchCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents SupByButton As System.Windows.Forms.Button
     Friend WithEvents Label19 As System.Windows.Forms.Label
-    Friend WithEvents SupersededByCheckedListBox As System.Windows.Forms.CheckedListBox
     Friend WithEvents TabPageExtras As System.Windows.Forms.TabPage
     Friend WithEvents TreeViewFiles As System.Windows.Forms.TreeView
     Friend WithEvents ButtonFindFiles As System.Windows.Forms.Button
     Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents ExtrasListBox As System.Windows.Forms.ListBox
+    Friend WithEvents PreReqPatchesTreeView As System.Windows.Forms.TreeView
+    Friend WithEvents SuperPatchesTreeView As System.Windows.Forms.TreeView
+    Friend WithEvents SuperByPatchesTreeView As System.Windows.Forms.TreeView
+    Friend WithEvents ButtonTreeChangeSuper As System.Windows.Forms.Button
+    Friend WithEvents ButtonTreeChangePrereq As System.Windows.Forms.Button
+    Friend WithEvents ButtonTreeChangeSuperBy As System.Windows.Forms.Button
 End Class

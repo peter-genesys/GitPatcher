@@ -18,10 +18,22 @@ Public Class PatchFromTags
         gRebaseBranchOn = iRebaseBranchOn
 
         'NOT CURRENTLY USING THE TabPageSuperBy TABPAGE
-        PatchTabControl.TabPages.Remove(TabPageSuperBy)
+        'PatchTabControl.TabPages.Remove(TabPageSuperBy)
         'If gBranchType <> "hotfix" Then
         '  PatchTabControl.TabPages.Remove(TabPageSuperBy)
         'End If
+
+
+        ' 'Initialise Patch lists.
+        ' RestrictPreReqToBranchCheckBox.Checked = True
+        ' FindPreReqs()
+        '
+        ' RestrictSupToBranchCheckBox.Checked = True
+        ' FindSuper()
+        '
+        ' RestrictSupByToBranchCheckBox.Checked = True
+        ' FindSuperBy()
+ 
 
     End Sub
 
@@ -111,6 +123,26 @@ Public Class PatchFromTags
  
         'Add to filenames too
 
+
+        Dim PreReqPatches As Collection = New Collection
+
+        'Retrieve checked node items from the PreReqPatchesTreeView as a collection of patches.
+        GPTrees.ReadCheckedNodes(PreReqPatchesTreeView.TopNode, PreReqPatches, True)
+
+
+        Dim SuperPatches As Collection = New Collection
+
+        'Retrieve checked node items from the SuperPatchesTreeView as a collection of patches.
+        GPTrees.ReadCheckedNodes(SuperPatchesTreeView.TopNode, SuperPatches, True)
+
+        Dim SuperByPatches As Collection = New Collection
+
+
+        'Retrieve checked node items from the SuperByPatchesTreeView as a collection of patches.
+        GPTrees.ReadCheckedNodes(SuperByPatchesTreeView.TopNode, SuperByPatches, True)
+
+
+
         'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
                            Common.getFirstSegment(Globals.currentLongBranch, "/"), _
@@ -125,9 +157,9 @@ Public Class PatchFromTags
                            RerunCheckBox.Checked, _
                            filenames, _
                            PatchableCheckedListBox.CheckedItems, _
-                           PrereqsCheckedListBox.CheckedItems, _
-                           SupersedesCheckedListBox.CheckedItems, _
-                           SupersededByCheckedListBox.CheckedItems, _
+                           PreReqPatches, _
+                           SuperPatches, _
+                           SuperByPatches, _
                            PatchDirTextBox.Text, _
                            PatchPathTextBox.Text, _
                            TrackPromoCheckBox.Checked)
@@ -207,9 +239,9 @@ Public Class PatchFromTags
                                   ByVal rerunnable As Boolean, _
                                   ByRef targetFiles As Collection, _
                                   ByRef ignoreErrorFiles As CheckedListBox.CheckedItemCollection, _
-                                  ByRef prereq_patches As CheckedListBox.CheckedItemCollection, _
-                                  ByRef supersedes_patches As CheckedListBox.CheckedItemCollection, _
-                                  ByRef superseded_by_patches As CheckedListBox.CheckedItemCollection, _
+                                  ByRef prereq_patches As Collection, _
+                                  ByRef supersedes_patches As Collection, _
+                                  ByRef superseded_by_patches As Collection, _
                                   ByVal patchDir As String, _
                                   ByVal groupPath As String, _
                                   ByVal track_promotion As Boolean)
@@ -643,9 +675,10 @@ Public Class PatchFromTags
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePreReqs" Then
 
-            RestrictPreReqToBranchCheckBox.Checked = True
 
-            If PrereqsCheckedListBox.Items.Count = 0 Then
+
+            If PreReqPatchesTreeView.Nodes.Count = 0 Then
+                RestrictPreReqToBranchCheckBox.Checked = True
                 FindPreReqs()
             End If
 
@@ -654,9 +687,10 @@ Public Class PatchFromTags
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageSuper" Then
 
-            RestrictSupToBranchCheckBox.Checked = True
 
-            If SupersedesCheckedListBox.Items.Count = 0 Then
+
+            If SuperPatchesTreeView.Nodes.Count = 0 Then
+                RestrictSupToBranchCheckBox.Checked = True
                 FindSuper()
             End If
 
@@ -666,9 +700,10 @@ Public Class PatchFromTags
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageSuperBy" Then
 
-            RestrictSupByToBranchCheckBox.Checked = True
 
-            If SupersededByCheckedListBox.Items.Count = 0 Then
+
+            If SuperByPatchesTreeView.Nodes.Count = 0 Then
+                RestrictSupByToBranchCheckBox.Checked = True
                 FindSuperBy()
             End If
 
@@ -747,30 +782,66 @@ Public Class PatchFromTags
     End Sub
 
 
-    Private Sub FindPatches(ByRef foundPatches As CheckedListBox, ByVal restrictToBranch As Boolean)
-        foundPatches.Items.Clear()
+    ' Private Sub FindPatches(ByRef foundPatches As CheckedListBox, ByVal restrictToBranch As Boolean)
+    '     foundPatches.Items.Clear()
+    '     If IO.Directory.Exists(Globals.RootPatchDir) Then
+    '
+    '         FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", foundPatches, Globals.RootPatchDir)
+    '
+    '         If restrictToBranch Then
+    '             For i As Integer = foundPatches.Items.Count - 1 To 0 Step -1
+    '                 If Not foundPatches.Items(i).contains(Globals.currentBranch) Then
+    '                     'This patch is not from this branch and will be removed from the list
+    '                     foundPatches.Items.RemoveAt(i)
+    '                 End If
+    '             Next
+    '         End If
+    '
+    '
+    '     End If
+    '
+    ' End Sub
+
+
+    Private Sub FindPatches(ByRef foundPatches As TreeView, ByVal restrictToBranch As Boolean, ByRef sender As Object)
+
+
+        Dim lfoundPatches As Collection = New Collection
+
+        sender.text = "Expand"
+
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", foundPatches, Globals.RootPatchDir)
+            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", lfoundPatches, Globals.RootPatchDir)
 
             If restrictToBranch Then
-                For i As Integer = foundPatches.Items.Count - 1 To 0 Step -1
-                    If Not foundPatches.Items(i).contains(Globals.currentBranch) Then
+                'For i As Integer = lfoundPatches.Count - 1 To 0 Step -1
+                For i As Integer = lfoundPatches.Count To 1 Step -1
+                    If Not lfoundPatches(i).contains(Globals.currentBranch) Then
                         'This patch is not from this branch and will be removed from the list
-                        foundPatches.Items.RemoveAt(i)
+                        lfoundPatches.Remove(i)
+
                     End If
                 Next
+
             End If
 
 
         End If
+
+
+        GPTrees.populateTreeFromCollection(foundPatches, lfoundPatches)
+
+        If restrictToBranch Then
+            GPTrees.treeChange_Click(sender, foundPatches)
+        End If
+
     End Sub
-
-
-
+ 
 
     Private Sub FindPreReqs()
-        FindPatches(PrereqsCheckedListBox, RestrictPreReqToBranchCheckBox.Checked)
+        FindPatches(PreReqPatchesTreeView, RestrictPreReqToBranchCheckBox.Checked, ButtonTreeChangePrereq)
+
     End Sub
 
 
@@ -780,7 +851,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub FindSuper()
-        FindPatches(SupersedesCheckedListBox, RestrictSupToBranchCheckBox.Checked)
+        FindPatches(SuperPatchesTreeView, RestrictSupToBranchCheckBox.Checked, ButtonTreeChangeSuper)
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles SupButton.Click
@@ -922,7 +993,7 @@ Public Class PatchFromTags
             'Switch to develop branch
             GitBash.Switch(Globals.currentRepo, iRebaseBranchOn)
         End If
- 
+
         If createPatchProgress.toDoNextStep() Then
             'Merge from Feature branch
             Tortoise.Merge(Globals.currentRepo)
@@ -961,7 +1032,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub FindSuperBy()
-        FindPatches(SupersededByCheckedListBox, RestrictSupByToBranchCheckBox.Checked)
+        FindPatches(SuperByPatchesTreeView, RestrictSupByToBranchCheckBox.Checked, ButtonTreeChangeSuperBy)
     End Sub
 
 
@@ -969,19 +1040,19 @@ Public Class PatchFromTags
         FindSuperBy()
     End Sub
 
- 
+
 
     Private Sub PopulateTreeView(ByVal dir As String, ByVal parentNode As TreeNode)
         Dim folder As String = String.Empty
         Try
- 
+
             Dim files() As String = System.IO.Directory.GetFiles(dir) ', strPattern)
             Dim fileNode As TreeNode = Nothing
             For Each file In files
                 fileNode = New TreeNode(Common.getLastSegment(file, "\")) 'translate to relative URL
                 parentNode.Nodes.Add(fileNode)
             Next
- 
+
             Dim folders() As String = IO.Directory.GetDirectories(dir)
             If folders.Length <> 0 Then
                 Dim childNode As TreeNode = Nothing
@@ -996,15 +1067,15 @@ Public Class PatchFromTags
         End Try
     End Sub
 
- 
+
     Private Sub ButtonFindFiles_Click(sender As Object, e As EventArgs) Handles ButtonFindFiles.Click
- 
+
 
         TreeViewFiles.PathSeparator = "\"
         TreeViewFiles.Nodes.Clear()
 
         Dim extrasDirCol As Collection = extrasDirCollection()
-   
+
         For Each relDir In extrasDirCol
             Dim aRootDir As String = Globals.currentRepo() & relDir
             Dim aRootNode As TreeNode = New TreeNode(aRootDir)
@@ -1015,7 +1086,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub TreeViewFiles_DoubleClick(sender As Object, e As MouseEventArgs) Handles TreeViewFiles.DoubleClick
- 
+
         'Ignore Doubleclick on a folder
         If TreeViewFiles.SelectedNode.Nodes.Count = 0 Then
 
@@ -1040,4 +1111,37 @@ Public Class PatchFromTags
             ExtrasListBox.Items.RemoveAt(ExtrasListBox.SelectedIndex)
         End If
     End Sub
+
+    Private Sub ButtonTreeChange_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangePrereq.Click
+        'Impliments a 3 position button Expand, Contract, Collapse.
+        GPTrees.treeChange_Click(sender, PreReqPatchesTreeView)
+    End Sub
+ 
+    Private Sub ButtonTreeChangeSuper_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangeSuper.Click
+        'Impliments a 3 position button Expand, Contract, Collapse.
+        GPTrees.treeChange_Click(sender, SuperPatchesTreeView)
+    End Sub
+
+    Private Sub ButtonTreeChangeSuperBy_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangeSuperBy.Click
+        'Impliments a 3 position button Expand, Contract, Collapse.
+        GPTrees.treeChange_Click(sender, SuperByPatchesTreeView)
+    End Sub
+
+    Shared Sub PreReqPatchesTreeView_node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles PreReqPatchesTreeView.AfterCheck
+
+        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+
+    End Sub
+
+    Shared Sub SuperPatchesTreeView_node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles SuperPatchesTreeView.AfterCheck
+
+        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+
+    End Sub
+    Shared Sub SuperByPatchesTreeView_node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles SuperByPatchesTreeView.AfterCheck
+
+        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+
+    End Sub
+
 End Class

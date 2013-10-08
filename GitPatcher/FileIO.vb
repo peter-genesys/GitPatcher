@@ -154,6 +154,25 @@
     End Sub
 
 
+    Public Shared Sub RecursiveSearchContainingFolder(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As Collection, ByVal removePath As String)
+
+        Dim strFolders() As String = System.IO.Directory.GetDirectories(strPath)
+        Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
+
+        'Add the files
+        For Each strFile As String In strFiles
+            lstTarget.Add(strPath.Substring(removePath.Length))
+        Next
+
+        'Look through the other folders
+        For Each strFolder As String In strFolders
+            'Call the procedure again to perform the same operation
+            RecursiveSearchContainingFolder(strFolder, strPattern, lstTarget, removePath)
+        Next
+
+    End Sub
+
+
     Public Shared Function FileList(ByVal strPath As String, ByVal strPattern As String, ByVal removePath As String) As Collection
 
         Dim Filenames As Collection = New Collection

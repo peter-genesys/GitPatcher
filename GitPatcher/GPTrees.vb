@@ -1,7 +1,7 @@
 ﻿Public Class GPTrees
  
 
-    Shared Sub showCheckedNodesButton_Click(ByVal sender As Object, ByVal e As EventArgs, ByRef aTreeView As TreeView)
+    Shared Sub showCheckedNodesButton_Click(ByRef aTreeView As TreeView)
         ' Disable redrawing of treeView1 to prevent flickering  
         ' while changes are made.
         aTreeView.BeginUpdate()
@@ -51,8 +51,8 @@
     End Function 'HasCheckedChildNodes
 
 
-    Shared Sub treeChange_Click(ByRef sender As Object, ByVal e As EventArgs, ByRef aTreeView As TreeView)
- 
+    Shared Sub treeChange_Click(ByRef sender As Object, ByRef aTreeView As TreeView)
+
         If sender.text = "Collapse" Then
             sender.text = "Expand"
             aTreeView.CollapseAll()
@@ -61,7 +61,7 @@
             aTreeView.ExpandAll()
         ElseIf sender.text = "Contract" Then
             sender.text = "Collapse"
-            showCheckedNodesButton_Click(sender, e, aTreeView)
+            showCheckedNodesButton_Click(aTreeView)
         End If
 
     End Sub
@@ -122,22 +122,49 @@
  
 
 
-    Shared Sub populateTreeFromListbox(ByRef patchesTreeView As TreeView, ByRef patchesListBox As ListBox)
+    Shared Sub populateTreeFromCollection(ByRef patchesTreeView As TreeView, ByRef patches As Collection)
 
         patchesTreeView.PathSeparator = "\"
         patchesTreeView.Nodes.Clear()
 
         'copy each item from listbox
-        For i As Integer = 0 To patchesListBox.Items.Count - 1
+
+        For Each patch In patches
 
             'find or create each node for item
+            GPTrees.AddNode(patchesTreeView.Nodes, patch, patch)
 
-            Dim aItem As String = patchesListBox.Items(i).ToString()
-            GPTrees.AddNode(patchesTreeView.Nodes, aItem, aItem)
- 
         Next
 
     End Sub
+
+    Shared Sub populateTreeFromListbox(ByRef patchesTreeView As TreeView, ByRef patchesListBox As ListBox)
+
+        patchesTreeView.PathSeparator = "\"
+        patchesTreeView.Nodes.Clear()
+ 
+        ''copy each item from listbox
+        'For i As Integer = 0 To patchesListBox.Items.Count - 1
+        '
+        '    'find or create each node for item
+        '
+        '    Dim aItem As String = patchesListBox.Items(i).ToString()
+        '    GPTrees.AddNode(patchesTreeView.Nodes, aItem, aItem)
+        '
+        'Next
+
+        'copy each item from listbox
+        For Each item In patchesListBox.Items
+
+            'find or create each node for item
+            Dim aItem As String = item.ToString()
+            GPTrees.AddNode(patchesTreeView.Nodes, aItem, aItem)
+
+        Next
+
+
+    End Sub
+
  
     'NB - PAB There is protection against event recursion and then explicit recursion, but could have left it up to event recursion.!!
 
@@ -169,19 +196,23 @@
 
     Shared Sub ReadCheckedNodes(ByRef treeNode As TreeNode, ByRef iChosenPatches As Collection, ByVal itemsOnly As Boolean)
 
+        Try
+            Dim node As TreeNode
 
-        Dim node As TreeNode
+            If treeNode.Nodes.Count > 0 Then
+                For Each node In treeNode.Nodes
+                    ReadCheckedNodes(node, iChosenPatches, itemsOnly)
+                Next node
+            Else
+                If treeNode.Checked Or Not itemsOnly Then
+                    iChosenPatches.Add(treeNode.FullPath)
+                End If
 
-        If treeNode.Nodes.Count > 0 Then
-            For Each node In treeNode.Nodes
-                ReadCheckedNodes(node, iChosenPatches, itemsOnly)
-            Next node
-        Else
-            If treeNode.Checked Or Not itemsOnly Then
-                iChosenPatches.Add(treeNode.FullPath)
             End If
+        Catch ex As System.NullReferenceException
+            Logger.Dbg("TreeNode not defined.")
+        End Try
 
-        End If
 
     End Sub
 

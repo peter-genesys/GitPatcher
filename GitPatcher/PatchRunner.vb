@@ -276,27 +276,7 @@ Public Class PatchRunner
 
 
     End Sub
-
  
-
-
-    'Sub populateTreeFromListbox(ByRef patchesTreeView As TreeView, ByRef patchesListBox As ListBox)
-    '
-    '    patchesTreeView.PathSeparator = "\"
-    '    patchesTreeView.Nodes.Clear()
-    '
-    '    'copy each item from listbox
-    '    For i As Integer = 0 To AvailablePatchesListBox.Items.Count - 1
-    '
-    '        'find or create each node for item
-    '
-    '        Dim aItem As String = AvailablePatchesListBox.Items(i).ToString()
-    '        GPTrees.AddNode(patchesTreeView.Nodes, aItem, aItem)
-    '
-    '
-    '    Next
-    '
-    'End Sub
 
 
     Private Sub doSearch()
@@ -404,7 +384,7 @@ Public Class PatchRunner
 
     Private Sub ButtonTreeChange_Click(sender As Object, e As EventArgs) Handles ButtonTreeChange.Click
         'Impliments a 3 position button Expand, Contract, Collapse.
-        GPTrees.treeChange_Click(sender, e, AvailablePatchesTreeView)
+        GPTrees.treeChange_Click(sender, AvailablePatchesTreeView)
 
     End Sub
 
