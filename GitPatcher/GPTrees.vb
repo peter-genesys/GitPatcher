@@ -1,28 +1,5 @@
 ﻿Public Class GPTrees
-    ' Shared Sub Collapse_Click(ByVal sender As Object, ByVal e As EventArgs, ByRef aTreeView As TreeView)
-    '     ' Disable redrawing of treeView1 to prevent flickering  
-    '     ' while changes are made.
-    '     aTreeView.BeginUpdate()
-    '
-    '     ' Collapse all nodes of treeView1.
-    '     aTreeView.CollapseAll()
-    '
-    '     ' Enable redrawing of treeView1.
-    '     aTreeView.EndUpdate()
-    ' End Sub
-    '
-    ' Shared Sub Expand_Click(ByVal sender As Object, ByVal e As EventArgs, ByRef aTreeView As TreeView)
-    '     ' Disable redrawing of treeView1 to prevent flickering  
-    '     ' while changes are made.
-    '     aTreeView.BeginUpdate()
-    '
-    '     ' Expand all nodes of treeView1. 
-    '     aTreeView.ExpandAll()
-    '
-    '     ' Enable redrawing of treeView1.
-    '     aTreeView.EndUpdate()
-    ' End Sub
-    '
+ 
 
     Shared Sub showCheckedNodesButton_Click(ByVal sender As Object, ByVal e As EventArgs, ByRef aTreeView As TreeView)
         ' Disable redrawing of treeView1 to prevent flickering  
@@ -91,6 +68,7 @@
 
 
     Shared Function AddNode(ByRef nodes As TreeNodeCollection, ByVal fullPath As String, ByVal remainderPath As String, Optional ByVal delim As String = "\") As Boolean
+        'Commented out the logging, as it severely reduces performance.
         Dim first_segment As String = Common.getFirstSegment(remainderPath, delim)
         Dim remainder As String = Common.dropFirstSegment(remainderPath, delim)
 
@@ -98,18 +76,18 @@
 
         'First try to find the node
         For Each node In nodes
-            Logger.Note("node.FullPath", node.FullPath)
-            Logger.Note("fullPath", fullPath)
-            Logger.Note("InStr", InStr(fullPath, node.FullPath))
+            'Logger.Note("node.FullPath", node.FullPath)
+            ' Logger.Note("fullPath", fullPath)
+            'Logger.Note("InStr", InStr(fullPath, node.FullPath))
             If fullPath = node.FullPath Then
                 'If node.FullPath.ToString = fullPath Then
                 'Yay found it nothing to do
-                Logger.Dbg("Yay found it nothing to do")
+                'Logger.Dbg("Yay found it nothing to do")
                 Return True
                 'Node Full path must match first part of given full path, and current node must match exactly current segment
             ElseIf InStr(fullPath, node.FullPath.ToString) = 1 And first_segment = node.text Then
                 'Found a parent node at least, lets look for children
-                Logger.Dbg("Found a parent node at least, lets look for children")
+                'Logger.Dbg("Found a parent node at least, lets look for children")
                 lFound = AddNode(node.nodes, fullPath, remainder)
             End If
 
@@ -117,17 +95,17 @@
 
         If Not lFound And Not String.IsNullOrEmpty(first_segment) Then
             'Need to make a node
-            Logger.Dbg("Need to make a node for " & first_segment)
+            'Logger.Dbg("Need to make a node for " & first_segment)
             Dim newNode As TreeNode = New TreeNode(first_segment)
             nodes.Add(newNode)
             'If newNode.FullPath = fullPath Then
             If String.IsNullOrEmpty(remainder) Then
                 'We made the node!
-                Logger.Dbg("We made the node!")
+                'Logger.Dbg("We made the node!")
                 lFound = True
             Else
                 'Now follow this child
-                Logger.Dbg("Now follow this child")
+                'Logger.Dbg("Now follow this child")
                 'newNode.  .ShowCheckBox = False 'Hide checkbox of any parent node.
                 lFound = AddNode(newNode.Nodes, fullPath, remainder)
             End If
@@ -141,10 +119,26 @@
 
 
     End Function
+ 
 
 
+    Shared Sub populateTreeFromListbox(ByRef patchesTreeView As TreeView, ByRef patchesListBox As ListBox)
 
+        patchesTreeView.PathSeparator = "\"
+        patchesTreeView.Nodes.Clear()
 
+        'copy each item from listbox
+        For i As Integer = 0 To patchesListBox.Items.Count - 1
+
+            'find or create each node for item
+
+            Dim aItem As String = patchesListBox.Items(i).ToString()
+            GPTrees.AddNode(patchesTreeView.Nodes, aItem, aItem)
+ 
+        Next
+
+    End Sub
+ 
     'NB - PAB There is protection against event recursion and then explicit recursion, but could have left it up to event recursion.!!
 
     ' Updates all child tree nodes recursively. 
@@ -170,20 +164,7 @@
         Next node
     End Sub
 
-
-    '  ' NOTE   This code can be added to the BeforeCheck event handler instead of the AfterCheck event. 
-    '  ' After a tree node's Checked property is changed, all its child nodes are updated to the same value. 
-    '  Shared Sub node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles treeView1.AfterCheck
-    '      ' The code only executes if the user caused the checked state to change. 
-    '      If e.Action <> TreeViewAction.Unknown Then
-    '          If e.Node.Nodes.Count > 0 Then
-    '              ' Calls the CheckAllChildNodes method, passing in the current  
-    '              ' Checked value of the TreeNode whose checked state changed.  
-    '              Me.CheckAllChildNodes(e.Node, e.Node.Checked)
-    '          End If
-    '      End If
-    '  End Sub
-
+ 
  
 
     Shared Sub ReadCheckedNodes(ByRef treeNode As TreeNode, ByRef iChosenPatches As Collection, ByVal itemsOnly As Boolean)

@@ -280,26 +280,28 @@ Public Class PatchRunner
  
 
 
-    Sub populateTreeFromListbox(ByRef patchesTreeView As TreeView, ByRef patchesListBox As ListBox)
-
-        patchesTreeView.PathSeparator = "\"
-        patchesTreeView.Nodes.Clear()
-
-        'copy each item from listbox
-        For i As Integer = 0 To AvailablePatchesListBox.Items.Count - 1
-
-            'find or create each node for item
-
-            Dim aItem As String = AvailablePatchesListBox.Items(i).ToString()
-            GPTrees.AddNode(patchesTreeView.Nodes, aItem, aItem)
-
-
-        Next
-
-    End Sub
+    'Sub populateTreeFromListbox(ByRef patchesTreeView As TreeView, ByRef patchesListBox As ListBox)
+    '
+    '    patchesTreeView.PathSeparator = "\"
+    '    patchesTreeView.Nodes.Clear()
+    '
+    '    'copy each item from listbox
+    '    For i As Integer = 0 To AvailablePatchesListBox.Items.Count - 1
+    '
+    '        'find or create each node for item
+    '
+    '        Dim aItem As String = AvailablePatchesListBox.Items(i).ToString()
+    '        GPTrees.AddNode(patchesTreeView.Nodes, aItem, aItem)
+    '
+    '
+    '    Next
+    '
+    'End Sub
 
 
     Private Sub doSearch()
+        Logger.Dbg("Searching")
+
         If RadioButtonUnapplied.Checked Then
             FindUnappliedPatches(AvailablePatchesListBox)
         ElseIf RadioButtonUninstalled.Checked Or RadioButtonAll.Checked Then
@@ -308,9 +310,12 @@ Public Class PatchRunner
             MsgBox("Choose type of patch to search for.", MsgBoxStyle.Exclamation, "Choose Search criteria")
         End If
 
+        Logger.Dbg("Filtering")
         filterPatchType(AvailablePatchesListBox)
 
-        populateTreeFromListbox(AvailablePatchesTreeView, AvailablePatchesListBox)
+        Logger.Dbg("Populate Tree")
+        GPTrees.populateTreeFromListbox(AvailablePatchesTreeView, AvailablePatchesListBox)
+        'populateTreeFromListbox(AvailablePatchesTreeView.TopNode, AvailablePatchesListBox)
 
 
     End Sub
@@ -323,20 +328,8 @@ Public Class PatchRunner
 
     End Sub
 
-    Private Sub AvailablePatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AvailablePatchesListBox.Click
-        If Not ChosenPatchesListBox.Items.Contains(AvailablePatchesListBox.SelectedItem) Then
-            ChosenPatchesListBox.Items.Add(AvailablePatchesListBox.SelectedItem)
-        End If
-
-    End Sub
-
-    Private Sub ChosenPatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ChosenPatchesListBox.Click
-
-        If ChosenPatchesListBox.Items.Count > 0 Then
-            ChosenPatchesListBox.Items.RemoveAt(ChosenPatchesListBox.SelectedIndex)
-        End If
-
-    End Sub
+ 
+ 
 
     Public Shared Sub RunMasterScript(scriptData As String)
 
@@ -373,21 +366,12 @@ Public Class PatchRunner
         MasterScriptListBox.Items.Clear()
 
         MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.currentTNS & "'")
- 
-
+  
         Dim chosenPatches As Collection = New Collection
-
-
+ 
         'Retrieve checked node items from the available patches as a collection of patches.
         GPTrees.ReadCheckedNodes(AvailablePatchesTreeView.TopNode, chosenPatches, True)
  
-        'For i As Integer = 0 To ChosenPatchesListBox.Items.Count - 1
-        '
-        '    MasterScriptListBox.Items.Add("@" & ChosenPatchesListBox.Items(i).ToString() & "\install.sql")
-        '
-        'Next
-
-
         For Each lpatch In chosenPatches
             MasterScriptListBox.Items.Add("@" & lpatch & "\install.sql")
         Next
@@ -406,98 +390,17 @@ Public Class PatchRunner
         End If
 
     End Sub
-
-
-    Private Sub CopyAllPatches()
-        'Copy Selected Changes to the next list box.
-        ChosenPatchesListBox.Items.Clear()
-
-        For i As Integer = 0 To AvailablePatchesListBox.Items.Count - 1
-
-            ChosenPatchesListBox.Items.Add(AvailablePatchesListBox.Items(i).ToString)
-
-        Next
-    End Sub
-
-    Private Sub ChooseAllButton_Click(sender As Object, e As EventArgs) Handles ChooseAllButton.Click
-        CopyAllPatches()
-    End Sub
-
-    Private Sub ClearButton_Click(sender As Object, e As EventArgs) Handles ClearButton.Click
-        ChosenPatchesListBox.Items.Clear()
-    End Sub
-
-    ' Private Sub AvailablePatchesTreeView_DoubleClick(sender As Object, e As TreeViewCancelEventArgs) Handles AvailablePatchesTreeView.BeforeCheck
-    '
-    '     If e.Node.Nodes.Count > 0 Then
-    '         e.Node.Checked = False
-    '         e.Node.Expand()
-    '     End If
-    '     'Dim aItem As String = e.Node.FullPath
-    '     'If Not ChosenPatchesListBox.Items.Contains(aItem) Then
-    '     '    ChosenPatchesListBox.Items.Add(aItem)
-    '     'End If
-    '
-    ' End Sub
-
+ 
 
     ' NOTE   This code can be added to the BeforeCheck event handler instead of the AfterCheck event. 
     ' After a tree node's Checked property is changed, all its child nodes are updated to the same value. 
     Shared Sub node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles AvailablePatchesTreeView.AfterCheck
-        '' The code only executes if the user caused the checked state to change. 
-        'If e.Action <> TreeViewAction.Unknown Then
-        '    If e.Node.Nodes.Count > 0 Then
-        '        ' Calls the CheckAllChildNodes method, passing in the current  
-        '        ' Checked value of the TreeNode whose checked state changed.  
-        '        GPTrees.CheckAllChildNodes(e.Node, e.Node.Checked)
-        '    End If
-        'End If
-
+ 
         GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
 
     End Sub
 
  
-
-
-    'Private Sub AvailablePatchesTreeView_DoubleClick(sender As Object, e As TreeViewEventArgs) Handles AvailablePatchesTreeView.AfterCheck
-    '
-    '    Dim aItem As String = e.Node.FullPath
-    '    If Not ChosenPatchesListBox.Items.Contains(aItem) Then
-    '        ChosenPatchesListBox.Items.Add(aItem)
-    '    End If
-    '
-    'End Sub
-
-
-    'Private Sub AvailablePatchesTreeView_DoubleClick(sender As Object, e As MouseEventArgs) Handles AvailablePatchesTreeView.DoubleClick
-    '
-    '    Dim aItem As String = AvailablePatchesTreeView.SelectedNode.FullPath
-    '    If Not ChosenPatchesListBox.Items.Contains(aItem) And AvailablePatchesTreeView.SelectedNode.Nodes.Count = 0 Then
-    '        ChosenPatchesListBox.Items.Add(aItem)
-    '    End If
-    '
-    'End Sub
-
-  
-
-    Private Sub ListButton_Click(sender As Object, e As EventArgs) Handles ListButton.Click
-        AvailablePatchesListBox.Visible = True
-        AvailablePatchesTreeView.Visible = False
-        TreeButton.Visible = True
-        ListButton.Visible = False
-
-    End Sub
-
-    Private Sub TreeButton_Click(sender As Object, e As EventArgs) Handles TreeButton.Click
-        AvailablePatchesTreeView.Visible = True
-        AvailablePatchesListBox.Visible = False
-        ListButton.Visible = True
-        TreeButton.Visible = False
-
-    End Sub
-
-
 
     Private Sub ButtonTreeChange_Click(sender As Object, e As EventArgs) Handles ButtonTreeChange.Click
         'Impliments a 3 position button Expand, Contract, Collapse.

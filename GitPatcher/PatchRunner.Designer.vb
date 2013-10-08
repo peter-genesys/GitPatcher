@@ -27,19 +27,13 @@ Partial Class PatchRunner
         Me.PatchSelectorTabPage = New System.Windows.Forms.TabPage()
         Me.ButtonTreeChange = New System.Windows.Forms.Button()
         Me.AvailablePatchesTreeView = New System.Windows.Forms.TreeView()
-        Me.TreeButton = New System.Windows.Forms.Button()
-        Me.ListButton = New System.Windows.Forms.Button()
-        Me.ClearButton = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.AvailablePatchesListBox = New System.Windows.Forms.ListBox()
-        Me.ChooseAllButton = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.RadioButtonAll2 = New System.Windows.Forms.RadioButton()
         Me.RadioButtonFeature = New System.Windows.Forms.RadioButton()
         Me.RadioButtonPatchSet = New System.Windows.Forms.RadioButton()
         Me.RadioButtonHotfix = New System.Windows.Forms.RadioButton()
-        Me.ChosenPatchesListBox = New System.Windows.Forms.ListBox()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.SearchPatchesButton = New System.Windows.Forms.Button()
         Me.PatchFilterGroupBox = New System.Windows.Forms.GroupBox()
         Me.RadioButtonUnapplied = New System.Windows.Forms.RadioButton()
@@ -64,35 +58,29 @@ Partial Class PatchRunner
         Me.PatchRunnerTabControl.MaximumSize = New System.Drawing.Size(1000, 1000)
         Me.PatchRunnerTabControl.Name = "PatchRunnerTabControl"
         Me.PatchRunnerTabControl.SelectedIndex = 0
-        Me.PatchRunnerTabControl.Size = New System.Drawing.Size(701, 738)
+        Me.PatchRunnerTabControl.Size = New System.Drawing.Size(430, 738)
         Me.PatchRunnerTabControl.TabIndex = 0
         '
         'PatchSelectorTabPage
         '
         Me.PatchSelectorTabPage.Controls.Add(Me.ButtonTreeChange)
         Me.PatchSelectorTabPage.Controls.Add(Me.AvailablePatchesTreeView)
-        Me.PatchSelectorTabPage.Controls.Add(Me.TreeButton)
-        Me.PatchSelectorTabPage.Controls.Add(Me.ListButton)
-        Me.PatchSelectorTabPage.Controls.Add(Me.ClearButton)
         Me.PatchSelectorTabPage.Controls.Add(Me.Label1)
         Me.PatchSelectorTabPage.Controls.Add(Me.AvailablePatchesListBox)
-        Me.PatchSelectorTabPage.Controls.Add(Me.ChooseAllButton)
         Me.PatchSelectorTabPage.Controls.Add(Me.GroupBox1)
-        Me.PatchSelectorTabPage.Controls.Add(Me.ChosenPatchesListBox)
-        Me.PatchSelectorTabPage.Controls.Add(Me.Label2)
         Me.PatchSelectorTabPage.Controls.Add(Me.SearchPatchesButton)
         Me.PatchSelectorTabPage.Controls.Add(Me.PatchFilterGroupBox)
         Me.PatchSelectorTabPage.Location = New System.Drawing.Point(4, 22)
         Me.PatchSelectorTabPage.Name = "PatchSelectorTabPage"
         Me.PatchSelectorTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.PatchSelectorTabPage.Size = New System.Drawing.Size(693, 712)
+        Me.PatchSelectorTabPage.Size = New System.Drawing.Size(422, 712)
         Me.PatchSelectorTabPage.TabIndex = 0
         Me.PatchSelectorTabPage.Text = "Selection"
         Me.PatchSelectorTabPage.UseVisualStyleBackColor = True
         '
         'ButtonTreeChange
         '
-        Me.ButtonTreeChange.Location = New System.Drawing.Point(156, 153)
+        Me.ButtonTreeChange.Location = New System.Drawing.Point(115, 148)
         Me.ButtonTreeChange.Name = "ButtonTreeChange"
         Me.ButtonTreeChange.Size = New System.Drawing.Size(75, 23)
         Me.ButtonTreeChange.TabIndex = 43
@@ -104,41 +92,13 @@ Partial Class PatchRunner
         Me.AvailablePatchesTreeView.CheckBoxes = True
         Me.AvailablePatchesTreeView.Location = New System.Drawing.Point(6, 182)
         Me.AvailablePatchesTreeView.Name = "AvailablePatchesTreeView"
-        Me.AvailablePatchesTreeView.Size = New System.Drawing.Size(331, 524)
+        Me.AvailablePatchesTreeView.Size = New System.Drawing.Size(400, 525)
         Me.AvailablePatchesTreeView.TabIndex = 39
-        '
-        'TreeButton
-        '
-        Me.TreeButton.Location = New System.Drawing.Point(262, 153)
-        Me.TreeButton.Name = "TreeButton"
-        Me.TreeButton.Size = New System.Drawing.Size(75, 23)
-        Me.TreeButton.TabIndex = 42
-        Me.TreeButton.Text = "Tree View"
-        Me.TreeButton.UseVisualStyleBackColor = True
-        Me.TreeButton.Visible = False
-        '
-        'ListButton
-        '
-        Me.ListButton.Location = New System.Drawing.Point(262, 153)
-        Me.ListButton.Name = "ListButton"
-        Me.ListButton.Size = New System.Drawing.Size(75, 23)
-        Me.ListButton.TabIndex = 39
-        Me.ListButton.Text = "List View"
-        Me.ListButton.UseVisualStyleBackColor = True
-        '
-        'ClearButton
-        '
-        Me.ClearButton.Location = New System.Drawing.Point(354, 36)
-        Me.ClearButton.Name = "ClearButton"
-        Me.ClearButton.Size = New System.Drawing.Size(75, 23)
-        Me.ClearButton.TabIndex = 41
-        Me.ClearButton.Text = "Clear"
-        Me.ClearButton.UseVisualStyleBackColor = True
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(3, 166)
+        Me.Label1.Location = New System.Drawing.Point(3, 158)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(92, 13)
         Me.Label1.TabIndex = 2
@@ -153,24 +113,15 @@ Partial Class PatchRunner
         Me.AvailablePatchesListBox.TabIndex = 0
         Me.AvailablePatchesListBox.Visible = False
         '
-        'ChooseAllButton
-        '
-        Me.ChooseAllButton.Location = New System.Drawing.Point(354, 7)
-        Me.ChooseAllButton.Name = "ChooseAllButton"
-        Me.ChooseAllButton.Size = New System.Drawing.Size(75, 23)
-        Me.ChooseAllButton.TabIndex = 40
-        Me.ChooseAllButton.Text = "Choose All"
-        Me.ChooseAllButton.UseVisualStyleBackColor = True
-        '
         'GroupBox1
         '
         Me.GroupBox1.Controls.Add(Me.RadioButtonAll2)
         Me.GroupBox1.Controls.Add(Me.RadioButtonFeature)
         Me.GroupBox1.Controls.Add(Me.RadioButtonPatchSet)
         Me.GroupBox1.Controls.Add(Me.RadioButtonHotfix)
-        Me.GroupBox1.Location = New System.Drawing.Point(193, 7)
+        Me.GroupBox1.Location = New System.Drawing.Point(250, 36)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(144, 120)
+        Me.GroupBox1.Size = New System.Drawing.Size(156, 120)
         Me.GroupBox1.TabIndex = 38
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Filter"
@@ -217,23 +168,6 @@ Partial Class PatchRunner
         Me.RadioButtonHotfix.Text = "Hotfix"
         Me.RadioButtonHotfix.UseVisualStyleBackColor = True
         '
-        'ChosenPatchesListBox
-        '
-        Me.ChosenPatchesListBox.FormattingEnabled = True
-        Me.ChosenPatchesListBox.Location = New System.Drawing.Point(354, 182)
-        Me.ChosenPatchesListBox.Name = "ChosenPatchesListBox"
-        Me.ChosenPatchesListBox.Size = New System.Drawing.Size(331, 524)
-        Me.ChosenPatchesListBox.TabIndex = 1
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(351, 165)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(85, 13)
-        Me.Label2.TabIndex = 35
-        Me.Label2.Text = "Chosen Patches"
-        '
         'SearchPatchesButton
         '
         Me.SearchPatchesButton.Location = New System.Drawing.Point(8, 7)
@@ -248,9 +182,9 @@ Partial Class PatchRunner
         Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUnapplied)
         Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonAll)
         Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUninstalled)
-        Me.PatchFilterGroupBox.Location = New System.Drawing.Point(3, 36)
+        Me.PatchFilterGroupBox.Location = New System.Drawing.Point(8, 36)
         Me.PatchFilterGroupBox.Name = "PatchFilterGroupBox"
-        Me.PatchFilterGroupBox.Size = New System.Drawing.Size(144, 93)
+        Me.PatchFilterGroupBox.Size = New System.Drawing.Size(182, 93)
         Me.PatchFilterGroupBox.TabIndex = 1
         Me.PatchFilterGroupBox.TabStop = False
         Me.PatchFilterGroupBox.Text = "Filter"
@@ -295,7 +229,7 @@ Partial Class PatchRunner
         Me.RunTabPage.Location = New System.Drawing.Point(4, 22)
         Me.RunTabPage.Name = "RunTabPage"
         Me.RunTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.RunTabPage.Size = New System.Drawing.Size(693, 712)
+        Me.RunTabPage.Size = New System.Drawing.Size(422, 712)
         Me.RunTabPage.TabIndex = 1
         Me.RunTabPage.Text = "Run"
         Me.RunTabPage.UseVisualStyleBackColor = True
@@ -305,7 +239,7 @@ Partial Class PatchRunner
         Me.MasterScriptListBox.FormattingEnabled = True
         Me.MasterScriptListBox.Location = New System.Drawing.Point(7, 61)
         Me.MasterScriptListBox.Name = "MasterScriptListBox"
-        Me.MasterScriptListBox.Size = New System.Drawing.Size(739, 641)
+        Me.MasterScriptListBox.Size = New System.Drawing.Size(400, 641)
         Me.MasterScriptListBox.TabIndex = 4
         '
         'Label3
@@ -330,7 +264,7 @@ Partial Class PatchRunner
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(716, 756)
+        Me.ClientSize = New System.Drawing.Size(452, 756)
         Me.Controls.Add(Me.PatchRunnerTabControl)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "PatchRunner"
@@ -366,11 +300,5 @@ Partial Class PatchRunner
     Friend WithEvents RadioButtonAll As System.Windows.Forms.RadioButton
     Friend WithEvents RadioButtonUninstalled As System.Windows.Forms.RadioButton
     Friend WithEvents SearchPatchesButton As System.Windows.Forms.Button
-    Friend WithEvents ClearButton As System.Windows.Forms.Button
-    Friend WithEvents ChooseAllButton As System.Windows.Forms.Button
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents ChosenPatchesListBox As System.Windows.Forms.ListBox
-    Friend WithEvents TreeButton As System.Windows.Forms.Button
-    Friend WithEvents ListButton As System.Windows.Forms.Button
     Friend WithEvents ButtonTreeChange As System.Windows.Forms.Button
 End Class
