@@ -43,13 +43,19 @@ Public Class PatchFromTags
                 Throw (New Halt("Schema not selected"))
             End If
 
-            ChangesCheckedListBox.Items.Clear()
+            TreeViewChanges.PathSeparator = "/"
+            TreeViewChanges.Nodes.Clear()
+
+
             For Each change In GitSharpFascade.getTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, False)
-                ChangesCheckedListBox.Items.Add(change)
-                ChangesCheckedListBox.SetItemChecked(ChangesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
+
+                'find or create each node for item
+                GPTrees.AddNode(TreeViewChanges.Nodes, change, change, "/", True)
+ 
             Next
-
-
+            ButtonTreeChangeChanges.Text = "Expand"
+            GPTrees.treeChange_Click(ButtonTreeChangeChanges, TreeViewChanges)
+ 
         Catch schema_not_selected As Halt
             MsgBox("Please select a schema")
         End Try
@@ -104,7 +110,7 @@ Public Class PatchFromTags
 
 
         Dim filenames As Collection = Nothing
- 
+
         filenames = GitSharpFascade.exportTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchableCheckedListBox.Items, PatchDirTextBox.Text)
 
         'Additional file exports 
@@ -114,7 +120,7 @@ Public Class PatchFromTags
         GPTrees.ReadCheckedNodes(TreeViewFiles.TopNode, ExtraFiles, True)
 
         exportExtraFiles(ExtraFiles, filenames, PatchDirTextBox.Text)
- 
+
         'Add to filenames too
 
 
@@ -180,13 +186,14 @@ Public Class PatchFromTags
         End If
     End Sub
 
-    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckAllCheckBox.CheckedChanged
-        'Loop thru items.
-        For i As Integer = 0 To ChangesCheckedListBox.Items.Count - 1
-            ChangesCheckedListBox.SetItemChecked(i, CheckAllCheckBox.Checked)
-
-        Next
-    End Sub
+    '??NOT BEING USED
+    'Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckAllCheckBox.CheckedChanged
+    '    'Loop thru items.
+    '    For i As Integer = 0 To ChangesCheckedListBox.Items.Count - 1
+    '        ChangesCheckedListBox.SetItemChecked(i, CheckAllCheckBox.Checked)
+    '
+    '    Next
+    'End Sub
 
     Private Sub Tag2TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag2TextBox.TextChanged
 
@@ -199,20 +206,37 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub ViewButton_Click(sender As Object, e As EventArgs) Handles ViewButton.Click
-        MsgBox(GitSharpFascade.viewTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, ChangesCheckedListBox.CheckedItems))
+
+        Dim CheckedChanges As Collection = New Collection
+
+        'Retrieve checked node items from the TreeViewChanges as a collection of changes.
+        GPTrees.ReadCheckedNodes(TreeViewChanges.TopNode, CheckedChanges, True)
+ 
+
+        MsgBox(GitSharpFascade.viewTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, CheckedChanges))
     End Sub
 
     Private Sub RemoveButton_Click(sender As Object, e As EventArgs) Handles RemoveButton.Click
-        For i As Integer = ChangesCheckedListBox.Items.Count - 1 To 0 Step -1
-            If ChangesCheckedListBox.CheckedIndices.Contains(i) Then
-                'This change is ticked and will be removed from the list
-                ChangesCheckedListBox.Items.RemoveAt(i)
-            End If
-        Next
 
+        'GPTrees.RemoveCheckedNodes(TreeViewChanges.Nodes)
 
-
+        GPTrees.RemoveNodes(TreeViewChanges.Nodes, True)
+ 
+        'For i As Integer = ChangesCheckedListBox.Items.Count - 1 To 0 Step -1
+        '    If ChangesCheckedListBox.CheckedIndices.Contains(i) Then
+        '        'This change is ticked and will be removed from the list
+        '        ChangesCheckedListBox.Items.RemoveAt(i)
+        '    End If
+        'Next
+ 
     End Sub
+
+
+    Private Sub ButtonCropTo_Click(sender As Object, e As EventArgs) Handles ButtonCropTo.Click
+        GPTrees.RemoveNodes(TreeViewChanges.Nodes, False)
+    End Sub
+
+
 
     Private Sub PatchNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchNameTextBox.TextChanged
         PatchDirTextBox.Text = Globals.RootPatchDir & Replace(PatchNameTextBox.Text, "/", "\") & "\"
@@ -631,16 +655,17 @@ Public Class PatchFromTags
         'Copy Selected Changes to the next list box.
         PatchableCheckedListBox.Items.Clear()
 
-        For i As Integer = 0 To ChangesCheckedListBox.Items.Count - 1
-            If ChangesCheckedListBox.CheckedIndices.Contains(i) Then
-                'MsgBox(ChangesCheckedListBox.Items(i).ToString)
+        Dim ChosenChanges As Collection = New Collection
+        'Retrieve checked node items from the TreeViewChanges as a collection of files.
+        GPTrees.ReadCheckedNodes(TreeViewChanges.TopNode, ChosenChanges, True)
 
-                PatchableCheckedListBox.Items.Add(ChangesCheckedListBox.Items(i).ToString)
+        For Each change In ChosenChanges
 
-            End If
-
+            PatchableCheckedListBox.Items.Add(change.ToString)
 
         Next
+
+
     End Sub
 
 
@@ -660,7 +685,7 @@ Public Class PatchFromTags
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageChanges" Then
             deriveTags()
 
-            If ChangesCheckedListBox.Items.Count = 0 Then
+            If TreeViewChanges.Nodes.Count = 0 Then
                 FindChanges()
             End If
 
@@ -735,7 +760,7 @@ Public Class PatchFromTags
             PatchButton.Visible = Not String.IsNullOrEmpty(PatchNameTextBox.Text)
             ExecuteButton.Visible = Not String.IsNullOrEmpty(PatchNameTextBox.Text)
             CommitButton.Visible = Not String.IsNullOrEmpty(PatchNameTextBox.Text)
- 
+
 
         End If
 
@@ -831,7 +856,7 @@ Public Class PatchFromTags
         End If
 
     End Sub
- 
+
 
     Private Sub FindPreReqs()
         FindPatches(PreReqPatchesTreeView, RestrictPreReqToBranchCheckBox.Checked, ButtonTreeChangePrereq)
@@ -1110,7 +1135,7 @@ Public Class PatchFromTags
         'Impliments a 3 position button Expand, Contract, Collapse.
         GPTrees.treeChange_Click(sender, PreReqPatchesTreeView)
     End Sub
- 
+
     Private Sub ButtonTreeChangeSuper_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangeSuper.Click
         'Impliments a 3 position button Expand, Contract, Collapse.
         GPTrees.treeChange_Click(sender, SuperPatchesTreeView)
@@ -1126,7 +1151,14 @@ Public Class PatchFromTags
         GPTrees.treeChange_Click(sender, TreeViewFiles)
 
     End Sub
- 
+
+    Private Sub ButtonTreeChangeChanges_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangeChanges.Click
+        'Impliments a 3 position button Expand, Contract, Collapse.
+        GPTrees.treeChange_Click(sender, TreeViewChanges)
+
+    End Sub
+
+
     Shared Sub PreReqPatchesTreeView_node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles PreReqPatchesTreeView.AfterCheck
 
         GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
@@ -1143,7 +1175,11 @@ Public Class PatchFromTags
         GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
 
     End Sub
+    Shared Sub TreeViewChanges_node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles TreeViewChanges.AfterCheck
 
+        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+
+    End Sub
 
     Shared Sub TreeViewFiles_node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles TreeViewFiles.AfterCheck
 
@@ -1151,5 +1187,6 @@ Public Class PatchFromTags
 
     End Sub
 
- 
+
+
 End Class

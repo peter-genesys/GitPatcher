@@ -67,7 +67,7 @@
     End Sub
 
 
-    Shared Function AddNode(ByRef nodes As TreeNodeCollection, ByVal fullPath As String, ByVal remainderPath As String, Optional ByVal delim As String = "\") As Boolean
+    Shared Function AddNode(ByRef nodes As TreeNodeCollection, ByVal fullPath As String, ByVal remainderPath As String, Optional ByVal delim As String = "\", Optional ByVal checked As Boolean = False) As Boolean
         'Commented out the logging, as it severely reduces performance.
         Dim first_segment As String = Common.getFirstSegment(remainderPath, delim)
         Dim remainder As String = Common.dropFirstSegment(remainderPath, delim)
@@ -88,7 +88,7 @@
             ElseIf InStr(fullPath, node.FullPath.ToString) = 1 And first_segment = node.text Then
                 'Found a parent node at least, lets look for children
                 'Logger.Dbg("Found a parent node at least, lets look for children")
-                lFound = AddNode(node.nodes, fullPath, remainder)
+                lFound = AddNode(node.nodes, fullPath, remainder, delim, checked)
             End If
 
         Next
@@ -97,6 +97,7 @@
             'Need to make a node
             'Logger.Dbg("Need to make a node for " & first_segment)
             Dim newNode As TreeNode = New TreeNode(first_segment)
+            newNode.Checked = checked
             nodes.Add(newNode)
             'If newNode.FullPath = fullPath Then
             If String.IsNullOrEmpty(remainder) Then
@@ -107,7 +108,7 @@
                 'Now follow this child
                 'Logger.Dbg("Now follow this child")
                 'newNode.  .ShowCheckBox = False 'Hide checkbox of any parent node.
-                lFound = AddNode(newNode.Nodes, fullPath, remainder)
+                lFound = AddNode(newNode.Nodes, fullPath, remainder, delim, checked)
             End If
 
         End If
@@ -216,6 +217,32 @@
 
     End Sub
 
+ 
+
+    Shared Sub RemoveNodes(ByRef givenNodes As TreeNodeCollection, ByVal checked As Boolean)
+        Dim node As TreeNode
+        For i As Integer = givenNodes.Count - 1 To 0 Step -1
+
+            node = givenNodes(i)
+
+            If node.Nodes.Count > 0 Then
+                'non-leaf
+                RemoveNodes(node.Nodes, checked)
+                'if no leaves left, remove the branch
+                If node.Nodes.Count = 0 Then
+                    givenNodes.Remove(node)
+                End If
+
+            Else
+                'leaf
+                If node.Checked = checked Then
+                    givenNodes.Remove(node)
+                End If
+            End If
+ 
+        Next
+
+    End Sub
  
 
 End Class

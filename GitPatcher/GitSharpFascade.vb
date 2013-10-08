@@ -219,7 +219,7 @@ Public Class GitSharpFascade
     End Function
 
 
-    Shared Function viewTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As CheckedListBox.CheckedItemCollection) As String
+    Shared Function viewTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As Collection) As String
 
         Dim repo As GitSharp.Repository = New GitSharp.Repository(repo_path)
 

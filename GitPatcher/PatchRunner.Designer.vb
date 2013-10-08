@@ -80,9 +80,9 @@ Partial Class PatchRunner
         '
         'ButtonTreeChange
         '
-        Me.ButtonTreeChange.Location = New System.Drawing.Point(115, 148)
+        Me.ButtonTreeChange.Location = New System.Drawing.Point(8, 33)
         Me.ButtonTreeChange.Name = "ButtonTreeChange"
-        Me.ButtonTreeChange.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonTreeChange.Size = New System.Drawing.Size(139, 23)
         Me.ButtonTreeChange.TabIndex = 43
         Me.ButtonTreeChange.Text = "Expand"
         Me.ButtonTreeChange.UseVisualStyleBackColor = True
@@ -119,9 +119,9 @@ Partial Class PatchRunner
         Me.GroupBox1.Controls.Add(Me.RadioButtonFeature)
         Me.GroupBox1.Controls.Add(Me.RadioButtonPatchSet)
         Me.GroupBox1.Controls.Add(Me.RadioButtonHotfix)
-        Me.GroupBox1.Location = New System.Drawing.Point(250, 36)
+        Me.GroupBox1.Location = New System.Drawing.Point(213, 36)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(156, 120)
+        Me.GroupBox1.Size = New System.Drawing.Size(193, 120)
         Me.GroupBox1.TabIndex = 38
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Filter"
@@ -182,9 +182,9 @@ Partial Class PatchRunner
         Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUnapplied)
         Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonAll)
         Me.PatchFilterGroupBox.Controls.Add(Me.RadioButtonUninstalled)
-        Me.PatchFilterGroupBox.Location = New System.Drawing.Point(8, 36)
+        Me.PatchFilterGroupBox.Location = New System.Drawing.Point(8, 62)
         Me.PatchFilterGroupBox.Name = "PatchFilterGroupBox"
-        Me.PatchFilterGroupBox.Size = New System.Drawing.Size(182, 93)
+        Me.PatchFilterGroupBox.Size = New System.Drawing.Size(199, 93)
         Me.PatchFilterGroupBox.TabIndex = 1
         Me.PatchFilterGroupBox.TabStop = False
         Me.PatchFilterGroupBox.Text = "Filter"
