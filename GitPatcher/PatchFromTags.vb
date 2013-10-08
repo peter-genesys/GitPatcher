@@ -18,23 +18,12 @@ Public Class PatchFromTags
         gRebaseBranchOn = iRebaseBranchOn
 
         'NOT CURRENTLY USING THE TabPageSuperBy TABPAGE
-        'PatchTabControl.TabPages.Remove(TabPageSuperBy)
+        PatchTabControl.TabPages.Remove(TabPageSuperBy)
         'If gBranchType <> "hotfix" Then
         '  PatchTabControl.TabPages.Remove(TabPageSuperBy)
         'End If
 
-
-        ' 'Initialise Patch lists.
-        ' RestrictPreReqToBranchCheckBox.Checked = True
-        ' FindPreReqs()
-        '
-        ' RestrictSupToBranchCheckBox.Checked = True
-        ' FindSuper()
-        '
-        ' RestrictSupByToBranchCheckBox.Checked = True
-        ' FindSuperBy()
  
-
     End Sub
 
 
@@ -74,14 +63,15 @@ Public Class PatchFromTags
     End Sub
 
 
-    Private Sub exportExtraFiles(ByRef extrasListBox As ListBox, ByRef filenames As Collection, ByVal patch_dir As String)
+    Private Sub exportExtraFiles(ByRef extrasCollection As Collection, ByRef filenames As Collection, ByVal patch_dir As String)
 
         Dim Filename As String = Nothing
-        If extrasListBox.Items.Count > 0 Then
-            For i As Integer = 0 To extrasListBox.Items.Count - 1
-                Filename = Common.getLastSegment(extrasListBox.Items(i), "\")
+        If extrasCollection.Count > 0 Then
+            For Each FilePath In extrasCollection
 
-                My.Computer.FileSystem.CopyFile(extrasListBox.Items(i), patch_dir & "\" & Filename, True)
+                Filename = Common.getLastSegment(FilePath, "\")
+
+                My.Computer.FileSystem.CopyFile(FilePath, patch_dir & "\" & Filename, True)
 
                 filenames.Add(Filename)
 
@@ -119,7 +109,11 @@ Public Class PatchFromTags
 
         'Additional file exports 
 
-        exportExtraFiles(ExtrasListBox, filenames, PatchDirTextBox.Text)
+        Dim ExtraFiles As Collection = New Collection
+        'Retrieve checked node items from the TreeViewFiles as a collection of files.
+        GPTrees.ReadCheckedNodes(TreeViewFiles.TopNode, ExtraFiles, True)
+
+        exportExtraFiles(ExtraFiles, filenames, PatchDirTextBox.Text)
  
         'Add to filenames too
 
@@ -1085,32 +1079,32 @@ Public Class PatchFromTags
 
     End Sub
 
-    Private Sub TreeViewFiles_DoubleClick(sender As Object, e As MouseEventArgs) Handles TreeViewFiles.DoubleClick
+    ' Private Sub TreeViewFiles_DoubleClick(sender As Object, e As MouseEventArgs) Handles TreeViewFiles.DoubleClick
+    '
+    '     'Ignore Doubleclick on a folder
+    '     If TreeViewFiles.SelectedNode.Nodes.Count = 0 Then
+    '
+    '         Dim aItem As String = TreeViewFiles.SelectedNode.FullPath
+    '
+    '         If ExtrasListBox.Items.Contains(aItem) Then
+    '             MsgBox(aItem & " has ALREADY been added to Extras.", MsgBoxStyle.Exclamation)
+    '         Else
+    '             ExtrasListBox.Items.Add(aItem)
+    '             MsgBox("Added " & aItem & " to Extras.")
+    '         End If
+    '
+    '
+    '     End If
+    '
+    ' End Sub
 
-        'Ignore Doubleclick on a folder
-        If TreeViewFiles.SelectedNode.Nodes.Count = 0 Then
 
-            Dim aItem As String = TreeViewFiles.SelectedNode.FullPath
-
-            If ExtrasListBox.Items.Contains(aItem) Then
-                MsgBox(aItem & " has ALREADY been added to Extras.", MsgBoxStyle.Exclamation)
-            Else
-                ExtrasListBox.Items.Add(aItem)
-                MsgBox("Added " & aItem & " to Extras.")
-            End If
-
-
-        End If
-
-    End Sub
-
-
-    Private Sub ExtrasListBox_DoubleClick(sender As Object, e As EventArgs) Handles ExtrasListBox.DoubleClick
-        If ExtrasListBox.Items.Count > 0 Then
-            MsgBox("Removing " & ExtrasListBox.SelectedItem & " from Extras.")
-            ExtrasListBox.Items.RemoveAt(ExtrasListBox.SelectedIndex)
-        End If
-    End Sub
+    'Private Sub ExtrasListBox_DoubleClick(sender As Object, e As EventArgs)
+    '    If ExtrasListBox.Items.Count > 0 Then
+    '        MsgBox("Removing " & ExtrasListBox.SelectedItem & " from Extras.")
+    '        ExtrasListBox.Items.RemoveAt(ExtrasListBox.SelectedIndex)
+    '    End If
+    'End Sub
 
     Private Sub ButtonTreeChange_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangePrereq.Click
         'Impliments a 3 position button Expand, Contract, Collapse.
@@ -1127,6 +1121,12 @@ Public Class PatchFromTags
         GPTrees.treeChange_Click(sender, SuperByPatchesTreeView)
     End Sub
 
+    Private Sub ButtonTreeChangeFiles_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangeFiles.Click
+        'Impliments a 3 position button Expand, Contract, Collapse.
+        GPTrees.treeChange_Click(sender, TreeViewFiles)
+
+    End Sub
+ 
     Shared Sub PreReqPatchesTreeView_node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles PreReqPatchesTreeView.AfterCheck
 
         GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
@@ -1144,4 +1144,12 @@ Public Class PatchFromTags
 
     End Sub
 
+
+    Shared Sub TreeViewFiles_node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles TreeViewFiles.AfterCheck
+
+        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+
+    End Sub
+
+ 
 End Class
