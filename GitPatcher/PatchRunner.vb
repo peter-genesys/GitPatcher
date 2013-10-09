@@ -1,5 +1,6 @@
 ﻿Imports Oracle.DataAccess.Client ' VB.NET
 
+
 Public Class PatchRunner
 
     Dim hotFixTargetDBFilter As String = Nothing
@@ -388,7 +389,119 @@ Public Class PatchRunner
 
     End Sub
 
- 
+
+
+    '
+    '   Public Shared Function FindLastPatch(ByVal patch_component As String) As String
+    '
+    '       'Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+    '       '    Dim Conn As New OracleConnection("Data Source=ssil;user id=scott;password=tiger")
+    '       '    Dim cmd As New OracleCommand
+    '       '    Conn.Open()
+    '       '    cmd.CommandText = "testfunction"
+    '       '    cmd.CommandType = CommandType.StoredProcedure
+    '       '    cmd.Parameters.Add("eno", OracleType.Number)
+    '       '    cmd.Parameters.Add("jb", OracleType.VarChar, 10)
+    '       '    cmd.Parameters.Item("jb").Direction = ParameterDirection.Output
+    '       '    cmd.Parameters.Item("eno").Value = 7788
+    '       '    cmd.Parameters.Add("sl", OracleType.Number)
+    '       '    cmd.Parameters.Item("sl").Direction = ParameterDirection.ReturnValue
+    '       '    cmd.Connection = Conn
+    '       '    Dim obj As Object = cmd.ExecuteScalar()
+    '       '    Dim str As String
+    '       '    str = "Salary = " & cmd.Parameters.Item("sl").Value & vbNewLine
+    '       '    str = str & "Job = " & cmd.Parameters.Item("jb").Value
+    '       '    MessageBox.Show(str)
+    '       'End Sub
+    '
+    '       'Simple but replies on TNSNAMES File
+    '       Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
+    '
+    '       Dim conn As New OracleConnection(oradb)
+    '       'Dim sql As String = Nothing
+    '       Dim cmd As New OracleCommand
+    '       'Dim dr As OracleDataReader
+    '
+    '       Dim patch_name As String = Nothing
+    '
+    '       'This time loop through unapplied patches first and show in list if available in dir.
+    '       Try
+    '
+    '           conn.Open()
+    '           cmd.CommandText = "patch_installer.get_last_patch"
+    '           cmd.CommandType = CommandType.StoredProcedure
+    '           cmd.Parameters.Add("i_patch_component", OracleDbType.Varchar2, 50)
+    '           cmd.Parameters.Item("i_patch_component").Value = patch_component
+    '           cmd.Parameters.Add("patch_name", OracleDbType.Varchar2, 100)
+    '           cmd.Parameters.Item("patch_name").Direction = ParameterDirection.ReturnValue
+    '           cmd.Connection = conn
+    '
+    '           Dim obj As Object = cmd.ExecuteScalar()
+    '
+    '
+    '           patch_name = CType(cmd.Parameters.Item("patch_name").Value, String)
+    '
+    '           conn.Close()
+    '           conn.Dispose()
+    '
+    '
+    '       Catch ex As Exception ' catches any error
+    '           MessageBox.Show(ex.Message.ToString())
+    '       Finally
+    '           ' In a real application, put cleanup code here.
+    '
+    '       End Try
+    '
+    '       Return patch_name
+    '
+    '
+    'End Function
+
+
+
+    Public Shared Function FindLastPatch(ByVal patch_component As String) As String
 
  
+        'Simple but replies on TNSNAMES File
+        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
+
+        Dim conn As New OracleConnection(oradb)
+        Dim sql As String = Nothing
+        Dim cmd As OracleCommand
+        Dim dr As OracleDataReader
+
+        Dim l_patch_name As String = Nothing
+
+        'This time loop through unapplied patches first and show in list if available in dir.
+        Try
+
+            conn.Open()
+
+            sql = "select patch_installer.get_last_patch('" & patch_component & "') patch_name from dual"
+
+            cmd = New OracleCommand(sql, conn)
+            cmd.CommandType = CommandType.Text
+            dr = cmd.ExecuteReader()
+
+            dr.Read()
+            l_patch_name = dr.Item("patch_name")
+  
+            conn.Close()
+            conn.Dispose()
+ 
+
+
+        Catch ex As Exception ' catches any error
+            MessageBox.Show(ex.Message.ToString())
+        Finally
+            ' In a real application, put cleanup code here.
+
+        End Try
+
+        Return l_patch_name
+
+
+    End Function
+
+
 End Class

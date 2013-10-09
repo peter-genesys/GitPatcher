@@ -218,16 +218,8 @@ Public Class PatchFromTags
 
     Private Sub RemoveButton_Click(sender As Object, e As EventArgs) Handles RemoveButton.Click
 
-        'GPTrees.RemoveCheckedNodes(TreeViewChanges.Nodes)
-
-        GPTrees.RemoveNodes(TreeViewChanges.Nodes, True)
  
-        'For i As Integer = ChangesCheckedListBox.Items.Count - 1 To 0 Step -1
-        '    If ChangesCheckedListBox.CheckedIndices.Contains(i) Then
-        '        'This change is ticked and will be removed from the list
-        '        ChangesCheckedListBox.Items.RemoveAt(i)
-        '    End If
-        'Next
+        GPTrees.RemoveNodes(TreeViewChanges.Nodes, True)
  
     End Sub
 
@@ -1188,5 +1180,72 @@ Public Class PatchFromTags
     End Sub
 
 
+ 
+    Private Sub ButtonLastPatch_Click(sender As Object, e As EventArgs) Handles ButtonLastPatch.Click
+ 
+        Dim ChosenChanges As Collection = New Collection
+        'Retrieve checked node items from the TreeViewChanges as a collection of files.
+        GPTrees.ReadCheckedNodes(TreeViewChanges.TopNode, ChosenChanges, True)
 
+        'Requery ALL patches
+        RestrictPreReqToBranchCheckBox.Checked = False
+        FindPreReqs()
+
+
+        For Each change In ChosenChanges
+            Dim patch_component As String = Common.getLastSegment(change.ToString(), "/")
+            Dim LastPatch As String = PatchRunner.FindLastPatch(patch_component)
+            If IsNothing(LastPatch) Then
+                Logger.Dbg("No previous patch for Change: " & patch_component)
+            End If
+            'MsgBox("Change: " & patch_component & " LastPatch: " & LastPatch)
+            Dim l_found As Boolean = False
+            GPTrees.TickNode(PreReqPatchesTreeView.TopNode, LastPatch, l_found)
+            If Not l_found Then
+                MsgBox("Unable to find patch: " & LastPatch & " for Change: " & patch_component)
+            End If
+
+ 
+        Next
+
+        'Set Prereq tree to Contract view.
+        ButtonTreeChangePrereq.Text = "Contract"
+
+        GPTrees.treeChange_Click(ButtonTreeChangePrereq, PreReqPatchesTreeView)
+
+    End Sub
+
+  
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        GPTrees.RemoveNodes(TreeViewFiles.Nodes, True)
+    End Sub
+
+    Private Sub Button1_Click_2(sender As Object, e As EventArgs) Handles Button1.Click
+        GPTrees.RemoveNodes(TreeViewFiles.Nodes, False)
+    End Sub
+
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        GPTrees.RemoveNodes(PreReqPatchesTreeView.Nodes, True)
+
+    End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        GPTrees.RemoveNodes(PreReqPatchesTreeView.Nodes, False)
+    End Sub
+ 
+    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
+        GPTrees.RemoveNodes(SuperPatchesTreeView.Nodes, True)
+    End Sub
+
+    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+        GPTrees.RemoveNodes(SuperPatchesTreeView.Nodes, False)
+    End Sub
+ 
+    Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
+        GPTrees.RemoveNodes(SuperByPatchesTreeView.Nodes, True)
+    End Sub
+
+    Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
+        GPTrees.RemoveNodes(SuperByPatchesTreeView.Nodes, False)
+    End Sub
 End Class

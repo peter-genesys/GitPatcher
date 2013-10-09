@@ -245,4 +245,68 @@
     End Sub
  
 
+    ' Shared Sub findNode(ByRef aTreeView As TreeView, ByVal nodeShortName As String)
+    '
+    '
+    '     If aTreeView.Then Then
+    '
+    '     End If
+    '
+    '     patchesTreeView.PathSeparator = "\"
+    '     patchesTreeView.Nodes.Clear()
+    '
+    '     ''copy each item from listbox
+    '     'For i As Integer = 0 To patchesListBox.Items.Count - 1
+    '     '
+    '     '    'find or create each node for item
+    '     '
+    '     '    Dim aItem As String = patchesListBox.Items(i).ToString()
+    '     '    GPTrees.AddNode(patchesTreeView.Nodes, aItem, aItem)
+    '     '
+    '     'Next
+    '
+    '     'copy each item from listbox
+    '     For Each item In patchesListBox.Items
+    '
+    '         'find or create each node for item
+    '         Dim aItem As String = item.ToString()
+    '         GPTrees.AddNode(patchesTreeView.Nodes, aItem, aItem)
+    '
+    '     Next
+    '
+    '
+    ' End Sub
+
+
+    Shared Sub TickNode(ByRef treeNode As TreeNode, ByVal nodeShortName As String, ByRef found As Boolean)
+
+        If Not found Then
+
+            Try
+                Dim node As TreeNode
+
+                If treeNode.Nodes.Count > 0 Then
+                    For Each node In treeNode.Nodes
+                        TickNode(node, nodeShortName, found)
+                    Next node
+                Else
+                    If treeNode.Text = nodeShortName Then
+                        treeNode.Checked = True
+                        found = True
+                    End If
+
+                End If
+            Catch ex As System.NullReferenceException
+                Logger.Dbg("TreeNode not defined.")
+            End Try
+
+        End If
+
+
+
+    End Sub
+
+
+
+
 End Class
