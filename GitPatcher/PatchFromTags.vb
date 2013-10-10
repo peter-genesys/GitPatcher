@@ -74,12 +74,14 @@ Public Class PatchFromTags
         Dim Filename As String = Nothing
         If extrasCollection.Count > 0 Then
             For Each FilePath In extrasCollection
+                If Common.getFirstSegment(FilePath, "/") <> "database" Then
+                    'Screened out repo files
+                    Filename = Common.getLastSegment(FilePath, "\")
 
-                Filename = Common.getLastSegment(FilePath, "\")
+                    My.Computer.FileSystem.CopyFile(FilePath, patch_dir & "\" & Filename, True)
 
-                My.Computer.FileSystem.CopyFile(FilePath, patch_dir & "\" & Filename, True)
-
-                filenames.Add(Filename)
+                    filenames.Add(Filename)
+                End If
 
             Next
         End If
@@ -108,18 +110,20 @@ Public Class PatchFromTags
 
         FileIO.createFolderIfNotExists(PatchDirTextBox.Text)
 
+        'Get a list of patchable files (filepaths) from the TreeViewPatchOrder to send to exportTagChanges and exportExtraFiles
+        Dim patchableFiles As Collection = New Collection
+        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, patchableFiles, False, True, True, False)
 
         Dim filenames As Collection = Nothing
-
-        filenames = GitSharpFascade.exportTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, PatchableCheckedListBox.Items, PatchDirTextBox.Text)
+        filenames = GitSharpFascade.exportTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, patchableFiles, PatchDirTextBox.Text)
 
         'Additional file exports 
 
-        Dim ExtraFiles As Collection = New Collection
-        'Retrieve checked node items from the TreeViewFiles as a collection of files.
-        GPTrees.ReadCheckedNodes(TreeViewFiles.TopNode, ExtraFiles, True)
+        ' Dim ExtraFiles As Collection = New Collection
+        ' 'Retrieve checked node items from the TreeViewFiles as a collection of files.
+        ' GPTrees.ReadCheckedNodes(TreeViewFiles.TopNode, ExtraFiles, True)
 
-        exportExtraFiles(ExtraFiles, filenames, PatchDirTextBox.Text)
+        exportExtraFiles(patchableFiles, filenames, PatchDirTextBox.Text)
 
         'Add to filenames too
 
@@ -142,6 +146,17 @@ Public Class PatchFromTags
         GPTrees.ReadCheckedNodes(SuperByPatchesTreeView.TopNode, SuperByPatches, True)
 
 
+        Dim filelist As Collection = New Collection
+        'Ok - no longer need the filenames list created by exportTagChanges and exportExtraFiles
+        'Instead we will rederive this list from TreeViewPatchOrder
+        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, filelist, False, True, False, False)
+
+
+        Dim checkedFilelist As Collection = New Collection
+        'Ok - no longer need the filenames list created by exportTagChanges and exportExtraFiles
+        'Instead we will rederive this list from TreeViewPatchOrder
+        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, checkedFilelist, False, True, False, True)
+
 
         'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
@@ -155,8 +170,8 @@ Public Class PatchFromTags
                            NoteTextBox.Text, _
                            UsePatchAdminCheckBox.Checked, _
                            RerunCheckBox.Checked, _
-                           filenames, _
-                           PatchableCheckedListBox.CheckedItems, _
+                           filelist, _
+                           checkedFilelist, _
                            PreReqPatches, _
                            SuperPatches, _
                            SuperByPatches, _
@@ -186,14 +201,7 @@ Public Class PatchFromTags
         End If
     End Sub
 
-    '??NOT BEING USED
-    'Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckAllCheckBox.CheckedChanged
-    '    'Loop thru items.
-    '    For i As Integer = 0 To ChangesCheckedListBox.Items.Count - 1
-    '        ChangesCheckedListBox.SetItemChecked(i, CheckAllCheckBox.Checked)
-    '
-    '    Next
-    'End Sub
+ 
 
     Private Sub Tag2TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag2TextBox.TextChanged
 
@@ -216,17 +224,6 @@ Public Class PatchFromTags
         MsgBox(GitSharpFascade.viewTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, CheckedChanges))
     End Sub
 
-    Private Sub RemoveButton_Click(sender As Object, e As EventArgs) Handles RemoveButton.Click
-
- 
-        GPTrees.RemoveNodes(TreeViewChanges.Nodes, True)
- 
-    End Sub
-
-
-    Private Sub ButtonCropTo_Click(sender As Object, e As EventArgs) Handles ButtonCropTo.Click
-        GPTrees.RemoveNodes(TreeViewChanges.Nodes, False)
-    End Sub
 
 
 
@@ -248,7 +245,7 @@ Public Class PatchFromTags
                                   ByVal use_patch_admin As Boolean, _
                                   ByVal rerunnable As Boolean, _
                                   ByRef targetFiles As Collection, _
-                                  ByRef ignoreErrorFiles As CheckedListBox.CheckedItemCollection, _
+                                  ByRef ignoreErrorFiles As Collection, _
                                   ByRef prereq_patches As Collection, _
                                   ByRef supersedes_patches As Collection, _
                                   ByRef superseded_by_patches As Collection, _
@@ -297,7 +294,7 @@ Public Class PatchFromTags
         Dim l_all_programs As String = Nothing
 
 
-        Dim l_show_error As String = Chr(10) & "Show error;"
+        Dim l_show_error As String = "Show error;"
 
         Dim l_patchable_count As Integer = 0
 
@@ -316,87 +313,46 @@ Public Class PatchFromTags
 
         Dim l_patch_started As String = Nothing
 
+        Dim l_install_list As String = Nothing
 
-        For Each l_path In targetFiles
 
-            Dim l_filename As String = Common.getLastSegment(l_path, "/")
+        'Files have already been sorted into Categories, we only need to list the categories and spit out the files under each.
+
+
+        For Each l_filename In targetFiles
+
+            'Dim l_filename As String = Common.getLastSegment(l_path, "/")
 
             'Sort the files by files extention into lists.
 
             l_file_extension = l_filename.Split(".")(1)
+ 
 
-            If ignoreErrorFiles.Contains(l_path) Then
-                l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
-                                      Chr(10) & "PROMPT " & l_filename & " " & _
-                                      Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";" & _
-                                      Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
+            If String.IsNullOrEmpty(l_file_extension) Then
+                'No file extension so assume this is a Category heading.
+
+                l_install_file_line = "Prompt installing " & l_filename.ToUpper
+ 
 
             Else
-                l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
-                                      Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";"
+                'This is a releaseable file, so put an entry in the script.
+                If ignoreErrorFiles.Contains(l_filename) Then
+                    l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
+                                          Chr(10) & "PROMPT " & l_filename & " " & _
+                                          Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";" & _
+                                          Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
 
-            End If
+                Else
+                    l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
+                                          Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";"
 
-            Try
+                End If
 
-                Select Case l_file_extension
-                    Case "user"
-                        l_db_objects_users = l_db_objects_users & l_install_file_line
-                    Case "tab"
-                        l_db_objects_tables = l_db_objects_tables & l_install_file_line
-                    Case "seq"
-                        l_db_objects_sequences = l_db_objects_sequences & l_install_file_line
-                    Case "tps"
-                        l_db_objects_type_specs = l_db_objects_type_specs & l_install_file_line & l_show_error
-                    Case "grt"
-                        l_db_objects_grants = l_db_objects_grants & l_install_file_line
-                    Case "sql"
-                        l_db_objects_data = l_db_objects_data & l_install_file_line
-                    Case "pks", "pls"
-                        l_db_objects_package_specs = l_db_objects_package_specs & l_install_file_line & l_show_error
-                    Case "fnc"
-                        l_db_objects_functions = l_db_objects_functions & l_install_file_line & l_show_error
-                    Case "prc"
-                        l_db_objects_procedures = l_db_objects_procedures & l_install_file_line & l_show_error
-                    Case "vw"
-                        l_db_objects_views = l_db_objects_views & l_install_file_line & l_show_error
-                    Case "syn"
-                        l_db_objects_synonyms = l_db_objects_synonyms & l_install_file_line
-                    Case "tpb"
-                        l_db_objects_type_bodies = l_db_objects_type_bodies & l_install_file_line & l_show_error
-                    Case "pkb", "plb"
-                        l_db_objects_package_bodies = l_db_objects_package_bodies & l_install_file_line & l_show_error
-                    Case "trg"
-                        l_db_objects_triggers = l_db_objects_triggers & l_install_file_line & l_show_error
-                    Case "pk"
-                        l_db_objects_primary_keys = l_db_objects_primary_keys & l_install_file_line
-                    Case "uk"
-                        l_db_objects_unique_keys = l_db_objects_unique_keys & l_install_file_line
-                    Case "nk"
-                        l_db_objects_non_unique_keys = l_db_objects_non_unique_keys & l_install_file_line
-                    Case "idx"
-                        l_db_objects_indexes = l_db_objects_indexes & l_install_file_line
-                    Case "fk"
-                        l_db_objects_foreign_keys = l_db_objects_foreign_keys & l_install_file_line
-                    Case "con"
-                        l_db_objects_constraints = l_db_objects_constraints & l_install_file_line
-                    Case "sdl"
-                        l_db_objects_configuration = l_db_objects_configuration & l_install_file_line
-                    Case "rg", "rol"
-                        l_db_objects_roles = l_db_objects_roles & l_install_file_line
-                    Case "job"
-                        l_db_objects_jobs = l_db_objects_jobs & l_install_file_line
-                    Case "dblink"
-                        l_db_objects_dblinks = l_db_objects_dblinks & l_install_file_line & l_show_error
-                    Case "mv"
-                        l_db_objects_mviews = l_db_objects_mviews & l_install_file_line & l_show_error
-                    Case "ctl", "xml"
-                        l_ignored = l_ignored & l_install_file_line
-                        'System.IO.File.Delete(PatchDirTextBox.Text & l_filename)
-                        Throw (New Halt("Skip this ignorable object"))
-                    Case Else
-                        l_db_objects_misc = l_db_objects_misc & l_install_file_line
-                End Select
+                'Add Show Error after these file types.
+                If "tps,tpb,pks,pls,pkb,plb,fnc,prc,vw,trg,dblink,mv".Contains(l_file_extension) Then
+                    l_install_file_line = l_install_file_line & Chr(10) & l_show_error
+                End If
+
 
                 If String.IsNullOrEmpty(l_all_programs) Then
                     l_all_programs = l_filename
@@ -405,11 +361,10 @@ Public Class PatchFromTags
                 End If
 
 
-            Catch SkipTestObject As Halt
-                ' Logger.Dbg("Skip object " & l_item.path)
-                ' l_all_programs = l_all_programs & "XX " & l_program_name & "NOT PATCHED" & Chr(10)
-            End Try
+            End If
+ 
 
+            l_install_list = l_install_list & Chr(10) & l_install_file_line
 
         Next
 
@@ -500,89 +455,10 @@ Public Class PatchFromTags
             End If
 
             l_master_file.WriteLine("select user||'@'||global_name Connection from global_name;")
+
             'Write the list of files to execute.
-
-
-            If Not String.IsNullOrEmpty(l_db_objects_users) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing USERS" & l_db_objects_users)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_tables) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing TABLES" & l_db_objects_tables)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_sequences) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing SEQUENCES" & l_db_objects_sequences)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_type_specs) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing TYPE SPECS" & l_db_objects_type_specs)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_roles) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing ROLES" & l_db_objects_roles)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_dblinks) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing DB_LINKS" & l_db_objects_dblinks)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_functions) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing FUNCTIONS" & l_db_objects_functions)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_procedures) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing PROCEDURES" & l_db_objects_procedures)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_package_specs) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing PACKAGE SPECS" & l_db_objects_package_specs)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_views) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing VIEWS" & l_db_objects_views)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_mviews) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing MATERIALISED VIEWS" & l_db_objects_mviews)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_grants) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing GRANTS" & l_db_objects_grants)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_synonyms) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing SYNONYMS" & l_db_objects_synonyms)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_type_bodies) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing TYPE BODIES" & l_db_objects_type_bodies)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_package_bodies) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing PACKAGE BODIES" & l_db_objects_package_bodies)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_triggers) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing TRIGGERS" & l_db_objects_triggers)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_indexes) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing INDEXES" & l_db_objects_indexes)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_primary_keys) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing PRIMARY KEYS" & l_db_objects_primary_keys)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_unique_keys) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing UNIQUE KEYS" & l_db_objects_unique_keys)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_non_unique_keys) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing NON-UNIQUE KEYS" & l_db_objects_non_unique_keys)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_data) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing DATA" & l_db_objects_data)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_foreign_keys) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing FOREIGN KEYS" & l_db_objects_foreign_keys)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_constraints) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing CONSTRAINTS" & l_db_objects_constraints)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_configuration) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing CONFIGURATION" & l_db_objects_configuration)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_jobs) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing JOBS" & l_db_objects_jobs)
-            End If
-            If Not String.IsNullOrEmpty(l_db_objects_misc) Then
-                l_master_file.WriteLine(Chr(10) & "Prompt installing MISCELLANIOUS" & l_db_objects_misc)
-            End If
-
-
+            l_master_file.WriteLine(l_install_list)
+ 
             l_master_file.WriteLine(Chr(10) & "COMMIT;")
 
             If use_patch_admin Then
@@ -644,21 +520,137 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub CopySelectedChanges()
-        'Copy Selected Changes to the next list box.
-        PatchableCheckedListBox.Items.Clear()
-
+ 
         Dim ChosenChanges As Collection = New Collection
         'Retrieve checked node items from the TreeViewChanges as a collection of files.
         GPTrees.ReadCheckedNodes(TreeViewChanges.TopNode, ChosenChanges, True)
 
+        'For Each change In ChosenChanges
+        '
+        '    PatchableCheckedListBox.Items.Add(change.ToString)
+        '
+        'Next
+ 
+        'Retrieve checked node items from the TreeViewFiles as a collection of files.
+        GPTrees.ReadCheckedNodes(TreeViewFiles.TopNode, ChosenChanges, True)
+ 
+        'Copy to the new Patchable Tree
+        TreeViewPatchOrder.PathSeparator = "#"
+        TreeViewPatchOrder.Nodes.Clear()
+
+        'Prepopulate Tree with default category nodes.
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Users")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Tables")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Sequences")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Type Specs")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Roles")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Database Links")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Functions")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Procedures")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Package Specs")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Views")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Materialised Views")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Grants")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Synonyms")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Type Bodies")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Package Bodies")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Triggers")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Indexes")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Primary Keys")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Unique Keys")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Non-Unique Keys")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Data")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Foreign Keys")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Constraints")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Configuration")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Jobs")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Miscellaneous")
+ 
+
         For Each change In ChosenChanges
 
-            PatchableCheckedListBox.Items.Add(change.ToString)
+            Dim l_category As String = Nothing
+            Dim l_file_extension As String = Common.getLastSegment(change, ".")
+            Dim l_entry As String
+            Select Case l_file_extension
+                Case "user"
+                    l_category = "Users"
+                Case "tab"
+                    l_category = "Tables"
+                Case "seq"
+                    l_category = "Sequences"
+                Case "tps"
+                    l_category = "Type Specs"
+                Case "grt"
+                    l_category = "Grants"
+                Case "pks", "pls"
+                    l_category = "Package Specs"
+                Case "fnc"
+                    l_category = "Functions"
+                Case "prc"
+                    l_category = "Procedures"
+                Case "vw"
+                    l_category = "Views"
+                Case "syn"
+                    l_category = "Synonyms"
+                Case "tpb"
+                    l_category = "Type Bodies"
+                Case "pkb", "plb"
+                    l_category = "Package Bodies"
+                Case "trg"
+                    l_category = "Triggers"
+                Case "pk"
+                    l_category = "Primary Keys"
+                Case "uk"
+                    l_category = "Unique Keys"
+                Case "nk"
+                    l_category = "Non-Unique Keys"
+                Case "idx"
+                    l_category = "Indexes"
+                Case "fk"
+                    l_category = "Foreign Keys"
+                Case "con"
+                    l_category = "Constraints"
+                Case "sdl"
+                    l_category = "Loader Scripts"
+                Case "rg", "rol"
+                    l_category = "Roles"
+                Case "job"
+                    l_category = "Jobs"
+                Case "sdl"
+                    l_category = "Data"
+                Case "dblink"
+                    l_category = "Database Links"
+                Case "mv"
+                    l_category = "Materialised Views"
+                    'Case "ctl", "xml"
+                    'l_ignored = l_ignored & l_install_file_line
+                    'System.IO.File.Delete(PatchDirTextBox.Text & l_filename)
+                    'Throw (New Halt("Skip this ignorable object"))
+                Case "sql"
+                    l_category = "Miscellaneous"
+                Case Else
+                    l_category = "Miscellaneous"
+            End Select
+ 
+  
+            If change.contains(":") Then
+                GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_category, Common.getLastSegment(change, "\"), change)
+            Else
+                GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_category, Common.getLastSegment(change, "/"), change)
+            End If
+ 
+            'GPTrees.AddNode(TreeViewPatchOrder.Nodes, l_entry, l_entry, TreeViewPatchOrder.PathSeparator, False)
 
         Next
 
+        GPTrees.RemoveChildlessNodes2Levels(TreeViewPatchOrder.Nodes)
+ 
 
     End Sub
+
+ 
+
 
 
     Private Sub PatchTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles PatchTabControl.SelectedIndexChanged
@@ -743,8 +735,8 @@ Public Class PatchFromTags
             RerunCheckBox.Checked = True
 
             TrackPromoCheckBox.Checked = True
-
-            If PatchableCheckedListBox.Items.Count = 0 Then
+ 
+            If TreeViewPatchOrder.Nodes.Count = 0 Then
                 CopySelectedChanges()
             End If
 
@@ -1215,7 +1207,19 @@ Public Class PatchFromTags
 
     End Sub
 
-  
+    Private Sub RemoveButton_Click(sender As Object, e As EventArgs) Handles RemoveButton.Click
+
+        GPTrees.RemoveNodes(TreeViewChanges.Nodes, True)
+
+    End Sub
+
+
+    Private Sub ButtonCropTo_Click(sender As Object, e As EventArgs) Handles ButtonCropTo.Click
+        GPTrees.RemoveNodes(TreeViewChanges.Nodes, False)
+    End Sub
+
+
+
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         GPTrees.RemoveNodes(TreeViewFiles.Nodes, True)
     End Sub

@@ -97,6 +97,7 @@
             'Need to make a node
             'Logger.Dbg("Need to make a node for " & first_segment)
             Dim newNode As TreeNode = New TreeNode(first_segment)
+            newNode.Tag = first_segment
             newNode.Checked = checked
             nodes.Add(newNode)
             'If newNode.FullPath = fullPath Then
@@ -120,6 +121,39 @@
 
 
     End Function
+
+    'A Category is a root node, with formatting
+    Shared Function AddCategory(ByRef nodes As TreeNodeCollection, ByVal label As String) As Boolean
+
+        Dim newNode As TreeNode = New TreeNode(label)
+        newNode.Tag = label
+        newNode.BackColor = Color.Aqua
+
+        nodes.Add(newNode)
+
+        Return True
+
+        'Return GPTrees.AddNode(nodes, text, text)
+
+    End Function
+
+
+    Shared Function AddFileToCategory(ByRef nodes As TreeNodeCollection, ByVal category As String, ByVal label As String, ByVal path As String) As Boolean
+
+        Dim newNode As TreeNode = New TreeNode(label)
+        newNode.Tag = path
+
+        For Each anode In nodes
+            If anode.text = category Then
+                anode.Nodes.Add(newNode)
+            End If
+        Next
+
+ 
+        Return True
+
+
+    End Function
  
 
 
@@ -139,6 +173,7 @@
 
     End Sub
 
+    'NEED TO REMVOE THIS AND CODE USING IT
     Shared Sub populateTreeFromListbox(ByRef patchesTreeView As TreeView, ByRef patchesListBox As ListBox)
 
         patchesTreeView.PathSeparator = "\"
@@ -191,28 +226,58 @@
             End if
         Next node
     End Sub
-
- 
  
 
-    Shared Sub ReadCheckedNodes(ByRef treeNode As TreeNode, ByRef iChosenPatches As Collection, ByVal itemsOnly As Boolean)
+    Shared Sub ReadCheckedNodes(ByRef theTreeNode As TreeNode, ByRef iChosenPatches As Collection, ByVal checkedItemsOnly As Boolean)
 
         Try
             Dim node As TreeNode
 
-            If treeNode.Nodes.Count > 0 Then
-                For Each node In treeNode.Nodes
-                    ReadCheckedNodes(node, iChosenPatches, itemsOnly)
+            If theTreeNode.Nodes.Count > 0 Then
+                For Each node In theTreeNode.Nodes
+                    ReadCheckedNodes(node, iChosenPatches, checkedItemsOnly)
                 Next node
             Else
-                If treeNode.Checked Or Not itemsOnly Then
-                    iChosenPatches.Add(treeNode.FullPath)
+                If theTreeNode.Checked Or Not checkedItemsOnly Then
+                    iChosenPatches.Add(theTreeNode.FullPath)
                 End If
 
             End If
         Catch ex As System.NullReferenceException
             Logger.Dbg("TreeNode not defined.")
         End Try
+
+
+    End Sub
+
+
+    Shared Sub ReadTags2Level(ByRef givenNodes As TreeNodeCollection, ByRef iChosenPatches As Collection, ByVal listAllRoots As Boolean, ByVal listNoRoots As Boolean, ByVal listTags As Boolean, ByVal checkedItemsOnly As Boolean)
+        'This routine assumes usage of a 2level control like TreeViewDraggableNodes2Levels
+        For Each node In givenNodes
+            If node.Parent Is Nothing Then
+                'Level1
+                If (node.Nodes.Count > 0 Or listAllRoots) And Not listNoRoots Then
+                    If listTags Then
+                        iChosenPatches.Add(node.Tag)
+                    Else
+                        iChosenPatches.Add(node.Text)
+                    End If
+                End If
+                ReadTags2Level(node.Nodes, iChosenPatches, listAllRoots, listNoRoots, listTags, checkedItemsOnly)
+
+            Else
+                'Level2
+                If node.Checked Or Not checkedItemsOnly Then
+                    If listTags Then
+                        iChosenPatches.Add(node.Tag)
+                    Else
+                        iChosenPatches.Add(node.Text)
+                    End If
+                End If
+            End If
+
+
+        Next node
 
 
     End Sub
@@ -243,7 +308,18 @@
         Next
 
     End Sub
- 
+
+    Shared Sub RemoveChildlessNodes2Levels(ByRef givenNodes As TreeNodeCollection)
+        Dim node As TreeNode
+        For i As Integer = givenNodes.Count - 1 To 0 Step -1
+            node = givenNodes(i)
+
+            If node.Nodes.Count = 0 Then
+                givenNodes.Remove(node)
+            End If
+        Next
+
+    End Sub
 
     ' Shared Sub findNode(ByRef aTreeView As TreeView, ByVal nodeShortName As String)
     '
@@ -305,6 +381,7 @@
 
 
     End Sub
+
 
 
 

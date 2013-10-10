@@ -272,8 +272,9 @@ Public Class GitSharpFascade
     End Function
 
 
-    Shared Function exportTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As CheckedListBox.ObjectCollection, patchDir As String) As Collection
-
+    Shared Function exportTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As Collection, patchDir As String) As Collection
+        'Any files in the targetFiles that are not found are simly not exported.
+        'This is currently being exploited as the filelist will be sent from the total patchable files treeview, even though it could contain files from the extras list, that are not to be exported from the repo.
         Dim repo As GitSharp.Repository = New GitSharp.Repository(repo_path)
 
         Dim result As String = Nothing

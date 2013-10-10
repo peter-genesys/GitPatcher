@@ -24,6 +24,7 @@ Partial Class PatchFromTags
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PatchFromTags))
         Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
+        Me.TreeViewPatchOrder = New TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels()
         Me.CommitButton = New System.Windows.Forms.Button()
         Me.TrackPromoCheckBox = New System.Windows.Forms.CheckBox()
         Me.PatchPathTextBox = New System.Windows.Forms.TextBox()
@@ -38,7 +39,6 @@ Partial Class PatchFromTags
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
-        Me.PatchableCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.UsePatchAdminCheckBox = New System.Windows.Forms.CheckBox()
@@ -49,12 +49,16 @@ Partial Class PatchFromTags
         Me.PatchButton = New System.Windows.Forms.Button()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.TabPageSuper = New System.Windows.Forms.TabPage()
+        Me.Button5 = New System.Windows.Forms.Button()
+        Me.Button6 = New System.Windows.Forms.Button()
         Me.ButtonTreeChangeSuper = New System.Windows.Forms.Button()
         Me.SuperPatchesTreeView = New System.Windows.Forms.TreeView()
         Me.RestrictSupToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.SupButton = New System.Windows.Forms.Button()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.TabPagePreReqs = New System.Windows.Forms.TabPage()
+        Me.Button3 = New System.Windows.Forms.Button()
+        Me.Button4 = New System.Windows.Forms.Button()
         Me.ButtonLastPatch = New System.Windows.Forms.Button()
         Me.ButtonTreeChangePrereq = New System.Windows.Forms.Button()
         Me.PreReqPatchesTreeView = New System.Windows.Forms.TreeView()
@@ -83,24 +87,20 @@ Partial Class PatchFromTags
         Me.Label2 = New System.Windows.Forms.Label()
         Me.PatchTabControl = New System.Windows.Forms.TabControl()
         Me.TabPageExtras = New System.Windows.Forms.TabPage()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Button2 = New System.Windows.Forms.Button()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.ButtonTreeChangeFiles = New System.Windows.Forms.Button()
         Me.ButtonFindFiles = New System.Windows.Forms.Button()
         Me.TreeViewFiles = New System.Windows.Forms.TreeView()
         Me.TabPageSuperBy = New System.Windows.Forms.TabPage()
+        Me.Button7 = New System.Windows.Forms.Button()
+        Me.Button8 = New System.Windows.Forms.Button()
         Me.ButtonTreeChangeSuperBy = New System.Windows.Forms.Button()
         Me.SuperByPatchesTreeView = New System.Windows.Forms.TreeView()
         Me.RestrictSupByToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.SupByButton = New System.Windows.Forms.Button()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
-        Me.Button3 = New System.Windows.Forms.Button()
-        Me.Button4 = New System.Windows.Forms.Button()
-        Me.Button5 = New System.Windows.Forms.Button()
-        Me.Button6 = New System.Windows.Forms.Button()
-        Me.Button7 = New System.Windows.Forms.Button()
-        Me.Button8 = New System.Windows.Forms.Button()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPageSuper.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
@@ -113,6 +113,7 @@ Partial Class PatchFromTags
         '
         'TabPagePatchDefn
         '
+        Me.TabPagePatchDefn.Controls.Add(Me.TreeViewPatchOrder)
         Me.TabPagePatchDefn.Controls.Add(Me.CommitButton)
         Me.TabPagePatchDefn.Controls.Add(Me.TrackPromoCheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.PatchPathTextBox)
@@ -127,7 +128,6 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.Controls.Add(Me.Label16)
         Me.TabPagePatchDefn.Controls.Add(Me.Label12)
         Me.TabPagePatchDefn.Controls.Add(Me.Label11)
-        Me.TabPagePatchDefn.Controls.Add(Me.PatchableCheckedListBox)
         Me.TabPagePatchDefn.Controls.Add(Me.Label8)
         Me.TabPagePatchDefn.Controls.Add(Me.Label10)
         Me.TabPagePatchDefn.Controls.Add(Me.UsePatchAdminCheckBox)
@@ -140,10 +140,19 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePatchDefn.Name = "TabPagePatchDefn"
         Me.TabPagePatchDefn.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePatchDefn.Size = New System.Drawing.Size(542, 699)
+        Me.TabPagePatchDefn.Size = New System.Drawing.Size(527, 699)
         Me.TabPagePatchDefn.TabIndex = 2
         Me.TabPagePatchDefn.Text = "Create Patch"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
+        '
+        'TreeViewPatchOrder
+        '
+        Me.TreeViewPatchOrder.BackColor = System.Drawing.Color.AliceBlue
+        Me.TreeViewPatchOrder.CheckBoxes = True
+        Me.TreeViewPatchOrder.Location = New System.Drawing.Point(80, 76)
+        Me.TreeViewPatchOrder.Name = "TreeViewPatchOrder"
+        Me.TreeViewPatchOrder.Size = New System.Drawing.Size(429, 351)
+        Me.TreeViewPatchOrder.TabIndex = 44
         '
         'CommitButton
         '
@@ -263,15 +272,6 @@ Partial Class PatchFromTags
         Me.Label11.TabIndex = 29
         Me.Label11.Text = "All listed changes will be patched"
         '
-        'PatchableCheckedListBox
-        '
-        Me.PatchableCheckedListBox.CheckOnClick = True
-        Me.PatchableCheckedListBox.FormattingEnabled = True
-        Me.PatchableCheckedListBox.Location = New System.Drawing.Point(80, 76)
-        Me.PatchableCheckedListBox.Name = "PatchableCheckedListBox"
-        Me.PatchableCheckedListBox.Size = New System.Drawing.Size(429, 349)
-        Me.PatchableCheckedListBox.TabIndex = 26
-        '
         'Label8
         '
         Me.Label8.AutoSize = True
@@ -367,10 +367,28 @@ Partial Class PatchFromTags
         Me.TabPageSuper.Location = New System.Drawing.Point(4, 22)
         Me.TabPageSuper.Name = "TabPageSuper"
         Me.TabPageSuper.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageSuper.Size = New System.Drawing.Size(542, 699)
+        Me.TabPageSuper.Size = New System.Drawing.Size(1143, 699)
         Me.TabPageSuper.TabIndex = 4
         Me.TabPageSuper.Text = "Supersedes"
         Me.TabPageSuper.UseVisualStyleBackColor = True
+        '
+        'Button5
+        '
+        Me.Button5.Location = New System.Drawing.Point(367, 64)
+        Me.Button5.Name = "Button5"
+        Me.Button5.Size = New System.Drawing.Size(139, 23)
+        Me.Button5.TabIndex = 49
+        Me.Button5.Text = "Crop To Ticked Patches"
+        Me.Button5.UseVisualStyleBackColor = True
+        '
+        'Button6
+        '
+        Me.Button6.Location = New System.Drawing.Point(222, 64)
+        Me.Button6.Name = "Button6"
+        Me.Button6.Size = New System.Drawing.Size(139, 23)
+        Me.Button6.TabIndex = 48
+        Me.Button6.Text = "Remove Ticked Patches"
+        Me.Button6.UseVisualStyleBackColor = True
         '
         'ButtonTreeChangeSuper
         '
@@ -430,10 +448,28 @@ Partial Class PatchFromTags
         Me.TabPagePreReqs.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePreReqs.Name = "TabPagePreReqs"
         Me.TabPagePreReqs.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePreReqs.Size = New System.Drawing.Size(542, 699)
+        Me.TabPagePreReqs.Size = New System.Drawing.Size(1143, 699)
         Me.TabPagePreReqs.TabIndex = 3
         Me.TabPagePreReqs.Text = "Pre-Requisites"
         Me.TabPagePreReqs.UseVisualStyleBackColor = True
+        '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(367, 64)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(139, 23)
+        Me.Button3.TabIndex = 49
+        Me.Button3.Text = "Crop To Ticked Patches"
+        Me.Button3.UseVisualStyleBackColor = True
+        '
+        'Button4
+        '
+        Me.Button4.Location = New System.Drawing.Point(222, 64)
+        Me.Button4.Name = "Button4"
+        Me.Button4.Size = New System.Drawing.Size(139, 23)
+        Me.Button4.TabIndex = 48
+        Me.Button4.Text = "Remove Ticked Patches"
+        Me.Button4.UseVisualStyleBackColor = True
         '
         'ButtonLastPatch
         '
@@ -505,7 +541,7 @@ Partial Class PatchFromTags
         Me.TabPageChanges.Location = New System.Drawing.Point(4, 22)
         Me.TabPageChanges.Name = "TabPageChanges"
         Me.TabPageChanges.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageChanges.Size = New System.Drawing.Size(542, 699)
+        Me.TabPageChanges.Size = New System.Drawing.Size(1143, 699)
         Me.TabPageChanges.TabIndex = 1
         Me.TabPageChanges.Text = "Changes"
         Me.TabPageChanges.UseVisualStyleBackColor = True
@@ -618,7 +654,7 @@ Partial Class PatchFromTags
         Me.TabPageTags.Location = New System.Drawing.Point(4, 22)
         Me.TabPageTags.Name = "TabPageTags"
         Me.TabPageTags.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageTags.Size = New System.Drawing.Size(542, 699)
+        Me.TabPageTags.Size = New System.Drawing.Size(1143, 699)
         Me.TabPageTags.TabIndex = 0
         Me.TabPageTags.Text = "Tags"
         Me.TabPageTags.UseVisualStyleBackColor = True
@@ -696,7 +732,7 @@ Partial Class PatchFromTags
         Me.PatchTabControl.Location = New System.Drawing.Point(12, 12)
         Me.PatchTabControl.Name = "PatchTabControl"
         Me.PatchTabControl.SelectedIndex = 0
-        Me.PatchTabControl.Size = New System.Drawing.Size(550, 725)
+        Me.PatchTabControl.Size = New System.Drawing.Size(535, 725)
         Me.PatchTabControl.TabIndex = 18
         '
         'TabPageExtras
@@ -710,10 +746,28 @@ Partial Class PatchFromTags
         Me.TabPageExtras.Location = New System.Drawing.Point(4, 22)
         Me.TabPageExtras.Name = "TabPageExtras"
         Me.TabPageExtras.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageExtras.Size = New System.Drawing.Size(542, 699)
+        Me.TabPageExtras.Size = New System.Drawing.Size(527, 699)
         Me.TabPageExtras.TabIndex = 6
         Me.TabPageExtras.Text = "Extra Files"
         Me.TabPageExtras.UseVisualStyleBackColor = True
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(367, 64)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(139, 23)
+        Me.Button1.TabIndex = 49
+        Me.Button1.Text = "Crop To Ticked Files"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(222, 64)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(139, 23)
+        Me.Button2.TabIndex = 48
+        Me.Button2.Text = "Remove Ticked Files"
+        Me.Button2.UseVisualStyleBackColor = True
         '
         'Label21
         '
@@ -761,10 +815,28 @@ Partial Class PatchFromTags
         Me.TabPageSuperBy.Controls.Add(Me.Label19)
         Me.TabPageSuperBy.Location = New System.Drawing.Point(4, 22)
         Me.TabPageSuperBy.Name = "TabPageSuperBy"
-        Me.TabPageSuperBy.Size = New System.Drawing.Size(542, 699)
+        Me.TabPageSuperBy.Size = New System.Drawing.Size(527, 699)
         Me.TabPageSuperBy.TabIndex = 5
         Me.TabPageSuperBy.Text = "Superseded By"
         Me.TabPageSuperBy.UseVisualStyleBackColor = True
+        '
+        'Button7
+        '
+        Me.Button7.Location = New System.Drawing.Point(367, 64)
+        Me.Button7.Name = "Button7"
+        Me.Button7.Size = New System.Drawing.Size(139, 23)
+        Me.Button7.TabIndex = 49
+        Me.Button7.Text = "Crop To Ticked Patches"
+        Me.Button7.UseVisualStyleBackColor = True
+        '
+        'Button8
+        '
+        Me.Button8.Location = New System.Drawing.Point(222, 64)
+        Me.Button8.Name = "Button8"
+        Me.Button8.Size = New System.Drawing.Size(139, 23)
+        Me.Button8.TabIndex = 48
+        Me.Button8.Text = "Remove Ticked Patches"
+        Me.Button8.UseVisualStyleBackColor = True
         '
         'ButtonTreeChangeSuperBy
         '
@@ -812,83 +884,11 @@ Partial Class PatchFromTags
         Me.Label19.Text = "Superseded" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "By"
         Me.Label19.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(367, 64)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(139, 23)
-        Me.Button1.TabIndex = 49
-        Me.Button1.Text = "Crop To Ticked Files"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
-        'Button2
-        '
-        Me.Button2.Location = New System.Drawing.Point(222, 64)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(139, 23)
-        Me.Button2.TabIndex = 48
-        Me.Button2.Text = "Remove Ticked Files"
-        Me.Button2.UseVisualStyleBackColor = True
-        '
-        'Button3
-        '
-        Me.Button3.Location = New System.Drawing.Point(367, 64)
-        Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(139, 23)
-        Me.Button3.TabIndex = 49
-        Me.Button3.Text = "Crop To Ticked Patches"
-        Me.Button3.UseVisualStyleBackColor = True
-        '
-        'Button4
-        '
-        Me.Button4.Location = New System.Drawing.Point(222, 64)
-        Me.Button4.Name = "Button4"
-        Me.Button4.Size = New System.Drawing.Size(139, 23)
-        Me.Button4.TabIndex = 48
-        Me.Button4.Text = "Remove Ticked Patches"
-        Me.Button4.UseVisualStyleBackColor = True
-        '
-        'Button5
-        '
-        Me.Button5.Location = New System.Drawing.Point(367, 64)
-        Me.Button5.Name = "Button5"
-        Me.Button5.Size = New System.Drawing.Size(139, 23)
-        Me.Button5.TabIndex = 49
-        Me.Button5.Text = "Crop To Ticked Patches"
-        Me.Button5.UseVisualStyleBackColor = True
-        '
-        'Button6
-        '
-        Me.Button6.Location = New System.Drawing.Point(222, 64)
-        Me.Button6.Name = "Button6"
-        Me.Button6.Size = New System.Drawing.Size(139, 23)
-        Me.Button6.TabIndex = 48
-        Me.Button6.Text = "Remove Ticked Patches"
-        Me.Button6.UseVisualStyleBackColor = True
-        '
-        'Button7
-        '
-        Me.Button7.Location = New System.Drawing.Point(367, 64)
-        Me.Button7.Name = "Button7"
-        Me.Button7.Size = New System.Drawing.Size(139, 23)
-        Me.Button7.TabIndex = 49
-        Me.Button7.Text = "Crop To Ticked Patches"
-        Me.Button7.UseVisualStyleBackColor = True
-        '
-        'Button8
-        '
-        Me.Button8.Location = New System.Drawing.Point(222, 64)
-        Me.Button8.Name = "Button8"
-        Me.Button8.Size = New System.Drawing.Size(139, 23)
-        Me.Button8.TabIndex = 48
-        Me.Button8.Text = "Remove Ticked Patches"
-        Me.Button8.UseVisualStyleBackColor = True
-        '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(572, 749)
+        Me.ClientSize = New System.Drawing.Size(559, 749)
         Me.Controls.Add(Me.PatchTabControl)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "PatchFromTags"
@@ -926,7 +926,6 @@ Partial Class PatchFromTags
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents PatchableCheckedListBox As System.Windows.Forms.CheckedListBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents UsePatchAdminCheckBox As System.Windows.Forms.CheckBox
@@ -989,4 +988,5 @@ Partial Class PatchFromTags
     Friend WithEvents Button2 As System.Windows.Forms.Button
     Friend WithEvents Button7 As System.Windows.Forms.Button
     Friend WithEvents Button8 As System.Windows.Forms.Button
+    Friend WithEvents TreeViewPatchOrder As TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels
 End Class

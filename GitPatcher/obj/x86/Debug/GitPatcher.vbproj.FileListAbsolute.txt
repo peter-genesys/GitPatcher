@@ -26,3 +26,9 @@ C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\ob
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.pdb
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.vbprojResolveAssemblyReference.cache
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.vbproj.ResolveComReference.cache
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes.dll
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes.pdb
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes.xml
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes2Levels.dll
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes2Levels.pdb
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes2Levels.xml
