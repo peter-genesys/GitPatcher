@@ -131,25 +131,25 @@ Public Class PatchFromTags
         Dim PreReqPatches As Collection = New Collection
 
         'Retrieve checked node items from the PreReqPatchesTreeView as a collection of patches.
-        GPTrees.ReadCheckedNodes(PreReqPatchesTreeView.TopNode, PreReqPatches, True)
+        GPTrees.ReadCheckedLeafNodes(PreReqPatchesTreeView.Nodes, PreReqPatches)
 
 
         Dim SuperPatches As Collection = New Collection
 
         'Retrieve checked node items from the SuperPatchesTreeView as a collection of patches.
-        GPTrees.ReadCheckedNodes(SuperPatchesTreeView.TopNode, SuperPatches, True)
+        GPTrees.ReadCheckedLeafNodes(SuperPatchesTreeView.Nodes, SuperPatches)
 
         Dim SuperByPatches As Collection = New Collection
 
 
         'Retrieve checked node items from the SuperByPatchesTreeView as a collection of patches.
-        GPTrees.ReadCheckedNodes(SuperByPatchesTreeView.TopNode, SuperByPatches, True)
+        GPTrees.ReadCheckedLeafNodes(SuperByPatchesTreeView.Nodes, SuperByPatches)
 
 
         Dim filelist As Collection = New Collection
         'Ok - no longer need the filenames list created by exportTagChanges and exportExtraFiles
         'Instead we will rederive this list from TreeViewPatchOrder
-        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, filelist, False, True, False, False)
+        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, filelist, False, False, False, False)
 
 
         Dim checkedFilelist As Collection = New Collection
@@ -201,7 +201,7 @@ Public Class PatchFromTags
         End If
     End Sub
 
- 
+
 
     Private Sub Tag2TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag2TextBox.TextChanged
 
@@ -218,8 +218,8 @@ Public Class PatchFromTags
         Dim CheckedChanges As Collection = New Collection
 
         'Retrieve checked node items from the TreeViewChanges as a collection of changes.
-        GPTrees.ReadCheckedNodes(TreeViewChanges.TopNode, CheckedChanges, True)
- 
+        GPTrees.ReadCheckedLeafNodes(TreeViewChanges.Nodes, CheckedChanges)
+
 
         MsgBox(GitSharpFascade.viewTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, CheckedChanges))
     End Sub
@@ -253,40 +253,7 @@ Public Class PatchFromTags
                                   ByVal groupPath As String, _
                                   ByVal track_promotion As Boolean)
 
-
-        Dim l_db_objects_users As String = Nothing 'user
-        Dim l_db_objects_tables As String = Nothing 'tab
-        Dim l_db_objects_sequences As String = Nothing 'seq
-        Dim l_db_objects_type_specs As String = Nothing 'tps
-        Dim l_db_objects_type_bodies As String = Nothing 'tpb
-        Dim l_db_objects_grants As String = Nothing 'grt
-        Dim l_db_objects_data As String = Nothing 'sql
-
-        Dim l_db_objects_package_specs As String = Nothing 'pks,pls
-        Dim l_db_objects_functions As String = Nothing 'fnc
-        Dim l_db_objects_procedures As String = Nothing 'prc
-
-        Dim l_db_objects_views As String = Nothing 'vw
-        Dim l_db_objects_synonyms As String = Nothing 'syn
-        Dim l_db_objects_package_bodies As String = Nothing 'pkb,plb
-        Dim l_db_objects_triggers As String = Nothing 'trg
-
-        Dim l_db_objects_primary_keys As String = Nothing 'pk
-        Dim l_db_objects_unique_keys As String = Nothing 'uk
-        Dim l_db_objects_non_unique_keys As String = Nothing 'nk
-        Dim l_db_objects_indexes As String = Nothing 'idx
-        Dim l_db_objects_foreign_keys As String = Nothing 'fk
-        Dim l_db_objects_constraints As String = Nothing 'con
-        Dim l_db_objects_configuration As String = Nothing 'sdl
-        Dim l_db_objects_roles As String = Nothing 'rg, rol
-        Dim l_db_objects_jobs As String = Nothing 'job
-        Dim l_db_objects_dblinks As String = Nothing 'dblink
-        Dim l_db_objects_mviews As String = Nothing 'mv
-
-
-        Dim l_ignored As String = Nothing 'ctl
-        Dim l_db_objects_misc As String = Nothing 'everything else
-
+ 
 
         Dim l_file_extension As String = Nothing
         Dim l_install_file_line As String = Nothing
@@ -295,9 +262,7 @@ Public Class PatchFromTags
 
 
         Dim l_show_error As String = "Show error;"
-
-        Dim l_patchable_count As Integer = 0
-
+ 
         Dim rerunnable_yn As String = "N"
         If rerunnable Then
             rerunnable_yn = "Y"
@@ -316,57 +281,7 @@ Public Class PatchFromTags
         Dim l_install_list As String = Nothing
 
 
-        'Files have already been sorted into Categories, we only need to list the categories and spit out the files under each.
-
-
-        For Each l_filename In targetFiles
-
-            'Dim l_filename As String = Common.getLastSegment(l_path, "/")
-
-            'Sort the files by files extention into lists.
-
-            l_file_extension = l_filename.Split(".")(1)
  
-
-            If String.IsNullOrEmpty(l_file_extension) Then
-                'No file extension so assume this is a Category heading.
-
-                l_install_file_line = "Prompt installing " & l_filename.ToUpper
- 
-
-            Else
-                'This is a releaseable file, so put an entry in the script.
-                If ignoreErrorFiles.Contains(l_filename) Then
-                    l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
-                                          Chr(10) & "PROMPT " & l_filename & " " & _
-                                          Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";" & _
-                                          Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
-
-                Else
-                    l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
-                                          Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";"
-
-                End If
-
-                'Add Show Error after these file types.
-                If "tps,tpb,pks,pls,pkb,plb,fnc,prc,vw,trg,dblink,mv".Contains(l_file_extension) Then
-                    l_install_file_line = l_install_file_line & Chr(10) & l_show_error
-                End If
-
-
-                If String.IsNullOrEmpty(l_all_programs) Then
-                    l_all_programs = l_filename
-                Else
-                    l_all_programs = l_all_programs & "' -" & Chr(10) & "||'," & l_filename
-                End If
-
-
-            End If
- 
-
-            l_install_list = l_install_list & Chr(10) & l_install_file_line
-
-        Next
 
         If targetFiles.Count > 0 Then
 
@@ -402,6 +317,60 @@ Public Class PatchFromTags
 
 
             l_master_file.WriteLine("set serveroutput on;")
+
+
+
+            'Files have already been sorted into Categories, we only need to list the categories and spit out the files under each.
+            For Each l_filename In targetFiles
+
+                'Dim l_filename As String = Common.getLastSegment(l_path, "/")
+
+                'Sort the files by files extention into lists.
+
+         
+
+                If Not l_filename.contains(".") Then
+                    'No file extension so assume this is a Category heading.
+                    Dim Category As String = l_filename.ToUpper
+                    l_install_file_line = Chr(10) & "PROMPT " & Category
+
+
+                Else
+
+                    l_file_extension = l_filename.Split(".")(1)
+
+                    'This is a releaseable file, so put an entry in the script.
+                    If ignoreErrorFiles.Contains(l_filename) Then
+                        l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
+                                              Chr(10) & "PROMPT " & l_filename & " " & _
+                                              Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";" & _
+                                              Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
+
+                    Else
+                        l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
+                                              Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";"
+
+                    End If
+
+                    'Add Show Error after these file types.
+                    If "tps,tpb,pks,pls,pkb,plb,fnc,prc,vw,trg,dblink,mv".Contains(l_file_extension) Then
+                        l_install_file_line = l_install_file_line & Chr(10) & l_show_error
+                    End If
+
+
+                    If String.IsNullOrEmpty(l_all_programs) Then
+                        l_all_programs = l_filename
+                    Else
+                        l_all_programs = l_all_programs & "' -" & Chr(10) & "||'," & l_filename
+                    End If
+
+
+                End If
+
+
+                l_install_list = l_install_list & Chr(10) & l_install_file_line
+
+            Next
 
 
 
@@ -458,7 +427,7 @@ Public Class PatchFromTags
 
             'Write the list of files to execute.
             l_master_file.WriteLine(l_install_list)
- 
+
             l_master_file.WriteLine(Chr(10) & "COMMIT;")
 
             If use_patch_admin Then
@@ -520,25 +489,22 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub CopySelectedChanges()
- 
-        Dim ChosenChanges As Collection = New Collection
-        'Retrieve checked node items from the TreeViewChanges as a collection of files.
-        GPTrees.ReadCheckedNodes(TreeViewChanges.TopNode, ChosenChanges, True)
 
-        'For Each change In ChosenChanges
-        '
-        '    PatchableCheckedListBox.Items.Add(change.ToString)
-        '
-        'Next
- 
+        Dim ChosenChanges As Collection = New Collection
+        'Repo changes
+        'Retrieve checked node items from the TreeViewChanges as a collection of files.
+        GPTrees.ReadCheckedLeafNodes(TreeViewChanges.Nodes, ChosenChanges)
+
+        'Extra files
         'Retrieve checked node items from the TreeViewFiles as a collection of files.
-        GPTrees.ReadCheckedNodes(TreeViewFiles.TopNode, ChosenChanges, True)
- 
+        GPTrees.ReadCheckedLeafNodes(TreeViewFiles.Nodes, ChosenChanges)
+
         'Copy to the new Patchable Tree
         TreeViewPatchOrder.PathSeparator = "#"
         TreeViewPatchOrder.Nodes.Clear()
 
         'Prepopulate Tree with default category nodes.
+        'This should become a method on TreeViewDraggableNodes2Levels
         GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Users")
         GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Tables")
         GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Sequences")
@@ -565,13 +531,13 @@ Public Class PatchFromTags
         GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Configuration")
         GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Jobs")
         GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Miscellaneous")
- 
+
 
         For Each change In ChosenChanges
 
             Dim l_category As String = Nothing
             Dim l_file_extension As String = Common.getLastSegment(change, ".")
-            Dim l_entry As String
+            Dim l_label As String
             Select Case l_file_extension
                 Case "user"
                     l_category = "Users"
@@ -623,40 +589,40 @@ Public Class PatchFromTags
                     l_category = "Database Links"
                 Case "mv"
                     l_category = "Materialised Views"
-                    'Case "ctl", "xml"
-                    'l_ignored = l_ignored & l_install_file_line
-                    'System.IO.File.Delete(PatchDirTextBox.Text & l_filename)
-                    'Throw (New Halt("Skip this ignorable object"))
                 Case "sql"
                     l_category = "Miscellaneous"
                 Case Else
                     l_category = "Miscellaneous"
             End Select
- 
-  
+
+            Dim pathSeparator As String = Nothing
             If change.contains(":") Then
-                GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_category, Common.getLastSegment(change, "\"), change)
+                'Windows path
+                pathSeparator = "\"
             Else
-                GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_category, Common.getLastSegment(change, "/"), change)
+                'Repo path
+                pathSeparator = "/"
             End If
- 
-            'GPTrees.AddNode(TreeViewPatchOrder.Nodes, l_entry, l_entry, TreeViewPatchOrder.PathSeparator, False)
+
+            l_label = Common.getLastSegment(change, pathSeparator)
+            GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_category, l_label, change) 'This should become a method on TreeViewDraggableNodes2Levels
 
         Next
 
-        GPTrees.RemoveChildlessNodes2Levels(TreeViewPatchOrder.Nodes)
- 
+        GPTrees.RemoveChildlessNodes2Levels(TreeViewPatchOrder.Nodes) 'This should become a method on TreeViewDraggableNodes2Levels
+        'Set tree to expanded.
+        TreeViewPatchOrder.ExpandAll()
+
+        GPTrees.PrependCategory(TreeViewPatchOrder.Nodes, "Initialise")
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Finalise")
 
     End Sub
 
- 
+
 
 
 
     Private Sub PatchTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles PatchTabControl.SelectedIndexChanged
-
-        'MessageBox.Show("you selected the fifth tab:  " & PatchTabControl.SelectedTab.Name.ToString)
-
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageTags" Then
             If TagsCheckedListBox.Items.Count = 0 Then
@@ -735,7 +701,7 @@ Public Class PatchFromTags
             RerunCheckBox.Checked = True
 
             TrackPromoCheckBox.Checked = True
- 
+
             If TreeViewPatchOrder.Nodes.Count = 0 Then
                 CopySelectedChanges()
             End If
@@ -1172,12 +1138,12 @@ Public Class PatchFromTags
     End Sub
 
 
- 
+
     Private Sub ButtonLastPatch_Click(sender As Object, e As EventArgs) Handles ButtonLastPatch.Click
- 
+
         Dim ChosenChanges As Collection = New Collection
         'Retrieve checked node items from the TreeViewChanges as a collection of files.
-        GPTrees.ReadCheckedNodes(TreeViewChanges.TopNode, ChosenChanges, True)
+        GPTrees.ReadCheckedLeafNodes(TreeViewChanges.Nodes, ChosenChanges)
 
         'Requery ALL patches
         RestrictPreReqToBranchCheckBox.Checked = False
@@ -1192,12 +1158,12 @@ Public Class PatchFromTags
             End If
             'MsgBox("Change: " & patch_component & " LastPatch: " & LastPatch)
             Dim l_found As Boolean = False
-            GPTrees.TickNode(PreReqPatchesTreeView.TopNode, LastPatch, l_found)
+            GPTrees.TickNode(PreReqPatchesTreeView.Nodes, LastPatch, l_found)
             If Not l_found Then
                 MsgBox("Unable to find patch: " & LastPatch & " for Change: " & patch_component)
             End If
 
- 
+
         Next
 
         'Set Prereq tree to Contract view.

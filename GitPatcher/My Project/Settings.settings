@@ -63,7 +63,7 @@ PBurgess</Value>
       <Value Profile="(Default)">@thiess.com.au</Value>
     </Setting>
     <Setting Name="MinPatch" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">PRJROV-77_04A_04B_PATCH_ADMIN</Value>
+      <Value Profile="(Default)">PRJROV-206_06A_06B_PATCH_ADMIN</Value>
     </Setting>
     <Setting Name="ApplicationsList" Type="System.String" Scope="User">
       <Value Profile="(Default)">Prism

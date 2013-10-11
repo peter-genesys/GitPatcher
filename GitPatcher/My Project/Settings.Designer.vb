@@ -249,7 +249,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("PRJROV-77_04A_04B_PATCH_ADMIN")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("PRJROV-206_06A_06B_PATCH_ADMIN")>  _
         Public ReadOnly Property MinPatch() As String
             Get
                 Return CType(Me("MinPatch"),String)
@@ -358,14 +358,14 @@ Namespace My
             End Set
         End Property
         
-        <Global.System.Configuration.UserScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("PRJROV" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "???")> _
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("PRJROV"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"???")>  _
         Public Property JiraProject() As String
             Get
-                Return CType(Me("JiraProject"), String)
+                Return CType(Me("JiraProject"),String)
             End Get
-            Set(value As String)
+            Set
                 Me("JiraProject") = value
             End Set
         End Property

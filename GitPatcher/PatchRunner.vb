@@ -351,7 +351,7 @@ Public Class PatchRunner
         Dim chosenPatches As Collection = New Collection
  
         'Retrieve checked node items from the available patches as a collection of patches.
-        GPTrees.ReadCheckedNodes(AvailablePatchesTreeView.TopNode, chosenPatches, True)
+        GPTrees.ReadCheckedLeafNodes(AvailablePatchesTreeView.Nodes, chosenPatches)
  
         For Each lpatch In chosenPatches
             MasterScriptListBox.Items.Add("@" & lpatch & "\install.sql")

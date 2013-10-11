@@ -132,8 +132,18 @@
         nodes.Add(newNode)
 
         Return True
+ 
+    End Function
 
-        'Return GPTrees.AddNode(nodes, text, text)
+    'A Category is a root node, with formatting
+    Shared Function PrependCategory(ByRef nodes As TreeNodeCollection, ByVal label As String) As Boolean
+
+        Dim newNode As TreeNode = New TreeNode(label)
+        newNode.Tag = label
+        newNode.BackColor = Color.Aqua
+        nodes.Insert(0, newNode) 'Add node at start of nodes list.
+ 
+        Return True
 
     End Function
 
@@ -228,25 +238,22 @@
     End Sub
  
 
-    Shared Sub ReadCheckedNodes(ByRef theTreeNode As TreeNode, ByRef iChosenPatches As Collection, ByVal checkedItemsOnly As Boolean)
+    Shared Sub ReadCheckedLeafNodes(ByRef givenNodes As TreeNodeCollection, ByRef iChosenPatches As Collection)
 
-        Try
-            Dim node As TreeNode
+        For Each node In givenNodes
 
-            If theTreeNode.Nodes.Count > 0 Then
-                For Each node In theTreeNode.Nodes
-                    ReadCheckedNodes(node, iChosenPatches, checkedItemsOnly)
-                Next node
-            Else
-                If theTreeNode.Checked Or Not checkedItemsOnly Then
-                    iChosenPatches.Add(theTreeNode.FullPath)
+            If node.Nodes.Count = 0 Then
+                'Leaf node
+                If node.Checked Then
+                    iChosenPatches.Add(node.FullPath)
                 End If
 
-            End If
-        Catch ex As System.NullReferenceException
-            Logger.Dbg("TreeNode not defined.")
-        End Try
+            Else
+                ReadCheckedLeafNodes(node.Nodes, iChosenPatches)
 
+            End If
+
+        Next
 
     End Sub
 
@@ -258,9 +265,9 @@
                 'Level1
                 If (node.Nodes.Count > 0 Or listAllRoots) And Not listNoRoots Then
                     If listTags Then
-                        iChosenPatches.Add(node.Tag)
+                        iChosenPatches.Add(node.Tag, node.Tag)
                     Else
-                        iChosenPatches.Add(node.Text)
+                        iChosenPatches.Add(node.Text, node.Text)
                     End If
                 End If
                 ReadTags2Level(node.Nodes, iChosenPatches, listAllRoots, listNoRoots, listTags, checkedItemsOnly)
@@ -269,9 +276,9 @@
                 'Level2
                 If node.Checked Or Not checkedItemsOnly Then
                     If listTags Then
-                        iChosenPatches.Add(node.Tag)
+                        iChosenPatches.Add(node.Tag, node.Tag)
                     Else
-                        iChosenPatches.Add(node.Text)
+                        iChosenPatches.Add(node.Text, node.Text)
                     End If
                 End If
             End If
@@ -320,70 +327,20 @@
         Next
 
     End Sub
+ 
+    'Used by the Prereq generator
+    Shared Sub TickNode(ByRef givenNodes As TreeNodeCollection, ByVal search As String, ByRef found As Boolean)
 
-    ' Shared Sub findNode(ByRef aTreeView As TreeView, ByVal nodeShortName As String)
-    '
-    '
-    '     If aTreeView.Then Then
-    '
-    '     End If
-    '
-    '     patchesTreeView.PathSeparator = "\"
-    '     patchesTreeView.Nodes.Clear()
-    '
-    '     ''copy each item from listbox
-    '     'For i As Integer = 0 To patchesListBox.Items.Count - 1
-    '     '
-    '     '    'find or create each node for item
-    '     '
-    '     '    Dim aItem As String = patchesListBox.Items(i).ToString()
-    '     '    GPTrees.AddNode(patchesTreeView.Nodes, aItem, aItem)
-    '     '
-    '     'Next
-    '
-    '     'copy each item from listbox
-    '     For Each item In patchesListBox.Items
-    '
-    '         'find or create each node for item
-    '         Dim aItem As String = item.ToString()
-    '         GPTrees.AddNode(patchesTreeView.Nodes, aItem, aItem)
-    '
-    '     Next
-    '
-    '
-    ' End Sub
-
-
-    Shared Sub TickNode(ByRef treeNode As TreeNode, ByVal nodeShortName As String, ByRef found As Boolean)
-
-        If Not found Then
-
-            Try
-                Dim node As TreeNode
-
-                If treeNode.Nodes.Count > 0 Then
-                    For Each node In treeNode.Nodes
-                        TickNode(node, nodeShortName, found)
-                    Next node
-                Else
-                    If treeNode.Text = nodeShortName Then
-                        treeNode.Checked = True
-                        found = True
-                    End If
-
+        For Each node In givenNodes
+            If Not found Then
+                If node.Text = search Or node.Tag = search Then
+                    node.Checked = True
+                    found = True
                 End If
-            Catch ex As System.NullReferenceException
-                Logger.Dbg("TreeNode not defined.")
-            End Try
-
-        End If
-
-
+                TickNode(node.nodes, search, found)
+            End If
+        Next
 
     End Sub
-
-
-
-
-
+ 
 End Class
