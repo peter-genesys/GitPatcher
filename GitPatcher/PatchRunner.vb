@@ -23,7 +23,7 @@ Public Class PatchRunner
         If iBranchType = "" Then
             iBranchType = Globals.getPatchRunnerFilter
         End If
- 
+
         Logger.Note("iBranchType", iBranchType)
         Select Case iBranchType
             Case "feature"
@@ -111,7 +111,7 @@ Public Class PatchRunner
                     'Check whether the patch has been successfully installed.
                     patchMatch = False
                     Dim lPatchName As String = Common.getLastSegment(foundPatches.Items(i), "\")
-    
+
                     sql = "select max(patch_name) patch_name from patches where patch_name = '" & lPatchName & "' and success_yn = 'Y' "
 
                     'sql = "select max(patch_name) patch_name from ( " _
@@ -126,7 +126,7 @@ Public Class PatchRunner
                     '    & "and p.success_yn = 'Y' " _
                     '    & "and  ps.supersedes_patch = '" & lPatchName & "') "
 
- 
+
 
                     cmd = New OracleCommand(sql, conn)
                     cmd.CommandType = CommandType.Text
@@ -137,7 +137,7 @@ Public Class PatchRunner
                         'patch matches the search
                         patchMatch = True
                     End If
- 
+
                     If patchMatch Then
                         'patch is to be filtered from the list.
                         foundPatches.Items.RemoveAt(i)
@@ -241,7 +241,7 @@ Public Class PatchRunner
 
     Private Sub filterPatchType(ByRef foundPatches As ListBox)
 
- 
+
         Dim searchTerm As String = "all"
         If Not RadioButtonAll2.Checked And foundPatches.Items.Count > 0 Then
 
@@ -266,7 +266,7 @@ Public Class PatchRunner
 
 
             Next
- 
+
             If foundPatches.Items.Count = 0 Then
                 MsgBox("No patches matched the Filter: " & searchTerm, MsgBoxStyle.Information, "No patches found")
             End If
@@ -277,7 +277,7 @@ Public Class PatchRunner
 
 
     End Sub
- 
+
 
 
     Private Sub doSearch()
@@ -309,8 +309,8 @@ Public Class PatchRunner
 
     End Sub
 
- 
- 
+
+
 
     Public Shared Sub RunMasterScript(scriptData As String)
 
@@ -347,17 +347,17 @@ Public Class PatchRunner
         MasterScriptListBox.Items.Clear()
 
         MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.currentTNS & "'")
-  
+
         Dim chosenPatches As Collection = New Collection
- 
+
         'Retrieve checked node items from the available patches as a collection of patches.
         GPTrees.ReadCheckedLeafNodes(AvailablePatchesTreeView.Nodes, chosenPatches)
- 
+
         For Each lpatch In chosenPatches
             MasterScriptListBox.Items.Add("@" & lpatch & "\install.sql")
         Next
 
- 
+
 
     End Sub
 
@@ -371,17 +371,17 @@ Public Class PatchRunner
         End If
 
     End Sub
- 
+
 
     ' NOTE   This code can be added to the BeforeCheck event handler instead of the AfterCheck event. 
     ' After a tree node's Checked property is changed, all its child nodes are updated to the same value. 
     Shared Sub node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles AvailablePatchesTreeView.AfterCheck
- 
+
         GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
 
     End Sub
 
- 
+
 
     Private Sub ButtonTreeChange_Click(sender As Object, e As EventArgs) Handles ButtonTreeChange.Click
         'Impliments a 3 position button Expand, Contract, Collapse.
@@ -461,7 +461,7 @@ Public Class PatchRunner
 
     Public Shared Function FindLastPatch(ByVal patch_component As String) As String
 
- 
+
         'Simple but replies on TNSNAMES File
         Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
 
@@ -484,11 +484,16 @@ Public Class PatchRunner
             dr = cmd.ExecuteReader()
 
             dr.Read()
-            l_patch_name = dr.Item("patch_name")
-  
+
+
+            If Not IsDBNull(dr.Item("patch_name")) Then
+                l_patch_name = dr.Item("patch_name")
+            End If
+
+
             conn.Close()
             conn.Dispose()
- 
+
 
 
         Catch ex As Exception ' catches any error

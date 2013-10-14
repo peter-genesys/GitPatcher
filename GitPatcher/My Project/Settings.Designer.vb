@@ -348,7 +348,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("\database\TPDS\Tools")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("\database\TPDS")>  _
         Public Property ExtrasDirList() As String
             Get
                 Return CType(Me("ExtrasDirList"),String)

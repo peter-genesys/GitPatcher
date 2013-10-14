@@ -1153,15 +1153,18 @@ Public Class PatchFromTags
         For Each change In ChosenChanges
             Dim patch_component As String = Common.getLastSegment(change.ToString(), "/")
             Dim LastPatch As String = PatchRunner.FindLastPatch(patch_component)
-            If IsNothing(LastPatch) Then
+            If String.IsNullOrEmpty(LastPatch) Then
                 Logger.Dbg("No previous patch for Change: " & patch_component)
+            Else
+                'MsgBox("Change: " & patch_component & " LastPatch: " & LastPatch)
+                Dim l_found As Boolean = False
+                GPTrees.TickNode(PreReqPatchesTreeView.Nodes, LastPatch, l_found)
+                If Not l_found Then
+                    MsgBox("Unable to find patch: " & LastPatch & " for Change: " & patch_component)
+                End If
+
             End If
-            'MsgBox("Change: " & patch_component & " LastPatch: " & LastPatch)
-            Dim l_found As Boolean = False
-            GPTrees.TickNode(PreReqPatchesTreeView.Nodes, LastPatch, l_found)
-            If Not l_found Then
-                MsgBox("Unable to find patch: " & LastPatch & " for Change: " & patch_component)
-            End If
+
 
 
         Next

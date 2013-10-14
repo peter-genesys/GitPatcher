@@ -99,7 +99,7 @@ VM</Value>
       <Value Profile="(Default)">\database</Value>
     </Setting>
     <Setting Name="ExtrasDirList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\database\TPDS\Tools</Value>
+      <Value Profile="(Default)">\database\TPDS</Value>
     </Setting>
     <Setting Name="JiraProject" Type="System.String" Scope="User">
       <Value Profile="(Default)">PRJROV

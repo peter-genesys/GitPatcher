@@ -419,7 +419,7 @@
             'Tag the develop head
             l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please enter 2 digit numeric tag for next patch.", "Create Tag for next patch")
             Dim l_tagA As String = currentBranchShort & "." & l_tag_base & "A"
-            rebasing.updateStepDescription(2, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
+            rebasing.updateStepDescription(3, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
             GitBash.TagSimple(Globals.currentRepo, l_tagA)
 
         End If
@@ -438,7 +438,7 @@
         If rebasing.toDoNextStep() Then
             'Tag Branch
             Dim l_tagB As String = currentBranchShort & "." & l_tag_base & "B"
-            rebasing.updateStepDescription(5, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
+            rebasing.updateStepDescription(6, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
             GitBash.TagSimple(Globals.currentRepo, l_tagB)
 
         End If
