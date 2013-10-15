@@ -68,7 +68,87 @@ Public Class PatchRunner
 
 
 
-    Public Shared Sub FindPatches(ByRef foundPatches As ListBox, ByVal iHideInstalled As Boolean)
+
+    Public Shared Function ReorderByDependancy(ByRef givenPatches As Collection) As Collection
+
+        Dim orderedPatches As Collection = New Collection
+
+        'Simple but replies on TNSNAMES File
+        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
+
+        Dim conn As New OracleConnection(oradb)
+        Dim sql As String = Nothing
+        Dim cmd As OracleCommand
+        Dim dr As OracleDataReader
+
+        Dim patchMatch As Boolean = False
+
+        'This time loop through unapplied patches first and show in list if available in dir.
+        Try
+
+            conn.Open()
+
+            sql = "select patch_name from patches_unapplied_v"
+
+
+            cmd = New OracleCommand(sql, conn)
+            cmd.CommandType = CommandType.Text
+            dr = cmd.ExecuteReader()
+
+            While (dr.Read())
+                Dim l_patch_name As String = dr.Item("patch_name")
+
+                'For Each givenPatch In givenPatches
+                '    If givenPatch.Contains(l_patch_name) Then
+                '        orderedPatches.Add(givenPatch)
+                '    End If
+                'Next
+
+                For i As Integer = givenPatches.Count To 1 Step -1
+
+                    If givenPatches(i).ToString().Contains(l_patch_name) Then
+                        orderedPatches.Add(givenPatches(i))
+                        givenPatches.Remove(i)
+                    End If
+
+                Next
+
+            End While
+
+            conn.Close()
+            conn.Dispose()
+
+            If givenPatches.Count > 0 Then
+                Dim l_unordered_patches As String = Nothing
+                For Each givenPatch In givenPatches
+
+                    orderedPatches.Add(givenPatch)
+                    l_unordered_patches = l_unordered_patches & Chr(10) & givenPatch
+
+                Next
+
+                MsgBox("WARNING: Could not determine install order for these patches on " & Globals.currentDB & " . Added to the end of the release." _
+                       & Chr(10) & "They may not yet have been applied to the reference database, or perhaps already applied to the target database." _
+                       & Chr(10) & l_unordered_patches)
+            End If
+
+
+        Catch ex As Exception ' catches any error
+            MessageBox.Show(ex.Message.ToString())
+        Finally
+            ' In a real application, put cleanup code here.
+
+        End Try
+
+        Return orderedPatches
+
+    End Function
+
+ 
+
+
+
+    Public Shared Sub FindPatches(ByRef foundPatches As Collection, ByVal iHideInstalled As Boolean)
 
         'Simple but replies on TNSNAMES File
         Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
@@ -85,7 +165,7 @@ Public Class PatchRunner
         Dim dr As OracleDataReader
 
 
-        foundPatches.Items.Clear()
+        foundPatches.Clear()
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
             FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", foundPatches, Globals.RootPatchDir)
@@ -106,11 +186,11 @@ Public Class PatchRunner
                 conn.Open()
 
                 'process in reverse order, because removing items from the list, changes the indexes.  reverse order will not be affected.
-                For i As Integer = foundPatches.Items.Count - 1 To 0 Step -1
+                For i As Integer = foundPatches.Count To 1 Step -1
 
                     'Check whether the patch has been successfully installed.
                     patchMatch = False
-                    Dim lPatchName As String = Common.getLastSegment(foundPatches.Items(i), "\")
+                    Dim lPatchName As String = Common.getLastSegment(foundPatches(i), "\")
 
                     sql = "select max(patch_name) patch_name from patches where patch_name = '" & lPatchName & "' and success_yn = 'Y' "
 
@@ -140,7 +220,7 @@ Public Class PatchRunner
 
                     If patchMatch Then
                         'patch is to be filtered from the list.
-                        foundPatches.Items.RemoveAt(i)
+                        foundPatches.Remove(i)
 
                     End If
 
@@ -161,7 +241,7 @@ Public Class PatchRunner
 
         End If
 
-        If foundPatches.Items.Count = 0 Then
+        If foundPatches.Count = 0 Then
             MsgBox("No patches matched the search criteria.", MsgBoxStyle.Information, "No patches found")
         End If
 
@@ -169,14 +249,14 @@ Public Class PatchRunner
     End Sub
 
 
-    Public Shared Sub FindUnappliedPatches(ByRef foundPatches As ListBox)
+    Public Shared Sub FindUnappliedPatches(ByRef foundPatches As Collection)
 
 
-        foundPatches.Items.Clear()
-        Dim availableList As ListBox = New ListBox
+        foundPatches.Clear()
+        Dim availablePatches As Collection = New Collection
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", availableList, Globals.RootPatchDir)
+            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", availablePatches, Globals.RootPatchDir)
 
         End If
 
@@ -205,10 +285,10 @@ Public Class PatchRunner
                 Dim l_patch_name As String = dr.Item("patch_name")
                 Dim l_patch_found As Boolean = False
 
-                For i As Integer = 0 To availableList.Items.Count - 1
+                For i As Integer = 1 To availablePatches.Count
 
-                    If availableList.Items(i).ToString().Contains(l_patch_name) Then
-                        foundPatches.Items.Add(availableList.Items(i))
+                    If availablePatches(i).ToString().Contains(l_patch_name) Then
+                        foundPatches.Add(availablePatches(i))
                         l_patch_found = True
                     End If
 
@@ -231,7 +311,7 @@ Public Class PatchRunner
 
         End Try
 
-        If foundPatches.Items.Count = 0 Then
+        If foundPatches.Count = 0 Then
             MsgBox("No patches matched the search criteria.", MsgBoxStyle.Information, "No patches found")
         End If
 
@@ -239,11 +319,11 @@ Public Class PatchRunner
     End Sub
 
 
-    Private Sub filterPatchType(ByRef foundPatches As ListBox)
+    Private Sub filterPatchType(ByRef foundPatches As Collection)
 
 
         Dim searchTerm As String = "all"
-        If Not RadioButtonAll2.Checked And foundPatches.Items.Count > 0 Then
+        If Not RadioButtonAll2.Checked And foundPatches.Count > 0 Then
 
 
             If RadioButtonFeature.Checked Then
@@ -254,20 +334,20 @@ Public Class PatchRunner
                 searchTerm = "patchset"
             End If
 
-            For i As Integer = foundPatches.Items.Count - 1 To 0 Step -1
-                If Not foundPatches.Items(i).contains(searchTerm) Then
+            For i As Integer = foundPatches.Count To 1 Step -1
+                If Not foundPatches(i).contains(searchTerm) Then
                     'This patch does not match the filter and will be removed from the list
-                    foundPatches.Items.RemoveAt(i)
+                    foundPatches.Remove(i)
 
-                ElseIf foundPatches.Items(i).contains("hotfix") And Not foundPatches.Items(i).contains("_" & hotFixTargetDBFilter) Then
+                ElseIf foundPatches(i).contains("hotfix") And Not foundPatches(i).contains("_" & hotFixTargetDBFilter) Then
                     'Filter out hotfixes that do not match the current database
-                    foundPatches.Items.RemoveAt(i)
+                    foundPatches.Remove(i)
                 End If
 
 
             Next
 
-            If foundPatches.Items.Count = 0 Then
+            If foundPatches.Count = 0 Then
                 MsgBox("No patches matched the Filter: " & searchTerm, MsgBoxStyle.Information, "No patches found")
             End If
 
@@ -283,21 +363,24 @@ Public Class PatchRunner
     Private Sub doSearch()
         Logger.Dbg("Searching")
 
+        Dim AvailablePatches As Collection = New Collection
+
         If RadioButtonUnapplied.Checked Then
-            FindUnappliedPatches(AvailablePatchesListBox)
+            FindUnappliedPatches(AvailablePatches)
         ElseIf RadioButtonUninstalled.Checked Or RadioButtonAll.Checked Then
-            FindPatches(AvailablePatchesListBox, RadioButtonUninstalled.Checked)
+            FindPatches(AvailablePatches, RadioButtonUninstalled.Checked)
         Else
             MsgBox("Choose type of patch to search for.", MsgBoxStyle.Exclamation, "Choose Search criteria")
         End If
 
         Logger.Dbg("Filtering")
-        filterPatchType(AvailablePatchesListBox)
+        filterPatchType(AvailablePatches)
 
         Logger.Dbg("Populate Tree")
-        GPTrees.populateTreeFromListbox(AvailablePatchesTreeView, AvailablePatchesListBox)
-        'populateTreeFromListbox(AvailablePatchesTreeView.TopNode, AvailablePatchesListBox)
+        GPTrees.populateTreeFromCollection(AvailablePatchesTreeView, AvailablePatches)
 
+        ButtonTreeChange.Text = "Expand"
+ 
 
     End Sub
 
@@ -352,11 +435,23 @@ Public Class PatchRunner
 
         'Retrieve checked node items from the available patches as a collection of patches.
         GPTrees.ReadCheckedLeafNodes(AvailablePatchesTreeView.Nodes, chosenPatches)
+        If chosenPatches.Count = 0 Then
+            MsgBox("No patches selected.")
+        Else
+            Dim ReorderedChanges As Collection = New Collection
 
-        For Each lpatch In chosenPatches
-            MasterScriptListBox.Items.Add("@" & lpatch & "\install.sql")
-        Next
+            If RadioButtonUnapplied.Checked Then
 
+                ReorderedChanges = PatchRunner.ReorderByDependancy(chosenPatches)
+            Else
+                ReorderedChanges = chosenPatches
+                MsgBox("WARNING: Unordered patches.  Dependancy order is only used when filter is 'Unapplied'")
+            End If
+
+            For Each lpatch In ReorderedChanges
+                MasterScriptListBox.Items.Add("@" & lpatch & "\install.sql")
+            Next
+        End If
 
 
     End Sub

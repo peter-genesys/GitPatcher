@@ -490,15 +490,6 @@ Public Class PatchFromTags
 
     Private Sub CopySelectedChanges()
 
-        Dim ChosenChanges As Collection = New Collection
-        'Repo changes
-        'Retrieve checked node items from the TreeViewChanges as a collection of files.
-        GPTrees.ReadCheckedLeafNodes(TreeViewChanges.Nodes, ChosenChanges)
-
-        'Extra files
-        'Retrieve checked node items from the TreeViewFiles as a collection of files.
-        GPTrees.ReadCheckedLeafNodes(TreeViewFiles.Nodes, ChosenChanges)
-
         'Copy to the new Patchable Tree
         TreeViewPatchOrder.PathSeparator = "#"
         TreeViewPatchOrder.Nodes.Clear()
@@ -531,6 +522,17 @@ Public Class PatchFromTags
         GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Configuration")
         GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Jobs")
         GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Miscellaneous")
+
+
+        Dim ChosenChanges As Collection = New Collection
+        'Repo changes
+        'Retrieve checked node items from the TreeViewChanges as a collection of files.
+        GPTrees.ReadCheckedLeafNodes(TreeViewChanges.Nodes, ChosenChanges)
+
+        'Extra files
+        'Retrieve checked node items from the TreeViewFiles as a collection of files.
+        GPTrees.ReadCheckedLeafNodes(TreeViewFiles.Nodes, ChosenChanges)
+
 
 
         For Each change In ChosenChanges
@@ -772,7 +774,13 @@ Public Class PatchFromTags
     ' End Sub
 
 
-    Private Sub FindPatches(ByRef foundPatches As TreeView, ByVal restrictToBranch As Boolean, ByRef sender As Object)
+    Shared Sub FindPatches(ByRef foundPatches As TreeView, ByVal restrictToBranch As Boolean, ByRef sender As Object, Optional ByVal patchType As String = "ALL")
+
+
+        Dim searchPath As String = Nothing
+        If patchType <> "ALL" Then
+            searchPath = patchType & "\"
+        End If
 
 
         Dim lfoundPatches As Collection = New Collection
@@ -781,7 +789,7 @@ Public Class PatchFromTags
 
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
-            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", lfoundPatches, Globals.RootPatchDir)
+            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", lfoundPatches, Globals.RootPatchDir)
 
             If restrictToBranch Then
                 'For i As Integer = lfoundPatches.Count - 1 To 0 Step -1

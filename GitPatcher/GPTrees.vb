@@ -183,7 +183,7 @@
 
     End Sub
 
-    'NEED TO REMVOE THIS AND CODE USING IT
+    'Deprecating
     Shared Sub populateTreeFromListbox(ByRef patchesTreeView As TreeView, ByRef patchesListBox As ListBox)
 
         patchesTreeView.PathSeparator = "\"

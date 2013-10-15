@@ -54,9 +54,10 @@ Public Class CreatePatchCollection
         Findtags()
 
         TagFilterCheckBox.Checked = True
-        RadioButtonUnapplied.Checked = True
+        'RadioButtonUnapplied.Checked = True
+        ComboBoxPatchesFilter.SelectedItem = "Unapplied"
  
-        PatchFilterGroupBox.Text = Globals.currentTNS & " Filter"
+        'PatchFilterGroupBox.Text = Globals.currentTNS & " Filter"
 
     End Sub
 
@@ -106,63 +107,18 @@ Public Class CreatePatchCollection
 
     End Sub
 
-
-
-    '  Private Sub FindPatches()
-    '
-    '
-    '      Dim allPatches As New Collection()
-    '
-    '      If IO.Directory.Exists(Globals.RootPatchDir) Then
-    '
-    '          RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", allPatches, Globals.RootPatchDir)
-    '
-    '      End If
-    '
-    '      'Try
-    '      'If SchemaComboBox.Text = "" Then
-    '      '    Throw (New Halt("Schema not selected"))
-    '      'End If
-    '
-    '      PatchesCheckedListBox.Items.Clear()
-    '
-    '      'For Each patchname As String In allPatches
-    '      '    PatchesCheckedListBox.Items.Add(patchname)
-    '      '    PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
-    '      '    'For Each change In GitSharpFascade.getTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, patchname, False)
-    '      '    'PatchesCheckedListBox.Items.Add(change)
-    '      '    'PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
-    '      '    'Next
-    '      'Next
-    '
-    '      For Each change In GitSharpFascade.getTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
-    '          For Each patchname As String In allPatches
-    '              If change.contains(Replace(patchname, "\", "/")) And change.contains("install.sql") Then
-    '                  PatchesCheckedListBox.Items.Add(change)
-    '                  PatchesCheckedListBox.SetItemChecked(PatchesCheckedListBox.Items.Count - 1, CheckAllCheckBox.Checked)
-    '              End If
-    '          Next
-    '      Next
-    '
-    '
-    '      'Catch schema_not_selected As Halt
-    '      'MsgBox("Please select a schema")
-    '      'End Try
-    '  End Sub
-
-
-
-
-
+ 
     Private Sub FindPatches()
 
-        Dim taggedPatches As New Collection
+        Dim AvailablePatches As Collection = New Collection
+        Dim taggedPatches As Collection = New Collection
 
         'First use the Filter box to find available patches from the file system and with reference to the current DB.
-        If RadioButtonUnapplied.Checked Then
-            PatchRunner.FindUnappliedPatches(Me.AvailablePatchesListBox)
+        If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
+            PatchRunner.FindUnappliedPatches(AvailablePatches)
         Else
-            PatchRunner.FindPatches(Me.AvailablePatchesListBox, Me.RadioButtonUninstalled.Checked)
+            'PatchRunner.FindPatches(AvailablePatches, Me.RadioButtonUninstalled.Checked)
+            PatchRunner.FindPatches(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Uninstalled")
         End If
 
 
@@ -193,8 +149,8 @@ Public Class CreatePatchCollection
         Dim patchTagged As Boolean = True
 
         'process in reverse order, because removing items from the list, changes the indexes.  reverse order will not be affected.
-        For i As Integer = AvailablePatchesListBox.Items.Count - 1 To 0 Step -1
-            Dim availablePatch As String = AvailablePatchesListBox.Items(i)
+        For i As Integer = AvailablePatches.Count To 1 Step -1
+            Dim availablePatch As String = AvailablePatches(i)
             'Check patch matches filter
             patchMatch = False
 
@@ -221,35 +177,38 @@ Public Class CreatePatchCollection
 
             If Not patchMatch Or Not patchTagged Then
                 'patch is to be filtered from the list.
-                AvailablePatchesListBox.Items.RemoveAt(i)
+                AvailablePatches.Remove(i)
 
             End If
 
         Next
 
+        'Populate the treeview.
+        GPTrees.populateTreeFromCollection(AvailablePatchesTreeView, AvailablePatches)
+ 
 
     End Sub
 
-    Private Sub AvailablePatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AvailablePatchesListBox.Click
-        If Not ChosenPatchesListBox.Items.Contains(AvailablePatchesListBox.SelectedItem) Then
-            ChosenPatchesListBox.Items.Add(AvailablePatchesListBox.SelectedItem)
-        End If
+    'Private Sub AvailablePatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs)
+    '    If Not ChosenPatchesListBox.Items.Contains(AvailablePatchesListBox.SelectedItem) Then
+    '        ChosenPatchesListBox.Items.Add(AvailablePatchesListBox.SelectedItem)
+    '    End If
+    '
+    'End Sub
+    '
+    'Private Sub ChosenPatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs)
+    '
+    '    If ChosenPatchesListBox.Items.Count > 0 Then
+    '        ChosenPatchesListBox.Items.RemoveAt(ChosenPatchesListBox.SelectedIndex)
+    '    End If
+    '
+    'End Sub
 
-    End Sub
 
-    Private Sub ChosenPatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ChosenPatchesListBox.Click
-
-        If ChosenPatchesListBox.Items.Count > 0 Then
-            ChosenPatchesListBox.Items.RemoveAt(ChosenPatchesListBox.SelectedIndex)
-        End If
-
-    End Sub
-
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles FindButton.Click
-        FindPatches()
-
-    End Sub
+    'Private Sub Button1_Click(sender As Object, e As EventArgs)
+    '    FindPatches()
+    '
+    'End Sub
 
     Private Sub PatchButton_Click(sender As Object, e As EventArgs) Handles PatchButton.Click
 
@@ -284,6 +243,22 @@ Public Class CreatePatchCollection
         'Next
 
 
+        Dim patchableFiles As Collection = New Collection
+        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, patchableFiles, False, True, True, False)
+
+        Dim skipFiles As Collection = New Collection
+        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, skipFiles, False, True, True, True)
+
+
+        Dim PreReqPatches As Collection = New Collection
+        'Retrieve checked node items from the PreReqPatchesTreeView as a collection of patches.
+        GPTrees.ReadCheckedLeafNodes(PreReqPatchesTreeView.Nodes, PreReqPatches)
+
+
+        Dim SuperPatches As Collection = New Collection
+        'Retrieve checked node items from the SuperPatchesTreeView as a collection of patches.
+        GPTrees.ReadCheckedLeafNodes(SuperPatchesTreeView.Nodes, SuperPatches)
+
  
         'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
@@ -297,10 +272,10 @@ Public Class CreatePatchCollection
                            NoteTextBox.Text, _
                            UsePatchAdminCheckBox.Checked, _
                            RerunCheckBox.Checked, _
-                           PatchableCheckedListBox.Items, _
-                           PatchableCheckedListBox.CheckedItems, _
-                           PrereqsCheckedListBox.CheckedItems, _
-                           SupersedesCheckedListBox.CheckedItems, _
+                           patchableFiles, _
+                           skipFiles, _
+                           PreReqPatches, _
+                           SuperPatches, _
                            PatchDirTextBox.Text, _
                            PatchPathTextBox.Text, _
                            TrackPromoCheckBox.Checked)
@@ -365,10 +340,10 @@ Public Class CreatePatchCollection
                                   ByVal note As String, _
                                   ByVal use_patch_admin As Boolean, _
                                   ByVal rerunnable As Boolean, _
-                                  ByRef targetFiles As CheckedListBox.ObjectCollection, _
-                                  ByRef iSkipFiles As CheckedListBox.CheckedItemCollection, _
-                                  ByRef prereq_patches As CheckedListBox.CheckedItemCollection, _
-                                  ByRef supersedes_patches As CheckedListBox.CheckedItemCollection, _
+                                  ByRef targetFiles As Collection, _
+                                  ByRef iSkipFiles As Collection, _
+                                  ByRef prereq_patches As Collection, _
+                                  ByRef supersedes_patches As Collection, _
                                   ByVal patchDir As String, _
                                   ByVal groupPath As String, _
                                   ByVal track_promotion As Boolean)
@@ -541,14 +516,52 @@ Public Class CreatePatchCollection
     End Sub
 
     Private Sub CopySelectedChanges()
-        'Copy Selected Changes to the next list box.
-        PatchableCheckedListBox.Items.Clear()
 
-        For i As Integer = 0 To ChosenPatchesListBox.Items.Count - 1
+        'Copy to the new Patchable Tree
+        TreeViewPatchOrder.PathSeparator = "#"
+        TreeViewPatchOrder.Nodes.Clear()
 
-            PatchableCheckedListBox.Items.Add(ChosenPatchesListBox.Items(i).ToString)
 
-        Next
+        'Prepopulate Tree with default category nodes.
+        'This should become a method on TreeViewDraggableNodes2Levels
+        Dim l_patches_category As String = "Patches"
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, l_patches_category)
+
+        Dim ChosenChanges As Collection = New Collection
+        'Repo changes
+        'Retrieve checked node items from the TreeViewChanges as a collection of files.
+        GPTrees.ReadCheckedLeafNodes(AvailablePatchesTreeView.Nodes, ChosenChanges)
+
+        If ChosenChanges.Count = 0 Then
+            MsgBox("No patches selected.")
+        Else
+            Dim ReorderedChanges As Collection = New Collection
+
+
+            If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
+
+                ReorderedChanges = PatchRunner.ReorderByDependancy(ChosenChanges)
+            Else
+                ReorderedChanges = ChosenChanges
+                MsgBox("WARNING: Unordered patches.  Dependancy order is only used when filter is 'Unapplied'")
+            End If
+ 
+
+
+            Dim l_label As String
+            For Each change In ReorderedChanges
+                Dim pathSeparator As String = "\"
+
+                l_label = Common.getLastSegment(change, pathSeparator)
+                GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_patches_category, l_label, change) 'This should become a method on TreeViewDraggableNodes2Levels
+            Next
+
+
+            TreeViewPatchOrder.ExpandAll()
+        End If
+
+
+
     End Sub
 
 
@@ -569,7 +582,7 @@ Public Class CreatePatchCollection
             Application.DoEvents()
             deriveTags()
 
-            If AvailablePatchesListBox.Items.Count = 0 Then
+            If AvailablePatchesTreeView.Nodes.Count = 0 Then
                 FindPatches()
             End If
 
@@ -577,7 +590,7 @@ Public Class CreatePatchCollection
         End If
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePreReqs" Then
-            If PrereqsCheckedListBox.Items.Count = 0 Then
+            If PreReqPatchesTreeView.Nodes.Count = 0 Then
                 FindPreReqs()
             End If
 
@@ -585,7 +598,7 @@ Public Class CreatePatchCollection
         End If
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageSuper" Then
-            If SupersedesCheckedListBox.Items.Count = 0 Then
+            If SuperPatchesTreeView.Nodes.Count = 0 Then
                 FindSuper()
             End If
 
@@ -608,7 +621,7 @@ Public Class CreatePatchCollection
 
             TrackPromoCheckBox.Checked = True
 
-            If PatchableCheckedListBox.Items.Count = 0 Then
+            If TreeViewPatchOrder.Nodes.Count = 0 Then
                 CopySelectedChanges()
             End If
         End If
@@ -642,17 +655,20 @@ Public Class CreatePatchCollection
 
 
     Private Sub FindPreReqs()
-        Dim searchPath As String = Nothing
-        If PreReqPatchTypeComboBox.SelectedItem <> "ALL" Then
-            searchPath = PreReqPatchTypeComboBox.SelectedItem & "\"
-        End If
+        'Dim searchPath As String = Nothing
+        'If PreReqPatchTypeComboBox.SelectedItem <> "ALL" Then
+        '    searchPath = PreReqPatchTypeComboBox.SelectedItem & "\"
+        'End If
+        '
+        'PrereqsCheckedListBox.Items.Clear()
+        'If IO.Directory.Exists(Globals.RootPatchDir) Then
+        '
+        '    FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", PrereqsCheckedListBox, Globals.RootPatchDir)
+        '
+        'End If
+ 
+        PatchFromTags.FindPatches(PreReqPatchesTreeView, False, ButtonTreeChangePrereq, PreReqPatchTypeComboBox.SelectedItem)
 
-        PrereqsCheckedListBox.Items.Clear()
-        If IO.Directory.Exists(Globals.RootPatchDir) Then
-
-            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", PrereqsCheckedListBox, Globals.RootPatchDir)
-
-        End If
     End Sub
 
 
@@ -665,19 +681,19 @@ Public Class CreatePatchCollection
 
     Private Sub FindSuper()
 
-        Dim searchPath As String = Nothing
-        If SupPatchTypeComboBox.SelectedItem <> "ALL" Then
-            searchPath = SupPatchTypeComboBox.SelectedItem & "\"
-        End If
+        'Dim searchPath As String = Nothing
+        'If SupPatchTypeComboBox.SelectedItem <> "ALL" Then
+        '    searchPath = SupPatchTypeComboBox.SelectedItem & "\"
+        'End If
+        '
+        'SupersedesCheckedListBox.Items.Clear()
+        'If IO.Directory.Exists(Globals.RootPatchDir) Then
+        '
+        '    FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", SupersedesCheckedListBox, Globals.RootPatchDir)
+        '
+        'End If
 
-        SupersedesCheckedListBox.Items.Clear()
-        If IO.Directory.Exists(Globals.RootPatchDir) Then
-
-            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", SupersedesCheckedListBox, Globals.RootPatchDir)
-
-        End If
-
-
+        PatchFromTags.FindPatches(SuperPatchesTreeView, False, ButtonTreeChangeSuper, SupPatchTypeComboBox.SelectedItem)
 
 
     End Sub
@@ -686,7 +702,7 @@ Public Class CreatePatchCollection
         FindSuper()
     End Sub
 
-    Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
+    Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs)
         'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Globals.RootPatchDir)
         'Use patch runner to execute with a master script.
         PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
@@ -737,7 +753,7 @@ Public Class CreatePatchCollection
 
     End Sub
 
-    Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles ComitButton.Click
+    Private Sub ComitButton_Click(sender As Object, e As EventArgs)
         Tortoise.Commit(PatchDirTextBox.Text, "NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
 
         Mail.SendNotification("NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, pCreatePatchType & " created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
@@ -914,22 +930,90 @@ Public Class CreatePatchCollection
     End Sub
 
 
-    Private Sub CopyAllPatches()
-        'Copy Selected Changes to the next list box.
-        ChosenPatchesListBox.Items.Clear()
+    'Private Sub CopyAllPatches()
+    '    'Copy Selected Changes to the next list box.
+    '    ChosenPatchesListBox.Items.Clear()
+    '
+    '    For i As Integer = 0 To AvailablePatchesListBox.Items.Count - 1
+    '
+    '            ChosenPatchesListBox.Items.Add(AvailablePatchesListBox.Items(i).ToString)
+    '
+    '    Next
+    'End Sub
 
-        For i As Integer = 0 To AvailablePatchesListBox.Items.Count - 1
+    'Private Sub ChooseAllButton_Click(sender As Object, e As EventArgs)
+    '    CopyAllPatches()
+    'End Sub
+
+    'Private Sub ClearButton_Click(sender As Object, e As EventArgs)
+    '    ChosenPatchesListBox.Items.Clear()
+    'End Sub
+
+    Private Sub FindButton_Click(sender As Object, e As EventArgs) Handles FindButton.Click
+        FindPatches()
+    End Sub
+
+    Private Sub ButtonTreeChange_Click(sender As Object, e As EventArgs) Handles ButtonTreeChange.Click
+        'Impliments a 3 position button Expand, Contract, Collapse.
+        GPTrees.treeChange_Click(sender, AvailablePatchesTreeView)
+    End Sub
+
+
+
+
+    Private Sub ButtonTreeChangePrereq_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangePrereq.Click
+        'Impliments a 3 position button Expand, Contract, Collapse.
+        GPTrees.treeChange_Click(sender, PreReqPatchesTreeView)
+    End Sub
+
+    Private Sub ButtonTreeChangeSuper_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangeSuper.Click
+        'Impliments a 3 position button Expand, Contract, Collapse.
+        GPTrees.treeChange_Click(sender, SuperPatchesTreeView)
+
+    End Sub
+
+    Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
+        GPTrees.RemoveNodes(AvailablePatchesTreeView.Nodes, True)
+    End Sub
+
  
-                ChosenPatchesListBox.Items.Add(AvailablePatchesListBox.Items(i).ToString)
+    Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
+        GPTrees.RemoveNodes(AvailablePatchesTreeView.Nodes, False)
+    End Sub
  
-        Next
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        GPTrees.RemoveNodes(PreReqPatchesTreeView.Nodes, True)
     End Sub
 
-    Private Sub ChooseAllButton_Click(sender As Object, e As EventArgs) Handles ChooseAllButton.Click
-        CopyAllPatches()
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        GPTrees.RemoveNodes(PreReqPatchesTreeView.Nodes, False)
     End Sub
 
-    Private Sub ClearButton_Click(sender As Object, e As EventArgs) Handles ClearButton.Click
-        ChosenPatchesListBox.Items.Clear()
+    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
+        GPTrees.RemoveNodes(SuperPatchesTreeView.Nodes, True)
     End Sub
+
+    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+        GPTrees.RemoveNodes(SuperPatchesTreeView.Nodes, False)
+    End Sub
+
+    Shared Sub AvailablePatches_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles AvailablePatchesTreeView.AfterCheck
+
+        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+
+    End Sub
+
+    Shared Sub PreReqPatchesTreeView_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles PreReqPatchesTreeView.AfterCheck
+
+        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+
+    End Sub
+
+    Shared Sub SuperPatchesTreeView_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles SuperPatchesTreeView.AfterCheck
+
+        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+
+    End Sub
+
+
 End Class

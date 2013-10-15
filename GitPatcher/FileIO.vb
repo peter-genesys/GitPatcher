@@ -134,7 +134,7 @@
 
     End Function
 
-
+    'Deprecating
     Public Shared Sub RecursiveSearchContainingFolder(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As ListBox, ByVal removePath As String)
 
         Dim strFolders() As String = System.IO.Directory.GetDirectories(strPath)
