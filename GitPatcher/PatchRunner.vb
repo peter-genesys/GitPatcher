@@ -395,13 +395,9 @@ Public Class PatchRunner
         filterPatchType(AvailablePatches)
 
         Logger.Dbg("Populate Tree")
-        'GPTrees.populateTreeFromCollection(AvailablePatchesTreeView, AvailablePatches)
+ 
         AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches)
-
-        'GPTrees.populateTreeFromCollection(TreeViewDraggableNodes1, AvailablePatches)
- 
-        'ButtonTreeChange.Text = "Expand"
- 
+  
 
     End Sub
 
@@ -454,7 +450,6 @@ Public Class PatchRunner
 
 
         Dim ReorderedChanges As Collection = New Collection
-        'GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, ReorderedChanges, False, True, True, False)
         TreeViewPatchOrder.ReadTags(ReorderedChanges, False, True, True, False)
  
         If ReorderedChanges.Count = 0 Then
@@ -484,49 +479,15 @@ Public Class PatchRunner
 
     End Sub
 
-
-    ' NOTE   This code can be added to the BeforeCheck event handler instead of the AfterCheck event. 
-    ' After a tree node's Checked property is changed, all its child nodes are updated to the same value. 
-    'Shared Sub node_AfterCheck(sender As Object, e As TreeViewEventArgs)
-    '
-    '    GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
-    '
-    'End Sub
-
-
-
-    'Private Sub ButtonTreeChange_Click(sender As Object, e As EventArgs)
-    '    'Impliments a 3 position button Expand, Contract, Collapse.
-    '    GPTrees.treeChange_Click(sender, AvailablePatchesTreeView)
-    '
-    'End Sub
-
+ 
 
 
     '
     '   Public Shared Function FindLastPatch(ByVal patch_component As String) As String
     '
-    '       'Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
-    '       '    Dim Conn As New OracleConnection("Data Source=ssil;user id=scott;password=tiger")
-    '       '    Dim cmd As New OracleCommand
-    '       '    Conn.Open()
-    '       '    cmd.CommandText = "testfunction"
-    '       '    cmd.CommandType = CommandType.StoredProcedure
-    '       '    cmd.Parameters.Add("eno", OracleType.Number)
-    '       '    cmd.Parameters.Add("jb", OracleType.VarChar, 10)
-    '       '    cmd.Parameters.Item("jb").Direction = ParameterDirection.Output
-    '       '    cmd.Parameters.Item("eno").Value = 7788
-    '       '    cmd.Parameters.Add("sl", OracleType.Number)
-    '       '    cmd.Parameters.Item("sl").Direction = ParameterDirection.ReturnValue
-    '       '    cmd.Connection = Conn
-    '       '    Dim obj As Object = cmd.ExecuteScalar()
-    '       '    Dim str As String
-    '       '    str = "Salary = " & cmd.Parameters.Item("sl").Value & vbNewLine
-    '       '    str = str & "Job = " & cmd.Parameters.Item("jb").Value
-    '       '    MessageBox.Show(str)
-    '       'End Sub
+ 
     '
-    '       'Simple but replies on TNSNAMES File
+    '       'Simple but relies on TNSNAMES File
     '       Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
     '
     '       Dim conn As New OracleConnection(oradb)
@@ -633,15 +594,12 @@ Public Class PatchRunner
 
 
         'Prepopulate Tree with default category nodes.
-        'This should become a method on TreeViewDraggableNodes2Levels
         Dim l_patches_category As String = "Patches"
-        'GPTrees.AddCategory(TreeViewPatchOrder.Nodes, l_patches_category)
         TreeViewPatchOrder.AddCategory(l_patches_category)
 
         Dim ChosenChanges As Collection = New Collection
         'Repo changes
         'Retrieve checked node items from the TreeViewChanges as a collection of files.
-        'GPTrees.ReadCheckedLeafNodes(AvailablePatchesTreeView.Nodes, ChosenChanges)
         AvailablePatchesTreeView.ReadCheckedLeafNodes(ChosenChanges)
 
         If ChosenChanges.Count = 0 Then
@@ -665,7 +623,6 @@ Public Class PatchRunner
                 Dim pathSeparator As String = "\"
 
                 l_label = Common.getLastSegment(change, pathSeparator)
-                'GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_patches_category, l_label, change) 'This should become a method on TreeViewDraggableNodes2Levels
                 TreeViewPatchOrder.AddFileToCategory(l_patches_category, l_label, change)
             Next
 

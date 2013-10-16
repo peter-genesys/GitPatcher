@@ -54,22 +54,14 @@ Public Class CreatePatchCollection
         Findtags()
 
         TagFilterCheckBox.Checked = True
-        'RadioButtonUnapplied.Checked = True
         ComboBoxPatchesFilter.SelectedItem = "Unapplied"
 
         Me.Text = "CreatePatchSet - Creating a " & iCreatePatchType & " for " & Globals.currentTNS
-
-        'PatchFilterGroupBox.Text = Globals.currentTNS & " Filter"
 
         AvailablePatchesLabel.Text = "Available" & Chr(10) & iFindPatchTypes & Chr(10) & "Patches"
  
     End Sub
 
-
-    'Shared Sub TortoiseMerge(ByVal i_WorkingDir As String, ByVal i_merge_branch As String, Optional ByVal i_wait As Boolean = True)
-    '    Dim Tortoise As New TortoiseFacade(i_wait)
-    '    Tortoise.Merge(i_WorkingDir, i_merge_branch)
-    'End Sub
 
     Private Sub Findtags()
 
@@ -121,7 +113,6 @@ Public Class CreatePatchCollection
         If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
             PatchRunner.FindUnappliedPatches(AvailablePatches)
         Else
-            'PatchRunner.FindPatches(AvailablePatches, Me.RadioButtonUninstalled.Checked)
             PatchRunner.FindPatches(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Uninstalled")
         End If
 
@@ -132,7 +123,6 @@ Public Class CreatePatchCollection
         End If
 
         If TagFilterCheckBox.Checked Then
-            'taggedPatches = GitSharpFascade.getTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
 
             'Find patches between 2 tags
             For Each change In GitSharpFascade.getTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
@@ -140,8 +130,7 @@ Public Class CreatePatchCollection
                 If change.contains("install.sql") And Common.stringContainsSetMember(change, pFindPatchTypes, ",") And Common.stringContainsSetMember(change, pFindPatchFilters, ",") Then
 
                     taggedPatches.Add(Replace(Common.dropLastSegment(Common.dropFirstSegment(change, "/"), "/"), "/", "\"))
-                    'ChosenPatchesListBox.Items.Add(Replace(Common.dropLastSegment(Common.dropFirstSegment(change, "/"), "/"), "/", "\"))
-
+ 
                 End If
 
             Next
@@ -188,7 +177,6 @@ Public Class CreatePatchCollection
         Next
 
         'Populate the treeview.
-        'GPTrees.populateTreeFromCollection(AvailablePatchesTreeView, AvailablePatches)
         AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches)
 
         Cursor.Current = Cursors.Default
@@ -201,28 +189,7 @@ Public Class CreatePatchCollection
 
 
     End Sub
-
-    'Private Sub AvailablePatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs)
-    '    If Not ChosenPatchesListBox.Items.Contains(AvailablePatchesListBox.SelectedItem) Then
-    '        ChosenPatchesListBox.Items.Add(AvailablePatchesListBox.SelectedItem)
-    '    End If
-    '
-    'End Sub
-    '
-    'Private Sub ChosenPatchesListBox_SelectedIndexChanged(sender As Object, e As EventArgs)
-    '
-    '    If ChosenPatchesListBox.Items.Count > 0 Then
-    '        ChosenPatchesListBox.Items.RemoveAt(ChosenPatchesListBox.SelectedIndex)
-    '    End If
-    '
-    'End Sub
-
-
-    'Private Sub Button1_Click(sender As Object, e As EventArgs)
-    '    FindPatches()
-    '
-    'End Sub
-
+ 
     Private Sub PatchButton_Click(sender As Object, e As EventArgs) Handles PatchButton.Click
 
         'Create Patch Dir
@@ -239,41 +206,26 @@ Public Class CreatePatchCollection
             Else
                 l_create_folder = l_create_folder & "\" & folder
             End If
-
-            'l_create_folder = l_create_folder & "\" & folder
+ 
             FileIO.createFolderIfNotExists(l_create_folder)
         Next
 
         FileIO.createFolderIfNotExists(PatchDirTextBox.Text)
-
-        'Iterate through the PatchableCheckedListBox
-        'convert Patchable items to a collection
-        'Dim filenames As Collection = New Collection
-        '
-        'For i = 0 To PatchableCheckedListBox.Items.Count - 1
-        '    filenames.Add(PatchableCheckedListBox.Items(i))
-        '
-        'Next
-
-
+ 
         Dim patchableFiles As Collection = New Collection
-        'GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, patchableFiles, False, True, True, False)
         TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
         Dim skipFiles As Collection = New Collection
-        'GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, skipFiles, False, True, True, True)
         TreeViewPatchOrder.ReadTags(skipFiles, False, True, True, True)
 
 
         Dim PreReqPatches As Collection = New Collection
         'Retrieve checked node items from the PreReqPatchesTreeView as a collection of patches.
-        'GPTrees.ReadCheckedLeafNodes(PreReqPatchesTreeView.Nodes, PreReqPatches)
         PreReqPatchesTreeView.ReadCheckedLeafNodes(PreReqPatches)
 
 
         Dim SuperPatches As Collection = New Collection
         'Retrieve checked node items from the SuperPatchesTreeView as a collection of patches.
-        'GPTrees.ReadCheckedLeafNodes(SuperPatchesTreeView.Nodes, SuperPatches)
         SuperPatchesTreeView.ReadCheckedLeafNodes(SuperPatches)
  
         'Write the install script
@@ -301,43 +253,7 @@ Public Class CreatePatchCollection
 
 
     End Sub
-
-    ' Private Sub deriveSchemas()
-    '     SchemaComboBox.Items.Clear()
-    '     SchemaComboBox.Text = ""
-    '     For Each schema In GitSharpFascade.getSchemaList(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database")
-    '         SchemaComboBox.Items.Add(schema)
-    '     Next
-    '
-    '     SchemaCountTextBox.Text = SchemaComboBox.Items.Count
-    '
-    '     'If exactly one schema found then select it
-    '     'otherwise force user to choose one.
-    '     If SchemaComboBox.Items.Count = 1 Then
-    '         SchemaComboBox.SelectedIndex = 0
-    '     End If
-    ' End Sub
-
-    ' Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs)
-    '     'Loop thru items.
-    '     For i As Integer = 0 To PatchesCheckedListBox.Items.Count - 1
-    '         PatchesCheckedListBox.SetItemChecked(i, CheckAllCheckBox.Checked)
-    '
-    '     Next
-    ' End Sub
-
-    Private Sub Tag2TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag2TextBox.TextChanged
-
-        ' deriveSchemas()
-
-    End Sub
-
-    Private Sub Tag1TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag1TextBox.TextChanged
-        ' deriveSchemas()
-    End Sub
-
-
-
+ 
     Private Sub PatchNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchNameTextBox.TextChanged
 
         PatchDirTextBox.Text = Globals.RootPatchDir & Replace(PatchNameTextBox.Text, "/", "\") & "\"
@@ -571,7 +487,6 @@ Public Class CreatePatchCollection
                 Dim pathSeparator As String = "\"
 
                 l_label = Common.getLastSegment(change, pathSeparator)
-                'GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_patches_category, l_label, change) 'This should become a method on TreeViewDraggableNodes2Levels
                 TreeViewPatchOrder.AddFileToCategory(l_patches_category, l_label, change)
             Next
  
@@ -584,10 +499,7 @@ Public Class CreatePatchCollection
 
 
     Private Sub PatchTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles PatchTabControl.SelectedIndexChanged
-
-        'MessageBox.Show("you selected the fifth tab:  " & PatchTabControl.SelectedTab.Name.ToString)
-
-
+ 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageTags" Then
             If TagsCheckedListBox.Items.Count = 0 Then
                 Findtags()
@@ -673,20 +585,8 @@ Public Class CreatePatchCollection
 
 
     Private Sub FindPreReqs()
-        'Dim searchPath As String = Nothing
-        'If PreReqPatchTypeComboBox.SelectedItem <> "ALL" Then
-        '    searchPath = PreReqPatchTypeComboBox.SelectedItem & "\"
-        'End If
-        '
-        'PrereqsCheckedListBox.Items.Clear()
-        'If IO.Directory.Exists(Globals.RootPatchDir) Then
-        '
-        '    FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", PrereqsCheckedListBox, Globals.RootPatchDir)
-        '
-        'End If
  
-        'PatchFromTags.FindPatches(PreReqPatchesTreeView, False, ButtonTreeChangePrereq, PreReqPatchTypeComboBox.SelectedItem)
-        PatchFromTags.FindPatches(PreReqPatchesTreeView, False, PreReqPatchTypeComboBox.SelectedItem)
+         PatchFromTags.FindPatches(PreReqPatchesTreeView, False, PreReqPatchTypeComboBox.SelectedItem)
 
     End Sub
 
@@ -699,19 +599,7 @@ Public Class CreatePatchCollection
 
 
     Private Sub FindSuper()
-
-        'Dim searchPath As String = Nothing
-        'If SupPatchTypeComboBox.SelectedItem <> "ALL" Then
-        '    searchPath = SupPatchTypeComboBox.SelectedItem & "\"
-        'End If
-        '
-        'SupersedesCheckedListBox.Items.Clear()
-        'If IO.Directory.Exists(Globals.RootPatchDir) Then
-        '
-        '    FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", SupersedesCheckedListBox, Globals.RootPatchDir)
-        '
-        'End If
-
+ 
         PatchFromTags.FindPatches(SuperPatchesTreeView, False, SupPatchTypeComboBox.SelectedItem)
 
 
@@ -722,7 +610,6 @@ Public Class CreatePatchCollection
     End Sub
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs)
-        'Host.executeSQLscriptInteractive(PatchNameTextBox.Text & "\install.sql", Globals.RootPatchDir)
         'Use patch runner to execute with a master script.
         PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
 
@@ -737,18 +624,7 @@ Public Class CreatePatchCollection
     End Sub
 
     Private Sub deriveTags()
-        'MsgBox("TagsCheckedListBox.SelectedIndexChanged")
-
-        'If TagsCheckedListBox.CheckedItems.Count > 0 Then
-        '    Tag1TextBox.Text = TagsCheckedListBox.CheckedItems.Item(0)
-        'Else
-        '    Tag1TextBox.Text = ""
-        'End If
-        'If TagsCheckedListBox.CheckedItems.Count > 1 Then
-        '    Tag2TextBox.Text = TagsCheckedListBox.CheckedItems.Item(1)
-        'Else
-        '    Tag2TextBox.Text = ""
-        'End If
+  
 
         If TagsCheckedListBox.CheckedItems.Count = 0 Then
             'Nothing checked so select no tags
@@ -776,9 +652,7 @@ Public Class CreatePatchCollection
         Tortoise.Commit(PatchDirTextBox.Text, "NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
 
         Mail.SendNotification("NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, pCreatePatchType & " created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
-
-        'Mail.SendNotification("NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.")
-
+ 
         'user
         'branch
         'tags
@@ -948,93 +822,12 @@ Public Class CreatePatchCollection
 
     End Sub
 
-
-    'Private Sub CopyAllPatches()
-    '    'Copy Selected Changes to the next list box.
-    '    ChosenPatchesListBox.Items.Clear()
-    '
-    '    For i As Integer = 0 To AvailablePatchesListBox.Items.Count - 1
-    '
-    '            ChosenPatchesListBox.Items.Add(AvailablePatchesListBox.Items(i).ToString)
-    '
-    '    Next
-    'End Sub
-
-    'Private Sub ChooseAllButton_Click(sender As Object, e As EventArgs)
-    '    CopyAllPatches()
-    'End Sub
-
-    'Private Sub ClearButton_Click(sender As Object, e As EventArgs)
-    '    ChosenPatchesListBox.Items.Clear()
-    'End Sub
+ 
 
     Private Sub FindButton_Click(sender As Object, e As EventArgs) Handles FindButton.Click
         FindPatches()
     End Sub
 
-    'Private Sub ButtonTreeChange_Click(sender As Object, e As EventArgs)
-    '    'Impliments a 3 position button Expand, Contract, Collapse.
-    '    GPTrees.treeChange_Click(sender, AvailablePatchesTreeView)
-    'End Sub
-    '
-    '
-    '
-    '
-    'Private Sub ButtonTreeChangePrereq_Click(sender As Object, e As EventArgs)
-    '    'Impliments a 3 position button Expand, Contract, Collapse.
-    '    GPTrees.treeChange_Click(sender, PreReqPatchesTreeView)
-    'End Sub
-    '
-    'Private Sub ButtonTreeChangeSuper_Click(sender As Object, e As EventArgs)
-    '    'Impliments a 3 position button Expand, Contract, Collapse.
-    '    GPTrees.treeChange_Click(sender, SuperPatchesTreeView)
-    '
-    'End Sub
-
-    'Private Sub Button8_Click(sender As Object, e As EventArgs)
-    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(AvailablePatchesTreeView.Nodes, True)
-    'End Sub
-    '
-    '
-    'Private Sub Button7_Click(sender As Object, e As EventArgs)
-    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(AvailablePatchesTreeView.Nodes, False)
-    'End Sub
-    '
-    'Private Sub Button4_Click(sender As Object, e As EventArgs)
-    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(PreReqPatchesTreeView.Nodes, True)
-    'End Sub
-    '
-    'Private Sub Button3_Click(sender As Object, e As EventArgs)
-    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(PreReqPatchesTreeView.Nodes, False)
-    'End Sub
-    '
-    'Private Sub Button6_Click(sender As Object, e As EventArgs)
-    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperPatchesTreeView.Nodes, True)
-    'End Sub
-    '
-    'Private Sub Button5_Click(sender As Object, e As EventArgs)
-    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperPatchesTreeView.Nodes, False)
-    'End Sub
-
-    'Shared Sub AvailablePatches_AfterCheck(sender As Object, e As TreeViewEventArgs)
-    '
-    '    GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
-    '
-    'End Sub
-    '
-    'Shared Sub PreReqPatchesTreeView_AfterCheck(sender As Object, e As TreeViewEventArgs)
-    '
-    '    GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
-    '
-    'End Sub
-    '
-    'Shared Sub SuperPatchesTreeView_AfterCheck(sender As Object, e As TreeViewEventArgs)
-    '
-    '    GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
-    '
-    'End Sub
-
-
- 
+  
  
 End Class
