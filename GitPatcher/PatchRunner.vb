@@ -5,12 +5,15 @@ Public Class PatchRunner
 
     Dim hotFixTargetDBFilter As String = Nothing
 
-    Public Sub New(ByVal iUnapplied As Boolean, ByVal iUninstalled As Boolean, ByVal iAll As Boolean, Optional ByVal iBranchType As String = "")
+    Public Sub New(Optional ByVal iInstallStatus As String = "All", Optional ByVal iBranchType As String = "")
         InitializeComponent()
-        RadioButtonUnapplied.Checked = iUnapplied
-        RadioButtonUninstalled.Checked = iUninstalled
-        RadioButtonAll.Checked = iAll
-        PatchFilterGroupBox.Text = Globals.currentTNS & " Search Criteria"
+
+        'Other legal values Unapplied and Uninstalled
+        ComboBoxPatchesFilter.SelectedItem = iInstallStatus
+
+        Me.Text = "PatchRunner - Running patches on " & Globals.currentTNS
+
+        'PatchFilterGroupBox.Text = Globals.currentTNS & " Search Criteria"
 
 
         hotFixTargetDBFilter = Globals.currentDB()
@@ -70,6 +73,9 @@ Public Class PatchRunner
 
 
     Public Shared Function ReorderByDependancy(ByRef givenPatches As Collection) As Collection
+
+        Application.DoEvents()
+        Cursor.Current = Cursors.WaitCursor
 
         Dim orderedPatches As Collection = New Collection
 
@@ -140,6 +146,8 @@ Public Class PatchRunner
 
         End Try
 
+        Cursor.Current = Cursors.Default
+
         Return orderedPatches
 
     End Function
@@ -149,6 +157,9 @@ Public Class PatchRunner
 
 
     Public Shared Sub FindPatches(ByRef foundPatches As Collection, ByVal iHideInstalled As Boolean)
+
+        Application.DoEvents()
+        Cursor.Current = Cursors.WaitCursor
 
         'Simple but replies on TNSNAMES File
         Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
@@ -246,11 +257,16 @@ Public Class PatchRunner
         End If
 
 
+        Cursor.Current = Cursors.Default
+
+
     End Sub
 
 
     Public Shared Sub FindUnappliedPatches(ByRef foundPatches As Collection)
 
+        Application.DoEvents()
+        Cursor.Current = Cursors.WaitCursor
 
         foundPatches.Clear()
         Dim availablePatches As Collection = New Collection
@@ -316,6 +332,8 @@ Public Class PatchRunner
         End If
 
 
+        Cursor.Current = Cursors.Default
+
     End Sub
 
 
@@ -365,10 +383,10 @@ Public Class PatchRunner
 
         Dim AvailablePatches As Collection = New Collection
 
-        If RadioButtonUnapplied.Checked Then
+        If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
             FindUnappliedPatches(AvailablePatches)
-        ElseIf RadioButtonUninstalled.Checked Or RadioButtonAll.Checked Then
-            FindPatches(AvailablePatches, RadioButtonUninstalled.Checked)
+        ElseIf ComboBoxPatchesFilter.SelectedItem = "Uninstalled" Or ComboBoxPatchesFilter.SelectedItem = "All" Then
+            FindPatches(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Uninstalled")
         Else
             MsgBox("Choose type of patch to search for.", MsgBoxStyle.Exclamation, "Choose Search criteria")
         End If
@@ -431,23 +449,14 @@ Public Class PatchRunner
 
         MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.currentTNS & "'")
 
-        Dim chosenPatches As Collection = New Collection
 
-        'Retrieve checked node items from the available patches as a collection of patches.
-        GPTrees.ReadCheckedLeafNodes(AvailablePatchesTreeView.Nodes, chosenPatches)
-        If chosenPatches.Count = 0 Then
-            MsgBox("No patches selected.")
+        Dim ReorderedChanges As Collection = New Collection
+        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, ReorderedChanges, False, True, True, False)
+ 
+        If ReorderedChanges.Count = 0 Then
+            MsgBox("No patches in ordered list.")
         Else
-            Dim ReorderedChanges As Collection = New Collection
-
-            If RadioButtonUnapplied.Checked Then
-
-                ReorderedChanges = PatchRunner.ReorderByDependancy(chosenPatches)
-            Else
-                ReorderedChanges = chosenPatches
-                MsgBox("WARNING: Unordered patches.  Dependancy order is only used when filter is 'Unapplied'")
-            End If
-
+ 
             For Each lpatch In ReorderedChanges
                 MasterScriptListBox.Items.Add("@" & lpatch & "\install.sql")
             Next
@@ -460,7 +469,11 @@ Public Class PatchRunner
     Private Sub PatchRunnerTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles PatchRunnerTabControl.SelectedIndexChanged
 
 
-        If (PatchRunnerTabControl.SelectedTab.Name.ToString) = "RunTabPage" Then
+        If (PatchRunnerTabControl.SelectedTab.Name.ToString) = "OrderTabPage" Then
+            If TreeViewPatchOrder.Nodes.Count = 0 Then
+                CopySelectedChanges()
+            End If
+        ElseIf (PatchRunnerTabControl.SelectedTab.Name.ToString) = "RunTabPage" Then
             PopMasterScriptListBox()
 
         End If
@@ -556,6 +569,8 @@ Public Class PatchRunner
 
     Public Shared Function FindLastPatch(ByVal patch_component As String) As String
 
+        Application.DoEvents()
+        Cursor.Current = Cursors.WaitCursor
 
         'Simple but replies on TNSNAMES File
         Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
@@ -598,10 +613,65 @@ Public Class PatchRunner
 
         End Try
 
+        Cursor.Current = Cursors.Default
+
         Return l_patch_name
 
 
     End Function
 
 
+    Private Sub CopySelectedChanges()
+
+        'Copy to the new Patchable Tree
+        TreeViewPatchOrder.PathSeparator = "#"
+        TreeViewPatchOrder.Nodes.Clear()
+
+
+        'Prepopulate Tree with default category nodes.
+        'This should become a method on TreeViewDraggableNodes2Levels
+        Dim l_patches_category As String = "Patches"
+        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, l_patches_category)
+
+        Dim ChosenChanges As Collection = New Collection
+        'Repo changes
+        'Retrieve checked node items from the TreeViewChanges as a collection of files.
+        GPTrees.ReadCheckedLeafNodes(AvailablePatchesTreeView.Nodes, ChosenChanges)
+
+        If ChosenChanges.Count = 0 Then
+            MsgBox("No patches selected.")
+        Else
+            Dim ReorderedChanges As Collection = New Collection
+
+
+            If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
+
+                ReorderedChanges = PatchRunner.ReorderByDependancy(ChosenChanges)
+            Else
+                ReorderedChanges = ChosenChanges
+                MsgBox("WARNING: Unordered patches.  Dependancy order is only used when filter is 'Unapplied'")
+            End If
+
+
+
+            Dim l_label As String
+            For Each change In ReorderedChanges
+                Dim pathSeparator As String = "\"
+
+                l_label = Common.getLastSegment(change, pathSeparator)
+                GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_patches_category, l_label, change) 'This should become a method on TreeViewDraggableNodes2Levels
+            Next
+
+
+            TreeViewPatchOrder.ExpandAll()
+        End If
+
+
+
+    End Sub
+
+
+    Private Sub CopyChangesButton_Click(sender As Object, e As EventArgs) Handles CopyChangesButton.Click
+        CopySelectedChanges()
+    End Sub
 End Class

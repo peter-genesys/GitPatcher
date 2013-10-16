@@ -56,9 +56,13 @@ Public Class CreatePatchCollection
         TagFilterCheckBox.Checked = True
         'RadioButtonUnapplied.Checked = True
         ComboBoxPatchesFilter.SelectedItem = "Unapplied"
- 
+
+        Me.Text = "CreatePatchSet - Creating a " & iCreatePatchType & " for " & Globals.currentTNS
+
         'PatchFilterGroupBox.Text = Globals.currentTNS & " Filter"
 
+        AvailablePatchesLabel.Text = "Available" & Chr(10) & iFindPatchTypes & Chr(10) & "Patches"
+ 
     End Sub
 
 
@@ -121,7 +125,7 @@ Public Class CreatePatchCollection
             PatchRunner.FindPatches(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Uninstalled")
         End If
 
-
+        Cursor.Current = Cursors.WaitCursor
         'Next get a list of patches between the 2 tags and filter the orginal list by this.
         If String.IsNullOrEmpty(Tag1TextBox.Text) Or String.IsNullOrEmpty(Tag2TextBox.Text) Then
             TagFilterCheckBox.Checked = False
@@ -185,7 +189,15 @@ Public Class CreatePatchCollection
 
         'Populate the treeview.
         GPTrees.populateTreeFromCollection(AvailablePatchesTreeView, AvailablePatches)
+
+        Cursor.Current = Cursors.Default
+
+        If AvailablePatches.Count = 0 Then
+            MsgBox("No " & pFindPatchTypes & " patches are " & ComboBoxPatchesFilter.SelectedItem & " to " & Globals.currentDB)
+
+        End If
  
+
 
     End Sub
 
@@ -516,7 +528,7 @@ Public Class CreatePatchCollection
     End Sub
 
     Private Sub CopySelectedChanges()
-
+ 
         'Copy to the new Patchable Tree
         TreeViewPatchOrder.PathSeparator = "#"
         TreeViewPatchOrder.Nodes.Clear()
@@ -1016,4 +1028,6 @@ Public Class CreatePatchCollection
     End Sub
 
 
+ 
+ 
 End Class

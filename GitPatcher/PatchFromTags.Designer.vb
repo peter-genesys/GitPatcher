@@ -268,9 +268,9 @@ Partial Class PatchFromTags
         Me.Label11.AutoSize = True
         Me.Label11.Location = New System.Drawing.Point(77, 43)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(163, 13)
+        Me.Label11.Size = New System.Drawing.Size(281, 13)
         Me.Label11.TabIndex = 29
-        Me.Label11.Text = "All listed changes will be patched"
+        Me.Label11.Text = "All listed changes will be patched  - Drag n' drop to reorder"
         '
         'Label8
         '
@@ -367,7 +367,7 @@ Partial Class PatchFromTags
         Me.TabPageSuper.Location = New System.Drawing.Point(4, 22)
         Me.TabPageSuper.Name = "TabPageSuper"
         Me.TabPageSuper.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageSuper.Size = New System.Drawing.Size(1143, 699)
+        Me.TabPageSuper.Size = New System.Drawing.Size(527, 699)
         Me.TabPageSuper.TabIndex = 4
         Me.TabPageSuper.Text = "Supersedes"
         Me.TabPageSuper.UseVisualStyleBackColor = True
@@ -448,7 +448,7 @@ Partial Class PatchFromTags
         Me.TabPagePreReqs.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePreReqs.Name = "TabPagePreReqs"
         Me.TabPagePreReqs.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePreReqs.Size = New System.Drawing.Size(1143, 699)
+        Me.TabPagePreReqs.Size = New System.Drawing.Size(527, 699)
         Me.TabPagePreReqs.TabIndex = 3
         Me.TabPagePreReqs.Text = "Pre-Requisites"
         Me.TabPagePreReqs.UseVisualStyleBackColor = True
@@ -541,7 +541,7 @@ Partial Class PatchFromTags
         Me.TabPageChanges.Location = New System.Drawing.Point(4, 22)
         Me.TabPageChanges.Name = "TabPageChanges"
         Me.TabPageChanges.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageChanges.Size = New System.Drawing.Size(1143, 699)
+        Me.TabPageChanges.Size = New System.Drawing.Size(527, 699)
         Me.TabPageChanges.TabIndex = 1
         Me.TabPageChanges.Text = "Changes"
         Me.TabPageChanges.UseVisualStyleBackColor = True
@@ -654,7 +654,7 @@ Partial Class PatchFromTags
         Me.TabPageTags.Location = New System.Drawing.Point(4, 22)
         Me.TabPageTags.Name = "TabPageTags"
         Me.TabPageTags.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageTags.Size = New System.Drawing.Size(1143, 699)
+        Me.TabPageTags.Size = New System.Drawing.Size(527, 699)
         Me.TabPageTags.TabIndex = 0
         Me.TabPageTags.Text = "Tags"
         Me.TabPageTags.UseVisualStyleBackColor = True

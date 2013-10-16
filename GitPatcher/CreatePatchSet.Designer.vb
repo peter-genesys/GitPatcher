@@ -43,7 +43,7 @@ Partial Class CreatePatchCollection
         Me.Button8 = New System.Windows.Forms.Button()
         Me.ButtonTreeChange = New System.Windows.Forms.Button()
         Me.AvailablePatchesTreeView = New System.Windows.Forms.TreeView()
-        Me.PatchesLabel = New System.Windows.Forms.Label()
+        Me.AvailablePatchesLabel = New System.Windows.Forms.Label()
         Me.TagFilterCheckBox = New System.Windows.Forms.CheckBox()
         Me.FindButton = New System.Windows.Forms.Button()
         Me.TabPagePreReqs = New System.Windows.Forms.TabPage()
@@ -65,6 +65,7 @@ Partial Class CreatePatchCollection
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.ComitButton = New System.Windows.Forms.Button()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
         Me.TreeViewPatchOrder = New TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels()
@@ -84,7 +85,6 @@ Partial Class CreatePatchCollection
         Me.Label7 = New System.Windows.Forms.Label()
         Me.SupIdTextBox = New System.Windows.Forms.TextBox()
         Me.PatchDescTextBox = New System.Windows.Forms.TextBox()
-        Me.Label3 = New System.Windows.Forms.Label()
         Me.PatchTabControl.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.TabPagePatches.SuspendLayout()
@@ -234,7 +234,7 @@ Partial Class CreatePatchCollection
         Me.TabPagePatches.Controls.Add(Me.Button8)
         Me.TabPagePatches.Controls.Add(Me.ButtonTreeChange)
         Me.TabPagePatches.Controls.Add(Me.AvailablePatchesTreeView)
-        Me.TabPagePatches.Controls.Add(Me.PatchesLabel)
+        Me.TabPagePatches.Controls.Add(Me.AvailablePatchesLabel)
         Me.TabPagePatches.Controls.Add(Me.TagFilterCheckBox)
         Me.TabPagePatches.Controls.Add(Me.FindButton)
         Me.TabPagePatches.Location = New System.Drawing.Point(4, 22)
@@ -289,14 +289,14 @@ Partial Class CreatePatchCollection
         Me.AvailablePatchesTreeView.Size = New System.Drawing.Size(429, 619)
         Me.AvailablePatchesTreeView.TabIndex = 42
         '
-        'PatchesLabel
+        'AvailablePatchesLabel
         '
-        Me.PatchesLabel.AutoSize = True
-        Me.PatchesLabel.Location = New System.Drawing.Point(21, 76)
-        Me.PatchesLabel.Name = "PatchesLabel"
-        Me.PatchesLabel.Size = New System.Drawing.Size(50, 26)
-        Me.PatchesLabel.TabIndex = 41
-        Me.PatchesLabel.Text = "Available" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Patches"
+        Me.AvailablePatchesLabel.AutoSize = True
+        Me.AvailablePatchesLabel.Location = New System.Drawing.Point(21, 76)
+        Me.AvailablePatchesLabel.Name = "AvailablePatchesLabel"
+        Me.AvailablePatchesLabel.Size = New System.Drawing.Size(50, 26)
+        Me.AvailablePatchesLabel.TabIndex = 41
+        Me.AvailablePatchesLabel.Text = "Available" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Patches"
         '
         'TagFilterCheckBox
         '
@@ -528,6 +528,15 @@ Partial Class CreatePatchCollection
         Me.TabPagePatchDefn.Text = "Patch Defn"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
         '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(222, 22)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(217, 13)
+        Me.Label3.TabIndex = 48
+        Me.Label3.Text = "(Rechecks dependancy order, can be slow.)"
+        '
         'ComitButton
         '
         Me.ComitButton.Location = New System.Drawing.Point(77, 666)
@@ -614,9 +623,9 @@ Partial Class CreatePatchCollection
         Me.Label11.AutoSize = True
         Me.Label11.Location = New System.Drawing.Point(77, 43)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(152, 13)
+        Me.Label11.Size = New System.Drawing.Size(267, 13)
         Me.Label11.TabIndex = 29
-        Me.Label11.Text = "All listed patches will be called."
+        Me.Label11.Text = "All listed patches will be called  - Drag n' drop to reorder"
         '
         'Label8
         '
@@ -696,15 +705,6 @@ Partial Class CreatePatchCollection
         Me.PatchDescTextBox.Size = New System.Drawing.Size(429, 20)
         Me.PatchDescTextBox.TabIndex = 20
         '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(222, 22)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(217, 13)
-        Me.Label3.TabIndex = 48
-        Me.Label3.Text = "(Rechecks dependancy order, can be slow.)"
-        '
         'CreatePatchCollection
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -770,7 +770,7 @@ Partial Class CreatePatchCollection
     Friend WithEvents Label17 As System.Windows.Forms.Label
     Friend WithEvents TrackPromoCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents TabPagePatches As System.Windows.Forms.TabPage
-    Friend WithEvents PatchesLabel As System.Windows.Forms.Label
+    Friend WithEvents AvailablePatchesLabel As System.Windows.Forms.Label
     Friend WithEvents TagFilterCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents FindButton As System.Windows.Forms.Button
     Friend WithEvents AvailablePatchesTreeView As System.Windows.Forms.TreeView

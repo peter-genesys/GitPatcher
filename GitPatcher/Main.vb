@@ -452,7 +452,7 @@
 
         If rebasing.toDoNextStep() Then
             'Use PatchRunner to run Unapplied Patches
-            Dim newchildform As New PatchRunner(True, False, False)
+            Dim newchildform As New PatchRunner("Unapplied")
             'newchildform.MdiParent = GitPatcher
             newchildform.ShowDialog() 'NEED TO WAIT HERE!!
 
@@ -544,7 +544,7 @@
 
         If releasing.toDoNextStep() Then
             'Use PatchRunner to run  Uninstalled Patches
-            Dim newchildform As New PatchRunner(False, True, False, iBranchType)
+            Dim newchildform As New PatchRunner("Uninstalled", iBranchType)
             'newchildform.MdiParent = GitPatcher
             newchildform.ShowDialog() 'NEED TO WAIT HERE!!
 
@@ -656,19 +656,19 @@
 
  
     Private Sub UnappliedToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UnappliedToolStripMenuItem.Click
-        Dim newchildform As New PatchRunner(True, False, False)
+        Dim newchildform As New PatchRunner("Unapplied")
         newchildform.MdiParent = GitPatcher
         newchildform.Show()
     End Sub
 
     Private Sub UninstalledToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UninstalledToolStripMenuItem.Click
-        Dim newchildform As New PatchRunner(False, True, False)
+        Dim newchildform As New PatchRunner("Uninstalled")
         newchildform.MdiParent = GitPatcher
         newchildform.Show()
     End Sub
 
     Private Sub AllPatchesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllPatchesToolStripMenuItem.Click
-        Dim newchildform As New PatchRunner(False, False, True)
+        Dim newchildform As New PatchRunner("All")
         newchildform.MdiParent = GitPatcher
         newchildform.Show()
     End Sub
@@ -679,5 +679,9 @@
 
     Private Sub GITToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GITToolStripMenuItem.Click
 
+    End Sub
+
+    Private Sub CreateDBMajorReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBMajorReleaseToolStripMenuItem.Click
+        CreatePatchCollection.createCollectionProcess("major", "minor", Me.AppCodeTextBox.Text, "major,minor,patchset,feature,hotfix,ALL", "major,minor,patchset,feature,hotfix,ALL", "TEST")
     End Sub
 End Class
