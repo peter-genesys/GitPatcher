@@ -51,20 +51,20 @@
  '  End Function 'HasCheckedChildNodes
 
 
-    Shared Sub treeChange_Click(ByRef sender As Object, ByRef aTreeView As TreeViewEnhanced.TreeViewEnhanced)
-
-        If sender.text = "Collapse" Then
-            sender.text = "Expand"
-            aTreeView.CollapseAll()
-        ElseIf sender.text = "Expand" Then
-            sender.text = "Contract"
-            aTreeView.ExpandAll()
-        ElseIf sender.text = "Contract" Then
-            sender.text = "Collapse"
-            aTreeView.showCheckedNodes()
-        End If
-
-    End Sub
+    ' Shared Sub treeChange_Click(ByRef sender As Object, ByRef aTreeView As TreeViewEnhanced.TreeViewEnhanced)
+    '
+    '     If sender.text = "Collapse" Then
+    '         sender.text = "Expand"
+    '         aTreeView.CollapseAll()
+    '     ElseIf sender.text = "Expand" Then
+    '         sender.text = "Contract"
+    '         aTreeView.ExpandAll()
+    '     ElseIf sender.text = "Contract" Then
+    '         sender.text = "Collapse"
+    '         aTreeView.showCheckedNodes()
+    '     End If
+    '
+    ' End Sub
 
 
    'Shared Function AddNode(ByRef nodes As TreeNodeCollection, ByVal fullPath As String, ByVal remainderPath As String, Optional ByVal delim As String = "\", Optional ByVal checked As Boolean = False) As Boolean

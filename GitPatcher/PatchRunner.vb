@@ -400,7 +400,7 @@ Public Class PatchRunner
 
         'GPTrees.populateTreeFromCollection(TreeViewDraggableNodes1, AvailablePatches)
  
-        ButtonTreeChange.Text = "Expand"
+        'ButtonTreeChange.Text = "Expand"
  
 
     End Sub
@@ -495,11 +495,11 @@ Public Class PatchRunner
 
 
 
-    Private Sub ButtonTreeChange_Click(sender As Object, e As EventArgs) Handles ButtonTreeChange.Click
-        'Impliments a 3 position button Expand, Contract, Collapse.
-        GPTrees.treeChange_Click(sender, AvailablePatchesTreeView)
-
-    End Sub
+    'Private Sub ButtonTreeChange_Click(sender As Object, e As EventArgs)
+    '    'Impliments a 3 position button Expand, Contract, Collapse.
+    '    GPTrees.treeChange_Click(sender, AvailablePatchesTreeView)
+    '
+    'End Sub
 
 
 

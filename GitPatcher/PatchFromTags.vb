@@ -56,8 +56,9 @@ Public Class PatchFromTags
                 TreeViewChanges.AddNode(change, "/", True)
  
             Next
-            ButtonTreeChangeChanges.Text = "Expand"
-            GPTrees.treeChange_Click(ButtonTreeChangeChanges, TreeViewChanges)
+            'ButtonTreeChangeChanges.Text = "Expand"
+            'GPTrees.treeChange_Click(ButtonTreeChangeChanges, TreeViewChanges)
+            TreeViewChanges.ExpandAll()
  
         Catch schema_not_selected As Halt
             MsgBox("Please select a schema")
@@ -791,7 +792,7 @@ Public Class PatchFromTags
     ' End Sub
 
 
-    Shared Sub FindPatches(ByRef foundPatches As TreeViewEnhanced.TreeViewEnhanced, ByVal restrictToBranch As Boolean, ByRef sender As Object, Optional ByVal patchType As String = "ALL")
+    Shared Sub FindPatches(ByRef foundPatches As TreeViewEnhanced.TreeViewEnhanced, ByVal restrictToBranch As Boolean, Optional ByVal patchType As String = "ALL")
 
 
         Dim searchPath As String = Nothing
@@ -802,7 +803,7 @@ Public Class PatchFromTags
 
         Dim lfoundPatches As Collection = New Collection
 
-        sender.text = "Expand"
+        'sender.text = "Expand"
 
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
@@ -830,14 +831,15 @@ Public Class PatchFromTags
 
 
         If restrictToBranch Then
-            GPTrees.treeChange_Click(sender, foundPatches)
+            'GPTrees.treeChange_Click(sender, foundPatches)
+            foundPatches.ExpandAll()
         End If
 
     End Sub
 
 
     Private Sub FindPreReqs()
-        FindPatches(PreReqPatchesTreeView, RestrictPreReqToBranchCheckBox.Checked, ButtonTreeChangePrereq)
+        FindPatches(PreReqPatchesTreeView, RestrictPreReqToBranchCheckBox.Checked)
 
     End Sub
 
@@ -848,7 +850,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub FindSuper()
-        FindPatches(SuperPatchesTreeView, RestrictSupToBranchCheckBox.Checked, ButtonTreeChangeSuper)
+        FindPatches(SuperPatchesTreeView, RestrictSupToBranchCheckBox.Checked)
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles SupButton.Click
@@ -1029,7 +1031,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub FindSuperBy()
-        FindPatches(SuperByPatchesTreeView, RestrictSupByToBranchCheckBox.Checked, ButtonTreeChangeSuperBy)
+        FindPatches(SuperByPatchesTreeView, RestrictSupByToBranchCheckBox.Checked)
     End Sub
 
 
@@ -1109,32 +1111,32 @@ Public Class PatchFromTags
     '    End If
     'End Sub
 
-    Private Sub ButtonTreeChange_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangePrereq.Click
-        'Impliments a 3 position button Expand, Contract, Collapse.
-        GPTrees.treeChange_Click(sender, PreReqPatchesTreeView)
-    End Sub
-
-    Private Sub ButtonTreeChangeSuper_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangeSuper.Click
-        'Impliments a 3 position button Expand, Contract, Collapse.
-        GPTrees.treeChange_Click(sender, SuperPatchesTreeView)
-    End Sub
-
-    Private Sub ButtonTreeChangeSuperBy_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangeSuperBy.Click
-        'Impliments a 3 position button Expand, Contract, Collapse.
-        GPTrees.treeChange_Click(sender, SuperByPatchesTreeView)
-    End Sub
-
-    Private Sub ButtonTreeChangeFiles_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangeFiles.Click
-        'Impliments a 3 position button Expand, Contract, Collapse.
-        GPTrees.treeChange_Click(sender, TreeViewFiles)
-
-    End Sub
-
-    Private Sub ButtonTreeChangeChanges_Click(sender As Object, e As EventArgs) Handles ButtonTreeChangeChanges.Click
-        'Impliments a 3 position button Expand, Contract, Collapse.
-        GPTrees.treeChange_Click(sender, TreeViewChanges)
-
-    End Sub
+    'Private Sub ButtonTreeChange_Click(sender As Object, e As EventArgs)
+    '    'Impliments a 3 position button Expand, Contract, Collapse.
+    '    GPTrees.treeChange_Click(sender, PreReqPatchesTreeView)
+    'End Sub
+    '
+    'Private Sub ButtonTreeChangeSuper_Click(sender As Object, e As EventArgs)
+    '    'Impliments a 3 position button Expand, Contract, Collapse.
+    '    GPTrees.treeChange_Click(sender, SuperPatchesTreeView)
+    'End Sub
+    '
+    'Private Sub ButtonTreeChangeSuperBy_Click(sender As Object, e As EventArgs)
+    '    'Impliments a 3 position button Expand, Contract, Collapse.
+    '    GPTrees.treeChange_Click(sender, SuperByPatchesTreeView)
+    'End Sub
+    '
+    'Private Sub ButtonTreeChangeFiles_Click(sender As Object, e As EventArgs)
+    '    'Impliments a 3 position button Expand, Contract, Collapse.
+    '    GPTrees.treeChange_Click(sender, TreeViewFiles)
+    '
+    'End Sub
+    '
+    'Private Sub ButtonTreeChangeChanges_Click(sender As Object, e As EventArgs)
+    '    'Impliments a 3 position button Expand, Contract, Collapse.
+    '    GPTrees.treeChange_Click(sender, TreeViewChanges)
+    '
+    'End Sub
 
 
     'Shared Sub PreReqPatchesTreeView_node_AfterCheck(sender As Object, e As TreeViewEventArgs)
@@ -1202,52 +1204,54 @@ Public Class PatchFromTags
         Next
 
         'Set Prereq tree to Contract view.
-        ButtonTreeChangePrereq.Text = "Contract"
+        'ButtonTreeChangePrereq.Text = "Contract"
 
-        GPTrees.treeChange_Click(ButtonTreeChangePrereq, PreReqPatchesTreeView)
+        'GPTrees.treeChange_Click(ButtonTreeChangePrereq, PreReqPatchesTreeView)
 
-    End Sub
-
-    Private Sub RemoveButton_Click(sender As Object, e As EventArgs) Handles RemoveButton.Click
-
-        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(TreeViewChanges.Nodes, True)
-
-    End Sub
- 
-    Private Sub ButtonCropTo_Click(sender As Object, e As EventArgs) Handles ButtonCropTo.Click
-        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(TreeViewChanges.Nodes, False)
-    End Sub
- 
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(TreeViewFiles.Nodes, True)
-    End Sub
-
-    Private Sub Button1_Click_2(sender As Object, e As EventArgs) Handles Button1.Click
-        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(TreeViewFiles.Nodes, False)
-    End Sub
-
-    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
-        PreReqPatchesTreeView.RemoveNodes(True)
+        PreReqPatchesTreeView.showCheckedNodes()
 
     End Sub
 
-    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        PreReqPatchesTreeView.RemoveNodes(False)
-    End Sub
- 
-    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
-        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperPatchesTreeView.Nodes, True)
-    End Sub
-
-    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
-        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperPatchesTreeView.Nodes, False)
-    End Sub
- 
-    Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
-        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperByPatchesTreeView.Nodes, True)
-    End Sub
-
-    Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
-        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperByPatchesTreeView.Nodes, False)
-    End Sub
+    'Private Sub RemoveButton_Click(sender As Object, e As EventArgs)
+    '
+    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(TreeViewChanges.Nodes, True)
+    '
+    'End Sub
+    '
+    'Private Sub ButtonCropTo_Click(sender As Object, e As EventArgs)
+    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(TreeViewChanges.Nodes, False)
+    'End Sub
+    '
+    'Private Sub Button2_Click(sender As Object, e As EventArgs)
+    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(TreeViewFiles.Nodes, True)
+    'End Sub
+    '
+    'Private Sub Button1_Click_2(sender As Object, e As EventArgs)
+    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(TreeViewFiles.Nodes, False)
+    'End Sub
+    '
+    'Private Sub Button4_Click(sender As Object, e As EventArgs)
+    '    PreReqPatchesTreeView.RemoveNodes(True)
+    '
+    'End Sub
+    '
+    'Private Sub Button3_Click(sender As Object, e As EventArgs)
+    '    PreReqPatchesTreeView.RemoveNodes(False)
+    'End Sub
+    '
+    'Private Sub Button6_Click(sender As Object, e As EventArgs)
+    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperPatchesTreeView.Nodes, True)
+    'End Sub
+    '
+    'Private Sub Button5_Click(sender As Object, e As EventArgs)
+    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperPatchesTreeView.Nodes, False)
+    'End Sub
+    '
+    'Private Sub Button8_Click(sender As Object, e As EventArgs)
+    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperByPatchesTreeView.Nodes, True)
+    'End Sub
+    '
+    'Private Sub Button7_Click(sender As Object, e As EventArgs)
+    '    TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperByPatchesTreeView.Nodes, False)
+    'End Sub
 End Class

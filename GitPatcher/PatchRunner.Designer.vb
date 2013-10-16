@@ -25,8 +25,8 @@ Partial Class PatchRunner
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PatchRunner))
         Me.PatchRunnerTabControl = New System.Windows.Forms.TabControl()
         Me.PatchSelectorTabPage = New System.Windows.Forms.TabPage()
+        Me.AvailablePatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
         Me.ComboBoxPatchesFilter = New System.Windows.Forms.ComboBox()
-        Me.ButtonTreeChange = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.RadioButtonAll2 = New System.Windows.Forms.RadioButton()
@@ -43,7 +43,6 @@ Partial Class PatchRunner
         Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.AvailablePatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
         Me.PatchRunnerTabControl.SuspendLayout()
         Me.PatchSelectorTabPage.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -67,7 +66,6 @@ Partial Class PatchRunner
         '
         Me.PatchSelectorTabPage.Controls.Add(Me.AvailablePatchesTreeView)
         Me.PatchSelectorTabPage.Controls.Add(Me.ComboBoxPatchesFilter)
-        Me.PatchSelectorTabPage.Controls.Add(Me.ButtonTreeChange)
         Me.PatchSelectorTabPage.Controls.Add(Me.Label1)
         Me.PatchSelectorTabPage.Controls.Add(Me.GroupBox1)
         Me.PatchSelectorTabPage.Controls.Add(Me.SearchPatchesButton)
@@ -79,6 +77,15 @@ Partial Class PatchRunner
         Me.PatchSelectorTabPage.Text = "Selection"
         Me.PatchSelectorTabPage.UseVisualStyleBackColor = True
         '
+        'AvailablePatchesTreeView
+        '
+        Me.AvailablePatchesTreeView.BackColor = System.Drawing.Color.Wheat
+        Me.AvailablePatchesTreeView.CheckBoxes = True
+        Me.AvailablePatchesTreeView.Location = New System.Drawing.Point(9, 129)
+        Me.AvailablePatchesTreeView.Name = "AvailablePatchesTreeView"
+        Me.AvailablePatchesTreeView.Size = New System.Drawing.Size(429, 577)
+        Me.AvailablePatchesTreeView.TabIndex = 62
+        '
         'ComboBoxPatchesFilter
         '
         Me.ComboBoxPatchesFilter.FormattingEnabled = True
@@ -87,15 +94,6 @@ Partial Class PatchRunner
         Me.ComboBoxPatchesFilter.Name = "ComboBoxPatchesFilter"
         Me.ComboBoxPatchesFilter.Size = New System.Drawing.Size(139, 21)
         Me.ComboBoxPatchesFilter.TabIndex = 61
-        '
-        'ButtonTreeChange
-        '
-        Me.ButtonTreeChange.Location = New System.Drawing.Point(8, 62)
-        Me.ButtonTreeChange.Name = "ButtonTreeChange"
-        Me.ButtonTreeChange.Size = New System.Drawing.Size(139, 23)
-        Me.ButtonTreeChange.TabIndex = 43
-        Me.ButtonTreeChange.Text = "Expand"
-        Me.ButtonTreeChange.UseVisualStyleBackColor = True
         '
         'Label1
         '
@@ -258,15 +256,6 @@ Partial Class PatchRunner
         Me.ExecutePatchButton.Text = "Execute Patches"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'AvailablePatchesTreeView
-        '
-        Me.AvailablePatchesTreeView.BackColor = System.Drawing.Color.Wheat
-        Me.AvailablePatchesTreeView.CheckBoxes = True
-        Me.AvailablePatchesTreeView.Location = New System.Drawing.Point(9, 129)
-        Me.AvailablePatchesTreeView.Name = "AvailablePatchesTreeView"
-        Me.AvailablePatchesTreeView.Size = New System.Drawing.Size(429, 577)
-        Me.AvailablePatchesTreeView.TabIndex = 62
-        '
         'PatchRunner
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -301,7 +290,6 @@ Partial Class PatchRunner
     Friend WithEvents RadioButtonHotfix As System.Windows.Forms.RadioButton
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents SearchPatchesButton As System.Windows.Forms.Button
-    Friend WithEvents ButtonTreeChange As System.Windows.Forms.Button
     Friend WithEvents OrderTabPage As System.Windows.Forms.TabPage
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents TreeViewPatchOrder As TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels
