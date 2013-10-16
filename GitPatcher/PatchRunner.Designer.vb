@@ -25,31 +25,30 @@ Partial Class PatchRunner
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PatchRunner))
         Me.PatchRunnerTabControl = New System.Windows.Forms.TabControl()
         Me.PatchSelectorTabPage = New System.Windows.Forms.TabPage()
+        Me.ComboBoxPatchesFilter = New System.Windows.Forms.ComboBox()
         Me.ButtonTreeChange = New System.Windows.Forms.Button()
-        Me.AvailablePatchesTreeView = New System.Windows.Forms.TreeView()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.AvailablePatchesListBox = New System.Windows.Forms.ListBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.RadioButtonAll2 = New System.Windows.Forms.RadioButton()
         Me.RadioButtonFeature = New System.Windows.Forms.RadioButton()
         Me.RadioButtonPatchSet = New System.Windows.Forms.RadioButton()
         Me.RadioButtonHotfix = New System.Windows.Forms.RadioButton()
         Me.SearchPatchesButton = New System.Windows.Forms.Button()
+        Me.OrderTabPage = New System.Windows.Forms.TabPage()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.TreeViewPatchOrder = New TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels()
+        Me.CopyChangesButton = New System.Windows.Forms.Button()
         Me.RunTabPage = New System.Windows.Forms.TabPage()
         Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.OrderTabPage = New System.Windows.Forms.TabPage()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.TreeViewPatchOrder = New TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels()
-        Me.CopyChangesButton = New System.Windows.Forms.Button()
-        Me.ComboBoxPatchesFilter = New System.Windows.Forms.ComboBox()
-        Me.Label4 = New System.Windows.Forms.Label()
+        Me.AvailablePatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
         Me.PatchRunnerTabControl.SuspendLayout()
         Me.PatchSelectorTabPage.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
-        Me.RunTabPage.SuspendLayout()
         Me.OrderTabPage.SuspendLayout()
+        Me.RunTabPage.SuspendLayout()
         Me.SuspendLayout()
         '
         'PatchRunnerTabControl
@@ -66,11 +65,10 @@ Partial Class PatchRunner
         '
         'PatchSelectorTabPage
         '
+        Me.PatchSelectorTabPage.Controls.Add(Me.AvailablePatchesTreeView)
         Me.PatchSelectorTabPage.Controls.Add(Me.ComboBoxPatchesFilter)
         Me.PatchSelectorTabPage.Controls.Add(Me.ButtonTreeChange)
-        Me.PatchSelectorTabPage.Controls.Add(Me.AvailablePatchesTreeView)
         Me.PatchSelectorTabPage.Controls.Add(Me.Label1)
-        Me.PatchSelectorTabPage.Controls.Add(Me.AvailablePatchesListBox)
         Me.PatchSelectorTabPage.Controls.Add(Me.GroupBox1)
         Me.PatchSelectorTabPage.Controls.Add(Me.SearchPatchesButton)
         Me.PatchSelectorTabPage.Location = New System.Drawing.Point(4, 22)
@@ -81,6 +79,15 @@ Partial Class PatchRunner
         Me.PatchSelectorTabPage.Text = "Selection"
         Me.PatchSelectorTabPage.UseVisualStyleBackColor = True
         '
+        'ComboBoxPatchesFilter
+        '
+        Me.ComboBoxPatchesFilter.FormattingEnabled = True
+        Me.ComboBoxPatchesFilter.Items.AddRange(New Object() {"Unapplied", "Uninstalled", "All"})
+        Me.ComboBoxPatchesFilter.Location = New System.Drawing.Point(8, 6)
+        Me.ComboBoxPatchesFilter.Name = "ComboBoxPatchesFilter"
+        Me.ComboBoxPatchesFilter.Size = New System.Drawing.Size(139, 21)
+        Me.ComboBoxPatchesFilter.TabIndex = 61
+        '
         'ButtonTreeChange
         '
         Me.ButtonTreeChange.Location = New System.Drawing.Point(8, 62)
@@ -89,14 +96,6 @@ Partial Class PatchRunner
         Me.ButtonTreeChange.TabIndex = 43
         Me.ButtonTreeChange.Text = "Expand"
         Me.ButtonTreeChange.UseVisualStyleBackColor = True
-        '
-        'AvailablePatchesTreeView
-        '
-        Me.AvailablePatchesTreeView.CheckBoxes = True
-        Me.AvailablePatchesTreeView.Location = New System.Drawing.Point(6, 132)
-        Me.AvailablePatchesTreeView.Name = "AvailablePatchesTreeView"
-        Me.AvailablePatchesTreeView.Size = New System.Drawing.Size(429, 575)
-        Me.AvailablePatchesTreeView.TabIndex = 39
         '
         'Label1
         '
@@ -107,15 +106,6 @@ Partial Class PatchRunner
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "Available Patches"
         '
-        'AvailablePatchesListBox
-        '
-        Me.AvailablePatchesListBox.FormattingEnabled = True
-        Me.AvailablePatchesListBox.Location = New System.Drawing.Point(6, 182)
-        Me.AvailablePatchesListBox.Name = "AvailablePatchesListBox"
-        Me.AvailablePatchesListBox.Size = New System.Drawing.Size(331, 524)
-        Me.AvailablePatchesListBox.TabIndex = 0
-        Me.AvailablePatchesListBox.Visible = False
-        '
         'GroupBox1
         '
         Me.GroupBox1.Controls.Add(Me.RadioButtonAll2)
@@ -124,7 +114,7 @@ Partial Class PatchRunner
         Me.GroupBox1.Controls.Add(Me.RadioButtonHotfix)
         Me.GroupBox1.Location = New System.Drawing.Point(296, 6)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(139, 120)
+        Me.GroupBox1.Size = New System.Drawing.Size(139, 117)
         Me.GroupBox1.TabIndex = 38
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Filter"
@@ -180,6 +170,55 @@ Partial Class PatchRunner
         Me.SearchPatchesButton.Text = "Search"
         Me.SearchPatchesButton.UseVisualStyleBackColor = True
         '
+        'OrderTabPage
+        '
+        Me.OrderTabPage.Controls.Add(Me.Label4)
+        Me.OrderTabPage.Controls.Add(Me.Label2)
+        Me.OrderTabPage.Controls.Add(Me.TreeViewPatchOrder)
+        Me.OrderTabPage.Controls.Add(Me.CopyChangesButton)
+        Me.OrderTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.OrderTabPage.Name = "OrderTabPage"
+        Me.OrderTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.OrderTabPage.Size = New System.Drawing.Size(450, 712)
+        Me.OrderTabPage.TabIndex = 2
+        Me.OrderTabPage.Text = "Order"
+        Me.OrderTabPage.UseVisualStyleBackColor = True
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(6, 71)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(210, 13)
+        Me.Label4.TabIndex = 52
+        Me.Label4.Text = "Order of Execution - Drag n' drop to reorder"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(153, 38)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(217, 13)
+        Me.Label2.TabIndex = 51
+        Me.Label2.Text = "(Rechecks dependancy order, can be slow.)"
+        '
+        'TreeViewPatchOrder
+        '
+        Me.TreeViewPatchOrder.BackColor = System.Drawing.Color.AliceBlue
+        Me.TreeViewPatchOrder.Location = New System.Drawing.Point(7, 87)
+        Me.TreeViewPatchOrder.Name = "TreeViewPatchOrder"
+        Me.TreeViewPatchOrder.Size = New System.Drawing.Size(429, 615)
+        Me.TreeViewPatchOrder.TabIndex = 50
+        '
+        'CopyChangesButton
+        '
+        Me.CopyChangesButton.Location = New System.Drawing.Point(8, 33)
+        Me.CopyChangesButton.Name = "CopyChangesButton"
+        Me.CopyChangesButton.Size = New System.Drawing.Size(139, 23)
+        Me.CopyChangesButton.TabIndex = 49
+        Me.CopyChangesButton.Text = "Copy Patches"
+        Me.CopyChangesButton.UseVisualStyleBackColor = True
+        '
         'RunTabPage
         '
         Me.RunTabPage.Controls.Add(Me.MasterScriptListBox)
@@ -219,63 +258,14 @@ Partial Class PatchRunner
         Me.ExecutePatchButton.Text = "Execute Patches"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'OrderTabPage
+        'AvailablePatchesTreeView
         '
-        Me.OrderTabPage.Controls.Add(Me.Label4)
-        Me.OrderTabPage.Controls.Add(Me.Label2)
-        Me.OrderTabPage.Controls.Add(Me.TreeViewPatchOrder)
-        Me.OrderTabPage.Controls.Add(Me.CopyChangesButton)
-        Me.OrderTabPage.Location = New System.Drawing.Point(4, 22)
-        Me.OrderTabPage.Name = "OrderTabPage"
-        Me.OrderTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.OrderTabPage.Size = New System.Drawing.Size(450, 712)
-        Me.OrderTabPage.TabIndex = 2
-        Me.OrderTabPage.Text = "Order"
-        Me.OrderTabPage.UseVisualStyleBackColor = True
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(153, 38)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(217, 13)
-        Me.Label2.TabIndex = 51
-        Me.Label2.Text = "(Rechecks dependancy order, can be slow.)"
-        '
-        'TreeViewPatchOrder
-        '
-        Me.TreeViewPatchOrder.BackColor = System.Drawing.Color.AliceBlue
-        Me.TreeViewPatchOrder.Location = New System.Drawing.Point(7, 87)
-        Me.TreeViewPatchOrder.Name = "TreeViewPatchOrder"
-        Me.TreeViewPatchOrder.Size = New System.Drawing.Size(429, 615)
-        Me.TreeViewPatchOrder.TabIndex = 50
-        '
-        'CopyChangesButton
-        '
-        Me.CopyChangesButton.Location = New System.Drawing.Point(8, 33)
-        Me.CopyChangesButton.Name = "CopyChangesButton"
-        Me.CopyChangesButton.Size = New System.Drawing.Size(139, 23)
-        Me.CopyChangesButton.TabIndex = 49
-        Me.CopyChangesButton.Text = "Copy Patches"
-        Me.CopyChangesButton.UseVisualStyleBackColor = True
-        '
-        'ComboBoxPatchesFilter
-        '
-        Me.ComboBoxPatchesFilter.FormattingEnabled = True
-        Me.ComboBoxPatchesFilter.Items.AddRange(New Object() {"Unapplied", "Uninstalled", "All"})
-        Me.ComboBoxPatchesFilter.Location = New System.Drawing.Point(8, 6)
-        Me.ComboBoxPatchesFilter.Name = "ComboBoxPatchesFilter"
-        Me.ComboBoxPatchesFilter.Size = New System.Drawing.Size(139, 21)
-        Me.ComboBoxPatchesFilter.TabIndex = 61
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(6, 71)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(210, 13)
-        Me.Label4.TabIndex = 52
-        Me.Label4.Text = "Order of Execution - Drag n' drop to reorder"
+        Me.AvailablePatchesTreeView.BackColor = System.Drawing.Color.Wheat
+        Me.AvailablePatchesTreeView.CheckBoxes = True
+        Me.AvailablePatchesTreeView.Location = New System.Drawing.Point(9, 129)
+        Me.AvailablePatchesTreeView.Name = "AvailablePatchesTreeView"
+        Me.AvailablePatchesTreeView.Size = New System.Drawing.Size(429, 577)
+        Me.AvailablePatchesTreeView.TabIndex = 62
         '
         'PatchRunner
         '
@@ -291,10 +281,10 @@ Partial Class PatchRunner
         Me.PatchSelectorTabPage.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
-        Me.RunTabPage.ResumeLayout(False)
-        Me.RunTabPage.PerformLayout()
         Me.OrderTabPage.ResumeLayout(False)
         Me.OrderTabPage.PerformLayout()
+        Me.RunTabPage.ResumeLayout(False)
+        Me.RunTabPage.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -304,8 +294,6 @@ Partial Class PatchRunner
     Friend WithEvents ExecutePatchButton As System.Windows.Forms.Button
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents MasterScriptListBox As System.Windows.Forms.ListBox
-    Friend WithEvents AvailablePatchesListBox As System.Windows.Forms.ListBox
-    Friend WithEvents AvailablePatchesTreeView As System.Windows.Forms.TreeView
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents RadioButtonAll2 As System.Windows.Forms.RadioButton
     Friend WithEvents RadioButtonFeature As System.Windows.Forms.RadioButton
@@ -320,4 +308,5 @@ Partial Class PatchRunner
     Friend WithEvents CopyChangesButton As System.Windows.Forms.Button
     Friend WithEvents ComboBoxPatchesFilter As System.Windows.Forms.ComboBox
     Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents AvailablePatchesTreeView As TreeViewEnhanced.TreeViewEnhanced
 End Class

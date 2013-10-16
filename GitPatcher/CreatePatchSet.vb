@@ -188,7 +188,8 @@ Public Class CreatePatchCollection
         Next
 
         'Populate the treeview.
-        GPTrees.populateTreeFromCollection(AvailablePatchesTreeView, AvailablePatches)
+        'GPTrees.populateTreeFromCollection(AvailablePatchesTreeView, AvailablePatches)
+        AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches)
 
         Cursor.Current = Cursors.Default
 
@@ -256,21 +257,24 @@ Public Class CreatePatchCollection
 
 
         Dim patchableFiles As Collection = New Collection
-        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, patchableFiles, False, True, True, False)
+        'GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, patchableFiles, False, True, True, False)
+        TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
         Dim skipFiles As Collection = New Collection
-        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, skipFiles, False, True, True, True)
+        'GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, skipFiles, False, True, True, True)
+        TreeViewPatchOrder.ReadTags(skipFiles, False, True, True, True)
 
 
         Dim PreReqPatches As Collection = New Collection
         'Retrieve checked node items from the PreReqPatchesTreeView as a collection of patches.
-        GPTrees.ReadCheckedLeafNodes(PreReqPatchesTreeView.Nodes, PreReqPatches)
+        'GPTrees.ReadCheckedLeafNodes(PreReqPatchesTreeView.Nodes, PreReqPatches)
+        PreReqPatchesTreeView.ReadCheckedLeafNodes(PreReqPatches)
 
 
         Dim SuperPatches As Collection = New Collection
         'Retrieve checked node items from the SuperPatchesTreeView as a collection of patches.
-        GPTrees.ReadCheckedLeafNodes(SuperPatchesTreeView.Nodes, SuperPatches)
-
+        'GPTrees.ReadCheckedLeafNodes(SuperPatchesTreeView.Nodes, SuperPatches)
+        SuperPatchesTreeView.ReadCheckedLeafNodes(SuperPatches)
  
         'Write the install script
         writeInstallScript(PatchNameTextBox.Text, _
@@ -537,12 +541,14 @@ Public Class CreatePatchCollection
         'Prepopulate Tree with default category nodes.
         'This should become a method on TreeViewDraggableNodes2Levels
         Dim l_patches_category As String = "Patches"
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, l_patches_category)
+        'GPTrees.AddCategory(TreeViewPatchOrder.Nodes, l_patches_category)
+        TreeViewPatchOrder.AddCategory(l_patches_category)
 
         Dim ChosenChanges As Collection = New Collection
         'Repo changes
         'Retrieve checked node items from the TreeViewChanges as a collection of files.
-        GPTrees.ReadCheckedLeafNodes(AvailablePatchesTreeView.Nodes, ChosenChanges)
+        'GPTrees.ReadCheckedLeafNodes(AvailablePatchesTreeView.Nodes, ChosenChanges)
+        AvailablePatchesTreeView.ReadCheckedLeafNodes(ChosenChanges)
 
         If ChosenChanges.Count = 0 Then
             MsgBox("No patches selected.")
@@ -565,10 +571,10 @@ Public Class CreatePatchCollection
                 Dim pathSeparator As String = "\"
 
                 l_label = Common.getLastSegment(change, pathSeparator)
-                GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_patches_category, l_label, change) 'This should become a method on TreeViewDraggableNodes2Levels
+                'GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_patches_category, l_label, change) 'This should become a method on TreeViewDraggableNodes2Levels
+                TreeViewPatchOrder.AddFileToCategory(l_patches_category, l_label, change)
             Next
-
-
+ 
             TreeViewPatchOrder.ExpandAll()
         End If
 
@@ -985,47 +991,47 @@ Public Class CreatePatchCollection
     End Sub
 
     Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
-        GPTrees.RemoveNodes(AvailablePatchesTreeView.Nodes, True)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(AvailablePatchesTreeView.Nodes, True)
     End Sub
 
  
     Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
-        GPTrees.RemoveNodes(AvailablePatchesTreeView.Nodes, False)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(AvailablePatchesTreeView.Nodes, False)
     End Sub
  
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
-        GPTrees.RemoveNodes(PreReqPatchesTreeView.Nodes, True)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(PreReqPatchesTreeView.Nodes, True)
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        GPTrees.RemoveNodes(PreReqPatchesTreeView.Nodes, False)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(PreReqPatchesTreeView.Nodes, False)
     End Sub
 
     Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
-        GPTrees.RemoveNodes(SuperPatchesTreeView.Nodes, True)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperPatchesTreeView.Nodes, True)
     End Sub
 
     Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
-        GPTrees.RemoveNodes(SuperPatchesTreeView.Nodes, False)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperPatchesTreeView.Nodes, False)
     End Sub
 
-    Shared Sub AvailablePatches_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles AvailablePatchesTreeView.AfterCheck
-
-        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
-
-    End Sub
-
-    Shared Sub PreReqPatchesTreeView_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles PreReqPatchesTreeView.AfterCheck
-
-        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
-
-    End Sub
-
-    Shared Sub SuperPatchesTreeView_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles SuperPatchesTreeView.AfterCheck
-
-        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
-
-    End Sub
+    'Shared Sub AvailablePatches_AfterCheck(sender As Object, e As TreeViewEventArgs)
+    '
+    '    GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+    '
+    'End Sub
+    '
+    'Shared Sub PreReqPatchesTreeView_AfterCheck(sender As Object, e As TreeViewEventArgs)
+    '
+    '    GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+    '
+    'End Sub
+    '
+    'Shared Sub SuperPatchesTreeView_AfterCheck(sender As Object, e As TreeViewEventArgs)
+    '
+    '    GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+    '
+    'End Sub
 
 
  

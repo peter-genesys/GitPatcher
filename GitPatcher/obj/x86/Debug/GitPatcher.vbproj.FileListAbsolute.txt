@@ -32,3 +32,6 @@ C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bi
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes2Levels.dll
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes2Levels.pdb
 C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes2Levels.xml
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewEnhanced.dll
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewEnhanced.pdb
+C:\Users\pburgess\Documents\Visual Studio 2012\Projects\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewEnhanced.xml

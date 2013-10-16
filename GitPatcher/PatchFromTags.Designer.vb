@@ -52,23 +52,21 @@ Partial Class PatchFromTags
         Me.Button5 = New System.Windows.Forms.Button()
         Me.Button6 = New System.Windows.Forms.Button()
         Me.ButtonTreeChangeSuper = New System.Windows.Forms.Button()
-        Me.SuperPatchesTreeView = New System.Windows.Forms.TreeView()
         Me.RestrictSupToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.SupButton = New System.Windows.Forms.Button()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.TabPagePreReqs = New System.Windows.Forms.TabPage()
+        Me.PreReqPatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button4 = New System.Windows.Forms.Button()
         Me.ButtonLastPatch = New System.Windows.Forms.Button()
         Me.ButtonTreeChangePrereq = New System.Windows.Forms.Button()
-        Me.PreReqPatchesTreeView = New System.Windows.Forms.TreeView()
         Me.RestrictPreReqToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.PreReqButton = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.TabPageChanges = New System.Windows.Forms.TabPage()
         Me.ButtonCropTo = New System.Windows.Forms.Button()
         Me.ButtonTreeChangeChanges = New System.Windows.Forms.Button()
-        Me.TreeViewChanges = New System.Windows.Forms.TreeView()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.SchemaCountTextBox = New System.Windows.Forms.TextBox()
         Me.SchemaComboBox = New System.Windows.Forms.ComboBox()
@@ -92,15 +90,17 @@ Partial Class PatchFromTags
         Me.Label21 = New System.Windows.Forms.Label()
         Me.ButtonTreeChangeFiles = New System.Windows.Forms.Button()
         Me.ButtonFindFiles = New System.Windows.Forms.Button()
-        Me.TreeViewFiles = New System.Windows.Forms.TreeView()
         Me.TabPageSuperBy = New System.Windows.Forms.TabPage()
         Me.Button7 = New System.Windows.Forms.Button()
         Me.Button8 = New System.Windows.Forms.Button()
         Me.ButtonTreeChangeSuperBy = New System.Windows.Forms.Button()
-        Me.SuperByPatchesTreeView = New System.Windows.Forms.TreeView()
         Me.RestrictSupByToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.SupByButton = New System.Windows.Forms.Button()
         Me.Label19 = New System.Windows.Forms.Label()
+        Me.TreeViewChanges = New TreeViewEnhanced.TreeViewEnhanced()
+        Me.TreeViewFiles = New TreeViewEnhanced.TreeViewEnhanced()
+        Me.SuperPatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
+        Me.SuperByPatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPageSuper.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
@@ -357,10 +357,10 @@ Partial Class PatchFromTags
         '
         'TabPageSuper
         '
+        Me.TabPageSuper.Controls.Add(Me.SuperPatchesTreeView)
         Me.TabPageSuper.Controls.Add(Me.Button5)
         Me.TabPageSuper.Controls.Add(Me.Button6)
         Me.TabPageSuper.Controls.Add(Me.ButtonTreeChangeSuper)
-        Me.TabPageSuper.Controls.Add(Me.SuperPatchesTreeView)
         Me.TabPageSuper.Controls.Add(Me.RestrictSupToBranchCheckBox)
         Me.TabPageSuper.Controls.Add(Me.SupButton)
         Me.TabPageSuper.Controls.Add(Me.Label14)
@@ -399,14 +399,6 @@ Partial Class PatchFromTags
         Me.ButtonTreeChangeSuper.Text = "Expand"
         Me.ButtonTreeChangeSuper.UseVisualStyleBackColor = True
         '
-        'SuperPatchesTreeView
-        '
-        Me.SuperPatchesTreeView.CheckBoxes = True
-        Me.SuperPatchesTreeView.Location = New System.Drawing.Point(77, 93)
-        Me.SuperPatchesTreeView.Name = "SuperPatchesTreeView"
-        Me.SuperPatchesTreeView.Size = New System.Drawing.Size(429, 571)
-        Me.SuperPatchesTreeView.TabIndex = 41
-        '
         'RestrictSupToBranchCheckBox
         '
         Me.RestrictSupToBranchCheckBox.AutoSize = True
@@ -437,11 +429,11 @@ Partial Class PatchFromTags
         '
         'TabPagePreReqs
         '
+        Me.TabPagePreReqs.Controls.Add(Me.PreReqPatchesTreeView)
         Me.TabPagePreReqs.Controls.Add(Me.Button3)
         Me.TabPagePreReqs.Controls.Add(Me.Button4)
         Me.TabPagePreReqs.Controls.Add(Me.ButtonLastPatch)
         Me.TabPagePreReqs.Controls.Add(Me.ButtonTreeChangePrereq)
-        Me.TabPagePreReqs.Controls.Add(Me.PreReqPatchesTreeView)
         Me.TabPagePreReqs.Controls.Add(Me.RestrictPreReqToBranchCheckBox)
         Me.TabPagePreReqs.Controls.Add(Me.PreReqButton)
         Me.TabPagePreReqs.Controls.Add(Me.Label13)
@@ -452,6 +444,15 @@ Partial Class PatchFromTags
         Me.TabPagePreReqs.TabIndex = 3
         Me.TabPagePreReqs.Text = "Pre-Requisites"
         Me.TabPagePreReqs.UseVisualStyleBackColor = True
+        '
+        'PreReqPatchesTreeView
+        '
+        Me.PreReqPatchesTreeView.BackColor = System.Drawing.Color.Wheat
+        Me.PreReqPatchesTreeView.CheckBoxes = True
+        Me.PreReqPatchesTreeView.Location = New System.Drawing.Point(77, 93)
+        Me.PreReqPatchesTreeView.Name = "PreReqPatchesTreeView"
+        Me.PreReqPatchesTreeView.Size = New System.Drawing.Size(429, 571)
+        Me.PreReqPatchesTreeView.TabIndex = 50
         '
         'Button3
         '
@@ -489,14 +490,6 @@ Partial Class PatchFromTags
         Me.ButtonTreeChangePrereq.Text = "Expand"
         Me.ButtonTreeChangePrereq.UseVisualStyleBackColor = True
         '
-        'PreReqPatchesTreeView
-        '
-        Me.PreReqPatchesTreeView.CheckBoxes = True
-        Me.PreReqPatchesTreeView.Location = New System.Drawing.Point(77, 93)
-        Me.PreReqPatchesTreeView.Name = "PreReqPatchesTreeView"
-        Me.PreReqPatchesTreeView.Size = New System.Drawing.Size(429, 571)
-        Me.PreReqPatchesTreeView.TabIndex = 40
-        '
         'RestrictPreReqToBranchCheckBox
         '
         Me.RestrictPreReqToBranchCheckBox.AutoSize = True
@@ -527,9 +520,9 @@ Partial Class PatchFromTags
         '
         'TabPageChanges
         '
+        Me.TabPageChanges.Controls.Add(Me.TreeViewChanges)
         Me.TabPageChanges.Controls.Add(Me.ButtonCropTo)
         Me.TabPageChanges.Controls.Add(Me.ButtonTreeChangeChanges)
-        Me.TabPageChanges.Controls.Add(Me.TreeViewChanges)
         Me.TabPageChanges.Controls.Add(Me.Label17)
         Me.TabPageChanges.Controls.Add(Me.SchemaCountTextBox)
         Me.TabPageChanges.Controls.Add(Me.SchemaComboBox)
@@ -563,14 +556,6 @@ Partial Class PatchFromTags
         Me.ButtonTreeChangeChanges.TabIndex = 46
         Me.ButtonTreeChangeChanges.Text = "Expand"
         Me.ButtonTreeChangeChanges.UseVisualStyleBackColor = True
-        '
-        'TreeViewChanges
-        '
-        Me.TreeViewChanges.CheckBoxes = True
-        Me.TreeViewChanges.Location = New System.Drawing.Point(77, 93)
-        Me.TreeViewChanges.Name = "TreeViewChanges"
-        Me.TreeViewChanges.Size = New System.Drawing.Size(429, 571)
-        Me.TreeViewChanges.TabIndex = 41
         '
         'Label17
         '
@@ -737,12 +722,12 @@ Partial Class PatchFromTags
         '
         'TabPageExtras
         '
+        Me.TabPageExtras.Controls.Add(Me.TreeViewFiles)
         Me.TabPageExtras.Controls.Add(Me.Button1)
         Me.TabPageExtras.Controls.Add(Me.Button2)
         Me.TabPageExtras.Controls.Add(Me.Label21)
         Me.TabPageExtras.Controls.Add(Me.ButtonTreeChangeFiles)
         Me.TabPageExtras.Controls.Add(Me.ButtonFindFiles)
-        Me.TabPageExtras.Controls.Add(Me.TreeViewFiles)
         Me.TabPageExtras.Location = New System.Drawing.Point(4, 22)
         Me.TabPageExtras.Name = "TabPageExtras"
         Me.TabPageExtras.Padding = New System.Windows.Forms.Padding(3)
@@ -796,20 +781,12 @@ Partial Class PatchFromTags
         Me.ButtonFindFiles.Text = "Find Files"
         Me.ButtonFindFiles.UseVisualStyleBackColor = True
         '
-        'TreeViewFiles
-        '
-        Me.TreeViewFiles.CheckBoxes = True
-        Me.TreeViewFiles.Location = New System.Drawing.Point(77, 93)
-        Me.TreeViewFiles.Name = "TreeViewFiles"
-        Me.TreeViewFiles.Size = New System.Drawing.Size(429, 571)
-        Me.TreeViewFiles.TabIndex = 0
-        '
         'TabPageSuperBy
         '
+        Me.TabPageSuperBy.Controls.Add(Me.SuperByPatchesTreeView)
         Me.TabPageSuperBy.Controls.Add(Me.Button7)
         Me.TabPageSuperBy.Controls.Add(Me.Button8)
         Me.TabPageSuperBy.Controls.Add(Me.ButtonTreeChangeSuperBy)
-        Me.TabPageSuperBy.Controls.Add(Me.SuperByPatchesTreeView)
         Me.TabPageSuperBy.Controls.Add(Me.RestrictSupByToBranchCheckBox)
         Me.TabPageSuperBy.Controls.Add(Me.SupByButton)
         Me.TabPageSuperBy.Controls.Add(Me.Label19)
@@ -847,14 +824,6 @@ Partial Class PatchFromTags
         Me.ButtonTreeChangeSuperBy.Text = "Expand"
         Me.ButtonTreeChangeSuperBy.UseVisualStyleBackColor = True
         '
-        'SuperByPatchesTreeView
-        '
-        Me.SuperByPatchesTreeView.CheckBoxes = True
-        Me.SuperByPatchesTreeView.Location = New System.Drawing.Point(77, 93)
-        Me.SuperByPatchesTreeView.Name = "SuperByPatchesTreeView"
-        Me.SuperByPatchesTreeView.Size = New System.Drawing.Size(429, 571)
-        Me.SuperByPatchesTreeView.TabIndex = 42
-        '
         'RestrictSupByToBranchCheckBox
         '
         Me.RestrictSupByToBranchCheckBox.AutoSize = True
@@ -883,6 +852,42 @@ Partial Class PatchFromTags
         Me.Label19.TabIndex = 37
         Me.Label19.Text = "Superseded" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "By"
         Me.Label19.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'TreeViewChanges
+        '
+        Me.TreeViewChanges.BackColor = System.Drawing.Color.Wheat
+        Me.TreeViewChanges.CheckBoxes = True
+        Me.TreeViewChanges.Location = New System.Drawing.Point(77, 93)
+        Me.TreeViewChanges.Name = "TreeViewChanges"
+        Me.TreeViewChanges.Size = New System.Drawing.Size(429, 571)
+        Me.TreeViewChanges.TabIndex = 51
+        '
+        'TreeViewFiles
+        '
+        Me.TreeViewFiles.BackColor = System.Drawing.Color.Wheat
+        Me.TreeViewFiles.CheckBoxes = True
+        Me.TreeViewFiles.Location = New System.Drawing.Point(77, 93)
+        Me.TreeViewFiles.Name = "TreeViewFiles"
+        Me.TreeViewFiles.Size = New System.Drawing.Size(429, 571)
+        Me.TreeViewFiles.TabIndex = 52
+        '
+        'SuperPatchesTreeView
+        '
+        Me.SuperPatchesTreeView.BackColor = System.Drawing.Color.Wheat
+        Me.SuperPatchesTreeView.CheckBoxes = True
+        Me.SuperPatchesTreeView.Location = New System.Drawing.Point(77, 93)
+        Me.SuperPatchesTreeView.Name = "SuperPatchesTreeView"
+        Me.SuperPatchesTreeView.Size = New System.Drawing.Size(429, 571)
+        Me.SuperPatchesTreeView.TabIndex = 52
+        '
+        'SuperByPatchesTreeView
+        '
+        Me.SuperByPatchesTreeView.BackColor = System.Drawing.Color.Wheat
+        Me.SuperByPatchesTreeView.CheckBoxes = True
+        Me.SuperByPatchesTreeView.Location = New System.Drawing.Point(77, 93)
+        Me.SuperByPatchesTreeView.Name = "SuperByPatchesTreeView"
+        Me.SuperByPatchesTreeView.Size = New System.Drawing.Size(429, 571)
+        Me.SuperByPatchesTreeView.TabIndex = 52
         '
         'PatchFromTags
         '
@@ -966,17 +971,12 @@ Partial Class PatchFromTags
     Friend WithEvents SupByButton As System.Windows.Forms.Button
     Friend WithEvents Label19 As System.Windows.Forms.Label
     Friend WithEvents TabPageExtras As System.Windows.Forms.TabPage
-    Friend WithEvents TreeViewFiles As System.Windows.Forms.TreeView
     Friend WithEvents ButtonFindFiles As System.Windows.Forms.Button
-    Friend WithEvents PreReqPatchesTreeView As System.Windows.Forms.TreeView
-    Friend WithEvents SuperPatchesTreeView As System.Windows.Forms.TreeView
-    Friend WithEvents SuperByPatchesTreeView As System.Windows.Forms.TreeView
     Friend WithEvents ButtonTreeChangeSuper As System.Windows.Forms.Button
     Friend WithEvents ButtonTreeChangePrereq As System.Windows.Forms.Button
     Friend WithEvents ButtonTreeChangeSuperBy As System.Windows.Forms.Button
     Friend WithEvents ButtonTreeChangeFiles As System.Windows.Forms.Button
     Friend WithEvents Label21 As System.Windows.Forms.Label
-    Friend WithEvents TreeViewChanges As System.Windows.Forms.TreeView
     Friend WithEvents ButtonTreeChangeChanges As System.Windows.Forms.Button
     Friend WithEvents ButtonCropTo As System.Windows.Forms.Button
     Friend WithEvents ButtonLastPatch As System.Windows.Forms.Button
@@ -989,4 +989,9 @@ Partial Class PatchFromTags
     Friend WithEvents Button7 As System.Windows.Forms.Button
     Friend WithEvents Button8 As System.Windows.Forms.Button
     Friend WithEvents TreeViewPatchOrder As TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels
+    Friend WithEvents PreReqPatchesTreeView As TreeViewEnhanced.TreeViewEnhanced
+    Friend WithEvents SuperPatchesTreeView As TreeViewEnhanced.TreeViewEnhanced
+    Friend WithEvents TreeViewChanges As TreeViewEnhanced.TreeViewEnhanced
+    Friend WithEvents TreeViewFiles As TreeViewEnhanced.TreeViewEnhanced
+    Friend WithEvents SuperByPatchesTreeView As TreeViewEnhanced.TreeViewEnhanced
 End Class

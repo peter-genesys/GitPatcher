@@ -395,8 +395,11 @@ Public Class PatchRunner
         filterPatchType(AvailablePatches)
 
         Logger.Dbg("Populate Tree")
-        GPTrees.populateTreeFromCollection(AvailablePatchesTreeView, AvailablePatches)
+        'GPTrees.populateTreeFromCollection(AvailablePatchesTreeView, AvailablePatches)
+        AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches)
 
+        'GPTrees.populateTreeFromCollection(TreeViewDraggableNodes1, AvailablePatches)
+ 
         ButtonTreeChange.Text = "Expand"
  
 
@@ -451,7 +454,8 @@ Public Class PatchRunner
 
 
         Dim ReorderedChanges As Collection = New Collection
-        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, ReorderedChanges, False, True, True, False)
+        'GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, ReorderedChanges, False, True, True, False)
+        TreeViewPatchOrder.ReadTags(ReorderedChanges, False, True, True, False)
  
         If ReorderedChanges.Count = 0 Then
             MsgBox("No patches in ordered list.")
@@ -483,11 +487,11 @@ Public Class PatchRunner
 
     ' NOTE   This code can be added to the BeforeCheck event handler instead of the AfterCheck event. 
     ' After a tree node's Checked property is changed, all its child nodes are updated to the same value. 
-    Shared Sub node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles AvailablePatchesTreeView.AfterCheck
-
-        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
-
-    End Sub
+    'Shared Sub node_AfterCheck(sender As Object, e As TreeViewEventArgs)
+    '
+    '    GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+    '
+    'End Sub
 
 
 
@@ -631,12 +635,14 @@ Public Class PatchRunner
         'Prepopulate Tree with default category nodes.
         'This should become a method on TreeViewDraggableNodes2Levels
         Dim l_patches_category As String = "Patches"
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, l_patches_category)
+        'GPTrees.AddCategory(TreeViewPatchOrder.Nodes, l_patches_category)
+        TreeViewPatchOrder.AddCategory(l_patches_category)
 
         Dim ChosenChanges As Collection = New Collection
         'Repo changes
         'Retrieve checked node items from the TreeViewChanges as a collection of files.
-        GPTrees.ReadCheckedLeafNodes(AvailablePatchesTreeView.Nodes, ChosenChanges)
+        'GPTrees.ReadCheckedLeafNodes(AvailablePatchesTreeView.Nodes, ChosenChanges)
+        AvailablePatchesTreeView.ReadCheckedLeafNodes(ChosenChanges)
 
         If ChosenChanges.Count = 0 Then
             MsgBox("No patches selected.")
@@ -659,7 +665,8 @@ Public Class PatchRunner
                 Dim pathSeparator As String = "\"
 
                 l_label = Common.getLastSegment(change, pathSeparator)
-                GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_patches_category, l_label, change) 'This should become a method on TreeViewDraggableNodes2Levels
+                'GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_patches_category, l_label, change) 'This should become a method on TreeViewDraggableNodes2Levels
+                TreeViewPatchOrder.AddFileToCategory(l_patches_category, l_label, change)
             Next
 
 

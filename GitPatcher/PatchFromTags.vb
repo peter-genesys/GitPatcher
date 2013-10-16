@@ -50,7 +50,10 @@ Public Class PatchFromTags
             For Each change In GitSharpFascade.getTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, False)
 
                 'find or create each node for item
-                GPTrees.AddNode(TreeViewChanges.Nodes, change, change, "/", True)
+                'GPTrees.AddNode(TreeViewChanges.Nodes, change, change, "/", True)
+
+                'TreeViewEnhanced.TreeViewEnhanced.AddNode(TreeViewChanges.Nodes, change, change, "/", True)
+                TreeViewChanges.AddNode(change, "/", True)
  
             Next
             ButtonTreeChangeChanges.Text = "Expand"
@@ -112,7 +115,8 @@ Public Class PatchFromTags
 
         'Get a list of patchable files (filepaths) from the TreeViewPatchOrder to send to exportTagChanges and exportExtraFiles
         Dim patchableFiles As Collection = New Collection
-        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, patchableFiles, False, True, True, False)
+        'GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, patchableFiles, False, True, True, False)
+        TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
         Dim filenames As Collection = Nothing
         filenames = GitSharpFascade.exportTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, patchableFiles, PatchDirTextBox.Text)
@@ -131,31 +135,35 @@ Public Class PatchFromTags
         Dim PreReqPatches As Collection = New Collection
 
         'Retrieve checked node items from the PreReqPatchesTreeView as a collection of patches.
-        GPTrees.ReadCheckedLeafNodes(PreReqPatchesTreeView.Nodes, PreReqPatches)
+        'GPTrees.ReadCheckedLeafNodes(PreReqPatchesTreeView.Nodes, PreReqPatches)
+        PreReqPatchesTreeView.ReadCheckedLeafNodes(PreReqPatches)
 
 
         Dim SuperPatches As Collection = New Collection
 
         'Retrieve checked node items from the SuperPatchesTreeView as a collection of patches.
-        GPTrees.ReadCheckedLeafNodes(SuperPatchesTreeView.Nodes, SuperPatches)
+        'GPTrees.ReadCheckedLeafNodes(SuperPatchesTreeView.Nodes, SuperPatches)
+        SuperPatchesTreeView.ReadCheckedLeafNodes(SuperPatches)
 
         Dim SuperByPatches As Collection = New Collection
 
 
         'Retrieve checked node items from the SuperByPatchesTreeView as a collection of patches.
-        GPTrees.ReadCheckedLeafNodes(SuperByPatchesTreeView.Nodes, SuperByPatches)
-
+        'GPTrees.ReadCheckedLeafNodes(SuperByPatchesTreeView.Nodes, SuperByPatches)
+        SuperByPatchesTreeView.ReadCheckedLeafNodes(SuperByPatches)
 
         Dim filelist As Collection = New Collection
         'Ok - no longer need the filenames list created by exportTagChanges and exportExtraFiles
         'Instead we will rederive this list from TreeViewPatchOrder
-        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, filelist, False, False, False, False)
+        'GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, filelist, False, False, False, False)
+        TreeViewPatchOrder.ReadTags(filelist, False, False, False, False)
 
 
         Dim checkedFilelist As Collection = New Collection
         'Ok - no longer need the filenames list created by exportTagChanges and exportExtraFiles
         'Instead we will rederive this list from TreeViewPatchOrder
-        GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, checkedFilelist, False, True, False, True)
+        'GPTrees.ReadTags2Level(TreeViewPatchOrder.Nodes, checkedFilelist, False, True, False, True)
+        TreeViewPatchOrder.ReadTags(checkedFilelist, False, True, False, True)
 
 
         'Write the install script
@@ -218,7 +226,8 @@ Public Class PatchFromTags
         Dim CheckedChanges As Collection = New Collection
 
         'Retrieve checked node items from the TreeViewChanges as a collection of changes.
-        GPTrees.ReadCheckedLeafNodes(TreeViewChanges.Nodes, CheckedChanges)
+        'GPTrees.ReadCheckedLeafNodes(TreeViewChanges.Nodes, CheckedChanges)
+        TreeViewChanges.ReadCheckedLeafNodes(CheckedChanges)
 
 
         MsgBox(GitSharpFascade.viewTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, CheckedChanges))
@@ -496,43 +505,44 @@ Public Class PatchFromTags
 
         'Prepopulate Tree with default category nodes.
         'This should become a method on TreeViewDraggableNodes2Levels
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Users")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Tables")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Sequences")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Type Specs")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Roles")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Database Links")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Functions")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Procedures")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Package Specs")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Views")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Materialised Views")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Grants")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Synonyms")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Type Bodies")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Package Bodies")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Triggers")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Indexes")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Primary Keys")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Unique Keys")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Non-Unique Keys")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Data")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Foreign Keys")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Constraints")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Configuration")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Jobs")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Miscellaneous")
+        TreeViewPatchOrder.AddCategory("Users")
+        TreeViewPatchOrder.AddCategory("Tables")
+        TreeViewPatchOrder.AddCategory("Sequences")
+        TreeViewPatchOrder.AddCategory("Type Specs")
+        TreeViewPatchOrder.AddCategory("Roles")
+        TreeViewPatchOrder.AddCategory("Database Links")
+        TreeViewPatchOrder.AddCategory("Functions")
+        TreeViewPatchOrder.AddCategory("Procedures")
+        TreeViewPatchOrder.AddCategory("Package Specs")
+        TreeViewPatchOrder.AddCategory("Views")
+        TreeViewPatchOrder.AddCategory("Materialised Views")
+        TreeViewPatchOrder.AddCategory("Grants")
+        TreeViewPatchOrder.AddCategory("Synonyms")
+        TreeViewPatchOrder.AddCategory("Type Bodies")
+        TreeViewPatchOrder.AddCategory("Package Bodies")
+        TreeViewPatchOrder.AddCategory("Triggers")
+        TreeViewPatchOrder.AddCategory("Indexes")
+        TreeViewPatchOrder.AddCategory("Primary Keys")
+        TreeViewPatchOrder.AddCategory("Unique Keys")
+        TreeViewPatchOrder.AddCategory("Non-Unique Keys")
+        TreeViewPatchOrder.AddCategory("Data")
+        TreeViewPatchOrder.AddCategory("Foreign Keys")
+        TreeViewPatchOrder.AddCategory("Constraints")
+        TreeViewPatchOrder.AddCategory("Configuration")
+        TreeViewPatchOrder.AddCategory("Jobs")
+        TreeViewPatchOrder.AddCategory("Miscellaneous")
 
 
         Dim ChosenChanges As Collection = New Collection
         'Repo changes
         'Retrieve checked node items from the TreeViewChanges as a collection of files.
-        GPTrees.ReadCheckedLeafNodes(TreeViewChanges.Nodes, ChosenChanges)
+        'GPTrees.ReadCheckedLeafNodes(TreeViewChanges.Nodes, ChosenChanges)
+        TreeViewChanges.ReadCheckedLeafNodes(ChosenChanges)
 
         'Extra files
         'Retrieve checked node items from the TreeViewFiles as a collection of files.
-        GPTrees.ReadCheckedLeafNodes(TreeViewFiles.Nodes, ChosenChanges)
-
+        'GPTrees.ReadCheckedLeafNodes(TreeViewFiles.Nodes, ChosenChanges)
+        TreeViewFiles.ReadCheckedLeafNodes(ChosenChanges)
 
 
         For Each change In ChosenChanges
@@ -607,16 +617,23 @@ Public Class PatchFromTags
             End If
 
             l_label = Common.getLastSegment(change, pathSeparator)
-            GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_category, l_label, change) 'This should become a method on TreeViewDraggableNodes2Levels
-
+            'GPTrees.AddFileToCategory(TreeViewPatchOrder.Nodes, l_category, l_label, change) 'This should become a method on TreeViewDraggableNodes2Levels
+            TreeViewPatchOrder.AddFileToCategory(l_category, l_label, change)
         Next
 
-        GPTrees.RemoveChildlessNodes2Levels(TreeViewPatchOrder.Nodes) 'This should become a method on TreeViewDraggableNodes2Levels
+        'GPTrees.RemoveChildlessNodes2Levels(TreeViewPatchOrder.Nodes) 'This should become a method on TreeViewDraggableNodes2Levels
+
+        'TreeViewPatchOrder.RemoveChildlessLevel1Nodes(TreeViewPatchOrder.Nodes)
+
+        TreeViewPatchOrder.RemoveChildlessLevel1Nodes()
+
         'Set tree to expanded.
         TreeViewPatchOrder.ExpandAll()
 
-        GPTrees.PrependCategory(TreeViewPatchOrder.Nodes, "Initialise")
-        GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Finalise")
+        'GPTrees.PrependCategory(TreeViewPatchOrder.Nodes, "Initialise")
+        TreeViewPatchOrder.PrependCategory("Initialise")
+        'GPTrees.AddCategory(TreeViewPatchOrder.Nodes, "Finalise")
+        TreeViewPatchOrder.AddCategory("Finalise")
 
     End Sub
 
@@ -774,7 +791,7 @@ Public Class PatchFromTags
     ' End Sub
 
 
-    Shared Sub FindPatches(ByRef foundPatches As TreeView, ByVal restrictToBranch As Boolean, ByRef sender As Object, Optional ByVal patchType As String = "ALL")
+    Shared Sub FindPatches(ByRef foundPatches As TreeViewEnhanced.TreeViewEnhanced, ByVal restrictToBranch As Boolean, ByRef sender As Object, Optional ByVal patchType As String = "ALL")
 
 
         Dim searchPath As String = Nothing
@@ -807,7 +824,10 @@ Public Class PatchFromTags
         End If
 
 
-        GPTrees.populateTreeFromCollection(foundPatches, lfoundPatches)
+        'GPTrees.populateTreeFromCollection(foundPatches, lfoundPatches)
+
+        foundPatches.populateTreeFromCollection(lfoundPatches)
+
 
         If restrictToBranch Then
             GPTrees.treeChange_Click(sender, foundPatches)
@@ -1117,33 +1137,33 @@ Public Class PatchFromTags
     End Sub
 
 
-    Shared Sub PreReqPatchesTreeView_node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles PreReqPatchesTreeView.AfterCheck
-
-        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
-
-    End Sub
-
-    Shared Sub SuperPatchesTreeView_node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles SuperPatchesTreeView.AfterCheck
-
-        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
-
-    End Sub
-    Shared Sub SuperByPatchesTreeView_node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles SuperByPatchesTreeView.AfterCheck
-
-        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
-
-    End Sub
-    Shared Sub TreeViewChanges_node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles TreeViewChanges.AfterCheck
-
-        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
-
-    End Sub
-
-    Shared Sub TreeViewFiles_node_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles TreeViewFiles.AfterCheck
-
-        GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
-
-    End Sub
+    'Shared Sub PreReqPatchesTreeView_node_AfterCheck(sender As Object, e As TreeViewEventArgs)
+    '
+    '    GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+    '
+    'End Sub
+    '
+    'Shared Sub SuperPatchesTreeView_node_AfterCheck(sender As Object, e As TreeViewEventArgs)
+    '
+    '    GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+    '
+    'End Sub
+    'Shared Sub SuperByPatchesTreeView_node_AfterCheck(sender As Object, e As TreeViewEventArgs)
+    '
+    '    GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+    '
+    'End Sub
+    'Shared Sub TreeViewChanges_node_AfterCheck(sender As Object, e As TreeViewEventArgs)
+    '
+    '    GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+    '
+    'End Sub
+    '
+    'Shared Sub TreeViewFiles_node_AfterCheck(sender As Object, e As TreeViewEventArgs)
+    '
+    '    GPTrees.CheckChildNodes(e.Node, e.Node.Checked)
+    '
+    'End Sub
 
 
 
@@ -1151,7 +1171,8 @@ Public Class PatchFromTags
 
         Dim ChosenChanges As Collection = New Collection
         'Retrieve checked node items from the TreeViewChanges as a collection of files.
-        GPTrees.ReadCheckedLeafNodes(TreeViewChanges.Nodes, ChosenChanges)
+        'GPTrees.ReadCheckedLeafNodes(TreeViewChanges.Nodes, ChosenChanges)
+        TreeViewChanges.ReadCheckedLeafNodes(ChosenChanges)
 
         'Requery ALL patches
         RestrictPreReqToBranchCheckBox.Checked = False
@@ -1166,7 +1187,10 @@ Public Class PatchFromTags
             Else
                 'MsgBox("Change: " & patch_component & " LastPatch: " & LastPatch)
                 Dim l_found As Boolean = False
-                GPTrees.TickNode(PreReqPatchesTreeView.Nodes, LastPatch, l_found)
+                'GPTrees.TickNode(PreReqPatchesTreeView.Nodes, LastPatch, l_found)
+
+                PreReqPatchesTreeView.TickNode(LastPatch, l_found)
+
                 If Not l_found Then
                     MsgBox("Unable to find patch: " & LastPatch & " for Change: " & patch_component)
                 End If
@@ -1186,47 +1210,44 @@ Public Class PatchFromTags
 
     Private Sub RemoveButton_Click(sender As Object, e As EventArgs) Handles RemoveButton.Click
 
-        GPTrees.RemoveNodes(TreeViewChanges.Nodes, True)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(TreeViewChanges.Nodes, True)
 
     End Sub
-
-
+ 
     Private Sub ButtonCropTo_Click(sender As Object, e As EventArgs) Handles ButtonCropTo.Click
-        GPTrees.RemoveNodes(TreeViewChanges.Nodes, False)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(TreeViewChanges.Nodes, False)
     End Sub
-
-
-
+ 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        GPTrees.RemoveNodes(TreeViewFiles.Nodes, True)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(TreeViewFiles.Nodes, True)
     End Sub
 
     Private Sub Button1_Click_2(sender As Object, e As EventArgs) Handles Button1.Click
-        GPTrees.RemoveNodes(TreeViewFiles.Nodes, False)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(TreeViewFiles.Nodes, False)
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
-        GPTrees.RemoveNodes(PreReqPatchesTreeView.Nodes, True)
+        PreReqPatchesTreeView.RemoveNodes(True)
 
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        GPTrees.RemoveNodes(PreReqPatchesTreeView.Nodes, False)
+        PreReqPatchesTreeView.RemoveNodes(False)
     End Sub
  
     Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
-        GPTrees.RemoveNodes(SuperPatchesTreeView.Nodes, True)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperPatchesTreeView.Nodes, True)
     End Sub
 
     Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
-        GPTrees.RemoveNodes(SuperPatchesTreeView.Nodes, False)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperPatchesTreeView.Nodes, False)
     End Sub
  
     Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
-        GPTrees.RemoveNodes(SuperByPatchesTreeView.Nodes, True)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperByPatchesTreeView.Nodes, True)
     End Sub
 
     Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
-        GPTrees.RemoveNodes(SuperByPatchesTreeView.Nodes, False)
+        TreeViewEnhanced.TreeViewEnhanced.RemoveNodes(SuperByPatchesTreeView.Nodes, False)
     End Sub
 End Class

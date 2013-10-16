@@ -42,7 +42,6 @@ Partial Class CreatePatchCollection
         Me.Button7 = New System.Windows.Forms.Button()
         Me.Button8 = New System.Windows.Forms.Button()
         Me.ButtonTreeChange = New System.Windows.Forms.Button()
-        Me.AvailablePatchesTreeView = New System.Windows.Forms.TreeView()
         Me.AvailablePatchesLabel = New System.Windows.Forms.Label()
         Me.TagFilterCheckBox = New System.Windows.Forms.CheckBox()
         Me.FindButton = New System.Windows.Forms.Button()
@@ -50,7 +49,6 @@ Partial Class CreatePatchCollection
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button4 = New System.Windows.Forms.Button()
         Me.ButtonTreeChangePrereq = New System.Windows.Forms.Button()
-        Me.PreReqPatchesTreeView = New System.Windows.Forms.TreeView()
         Me.PreReqPatchTypeComboBox = New System.Windows.Forms.ComboBox()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.PreReqButton = New System.Windows.Forms.Button()
@@ -59,7 +57,6 @@ Partial Class CreatePatchCollection
         Me.Button5 = New System.Windows.Forms.Button()
         Me.Button6 = New System.Windows.Forms.Button()
         Me.ButtonTreeChangeSuper = New System.Windows.Forms.Button()
-        Me.SuperPatchesTreeView = New System.Windows.Forms.TreeView()
         Me.SupPatchTypeComboBox = New System.Windows.Forms.ComboBox()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
@@ -85,6 +82,9 @@ Partial Class CreatePatchCollection
         Me.Label7 = New System.Windows.Forms.Label()
         Me.SupIdTextBox = New System.Windows.Forms.TextBox()
         Me.PatchDescTextBox = New System.Windows.Forms.TextBox()
+        Me.AvailablePatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
+        Me.PreReqPatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
+        Me.SuperPatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
         Me.PatchTabControl.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.TabPagePatches.SuspendLayout()
@@ -229,11 +229,11 @@ Partial Class CreatePatchCollection
         '
         'TabPagePatches
         '
+        Me.TabPagePatches.Controls.Add(Me.AvailablePatchesTreeView)
         Me.TabPagePatches.Controls.Add(Me.ComboBoxPatchesFilter)
         Me.TabPagePatches.Controls.Add(Me.Button7)
         Me.TabPagePatches.Controls.Add(Me.Button8)
         Me.TabPagePatches.Controls.Add(Me.ButtonTreeChange)
-        Me.TabPagePatches.Controls.Add(Me.AvailablePatchesTreeView)
         Me.TabPagePatches.Controls.Add(Me.AvailablePatchesLabel)
         Me.TabPagePatches.Controls.Add(Me.TagFilterCheckBox)
         Me.TabPagePatches.Controls.Add(Me.FindButton)
@@ -281,14 +281,6 @@ Partial Class CreatePatchCollection
         Me.ButtonTreeChange.Text = "Expand"
         Me.ButtonTreeChange.UseVisualStyleBackColor = True
         '
-        'AvailablePatchesTreeView
-        '
-        Me.AvailablePatchesTreeView.CheckBoxes = True
-        Me.AvailablePatchesTreeView.Location = New System.Drawing.Point(77, 76)
-        Me.AvailablePatchesTreeView.Name = "AvailablePatchesTreeView"
-        Me.AvailablePatchesTreeView.Size = New System.Drawing.Size(429, 619)
-        Me.AvailablePatchesTreeView.TabIndex = 42
-        '
         'AvailablePatchesLabel
         '
         Me.AvailablePatchesLabel.AutoSize = True
@@ -319,10 +311,10 @@ Partial Class CreatePatchCollection
         '
         'TabPagePreReqs
         '
+        Me.TabPagePreReqs.Controls.Add(Me.PreReqPatchesTreeView)
         Me.TabPagePreReqs.Controls.Add(Me.Button3)
         Me.TabPagePreReqs.Controls.Add(Me.Button4)
         Me.TabPagePreReqs.Controls.Add(Me.ButtonTreeChangePrereq)
-        Me.TabPagePreReqs.Controls.Add(Me.PreReqPatchesTreeView)
         Me.TabPagePreReqs.Controls.Add(Me.PreReqPatchTypeComboBox)
         Me.TabPagePreReqs.Controls.Add(Me.Label20)
         Me.TabPagePreReqs.Controls.Add(Me.PreReqButton)
@@ -362,14 +354,6 @@ Partial Class CreatePatchCollection
         Me.ButtonTreeChangePrereq.Text = "Expand"
         Me.ButtonTreeChangePrereq.UseVisualStyleBackColor = True
         '
-        'PreReqPatchesTreeView
-        '
-        Me.PreReqPatchesTreeView.CheckBoxes = True
-        Me.PreReqPatchesTreeView.Location = New System.Drawing.Point(77, 76)
-        Me.PreReqPatchesTreeView.Name = "PreReqPatchesTreeView"
-        Me.PreReqPatchesTreeView.Size = New System.Drawing.Size(429, 571)
-        Me.PreReqPatchesTreeView.TabIndex = 53
-        '
         'PreReqPatchTypeComboBox
         '
         Me.PreReqPatchTypeComboBox.FormattingEnabled = True
@@ -407,10 +391,10 @@ Partial Class CreatePatchCollection
         '
         'TabPageSuper
         '
+        Me.TabPageSuper.Controls.Add(Me.SuperPatchesTreeView)
         Me.TabPageSuper.Controls.Add(Me.Button5)
         Me.TabPageSuper.Controls.Add(Me.Button6)
         Me.TabPageSuper.Controls.Add(Me.ButtonTreeChangeSuper)
-        Me.TabPageSuper.Controls.Add(Me.SuperPatchesTreeView)
         Me.TabPageSuper.Controls.Add(Me.SupPatchTypeComboBox)
         Me.TabPageSuper.Controls.Add(Me.Label17)
         Me.TabPageSuper.Controls.Add(Me.Button1)
@@ -449,14 +433,6 @@ Partial Class CreatePatchCollection
         Me.ButtonTreeChangeSuper.TabIndex = 54
         Me.ButtonTreeChangeSuper.Text = "Expand"
         Me.ButtonTreeChangeSuper.UseVisualStyleBackColor = True
-        '
-        'SuperPatchesTreeView
-        '
-        Me.SuperPatchesTreeView.CheckBoxes = True
-        Me.SuperPatchesTreeView.Location = New System.Drawing.Point(77, 76)
-        Me.SuperPatchesTreeView.Name = "SuperPatchesTreeView"
-        Me.SuperPatchesTreeView.Size = New System.Drawing.Size(429, 571)
-        Me.SuperPatchesTreeView.TabIndex = 53
         '
         'SupPatchTypeComboBox
         '
@@ -705,6 +681,33 @@ Partial Class CreatePatchCollection
         Me.PatchDescTextBox.Size = New System.Drawing.Size(429, 20)
         Me.PatchDescTextBox.TabIndex = 20
         '
+        'AvailablePatchesTreeView
+        '
+        Me.AvailablePatchesTreeView.BackColor = System.Drawing.Color.Wheat
+        Me.AvailablePatchesTreeView.CheckBoxes = True
+        Me.AvailablePatchesTreeView.Location = New System.Drawing.Point(77, 76)
+        Me.AvailablePatchesTreeView.Name = "AvailablePatchesTreeView"
+        Me.AvailablePatchesTreeView.Size = New System.Drawing.Size(429, 619)
+        Me.AvailablePatchesTreeView.TabIndex = 61
+        '
+        'PreReqPatchesTreeView
+        '
+        Me.PreReqPatchesTreeView.BackColor = System.Drawing.Color.Wheat
+        Me.PreReqPatchesTreeView.CheckBoxes = True
+        Me.PreReqPatchesTreeView.Location = New System.Drawing.Point(77, 76)
+        Me.PreReqPatchesTreeView.Name = "PreReqPatchesTreeView"
+        Me.PreReqPatchesTreeView.Size = New System.Drawing.Size(429, 619)
+        Me.PreReqPatchesTreeView.TabIndex = 58
+        '
+        'SuperPatchesTreeView
+        '
+        Me.SuperPatchesTreeView.BackColor = System.Drawing.Color.Wheat
+        Me.SuperPatchesTreeView.CheckBoxes = True
+        Me.SuperPatchesTreeView.Location = New System.Drawing.Point(77, 75)
+        Me.SuperPatchesTreeView.Name = "SuperPatchesTreeView"
+        Me.SuperPatchesTreeView.Size = New System.Drawing.Size(429, 619)
+        Me.SuperPatchesTreeView.TabIndex = 57
+        '
         'CreatePatchCollection
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -773,16 +776,13 @@ Partial Class CreatePatchCollection
     Friend WithEvents AvailablePatchesLabel As System.Windows.Forms.Label
     Friend WithEvents TagFilterCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents FindButton As System.Windows.Forms.Button
-    Friend WithEvents AvailablePatchesTreeView As System.Windows.Forms.TreeView
     Friend WithEvents ButtonTreeChange As System.Windows.Forms.Button
     Friend WithEvents Button3 As System.Windows.Forms.Button
     Friend WithEvents Button4 As System.Windows.Forms.Button
     Friend WithEvents ButtonTreeChangePrereq As System.Windows.Forms.Button
-    Friend WithEvents PreReqPatchesTreeView As System.Windows.Forms.TreeView
     Friend WithEvents Button5 As System.Windows.Forms.Button
     Friend WithEvents Button6 As System.Windows.Forms.Button
     Friend WithEvents ButtonTreeChangeSuper As System.Windows.Forms.Button
-    Friend WithEvents SuperPatchesTreeView As System.Windows.Forms.TreeView
     Friend WithEvents TreeViewPatchOrder As TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels
     Friend WithEvents ComboBoxPatchesFilter As System.Windows.Forms.ComboBox
     Friend WithEvents Button7 As System.Windows.Forms.Button
@@ -790,4 +790,7 @@ Partial Class CreatePatchCollection
     Friend WithEvents ComitButton As System.Windows.Forms.Button
     Friend WithEvents ExecutePatchButton As System.Windows.Forms.Button
     Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents AvailablePatchesTreeView As TreeViewEnhanced.TreeViewEnhanced
+    Friend WithEvents PreReqPatchesTreeView As TreeViewEnhanced.TreeViewEnhanced
+    Friend WithEvents SuperPatchesTreeView As TreeViewEnhanced.TreeViewEnhanced
 End Class
