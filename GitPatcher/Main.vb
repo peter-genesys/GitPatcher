@@ -372,6 +372,7 @@
 
     Public Sub rebaseBranch(iBranchType As String, iRebaseBranchOn As String)
 
+        Dim tag_no_padding As Integer = 2
         Common.checkBranch(iBranchType)
 
         Dim currentBranchLong As String = GitSharpFascade.currentBranch(Globals.currentRepo)
@@ -379,23 +380,38 @@
 
         Dim rebasing As ProgressDialogue = New ProgressDialogue("Rebase branch " & currentBranchLong)
 
-        Dim l_tag_base As String = Nothing
+        Dim l_max_tag As Integer = 0
+
+        Dim tagnames As Collection = New Collection
+        tagnames = GitSharpFascade.getTagList(Globals.currentRepo, tagnames, Globals.currentBranch)
+        For Each tagname In tagnames
+            Dim tag_no As String = Common.getLastSegment(tagname, ".").Substring(0, tag_no_padding)
+            Try
+                If tag_no > l_max_tag Then
+                    l_max_tag = tag_no
+                End If
+            Catch
+            End Try
+
+        Next
+        Dim l_tag_base As String = l_max_tag + 1
+        l_tag_base = l_tag_base.PadLeft(tag_no_padding, "0")
 
         rebasing.MdiParent = GitPatcher
         rebasing.addStep("Commit to Branch: " & currentBranchLong, True, "Ensure the current branch [" & currentBranchShort & "] is free of uncommitted changes.")
         rebasing.addStep("Switch to " & iRebaseBranchOn & " branch", True, "If you get an error concerning uncommitted changes.  Please resolve the changes and then RESTART this process to ensure the switch to " & iRebaseBranchOn & " branch is successful.")
         rebasing.addStep("Pull from Origin")
-        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & ".99A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & CurrentBranchTextBox.Text & ".99A")
+        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & "." & l_tag_base & "A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & CurrentBranchTextBox.Text & ".99A")
         rebasing.addStep("Return to branch: " & currentBranchLong)
         rebasing.addStep("Rebase Branch: " & currentBranchLong & " From Upstream:" & iRebaseBranchOn, True, "Please select the Upstream Branch:" & iRebaseBranchOn & " from the Tortoise Rebase Dialogue")
-        rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & ".99B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.")
+        rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & "." & l_tag_base & "B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.")
         rebasing.addStep("Revert your VM", True, "Before running patches, consider reverting to a VM snapshot prior to the development of your current work, or swapping to a unit test VM.")
         rebasing.addStep("Use PatchRunner to run Unapplied Patches", True)
         rebasing.addStep("Import Apex from HEAD of branch: " & currentBranchLong, True, "Using the Apex Import workflow")
         rebasing.addStep("Post-Rebase Snapshot", True, "Before creating new patches, snapshot the VM again.  Use this snapshot as a quick restore to point restest patches that have failed, on first execution.")
 
         rebasing.Show()
- 
+
         Do Until rebasing.isStarted
             Common.wait(1000)
         Loop
@@ -405,7 +421,7 @@
             'Committing changed files to GIT"
             Tortoise.Commit(Globals.currentRepo, "CANCEL IF NOT NEEDED: Ensure the current branch [" & currentBranchShort & "] is free of uncommitted changes.", True)
         End If
- 
+
         If rebasing.toDoNextStep() Then
             'Switch to develop branch
             GitBash.Switch(Globals.currentRepo, iRebaseBranchOn)
@@ -417,7 +433,7 @@
 
         If rebasing.toDoNextStep() Then
             'Tag the develop head
-            l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please enter 2 digit numeric tag for next patch.", "Create Tag for next patch")
+            l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please enter 2 digit numeric tag for next patch.", "Create Tag for next patch", l_tag_base)
             Dim l_tagA As String = currentBranchShort & "." & l_tag_base & "A"
             rebasing.updateStepDescription(3, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
             GitBash.TagSimple(Globals.currentRepo, l_tagA)
