@@ -27,6 +27,10 @@ GitPatcher
 	<summary>
   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
 </summary>
+</member><member name="P:GitPatcher.My.Resources.Resources.Search_16">
+	<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
 </member><member name="T:GitPatcher.My.Resources.Resources">
 	<summary>
   A strongly-typed resource class, for looking up localized strings, etc.

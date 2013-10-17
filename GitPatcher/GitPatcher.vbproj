@@ -154,7 +154,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Globals.vb" />
-    <Compile Include="GPTrees.vb" />
     <Compile Include="Host.vb" />
     <Compile Include="Logger.vb" />
     <Compile Include="Mail.vb" />
@@ -310,6 +309,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GitPatcher.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Search.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Search_16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

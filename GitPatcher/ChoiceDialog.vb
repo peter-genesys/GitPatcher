@@ -12,10 +12,10 @@ Public Class ChoiceDialog
         Me.Close()
     End Sub
 
-    Shared Function Ask(ByVal i_question, ByVal i_CSVChoices, ByVal i_default, ByVal i_title)
+    Shared Function Ask(ByVal i_question As String, ByVal i_Choices As Collection, ByVal i_default As String, ByVal i_title As String, Optional ByVal i_reorder As Boolean = True)
         Dim l_choice As String = Nothing
         Dim l_default_found As Boolean = False
-        Dim l_reordered As String = Nothing
+        Dim l_reordered As New Collection
 
         ' Set the Window Title
         ChoiceDialog.Text = i_title
@@ -25,22 +25,20 @@ Public Class ChoiceDialog
 
         ' Populate the listbox from the CSV string
         ChoiceDialog.ChoiceComboBox.Items.Clear()
-
-        l_reordered = (Common.orderVersions(i_CSVChoices))
-
-        If l_reordered <> "" Then
-            For Each l_choice In l_reordered.Split(",")
-                l_choice = Trim(l_choice)
-                If (l_choice.Length > 0) Then
-                    ChoiceDialog.ChoiceComboBox.Items.Add(l_choice)
-                    If l_choice = i_default Then
-                        l_default_found = True
-                        ChoiceDialog.ChoiceComboBox.SelectedIndex = ChoiceDialog.ChoiceComboBox.Items.Count - 1
-                    End If
-
-                End If
-            Next
+        If i_reorder Then
+            l_reordered = Common.orderVersions(i_Choices)
+        Else
+            l_reordered = i_Choices
         End If
+
+        For Each line In l_reordered
+            ChoiceDialog.ChoiceComboBox.Items.Add(line)
+            If line = i_default Then
+                l_default_found = True
+                ChoiceDialog.ChoiceComboBox.SelectedIndex = ChoiceDialog.ChoiceComboBox.Items.Count - 1
+            End If
+        Next
+ 
 
         ' Set the listbox to the default answer if it's there
         If Not l_default_found Then
@@ -61,20 +59,6 @@ Public Class ChoiceDialog
         Ask = ChoiceDialog.ChoiceComboBox.SelectedItem
     End Function
 
-
-    Shared Function Ask(ByVal i_question As String, ByVal i_Choices As Collection, ByVal i_default As String, ByVal i_title As String)
-
-        Dim lCVSchoices As String = Nothing
-        For Each choice In i_Choices
-            If String.IsNullOrEmpty(lCVSchoices) Then
-                lCVSchoices = choice
-            Else
-                lCVSchoices = lCVSchoices & "," & choice
-            End If
-
-        Next
-
-        Ask = Ask(i_question, lCVSchoices, i_default, i_title)
-    End Function
+ 
 
 End Class

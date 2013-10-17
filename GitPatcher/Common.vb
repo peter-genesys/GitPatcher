@@ -34,68 +34,46 @@
     End Function
 
 
-    Public Shared Function orderVersions(ByVal i_versions As String) As String
-        Dim l_nums As String = ""
-        Dim l_chrs As String = ""
+    Public Shared Function orderVersions(ByVal i_versions As Collection) As Collection
+        Dim l_nums As New Collection
+        Dim l_ordered As New Collection
+        Dim l_chrs As New Collection
         Dim d As Decimal, v As String
 
-        If (i_versions = "") Then
+        If (i_versions.Count = 0) Then
             Return i_versions
         End If
 
-        For Each v In i_versions.Split(",")
+        For Each v In i_versions
             v = Trim(v)
             If (v.Length > 0) Then
                 Try
                     'Test that the string is numeric (after multiple points are removed) 
                     d = System.Convert.ToDecimal(Replace(v, ".", ""))
                     'Add the string to the numeric strings
-                    l_nums = l_nums & v & ","
+                    l_nums.Add(v)
                 Catch ex As Exception
                     'Add the string to the alpha strings
-                    l_chrs = l_chrs & v & ","
+                    l_chrs.Add(v)
                 End Try
             End If
         Next
-        l_nums.TrimEnd(",")
-        l_chrs.TrimEnd(",")
 
-        ' Perform a simple bubble sort on the numbers
-        Dim n() As String = Split(l_nums, ",")
+        Dim l_dictionary = (From entry In l_nums
+              Order By entry.Value Descending).ToDictionary(
+              Function(pair) pair.Key,
+              Function(pair) pair.Value)
 
-        Dim tmp As String
-        Dim a As String, b As String
-        Dim i As Integer
-        Dim sorted As Boolean = False
-        If (UBound(n) > 1) Then
-            ' only need to sort if there are elements to sort.
-            Do While Not sorted
-                sorted = True
-                For i = 0 To n.Length - 1
-                    If (n(i + 1) = "") Then
-                        Exit For
-                    End If
+        For Each entry In l_dictionary
+            l_ordered.Add(entry)
+        Next
 
-                    a = sortable_tag_string(n(i))
-                    b = sortable_tag_string(n(i + 1))
-
-                    If a < b Then
-                        'swap the elements
-                        tmp = n(i)
-                        n(i) = n(i + 1)
-                        n(i + 1) = tmp
-                        sorted = False
-                    End If
-                Next
-            Loop
-            l_nums = Nothing
-            For i = 0 To UBound(n)
-                l_nums = l_nums & n(i) & ","
-            Next
-        End If
-
-        ' Return the numbers, then the chars.
-        Return l_nums.TrimEnd(",") & "," & l_chrs.TrimEnd(",")
+ 
+        For Each entry In l_chrs
+            l_ordered.Add(entry)
+        Next
+ 
+        Return l_ordered
     End Function
 
 

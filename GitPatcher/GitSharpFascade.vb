@@ -88,8 +88,12 @@ Public Class GitSharpFascade
 
     Shared Sub getIndexedChanges(ByVal path As String)
 
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
+
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
- 
+
 
         For Each entry In repo.Index.Entries
             MsgBox(entry)
@@ -102,6 +106,7 @@ Public Class GitSharpFascade
 
         Next
 
+        Cursor.Current = cursorRevert
 
     End Sub
 
@@ -122,6 +127,10 @@ Public Class GitSharpFascade
     End Sub
 
     Shared Function getSchemaList(ByVal path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String) As Collection
+
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
 
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
 
@@ -163,6 +172,8 @@ Public Class GitSharpFascade
 
         End Try
 
+        Cursor.Current = cursorRevert
+
         Return schemas
 
     End Function
@@ -170,6 +181,11 @@ Public Class GitSharpFascade
 
 
     Shared Function getTagChanges(ByVal path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByVal viewFiles As Boolean) As Collection
+
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
+
 
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
 
@@ -214,12 +230,18 @@ Public Class GitSharpFascade
 
         End Try
 
+        Cursor.Current = cursorRevert
+
         Return changes
 
     End Function
 
 
     Shared Function viewTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As Collection) As String
+
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
 
         Dim repo As GitSharp.Repository = New GitSharp.Repository(repo_path)
 
@@ -266,6 +288,8 @@ Public Class GitSharpFascade
 
         End Try
 
+        Cursor.Current = cursorRevert
+
         Return result
 
 
@@ -273,7 +297,12 @@ Public Class GitSharpFascade
 
 
     Shared Function exportTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As Collection, patchDir As String) As Collection
-        'Any files in the targetFiles that are not found are simly not exported.
+
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
+
+        'Any files in the targetFiles that are not found are simply not exported.
         'This is currently being exploited as the filelist will be sent from the total patchable files treeview, even though it could contain files from the extras list, that are not to be exported from the repo.
         Dim repo As GitSharp.Repository = New GitSharp.Repository(repo_path)
 
@@ -321,7 +350,63 @@ Public Class GitSharpFascade
 
         End Try
 
+        Cursor.Current = cursorRevert
+
         Return filePathList
+
+
+    End Function
+
+
+
+    Shared Function TagLog(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, Optional ByVal headeronly As Boolean = True) As Collection
+
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
+
+        'Returns a log list from Tag 1 to Tag 2
+        Dim repo As GitSharp.Repository = New GitSharp.Repository(repo_path)
+
+        Dim result As String = Nothing
+
+        Dim t1 As Tag = repo.[Get](Of Tag)(tag1_name)
+        Dim t2 As Tag = repo.[Get](Of Tag)(tag2_name)
+
+        Dim logList As Collection = New Collection
+
+        Try
+            If Not t1.IsTag Then
+                Throw (New Halt("Tag 1 (" & tag1_name & ") does not exist."))
+            End If
+
+            If Not t2.IsTag Then
+                Throw (New Halt("Tag 2 (" & tag2_name & ") does not exist."))
+            End If
+
+            Dim c1 As Commit = repo.[Get](Of Tag)(tag1_name).Target
+            Dim c2 As Commit = repo.[Get](Of Tag)(tag2_name).Target
+
+            Dim ancestorCommit As Commit
+            For Each ancestorCommit In c2.Ancestors
+                If ancestorCommit = c1 Then Exit For
+ 
+                Dim logMessage As String = Nothing
+                If headeronly Then
+                    logMessage = Common.getFirstSegment(ancestorCommit.Message, Chr(10))
+                Else
+                    logMessage = ancestorCommit.Message
+                End If
+                logList.Add(logMessage)
+            Next
+
+        Catch tag_not_found As Halt
+
+        End Try
+
+        Cursor.Current = cursorRevert
+
+        Return logList
 
 
     End Function

@@ -75,6 +75,7 @@ Public Class PatchRunner
     Public Shared Function ReorderByDependancy(ByRef givenPatches As Collection) As Collection
 
         Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
 
         Dim orderedPatches As Collection = New Collection
@@ -146,7 +147,7 @@ Public Class PatchRunner
 
         End Try
 
-        Cursor.Current = Cursors.Default
+        Cursor.Current = cursorRevert
 
         Return orderedPatches
 
@@ -159,6 +160,7 @@ Public Class PatchRunner
     Public Shared Sub FindPatches(ByRef foundPatches As Collection, ByVal iHideInstalled As Boolean)
 
         Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
 
         'Simple but replies on TNSNAMES File
@@ -257,7 +259,7 @@ Public Class PatchRunner
         End If
 
 
-        Cursor.Current = Cursors.Default
+        Cursor.Current = cursorRevert
 
 
     End Sub
@@ -266,6 +268,7 @@ Public Class PatchRunner
     Public Shared Sub FindUnappliedPatches(ByRef foundPatches As Collection)
 
         Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
 
         foundPatches.Clear()
@@ -332,7 +335,7 @@ Public Class PatchRunner
         End If
 
 
-        Cursor.Current = Cursors.Default
+        Cursor.Current = cursorRevert
 
     End Sub
 
@@ -535,6 +538,7 @@ Public Class PatchRunner
     Public Shared Function FindLastPatch(ByVal patch_component As String) As String
 
         Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
 
         'Simple but replies on TNSNAMES File
@@ -578,7 +582,7 @@ Public Class PatchRunner
 
         End Try
 
-        Cursor.Current = Cursors.Default
+        Cursor.Current = cursorRevert
 
         Return l_patch_name
 

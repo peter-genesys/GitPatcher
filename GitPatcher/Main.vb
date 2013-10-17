@@ -370,7 +370,7 @@
         Apex.restoreCreateApplicationSQL()
     End Sub
 
-    Public Sub rebaseBranch(iBranchType As String, iRebaseBranchOn As String)
+    Public Function rebaseBranch(iBranchType As String, iRebaseBranchOn As String) As String
 
         Dim tag_no_padding As Integer = 2
         Common.checkBranch(iBranchType)
@@ -488,7 +488,9 @@
 
         'Finish
         rebasing.toDoNextStep()
-    End Sub
+
+        Return l_tag_base
+    End Function
 
 
 

@@ -4,18 +4,20 @@ Public Class PatchFromTags
     Dim gBranchType As String
     Dim gDBtarget As String
     Dim gRebaseBranchOn As String
+    Dim gtag_base As String
 
 
-    Public Sub New(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String)
+    Public Sub New(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String, itag_base As String)
         InitializeComponent()
 
-        FindTagsButton.Text = "Find Tags like " & Globals.currentBranch & ".XX"
+        FindTagsButton.Text = "Find Tags like " & Globals.currentBranch & "."
 
         Findtags()
 
         gBranchType = iBranchType
         gDBtarget = iDBtarget
         gRebaseBranchOn = iRebaseBranchOn
+        gtag_base = itag_base
 
         'NOT CURRENTLY USING THE TabPageSuperBy TABPAGE
         PatchTabControl.TabPages.Remove(TabPageSuperBy)
@@ -23,18 +25,32 @@ Public Class PatchFromTags
         '  PatchTabControl.TabPages.Remove(TabPageSuperBy)
         'End If
 
- 
+        ExecuteButton.Text = "Execute Patch on " & Globals.currentTNS
+
     End Sub
 
 
 
     Private Sub Findtags()
+
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
+
+        Dim tag_no_padding As Integer = 2
+
         TagsCheckedListBox.Items.Clear()
         For Each tagname In GitSharpFascade.getTagList(Globals.currentRepo)
             If Common.getFirstSegment(tagname, ".") = Globals.currentBranch Then
-                TagsCheckedListBox.Items.Add(tagname)
+                'This is a tag worth listing
+                Dim ticked As Boolean = (gtag_base = Common.getLastSegment(tagname, ".").Substring(0, tag_no_padding)) 'This is a tag worth ticking
+                TagsCheckedListBox.Items.Add(tagname, ticked)
+
             End If
         Next
+ 
+        Cursor.Current = cursorRevert
+
     End Sub
 
     Private Sub FindChanges()
@@ -475,40 +491,7 @@ Public Class PatchFromTags
 
     Private Sub CopySelectedChanges()
 
-        'Copy to the new Patchable Tree
-        TreeViewPatchOrder.PathSeparator = "#"
-        TreeViewPatchOrder.Nodes.Clear()
-
-        'Prepopulate Tree with default category nodes.
-        'This should become a method on TreeViewDraggableNodes2Levels
-        TreeViewPatchOrder.AddCategory("Users")
-        TreeViewPatchOrder.AddCategory("Tables")
-        TreeViewPatchOrder.AddCategory("Sequences")
-        TreeViewPatchOrder.AddCategory("Type Specs")
-        TreeViewPatchOrder.AddCategory("Roles")
-        TreeViewPatchOrder.AddCategory("Database Links")
-        TreeViewPatchOrder.AddCategory("Functions")
-        TreeViewPatchOrder.AddCategory("Procedures")
-        TreeViewPatchOrder.AddCategory("Package Specs")
-        TreeViewPatchOrder.AddCategory("Views")
-        TreeViewPatchOrder.AddCategory("Materialised Views")
-        TreeViewPatchOrder.AddCategory("Grants")
-        TreeViewPatchOrder.AddCategory("Synonyms")
-        TreeViewPatchOrder.AddCategory("Type Bodies")
-        TreeViewPatchOrder.AddCategory("Package Bodies")
-        TreeViewPatchOrder.AddCategory("Triggers")
-        TreeViewPatchOrder.AddCategory("Indexes")
-        TreeViewPatchOrder.AddCategory("Primary Keys")
-        TreeViewPatchOrder.AddCategory("Unique Keys")
-        TreeViewPatchOrder.AddCategory("Non-Unique Keys")
-        TreeViewPatchOrder.AddCategory("Data")
-        TreeViewPatchOrder.AddCategory("Foreign Keys")
-        TreeViewPatchOrder.AddCategory("Constraints")
-        TreeViewPatchOrder.AddCategory("Configuration")
-        TreeViewPatchOrder.AddCategory("Jobs")
-        TreeViewPatchOrder.AddCategory("Miscellaneous")
-
-
+ 
         Dim ChosenChanges As Collection = New Collection
         'Repo changes
         'Retrieve checked node items from the TreeViewChanges as a collection of files.
@@ -518,89 +501,127 @@ Public Class PatchFromTags
         'Retrieve checked node items from the TreeViewFiles as a collection of files.
         TreeViewFiles.ReadCheckedLeafNodes(ChosenChanges)
 
+        If ChosenChanges.Count = 0 Then
+            MsgBox("No files selected.")
+        Else
 
-        For Each change In ChosenChanges
+            'Copy to the new Patchable Tree
+            TreeViewPatchOrder.PathSeparator = "#"
+            TreeViewPatchOrder.Nodes.Clear()
 
-            Dim l_category As String = Nothing
-            Dim l_file_extension As String = Common.getLastSegment(change, ".")
-            Dim l_label As String
-            Select Case l_file_extension
-                Case "user"
-                    l_category = "Users"
-                Case "tab"
-                    l_category = "Tables"
-                Case "seq"
-                    l_category = "Sequences"
-                Case "tps"
-                    l_category = "Type Specs"
-                Case "grt"
-                    l_category = "Grants"
-                Case "pks", "pls"
-                    l_category = "Package Specs"
-                Case "fnc"
-                    l_category = "Functions"
-                Case "prc"
-                    l_category = "Procedures"
-                Case "vw"
-                    l_category = "Views"
-                Case "syn"
-                    l_category = "Synonyms"
-                Case "tpb"
-                    l_category = "Type Bodies"
-                Case "pkb", "plb"
-                    l_category = "Package Bodies"
-                Case "trg"
-                    l_category = "Triggers"
-                Case "pk"
-                    l_category = "Primary Keys"
-                Case "uk"
-                    l_category = "Unique Keys"
-                Case "nk"
-                    l_category = "Non-Unique Keys"
-                Case "idx"
-                    l_category = "Indexes"
-                Case "fk"
-                    l_category = "Foreign Keys"
-                Case "con"
-                    l_category = "Constraints"
-                Case "sdl"
-                    l_category = "Loader Scripts"
-                Case "rg", "rol"
-                    l_category = "Roles"
-                Case "job"
-                    l_category = "Jobs"
-                Case "sdl"
-                    l_category = "Data"
-                Case "dblink"
-                    l_category = "Database Links"
-                Case "mv"
-                    l_category = "Materialised Views"
-                Case "sql"
-                    l_category = "Miscellaneous"
-                Case Else
-                    l_category = "Miscellaneous"
-            End Select
+            'Prepopulate Tree with default category nodes.
+            'This should become a method on TreeViewDraggableNodes2Levels
+            TreeViewPatchOrder.AddCategory("Users")
+            TreeViewPatchOrder.AddCategory("Tables")
+            TreeViewPatchOrder.AddCategory("Sequences")
+            TreeViewPatchOrder.AddCategory("Type Specs")
+            TreeViewPatchOrder.AddCategory("Roles")
+            TreeViewPatchOrder.AddCategory("Database Links")
+            TreeViewPatchOrder.AddCategory("Functions")
+            TreeViewPatchOrder.AddCategory("Procedures")
+            TreeViewPatchOrder.AddCategory("Package Specs")
+            TreeViewPatchOrder.AddCategory("Views")
+            TreeViewPatchOrder.AddCategory("Materialised Views")
+            TreeViewPatchOrder.AddCategory("Grants")
+            TreeViewPatchOrder.AddCategory("Synonyms")
+            TreeViewPatchOrder.AddCategory("Type Bodies")
+            TreeViewPatchOrder.AddCategory("Package Bodies")
+            TreeViewPatchOrder.AddCategory("Triggers")
+            TreeViewPatchOrder.AddCategory("Indexes")
+            TreeViewPatchOrder.AddCategory("Primary Keys")
+            TreeViewPatchOrder.AddCategory("Unique Keys")
+            TreeViewPatchOrder.AddCategory("Non-Unique Keys")
+            TreeViewPatchOrder.AddCategory("Data")
+            TreeViewPatchOrder.AddCategory("Foreign Keys")
+            TreeViewPatchOrder.AddCategory("Constraints")
+            TreeViewPatchOrder.AddCategory("Configuration")
+            TreeViewPatchOrder.AddCategory("Jobs")
+            TreeViewPatchOrder.AddCategory("Miscellaneous")
 
-            Dim pathSeparator As String = Nothing
-            If change.contains(":") Then
-                'Windows path
-                pathSeparator = "\"
-            Else
-                'Repo path
-                pathSeparator = "/"
-            End If
+            For Each change In ChosenChanges
 
-            l_label = Common.getLastSegment(change, pathSeparator)
-            TreeViewPatchOrder.AddFileToCategory(l_category, l_label, change)
-        Next
- 
-        TreeViewPatchOrder.RemoveChildlessLevel1Nodes()
+                Dim l_category As String = Nothing
+                Dim l_file_extension As String = Common.getLastSegment(change, ".")
+                Dim l_label As String
+                Select Case l_file_extension
+                    Case "user"
+                        l_category = "Users"
+                    Case "tab"
+                        l_category = "Tables"
+                    Case "seq"
+                        l_category = "Sequences"
+                    Case "tps"
+                        l_category = "Type Specs"
+                    Case "grt"
+                        l_category = "Grants"
+                    Case "pks", "pls"
+                        l_category = "Package Specs"
+                    Case "fnc"
+                        l_category = "Functions"
+                    Case "prc"
+                        l_category = "Procedures"
+                    Case "vw"
+                        l_category = "Views"
+                    Case "syn"
+                        l_category = "Synonyms"
+                    Case "tpb"
+                        l_category = "Type Bodies"
+                    Case "pkb", "plb"
+                        l_category = "Package Bodies"
+                    Case "trg"
+                        l_category = "Triggers"
+                    Case "pk"
+                        l_category = "Primary Keys"
+                    Case "uk"
+                        l_category = "Unique Keys"
+                    Case "nk"
+                        l_category = "Non-Unique Keys"
+                    Case "idx"
+                        l_category = "Indexes"
+                    Case "fk"
+                        l_category = "Foreign Keys"
+                    Case "con"
+                        l_category = "Constraints"
+                    Case "sdl"
+                        l_category = "Loader Scripts"
+                    Case "rg", "rol"
+                        l_category = "Roles"
+                    Case "job"
+                        l_category = "Jobs"
+                    Case "sdl"
+                        l_category = "Data"
+                    Case "dblink"
+                        l_category = "Database Links"
+                    Case "mv"
+                        l_category = "Materialised Views"
+                    Case "sql"
+                        l_category = "Miscellaneous"
+                    Case Else
+                        l_category = "Miscellaneous"
+                End Select
 
-        'Set tree to expanded.
-        TreeViewPatchOrder.ExpandAll()
+                Dim pathSeparator As String = Nothing
+                If change.contains(":") Then
+                    'Windows path
+                    pathSeparator = "\"
+                Else
+                    'Repo path
+                    pathSeparator = "/"
+                End If
 
-        TreeViewPatchOrder.PrependCategory("Initialise")
-        TreeViewPatchOrder.AddCategory("Finalise")
+                l_label = Common.getLastSegment(change, pathSeparator)
+                TreeViewPatchOrder.AddFileToCategory(l_category, l_label, change)
+            Next
+
+            TreeViewPatchOrder.RemoveChildlessLevel1Nodes()
+
+            'Set tree to expanded.
+            TreeViewPatchOrder.ExpandAll()
+
+            TreeViewPatchOrder.PrependCategory("Initialise")
+            TreeViewPatchOrder.AddCategory("Finalise")
+
+        End If
 
     End Sub
 
@@ -697,21 +718,34 @@ Public Class PatchFromTags
             ExecuteButton.Visible = Not String.IsNullOrEmpty(PatchNameTextBox.Text)
             CommitButton.Visible = Not String.IsNullOrEmpty(PatchNameTextBox.Text)
 
+ 
 
         End If
 
-
-        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExecute" Then
-
-            ExecuteButton.Text = "Execute Patch on " & Globals.currentTNS
-
-        End If
+ 
 
     End Sub
 
+    Private Sub PopDesc(target As Windows.Forms.Control, targetControlName As String)
+
+        Dim l_old_text = target.Text
+        Try
+            Dim log As Collection = New Collection
+            log = GitSharpFascade.TagLog(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text)
+
+            target.Text = ChoiceDialog.Ask("You may choose a log message for the " & targetControlName, log, "", "Choose log message", False)
+
+        Catch noneChosen As Halt
+            target.Text = l_old_text
+        End Try
+
+    End Sub
+ 
+ 
+
     Private Sub derivePatchName()
 
-        If Not String.IsNullOrEmpty(Tag1TextBox.Text) And Not String.IsNullOrEmpty(Tag2TextBox.Text) Then
+        If Not String.IsNullOrEmpty(Tag1TextBox.Text) And Not String.IsNullOrEmpty(Tag2TextBox.Text) And SchemaComboBox.Items.Count > 0 Then
 
             PatchNameTextBox.Text = Globals.currentBranch & "_" & Common.dropFirstSegment(Tag1TextBox.Text, ".") & "_" & Common.dropFirstSegment(Tag2TextBox.Text, ".") & "_" & SchemaComboBox.SelectedItem.ToString
 
@@ -720,7 +754,7 @@ Public Class PatchFromTags
 
             End If
         Else
-            MsgBox("Please select two tags, and review changes, to allow derivation of PatchName")
+            MsgBox("Please select two tags, then review changes ensuring you select a schema, to allow derivation of PatchName")
 
         End If
 
@@ -760,6 +794,9 @@ Public Class PatchFromTags
 
     Shared Sub FindPatches(ByRef foundPatches As TreeViewEnhanced.TreeViewEnhanced, ByVal restrictToBranch As Boolean, Optional ByVal patchType As String = "ALL")
 
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
 
         Dim searchPath As String = Nothing
         If patchType <> "ALL" Then
@@ -794,6 +831,8 @@ Public Class PatchFromTags
         If restrictToBranch Then
             foundPatches.ExpandAll()
         End If
+
+        Cursor.Current = cursorRevert
 
     End Sub
 
@@ -871,7 +910,7 @@ Public Class PatchFromTags
     Public Shared Sub createPatchProcess(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String)
 
         Common.checkBranch(iBranchType)
-
+        Dim l_tag_base As String
 
         Dim currentBranch As String = Globals.currentLongBranch()
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")
@@ -915,7 +954,7 @@ Public Class PatchFromTags
 
         If createPatchProgress.toDoNextStep() Then
             'Rebase branch
-            Main.rebaseBranch(iBranchType, iRebaseBranchOn)
+            l_tag_base = Main.rebaseBranch(iBranchType, iRebaseBranchOn)
 
         End If
 
@@ -928,7 +967,7 @@ Public Class PatchFromTags
 
         If createPatchProgress.toDoNextStep() Then
 
-            Dim Wizard As New PatchFromTags(iBranchType, iDBtarget, iRebaseBranchOn)
+            Dim Wizard As New PatchFromTags(iBranchType, iDBtarget, iRebaseBranchOn, l_tag_base)
             'newchildform.MdiParent = GitPatcher
             Wizard.ShowDialog() 'NEED TO WAIT HERE!!
 
@@ -1081,4 +1120,11 @@ Public Class PatchFromTags
     End Sub
 
  
+    Private Sub ButtonPopDesc_Click(sender As Object, e As EventArgs) Handles ButtonPopDesc.Click
+        PopDesc(PatchDescTextBox, "Patch Description")
+    End Sub
+
+    Private Sub ButtonPopNotes_Click(sender As Object, e As EventArgs) Handles ButtonPopNotes.Click
+        PopDesc(NoteTextBox, "Notes")
+    End Sub
 End Class
