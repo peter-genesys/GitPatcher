@@ -910,7 +910,7 @@ Public Class PatchFromTags
     Public Shared Sub createPatchProcess(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String)
 
         Common.checkBranch(iBranchType)
-        Dim l_tag_base As String
+        Dim l_tag_base As String = Nothing
 
         Dim currentBranch As String = Globals.currentLongBranch()
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")

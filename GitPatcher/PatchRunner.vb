@@ -121,7 +121,8 @@ Public Class PatchRunner
                 Next
 
             End While
-
+            dr.Close()
+ 
             conn.Close()
             conn.Dispose()
 
@@ -236,7 +237,7 @@ Public Class PatchRunner
                         foundPatches.Remove(i)
 
                     End If
-
+                    dr.Close()
 
                 Next
 
@@ -318,6 +319,8 @@ Public Class PatchRunner
                 End If
 
             End While
+
+            dr.Close()
 
             conn.Close()
             conn.Dispose()
@@ -551,7 +554,7 @@ Public Class PatchRunner
 
         Dim l_patch_name As String = Nothing
 
-        'This time loop through unapplied patches first and show in list if available in dir.
+
         Try
 
             conn.Open()
@@ -569,7 +572,7 @@ Public Class PatchRunner
                 l_patch_name = dr.Item("patch_name")
             End If
 
-
+            dr.Close()
             conn.Close()
             conn.Dispose()
 
