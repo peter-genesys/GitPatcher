@@ -153,12 +153,12 @@ Public Class GitSharpFascade
 
             Dim c1 As Commit = repo.[Get](Of Tag)(tag1_name).Target
             Dim c2 As Commit = repo.[Get](Of Tag)(tag2_name).Target
-
-
+ 
             For Each change As Change In c1.CompareAgainst(c2)
+
                 If InStr(change.Path, pathmask) > 0 And change.ChangeType <> ChangeType.Deleted Then
 
-                    schema = change.Path.Split("/")(1)
+                    schema = change.Path.Substring(Len(pathmask)).Split("/")(0)
 
                     If Not schemas.Contains(schema) Then
                         schemas.Add(schema, schema)

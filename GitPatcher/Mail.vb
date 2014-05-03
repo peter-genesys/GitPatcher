@@ -1,7 +1,8 @@
 ﻿Imports System
 Imports System.Net.Mail
 
-Imports Outlook = Microsoft.Office.Interop.Outlook
+'Uncomment if MS Outlook is installed.
+'Imports Outlook = Microsoft.Office.Interop.Outlook
 
 Public Class Mail
 
@@ -106,48 +107,48 @@ Public Class Mail
     ' End Sub
 
 
-    Shared Sub SendEmailOutlook(ByVal i_EmailFrom, ByVal i_EmailTo, ByVal i_MailSubject, ByVal i_MessageBody, ByVal i_attachments)
-
-
-        Try
-
-            Dim oOutL As New Outlook.Application
-            Dim oMail As Outlook.MailItem
-
-            oMail = oOutL.CreateItem(Outlook.OlItemType.olMailItem)
-            oMail.UnRead = True
-            oMail.To = i_EmailTo
-            oMail.Subject = i_MailSubject
-            oMail.HTMLBody = True
-            oMail.Body = i_MessageBody
-            If Not String.IsNullOrEmpty(i_attachments) Then
-                For Each l_attachment In i_attachments.split(",")
-                    Try
-                        oMail.Attachments.Add(l_attachment)
-                        oMail.Body = oMail.Body & Chr(10) & "Attached file: " & l_attachment
-                    Catch ex As Exception
-                        oMail.Body = oMail.Body & Chr(10) & "Failed to attached file: " & l_attachment
-                    End Try
-
-                Next
-
-            End If
-
-            oMail.Send()
-
-
-        Catch ex As Exception
-
-            MsgBox("Delivery Failure: " & ex.Source & ex.Message)
-
-        End Try
-
-
-    End Sub
+    '  Shared Sub SendEmailOutlook(ByVal i_EmailFrom, ByVal i_EmailTo, ByVal i_MailSubject, ByVal i_MessageBody, ByVal i_attachments)
+    '
+    '
+    '      Try
+    '
+    '          Dim oOutL As New Outlook.Application
+    '          Dim oMail As Outlook.MailItem
+    '
+    '          oMail = oOutL.CreateItem(Outlook.OlItemType.olMailItem)
+    '          oMail.UnRead = True
+    '          oMail.To = i_EmailTo
+    '          oMail.Subject = i_MailSubject
+    '          oMail.HTMLBody = True
+    '          oMail.Body = i_MessageBody
+    '          If Not String.IsNullOrEmpty(i_attachments) Then
+    '              For Each l_attachment In i_attachments.split(",")
+    '                  Try
+    '                      oMail.Attachments.Add(l_attachment)
+    '                      oMail.Body = oMail.Body & Chr(10) & "Attached file: " & l_attachment
+    '                  Catch ex As Exception
+    '                      oMail.Body = oMail.Body & Chr(10) & "Failed to attached file: " & l_attachment
+    '                  End Try
+    '
+    '              Next
+    '
+    '          End If
+    '
+    '          oMail.Send()
+    '
+    '
+    '      Catch ex As Exception
+    '
+    '          MsgBox("Delivery Failure: " & ex.Source & ex.Message)
+    '
+    '      End Try
+    '
+    '
+    '  End Sub
 
 
     Shared Sub SendNotification(ByVal i_MailSubject, ByVal i_MessageBody, Optional ByVal i_attachments = Nothing)
- 
+
         Dim Sender As String = Environment.UserName & My.Settings.RecipientDomain
         Dim Recipients As String = Nothing
 
@@ -178,7 +179,8 @@ Public Class Mail
 
         Logger.Dbg(i_MessageBody)
 
-        SendEmailOutlook(Sender, Recipients, i_MailSubject, i_MessageBody, i_attachments)
+        'SendEmailOutlook(Sender, Recipients, i_MailSubject, i_MessageBody, i_attachments)
+        SendEmailSMTP(Sender, Recipients, i_MailSubject, i_MessageBody)
 
     End Sub
 

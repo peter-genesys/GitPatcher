@@ -8,6 +8,7 @@
     'Private gApexApp As String
     Private gParsingSchema As String
     Private gJiraProject As String
+    'Private gDBRepoPathMask As String
 
 
     Public Function currentDB() As String
@@ -71,6 +72,15 @@
     End Function
 
 
+    Public Function DBRepoPathMask() As String
+
+        Dim RepoPathMask As String = My.Settings.DBDirOffset.Substring(1) & "/"
+        Return RepoPathMask
+
+    End Function
+
+ 
+
     Public Function currentApplication() As String
 
         Return gApplication
@@ -99,6 +109,19 @@
         My.Settings.Save()
 
     End Sub
+
+    '  Public Sub setDBRepoPathMask(DBRepoPathMask As String)
+    '
+    '      gDBRepoPathMask = DBRepoPathMask
+    '
+    '      My.Settings.DBRepoPathMask = gDBRepoPathMask
+    '      My.Settings.Save()
+    '
+    '  End Sub
+
+
+
+
 
     'Public Sub setApex(Apex As String)
     '

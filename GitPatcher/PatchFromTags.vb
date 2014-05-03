@@ -21,14 +21,36 @@ Public Class PatchFromTags
 
         'NOT CURRENTLY USING THE TabPageSuperBy TABPAGE
         PatchTabControl.TabPages.Remove(TabPageSuperBy)
+
+        HideTabs()
+
         'If gBranchType <> "hotfix" Then
         '  PatchTabControl.TabPages.Remove(TabPageSuperBy)
         'End If
+
+        'PatchTabControl.TabPages("TabPagePatchDefn").Hide()
+        'PatchTabControl.TabPages(2).Hide()
+
+        'PatchTabControl.TabPages.TabPagePatchDefn Remove(TabPageSuperBy)
 
         ExecuteButton.Text = "Execute Patch on " & Globals.currentTNS
 
     End Sub
 
+    Private Sub HideTabs()
+        PatchTabControl.TabPages.Remove(TabPageExtras)
+        PatchTabControl.TabPages.Remove(TabPagePreReqs)
+        PatchTabControl.TabPages.Remove(TabPageSuper)
+        PatchTabControl.TabPages.Remove(TabPagePatchDefn)
+        FindButton.Visible = False
+
+    End Sub
+    Private Sub ShowTabs()
+        PatchTabControl.TabPages.Insert(2, TabPageExtras)
+        PatchTabControl.TabPages.Insert(3, TabPagePreReqs)
+        PatchTabControl.TabPages.Insert(4, TabPageSuper)
+        PatchTabControl.TabPages.Insert(5, TabPagePatchDefn)
+    End Sub
 
 
     Private Sub Findtags()
@@ -48,7 +70,7 @@ Public Class PatchFromTags
 
             End If
         Next
- 
+
         Cursor.Current = cursorRevert
 
     End Sub
@@ -59,18 +81,24 @@ Public Class PatchFromTags
                 Throw (New Halt("Schema not selected"))
             End If
 
+
+
             TreeViewChanges.PathSeparator = "/"
             TreeViewChanges.Nodes.Clear()
 
 
-            For Each change In GitSharpFascade.getTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, False)
+            For Each change In GitSharpFascade.getTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask & SchemaComboBox.Text, False)
 
                 'find or create each node for item
                 TreeViewChanges.AddNode(change, "/", True)
- 
+
             Next
             TreeViewChanges.ExpandAll()
- 
+
+            HideTabs()
+            ShowTabs()
+            ResetForNewPatch()
+
         Catch schema_not_selected As Halt
             MsgBox("Please select a schema")
         End Try
@@ -89,7 +117,7 @@ Public Class PatchFromTags
         Dim Filename As String = Nothing
         If extrasCollection.Count > 0 Then
             For Each FilePath In extrasCollection
-                If Common.getFirstSegment(FilePath, "/") <> "database" Then
+                If InStr(FilePath, Globals.DBRepoPathMask) = 0 Then
                     'Screened out repo files
                     Filename = Common.getLastSegment(FilePath, "\")
 
@@ -130,11 +158,11 @@ Public Class PatchFromTags
         TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
         Dim filenames As Collection = Nothing
-        filenames = GitSharpFascade.exportTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, patchableFiles, PatchDirTextBox.Text)
+        filenames = GitSharpFascade.exportTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask & SchemaComboBox.Text, patchableFiles, PatchDirTextBox.Text)
 
         'Additional file exports 
         exportExtraFiles(patchableFiles, filenames, PatchDirTextBox.Text)
- 
+
         Dim PreReqPatches As Collection = New Collection
         'Retrieve checked node items from the PreReqPatchesTreeView as a collection of patches.
         PreReqPatchesTreeView.ReadCheckedLeafNodes(PreReqPatches)
@@ -190,32 +218,37 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub deriveSchemas()
-        SchemaComboBox.Items.Clear()
-        SchemaComboBox.Text = ""
-        For Each schema In GitSharpFascade.getSchemaList(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database")
-            SchemaComboBox.Items.Add(schema)
-        Next
+        If String.IsNullOrEmpty(SchemaComboBox.Text) Then
+            SchemaComboBox.Items.Clear()
 
-        SchemaCountTextBox.Text = SchemaComboBox.Items.Count
 
-        'If exactly one schema found then select it
-        'otherwise force user to choose one.
-        If SchemaComboBox.Items.Count = 1 Then
-            SchemaComboBox.SelectedIndex = 0
+            For Each schema In GitSharpFascade.getSchemaList(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask)
+                SchemaComboBox.Items.Add(schema)
+            Next
+
+            SchemaCountTextBox.Text = SchemaComboBox.Items.Count
+
+            'If exactly one schema found then select it
+            'otherwise force user to choose one.
+            If SchemaComboBox.Items.Count = 1 Then
+                SchemaComboBox.SelectedIndex = 0
+            Else
+                Logger.Dbg("Multiple schemas")
+            End If
         End If
     End Sub
 
 
 
-    Private Sub Tag2TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag2TextBox.TextChanged
-
-        deriveSchemas()
-
-    End Sub
-
-    Private Sub Tag1TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag1TextBox.TextChanged
-        deriveSchemas()
-    End Sub
+    '  Private Sub Tag2TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag2TextBox.TextChanged
+    '
+    '      deriveSchemas()
+    '
+    '  End Sub
+    '
+    '  Private Sub Tag1TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag1TextBox.TextChanged
+    '      deriveSchemas()
+    '  End Sub
 
     Private Sub ViewButton_Click(sender As Object, e As EventArgs) Handles ViewButton.Click
 
@@ -257,7 +290,7 @@ Public Class PatchFromTags
                                   ByVal groupPath As String, _
                                   ByVal track_promotion As Boolean)
 
- 
+
 
         Dim l_file_extension As String = Nothing
         Dim l_install_file_line As String = Nothing
@@ -266,7 +299,7 @@ Public Class PatchFromTags
 
 
         Dim l_show_error As String = "Show error;"
- 
+
         Dim rerunnable_yn As String = "N"
         If rerunnable Then
             rerunnable_yn = "Y"
@@ -285,7 +318,7 @@ Public Class PatchFromTags
         Dim l_install_list As String = Nothing
 
 
- 
+
 
         If targetFiles.Count > 0 Then
 
@@ -314,7 +347,8 @@ Public Class PatchFromTags
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
             If db_schema = "SYS" Then
-                l_master_file.WriteLine("CONNECT APEX_SYS/&&APEX_SYS_password@&&database as sysdba")
+                'l_master_file.WriteLine("CONNECT APEX_SYS/&&APEX_SYS_password@&&database as sysdba")
+                l_master_file.WriteLine("CONNECT SYS/&&SYS_password@&&database as sysdba")
             Else
                 l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database")
             End If
@@ -327,9 +361,9 @@ Public Class PatchFromTags
             'Files have already been sorted into Categories, we only need to list the categories and spit out the files under each.
             For Each l_filename In targetFiles
 
- 
+
                 'Sort the files by files extention into lists.
- 
+
                 If Not l_filename.contains(".") Then
                     'No file extension so assume this is a Category heading.
                     Dim Category As String = l_filename.ToUpper
@@ -491,7 +525,7 @@ Public Class PatchFromTags
 
     Private Sub CopySelectedChanges()
 
- 
+
         Dim ChosenChanges As Collection = New Collection
         'Repo changes
         'Retrieve checked node items from the TreeViewChanges as a collection of files.
@@ -641,11 +675,18 @@ Public Class PatchFromTags
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageChanges" Then
             deriveTags()
+            deriveSchemas()
 
-            If TreeViewChanges.Nodes.Count = 0 Then
-                FindChanges()
-            End If
+            'If TreeViewChanges.Nodes.Count = 0 Then
+            'FindChanges()
+            'End If
 
+
+        End If
+
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExtras" Then
+ 
+            FindExtras()
 
         End If
 
@@ -718,11 +759,11 @@ Public Class PatchFromTags
             ExecuteButton.Visible = Not String.IsNullOrEmpty(PatchNameTextBox.Text)
             CommitButton.Visible = Not String.IsNullOrEmpty(PatchNameTextBox.Text)
 
- 
+
 
         End If
 
- 
+
 
     End Sub
 
@@ -740,8 +781,8 @@ Public Class PatchFromTags
         End Try
 
     End Sub
- 
- 
+
+
 
     Private Sub derivePatchName()
 
@@ -805,7 +846,7 @@ Public Class PatchFromTags
 
 
         Dim lfoundPatches As Collection = New Collection
- 
+
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
             FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir & searchPath, "install.sql", lfoundPatches, Globals.RootPatchDir)
@@ -825,7 +866,7 @@ Public Class PatchFromTags
 
         End If
 
- 
+
         foundPatches.populateTreeFromCollection(lfoundPatches)
 
         If restrictToBranch Then
@@ -1064,10 +1105,7 @@ Public Class PatchFromTags
         End Try
     End Sub
 
-
-    Private Sub ButtonFindFiles_Click(sender As Object, e As EventArgs) Handles ButtonFindFiles.Click
-
-
+    Private Sub FindExtras()
         TreeViewFiles.PathSeparator = "\"
         TreeViewFiles.Nodes.Clear()
 
@@ -1079,10 +1117,17 @@ Public Class PatchFromTags
             TreeViewFiles.Nodes.Add(aRootNode)
             PopulateTreeView(aRootDir, aRootNode)
         Next
+    End Sub
+
+
+
+    Private Sub ButtonFindFiles_Click(sender As Object, e As EventArgs) Handles ButtonFindFiles.Click
+        FindExtras()
+ 
 
     End Sub
 
- 
+
     Private Sub ButtonLastPatch_Click(sender As Object, e As EventArgs) Handles ButtonLastPatch.Click
 
         Dim ChosenChanges As Collection = New Collection
@@ -1119,12 +1164,39 @@ Public Class PatchFromTags
 
     End Sub
 
- 
+
     Private Sub ButtonPopDesc_Click(sender As Object, e As EventArgs) Handles ButtonPopDesc.Click
         PopDesc(PatchDescTextBox, "Patch Description")
     End Sub
 
     Private Sub ButtonPopNotes_Click(sender As Object, e As EventArgs) Handles ButtonPopNotes.Click
         PopDesc(NoteTextBox, "Notes")
+    End Sub
+
+    Private Sub TagsCheckedListBox_Click(sender As Object, e As EventArgs) Handles TagsCheckedListBox.Click
+        'If tags are changed then we will clear the selected changes and the schema list.
+        SchemaComboBox.Text = ""
+        TreeViewChanges.Nodes.Clear()
+        HideTabs()
+    End Sub
+
+    Private Sub ResetForNewPatch()
+
+        TreeViewFiles.Nodes.Clear()
+        PreReqPatchesTreeView.Nodes.Clear()
+        SuperPatchesTreeView.Nodes.Clear()
+        SuperByPatchesTreeView.Nodes.Clear()
+        TreeViewPatchOrder.Nodes.Clear()
+        SupIdTextBox.Text = ""
+        PatchDescTextBox.Text = ""
+        NoteTextBox.Text = ""
+    End Sub
+
+
+
+ 
+    Private Sub SchemaComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SchemaComboBox.SelectedIndexChanged
+        'FindButton.Visible = True
+        FindChanges()
     End Sub
 End Class

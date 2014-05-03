@@ -24,6 +24,7 @@ Partial Class PatchFromTags
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PatchFromTags))
         Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
+        Me.Label26 = New System.Windows.Forms.Label()
         Me.ButtonPopNotes = New System.Windows.Forms.Button()
         Me.ButtonPopDesc = New System.Windows.Forms.Button()
         Me.TreeViewPatchOrder = New TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels()
@@ -51,17 +52,22 @@ Partial Class PatchFromTags
         Me.PatchButton = New System.Windows.Forms.Button()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.TabPageSuper = New System.Windows.Forms.TabPage()
+        Me.Label24 = New System.Windows.Forms.Label()
         Me.SuperPatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
         Me.RestrictSupToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.SupButton = New System.Windows.Forms.Button()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.TabPagePreReqs = New System.Windows.Forms.TabPage()
+        Me.Label23 = New System.Windows.Forms.Label()
         Me.PreReqPatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
         Me.ButtonLastPatch = New System.Windows.Forms.Button()
         Me.RestrictPreReqToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.PreReqButton = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.TabPageTags = New System.Windows.Forms.TabPage()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.Label27 = New System.Windows.Forms.Label()
         Me.FindTagsButton = New System.Windows.Forms.Button()
         Me.TagsCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.Label15 = New System.Windows.Forms.Label()
@@ -71,6 +77,7 @@ Partial Class PatchFromTags
         Me.Label2 = New System.Windows.Forms.Label()
         Me.PatchTabControl = New System.Windows.Forms.TabControl()
         Me.TabPageChanges = New System.Windows.Forms.TabPage()
+        Me.Label20 = New System.Windows.Forms.Label()
         Me.TreeViewChanges = New TreeViewEnhanced.TreeViewEnhanced()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.SchemaCountTextBox = New System.Windows.Forms.TextBox()
@@ -80,23 +87,16 @@ Partial Class PatchFromTags
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ViewButton = New System.Windows.Forms.Button()
         Me.TabPageExtras = New System.Windows.Forms.TabPage()
+        Me.Label22 = New System.Windows.Forms.Label()
         Me.TreeViewFiles = New TreeViewEnhanced.TreeViewEnhanced()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.ButtonFindFiles = New System.Windows.Forms.Button()
         Me.TabPageSuperBy = New System.Windows.Forms.TabPage()
+        Me.Label25 = New System.Windows.Forms.Label()
         Me.SuperByPatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
         Me.RestrictSupByToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.SupByButton = New System.Windows.Forms.Button()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.Label20 = New System.Windows.Forms.Label()
-        Me.Label22 = New System.Windows.Forms.Label()
-        Me.Label23 = New System.Windows.Forms.Label()
-        Me.Label24 = New System.Windows.Forms.Label()
-        Me.Label25 = New System.Windows.Forms.Label()
-        Me.Label26 = New System.Windows.Forms.Label()
-        Me.Label27 = New System.Windows.Forms.Label()
-        Me.Label28 = New System.Windows.Forms.Label()
-        Me.Label29 = New System.Windows.Forms.Label()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPageSuper.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
@@ -143,6 +143,15 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.TabIndex = 2
         Me.TabPagePatchDefn.Text = "Create Patch"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
+        '
+        'Label26
+        '
+        Me.Label26.AutoSize = True
+        Me.Label26.Location = New System.Drawing.Point(222, 22)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(221, 13)
+        Me.Label26.TabIndex = 47
+        Me.Label26.Text = "Files are copied from Changes and Extra Files"
         '
         'ButtonPopNotes
         '
@@ -387,6 +396,15 @@ Partial Class PatchFromTags
         Me.TabPageSuper.Text = "Supersedes"
         Me.TabPageSuper.UseVisualStyleBackColor = True
         '
+        'Label24
+        '
+        Me.Label24.AutoSize = True
+        Me.Label24.Location = New System.Drawing.Point(74, 77)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(215, 13)
+        Me.Label24.TabIndex = 54
+        Me.Label24.Text = "This patch will supersede all ticked patches."
+        '
         'SuperPatchesTreeView
         '
         Me.SuperPatchesTreeView.BackColor = System.Drawing.Color.Wheat
@@ -439,6 +457,15 @@ Partial Class PatchFromTags
         Me.TabPagePreReqs.TabIndex = 3
         Me.TabPagePreReqs.Text = "Pre-Requisites"
         Me.TabPagePreReqs.UseVisualStyleBackColor = True
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = True
+        Me.Label23.Location = New System.Drawing.Point(74, 77)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(342, 13)
+        Me.Label23.TabIndex = 53
+        Me.Label23.Text = "This patch will require all ticked patches to have been already installed."
         '
         'PreReqPatchesTreeView
         '
@@ -505,6 +532,33 @@ Partial Class PatchFromTags
         Me.TabPageTags.TabIndex = 0
         Me.TabPageTags.Text = "Tags"
         Me.TabPageTags.UseVisualStyleBackColor = True
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.Location = New System.Drawing.Point(222, 632)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(79, 13)
+        Me.Label28.TabIndex = 54
+        Me.Label28.Text = "AFTER this tag"
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Location = New System.Drawing.Point(222, 658)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(74, 13)
+        Me.Label29.TabIndex = 55
+        Me.Label29.Text = "UPTO this tag"
+        '
+        'Label27
+        '
+        Me.Label27.AutoSize = True
+        Me.Label27.Location = New System.Drawing.Point(74, 60)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(173, 13)
+        Me.Label27.TabIndex = 53
+        Me.Label27.Text = "Tick 2 tags - From Tag and To Tag"
         '
         'FindTagsButton
         '
@@ -601,6 +655,15 @@ Partial Class PatchFromTags
         Me.TabPageChanges.Text = "Changes"
         Me.TabPageChanges.UseVisualStyleBackColor = True
         '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(74, 77)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(198, 13)
+        Me.Label20.TabIndex = 52
+        Me.Label20.Text = "Ticked files will be included in the patch."
+        '
         'TreeViewChanges
         '
         Me.TreeViewChanges.BackColor = System.Drawing.Color.Wheat
@@ -685,6 +748,15 @@ Partial Class PatchFromTags
         Me.TabPageExtras.Text = "Extra Files"
         Me.TabPageExtras.UseVisualStyleBackColor = True
         '
+        'Label22
+        '
+        Me.Label22.AutoSize = True
+        Me.Label22.Location = New System.Drawing.Point(74, 77)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(198, 13)
+        Me.Label22.TabIndex = 53
+        Me.Label22.Text = "Ticked files will be included in the patch."
+        '
         'TreeViewFiles
         '
         Me.TreeViewFiles.BackColor = System.Drawing.Color.Wheat
@@ -726,6 +798,15 @@ Partial Class PatchFromTags
         Me.TabPageSuperBy.Text = "Superseded By"
         Me.TabPageSuperBy.UseVisualStyleBackColor = True
         '
+        'Label25
+        '
+        Me.Label25.AutoSize = True
+        Me.Label25.Location = New System.Drawing.Point(74, 77)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(250, 13)
+        Me.Label25.TabIndex = 55
+        Me.Label25.Text = "This patch will be superseded by all ticked patches."
+        '
         'SuperByPatchesTreeView
         '
         Me.SuperByPatchesTreeView.BackColor = System.Drawing.Color.Wheat
@@ -763,87 +844,6 @@ Partial Class PatchFromTags
         Me.Label19.TabIndex = 37
         Me.Label19.Text = "Superseded" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "By"
         Me.Label19.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'Label20
-        '
-        Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(74, 77)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(198, 13)
-        Me.Label20.TabIndex = 52
-        Me.Label20.Text = "Ticked files will be included in the patch."
-        '
-        'Label22
-        '
-        Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(74, 77)
-        Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(198, 13)
-        Me.Label22.TabIndex = 53
-        Me.Label22.Text = "Ticked files will be included in the patch."
-        '
-        'Label23
-        '
-        Me.Label23.AutoSize = True
-        Me.Label23.Location = New System.Drawing.Point(74, 77)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(342, 13)
-        Me.Label23.TabIndex = 53
-        Me.Label23.Text = "This patch will require all ticked patches to have been already installed."
-        '
-        'Label24
-        '
-        Me.Label24.AutoSize = True
-        Me.Label24.Location = New System.Drawing.Point(74, 77)
-        Me.Label24.Name = "Label24"
-        Me.Label24.Size = New System.Drawing.Size(215, 13)
-        Me.Label24.TabIndex = 54
-        Me.Label24.Text = "This patch will supersede all ticked patches."
-        '
-        'Label25
-        '
-        Me.Label25.AutoSize = True
-        Me.Label25.Location = New System.Drawing.Point(74, 77)
-        Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(250, 13)
-        Me.Label25.TabIndex = 55
-        Me.Label25.Text = "This patch will be superseded by all ticked patches."
-        '
-        'Label26
-        '
-        Me.Label26.AutoSize = True
-        Me.Label26.Location = New System.Drawing.Point(222, 22)
-        Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(221, 13)
-        Me.Label26.TabIndex = 47
-        Me.Label26.Text = "Files are copied from Changes and Extra Files"
-        '
-        'Label27
-        '
-        Me.Label27.AutoSize = True
-        Me.Label27.Location = New System.Drawing.Point(74, 60)
-        Me.Label27.Name = "Label27"
-        Me.Label27.Size = New System.Drawing.Size(173, 13)
-        Me.Label27.TabIndex = 53
-        Me.Label27.Text = "Tick 2 tags - From Tag and To Tag"
-        '
-        'Label28
-        '
-        Me.Label28.AutoSize = True
-        Me.Label28.Location = New System.Drawing.Point(222, 632)
-        Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(79, 13)
-        Me.Label28.TabIndex = 54
-        Me.Label28.Text = "AFTER this tag"
-        '
-        'Label29
-        '
-        Me.Label29.AutoSize = True
-        Me.Label29.Location = New System.Drawing.Point(222, 658)
-        Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(74, 13)
-        Me.Label29.TabIndex = 55
-        Me.Label29.Text = "UPTO this tag"
         '
         'PatchFromTags
         '
