@@ -152,6 +152,7 @@ Partial Class PatchFromTags
         Me.Label26.Size = New System.Drawing.Size(221, 13)
         Me.Label26.TabIndex = 47
         Me.Label26.Text = "Files are copied from Changes and Extra Files"
+        Me.Label26.Visible = False
         '
         'ButtonPopNotes
         '

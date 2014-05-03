@@ -43,6 +43,7 @@ Public Class PatchFromTags
         PatchTabControl.TabPages.Remove(TabPageSuper)
         PatchTabControl.TabPages.Remove(TabPagePatchDefn)
         FindButton.Visible = False
+        CopyChangesButton.Visible = False
 
     End Sub
     Private Sub ShowTabs()
@@ -120,10 +121,14 @@ Public Class PatchFromTags
                 If InStr(FilePath, Globals.DBRepoPathMask) = 0 Then
                     'Screened out repo files
                     Filename = Common.getLastSegment(FilePath, "\")
+                    Try
+                        My.Computer.FileSystem.CopyFile(FilePath, patch_dir & "\" & Filename, True)
 
-                    My.Computer.FileSystem.CopyFile(FilePath, patch_dir & "\" & Filename, True)
+                        filenames.Add(Filename)
+                    Catch ex As Exception
+                        MsgBox("Warning: File " & Filename & " could not be exported, but will be in the install file.  It may be a folder.  Deselect, then recreate Patch.")
 
-                    filenames.Add(Filename)
+                    End Try
                 End If
 
             Next
@@ -153,15 +158,28 @@ Public Class PatchFromTags
 
         FileIO.createFolderIfNotExists(PatchDirTextBox.Text)
 
+        'Get a list of selected changed files (filepaths) 
+        Dim changesFiles As Collection = New Collection
+        'Repo changes
+        'Retrieve checked node items from the TreeViewChanges as a collection of files.
+        TreeViewChanges.ReadCheckedLeafNodes(changesFiles)
+
+        'NO LONGER USED
         'Get a list of patchable files (filepaths) from the TreeViewPatchOrder to send to exportTagChanges and exportExtraFiles
-        Dim patchableFiles As Collection = New Collection
-        TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
+        'TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
         Dim filenames As Collection = Nothing
-        filenames = GitSharpFascade.exportTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask & SchemaComboBox.Text, patchableFiles, PatchDirTextBox.Text)
+        filenames = GitSharpFascade.exportTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask & SchemaComboBox.Text, changesFiles, PatchDirTextBox.Text)
 
+ 
         'Additional file exports 
-        exportExtraFiles(patchableFiles, filenames, PatchDirTextBox.Text)
+        Dim ExtraFiles As Collection = New Collection
+        'Extra files
+        'Retrieve checked node items from the TreeViewFiles as a collection of files.
+        TreeViewFiles.ReadCheckedLeafNodes(ExtraFiles)
+
+
+        exportExtraFiles(ExtraFiles, filenames, PatchDirTextBox.Text)
 
         Dim PreReqPatches As Collection = New Collection
         'Retrieve checked node items from the PreReqPatchesTreeView as a collection of patches.
@@ -178,41 +196,45 @@ Public Class PatchFromTags
 
         'Retrieve checked node items from the SuperByPatchesTreeView as a collection of patches.
         SuperByPatchesTreeView.ReadCheckedLeafNodes(SuperByPatches)
-
-        Dim filelist As Collection = New Collection
-        'Ok - no longer need the filenames list created by exportTagChanges and exportExtraFiles
-        'Instead we will rederive this list from TreeViewPatchOrder
-        TreeViewPatchOrder.ReadTags(filelist, False, False, False, False)
-
-
-        Dim checkedFilelist As Collection = New Collection
-        'List of files that have been ticked.
-        TreeViewPatchOrder.ReadTags(checkedFilelist, False, True, False, True)
+        Try
+            Dim filelist As Collection = New Collection
+            'Ok - no longer need the filenames list created by exportTagChanges and exportExtraFiles
+            'Instead we will rederive this list from TreeViewPatchOrder
+            TreeViewPatchOrder.ReadTags(filelist, False, False, False, False)
 
 
-        'Write the install script
-        writeInstallScript(PatchNameTextBox.Text, _
-                           Common.getFirstSegment(Globals.currentLongBranch, "/"), _
-                           SchemaComboBox.Text, _
-                           Globals.currentLongBranch, _
-                           Tag1TextBox.Text, _
-                           Tag2TextBox.Text, _
-                           SupIdTextBox.Text, _
-                           PatchDescTextBox.Text, _
-                           NoteTextBox.Text, _
-                           UsePatchAdminCheckBox.Checked, _
-                           RerunCheckBox.Checked, _
-                           filelist, _
-                           checkedFilelist, _
-                           PreReqPatches, _
-                           SuperPatches, _
-                           SuperByPatches, _
-                           PatchDirTextBox.Text, _
-                           PatchPathTextBox.Text, _
-                           TrackPromoCheckBox.Checked)
+            Dim checkedFilelist As Collection = New Collection
+            'List of files that have been ticked.
+            TreeViewPatchOrder.ReadTags(checkedFilelist, False, True, False, True)
 
-        Host.RunExplorer(PatchDirTextBox.Text)
 
+            'Write the install script
+            writeInstallScript(PatchNameTextBox.Text, _
+                               Common.getFirstSegment(Globals.currentLongBranch, "/"), _
+                               SchemaComboBox.Text, _
+                               Globals.currentLongBranch, _
+                               Tag1TextBox.Text, _
+                               Tag2TextBox.Text, _
+                               SupIdTextBox.Text, _
+                               PatchDescTextBox.Text, _
+                               NoteTextBox.Text, _
+                               UsePatchAdminCheckBox.Checked, _
+                               RerunCheckBox.Checked, _
+                               filelist, _
+                               checkedFilelist, _
+                               PreReqPatches, _
+                               SuperPatches, _
+                               SuperByPatches, _
+                               PatchDirTextBox.Text, _
+                               PatchPathTextBox.Text, _
+                               TrackPromoCheckBox.Checked)
+
+            Host.RunExplorer(PatchDirTextBox.Text)
+        Catch ex As ArgumentException
+            'MsgBox(ex.ToString)
+            MsgBox("There are duplicated filenames in the patch.  You may have selected an Extra File that is already in the Patch.")
+
+        End Try
 
 
     End Sub
@@ -685,9 +707,9 @@ Public Class PatchFromTags
         End If
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageExtras" Then
- 
-            FindExtras()
-
+            If TreeViewFiles.Nodes.Count = 0 Then
+                FindExtras()
+            End If
         End If
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePreReqs" Then
@@ -1199,4 +1221,14 @@ Public Class PatchFromTags
         'FindButton.Visible = True
         FindChanges()
     End Sub
+
+    Private Sub TreeViewChanges_Click(sender As Object, e As EventArgs) Handles TreeViewChanges.Click
+        TreeViewPatchOrder.Nodes.Clear()
+    End Sub
+
+    Private Sub TreeViewFile_Click(sender As Object, e As EventArgs) Handles TreeViewFiles.Click
+        TreeViewPatchOrder.Nodes.Clear()
+    End Sub
+
+
 End Class
