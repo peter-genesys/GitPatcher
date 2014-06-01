@@ -73,8 +73,11 @@
 
 
     Public Function DBRepoPathMask() As String
+        'Remove the leading \
+        'Append a trailing /
 
         Dim RepoPathMask As String = My.Settings.DBDirOffset.Substring(1) & "/"
+
         Return RepoPathMask
 
     End Function

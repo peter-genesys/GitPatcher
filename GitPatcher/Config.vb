@@ -52,4 +52,7 @@
         Mail.SendNotification("Test Email", "Just testing my config for email from GitPatcher")
     End Sub
  
+    Private Sub DBOffsetTextBox_TextChanged(sender As Object, e As EventArgs) Handles DBOffsetTextBox.TextChanged
+        DBOffsetTextBox.Text = Replace(DBOffsetTextBox.Text, "\", "/")
+    End Sub
 End Class
