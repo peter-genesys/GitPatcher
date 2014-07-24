@@ -7,6 +7,12 @@ Public Class PatchFromTags
     Dim gtag_base As String
 
 
+    Function unix_path(ipath As String) As String
+        Return Replace(ipath, "\", "/")
+    End Function
+
+
+
     Public Sub New(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String, itag_base As String)
         InitializeComponent()
 
@@ -339,8 +345,7 @@ Public Class PatchFromTags
 
         Dim l_install_list As String = Nothing
 
-
-
+   
 
         If targetFiles.Count > 0 Then
 
@@ -369,10 +374,9 @@ Public Class PatchFromTags
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
             If db_schema = "SYS" Then
-                'l_master_file.WriteLine("CONNECT APEX_SYS/&&APEX_SYS_password@&&database as sysdba")
-                l_master_file.WriteLine("CONNECT SYS/&&SYS_password@&&database as sysdba")
+                l_master_file.WriteLine("CONNECT &&SYS_user/&&SYS_password@&&database as sysdba")
             Else
-                l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database")
+                l_master_file.WriteLine("CONNECT &&" & db_schema & "_user/&&" & db_schema & "_password@&&database")
             End If
 
 
@@ -400,12 +404,12 @@ Public Class PatchFromTags
                     If ignoreErrorFiles.Contains(l_filename) Then
                         l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
                                               Chr(10) & "PROMPT " & l_filename & " " & _
-                                              Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";" & _
+                                              Chr(10) & unix_path("@" & groupPath & patch_name & "\" & l_filename & ";") & _
                                               Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
 
                     Else
                         l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
-                                              Chr(10) & "@" & groupPath & patch_name & "\" & l_filename & ";"
+                                              Chr(10) & unix_path("@" & groupPath & patch_name & "\" & l_filename & ";")
 
                     End If
 
@@ -539,7 +543,9 @@ Public Class PatchFromTags
 
             l_master_file.Close()
 
-
+            'Convert the file to unix
+            FileIO.FileDOStoUNIX(patchDir & "\" & l_master_filename)
+ 
         End If
 
 

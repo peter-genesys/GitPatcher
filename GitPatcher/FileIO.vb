@@ -177,4 +177,33 @@
     End Function
 
 
+    Shared Function convertDOStoUNIX(ByVal DOSstring As String) As String
+        convertDOStoUNIX = Replace(DOSstring, vbCrLf, vbLf, 1, Len(DOSstring), vbTextCompare)
+    End Function
+
+
+    Shared Function convertUNIXtoDOS(ByVal UNIXstring As String) As String
+        convertUNIXtoDOS = Replace(UNIXstring, vbLf, vbCrLf, 1, Len(UNIXstring), vbTextCompare)
+    End Function
+
+    Public Shared Sub FileDOStoUNIX(ByVal i_filename As String)
+        'Read the dos file into a string
+        Dim l_dos_file As New System.IO.StreamReader(i_filename)
+        Dim l_dos_text As String = l_dos_file.ReadToEnd
+        l_dos_file.Close()
+        'Delete the dos file
+        Logger.Dbg("Delete dos file: " & i_filename)
+        System.IO.File.Delete(i_filename)
+
+        'Convert to unix and add an extra EOL
+        Dim l_unix_text As String = convertDOStoUNIX(l_dos_text) & vbLf
+ 
+        Dim l_unix_file As New System.IO.StreamWriter(i_filename)
+        l_unix_file.Write(l_unix_text)
+        l_unix_file.Close()
+ 
+    End Sub
+
+
+
 End Class

@@ -71,9 +71,9 @@ Public Class CreatePatchCollection
         TagsCheckedListBox.Items.Clear()
         For Each tagname In GitSharpFascade.getTagList(Globals.currentRepo)
             tagseg = Common.getFirstSegment(tagname, "-")
-            If tagseg = tagsearch Then
-                TagsCheckedListBox.Items.Add(tagname)
-            End If
+            'If tagseg = tagsearch Then
+            TagsCheckedListBox.Items.Add(tagname)
+            'End If
         Next
 
         TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
