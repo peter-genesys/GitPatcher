@@ -404,12 +404,12 @@ Public Class PatchFromTags
                     If ignoreErrorFiles.Contains(l_filename) Then
                         l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
                                               Chr(10) & "PROMPT " & l_filename & " " & _
-                                              Chr(10) & unix_path("@" & groupPath & patch_name & "\" & l_filename & ";") & _
+                                              Chr(10) & unix_path("@" & branch_path & "\" & patch_name & "\" & l_filename & ";") & _
                                               Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
 
                     Else
                         l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
-                                              Chr(10) & unix_path("@" & groupPath & patch_name & "\" & l_filename & ";")
+                                              Chr(10) & unix_path("@" & branch_path & "\" & patch_name & "\" & l_filename & ";")
 
                     End If
 
@@ -438,10 +438,10 @@ Public Class PatchFromTags
             If use_patch_admin Then
 
                 l_patch_started = _
-                    "execute patch_admin.patch_installer.patch_started( -" _
+                    "execute &&PATCH_ADMIN_user..patch_installer.patch_started( -" _
         & Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
         & Chr(10) & " ,i_patch_type         => '" & patch_type & "' -" _
-        & Chr(10) & " ,i_db_schema          => '" & db_schema & "' -" _
+        & Chr(10) & " ,i_db_schema          => '" & "&&" & db_schema & "_user" & "' -" _
         & Chr(10) & " ,i_branch_name        => '" & branch_path & "' -" _
         & Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
         & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
@@ -469,7 +469,7 @@ Public Class PatchFromTags
                     Else
                         l_master_file.WriteLine("PROMPT")
                         l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
-                        l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_prereq( -")
+                        l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_prereq( -")
                         l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
                         l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
                     End If
@@ -478,7 +478,7 @@ Public Class PatchFromTags
 
                 l_prereq_short_name = My.Settings.MinPatch
                 l_master_file.WriteLine("PROMPT Ensure Patch Admin is late enough for this patch")
-                l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_prereq( -")
+                l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_prereq( -")
                 l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
                 l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
 
@@ -494,13 +494,13 @@ Public Class PatchFromTags
             If use_patch_admin Then
 
                 l_master_file.WriteLine("PROMPT Compiling objects in schema " & db_schema)
-                l_master_file.WriteLine("execute patch_admin.patch_invoker.compile_post_patch;")
+                l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_invoker.compile_post_patch;")
 
                 If db_schema = "PATCH_ADMIN" Then
                     l_master_file.WriteLine("--PATCH_ADMIN patches are likely to loose the session state of patch_installer, so complete using the patch_name parm.")
-                    l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
+                    l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
                 Else
-                    l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed;")
+                    l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.patch_completed;")
                 End If
 
                 Dim l_sup_short_name As String = Nothing
@@ -511,7 +511,7 @@ Public Class PatchFromTags
                     Else
                         l_master_file.WriteLine("PROMPT")
                         l_master_file.WriteLine("PROMPT Supersedes patch " & l_sup_short_name)
-                        l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")
+                        l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_supersedes( -")
                         l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
                         l_master_file.WriteLine(",i_supersedes_patch  => '" & l_sup_short_name & "' );")
                     End If
@@ -525,7 +525,7 @@ Public Class PatchFromTags
 
                         l_master_file.WriteLine("PROMPT")
                         l_master_file.WriteLine("PROMPT Superseded by patch " & l_sup_short_name)
-                        l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")
+                        l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_supersedes( -")
                         l_master_file.WriteLine("i_patch_name     => '" & l_sup_short_name & "' -")
                         l_master_file.WriteLine(",i_supersedes_patch  => '" & patch_name & "' );")
                     End If
