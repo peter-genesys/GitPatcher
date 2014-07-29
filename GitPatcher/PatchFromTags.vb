@@ -214,7 +214,7 @@ Public Class PatchFromTags
             TreeViewPatchOrder.ReadTags(checkedFilelist, False, True, False, True)
 
 
-            'Write the install script
+            'Write the install script - using patch admin
             writeInstallScript(PatchNameTextBox.Text, _
                                Common.getFirstSegment(Globals.currentLongBranch, "/"), _
                                SchemaComboBox.Text, _
@@ -224,7 +224,7 @@ Public Class PatchFromTags
                                SupIdTextBox.Text, _
                                PatchDescTextBox.Text, _
                                NoteTextBox.Text, _
-                               UsePatchAdminCheckBox.Checked, _
+                               True, _
                                RerunCheckBox.Checked, _
                                filelist, _
                                checkedFilelist, _
@@ -234,6 +234,27 @@ Public Class PatchFromTags
                                PatchDirTextBox.Text, _
                                PatchPathTextBox.Text, _
                                TrackPromoCheckBox.Checked)
+            'Write the install script lite - without patch admin
+            writeInstallScript(PatchNameTextBox.Text, _
+                               Common.getFirstSegment(Globals.currentLongBranch, "/"), _
+                               SchemaComboBox.Text, _
+                               Globals.currentLongBranch, _
+                               Tag1TextBox.Text, _
+                               Tag2TextBox.Text, _
+                               SupIdTextBox.Text, _
+                               PatchDescTextBox.Text, _
+                               NoteTextBox.Text, _
+                               False, _
+                               RerunCheckBox.Checked, _
+                               filelist, _
+                               checkedFilelist, _
+                               PreReqPatches, _
+                               SuperPatches, _
+                               SuperByPatches, _
+                               PatchDirTextBox.Text, _
+                               PatchPathTextBox.Text, _
+                               TrackPromoCheckBox.Checked)
+
 
             Host.RunExplorer(PatchDirTextBox.Text)
         Catch ex As ArgumentException
@@ -293,7 +314,8 @@ Public Class PatchFromTags
 
 
     Private Sub PatchNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchNameTextBox.TextChanged
-        PatchDirTextBox.Text = Globals.RootPatchDir & Replace(PatchNameTextBox.Text, "/", "\") & "\"
+        derivePatchDir()
+        'PatchDirTextBox.Text = Globals.RootPatchDir & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
 
@@ -350,7 +372,16 @@ Public Class PatchFromTags
         If targetFiles.Count > 0 Then
 
             Dim l_log_filename As String = patch_name & ".log"
-            Dim l_master_filename As String = "install.sql"
+            Dim l_master_filename As String = Nothing
+
+            If use_patch_admin Then
+                l_master_filename = "install.sql"
+            Else
+                l_master_filename = "install_lite.sql"
+            End If
+
+
+
             Dim l_master_file As New System.IO.StreamWriter(patchDir & "\" & l_master_filename)
 
             l_master_file.WriteLine("PROMPT LOG TO " & l_log_filename)
@@ -371,6 +402,9 @@ Public Class PatchFromTags
             l_master_file.WriteLine("WHENEVER SQLERROR EXIT FAILURE ROLLBACK")
             l_master_file.WriteLine("")
 
+            l_master_file.WriteLine("define patch_name = '" & patch_name & "'")
+            l_master_file.WriteLine("define patch_desc = '" & patch_desc.Replace("'", "''") & "'")
+
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
             If db_schema = "SYS" Then
@@ -381,6 +415,10 @@ Public Class PatchFromTags
 
 
             l_master_file.WriteLine("set serveroutput on;")
+
+
+
+
 
 
 
@@ -545,7 +583,7 @@ Public Class PatchFromTags
 
             'Convert the file to unix
             FileIO.FileDOStoUNIX(patchDir & "\" & l_master_filename)
- 
+
         End If
 
 
@@ -927,7 +965,15 @@ Public Class PatchFromTags
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecuteButton.Click
         'Use patch runner to execute with a master script.
-        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
+        Dim l_master_filename As String = Nothing
+
+        If UsePatchAdminCheckBox.Checked Then
+            l_master_filename = "install.sql"
+        Else
+            l_master_filename = "install_lite.sql"
+        End If
+ 
+        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\" & l_master_filename)
 
     End Sub
 

@@ -454,6 +454,17 @@ Public Class PatchRunner
 
         MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.currentTNS & "'")
 
+        Dim l_master_filename As String = Nothing
+
+        If UsePatchAdminCheckBox.Checked Then
+            l_master_filename = "install.sql"
+        Else
+            l_master_filename = "install_lite.sql"
+        End If
+
+
+
+
 
         Dim ReorderedChanges As Collection = New Collection
         TreeViewPatchOrder.ReadTags(ReorderedChanges, False, True, True, False)
@@ -463,7 +474,7 @@ Public Class PatchRunner
         Else
  
             For Each lpatch In ReorderedChanges
-                MasterScriptListBox.Items.Add("@" & lpatch & "\install.sql")
+                MasterScriptListBox.Items.Add("@" & lpatch & "\" & l_master_filename)
             Next
         End If
 

@@ -43,6 +43,7 @@ Partial Class PatchRunner
         Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
+        Me.UsePatchAdminCheckBox = New System.Windows.Forms.CheckBox()
         Me.PatchRunnerTabControl.SuspendLayout()
         Me.PatchSelectorTabPage.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -170,6 +171,7 @@ Partial Class PatchRunner
         '
         'OrderTabPage
         '
+        Me.OrderTabPage.Controls.Add(Me.UsePatchAdminCheckBox)
         Me.OrderTabPage.Controls.Add(Me.Label4)
         Me.OrderTabPage.Controls.Add(Me.Label2)
         Me.OrderTabPage.Controls.Add(Me.TreeViewPatchOrder)
@@ -256,6 +258,16 @@ Partial Class PatchRunner
         Me.ExecutePatchButton.Text = "Execute Patches"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
+        'UsePatchAdminCheckBox
+        '
+        Me.UsePatchAdminCheckBox.AutoSize = True
+        Me.UsePatchAdminCheckBox.Location = New System.Drawing.Point(156, 18)
+        Me.UsePatchAdminCheckBox.Name = "UsePatchAdminCheckBox"
+        Me.UsePatchAdminCheckBox.Size = New System.Drawing.Size(108, 17)
+        Me.UsePatchAdminCheckBox.TabIndex = 53
+        Me.UsePatchAdminCheckBox.Text = "Use Patch Admin"
+        Me.UsePatchAdminCheckBox.UseVisualStyleBackColor = True
+        '
         'PatchRunner
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -297,4 +309,5 @@ Partial Class PatchRunner
     Friend WithEvents ComboBoxPatchesFilter As System.Windows.Forms.ComboBox
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents AvailablePatchesTreeView As TreeViewEnhanced.TreeViewEnhanced
+    Friend WithEvents UsePatchAdminCheckBox As System.Windows.Forms.CheckBox
 End Class
