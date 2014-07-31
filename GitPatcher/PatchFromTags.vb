@@ -404,6 +404,7 @@ Public Class PatchFromTags
 
             l_master_file.WriteLine("define patch_name = '" & patch_name & "'")
             l_master_file.WriteLine("define patch_desc = '" & patch_desc.Replace("'", "''") & "'")
+            l_master_file.WriteLine("define patch_path = '" & branch_path & "/" & patch_name & "/" & "'")
 
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
