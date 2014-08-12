@@ -612,6 +612,8 @@ Public Class PatchFromTags
 
             'Prepopulate Tree with default category nodes.
             'This should become a method on TreeViewDraggableNodes2Levels
+
+            TreeViewPatchOrder.AddCategory("Initialise")
             TreeViewPatchOrder.AddCategory("Users")
             TreeViewPatchOrder.AddCategory("Tables")
             TreeViewPatchOrder.AddCategory("Sequences")
@@ -638,6 +640,7 @@ Public Class PatchFromTags
             TreeViewPatchOrder.AddCategory("Configuration")
             TreeViewPatchOrder.AddCategory("Jobs")
             TreeViewPatchOrder.AddCategory("Miscellaneous")
+            TreeViewPatchOrder.AddCategory("Finalise")
 
             For Each change In ChosenChanges
 
@@ -697,6 +700,11 @@ Public Class PatchFromTags
                         l_category = "Materialised Views"
                     Case "sql"
                         l_category = "Miscellaneous"
+                    Case "begin", "init"
+                        l_category = "Initialise"
+                    Case "end", "final"
+                        l_category = "Finalise"
+
                     Case Else
                         l_category = "Miscellaneous"
                 End Select
