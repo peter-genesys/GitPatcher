@@ -366,6 +366,9 @@ Public Class PatchFromTags
         Dim l_patch_started As String = Nothing
 
         Dim l_install_list As String = Nothing
+        Dim l_post_install_list As String = Nothing
+
+        Dim Category As String = Nothing
 
    
 
@@ -431,7 +434,7 @@ Public Class PatchFromTags
 
                 If Not l_filename.contains(".") Then
                     'No file extension so assume this is a Category heading.
-                    Dim Category As String = l_filename.ToUpper
+                    Category = l_filename.ToUpper
                     l_install_file_line = Chr(10) & "PROMPT " & Category
 
 
@@ -467,9 +470,15 @@ Public Class PatchFromTags
 
                 End If
 
-
-                l_install_list = l_install_list & Chr(10) & l_install_file_line
-
+                If Category = "POST COMPLETION" Then
+                    l_post_install_list = l_post_install_list & Chr(10) & l_install_file_line
+                ElseIf Category = "DO NOT EXECUTE" Then
+                    'Do nothing
+                Else
+                    'Add this file to the normal list
+                    l_install_list = l_install_list & Chr(10) & l_install_file_line
+                End If
+ 
             Next
 
 
@@ -579,7 +588,11 @@ Public Class PatchFromTags
 
             l_master_file.WriteLine("spool off;")
 
+            'Now we want to do the Post Completion node.
+            l_master_file.WriteLine(l_post_install_list)
 
+            l_master_file.WriteLine(Chr(10) & "COMMIT;")
+ 
             l_master_file.Close()
 
             'Convert the file to unix
@@ -641,7 +654,9 @@ Public Class PatchFromTags
             TreeViewPatchOrder.AddCategory("Jobs")
             TreeViewPatchOrder.AddCategory("Miscellaneous")
             TreeViewPatchOrder.AddCategory("Finalise")
-
+            TreeViewPatchOrder.AddCategory("Post Completion")
+            TreeViewPatchOrder.AddCategory("Do Not Execute")
+ 
             For Each change In ChosenChanges
 
                 Dim l_category As String = Nothing
@@ -704,9 +719,11 @@ Public Class PatchFromTags
                         l_category = "Initialise"
                     Case "end", "final"
                         l_category = "Finalise"
+                    Case "post"
+                        l_category = "Post Completion"
 
                     Case Else
-                        l_category = "Miscellaneous"
+                        l_category = "Do Not Execute"
                 End Select
 
                 Dim pathSeparator As String = Nothing
@@ -729,6 +746,9 @@ Public Class PatchFromTags
 
             TreeViewPatchOrder.PrependCategory("Initialise")
             TreeViewPatchOrder.AddCategory("Finalise")
+            TreeViewPatchOrder.AddCategory("Post Completion")
+            TreeViewPatchOrder.AddCategory("Do Not Execute")
+
 
         End If
 
