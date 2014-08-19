@@ -109,4 +109,5 @@ Public Class GitPatcher
 
         Host.executeSQLplus(Globals.currentRepo, Main.get_connect_string(Globals.currentParsingSchema, Globals.currentTNS), False)
     End Sub
+ 
 End Class

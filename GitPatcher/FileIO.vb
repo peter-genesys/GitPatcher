@@ -161,20 +161,57 @@
     End Sub
 
 
-    Public Shared Function FileList(ByVal strPath As String, ByVal strPattern As String, ByVal removePath As String) As Collection
+    Public Shared Function FileList(ByVal strPath As String, ByVal strPattern As String, ByVal removePath As String, Optional ByVal popKey As Boolean = False) As Collection
 
         Dim Filenames As Collection = New Collection
-        Dim strFolders() As String = System.IO.Directory.GetDirectories(strPath)
-        Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
+        Try
+            Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
 
-        'Add the files
-        For Each strFile As String In strFiles
-            Filenames.Add(strFile.Substring(removePath.Length))
-        Next
+            'Add the files
+            For Each strFile As String In strFiles
+                If popKey Then
+                    Filenames.Add(strFile.Substring(removePath.Length), strFile.Substring(removePath.Length).ToString)
+                Else
+                    Filenames.Add(strFile.Substring(removePath.Length))
+                End If
+
+                Logger.Note("Added File", strFile.Substring(removePath.Length))
+            Next
+
+
+        Catch e As System.IO.DirectoryNotFoundException
+            MsgBox("Path does not exist: " & strPath, MsgBoxStyle.Critical, "Dir does not exist")
+
+        End Try
+
 
         Return Filenames
 
     End Function
+
+    Public Shared Sub AppendFileList(ByVal strPath As String, ByVal strPattern As String, ByVal removePath As String, ByRef Filenames As Collection, Optional ByVal popKey As Boolean = False)
+
+        Try
+            Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
+
+            'Add the files
+            For Each strFile As String In strFiles
+                If popKey Then
+                    Filenames.Add(strFile.Substring(removePath.Length), strFile.Substring(removePath.Length).ToString)
+                Else
+                    Filenames.Add(strFile.Substring(removePath.Length))
+                End If
+
+                Logger.Note("Added File", strFile.Substring(removePath.Length))
+            Next
+        Catch e As System.IO.DirectoryNotFoundException
+            MsgBox("Path does not exist: " & strPath, MsgBoxStyle.Critical, "Dir does not exist")
+
+        End Try
+
+    End Sub
+
+
 
 
     Shared Function convertDOStoUNIX(ByVal DOSstring As String) As String

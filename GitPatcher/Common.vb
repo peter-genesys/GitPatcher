@@ -158,4 +158,14 @@
 
     End Sub
 
+
+    Public Shared Sub listCollection(ByVal i_collection As Collection, iTitle As String)
+
+        For Each lcollectionRow In i_collection
+            MsgBox(lcollectionRow.ToString, MsgBoxStyle.Information, iTitle)
+        Next
+
+    End Sub
+
+
 End Class

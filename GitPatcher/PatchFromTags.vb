@@ -1312,4 +1312,318 @@ Public Class PatchFromTags
     End Sub
 
 
+
+    Private Sub writeUnInstallScript(ByVal patch_name As String, _
+                                     ByVal patch_type As String, _
+                                  ByVal db_schema As String, _
+                                  ByVal branch_path As String, _
+                                  ByVal tag1_name As String, _
+                                  ByVal tag2_name As String, _
+                                  ByVal supplementary As String, _
+                                  ByVal patch_desc As String, _
+                                  ByVal note As String, _
+                                  ByVal use_patch_admin As Boolean, _
+                                  ByVal rerunnable As Boolean, _
+                                  ByRef targetFiles As Collection, _
+                                  ByRef ignoreErrorFiles As Collection, _
+                                  ByVal patchDir As String, _
+                                  ByVal groupPath As String, _
+                                  ByVal track_promotion As Boolean)
+
+
+
+        Dim l_file_extension As String = Nothing
+        Dim l_install_file_line As String = Nothing
+
+        Dim l_all_programs As String = Nothing
+
+
+        Dim l_show_error As String = "Show error;"
+
+        Dim rerunnable_yn As String = "N"
+        If rerunnable Then
+            rerunnable_yn = "Y"
+        End If
+
+
+        Dim track_promotion_yn As String = "N"
+        If track_promotion Then
+            track_promotion_yn = "Y"
+        End If
+
+
+
+        Dim l_patch_started As String = Nothing
+
+        Dim l_install_list As String = Nothing
+        Dim l_post_install_list As String = Nothing
+
+        Dim Category As String = Nothing
+
+
+
+        If targetFiles.Count > 0 Then
+
+            Dim l_log_filename As String = patch_name & "_uninstall.log"
+            Dim l_master_filename As String = Nothing
+
+            If use_patch_admin Then
+                l_master_filename = "uninstall.sql"
+            Else
+                l_master_filename = "uninstall_lite.sql"
+            End If
+
+
+
+            Dim l_master_file As New System.IO.StreamWriter(patchDir & "\" & l_master_filename)
+
+            l_master_file.WriteLine("PROMPT LOG TO " & l_log_filename)
+            l_master_file.WriteLine("PROMPT .")
+            l_master_file.WriteLine("SET AUTOCOMMIT OFF")
+            l_master_file.WriteLine("SET AUTOPRINT ON")
+            l_master_file.WriteLine("SET ECHO ON")
+            l_master_file.WriteLine("SET FEEDBACK ON")
+            l_master_file.WriteLine("SET PAUSE OFF")
+            l_master_file.WriteLine("SET SERVEROUTPUT ON SIZE 1000000")
+            l_master_file.WriteLine("SET TERMOUT ON")
+            l_master_file.WriteLine("SET TRIMOUT ON")
+            l_master_file.WriteLine("SET VERIFY ON")
+            l_master_file.WriteLine("SET trims on pagesize 3000")
+            l_master_file.WriteLine("SET auto off")
+            l_master_file.WriteLine("SET verify off echo off define on")
+            l_master_file.WriteLine("WHENEVER OSERROR EXIT FAILURE ROLLBACK")
+            l_master_file.WriteLine("WHENEVER SQLERROR EXIT FAILURE ROLLBACK")
+            l_master_file.WriteLine("")
+
+            l_master_file.WriteLine("define patch_name = '" & patch_name & "'")
+            l_master_file.WriteLine("define patch_desc = '" & patch_desc.Replace("'", "''") & "'")
+            l_master_file.WriteLine("define patch_path = '" & branch_path & "/" & patch_name & "/" & "'")
+
+            l_master_file.WriteLine("SPOOL " & l_log_filename)
+
+            If db_schema = "SYS" Then
+                l_master_file.WriteLine("CONNECT &&SYS_user/&&SYS_password@&&database as sysdba")
+            Else
+                l_master_file.WriteLine("CONNECT &&" & db_schema & "_user/&&" & db_schema & "_password@&&database")
+            End If
+
+
+            l_master_file.WriteLine("set serveroutput on;")
+
+ 
+
+            'Files have already been sorted into Categories, we only need to list the categories and spit out the files under each.
+            For Each l_filename In targetFiles
+
+
+                'Sort the files by files extention into lists.
+
+                If Not l_filename.contains(".") Then
+                    'No file extension so assume this is a Category heading.
+                    Category = l_filename.ToUpper
+                    l_install_file_line = Chr(10) & "PROMPT " & Category
+
+
+                Else
+
+                    l_file_extension = l_filename.Split(".")(1)
+
+                    'This is a releaseable file, so put an entry in the script.
+                    If ignoreErrorFiles.Contains(l_filename) Then
+                        l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
+                                              Chr(10) & "PROMPT " & l_filename & " " & _
+                                              Chr(10) & unix_path("@" & branch_path & "\" & patch_name & "\" & l_filename & ";") & _
+                                              Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
+
+                    Else
+                        l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
+                                              Chr(10) & unix_path("@" & branch_path & "\" & patch_name & "\" & l_filename & ";")
+
+                    End If
+ 
+
+
+                    If String.IsNullOrEmpty(l_all_programs) Then
+                        l_all_programs = l_filename
+                    Else
+                        l_all_programs = l_all_programs & "' -" & Chr(10) & "||'," & l_filename
+                    End If
+
+
+                End If
+
+                'Add this file to the normal list
+                l_install_list = l_install_list & Chr(10) & l_install_file_line
+
+
+            Next
+
+
+
+            '    If use_patch_admin Then
+
+            '        l_patch_started = _
+            '            "execute &&PATCH_ADMIN_user..patch_installer.patch_started( -" _
+            '& Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
+            '& Chr(10) & " ,i_patch_type         => '" & patch_type & "' -" _
+            '& Chr(10) & " ,i_db_schema          => '" & "&&" & db_schema & "_user" & "' -" _
+            '& Chr(10) & " ,i_branch_name        => '" & branch_path & "' -" _
+            '& Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
+            '& Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
+            '& Chr(10) & " ,i_supplementary      => '" & supplementary & "' -" _
+            '& Chr(10) & " ,i_patch_desc         => '" & patch_desc.Replace("'", "''") & "' -" _
+            '& Chr(10) & " ,i_patch_componants   => '" & l_all_programs & "' -" _
+            '& Chr(10) & " ,i_patch_create_date  => '" & DateString & "' -" _
+            '& Chr(10) & " ,i_patch_created_by   => '" & Environment.UserName & "' -" _
+            '& Chr(10) & " ,i_note               => '" & note.Replace("'", "''") & "' -" _
+            '& Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
+            '& Chr(10) & " ,i_remove_prereqs     => 'N' -" _
+            '& Chr(10) & " ,i_remove_sups        => 'N' -" _
+            '& Chr(10) & " ,i_track_promotion    => '" & track_promotion_yn & "'); " _
+            '& Chr(10)
+
+
+            '        l_master_file.WriteLine(l_patch_started)
+
+
+            '        Dim l_prereq_short_name As String = Nothing
+            '        For Each l_prereq_patch In prereq_patches
+            '            l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
+            '            If l_prereq_short_name = PatchNameTextBox.Text Then
+            '                MsgBox("A Patch may NOT have itself as a prerequisite, skipping Prerequisite Patch: " & l_prereq_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
+            '            Else
+            '                l_master_file.WriteLine("PROMPT")
+            '                l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
+            '                l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_prereq( -")
+            '                l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
+            '                l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
+            '            End If
+
+            '        Next
+
+            '        l_prereq_short_name = My.Settings.MinPatch
+            '        l_master_file.WriteLine("PROMPT Ensure Patch Admin is late enough for this patch")
+            '        l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_prereq( -")
+            '        l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
+            '        l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
+
+            '    End If
+
+            l_master_file.WriteLine("select user||'@'||global_name Connection from global_name;")
+
+            'Write the list of files to execute.
+            l_master_file.WriteLine(l_install_list)
+
+            l_master_file.WriteLine(Chr(10) & "COMMIT;")
+
+            'If use_patch_admin Then
+
+            '    l_master_file.WriteLine("PROMPT Compiling objects in schema " & db_schema)
+            '    l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_invoker.compile_post_patch;")
+
+            '    If db_schema = "PATCH_ADMIN" Then
+            '        l_master_file.WriteLine("--PATCH_ADMIN patches are likely to loose the session state of patch_installer, so complete using the patch_name parm.")
+            '        l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
+            '    Else
+            '        l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.patch_completed;")
+            '    End If
+
+            '    Dim l_sup_short_name As String = Nothing
+            '    For Each l_sup_patch In supersedes_patches
+            '        l_sup_short_name = Common.getLastSegment(l_sup_patch, "\")
+            '        If l_sup_short_name = PatchNameTextBox.Text Then
+            '            MsgBox("A Patch may NOT supersede itself, skipping Supersedes Patch: " & l_sup_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
+            '        Else
+            '            l_master_file.WriteLine("PROMPT")
+            '            l_master_file.WriteLine("PROMPT Supersedes patch " & l_sup_short_name)
+            '            l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_supersedes( -")
+            '            l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
+            '            l_master_file.WriteLine(",i_supersedes_patch  => '" & l_sup_short_name & "' );")
+            '        End If
+            '    Next
+
+            '    For Each l_sup_patch In superseded_by_patches
+            '        l_sup_short_name = Common.getLastSegment(l_sup_patch, "\")
+            '        If l_sup_short_name = PatchNameTextBox.Text Then
+            '            MsgBox("A Patch may NOT be superseded by itself, skipping Superseded By Patch: " & l_sup_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
+            '        Else
+
+            '            l_master_file.WriteLine("PROMPT")
+            '            l_master_file.WriteLine("PROMPT Superseded by patch " & l_sup_short_name)
+            '            l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_supersedes( -")
+            '            l_master_file.WriteLine("i_patch_name     => '" & l_sup_short_name & "' -")
+            '            l_master_file.WriteLine(",i_supersedes_patch  => '" & patch_name & "' );")
+            '        End If
+            '    Next
+
+            'End If
+
+            l_master_file.WriteLine("COMMIT;")
+
+            l_master_file.WriteLine("PROMPT ")
+            l_master_file.WriteLine("PROMPT " & l_master_filename & " - COMPLETED.")
+
+            l_master_file.WriteLine("spool off;")
+
+
+
+            l_master_file.Close()
+
+            'Convert the file to unix
+            FileIO.FileDOStoUNIX(patchDir & "\" & l_master_filename)
+
+        End If
+
+
+    End Sub
+
+
+
+    Private Sub AddUninstallButton_Click(sender As Object, e As EventArgs) Handles AddUninstallButton.Click
+        'Find .del files and .drop files and call them from a new uninstall.sql
+
+        Dim ignoreErrorFiles As Collection = New Collection
+        'Will ignore errors form the Drop files
+        ignoreErrorFiles = FileIO.FileList(PatchDirTextBox.Text, "*.drop", PatchDirTextBox.Text, True)
+
+        'Common.listCollection(ignoreErrorFiles, "ignore files")
+
+        'List the *.drop files 3 times, they will run 3 times.
+        Dim uninstallFiles As Collection = New Collection
+
+        uninstallFiles = FileIO.FileList(PatchDirTextBox.Text, "*.drop", PatchDirTextBox.Text)
+        FileIO.AppendFileList(PatchDirTextBox.Text, "*.drop", PatchDirTextBox.Text, uninstallFiles)
+        FileIO.AppendFileList(PatchDirTextBox.Text, "*.drop", PatchDirTextBox.Text, uninstallFiles)
+ 
+        'List the del files once.
+        FileIO.AppendFileList(PatchDirTextBox.Text, "*.del", PatchDirTextBox.Text, uninstallFiles)
+  
+        'Common.listCollection(uninstallFiles, "del files")
+   
+        'Write uninstall.sql
+
+ 
+        'Write the uninstall script lite - without patch admin
+        writeUnInstallScript(PatchNameTextBox.Text, _
+                           Common.getFirstSegment(Globals.currentLongBranch, "/"), _
+                           SchemaComboBox.Text, _
+                           Globals.currentLongBranch, _
+                           Tag1TextBox.Text, _
+                           Tag2TextBox.Text, _
+                           SupIdTextBox.Text, _
+                           PatchDescTextBox.Text, _
+                           NoteTextBox.Text, _
+                           False, _
+                           RerunCheckBox.Checked, _
+                           uninstallFiles, _
+                           ignoreErrorFiles, _
+                           PatchDirTextBox.Text, _
+                           PatchPathTextBox.Text, _
+                           TrackPromoCheckBox.Checked)
+
+
+
+
+
+    End Sub
 End Class
