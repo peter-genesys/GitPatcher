@@ -108,5 +108,16 @@ VM</Value>
     <Setting Name="DBRepoPathMask" Type="System.String" Scope="User">
       <Value Profile="(Default)">database</Value>
     </Setting>
+    <Setting Name="GitPatcherSettingDBConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=C:\SQLServerCompact\GitPatcherSettingDB.sdf&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;Microsoft.SqlServerCe.Client.4.0&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=C:\SQLServerCompact\GitPatcherSettingDB.sdf</Value>
+    </Setting>
+    <Setting Name="PatchExportPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">F:\patchbuild</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

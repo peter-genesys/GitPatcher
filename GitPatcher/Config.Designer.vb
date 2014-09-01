@@ -44,6 +44,7 @@ Partial Class Config
         Dim Label21 As System.Windows.Forms.Label
         Dim Label22 As System.Windows.Forms.Label
         Dim Label23 As System.Windows.Forms.Label
+        Dim Label24 As System.Windows.Forms.Label
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Config))
         Me.MailTabPage = New System.Windows.Forms.TabPage()
         Me.TestMailButton = New System.Windows.Forms.Button()
@@ -52,6 +53,7 @@ Partial Class Config
         Me.SMTPhostTextBox = New System.Windows.Forms.TextBox()
         Me.RecipientTextBox = New System.Windows.Forms.TextBox()
         Me.AppsTabPage = New System.Windows.Forms.TabPage()
+        Me.JiraProjectTextBox = New System.Windows.Forms.TextBox()
         Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.ApplicationsTextBox = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -76,8 +78,8 @@ Partial Class Config
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
         Me.ExtrasTabPage = New System.Windows.Forms.TabPage()
         Me.ExtrasDirListTextBox = New System.Windows.Forms.TextBox()
+        Me.PatchExportPathTextBox = New System.Windows.Forms.TextBox()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.JiraProjectTextBox = New System.Windows.Forms.TextBox()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -99,6 +101,7 @@ Partial Class Config
         Label21 = New System.Windows.Forms.Label()
         Label22 = New System.Windows.Forms.Label()
         Label23 = New System.Windows.Forms.Label()
+        Label24 = New System.Windows.Forms.Label()
         Me.MailTabPage.SuspendLayout()
         Me.AppsTabPage.SuspendLayout()
         Me.PatchTabPage.SuspendLayout()
@@ -289,6 +292,15 @@ Partial Class Config
         Label22.TabIndex = 10
         Label22.Text = "Extra Files Search Dirs Relative Path:"
         '
+        'Label23
+        '
+        Label23.AutoSize = True
+        Label23.Location = New System.Drawing.Point(347, 16)
+        Label23.Name = "Label23"
+        Label23.Size = New System.Drawing.Size(62, 13)
+        Label23.TabIndex = 24
+        Label23.Text = "Jira Project:"
+        '
         'MailTabPage
         '
         Me.MailTabPage.Controls.Add(Me.TestMailButton)
@@ -302,7 +314,7 @@ Partial Class Config
         Me.MailTabPage.Controls.Add(Label11)
         Me.MailTabPage.Location = New System.Drawing.Point(4, 22)
         Me.MailTabPage.Name = "MailTabPage"
-        Me.MailTabPage.Size = New System.Drawing.Size(534, 280)
+        Me.MailTabPage.Size = New System.Drawing.Size(534, 325)
         Me.MailTabPage.TabIndex = 5
         Me.MailTabPage.Text = "Mail"
         Me.MailTabPage.UseVisualStyleBackColor = True
@@ -361,10 +373,18 @@ Partial Class Config
         Me.AppsTabPage.Location = New System.Drawing.Point(4, 22)
         Me.AppsTabPage.Name = "AppsTabPage"
         Me.AppsTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.AppsTabPage.Size = New System.Drawing.Size(534, 280)
+        Me.AppsTabPage.Size = New System.Drawing.Size(534, 325)
         Me.AppsTabPage.TabIndex = 4
         Me.AppsTabPage.Text = "Apps"
         Me.AppsTabPage.UseVisualStyleBackColor = True
+        '
+        'JiraProjectTextBox
+        '
+        Me.JiraProjectTextBox.Location = New System.Drawing.Point(350, 32)
+        Me.JiraProjectTextBox.Multiline = True
+        Me.JiraProjectTextBox.Name = "JiraProjectTextBox"
+        Me.JiraProjectTextBox.Size = New System.Drawing.Size(75, 229)
+        Me.JiraProjectTextBox.TabIndex = 25
         '
         'AppCodeTextBox
         '
@@ -409,6 +429,8 @@ Partial Class Config
         '
         'PatchTabPage
         '
+        Me.PatchTabPage.Controls.Add(Me.PatchExportPathTextBox)
+        Me.PatchTabPage.Controls.Add(Label24)
         Me.PatchTabPage.Controls.Add(Me.DBOffsetTextBox)
         Me.PatchTabPage.Controls.Add(Label21)
         Me.PatchTabPage.Controls.Add(Me.GitExeTextBox)
@@ -424,7 +446,7 @@ Partial Class Config
         Me.PatchTabPage.Location = New System.Drawing.Point(4, 22)
         Me.PatchTabPage.Name = "PatchTabPage"
         Me.PatchTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.PatchTabPage.Size = New System.Drawing.Size(534, 280)
+        Me.PatchTabPage.Size = New System.Drawing.Size(534, 325)
         Me.PatchTabPage.TabIndex = 1
         Me.PatchTabPage.Text = "Paths"
         Me.PatchTabPage.UseVisualStyleBackColor = True
@@ -486,7 +508,7 @@ Partial Class Config
         Me.DBTabPage.Location = New System.Drawing.Point(4, 22)
         Me.DBTabPage.Name = "DBTabPage"
         Me.DBTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.DBTabPage.Size = New System.Drawing.Size(534, 280)
+        Me.DBTabPage.Size = New System.Drawing.Size(534, 325)
         Me.DBTabPage.TabIndex = 3
         Me.DBTabPage.Text = "Databases"
         Me.DBTabPage.UseVisualStyleBackColor = True
@@ -551,7 +573,7 @@ Partial Class Config
         Me.TabPageGitRepo.Location = New System.Drawing.Point(4, 22)
         Me.TabPageGitRepo.Name = "TabPageGitRepo"
         Me.TabPageGitRepo.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageGitRepo.Size = New System.Drawing.Size(534, 280)
+        Me.TabPageGitRepo.Size = New System.Drawing.Size(534, 325)
         Me.TabPageGitRepo.TabIndex = 0
         Me.TabPageGitRepo.Text = "Git Repos"
         Me.TabPageGitRepo.UseVisualStyleBackColor = True
@@ -575,7 +597,7 @@ Partial Class Config
         Me.ConfigTabs.Location = New System.Drawing.Point(12, 28)
         Me.ConfigTabs.Name = "ConfigTabs"
         Me.ConfigTabs.SelectedIndex = 0
-        Me.ConfigTabs.Size = New System.Drawing.Size(542, 306)
+        Me.ConfigTabs.Size = New System.Drawing.Size(542, 351)
         Me.ConfigTabs.TabIndex = 0
         '
         'ExtrasTabPage
@@ -585,7 +607,7 @@ Partial Class Config
         Me.ExtrasTabPage.Location = New System.Drawing.Point(4, 22)
         Me.ExtrasTabPage.Name = "ExtrasTabPage"
         Me.ExtrasTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.ExtrasTabPage.Size = New System.Drawing.Size(534, 280)
+        Me.ExtrasTabPage.Size = New System.Drawing.Size(534, 325)
         Me.ExtrasTabPage.TabIndex = 6
         Me.ExtrasTabPage.Text = "Extras"
         Me.ExtrasTabPage.UseVisualStyleBackColor = True
@@ -598,32 +620,31 @@ Partial Class Config
         Me.ExtrasDirListTextBox.Size = New System.Drawing.Size(444, 232)
         Me.ExtrasDirListTextBox.TabIndex = 11
         '
+        'PatchExportPathTextBox
+        '
+        Me.PatchExportPathTextBox.Location = New System.Drawing.Point(8, 286)
+        Me.PatchExportPathTextBox.Name = "PatchExportPathTextBox"
+        Me.PatchExportPathTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.PatchExportPathTextBox.TabIndex = 19
+        '
+        'Label24
+        '
+        Label24.AutoSize = True
+        Label24.Location = New System.Drawing.Point(5, 270)
+        Label24.Name = "Label24"
+        Label24.Size = New System.Drawing.Size(115, 13)
+        Label24.TabIndex = 18
+        Label24.Text = "Patch Export Full Path:"
+        '
         'MySettingsBindingSource
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
-        '
-        'JiraProjectTextBox
-        '
-        Me.JiraProjectTextBox.Location = New System.Drawing.Point(350, 32)
-        Me.JiraProjectTextBox.Multiline = True
-        Me.JiraProjectTextBox.Name = "JiraProjectTextBox"
-        Me.JiraProjectTextBox.Size = New System.Drawing.Size(75, 229)
-        Me.JiraProjectTextBox.TabIndex = 25
-        '
-        'Label23
-        '
-        Label23.AutoSize = True
-        Label23.Location = New System.Drawing.Point(347, 16)
-        Label23.Name = "Label23"
-        Label23.Size = New System.Drawing.Size(62, 13)
-        Label23.TabIndex = 24
-        Label23.Text = "Jira Project:"
         '
         'Config
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(560, 341)
+        Me.ClientSize = New System.Drawing.Size(560, 391)
         Me.Controls.Add(Me.ConfigTabs)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Config"
@@ -678,4 +699,5 @@ Partial Class Config
     Friend WithEvents ExtrasTabPage As System.Windows.Forms.TabPage
     Friend WithEvents ExtrasDirListTextBox As System.Windows.Forms.TextBox
     Friend WithEvents JiraProjectTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents PatchExportPathTextBox As System.Windows.Forms.TextBox
 End Class

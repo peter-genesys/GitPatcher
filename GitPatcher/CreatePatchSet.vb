@@ -54,7 +54,7 @@ Public Class CreatePatchCollection
         Findtags()
 
         TagFilterCheckBox.Checked = True
-        ComboBoxPatchesFilter.SelectedItem = "Unapplied"
+        ComboBoxPatchesFilter.SelectedItem = "All" '"Unapplied"
 
         Me.Text = "CreatePatchSet - Creating a " & iCreatePatchType & " for " & Globals.currentTNS
 
@@ -148,18 +148,13 @@ Public Class CreatePatchCollection
             patchMatch = False
 
             If (String.IsNullOrEmpty(pFindPatchTypes) Or Common.stringContainsSetMember(availablePatch, pFindPatchTypes, ",")) And _
-                Common.stringContainsSetMember(availablePatch, pFindPatchFilters, ",") Then
+                (Not Me.AppFilterCheckBox.Checked Or Common.stringContainsSetMember(availablePatch, pFindPatchFilters, ",")) Then
                 patchMatch = True
             End If
 
             If TagFilterCheckBox.Checked Then
                 patchTagged = False
-
-                'SHOULD BE EQUIV TO LOOP BELOW, BUT DOES NOT WORK.
-                'If taggedPatches.Contains(availablePatch) Then
-                '    patchTagged = True
-                'End If
-
+ 
                 For Each change In taggedPatches
                     If change = availablePatch Then
                         patchTagged = True
@@ -306,15 +301,15 @@ Public Class CreatePatchCollection
         For Each l_path In targetFiles
 
             Dim l_filename As String = Common.getLastSegment(l_path, "/")
-            Dim l_dos_path As String = Replace(l_path, "/", "\")
+            'Dim l_dos_path As String = Replace(l_path, "/", "\")
 
             If iSkipFiles.Contains(l_path) Then
                 l_install_file_line = Chr(10) & "PROMPT SKIPPED FOR TESTING " & l_filename & " " & _
-                                      Chr(10) & "--@" & l_dos_path & "\install.sql;"
+                                      Chr(10) & "--@" & l_path & ";"
 
             Else
                 l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
-                                      Chr(10) & "@" & l_dos_path & "\install.sql;"
+                                      Chr(10) & "@" & l_path & ";"
 
             End If
 
@@ -446,6 +441,76 @@ Public Class CreatePatchCollection
 
 
     End Sub
+
+
+
+    Shared Sub exportPatchSet(ByVal patch_name As String, _
+                                  ByVal patch_type As String, _
+                                  ByVal db_schema As String, _
+                                  ByVal branch_path As String, _
+                                  ByVal tag1_name As String, _
+                                  ByVal tag2_name As String, _
+                                  ByVal supplementary As String, _
+                                  ByVal patch_desc As String, _
+                                  ByVal note As String, _
+                                  ByVal use_patch_admin As Boolean, _
+                                  ByVal rerunnable As Boolean, _
+                                  ByRef targetFiles As Collection, _
+                                  ByVal patchDir As String, _
+                                  ByVal patchExportDir As String, _
+                                  ByVal patchSetPath As String, _
+                                  ByVal groupPath As String, _
+                                  ByVal track_promotion As Boolean)
+
+ 
+      
+        For Each l_path In targetFiles
+
+        
+            Dim l_source_path As String = Globals.RootPatchDir & l_path
+            Dim l_target_path As String = patchExportDir & "\" & l_path
+
+
+            FileIO.createFolderIfNotExists(l_target_path)
+
+            Dim objfso = CreateObject("Scripting.FileSystemObject")
+            Dim objFolder As Object
+            Dim objFile As Object
+
+            objFolder = objfso.GetFolder(l_source_path)
+            For Each objFile In objFolder.Files
+                objfso.CopyFile(l_source_path & "\" & objFile.Name, l_target_path & "\" & objFile.Name, True)
+                'Info("using reference file " & objFile.Name)
+            Next
+
+            'Copy README.txt
+            Try
+                objfso.CopyFile(Globals.RootPatchDir & "README.txt", patchExportDir & "\README.txt", True)
+            Catch ex As Exception
+                MsgBox("No README.txt found, to copy to the patchset.")
+
+            End Try
+
+ 
+
+        Next
+
+        If targetFiles.Count > 0 Then
+ 
+            Dim l_master_filename As String = "install_patchset_lite.sql"
+            Dim l_master_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_filename)
+
+            l_master_file.WriteLine("@" & patchSetPath & "\" & "install_lite.sql")
+           
+            l_master_file.Close()
+
+
+        End If
+
+
+    End Sub
+
+
 
     Private Sub CopySelectedChanges()
  
@@ -672,9 +737,9 @@ Public Class CreatePatchCollection
     Public Shared Sub createCollectionProcess(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String, iTargetDB As String)
 
         Dim lcurrentDB As String = Globals.currentDB
-        Dim l_app_version = InputBox("Please enter a new version for " & Globals.currentAppCode & " in the format: 2.17.01", "New " & Globals.currentApplication & " Version")
+        Dim l_app_version = InputBox("Please enter Patchset Code for " & Globals.currentAppCode & "", "New " & Globals.currentApplication & " Version")
 
-        l_app_version = Globals.currentAppCode & "-" & l_app_version
+        'l_app_version = Globals.currentAppCode & "-" & l_app_version
 
         Dim newBranch As String = "release/" & iCreatePatchType & "/" & Globals.currentAppCode & "/" & l_app_version
 
@@ -705,6 +770,7 @@ Public Class CreatePatchCollection
         createPatchSetProgress.addStep("Release to ISUAT", False)
         createPatchSetProgress.addStep("Release to ISPROD", False)
         createPatchSetProgress.addStep("Revert current DB to : " & lcurrentDB)
+        'createPatchSetProgress.addStep("Export Patchset")
         'Import
 
         createPatchSetProgress.Show()
@@ -830,4 +896,51 @@ Public Class CreatePatchCollection
 
   
  
+    Private Sub ExportButton_Click(sender As Object, e As EventArgs) Handles ExportButton.Click
+
+        Dim l_patch_export_dir As String = Globals.PatchExportDir & "\" & Common.getLastSegment(Globals.currentRepo, "\") & My.Settings.PatchDirOffset
+ 
+
+        'Remove previous patch set
+        Try
+            FileIO.confirmDeleteFolder(l_patch_export_dir)
+        Catch cancelled_delete As Halt
+            MsgBox("Warning: Now overwriting previously exported patchset")
+        End Try
+
+
+        FileIO.createFolderIfNotExists(l_patch_export_dir)
+ 
+        Dim patchableFiles As Collection = New Collection
+        TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
+
+        'Add the PatchSet itself to the list.
+        patchableFiles.Add(PatchPathTextBox.Text & PatchNameTextBox.Text, _
+                           PatchPathTextBox.Text & PatchNameTextBox.Text)
+
+ 
+
+        'Export each patch, and create the patch_install.sql
+        exportPatchSet(PatchNameTextBox.Text, _
+                           pCreatePatchType, _
+                           "PATCH_ADMIN", _
+                           Globals.currentLongBranch, _
+                           Tag1TextBox.Text, _
+                           Tag2TextBox.Text, _
+                           SupIdTextBox.Text, _
+                           PatchDescTextBox.Text, _
+                           NoteTextBox.Text, _
+                           UsePatchAdminCheckBox.Checked, _
+                           RerunCheckBox.Checked, _
+                           patchableFiles, _
+                           PatchDirTextBox.Text, _
+                           l_patch_export_dir, _
+                           PatchPathTextBox.Text & PatchNameTextBox.Text, _
+                           PatchPathTextBox.Text, _
+                           TrackPromoCheckBox.Checked)
+
+        Host.RunExplorer(l_patch_export_dir)
+
+
+    End Sub
 End Class

@@ -17,6 +17,8 @@
         ApexOffsetTextBox.DataBindings.Add("Text", My.Settings, "ApexDirOffset")
         DBOffsetTextBox.DataBindings.Add("Text", My.Settings, "DBDirOffset")
 
+
+
         'Extras
         ExtrasDirListTextBox.DataBindings.Add("Text", My.Settings, "ExtrasDirList")
 
@@ -24,6 +26,9 @@
         OJDBCjarFileTextBox.DataBindings.Add("Text", My.Settings, "JDBCjar")
         SQLpathTextBox.DataBindings.Add("Text", My.Settings, "SQLpath")
         GitExeTextBox.DataBindings.Add("Text", My.Settings, "GITpath")
+
+        PatchExportPathTextBox.DataBindings.Add("Text", My.Settings, "PatchExportPath")
+
 
         'Apps
         ApplicationsTextBox.DataBindings.Add("Text", My.Settings, "ApplicationsList")   'Descriptions for Applications Eg Prism

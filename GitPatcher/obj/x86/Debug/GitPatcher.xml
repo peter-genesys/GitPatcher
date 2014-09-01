@@ -6,7 +6,11 @@ GitPatcher
 </name>
 </assembly>
 <members>
-<member name="P:GitPatcher.My.Resources.Resources.ResourceManager">
+<member name="T:GitPatcher.GitPatcherSettingDBDataSet">
+	<summary>
+Represents a strongly typed in-memory cache of data.
+</summary>
+</member><member name="P:GitPatcher.My.Resources.Resources.ResourceManager">
 	<summary>
   Returns the cached ResourceManager instance used by this class.
 </summary>

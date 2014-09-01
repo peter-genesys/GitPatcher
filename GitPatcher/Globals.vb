@@ -82,6 +82,16 @@
 
     End Function
 
+
+    Public Function PatchExportDir() As String
+
+
+        Return My.Settings.PatchExportPath
+
+    End Function
+
+
+
  
 
     Public Function currentApplication() As String

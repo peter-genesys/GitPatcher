@@ -32,16 +32,25 @@
     End Function
 
 
-    Shared Sub createFolderIfNotExists(ByVal i_path)
-
+    Shared Sub createFolderIfNotExists(ByVal i_path As String, Optional ByVal i_sep As String = "\")
+        'Iteratively creates a full patch starting with Drive:\
+        Dim l_incremental_path As String = Nothing
+        Dim l_path_folders() As String = i_path.Split(i_sep)
+ 
         ' Create the File System Object
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
 
-        ' Check that the patch_dir folder exists
-        If Not objFSO.FolderExists(i_path) Then
-            objFSO.CreateFolder(i_path)
-        End If
+        For Each l_folder In l_path_folders
 
+            l_incremental_path = l_incremental_path & l_folder & i_sep
+
+            ' Check that the patch_dir folder exists
+            If Not objFSO.FolderExists(l_incremental_path) Then
+                objFSO.CreateFolder(l_incremental_path)
+            End If
+        Next
+
+         
 
     End Sub
 
@@ -66,6 +75,7 @@
         ' Check that the patch_dir folder exists
         If objFSO.FolderExists(i_path) Then
             Confirm("Delete this folder: " & i_path, "Confirm Folder Delete")
+            objFSO.DeleteFolder(i_path)
         End If
 
 
