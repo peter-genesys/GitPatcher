@@ -1,5 +1,22 @@
 ﻿Public Class Host
 
+ 
+
+    Public Shared Sub run_shell(ByVal i_filename, ByVal i_path, ByVal i_arguments, ByVal i_WorkingDirectory)
+        Dim envSetup As ProcessStartInfo = New ProcessStartInfo
+        Dim path As String = envSetup.EnvironmentVariables.Item("PATH")
+        envSetup.EnvironmentVariables("PATH") = i_path & ";" & path
+        envSetup.FileName = i_filename
+        envSetup.Arguments = i_arguments
+        envSetup.WorkingDirectory = i_WorkingDirectory
+        envSetup.UseShellExecute = False
+
+        ' Launch the tool.
+        Dim myProcess As Process = New Process
+        myProcess.StartInfo = envSetup
+        myProcess.Start()
+    End Sub
+
 
     Public Shared Sub runInteractive(ByVal command As String, ByRef message As String, ByVal workingDir As String, Optional ByVal wait As Boolean = True)
 

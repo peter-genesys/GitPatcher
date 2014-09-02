@@ -9,6 +9,38 @@
 
     End Sub
 
+
+    'Shared Sub zip_dir(ByVal i_zip_file As String,
+    '                   ByVal i_zip_dir As String)
+
+
+    '    'Create empty ZIP file.
+    '    'Dim objFSO = CreateObject("Scripting.FileSystemObject")
+    '    'objFSO.CreateTextFile(i_zip_file, True)
+
+
+    '    Dim l_empty_zip_file As New System.IO.StreamWriter(i_zip_file)
+    '    l_empty_zip_file.Write("PK" & Chr(5) & Chr(6) & StrDup(18, vbNullChar))
+    '    l_empty_zip_file.Close()
+
+
+    '    'CreateObject("Scripting.FileSystemObject").CreateTextFile(i_zip_file, True).Write "PK" & Chr(5) & Chr(6) & String(18, vbNullChar)
+
+    '    'Dim objShell = CreateObject("Shell.Application")
+    '    Dim objShell As Object = CreateObject("Shell.Application")
+
+    '    Dim source = objShell.NameSpace(i_zip_dir).Items
+
+    '    objShell.NameSpace(i_zip_file).CopyHere(source)
+
+    '    objShell.WaitForExit()
+
+    '    'Required!
+    '    'wScript.Sleep 2000
+
+    'End Sub
+
+
     Shared Function fileExists(ByVal i_path) As Boolean
 
         ' Create the File System Object
@@ -67,15 +99,16 @@
 
     End Sub
 
-    Shared Sub confirmDeleteFolder(ByVal i_path)
+    Shared Sub confirmDeleteFolder(ByVal i_path As String)
+        Dim l_path As String = i_path.Trim("\")
 
         ' Create the File System Object
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
 
         ' Check that the patch_dir folder exists
-        If objFSO.FolderExists(i_path) Then
-            Confirm("Delete this folder: " & i_path, "Confirm Folder Delete")
-            objFSO.DeleteFolder(i_path)
+        If objFSO.FolderExists(l_path) Then
+            Confirm("Delete this folder: " & l_path, "Confirm Folder Delete")
+            objFSO.DeleteFolder(l_path)
         End If
 
 
@@ -251,6 +284,56 @@
  
     End Sub
 
+
+    'Not currently used, - but good generic routine, that may come in handy
+    Private Sub ReplaceWithinFile(ByVal i_filename As String, ByVal i_label As String, ByVal i_value As String)
+        Logger.Dbg("i_filename: " & i_filename)
+        Logger.Dbg("i_label: " & i_label)
+        Logger.Dbg("i_value: " & i_value)
+
+        'Read the original file into a string
+        Dim l_orig_file As New System.IO.StreamReader(i_filename)
+        Dim l_orig_text As String = l_orig_file.ReadToEnd
+        l_orig_file.Close()
+        'Delete the original file
+        Logger.Dbg("Delete orig file: " & i_filename)
+        System.IO.File.Delete(i_filename)
+
+        'Create the replacement text for the replacement file 
+        Dim l_new_text As String = Replace(l_orig_text, i_label, i_value, 1, Len(l_orig_text), vbTextCompare) & vbLf
+
+        'Replace the file
+        Dim l_new_file As New System.IO.StreamWriter(i_filename)
+        l_new_file.Write(l_new_text)
+        l_new_file.Close()
+    End Sub
+
+    'Not currently used, - but good generic routine, that may come in handy
+    Private Sub ReplaceWithinFilesRecursive(ByVal i_dir As String, ByVal i_label As String, ByVal i_value As String)
+
+        Logger.Dbg("i_dir: " & i_dir)
+        Logger.Dbg("i_label: " & i_label)
+        Logger.Dbg("i_value: " & i_value)
+
+        Dim objfso = CreateObject("Scripting.FileSystemObject")
+        Dim objFolder As Object
+        Dim objSubFolder As Object
+        objFolder = objfso.GetFolder(i_dir)
+        Dim objFile As Object
+
+        If objFolder.Files.Count > 0 Then
+            For Each objFile In objFolder.Files
+                ReplaceWithinFile(objFile.path, i_label, i_value)
+            Next
+        End If
+
+        If objFolder.SubFolders.Count > 0 Then
+            For Each objSubFolder In objFolder.SubFolders
+                ReplaceWithinFilesRecursive(objSubFolder.path, i_label, i_value)
+            Next
+        End If
+
+    End Sub
 
 
 End Class

@@ -167,5 +167,42 @@
 
     End Sub
 
+ 
+
+    Shared Sub zip7_dir(ByVal i_zip_file As String,
+                       ByVal i_zip_dir As String)
+
+        FileIO.confirmDeleteFile(i_zip_file)
+        FileIO.deleteFileIfExists(i_zip_file)
+
+        Dim l_command_filename As String = "C:\PROGRA~1\7-Zip\7z.exe"
+        Dim l_path As String = Nothing
+        Dim l_arguments As String = " a " & i_zip_file & " " & i_zip_dir
+        Logger.Dbg(l_arguments)
+        Dim l_workingDir As String = Nothing
+
+        Host.run_shell(l_command_filename, l_path, l_arguments, l_workingDir)
+
+    End Sub
+
+    Shared Sub unzip7_to_dir(ByVal i_zip_file As String,
+                            ByVal i_zip_dir As String,
+                            ByVal i_tag_dir As String)
+
+        FileIO.confirmDeleteFolder(i_zip_dir)
+        FileIO.deleteFolderIfExists(i_zip_dir)
+
+        Dim l_command_filename As String = "C:\PROGRA~1\7-Zip\7z.exe"
+        Dim l_path As String = Nothing
+        Dim l_arguments As String = " x " & i_zip_file & " -o" & i_tag_dir
+        Logger.Dbg(l_arguments)
+        Dim l_workingDir As String = Nothing
+
+        Host.run_shell(l_command_filename, l_path, l_arguments, l_workingDir)
+
+    End Sub
+
+
+
 
 End Class

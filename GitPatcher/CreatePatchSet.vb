@@ -898,19 +898,21 @@ Public Class CreatePatchCollection
  
     Private Sub ExportButton_Click(sender As Object, e As EventArgs) Handles ExportButton.Click
 
-        Dim l_patch_export_dir As String = Globals.PatchExportDir & "\" & Common.getLastSegment(Globals.currentRepo, "\") & My.Settings.PatchDirOffset
- 
+        Dim l_repo_patch_dir As String = Globals.PatchExportDir & "\" & Common.getLastSegment(Globals.currentRepo, "\") & "\"
+
+        Dim l_repo_patch_export_dir As String = l_repo_patch_dir & PatchNameTextBox.Text
+
 
         'Remove previous patch set
         Try
-            FileIO.confirmDeleteFolder(l_patch_export_dir)
+            FileIO.confirmDeleteFolder(l_repo_patch_export_dir)
         Catch cancelled_delete As Halt
             MsgBox("Warning: Now overwriting previously exported patchset")
         End Try
 
 
-        FileIO.createFolderIfNotExists(l_patch_export_dir)
- 
+        FileIO.createFolderIfNotExists(l_repo_patch_export_dir)
+
         Dim patchableFiles As Collection = New Collection
         TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
@@ -918,7 +920,7 @@ Public Class CreatePatchCollection
         patchableFiles.Add(PatchPathTextBox.Text & PatchNameTextBox.Text, _
                            PatchPathTextBox.Text & PatchNameTextBox.Text)
 
- 
+
 
         'Export each patch, and create the patch_install.sql
         exportPatchSet(PatchNameTextBox.Text, _
@@ -934,12 +936,16 @@ Public Class CreatePatchCollection
                            RerunCheckBox.Checked, _
                            patchableFiles, _
                            PatchDirTextBox.Text, _
-                           l_patch_export_dir, _
+                           l_repo_patch_export_dir, _
                            PatchPathTextBox.Text & PatchNameTextBox.Text, _
                            PatchPathTextBox.Text, _
                            TrackPromoCheckBox.Checked)
 
-        Host.RunExplorer(l_patch_export_dir)
+
+        zip.zip_dir(l_repo_patch_dir & PatchNameTextBox.Text & ".zip",
+                    l_repo_patch_export_dir)
+
+        Host.RunExplorer(l_repo_patch_export_dir)
 
 
     End Sub
