@@ -87,6 +87,5 @@ E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.PatchFromTags.resources
 E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.PatchRunner.resources
 E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.ProgressDialogue.resources
 E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.vbproj.GenerateResource.Cache
-F:\GitPatcher\GitPatcher\bin\x86\Debug\Oracle.DataAccess.dll
 F:\GitPatcher\GitPatcher\bin\x86\Debug\GitPatcherSettingDB.sdf
 F:\GitPatcher\GitPatcher\obj\x86\Debug\Interop.Shell32.dll
