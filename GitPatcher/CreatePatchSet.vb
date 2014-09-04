@@ -223,7 +223,7 @@ Public Class CreatePatchCollection
         'Retrieve checked node items from the SuperPatchesTreeView as a collection of patches.
         SuperPatchesTreeView.ReadCheckedLeafNodes(SuperPatches)
  
-        'Write the install script
+        'Write the install script with Patch Admin
         writeInstallScript(PatchNameTextBox.Text, _
                            pCreatePatchType, _
                            "PATCH_ADMIN", _
@@ -233,7 +233,27 @@ Public Class CreatePatchCollection
                            SupIdTextBox.Text, _
                            PatchDescTextBox.Text, _
                            NoteTextBox.Text, _
-                           UsePatchAdminCheckBox.Checked, _
+                           True, _
+                           RerunCheckBox.Checked, _
+                           patchableFiles, _
+                           skipFiles, _
+                           PreReqPatches, _
+                           SuperPatches, _
+                           PatchDirTextBox.Text, _
+                           PatchPathTextBox.Text, _
+                           TrackPromoCheckBox.Checked)
+
+        'Write the install_lite script without Patch Admin
+        writeInstallScript(PatchNameTextBox.Text, _
+                           pCreatePatchType, _
+                           "PATCH_ADMIN", _
+                           Globals.currentLongBranch, _
+                           Tag1TextBox.Text, _
+                           Tag2TextBox.Text, _
+                           SupIdTextBox.Text, _
+                           PatchDescTextBox.Text, _
+                           NoteTextBox.Text, _
+                           False, _
                            RerunCheckBox.Checked, _
                            patchableFiles, _
                            skipFiles, _
@@ -276,7 +296,13 @@ Public Class CreatePatchCollection
                                   ByVal track_promotion As Boolean)
 
 
+        Dim l_master_filename As String = Nothing
 
+        If use_patch_admin Then
+            l_master_filename = "install.sql"
+        Else
+            l_master_filename = "install_lite.sql"
+        End If
 
         Dim l_file_extension As String = Nothing
         Dim l_install_file_line As String = Nothing
@@ -305,11 +331,11 @@ Public Class CreatePatchCollection
 
             If iSkipFiles.Contains(l_path) Then
                 l_install_file_line = Chr(10) & "PROMPT SKIPPED FOR TESTING " & l_filename & " " & _
-                                      Chr(10) & "--@" & l_path & ";"
+                                      Chr(10) & "--@" & l_path & "\" & l_master_filename & ";"
 
             Else
                 l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
-                                      Chr(10) & "@" & l_path & ";"
+                                      Chr(10) & "@" & l_path & "\" & l_master_filename & ";"
 
             End If
 
@@ -328,7 +354,9 @@ Public Class CreatePatchCollection
         If targetFiles.Count > 0 Then
 
             Dim l_log_filename As String = patch_name & ".log"
-            Dim l_master_filename As String = "install.sql"
+
+
+
             Dim l_master_file As New System.IO.StreamWriter(patchDir & "\" & l_master_filename)
 
             l_master_file.WriteLine("PROMPT LOG TO " & l_log_filename)
@@ -351,16 +379,17 @@ Public Class CreatePatchCollection
 
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
-            If db_schema = "SYS" Then
-                l_master_file.WriteLine("CONNECT APEX_SYS/&&APEX_SYS_password@&&database as sysdba")
-            Else
-                l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database")
-            End If
-
-
-            l_master_file.WriteLine("set serveroutput on;")
-
             If use_patch_admin Then
+
+                If db_schema = "SYS" Then
+                    l_master_file.WriteLine("CONNECT APEX_SYS/&&APEX_SYS_password@&&database as sysdba")
+                Else
+                    l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database")
+                End If
+
+
+                l_master_file.WriteLine("set serveroutput on;")
+ 
 
                 l_master_file.WriteLine( _
                 "execute patch_admin.patch_installer.patch_started( -" _
@@ -400,16 +429,17 @@ Public Class CreatePatchCollection
                 l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
                 l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
 
+
+
+                l_master_file.WriteLine("select user||'@'||global_name Connection from global_name;")
+                'Write the list of files to execute.
+
+                l_master_file.WriteLine("COMMIT;")
+ 
             End If
 
-            l_master_file.WriteLine("select user||'@'||global_name Connection from global_name;")
-            'Write the list of files to execute.
-
             l_master_file.WriteLine("Prompt installing PATCHES" & Chr(10) & l_patches)
-
-
-            l_master_file.WriteLine("COMMIT;")
-
+ 
             If use_patch_admin Then
 
                 l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
@@ -424,9 +454,11 @@ Public Class CreatePatchCollection
                     l_master_file.WriteLine(",i_supersedes_patch  => '" & l_sup_short_name & "' );")
 
                 Next
+
+                l_master_file.WriteLine("COMMIT;")
             End If
 
-            l_master_file.WriteLine("COMMIT;")
+
 
             l_master_file.WriteLine("PROMPT ")
             l_master_file.WriteLine("PROMPT " & l_master_filename & " - COMPLETED.")
@@ -497,11 +529,18 @@ Public Class CreatePatchCollection
 
         If targetFiles.Count > 0 Then
  
-            Dim l_master_filename As String = "install_patchset_lite.sql"
+            Dim l_master_lite_filename As String = "install_patchset_lite.sql"
+            Dim l_master_lite_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_lite_filename)
+
+            l_master_lite_file.WriteLine("@" & patchSetPath & "\" & "install_lite.sql")
+           
+            l_master_lite_file.Close()
+
+            Dim l_master_filename As String = "install_patchset.sql"
             Dim l_master_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_filename)
 
-            l_master_file.WriteLine("@" & patchSetPath & "\" & "install_lite.sql")
-           
+            l_master_file.WriteLine("@" & patchSetPath & "\" & "install.sql")
+
             l_master_file.Close()
 
 
@@ -675,8 +714,16 @@ Public Class CreatePatchCollection
     End Sub
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs)
+
+        Dim l_install_file As String = Nothing
+        If UsePatchAdminCheckBox.Checked Then
+            l_install_file = "\install.sql"
+        Else
+            l_install_file = "\install_lite.sql"
+        End If
+
         'Use patch runner to execute with a master script.
-        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\install.sql")
+        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & l_install_file)
 
     End Sub
 
@@ -713,21 +760,7 @@ Public Class CreatePatchCollection
 
     End Sub
 
-    Private Sub ComitButton_Click(sender As Object, e As EventArgs)
-        Tortoise.Commit(PatchDirTextBox.Text, "NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
-
-        Mail.SendNotification("NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, pCreatePatchType & " created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
  
-        'user
-        'branch
-        'tags
-        'desc
-        'note
-
-
-    End Sub
-
-
     Public Shared Sub bumpApexVersion(ByVal i_app_version As String)
         Apex.modCreateApplicationSQL(i_app_version & " " & Today.ToString("dd-MMM-yyyy"), "")
     End Sub
@@ -941,7 +974,7 @@ Public Class CreatePatchCollection
                            PatchPathTextBox.Text, _
                            TrackPromoCheckBox.Checked)
 
-
+ 
         zip.zip_dir(l_repo_patch_dir & PatchNameTextBox.Text & ".zip",
                     l_repo_patch_export_dir)
 
@@ -949,4 +982,22 @@ Public Class CreatePatchCollection
 
 
     End Sub
+
+   
+  
+    Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles ComitButton.Click
+
+        Tortoise.Commit(PatchDirTextBox.Text, "NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
+
+        Mail.SendNotification("NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, pCreatePatchType & " created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
+
+        'user
+        'branch
+        'tags
+        'desc
+        'note
+
+
+    End Sub
+
 End Class

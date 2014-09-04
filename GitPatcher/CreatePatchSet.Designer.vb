@@ -24,6 +24,7 @@ Partial Class CreatePatchCollection
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(CreatePatchCollection))
         Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
+        Me.ExportButton = New System.Windows.Forms.Button()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ComitButton = New System.Windows.Forms.Button()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
@@ -62,6 +63,7 @@ Partial Class CreatePatchCollection
         Me.PreReqButton = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.TabPagePatches = New System.Windows.Forms.TabPage()
+        Me.AppFilterCheckBox = New System.Windows.Forms.CheckBox()
         Me.AvailablePatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
         Me.ComboBoxPatchesFilter = New System.Windows.Forms.ComboBox()
         Me.AvailablePatchesLabel = New System.Windows.Forms.Label()
@@ -76,8 +78,6 @@ Partial Class CreatePatchCollection
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.PatchTabControl = New System.Windows.Forms.TabControl()
-        Me.ExportButton = New System.Windows.Forms.Button()
-        Me.AppFilterCheckBox = New System.Windows.Forms.CheckBox()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPageSuper.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
@@ -122,6 +122,16 @@ Partial Class CreatePatchCollection
         Me.TabPagePatchDefn.Text = "Patch Defn"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
         '
+        'ExportButton
+        '
+        Me.ExportButton.Location = New System.Drawing.Point(77, 695)
+        Me.ExportButton.Name = "ExportButton"
+        Me.ExportButton.Size = New System.Drawing.Size(230, 23)
+        Me.ExportButton.TabIndex = 49
+        Me.ExportButton.Text = "Export Patch"
+        Me.ExportButton.TextAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.ExportButton.UseVisualStyleBackColor = True
+        '
         'Label3
         '
         Me.Label3.AutoSize = True
@@ -161,7 +171,7 @@ Partial Class CreatePatchCollection
         'TrackPromoCheckBox
         '
         Me.TrackPromoCheckBox.AutoSize = True
-        Me.TrackPromoCheckBox.Location = New System.Drawing.Point(281, 537)
+        Me.TrackPromoCheckBox.Location = New System.Drawing.Point(167, 537)
         Me.TrackPromoCheckBox.Name = "TrackPromoCheckBox"
         Me.TrackPromoCheckBox.Size = New System.Drawing.Size(104, 17)
         Me.TrackPromoCheckBox.TabIndex = 36
@@ -280,7 +290,7 @@ Partial Class CreatePatchCollection
         'UsePatchAdminCheckBox
         '
         Me.UsePatchAdminCheckBox.AutoSize = True
-        Me.UsePatchAdminCheckBox.Location = New System.Drawing.Point(80, 537)
+        Me.UsePatchAdminCheckBox.Location = New System.Drawing.Point(317, 641)
         Me.UsePatchAdminCheckBox.Name = "UsePatchAdminCheckBox"
         Me.UsePatchAdminCheckBox.Size = New System.Drawing.Size(108, 17)
         Me.UsePatchAdminCheckBox.TabIndex = 19
@@ -299,7 +309,7 @@ Partial Class CreatePatchCollection
         'RerunCheckBox
         '
         Me.RerunCheckBox.AutoSize = True
-        Me.RerunCheckBox.Location = New System.Drawing.Point(194, 537)
+        Me.RerunCheckBox.Location = New System.Drawing.Point(80, 537)
         Me.RerunCheckBox.Name = "RerunCheckBox"
         Me.RerunCheckBox.Size = New System.Drawing.Size(81, 17)
         Me.RerunCheckBox.TabIndex = 18
@@ -352,7 +362,7 @@ Partial Class CreatePatchCollection
         Me.TabPageSuper.Location = New System.Drawing.Point(4, 22)
         Me.TabPageSuper.Name = "TabPageSuper"
         Me.TabPageSuper.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageSuper.Size = New System.Drawing.Size(524, 712)
+        Me.TabPageSuper.Size = New System.Drawing.Size(521, 743)
         Me.TabPageSuper.TabIndex = 4
         Me.TabPageSuper.Text = "Supersedes"
         Me.TabPageSuper.UseVisualStyleBackColor = True
@@ -411,7 +421,7 @@ Partial Class CreatePatchCollection
         Me.TabPagePreReqs.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePreReqs.Name = "TabPagePreReqs"
         Me.TabPagePreReqs.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePreReqs.Size = New System.Drawing.Size(524, 712)
+        Me.TabPagePreReqs.Size = New System.Drawing.Size(521, 743)
         Me.TabPagePreReqs.TabIndex = 3
         Me.TabPagePreReqs.Text = "Pre-Requisites"
         Me.TabPagePreReqs.UseVisualStyleBackColor = True
@@ -476,6 +486,16 @@ Partial Class CreatePatchCollection
         Me.TabPagePatches.Text = "Patches"
         Me.TabPagePatches.UseVisualStyleBackColor = True
         '
+        'AppFilterCheckBox
+        '
+        Me.AppFilterCheckBox.AutoSize = True
+        Me.AppFilterCheckBox.Location = New System.Drawing.Point(222, 46)
+        Me.AppFilterCheckBox.Name = "AppFilterCheckBox"
+        Me.AppFilterCheckBox.Size = New System.Drawing.Size(84, 17)
+        Me.AppFilterCheckBox.TabIndex = 62
+        Me.AppFilterCheckBox.Text = "Filter by App"
+        Me.AppFilterCheckBox.UseVisualStyleBackColor = True
+        '
         'AvailablePatchesTreeView
         '
         Me.AvailablePatchesTreeView.BackColor = System.Drawing.Color.Wheat
@@ -534,7 +554,7 @@ Partial Class CreatePatchCollection
         Me.TabPageTags.Location = New System.Drawing.Point(4, 22)
         Me.TabPageTags.Name = "TabPageTags"
         Me.TabPageTags.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageTags.Size = New System.Drawing.Size(524, 712)
+        Me.TabPageTags.Size = New System.Drawing.Size(521, 743)
         Me.TabPageTags.TabIndex = 0
         Me.TabPageTags.Text = "Tags"
         Me.TabPageTags.UseVisualStyleBackColor = True
@@ -612,26 +632,6 @@ Partial Class CreatePatchCollection
         Me.PatchTabControl.SelectedIndex = 0
         Me.PatchTabControl.Size = New System.Drawing.Size(529, 769)
         Me.PatchTabControl.TabIndex = 18
-        '
-        'ExportButton
-        '
-        Me.ExportButton.Location = New System.Drawing.Point(77, 695)
-        Me.ExportButton.Name = "ExportButton"
-        Me.ExportButton.Size = New System.Drawing.Size(230, 23)
-        Me.ExportButton.TabIndex = 49
-        Me.ExportButton.Text = "Export Patch"
-        Me.ExportButton.TextAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.ExportButton.UseVisualStyleBackColor = True
-        '
-        'AppFilterCheckBox
-        '
-        Me.AppFilterCheckBox.AutoSize = True
-        Me.AppFilterCheckBox.Location = New System.Drawing.Point(222, 46)
-        Me.AppFilterCheckBox.Name = "AppFilterCheckBox"
-        Me.AppFilterCheckBox.Size = New System.Drawing.Size(84, 17)
-        Me.AppFilterCheckBox.TabIndex = 62
-        Me.AppFilterCheckBox.Text = "Filter by App"
-        Me.AppFilterCheckBox.UseVisualStyleBackColor = True
         '
         'CreatePatchCollection
         '
