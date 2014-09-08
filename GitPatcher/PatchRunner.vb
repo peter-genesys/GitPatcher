@@ -468,11 +468,11 @@ Public Class PatchRunner
 
         Dim ReorderedChanges As Collection = New Collection
         TreeViewPatchOrder.ReadTags(ReorderedChanges, False, True, True, False)
- 
+
         If ReorderedChanges.Count = 0 Then
             MsgBox("No patches in ordered list.")
         Else
- 
+
             For Each lpatch In ReorderedChanges
                 MasterScriptListBox.Items.Add("@" & lpatch & "\" & l_master_filename)
             Next
@@ -480,6 +480,50 @@ Public Class PatchRunner
 
 
     End Sub
+
+
+    Private Sub PopPatchListBox()
+
+        PatchListBox.Items.Clear()
+ 
+        Dim ReorderedChanges As Collection = New Collection
+        TreeViewPatchOrder.ReadTags(ReorderedChanges, False, True, True, False)
+
+        If ReorderedChanges.Count = 0 Then
+            MsgBox("No patches in ordered list.")
+        Else
+
+            For Each lpatch In ReorderedChanges
+                PatchListBox.Items.Add(lpatch)
+            Next
+        End If
+
+
+    End Sub
+
+    Private Sub exportPatchList()
+
+  
+        Dim ReorderedChanges As Collection = New Collection
+        TreeViewPatchOrder.ReadTags(ReorderedChanges, False, True, True, False)
+
+        If ReorderedChanges.Count = 0 Then
+            MsgBox("No patches in ordered list.")
+        Else
+
+            For Each lpatch In ReorderedChanges
+                PatchFromTags.doExportPatch(Common.dropLastSegment(lpatch, "\") & "\", Common.getLastSegment(lpatch, "\"))
+
+            Next
+        End If
+
+
+    End Sub
+
+
+
+
+
 
 
     Private Sub PatchRunnerTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles PatchRunnerTabControl.SelectedIndexChanged
@@ -491,6 +535,9 @@ Public Class PatchRunner
             End If
         ElseIf (PatchRunnerTabControl.SelectedTab.Name.ToString) = "RunTabPage" Then
             PopMasterScriptListBox()
+
+        ElseIf (PatchRunnerTabControl.SelectedTab.Name.ToString) = "ExportTabPage" Then
+            PopPatchListBox()
 
         End If
 
@@ -655,5 +702,10 @@ Public Class PatchRunner
 
     Private Sub CopyChangesButton_Click(sender As Object, e As EventArgs) Handles CopyChangesButton.Click
         CopySelectedChanges()
+    End Sub
+
+  
+    Private Sub ExportPatchesButton_Click(sender As Object, e As EventArgs) Handles ExportPatchesButton.Click
+        exportPatchList()
     End Sub
 End Class

@@ -35,6 +35,7 @@ Partial Class PatchRunner
         Me.RadioButtonHotfix = New System.Windows.Forms.RadioButton()
         Me.SearchPatchesButton = New System.Windows.Forms.Button()
         Me.OrderTabPage = New System.Windows.Forms.TabPage()
+        Me.UsePatchAdminCheckBox = New System.Windows.Forms.CheckBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.TreeViewPatchOrder = New TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels()
@@ -43,12 +44,17 @@ Partial Class PatchRunner
         Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.UsePatchAdminCheckBox = New System.Windows.Forms.CheckBox()
+        Me.ExportTabPage = New System.Windows.Forms.TabPage()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.ExportPatchesButton = New System.Windows.Forms.Button()
+        Me.PatchListBox = New System.Windows.Forms.ListBox()
+        Me.Label5 = New System.Windows.Forms.Label()
         Me.PatchRunnerTabControl.SuspendLayout()
         Me.PatchSelectorTabPage.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.OrderTabPage.SuspendLayout()
         Me.RunTabPage.SuspendLayout()
+        Me.ExportTabPage.SuspendLayout()
         Me.SuspendLayout()
         '
         'PatchRunnerTabControl
@@ -56,6 +62,7 @@ Partial Class PatchRunner
         Me.PatchRunnerTabControl.Controls.Add(Me.PatchSelectorTabPage)
         Me.PatchRunnerTabControl.Controls.Add(Me.OrderTabPage)
         Me.PatchRunnerTabControl.Controls.Add(Me.RunTabPage)
+        Me.PatchRunnerTabControl.Controls.Add(Me.ExportTabPage)
         Me.PatchRunnerTabControl.Location = New System.Drawing.Point(12, 12)
         Me.PatchRunnerTabControl.MaximumSize = New System.Drawing.Size(1000, 1000)
         Me.PatchRunnerTabControl.Name = "PatchRunnerTabControl"
@@ -184,6 +191,16 @@ Partial Class PatchRunner
         Me.OrderTabPage.Text = "Order"
         Me.OrderTabPage.UseVisualStyleBackColor = True
         '
+        'UsePatchAdminCheckBox
+        '
+        Me.UsePatchAdminCheckBox.AutoSize = True
+        Me.UsePatchAdminCheckBox.Location = New System.Drawing.Point(156, 18)
+        Me.UsePatchAdminCheckBox.Name = "UsePatchAdminCheckBox"
+        Me.UsePatchAdminCheckBox.Size = New System.Drawing.Size(108, 17)
+        Me.UsePatchAdminCheckBox.TabIndex = 53
+        Me.UsePatchAdminCheckBox.Text = "Use Patch Admin"
+        Me.UsePatchAdminCheckBox.UseVisualStyleBackColor = True
+        '
         'Label4
         '
         Me.Label4.AutoSize = True
@@ -258,15 +275,55 @@ Partial Class PatchRunner
         Me.ExecutePatchButton.Text = "Execute Patches"
         Me.ExecutePatchButton.UseVisualStyleBackColor = True
         '
-        'UsePatchAdminCheckBox
+        'ExportTabPage
         '
-        Me.UsePatchAdminCheckBox.AutoSize = True
-        Me.UsePatchAdminCheckBox.Location = New System.Drawing.Point(156, 18)
-        Me.UsePatchAdminCheckBox.Name = "UsePatchAdminCheckBox"
-        Me.UsePatchAdminCheckBox.Size = New System.Drawing.Size(108, 17)
-        Me.UsePatchAdminCheckBox.TabIndex = 53
-        Me.UsePatchAdminCheckBox.Text = "Use Patch Admin"
-        Me.UsePatchAdminCheckBox.UseVisualStyleBackColor = True
+        Me.ExportTabPage.Controls.Add(Me.Label6)
+        Me.ExportTabPage.Controls.Add(Me.ExportPatchesButton)
+        Me.ExportTabPage.Controls.Add(Me.PatchListBox)
+        Me.ExportTabPage.Controls.Add(Me.Label5)
+        Me.ExportTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.ExportTabPage.Name = "ExportTabPage"
+        Me.ExportTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.ExportTabPage.Size = New System.Drawing.Size(450, 712)
+        Me.ExportTabPage.TabIndex = 3
+        Me.ExportTabPage.Text = "Export"
+        Me.ExportTabPage.UseVisualStyleBackColor = True
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(156, 15)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(280, 39)
+        Me.Label6.TabIndex = 8
+        Me.Label6.Text = "This is intended for individual patches only." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Patchsets should be exported while" & _
+    " creating the patchset." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "The is no solution yet for Minor and Major releases."
+        '
+        'ExportPatchesButton
+        '
+        Me.ExportPatchesButton.Location = New System.Drawing.Point(8, 33)
+        Me.ExportPatchesButton.Name = "ExportPatchesButton"
+        Me.ExportPatchesButton.Size = New System.Drawing.Size(139, 23)
+        Me.ExportPatchesButton.TabIndex = 7
+        Me.ExportPatchesButton.Text = "Export Patches"
+        Me.ExportPatchesButton.UseVisualStyleBackColor = True
+        '
+        'PatchListBox
+        '
+        Me.PatchListBox.FormattingEnabled = True
+        Me.PatchListBox.Location = New System.Drawing.Point(7, 87)
+        Me.PatchListBox.Name = "PatchListBox"
+        Me.PatchListBox.Size = New System.Drawing.Size(429, 615)
+        Me.PatchListBox.TabIndex = 6
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(6, 71)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(54, 13)
+        Me.Label5.TabIndex = 5
+        Me.Label5.Text = "Patch List"
         '
         'PatchRunner
         '
@@ -286,6 +343,8 @@ Partial Class PatchRunner
         Me.OrderTabPage.PerformLayout()
         Me.RunTabPage.ResumeLayout(False)
         Me.RunTabPage.PerformLayout()
+        Me.ExportTabPage.ResumeLayout(False)
+        Me.ExportTabPage.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -310,4 +369,9 @@ Partial Class PatchRunner
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents AvailablePatchesTreeView As TreeViewEnhanced.TreeViewEnhanced
     Friend WithEvents UsePatchAdminCheckBox As System.Windows.Forms.CheckBox
+    Friend WithEvents ExportTabPage As System.Windows.Forms.TabPage
+    Friend WithEvents ExportPatchesButton As System.Windows.Forms.Button
+    Friend WithEvents PatchListBox As System.Windows.Forms.ListBox
+    Friend WithEvents Label5 As System.Windows.Forms.Label
+    Friend WithEvents Label6 As System.Windows.Forms.Label
 End Class

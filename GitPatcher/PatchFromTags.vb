@@ -1631,8 +1631,7 @@ Public Class PatchFromTags
 
 
     Shared Sub exportPatch(ByVal patchpath As String, _
-                           ByVal patchExportDir As String, _
-                           ByVal patchSetPath As String)
+                           ByVal patchExportDir As String )
 
 
         Dim l_path As String = patchpath
@@ -1666,14 +1665,14 @@ Public Class PatchFromTags
         Dim l_master_lite_filename As String = "install_patch_lite.sql"
         Dim l_master_lite_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_lite_filename)
 
-        l_master_lite_file.WriteLine("@" & patchSetPath & "\" & "install_lite.sql")
+        l_master_lite_file.WriteLine("@" & patchpath & "\" & "install_lite.sql")
 
         l_master_lite_file.Close()
 
         Dim l_master_filename As String = "install_patch.sql"
         Dim l_master_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_filename)
 
-        l_master_file.WriteLine("@" & patchSetPath & "\" & "install.sql")
+        l_master_file.WriteLine("@" & patchpath & "\" & "install.sql")
 
         l_master_file.Close()
 
@@ -1681,14 +1680,11 @@ Public Class PatchFromTags
 
     End Sub
 
-
-
-
-    Private Sub ExportPatchButton_Click(sender As Object, e As EventArgs) Handles ExportPatchButton.Click
+    Shared Sub doExportPatch(iPatchPath As String, iPatchName As String)
 
         Dim l_repo_patch_dir As String = Globals.PatchExportDir & "\" & Common.getLastSegment(Globals.currentRepo, "\") & "\"
 
-        Dim l_repo_patch_export_dir As String = l_repo_patch_dir & PatchNameTextBox.Text
+        Dim l_repo_patch_export_dir As String = l_repo_patch_dir & iPatchName
 
 
         'Remove previous patch 
@@ -1701,27 +1697,22 @@ Public Class PatchFromTags
 
         FileIO.createFolderIfNotExists(l_repo_patch_export_dir)
 
-        'Dim patchableFiles As Collection = New Collection
-        'TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
-
-        ''Add the PatchSet itself to the list.
-        'patchableFiles.Add(PatchPathTextBox.Text & PatchNameTextBox.Text, _
-        '                   PatchPathTextBox.Text & PatchNameTextBox.Text)
-
-
-
         'Export each patch, and create the patch_install.sql
-        exportPatch(PatchPathTextBox.Text & PatchNameTextBox.Text, _
-                    l_repo_patch_export_dir, _
-                    PatchPathTextBox.Text & PatchNameTextBox.Text)
-        'PatchPathTextBox.Text
+        exportPatch(iPatchPath & iPatchName, _
+                    l_repo_patch_export_dir)
 
 
-   
-        zip.zip_dir(l_repo_patch_dir & PatchNameTextBox.Text & ".zip",
+        zip.zip_dir(l_repo_patch_dir & iPatchName & ".zip",
                     l_repo_patch_export_dir)
 
         Host.RunExplorer(l_repo_patch_export_dir)
 
+    End Sub
+
+
+    Private Sub ExportPatchButton_Click(sender As Object, e As EventArgs) Handles ExportPatchButton.Click
+
+        doExportPatch(PatchPathTextBox.Text, PatchNameTextBox.Text)
+ 
     End Sub
 End Class
