@@ -1628,4 +1628,100 @@ Public Class PatchFromTags
 
 
     End Sub
+
+
+    Shared Sub exportPatch(ByVal patchpath As String, _
+                           ByVal patchExportDir As String, _
+                           ByVal patchSetPath As String)
+
+
+        Dim l_path As String = patchpath
+
+
+        Dim l_source_path As String = Globals.RootPatchDir & l_path
+        Dim l_target_path As String = patchExportDir & "\" & l_path
+
+
+        FileIO.createFolderIfNotExists(l_target_path)
+
+        Dim objfso = CreateObject("Scripting.FileSystemObject")
+        Dim objFolder As Object
+        Dim objFile As Object
+
+        objFolder = objfso.GetFolder(l_source_path)
+        For Each objFile In objFolder.Files
+            objfso.CopyFile(l_source_path & "\" & objFile.Name, l_target_path & "\" & objFile.Name, True)
+            'Info("using reference file " & objFile.Name)
+        Next
+
+        'Copy README.txt
+        Try
+            objfso.CopyFile(Globals.RootPatchDir & "README.txt", patchExportDir & "\README.txt", True)
+        Catch ex As Exception
+            MsgBox("No README.txt found, to copy to the patchset.")
+
+        End Try
+
+
+        Dim l_master_lite_filename As String = "install_patch_lite.sql"
+        Dim l_master_lite_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_lite_filename)
+
+        l_master_lite_file.WriteLine("@" & patchSetPath & "\" & "install_lite.sql")
+
+        l_master_lite_file.Close()
+
+        Dim l_master_filename As String = "install_patch.sql"
+        Dim l_master_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_filename)
+
+        l_master_file.WriteLine("@" & patchSetPath & "\" & "install.sql")
+
+        l_master_file.Close()
+
+
+
+    End Sub
+
+
+
+
+    Private Sub ExportPatchButton_Click(sender As Object, e As EventArgs) Handles ExportPatchButton.Click
+
+        Dim l_repo_patch_dir As String = Globals.PatchExportDir & "\" & Common.getLastSegment(Globals.currentRepo, "\") & "\"
+
+        Dim l_repo_patch_export_dir As String = l_repo_patch_dir & PatchNameTextBox.Text
+
+
+        'Remove previous patch 
+        Try
+            FileIO.confirmDeleteFolder(l_repo_patch_export_dir)
+        Catch cancelled_delete As Halt
+            MsgBox("Warning: Now overwriting previously exported patch")
+        End Try
+
+
+        FileIO.createFolderIfNotExists(l_repo_patch_export_dir)
+
+        'Dim patchableFiles As Collection = New Collection
+        'TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
+
+        ''Add the PatchSet itself to the list.
+        'patchableFiles.Add(PatchPathTextBox.Text & PatchNameTextBox.Text, _
+        '                   PatchPathTextBox.Text & PatchNameTextBox.Text)
+
+
+
+        'Export each patch, and create the patch_install.sql
+        exportPatch(PatchPathTextBox.Text & PatchNameTextBox.Text, _
+                    l_repo_patch_export_dir, _
+                    PatchPathTextBox.Text & PatchNameTextBox.Text)
+        'PatchPathTextBox.Text
+
+
+   
+        zip.zip_dir(l_repo_patch_dir & PatchNameTextBox.Text & ".zip",
+                    l_repo_patch_export_dir)
+
+        Host.RunExplorer(l_repo_patch_export_dir)
+
+    End Sub
 End Class

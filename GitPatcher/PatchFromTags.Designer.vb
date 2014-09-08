@@ -24,6 +24,7 @@ Partial Class PatchFromTags
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PatchFromTags))
         Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
+        Me.AddUninstallButton = New System.Windows.Forms.Button()
         Me.Label26 = New System.Windows.Forms.Label()
         Me.ButtonPopNotes = New System.Windows.Forms.Button()
         Me.ButtonPopDesc = New System.Windows.Forms.Button()
@@ -97,7 +98,7 @@ Partial Class PatchFromTags
         Me.RestrictSupByToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.SupByButton = New System.Windows.Forms.Button()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.AddUninstallButton = New System.Windows.Forms.Button()
+        Me.ExportPatchButton = New System.Windows.Forms.Button()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPageSuper.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
@@ -110,6 +111,7 @@ Partial Class PatchFromTags
         '
         'TabPagePatchDefn
         '
+        Me.TabPagePatchDefn.Controls.Add(Me.ExportPatchButton)
         Me.TabPagePatchDefn.Controls.Add(Me.AddUninstallButton)
         Me.TabPagePatchDefn.Controls.Add(Me.Label26)
         Me.TabPagePatchDefn.Controls.Add(Me.ButtonPopNotes)
@@ -141,10 +143,19 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePatchDefn.Name = "TabPagePatchDefn"
         Me.TabPagePatchDefn.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePatchDefn.Size = New System.Drawing.Size(525, 723)
+        Me.TabPagePatchDefn.Size = New System.Drawing.Size(525, 757)
         Me.TabPagePatchDefn.TabIndex = 2
         Me.TabPagePatchDefn.Text = "Create Patch"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
+        '
+        'AddUninstallButton
+        '
+        Me.AddUninstallButton.Location = New System.Drawing.Point(80, 668)
+        Me.AddUninstallButton.Name = "AddUninstallButton"
+        Me.AddUninstallButton.Size = New System.Drawing.Size(230, 23)
+        Me.AddUninstallButton.TabIndex = 48
+        Me.AddUninstallButton.Text = "Add Uninstall"
+        Me.AddUninstallButton.UseVisualStyleBackColor = True
         '
         'Label26
         '
@@ -393,7 +404,7 @@ Partial Class PatchFromTags
         Me.TabPageSuper.Location = New System.Drawing.Point(4, 22)
         Me.TabPageSuper.Name = "TabPageSuper"
         Me.TabPageSuper.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageSuper.Size = New System.Drawing.Size(527, 699)
+        Me.TabPageSuper.Size = New System.Drawing.Size(525, 723)
         Me.TabPageSuper.TabIndex = 4
         Me.TabPageSuper.Text = "Supersedes"
         Me.TabPageSuper.UseVisualStyleBackColor = True
@@ -455,7 +466,7 @@ Partial Class PatchFromTags
         Me.TabPagePreReqs.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePreReqs.Name = "TabPagePreReqs"
         Me.TabPagePreReqs.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePreReqs.Size = New System.Drawing.Size(527, 699)
+        Me.TabPagePreReqs.Size = New System.Drawing.Size(525, 723)
         Me.TabPagePreReqs.TabIndex = 3
         Me.TabPagePreReqs.Text = "Pre-Requisites"
         Me.TabPagePreReqs.UseVisualStyleBackColor = True
@@ -530,7 +541,7 @@ Partial Class PatchFromTags
         Me.TabPageTags.Location = New System.Drawing.Point(4, 22)
         Me.TabPageTags.Name = "TabPageTags"
         Me.TabPageTags.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageTags.Size = New System.Drawing.Size(527, 699)
+        Me.TabPageTags.Size = New System.Drawing.Size(525, 723)
         Me.TabPageTags.TabIndex = 0
         Me.TabPageTags.Text = "Tags"
         Me.TabPageTags.UseVisualStyleBackColor = True
@@ -635,7 +646,7 @@ Partial Class PatchFromTags
         Me.PatchTabControl.Location = New System.Drawing.Point(12, 12)
         Me.PatchTabControl.Name = "PatchTabControl"
         Me.PatchTabControl.SelectedIndex = 0
-        Me.PatchTabControl.Size = New System.Drawing.Size(533, 749)
+        Me.PatchTabControl.Size = New System.Drawing.Size(533, 783)
         Me.PatchTabControl.TabIndex = 18
         '
         'TabPageChanges
@@ -652,7 +663,7 @@ Partial Class PatchFromTags
         Me.TabPageChanges.Location = New System.Drawing.Point(4, 22)
         Me.TabPageChanges.Name = "TabPageChanges"
         Me.TabPageChanges.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageChanges.Size = New System.Drawing.Size(527, 699)
+        Me.TabPageChanges.Size = New System.Drawing.Size(525, 723)
         Me.TabPageChanges.TabIndex = 1
         Me.TabPageChanges.Text = "Changes"
         Me.TabPageChanges.UseVisualStyleBackColor = True
@@ -745,7 +756,7 @@ Partial Class PatchFromTags
         Me.TabPageExtras.Location = New System.Drawing.Point(4, 22)
         Me.TabPageExtras.Name = "TabPageExtras"
         Me.TabPageExtras.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageExtras.Size = New System.Drawing.Size(527, 699)
+        Me.TabPageExtras.Size = New System.Drawing.Size(525, 723)
         Me.TabPageExtras.TabIndex = 6
         Me.TabPageExtras.Text = "Extra Files"
         Me.TabPageExtras.UseVisualStyleBackColor = True
@@ -795,7 +806,7 @@ Partial Class PatchFromTags
         Me.TabPageSuperBy.Controls.Add(Me.Label19)
         Me.TabPageSuperBy.Location = New System.Drawing.Point(4, 22)
         Me.TabPageSuperBy.Name = "TabPageSuperBy"
-        Me.TabPageSuperBy.Size = New System.Drawing.Size(527, 699)
+        Me.TabPageSuperBy.Size = New System.Drawing.Size(525, 723)
         Me.TabPageSuperBy.TabIndex = 5
         Me.TabPageSuperBy.Text = "Superseded By"
         Me.TabPageSuperBy.UseVisualStyleBackColor = True
@@ -847,20 +858,20 @@ Partial Class PatchFromTags
         Me.Label19.Text = "Superseded" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "By"
         Me.Label19.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
-        'AddUninstallButton
+        'ExportPatchButton
         '
-        Me.AddUninstallButton.Location = New System.Drawing.Point(80, 668)
-        Me.AddUninstallButton.Name = "AddUninstallButton"
-        Me.AddUninstallButton.Size = New System.Drawing.Size(230, 23)
-        Me.AddUninstallButton.TabIndex = 48
-        Me.AddUninstallButton.Text = "Add Uninstall"
-        Me.AddUninstallButton.UseVisualStyleBackColor = True
+        Me.ExportPatchButton.Location = New System.Drawing.Point(80, 726)
+        Me.ExportPatchButton.Name = "ExportPatchButton"
+        Me.ExportPatchButton.Size = New System.Drawing.Size(230, 23)
+        Me.ExportPatchButton.TabIndex = 49
+        Me.ExportPatchButton.Text = "Export Patch"
+        Me.ExportPatchButton.UseVisualStyleBackColor = True
         '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(557, 773)
+        Me.ClientSize = New System.Drawing.Size(557, 796)
         Me.Controls.Add(Me.PatchTabControl)
         Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
         Me.Name = "PatchFromTags"
@@ -958,4 +969,5 @@ End Sub
     Friend WithEvents Label28 As System.Windows.Forms.Label
     Friend WithEvents Label29 As System.Windows.Forms.Label
     Friend WithEvents AddUninstallButton As System.Windows.Forms.Button
+    Friend WithEvents ExportPatchButton As System.Windows.Forms.Button
 End Class
