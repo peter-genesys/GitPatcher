@@ -1,5 +1,8 @@
 ﻿Public Class Common
 
+    Public Shared Function unix_path(ipath As String) As String
+        Return Replace(ipath, "\", "/")
+    End Function
 
     Public Shared Function cleanString(iString) As String
         Return Trim(iString).Replace(Chr(13), "")
@@ -68,11 +71,11 @@
             l_ordered.Add(entry)
         Next
 
- 
+
         For Each entry In l_chrs
             l_ordered.Add(entry)
         Next
- 
+
         Return l_ordered
     End Function
 
@@ -147,7 +150,7 @@
 
     End Function
 
- 
+
     Public Shared Sub checkBranch(i_searchString)
         Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
 
@@ -167,7 +170,7 @@
 
     End Sub
 
- 
+
 
     Shared Sub zip7_dir(ByVal i_zip_file As String,
                        ByVal i_zip_dir As String)

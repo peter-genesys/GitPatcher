@@ -532,14 +532,14 @@ Public Class CreatePatchCollection
             Dim l_master_lite_filename As String = "install_patchset_lite.sql"
             Dim l_master_lite_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_lite_filename)
 
-            l_master_lite_file.WriteLine("@" & patchSetPath & "\" & "install_lite.sql")
+            l_master_lite_file.WriteLine(Common.unix_path("@" & patchSetPath & "\" & "install_lite.sql"))
            
             l_master_lite_file.Close()
 
             Dim l_master_filename As String = "install_patchset.sql"
             Dim l_master_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_filename)
 
-            l_master_file.WriteLine("@" & patchSetPath & "\" & "install.sql")
+            l_master_file.WriteLine(Common.unix_path("@" & patchSetPath & "\" & "install.sql"))
 
             l_master_file.Close()
 

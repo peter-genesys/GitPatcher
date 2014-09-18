@@ -1665,14 +1665,14 @@ Public Class PatchFromTags
         Dim l_master_lite_filename As String = "install_patch_lite.sql"
         Dim l_master_lite_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_lite_filename)
 
-        l_master_lite_file.WriteLine("@" & patchpath & "\" & "install_lite.sql")
+        l_master_lite_file.WriteLine(Common.unix_path("@" & patchpath & "\" & "install_lite.sql"))
 
         l_master_lite_file.Close()
 
         Dim l_master_filename As String = "install_patch.sql"
         Dim l_master_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_filename)
 
-        l_master_file.WriteLine("@" & patchpath & "\" & "install.sql")
+        l_master_file.WriteLine(Common.unix_path("@" & patchpath & "\" & "install.sql"))
 
         l_master_file.Close()
 
