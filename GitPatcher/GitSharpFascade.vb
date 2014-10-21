@@ -56,8 +56,14 @@ Public Class GitSharpFascade
     End Function
 
     Shared Function currentBranch(ByVal path) As String
-        Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
-        Return repo.CurrentBranch.Name
+        Try
+            Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
+            Return repo.CurrentBranch.Name
+        Catch
+            MsgBox("Oops")
+            Return "Oops"
+        End Try
+
 
     End Function
 

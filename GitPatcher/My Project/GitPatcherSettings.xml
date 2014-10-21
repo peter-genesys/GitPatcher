@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<repos>
+  <repo RepoName="Tupperware">
+    <RootPath>F:\tupperware</RootPath>
+    <ApexRelPath>Smith</ApexRelPath>
+    <DatabaseRelPath>Smith</DatabaseRelPath>
+    <PatchRelPath>Smith</PatchRelPath>
+    <PatchExportPath>Smith</PatchExportPath>
+    <ODBCjavaRelPath>Smith</ODBCjavaRelPath>
+  </repo>
+</repos>

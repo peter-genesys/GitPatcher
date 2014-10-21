@@ -139,6 +139,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Common.vb" />
+    <Compile Include="EditSettingsXML.Designer.vb">
+      <DependentUpon>EditSettingsXML.vb</DependentUpon>
+    </Compile>
+    <Compile Include="EditSettingsXML.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GitBash.vb" />
     <Compile Include="GitBashFascade.vb" />
     <Compile Include="CreatePatchSet.Designer.vb">
@@ -222,6 +228,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Config.resx">
       <DependentUpon>Config.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditSettingsXML.resx">
+      <DependentUpon>EditSettingsXML.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CreatePatchSet.resx">
       <DependentUpon>CreatePatchSet.vb</DependentUpon>
