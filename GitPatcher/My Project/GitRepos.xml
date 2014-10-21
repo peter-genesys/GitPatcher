@@ -3,4 +3,5 @@
   <repo RepoName="NavigoAlesco" RepoPath="F:/navigo_alesco/" ApexRelPath="apex/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database/" ExtrasRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/" />
   <repo RepoName="Tupperware" RepoPath="F:/tupperware/" ApexRelPath="database/apex/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database/" ExtrasRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/" />
   <repo RepoName="ApexApps" RepoPath="F:/apex_apps/" ApexRelPath="apex/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database/" ExtrasRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/" />
+  <repo RepoName="GitPatcher" RepoPath="F:/GitPatcher/" ApexRelPath="apex/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database/" ExtrasRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/" />
 </repos>
