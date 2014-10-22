@@ -1,7 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <repos>
-  <repo RepoName="NavigoAlesco" RepoPath="F:/navigo_alesco/" ApexRelPath="apex/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database/" ExtrasRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/" />
-  <repo RepoName="Tupperware" RepoPath="F:/tupperware/" ApexRelPath="database/apex/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database/" ExtrasRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/" />
-  <repo RepoName="ApexApps" RepoPath="F:/apex_apps/" ApexRelPath="apex/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database/" ExtrasRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/" />
-  <repo RepoName="GitPatcher" RepoPath="F:/GitPatcher/" ApexRelPath="apex/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database/" ExtrasRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/" />
+  <repo RepoName="NavigoAlesco" RepoPath="F:/navigo_alesco/" ApexRelPath="apex/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database/" ExtrasRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/">
+    <orgs>
+      <org OrgName="A" PRODTNS="" PRODCONNECT="" UATTNS="" UATCONNECT="" TESTTNS="" TESTCONNECT="" DEVTNS="" DEVCONNECT="" VMTNS="" VMCONNECT="" />
+      <org OrgName="B" PRODTNS="" PRODCONNECT="" UATTNS="" UATCONNECT="" TESTTNS="" TESTCONNECT="" DEVTNS="" DEVCONNECT="" VMTNS="" VMCONNECT="" />
+    </orgs>
+  </repo>
+  <repo RepoName="Tupperware" RepoPath="F:/tupperware/" ApexRelPath="database/apex/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database/" ExtrasRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/">
+    <orgs>
+    </orgs>
+  </repo>
+  <repo RepoName="A" RepoPath="" ApexRelPath="" ODBCjavaRelPath="" DatabaseRelPath="" ExtrasRelPath="" PatchRelPath="" PatchExportPath="">
+    <orgs />
+  </repo>
 </repos>

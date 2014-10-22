@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<repos>
+  <repo RepoName="NavigoAlesco" RootPath="F:/navigo_alesco/" ApexRelPath="apex/" DatabaseRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar">
+  </repo>
+  <repo RepoName="" RepoPath="TEST" />
+</repos>

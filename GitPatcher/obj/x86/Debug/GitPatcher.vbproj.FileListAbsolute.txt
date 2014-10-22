@@ -90,4 +90,6 @@ E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.vbproj.GenerateResource.Cache
 F:\GitPatcher\GitPatcher\bin\x86\Debug\GitPatcherSettingDB.sdf
 F:\GitPatcher\GitPatcher\obj\x86\Debug\Interop.Shell32.dll
 F:\GitPatcher\GitPatcher\bin\x86\Debug\Oracle.DataAccess.dll
-F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.EditSettingsXML.resources
+F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.AppSettings.resources
+F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.DatabaseSettings.resources
+F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.RepoSettings.resources

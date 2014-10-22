@@ -2,7 +2,7 @@
 Imports System.IO
 Imports System.Xml
 
-Public Class EditSettingsXML
+Public Class AppSettings
 
     Function checkRepo(ByVal iRepoName) As Boolean
 
@@ -39,17 +39,15 @@ Public Class EditSettingsXML
                 hideUpdateButton()
 
             End If
- 
+
         Next
 
         Return l_found
 
- 
+
 
     End Function
 
-
- 
 
     Sub readGitRepos()
         Try
@@ -91,20 +89,12 @@ Public Class EditSettingsXML
 
             Next
 
-  
-
             l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
-
-
-
 
         Catch errorVariable As Exception
             'Error trapping
             Console.Write(errorVariable.ToString())
         End Try
-
-
-
 
 
     End Sub
@@ -209,10 +199,10 @@ Public Class EditSettingsXML
 
         'PatchOffsetTextBox.Text = ""
         'PatchExportPathTextBox.Text = ""
- 
+
         'SQLpathTextBox.DataBindings.Add("Text", My.Settings, "SQLpath")
         'GitExeTextBox.DataBindings.Add("Text", My.Settings, "GITpath")
- 
+
 
         'MsgBox(RepoComboBox.Text)
         ButtonRemove.Visible = False
@@ -241,38 +231,38 @@ Public Class EditSettingsXML
     End Sub
 
     Private Sub RepoComboBox_Leave(sender As Object, e As EventArgs) Handles XMLRepoComboBox.Leave
-     
+
         TestRepoValue()
     End Sub
 
     Private Sub AddRepo()
- 
-            Dim l_GitReposXML As XmlDocument = New XmlDocument()
+
+        Dim l_GitReposXML As XmlDocument = New XmlDocument()
 
 
-            'Load the Xml file
-            l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        'Load the Xml file
+        l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
 
-            Dim l_ReposNode As XmlNode = l_GitReposXML.DocumentElement
+        Dim l_ReposNode As XmlNode = l_GitReposXML.DocumentElement
 
-            Dim l_NewRepoNode As XmlElement = l_GitReposXML.CreateElement("repo")
+        Dim l_NewRepoNode As XmlElement = l_GitReposXML.CreateElement("repo")
 
-            l_NewRepoNode.SetAttribute("RepoName", XMLRepoComboBox.Text)
+        l_NewRepoNode.SetAttribute("RepoName", XMLRepoComboBox.Text)
 
-            'Paths
+        'Paths
 
-            l_NewRepoNode.SetAttribute("RepoPath", RepoPathTextBox.Text)
-            l_NewRepoNode.SetAttribute("ApexRelPath", ApexOffsetTextBox.Text)
-            l_NewRepoNode.SetAttribute("ODBCjavaRelPath", OJDBCjarFileTextBox.Text)
-            l_NewRepoNode.SetAttribute("DatabaseRelPath", DBOffsetTextBox.Text)
-            l_NewRepoNode.SetAttribute("ExtrasRelPath", ExtrasDirListTextBox.Text)
-            l_NewRepoNode.SetAttribute("PatchRelPath", PatchOffsetTextBox.Text)
-            l_NewRepoNode.SetAttribute("PatchExportPath", PatchExportPathTextBox.Text)
+        l_NewRepoNode.SetAttribute("RepoPath", RepoPathTextBox.Text)
+        l_NewRepoNode.SetAttribute("ApexRelPath", ApexOffsetTextBox.Text)
+        l_NewRepoNode.SetAttribute("ODBCjavaRelPath", OJDBCjarFileTextBox.Text)
+        l_NewRepoNode.SetAttribute("DatabaseRelPath", DBOffsetTextBox.Text)
+        l_NewRepoNode.SetAttribute("ExtrasRelPath", ExtrasDirListTextBox.Text)
+        l_NewRepoNode.SetAttribute("PatchRelPath", PatchOffsetTextBox.Text)
+        l_NewRepoNode.SetAttribute("PatchExportPath", PatchExportPathTextBox.Text)
 
-            l_ReposNode.AppendChild(l_NewRepoNode)
+        l_ReposNode.AppendChild(l_NewRepoNode)
 
-            l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
- 
+        l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+
 
         TestRepoValue()
         readGitRepos()
@@ -282,7 +272,7 @@ Public Class EditSettingsXML
 
 
     Private Sub ButtonAdd_Click(sender As Object, e As EventArgs) Handles ButtonAdd.Click
- 
+
         AddRepo()
 
     End Sub
@@ -366,4 +356,6 @@ Public Class EditSettingsXML
     Private Sub PatchOffsetTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchOffsetTextBox.TextChanged
         showUpdateButton()
     End Sub
+
+
 End Class

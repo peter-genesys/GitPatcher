@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class EditSettingsXML
+Partial Class AppSettings
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -46,7 +46,7 @@ Partial Class EditSettingsXML
         Dim Label24 As System.Windows.Forms.Label
         Dim Label22 As System.Windows.Forms.Label
         Dim Label26 As System.Windows.Forms.Label
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EditSettingsXML))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(AppSettings))
         Me.MailTabPage = New System.Windows.Forms.TabPage()
         Me.TestMailButton = New System.Windows.Forms.Button()
         Me.RecipientDomainTextBox = New System.Windows.Forms.TextBox()
@@ -82,6 +82,11 @@ Partial Class EditSettingsXML
         Me.XMLRepoComboBox = New System.Windows.Forms.ComboBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
         Me.PatchTabPage = New System.Windows.Forms.TabPage()
+        Me.UpdateOrgButton = New System.Windows.Forms.Button()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.Button3 = New System.Windows.Forms.Button()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.OrgComboBox = New System.Windows.Forms.ComboBox()
         Me.GitExeTextBox = New System.Windows.Forms.TextBox()
         Me.SQLpathTextBox = New System.Windows.Forms.TextBox()
         Me.ExtrasTabPage = New System.Windows.Forms.TabPage()
@@ -337,7 +342,7 @@ Partial Class EditSettingsXML
         Me.MailTabPage.Controls.Add(Label11)
         Me.MailTabPage.Location = New System.Drawing.Point(4, 22)
         Me.MailTabPage.Name = "MailTabPage"
-        Me.MailTabPage.Size = New System.Drawing.Size(534, 360)
+        Me.MailTabPage.Size = New System.Drawing.Size(545, 380)
         Me.MailTabPage.TabIndex = 5
         Me.MailTabPage.Text = "Mail"
         Me.MailTabPage.UseVisualStyleBackColor = True
@@ -396,7 +401,7 @@ Partial Class EditSettingsXML
         Me.AppsTabPage.Location = New System.Drawing.Point(4, 22)
         Me.AppsTabPage.Name = "AppsTabPage"
         Me.AppsTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.AppsTabPage.Size = New System.Drawing.Size(534, 360)
+        Me.AppsTabPage.Size = New System.Drawing.Size(545, 380)
         Me.AppsTabPage.TabIndex = 4
         Me.AppsTabPage.Text = "Apps"
         Me.AppsTabPage.UseVisualStyleBackColor = True
@@ -465,7 +470,7 @@ Partial Class EditSettingsXML
         Me.DBTabPage.Location = New System.Drawing.Point(4, 22)
         Me.DBTabPage.Name = "DBTabPage"
         Me.DBTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.DBTabPage.Size = New System.Drawing.Size(534, 360)
+        Me.DBTabPage.Size = New System.Drawing.Size(545, 380)
         Me.DBTabPage.TabIndex = 3
         Me.DBTabPage.Text = "Databases"
         Me.DBTabPage.UseVisualStyleBackColor = True
@@ -548,7 +553,7 @@ Partial Class EditSettingsXML
         Me.TabPageGitRepo.Location = New System.Drawing.Point(4, 22)
         Me.TabPageGitRepo.Name = "TabPageGitRepo"
         Me.TabPageGitRepo.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageGitRepo.Size = New System.Drawing.Size(534, 360)
+        Me.TabPageGitRepo.Size = New System.Drawing.Size(545, 380)
         Me.TabPageGitRepo.TabIndex = 0
         Me.TabPageGitRepo.Text = "Git Repos"
         Me.TabPageGitRepo.UseVisualStyleBackColor = True
@@ -658,11 +663,16 @@ Partial Class EditSettingsXML
         Me.ConfigTabs.Location = New System.Drawing.Point(12, 28)
         Me.ConfigTabs.Name = "ConfigTabs"
         Me.ConfigTabs.SelectedIndex = 0
-        Me.ConfigTabs.Size = New System.Drawing.Size(542, 386)
+        Me.ConfigTabs.Size = New System.Drawing.Size(553, 406)
         Me.ConfigTabs.TabIndex = 0
         '
         'PatchTabPage
         '
+        Me.PatchTabPage.Controls.Add(Me.UpdateOrgButton)
+        Me.PatchTabPage.Controls.Add(Me.Button2)
+        Me.PatchTabPage.Controls.Add(Me.Button3)
+        Me.PatchTabPage.Controls.Add(Me.Label28)
+        Me.PatchTabPage.Controls.Add(Me.OrgComboBox)
         Me.PatchTabPage.Controls.Add(Me.GitExeTextBox)
         Me.PatchTabPage.Controls.Add(Label18)
         Me.PatchTabPage.Controls.Add(Me.SQLpathTextBox)
@@ -670,10 +680,54 @@ Partial Class EditSettingsXML
         Me.PatchTabPage.Location = New System.Drawing.Point(4, 22)
         Me.PatchTabPage.Name = "PatchTabPage"
         Me.PatchTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.PatchTabPage.Size = New System.Drawing.Size(534, 360)
+        Me.PatchTabPage.Size = New System.Drawing.Size(545, 380)
         Me.PatchTabPage.TabIndex = 1
         Me.PatchTabPage.Text = "Paths"
         Me.PatchTabPage.UseVisualStyleBackColor = True
+        '
+        'UpdateOrgButton
+        '
+        Me.UpdateOrgButton.Location = New System.Drawing.Point(434, 18)
+        Me.UpdateOrgButton.Name = "UpdateOrgButton"
+        Me.UpdateOrgButton.Size = New System.Drawing.Size(75, 23)
+        Me.UpdateOrgButton.TabIndex = 36
+        Me.UpdateOrgButton.Text = "Update"
+        Me.UpdateOrgButton.UseVisualStyleBackColor = True
+        '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(434, 17)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(75, 23)
+        Me.Button2.TabIndex = 35
+        Me.Button2.Text = "Remove"
+        Me.Button2.UseVisualStyleBackColor = True
+        '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(435, 18)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(75, 23)
+        Me.Button3.TabIndex = 34
+        Me.Button3.Text = "Add"
+        Me.Button3.UseVisualStyleBackColor = True
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.Location = New System.Drawing.Point(37, 31)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(66, 13)
+        Me.Label28.TabIndex = 33
+        Me.Label28.Text = "Organisation"
+        '
+        'OrgComboBox
+        '
+        Me.OrgComboBox.FormattingEnabled = True
+        Me.OrgComboBox.Location = New System.Drawing.Point(40, 47)
+        Me.OrgComboBox.Name = "OrgComboBox"
+        Me.OrgComboBox.Size = New System.Drawing.Size(444, 21)
+        Me.OrgComboBox.TabIndex = 32
         '
         'GitExeTextBox
         '
@@ -694,7 +748,7 @@ Partial Class EditSettingsXML
         Me.ExtrasTabPage.Location = New System.Drawing.Point(4, 22)
         Me.ExtrasTabPage.Name = "ExtrasTabPage"
         Me.ExtrasTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.ExtrasTabPage.Size = New System.Drawing.Size(534, 360)
+        Me.ExtrasTabPage.Size = New System.Drawing.Size(545, 380)
         Me.ExtrasTabPage.TabIndex = 6
         Me.ExtrasTabPage.Text = "Extras"
         Me.ExtrasTabPage.UseVisualStyleBackColor = True
@@ -703,14 +757,14 @@ Partial Class EditSettingsXML
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
         '
-        'EditSettingsXML
+        'RepoSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(560, 426)
+        Me.ClientSize = New System.Drawing.Size(594, 460)
         Me.Controls.Add(Me.ConfigTabs)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.Name = "EditSettingsXML"
+        Me.Name = "RepoSettings"
         Me.Text = "EditXML"
         Me.MailTabPage.ResumeLayout(False)
         Me.MailTabPage.PerformLayout()
@@ -766,4 +820,9 @@ Partial Class EditSettingsXML
     Friend WithEvents ButtonUpdate As System.Windows.Forms.Button
     Friend WithEvents ExtrasDirListTextBox As System.Windows.Forms.TextBox
     Friend WithEvents RepoPathTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents UpdateOrgButton As System.Windows.Forms.Button
+    Friend WithEvents Button2 As System.Windows.Forms.Button
+    Friend WithEvents Button3 As System.Windows.Forms.Button
+    Friend WithEvents Label28 As System.Windows.Forms.Label
+    Friend WithEvents OrgComboBox As System.Windows.Forms.ComboBox
 End Class

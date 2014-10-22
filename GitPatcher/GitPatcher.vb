@@ -111,8 +111,8 @@ Public Class GitPatcher
     End Sub
  
     Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
-        Dim newchildform As New EditSettingsXML
-        newchildform.MdiParent = Me '  
+        Dim newchildform As New RepoSettings
+        'newchildform.MdiParent = Me
         newchildform.Show()
     End Sub
 End Class
