@@ -2,13 +2,16 @@
 Imports System.IO
 Imports System.Xml
 
-Public Class DatabaseSettings
+Public Class OrgSettings
 
     Private repoName As String
+    Private repoOrgSearch As String
 
     Public Sub New(ByVal irepoName As String)
         Me.Location = New Point(0, 0)
         repoName = irepoName
+        repoOrgSearch = "/repos/repo[@RepoName='" & repoName & "']/orgs"
+
 
         InitializeComponent()
         Me.Text = "Database Settings for Repo " & repoName
@@ -22,7 +25,7 @@ Public Class DatabaseSettings
 
     Function checkOrg(ByVal iOrgName) As Boolean
 
-     
+
         Dim l_OrgNode As XmlNode
 
 
@@ -36,7 +39,8 @@ Public Class DatabaseSettings
         ' Dim l_OrgNodeList As XmlNodeList = l_RepoNode.SelectNodes("/org")
 
 
-        Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['" & repoName & "']/orgs")
+        'Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['" & repoName & "']/orgs")
+        Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoOrgSearch)
 
 
 
@@ -51,6 +55,10 @@ Public Class DatabaseSettings
             If l_OrgNode.Attributes.GetNamedItem("OrgName").Value = iOrgName Then
 
                 l_found = True
+
+                'OrgCode
+                OrgCodeTextBox.Text = l_OrgNode.Attributes.GetNamedItem("OrgCode").Value
+ 
                 'Prod
                 PRODTNSTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODTNS").Value
                 PRODCONNECTTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODCONNECT").Value
@@ -109,9 +117,9 @@ Public Class DatabaseSettings
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
         l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
 
-  
 
-        Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['" & repoName & "']/orgs")
+
+        Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoOrgSearch)
         ' Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['Tupperware']/orgs")
 
 
@@ -129,6 +137,10 @@ Public Class DatabaseSettings
             OrgComboBox.Items.Add(OrgNameAttribute)
 
         Next
+
+        'If OrgComboBox.Items.Count > 0 Then
+        'OrgComboBox.SelectedIndex = 0
+        'End If
 
         ' l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
 
@@ -204,34 +216,37 @@ Public Class DatabaseSettings
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
         l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
 
-        With l_GitReposXML.SelectSingleNode("/repos/repo['" & repoName & "']/orgs").CreateNavigator().AppendChild()
+        With l_GitReposXML.SelectSingleNode(repoOrgSearch).CreateNavigator().AppendChild()
             .WriteStartElement("org")
             .WriteAttributeString("OrgName", OrgComboBox.Text)
- 
+
+            'OrgCode
+            .WriteAttributeString("OrgCode", OrgCodeTextBox.Text)
+
             'Prod
             .WriteAttributeString("PRODTNS", PRODTNSTextBox.Text)
             .WriteAttributeString("PRODCONNECT", PRODCONNECTTextBox.Text)
- 
+
 
             'Uat
             .WriteAttributeString("UATTNS", UATTNSTextBox.Text)
             .WriteAttributeString("UATCONNECT", UATCONNECTTextBox.Text)
- 
+
 
             'Test
             .WriteAttributeString("TESTTNS", TESTTNSTextBox.Text)
             .WriteAttributeString("TESTCONNECT", TESTCONNECTTextBox.Text)
 
-        
+
             'Dev
             .WriteAttributeString("DEVTNS", DEVTNSTextBox.Text)
             .WriteAttributeString("DEVCONNECT", DEVCONNECTTextBox.Text)
- 
+
             'VM
             .WriteAttributeString("VMTNS", VMTNSTextBox.Text)
             .WriteAttributeString("VMCONNECT", VMCONNECTTextBox.Text)
- 
-  
+
+
             .WriteEndElement()
             .Close()
         End With
@@ -307,7 +322,7 @@ Public Class DatabaseSettings
         ' l_OrgNodeList = l_GitReposXML.SelectNodes("/repos/repo/")
 
 
-        Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['" & repoName & "']/orgs")
+        Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoOrgSearch)
 
 
 
@@ -355,10 +370,47 @@ Public Class DatabaseSettings
         ButtonUpdate.Visible = True
     End Sub
 
+    Private Sub OrgCodeTextBox_TextChanged(sender As Object, e As EventArgs) Handles OrgCodeTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+
     Private Sub PRODTNSTextBox_TextChanged(sender As Object, e As EventArgs) Handles PRODTNSTextBox.TextChanged
         showUpdateButton()
     End Sub
 
 
+    Private Sub PRODCONNECTTextBox_TextChanged(sender As Object, e As EventArgs) Handles PRODCONNECTTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+    Private Sub UATTNSTextBox_TextChanged(sender As Object, e As EventArgs) Handles UATTNSTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+    Private Sub UATCONNECTTextBox_TextChanged(sender As Object, e As EventArgs) Handles UATCONNECTTextBox.TextChanged
+        showUpdateButton()
+    End Sub
 
+    Private Sub TESTTNSTextBox_TextChanged(sender As Object, e As EventArgs) Handles TESTTNSTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+    Private Sub TESTCONNECTTextBox_TextChanged(sender As Object, e As EventArgs) Handles TESTCONNECTTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+
+
+    Private Sub DEVTNSTextBox_TextChanged(sender As Object, e As EventArgs) Handles DEVTNSTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+    Private Sub DEVCONNECTTextBox_TextChanged(sender As Object, e As EventArgs) Handles DEVCONNECTTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+        
+    Private Sub VMTNSTextBox_TextChanged(sender As Object, e As EventArgs) Handles VMTNSTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+    Private Sub VMCONNECTTextBox_TextChanged(sender As Object, e As EventArgs) Handles VMCONNECTTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+ 
+ 
+     
 End Class

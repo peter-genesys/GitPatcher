@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class DatabaseSettings
+Partial Class OrgSettings
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -30,14 +30,14 @@ Partial Class DatabaseSettings
         Dim Label6 As System.Windows.Forms.Label
         Dim Label9 As System.Windows.Forms.Label
         Dim Label12 As System.Windows.Forms.Label
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DatabaseSettings))
+        Dim Label1 As System.Windows.Forms.Label
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(OrgSettings))
         Me.PRODTNSTextBox = New System.Windows.Forms.TextBox()
         Me.ButtonUpdate = New System.Windows.Forms.Button()
         Me.ButtonRemove = New System.Windows.Forms.Button()
         Me.ButtonAdd = New System.Windows.Forms.Button()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.OrgComboBox = New System.Windows.Forms.ComboBox()
-        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.PRODCONNECTTextBox = New System.Windows.Forms.TextBox()
         Me.UATCONNECTTextBox = New System.Windows.Forms.TextBox()
         Me.UATTNSTextBox = New System.Windows.Forms.TextBox()
@@ -47,6 +47,8 @@ Partial Class DatabaseSettings
         Me.DEVTNSTextBox = New System.Windows.Forms.TextBox()
         Me.VMCONNECTTextBox = New System.Windows.Forms.TextBox()
         Me.VMTNSTextBox = New System.Windows.Forms.TextBox()
+        Me.OrgCodeTextBox = New System.Windows.Forms.TextBox()
+        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Label26 = New System.Windows.Forms.Label()
         Label27 = New System.Windows.Forms.Label()
         Label29 = New System.Windows.Forms.Label()
@@ -54,6 +56,7 @@ Partial Class DatabaseSettings
         Label6 = New System.Windows.Forms.Label()
         Label9 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
+        Label1 = New System.Windows.Forms.Label()
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -67,6 +70,73 @@ Partial Class DatabaseSettings
         Label26.TabIndex = 31
         Label26.Text = "Promo: PROD  " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hotfix: master"
         '
+        'Label27
+        '
+        Label27.AutoSize = True
+        Label27.Location = New System.Drawing.Point(119, 76)
+        Label27.Name = "Label27"
+        Label27.Size = New System.Drawing.Size(56, 13)
+        Label27.TabIndex = 33
+        Label27.Text = "TNS Entry"
+        '
+        'Label29
+        '
+        Label29.AutoSize = True
+        Label29.Location = New System.Drawing.Point(218, 76)
+        Label29.Name = "Label29"
+        Label29.Size = New System.Drawing.Size(77, 13)
+        Label29.TabIndex = 35
+        Label29.Text = "Connect String"
+        '
+        'Label3
+        '
+        Label3.AutoSize = True
+        Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label3.Location = New System.Drawing.Point(12, 128)
+        Label3.Name = "Label3"
+        Label3.Size = New System.Drawing.Size(83, 26)
+        Label3.TabIndex = 36
+        Label3.Text = "Promo: UAT  " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hotfix: uat"
+        '
+        'Label6
+        '
+        Label6.AutoSize = True
+        Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label6.Location = New System.Drawing.Point(12, 169)
+        Label6.Name = "Label6"
+        Label6.Size = New System.Drawing.Size(90, 26)
+        Label6.TabIndex = 41
+        Label6.Text = "Promo: TEST  " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hotfix: test"
+        '
+        'Label9
+        '
+        Label9.AutoSize = True
+        Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label9.Location = New System.Drawing.Point(12, 210)
+        Label9.Name = "Label9"
+        Label9.Size = New System.Drawing.Size(93, 26)
+        Label9.TabIndex = 46
+        Label9.Text = "Promo: DEV  " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hotfix: develop"
+        '
+        'Label12
+        '
+        Label12.AutoSize = True
+        Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label12.Location = New System.Drawing.Point(13, 256)
+        Label12.Name = "Label12"
+        Label12.Size = New System.Drawing.Size(76, 13)
+        Label12.TabIndex = 51
+        Label12.Text = "Promo: VM  "
+        '
+        'Label1
+        '
+        Label1.AutoSize = True
+        Label1.Location = New System.Drawing.Point(414, 44)
+        Label1.Name = "Label1"
+        Label1.Size = New System.Drawing.Size(52, 13)
+        Label1.TabIndex = 56
+        Label1.Text = "Org Code"
+        '
         'PRODTNSTextBox
         '
         Me.PRODTNSTextBox.Location = New System.Drawing.Point(122, 92)
@@ -76,7 +146,7 @@ Partial Class DatabaseSettings
         '
         'ButtonUpdate
         '
-        Me.ButtonUpdate.Location = New System.Drawing.Point(487, 12)
+        Me.ButtonUpdate.Location = New System.Drawing.Point(93, 12)
         Me.ButtonUpdate.Name = "ButtonUpdate"
         Me.ButtonUpdate.Size = New System.Drawing.Size(75, 23)
         Me.ButtonUpdate.TabIndex = 30
@@ -85,7 +155,7 @@ Partial Class DatabaseSettings
         '
         'ButtonRemove
         '
-        Me.ButtonRemove.Location = New System.Drawing.Point(487, 11)
+        Me.ButtonRemove.Location = New System.Drawing.Point(93, 11)
         Me.ButtonRemove.Name = "ButtonRemove"
         Me.ButtonRemove.Size = New System.Drawing.Size(75, 23)
         Me.ButtonRemove.TabIndex = 11
@@ -94,7 +164,7 @@ Partial Class DatabaseSettings
         '
         'ButtonAdd
         '
-        Me.ButtonAdd.Location = New System.Drawing.Point(488, 12)
+        Me.ButtonAdd.Location = New System.Drawing.Point(94, 12)
         Me.ButtonAdd.Name = "ButtonAdd"
         Me.ButtonAdd.Size = New System.Drawing.Size(75, 23)
         Me.ButtonAdd.TabIndex = 10
@@ -116,30 +186,8 @@ Partial Class DatabaseSettings
         Me.OrgComboBox.FormattingEnabled = True
         Me.OrgComboBox.Location = New System.Drawing.Point(93, 41)
         Me.OrgComboBox.Name = "OrgComboBox"
-        Me.OrgComboBox.Size = New System.Drawing.Size(469, 21)
+        Me.OrgComboBox.Size = New System.Drawing.Size(315, 21)
         Me.OrgComboBox.TabIndex = 8
-        '
-        'MySettingsBindingSource
-        '
-        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
-        '
-        'Label27
-        '
-        Label27.AutoSize = True
-        Label27.Location = New System.Drawing.Point(119, 76)
-        Label27.Name = "Label27"
-        Label27.Size = New System.Drawing.Size(56, 13)
-        Label27.TabIndex = 33
-        Label27.Text = "TNS Entry"
-        '
-        'Label29
-        '
-        Label29.AutoSize = True
-        Label29.Location = New System.Drawing.Point(218, 76)
-        Label29.Name = "Label29"
-        Label29.Size = New System.Drawing.Size(77, 13)
-        Label29.TabIndex = 35
-        Label29.Text = "Connect String"
         '
         'PRODCONNECTTextBox
         '
@@ -162,16 +210,6 @@ Partial Class DatabaseSettings
         Me.UATTNSTextBox.Size = New System.Drawing.Size(91, 20)
         Me.UATTNSTextBox.TabIndex = 37
         '
-        'Label3
-        '
-        Label3.AutoSize = True
-        Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label3.Location = New System.Drawing.Point(12, 128)
-        Label3.Name = "Label3"
-        Label3.Size = New System.Drawing.Size(83, 26)
-        Label3.TabIndex = 36
-        Label3.Text = "Promo: UAT  " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hotfix: uat"
-        '
         'TESTCONNECTTextBox
         '
         Me.TESTCONNECTTextBox.Location = New System.Drawing.Point(218, 175)
@@ -185,16 +223,6 @@ Partial Class DatabaseSettings
         Me.TESTTNSTextBox.Name = "TESTTNSTextBox"
         Me.TESTTNSTextBox.Size = New System.Drawing.Size(91, 20)
         Me.TESTTNSTextBox.TabIndex = 42
-        '
-        'Label6
-        '
-        Label6.AutoSize = True
-        Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label6.Location = New System.Drawing.Point(12, 169)
-        Label6.Name = "Label6"
-        Label6.Size = New System.Drawing.Size(90, 26)
-        Label6.TabIndex = 41
-        Label6.Text = "Promo: TEST  " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hotfix: test"
         '
         'DEVCONNECTTextBox
         '
@@ -210,16 +238,6 @@ Partial Class DatabaseSettings
         Me.DEVTNSTextBox.Size = New System.Drawing.Size(91, 20)
         Me.DEVTNSTextBox.TabIndex = 47
         '
-        'Label9
-        '
-        Label9.AutoSize = True
-        Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label9.Location = New System.Drawing.Point(12, 210)
-        Label9.Name = "Label9"
-        Label9.Size = New System.Drawing.Size(93, 26)
-        Label9.TabIndex = 46
-        Label9.Text = "Promo: DEV  " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hotfix: develop"
-        '
         'VMCONNECTTextBox
         '
         Me.VMCONNECTTextBox.Location = New System.Drawing.Point(218, 256)
@@ -234,21 +252,24 @@ Partial Class DatabaseSettings
         Me.VMTNSTextBox.Size = New System.Drawing.Size(91, 20)
         Me.VMTNSTextBox.TabIndex = 52
         '
-        'Label12
+        'OrgCodeTextBox
         '
-        Label12.AutoSize = True
-        Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label12.Location = New System.Drawing.Point(13, 256)
-        Label12.Name = "Label12"
-        Label12.Size = New System.Drawing.Size(76, 13)
-        Label12.TabIndex = 51
-        Label12.Text = "Promo: VM  "
+        Me.OrgCodeTextBox.Location = New System.Drawing.Point(472, 41)
+        Me.OrgCodeTextBox.Name = "OrgCodeTextBox"
+        Me.OrgCodeTextBox.Size = New System.Drawing.Size(90, 20)
+        Me.OrgCodeTextBox.TabIndex = 55
         '
-        'DatabaseSettings
+        'MySettingsBindingSource
+        '
+        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
+        '
+        'OrgSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(594, 319)
+        Me.Controls.Add(Label1)
+        Me.Controls.Add(Me.OrgCodeTextBox)
         Me.Controls.Add(Me.VMCONNECTTextBox)
         Me.Controls.Add(Me.VMTNSTextBox)
         Me.Controls.Add(Label12)
@@ -272,8 +293,8 @@ Partial Class DatabaseSettings
         Me.Controls.Add(Me.ButtonAdd)
         Me.Controls.Add(Me.ButtonRemove)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.Name = "DatabaseSettings"
-        Me.Text = "DatabaseSettings"
+        Me.Name = "OrgSettings"
+        Me.Text = "OrganisationSettings"
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -295,4 +316,5 @@ Partial Class DatabaseSettings
     Friend WithEvents DEVTNSTextBox As System.Windows.Forms.TextBox
     Friend WithEvents VMCONNECTTextBox As System.Windows.Forms.TextBox
     Friend WithEvents VMTNSTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents OrgCodeTextBox As System.Windows.Forms.TextBox
 End Class

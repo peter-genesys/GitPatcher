@@ -145,10 +145,10 @@
     <Compile Include="AppSettings.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DatabaseSettings.Designer.vb">
-      <DependentUpon>DatabaseSettings.vb</DependentUpon>
+    <Compile Include="OrgSettings.Designer.vb">
+      <DependentUpon>OrgSettings.vb</DependentUpon>
     </Compile>
-    <Compile Include="DatabaseSettings.vb">
+    <Compile Include="OrgSettings.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="RepoSettings.Designer.vb">
@@ -244,8 +244,8 @@
     <EmbeddedResource Include="AppSettings.resx">
       <DependentUpon>AppSettings.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DatabaseSettings.resx">
-      <DependentUpon>DatabaseSettings.vb</DependentUpon>
+    <EmbeddedResource Include="OrgSettings.resx">
+      <DependentUpon>OrgSettings.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RepoSettings.resx">
       <DependentUpon>RepoSettings.vb</DependentUpon>

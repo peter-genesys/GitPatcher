@@ -4,37 +4,68 @@ Imports System.Xml
 
 Public Class AppSettings
 
-    Function checkRepo(ByVal iRepoName) As Boolean
+    Private repoName As String
+    Private repoAppSearch As String
 
-        Dim l_GitReposXML As XmlDocument = New XmlDocument()
-        Dim l_RepoNodeList As XmlNodeList
-        Dim l_RepoNode As XmlNode
+    Public Sub New(ByVal irepoName As String)
+        Me.Location = New Point(0, 0)
+        repoName = irepoName
+
+        repoAppSearch = "/repos/repo[@RepoName='" & repoName & "']/apps"
+
+        InitializeComponent()
+        Me.Text = "Apex App Settings for Repo " & repoName
+
+        ButtonUpdate.Visible = False
+        ButtonAdd.Visible = False
+        ButtonRemove.Visible = False
+
+    End Sub
+
+
+    Function checkApp(ByVal iAppName) As Boolean
+
+
+        Dim l_AppNode As XmlNode
+
+
+
         'Load the Xml file
+        Dim l_GitReposXML As XmlDocument = New XmlDocument()
         l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
 
         'Get the list of name nodes 
-        l_RepoNodeList = l_GitReposXML.SelectNodes("/repos/repo")
+        ' Dim l_RepoNode As XmlNode = RepoSettings.getRepoNode(RepoSettings.RepoComboBox.Text)
+        ' Dim l_OrgNodeList As XmlNodeList = l_RepoNode.SelectNodes("/org")
+
+        Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoAppSearch)
+        ' Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['" & repoName & "']/apps")
+
+
+
+        'l_GitReposXML.SelectNodes("/repos/repo/" & RepoSettings.RepoComboBox.Text)
 
         Dim l_found As Boolean = False
         'Loop through the nodes
 
-        For Each l_RepoNode In l_RepoNodeList
+        For Each l_AppNode In l_AppsNode.ChildNodes
             'Get the RepoName Attribute Value
 
-            If l_RepoNode.Attributes.GetNamedItem("RepoName").Value = iRepoName Then
+            If l_AppNode.Attributes.GetNamedItem("AppName").Value = iAppName Then
 
                 l_found = True
-                'Paths
-                RepoPathTextBox.Text = l_RepoNode.Attributes.GetNamedItem("RepoPath").Value
 
-                ApexOffsetTextBox.Text = l_RepoNode.Attributes.GetNamedItem("ApexRelPath").Value
-                OJDBCjarFileTextBox.Text = l_RepoNode.Attributes.GetNamedItem("ODBCjavaRelPath").Value
+                'App Code
+                AppCodeTextBox.Text = l_AppNode.Attributes.GetNamedItem("AppCode").Value
 
-                DBOffsetTextBox.Text = l_RepoNode.Attributes.GetNamedItem("DatabaseRelPath").Value
-                ExtrasDirListTextBox.Text = l_RepoNode.Attributes.GetNamedItem("ExtrasRelPath").Value
+                'App Id
+                AppIdTextBox.Text = l_AppNode.Attributes.GetNamedItem("AppId").Value
 
-                PatchOffsetTextBox.Text = l_RepoNode.Attributes.GetNamedItem("PatchRelPath").Value
-                PatchExportPathTextBox.Text = l_RepoNode.Attributes.GetNamedItem("PatchExportPath").Value
+                'Jira Issue
+                JiraIssueTextBox.Text = l_AppNode.Attributes.GetNamedItem("Jira").Value
+
+                'Parsing Schema
+                ParsingSchemaTextBox.Text = l_AppNode.Attributes.GetNamedItem("Schema").Value
 
                 hideUpdateButton()
 
@@ -49,106 +80,57 @@ Public Class AppSettings
     End Function
 
 
-    Sub readGitRepos()
-        Try
-            Dim l_GitReposXML As XmlDocument = New XmlDocument()
+
+    Sub readApps()
+
+        'Dim l_GitReposXML As XmlDocument = New XmlDocument()
+
+        'Dim l_OrgNodeList As XmlNodeList
+        Dim l_AppNode As XmlNode
+        'Create the XML Document
+
+        'Load the Xml file
+        'l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+
+        'Dim l_RepoNode As XmlNode = RepoSettings.getRepoNode(RepoSettings.RepoComboBox.Text)
+        ' Dim l_OrgNodeList As XmlNodeList = l_RepoNode.SelectNodes("/orgs")
+
+        'With l_GitReposXML.SelectSingleNode("/repos/repo['" & RepoSettings.RepoComboBox.Text & "']/orgs").CreateNavigator().AppendChild()
+        '    .WriteStartElement("org")
+        '    .WriteElementString("OrgName", OrgComboBox.Text)
+        '    .WriteEndElement()
+        '    .Close()
+        'End With
+
+        Dim l_GitReposXML As XmlDocument = New XmlDocument()
+        l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+
+
+        Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoAppSearch)
+        'Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['" & repoName & "']/apps")
+        ' Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['Tupperware']/orgs")
 
 
 
-            Dim l_RepoNodeList As XmlNodeList
-            Dim l_RepoNode As XmlNode
-            'Create the XML Document
-
-            'Load the Xml file
-            l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
-
-            Dim l_ReposNode As XmlNode = l_GitReposXML.DocumentElement
+        'Get the list of name nodes 
+        ' l_OrgNodeList = l_GitReposXML.SelectNodes("/repos/repo/" & RepoSettings.RepoComboBox.Text)
+        'Loop through the nodes
 
 
-            'Get the list of name nodes 
-            l_RepoNodeList = l_GitReposXML.SelectNodes("/repos/repo")
-            'Loop through the nodes
+        AppComboBox.Items.Clear()
+        For Each l_AppNode In l_AppsNode.ChildNodes
+            'Get the RepoName Attribute Value
+            Dim AppNameAttribute = l_AppNode.Attributes.GetNamedItem("AppName").Value
 
-            XMLRepoComboBox.Items.Clear()
-            For Each l_RepoNode In l_RepoNodeList
-                'Get the RepoName Attribute Value
-                Dim RepoNameAttribute = l_RepoNode.Attributes.GetNamedItem("RepoName").Value
-                'Console.Write(RepoNameAttribute)
-                'Get the firstName Element Value
-                '  Dim firstNameValue = m_node.ChildNodes.Item(0).InnerText
-                'Get the lastName Element Value
-                '   Dim lastNameValue = m_node.ChildNodes.Item(1).InnerText
-                'Write Result to the Console
+            AppComboBox.Items.Add(AppNameAttribute)
 
+        Next
 
-                XMLRepoComboBox.Items.Add(RepoNameAttribute)
+        'If AppComboBox.Items.Count > 0 Then
+        ' AppComboBox.SelectedIndex = 0
+        ' End If
 
-                ' If My.Settings.CurrentRepo = RepoNameAttribute Then
-                '  RepoComboBox.SelectedIndex = RepoComboBox.Items.Count - 1
-                ' End If
-
-            Next
-
-            l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
-
-        Catch errorVariable As Exception
-            'Error trapping
-            Console.Write(errorVariable.ToString())
-        End Try
-
-
-    End Sub
-
-
-
-    Public Sub New()
-        InitializeComponent()
-
-        ButtonUpdate.Visible = False
-        ButtonAdd.Visible = False
-        ButtonRemove.Visible = False
-
-        'Repos
-        'RepoListTextBox.DataBindings.Add("Text", My.Settings, "RepoList")
-
-        'Databases
-        'DBListTextBox.DataBindings.Add("Text", My.Settings, "DBList")
-        'HotFixBranchesTextBox.DataBindings.Add("Text", My.Settings, "HotFixBranches")
-        'TNSListTextbox.DataBindings.Add("Text", My.Settings, "TNSList")
-        'ConnectionTextBox.DataBindings.Add("Text", My.Settings, "ConnectionList")
-
-        ''Paths
-        'PatchOffsetTextBox.DataBindings.Add("Text", My.Settings, "PatchDirOffset")
-        'ApexOffsetTextBox.DataBindings.Add("Text", My.Settings, "ApexDirOffset")
-        'DBOffsetTextBox.DataBindings.Add("Text", My.Settings, "DBDirOffset")
-
-
-
-        ''Extras
-        'ExtrasDirListTextBox.DataBindings.Add("Text", My.Settings, "ExtrasDirList")
-
-
-        'OJDBCjarFileTextBox.DataBindings.Add("Text", My.Settings, "JDBCjar")
-        'SQLpathTextBox.DataBindings.Add("Text", My.Settings, "SQLpath")
-        'GitExeTextBox.DataBindings.Add("Text", My.Settings, "GITpath")
-
-        'PatchExportPathTextBox.DataBindings.Add("Text", My.Settings, "PatchExportPath")
-
-
-        ''Apps
-        'ApplicationsTextBox.DataBindings.Add("Text", My.Settings, "ApplicationsList")   'Descriptions for Applications Eg Prism
-        'AppCodeTextBox.DataBindings.Add("Text", My.Settings, "AppCodeList")             'Codes for Applications        Eg prism
-        'AppListTextBox.DataBindings.Add("Text", My.Settings, "AppList")                 'Apex ids
-        'JiraProjectTextBox.DataBindings.Add("Text", My.Settings, "JiraProject") 'Default Jira Project of Apex Application
-        'ParsingSchemaTextbox.DataBindings.Add("Text", My.Settings, "ParsingSchemaList") 'Parsing schema of Apex Application
-
-
-        ''Mail
-        'SMTPhostTextBox.DataBindings.Add("Text", My.Settings, "SMTPhost")
-        'SMTPportTextBox.DataBindings.Add("Text", My.Settings, "SMTPport")
-        'RecipientDomainTextBox.DataBindings.Add("Text", My.Settings, "RecipientDomain")
-        'RecipientTextBox.DataBindings.Add("Text", My.Settings, "RecipientList")
-
+        ' l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
 
 
     End Sub
@@ -158,34 +140,16 @@ Public Class AppSettings
         Main.loadRepos()
     End Sub
 
-    Private Sub TestMailButton_Click(sender As Object, e As EventArgs) Handles TestMailButton.Click
-        Mail.SendNotification("Test Email", "Just testing my config for email from GitPatcher")
-    End Sub
-
-    Private Sub DBOffsetTextBox_TextChanged(sender As Object, e As EventArgs)
-        DBOffsetTextBox.Text = Replace(DBOffsetTextBox.Text, "\", "/")
-    End Sub
 
 
-    'Private Sub ConfigTabs_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ConfigTabs.SelectedIndexChanged
-
-    '    If (ConfigTabs.SelectedTab.Name.ToString) = "TabPageGitRepo" Then
-    '        'If TagsCheckedListBox.Items.Count = 0 Then
-    '        MsgBox("tab page git repo")
-    '        readGitRepos()
-    '        'End If
 
 
-    '    End If
-    'End Sub
-
-
-    Private Sub EditSettingsXML_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        readGitRepos()
+    Private Sub DatabaseSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        readApps()
     End Sub
 
 
-    Private Sub TestRepoValue()
+    Private Sub TestOrgValue()
         'Clear all dependant fields
 
         'Paths
@@ -208,9 +172,9 @@ Public Class AppSettings
         ButtonRemove.Visible = False
         ButtonAdd.Visible = False
         'Check the Repo exists in the XML doc
-        If Not String.IsNullOrEmpty(XMLRepoComboBox.Text) Then
+        If Not String.IsNullOrEmpty(AppComboBox.Text) Then
 
-            If checkRepo(XMLRepoComboBox.Text) Then
+            If checkApp(AppComboBox.Text) Then
                 'If exists 
                 '  - look up dependant fields
                 '  - show the "Remove" button
@@ -226,46 +190,93 @@ Public Class AppSettings
     End Sub
 
 
-    Private Sub XMLRepoComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles XMLRepoComboBox.SelectedIndexChanged
-        TestRepoValue()
+    Private Sub XMLRepoComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AppComboBox.SelectedIndexChanged
+        TestOrgValue()
     End Sub
 
-    Private Sub RepoComboBox_Leave(sender As Object, e As EventArgs) Handles XMLRepoComboBox.Leave
+    Private Sub RepoComboBox_Leave(sender As Object, e As EventArgs) Handles AppComboBox.Leave
 
-        TestRepoValue()
+        TestOrgValue()
     End Sub
 
-    Private Sub AddRepo()
+    Private Sub AddApp()
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
-
-
-        'Load the Xml file
         l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
 
-        Dim l_ReposNode As XmlNode = l_GitReposXML.DocumentElement
+        'Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo[@RepoName='" & repoName & "']/apps")
 
-        Dim l_NewRepoNode As XmlElement = l_GitReposXML.CreateElement("repo")
+        With l_GitReposXML.SelectSingleNode(repoAppSearch).CreateNavigator().AppendChild()
+            'With l_GitReposXML.SelectSingleNode("/repos/repo['" & repoName & "']/apps").CreateNavigator().AppendChild()
+            .WriteStartElement("app")
+            'MsgBox(AppComboBox.SelectedText)
+            'MsgBox(AppComboBox.SelectedItem)
+            'MsgBox(AppComboBox.SelectedValue)
+            'MsgBox(AppComboBox.Text)
+            'MsgBox(AppComboBox.ToString)
+            .WriteAttributeString("AppName", AppComboBox.Text)
 
-        l_NewRepoNode.SetAttribute("RepoName", XMLRepoComboBox.Text)
 
-        'Paths
+            'App Code
+            .WriteAttributeString("AppCode", AppCodeTextBox.Text)
 
-        l_NewRepoNode.SetAttribute("RepoPath", RepoPathTextBox.Text)
-        l_NewRepoNode.SetAttribute("ApexRelPath", ApexOffsetTextBox.Text)
-        l_NewRepoNode.SetAttribute("ODBCjavaRelPath", OJDBCjarFileTextBox.Text)
-        l_NewRepoNode.SetAttribute("DatabaseRelPath", DBOffsetTextBox.Text)
-        l_NewRepoNode.SetAttribute("ExtrasRelPath", ExtrasDirListTextBox.Text)
-        l_NewRepoNode.SetAttribute("PatchRelPath", PatchOffsetTextBox.Text)
-        l_NewRepoNode.SetAttribute("PatchExportPath", PatchExportPathTextBox.Text)
 
-        l_ReposNode.AppendChild(l_NewRepoNode)
+            'App Id
+            .WriteAttributeString("AppId", AppIdTextBox.Text)
+
+            'Jira Issue
+            .WriteAttributeString("Jira", JiraIssueTextBox.Text)
+
+            'Parsing Schema
+            .WriteAttributeString("Schema", ParsingSchemaTextBox.Text)
+
+            .WriteEndElement()
+            .Close()
+        End With
+
+
+        'Dim l_RepoNode As XmlNode = RepoSettings.getRepoNode(RepoSettings.RepoComboBox.Text)
+        'Dim l_OrgNodeList As XmlNodeList = l_RepoNode.SelectNodes("/org")
+
+
+        '' Dim l_RepoNode As XmlNode = l_GitReposXML.GetElementById(
+
+        'Dim l_NewRepoNode As XmlElement = l_GitReposXML.CreateElement(
+
+        'CreateElement("org")
+
+        'l_NewRepoNode.SetAttribute("OrgName", OrgComboBox.Text)
+
+
+        ''Prod
+        'l_NewRepoNode.SetAttribute("PRODTNS", PRODTNSTextBox.Text)
+        'l_NewRepoNode.SetAttribute("PRODCONNECT", PRODCONNECTTextBox.Text)
+
+        ''Uat
+        'l_NewRepoNode.SetAttribute("UATTNS", UATTNSTextBox.Text)
+        'l_NewRepoNode.SetAttribute("UATCONNECT", UATCONNECTTextBox.Text)
+
+
+        ''Test
+        'l_NewRepoNode.SetAttribute("TESTTNS", TESTTNSTextBox.Text)
+        'l_NewRepoNode.SetAttribute("TESTCONNECT", TESTCONNECTTextBox.Text)
+
+        ''Dev
+        'l_NewRepoNode.SetAttribute("DEVTNS", DEVTNSTextBox.Text)
+        'l_NewRepoNode.SetAttribute("DEVCONNECT", DEVCONNECTTextBox.Text)
+
+        ''VM
+        'l_NewRepoNode.SetAttribute("VMTNS", VMTNSTextBox.Text)
+        'l_NewRepoNode.SetAttribute("VMCONNECT", VMCONNECTTextBox.Text)
+
+
+        'l_RepoNode.AppendChild(l_NewRepoNode)
 
         l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
 
 
-        TestRepoValue()
-        readGitRepos()
+        TestOrgValue()
+        readApps()
     End Sub
 
 
@@ -273,30 +284,43 @@ Public Class AppSettings
 
     Private Sub ButtonAdd_Click(sender As Object, e As EventArgs) Handles ButtonAdd.Click
 
-        AddRepo()
+        AddApp()
 
     End Sub
 
-    Private Sub RemoveRepo()
+    Private Sub RemoveApp()
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
 
-        Dim l_RepoNodeList As XmlNodeList
-        Dim l_RepoNode As XmlNode
+        'Dim l_OrgNodeList As XmlNodeList
+        ' Dim l_RepoNode As XmlNode
         'Create the XML Document
 
         'Load the Xml file
         l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
 
-        Dim l_ReposNode As XmlNode = l_GitReposXML.DocumentElement
+        ' Dim l_ReposNode As XmlNode = l_GitReposXML.DocumentElement
 
         'Get the list of name nodes 
-        l_RepoNodeList = l_GitReposXML.SelectNodes("/repos/repo")
-        For Each l_RepoNode In l_RepoNodeList
+        ' l_OrgNodeList = l_GitReposXML.SelectNodes("/repos/repo/")
+
+        Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoAppSearch)
+        'Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['" & repoName & "']/apps")
+
+
+
+        'l_GitReposXML.SelectNodes("/repos/repo/" & RepoSettings.RepoComboBox.Text)
+
+        Dim l_found As Boolean = False
+        'Loop through the nodes
+
+        For Each l_AppNode In l_AppsNode.ChildNodes
             'Get the RepoName Attribute Value
-            If l_RepoNode.Attributes.GetNamedItem("RepoName").Value = XMLRepoComboBox.Text Then
+
+            If l_AppNode.Attributes.GetNamedItem("AppName").Value = AppComboBox.Text Then
+
                 'Remove this node
-                l_ReposNode.RemoveChild(l_RepoNode)
+                l_AppsNode.RemoveChild(l_AppNode)
             End If
 
 
@@ -304,19 +328,19 @@ Public Class AppSettings
 
         l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
 
-        TestRepoValue()
-        readGitRepos()
+        TestOrgValue()
+        readApps()
     End Sub
 
 
     Private Sub ButtonRemove_Click(sender As Object, e As EventArgs) Handles ButtonRemove.Click
-        RemoveRepo()
+        RemoveApp()
 
     End Sub
 
     Private Sub ButtonUpdate_Click(sender As Object, e As EventArgs) Handles ButtonUpdate.Click
-        RemoveRepo()
-        AddRepo()
+        RemoveApp()
+        AddApp()
         hideUpdateButton()
 
     End Sub
@@ -329,33 +353,22 @@ Public Class AppSettings
         ButtonUpdate.Visible = True
     End Sub
 
-    Private Sub RepoPathTextBox_TextChanged(sender As Object, e As EventArgs) Handles RepoPathTextBox.TextChanged
+    Private Sub AppCodeTextBox_TextChanged(sender As Object, e As EventArgs) Handles AppCodeTextBox.TextChanged
         showUpdateButton()
     End Sub
 
-    Private Sub ApexOffsetTextBox_TextChanged(sender As Object, e As EventArgs) Handles ApexOffsetTextBox.TextChanged
+    Private Sub AppIdTextBox_TextChanged(sender As Object, e As EventArgs) Handles AppIdTextBox.TextChanged
         showUpdateButton()
     End Sub
 
-    Private Sub OJDBCjarFileTextBox_TextChanged(sender As Object, e As EventArgs) Handles OJDBCjarFileTextBox.TextChanged
+    Private Sub JiraIssueTextBox_TextChanged(sender As Object, e As EventArgs) Handles JiraIssueTextBox.TextChanged
         showUpdateButton()
     End Sub
 
-    Private Sub DBOffsetTextBox_TextChanged_1(sender As Object, e As EventArgs) Handles DBOffsetTextBox.TextChanged
+    Private Sub ParsingSchemaTextBox_TextChanged(sender As Object, e As EventArgs) Handles ParsingSchemaTextBox.TextChanged
         showUpdateButton()
     End Sub
 
-    Private Sub ExtrasDirListTextBox_TextChanged(sender As Object, e As EventArgs) Handles ExtrasDirListTextBox.TextChanged
-        showUpdateButton()
-    End Sub
-
-    Private Sub PatchExportPathTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchExportPathTextBox.TextChanged
-        showUpdateButton()
-    End Sub
-
-    Private Sub PatchOffsetTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchOffsetTextBox.TextChanged
-        showUpdateButton()
-    End Sub
 
 
 End Class

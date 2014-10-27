@@ -122,6 +122,11 @@ Public Class RepoSettings
                 ' End If
 
             Next
+            If RepoComboBox.Items.Count > 0 Then
+                RepoComboBox.SelectedIndex = 0
+            End If
+
+            ' RepoComboBox.SelectedIndex = RepoComboBox.Items.Count - 1
 
             ' l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
 
@@ -398,8 +403,15 @@ Public Class RepoSettings
    
    
     Private Sub DBButton_Click(sender As Object, e As EventArgs) Handles DBButton.Click
-        Dim theDatabaseSettings As DatabaseSettings = New DatabaseSettings(RepoComboBox.Text)
+        'MsgBox(RepoComboBox.SelectedItem)
+        Dim theDatabaseSettings As OrgSettings = New OrgSettings(RepoComboBox.SelectedItem)
         'theDatabaseSettings.MdiParent = Me
         theDatabaseSettings.Show()
+    End Sub
+
+    Private Sub AppButton_Click(sender As Object, e As EventArgs) Handles AppButton.Click
+        'MsgBox(RepoComboBox.SelectedItem)
+        Dim theApplicationSettings As AppSettings = New AppSettings(RepoComboBox.SelectedItem)
+        theApplicationSettings.Show()
     End Sub
 End Class

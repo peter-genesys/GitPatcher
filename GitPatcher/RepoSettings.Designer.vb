@@ -43,8 +43,9 @@ Partial Class RepoSettings
         Me.ButtonAdd = New System.Windows.Forms.Button()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.RepoComboBox = New System.Windows.Forms.ComboBox()
-        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.DBButton = New System.Windows.Forms.Button()
+        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.AppButton = New System.Windows.Forms.Button()
         Label26 = New System.Windows.Forms.Label()
         Label22 = New System.Windows.Forms.Label()
         Label24 = New System.Windows.Forms.Label()
@@ -127,7 +128,7 @@ Partial Class RepoSettings
         '
         'ButtonUpdate
         '
-        Me.ButtonUpdate.Location = New System.Drawing.Point(462, 15)
+        Me.ButtonUpdate.Location = New System.Drawing.Point(68, 15)
         Me.ButtonUpdate.Name = "ButtonUpdate"
         Me.ButtonUpdate.Size = New System.Drawing.Size(75, 23)
         Me.ButtonUpdate.TabIndex = 49
@@ -179,7 +180,7 @@ Partial Class RepoSettings
         '
         'ButtonRemove
         '
-        Me.ButtonRemove.Location = New System.Drawing.Point(462, 14)
+        Me.ButtonRemove.Location = New System.Drawing.Point(68, 14)
         Me.ButtonRemove.Name = "ButtonRemove"
         Me.ButtonRemove.Size = New System.Drawing.Size(75, 23)
         Me.ButtonRemove.TabIndex = 36
@@ -188,7 +189,7 @@ Partial Class RepoSettings
         '
         'ButtonAdd
         '
-        Me.ButtonAdd.Location = New System.Drawing.Point(463, 15)
+        Me.ButtonAdd.Location = New System.Drawing.Point(69, 15)
         Me.ButtonAdd.Name = "ButtonAdd"
         Me.ButtonAdd.Size = New System.Drawing.Size(75, 23)
         Me.ButtonAdd.TabIndex = 35
@@ -212,24 +213,34 @@ Partial Class RepoSettings
         Me.RepoComboBox.Size = New System.Drawing.Size(444, 21)
         Me.RepoComboBox.TabIndex = 33
         '
-        'MySettingsBindingSource
-        '
-        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
-        '
         'DBButton
         '
-        Me.DBButton.Location = New System.Drawing.Point(463, 363)
+        Me.DBButton.Location = New System.Drawing.Point(150, 15)
         Me.DBButton.Name = "DBButton"
         Me.DBButton.Size = New System.Drawing.Size(75, 23)
         Me.DBButton.TabIndex = 52
         Me.DBButton.Text = "Databases"
         Me.DBButton.UseVisualStyleBackColor = True
         '
+        'MySettingsBindingSource
+        '
+        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
+        '
+        'AppButton
+        '
+        Me.AppButton.Location = New System.Drawing.Point(231, 15)
+        Me.AppButton.Name = "AppButton"
+        Me.AppButton.Size = New System.Drawing.Size(75, 23)
+        Me.AppButton.TabIndex = 53
+        Me.AppButton.Text = "Applications"
+        Me.AppButton.UseVisualStyleBackColor = True
+        '
         'RepoSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(594, 460)
+        Me.Controls.Add(Me.AppButton)
         Me.Controls.Add(Me.DBButton)
         Me.Controls.Add(Me.RepoPathTextBox)
         Me.Controls.Add(Label26)
@@ -272,4 +283,5 @@ Partial Class RepoSettings
     Friend WithEvents Label25 As System.Windows.Forms.Label
     Friend WithEvents RepoComboBox As System.Windows.Forms.ComboBox
     Friend WithEvents DBButton As System.Windows.Forms.Button
+    Friend WithEvents AppButton As System.Windows.Forms.Button
 End Class

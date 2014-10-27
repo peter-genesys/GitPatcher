@@ -2,11 +2,18 @@
 <repos>
   <repo RepoName="NavigoAlesco" RepoPath="F:/navigo_alesco/" ApexRelPath="apex/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database/" ExtrasRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/">
     <orgs>
-      <org OrgName="tup" PRODTNS="TUPPROD" PRODCONNECT="" UATTNS="TUPUAT" UATCONNECT="" TESTTNS="TUPTEST" TESTCONNECT="" DEVTNS="TUPDEV" DEVCONNECT="" VMTNS="VM" VMCONNECT="" />
+      <org OrgName="Navigo" OrgCode="nav" PRODTNS="PROD" PRODCONNECT="" UATTNS="UAT" UATCONNECT="" TESTTNS="TEST" TESTCONNECT="" DEVTNS="DEV" DEVCONNECT="" VMTNS="VM" VMCONNECT="" />
     </orgs>
+    <apps>
+      <app AppName="alesco" AppCode="al" AppId="f100" Jira="AL" Schema="alesco" />
+    </apps>
   </repo>
   <repo RepoName="Tupperware" RepoPath="F:/tupperware/" ApexRelPath="database/apex/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database/" ExtrasRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/">
     <orgs>
+      <org OrgName="Tupperware" OrgCode="tup" PRODTNS="TUPPROD" PRODCONNECT="" UATTNS="TUPUAT" UATCONNECT="" TESTTNS="TUPTEST" TESTCONNECT="" DEVTNS="TUPDEV" DEVCONNECT="" VMTNS="VM" VMCONNECT="" />
     </orgs>
+    <apps>
+      <app AppName="Warranty" AppCode="wty" AppId="f200" Jira="WTY-" Schema="public_apps" />
+    </apps>
   </repo>
 </repos>
