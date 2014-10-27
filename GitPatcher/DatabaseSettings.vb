@@ -290,26 +290,39 @@ Public Class DatabaseSettings
 
     End Sub
 
-    Private Sub RemoveRepo()
+    Private Sub RemoveOrg()
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
 
-        Dim l_RepoNodeList As XmlNodeList
-        Dim l_RepoNode As XmlNode
+        'Dim l_OrgNodeList As XmlNodeList
+        ' Dim l_RepoNode As XmlNode
         'Create the XML Document
 
         'Load the Xml file
         l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
 
-        Dim l_ReposNode As XmlNode = l_GitReposXML.DocumentElement
+        ' Dim l_ReposNode As XmlNode = l_GitReposXML.DocumentElement
 
         'Get the list of name nodes 
-        l_RepoNodeList = l_GitReposXML.SelectNodes("/repos/repo")
-        For Each l_RepoNode In l_RepoNodeList
+        ' l_OrgNodeList = l_GitReposXML.SelectNodes("/repos/repo/")
+
+
+        Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['" & repoName & "']/orgs")
+
+
+
+        'l_GitReposXML.SelectNodes("/repos/repo/" & RepoSettings.RepoComboBox.Text)
+
+        Dim l_found As Boolean = False
+        'Loop through the nodes
+
+        For Each l_OrgNode In l_OrgsNode.ChildNodes
             'Get the RepoName Attribute Value
-            If l_RepoNode.Attributes.GetNamedItem("RepoName").Value = OrgComboBox.Text Then
+
+            If l_OrgNode.Attributes.GetNamedItem("OrgName").Value = OrgComboBox.Text Then
+
                 'Remove this node
-                l_ReposNode.RemoveChild(l_RepoNode)
+                l_OrgsNode.RemoveChild(l_OrgNode)
             End If
 
 
@@ -323,12 +336,12 @@ Public Class DatabaseSettings
 
 
     Private Sub ButtonRemove_Click(sender As Object, e As EventArgs) Handles ButtonRemove.Click
-        RemoveRepo()
+        RemoveOrg()
 
     End Sub
 
     Private Sub ButtonUpdate_Click(sender As Object, e As EventArgs) Handles ButtonUpdate.Click
-        RemoveRepo()
+        RemoveOrg()
         AddOrg()
         hideUpdateButton()
 
