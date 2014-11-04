@@ -199,9 +199,10 @@ Partial Class RepoSettings
         'Label25
         '
         Me.Label25.AutoSize = True
+        Me.Label25.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label25.Location = New System.Drawing.Point(13, 47)
         Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(49, 13)
+        Me.Label25.Size = New System.Drawing.Size(57, 13)
         Me.Label25.TabIndex = 34
         Me.Label25.Text = "Git Repo"
         '

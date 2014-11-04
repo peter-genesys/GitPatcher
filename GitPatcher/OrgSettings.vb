@@ -32,7 +32,7 @@ Public Class OrgSettings
 
         'Load the Xml file
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
-        l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
         'Get the list of name nodes 
         ' Dim l_RepoNode As XmlNode = RepoSettings.getRepoNode(RepoSettings.RepoComboBox.Text)
@@ -102,7 +102,7 @@ Public Class OrgSettings
         'Create the XML Document
 
         'Load the Xml file
-        'l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        'l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
         'Dim l_RepoNode As XmlNode = RepoSettings.getRepoNode(RepoSettings.RepoComboBox.Text)
         ' Dim l_OrgNodeList As XmlNodeList = l_RepoNode.SelectNodes("/orgs")
@@ -115,7 +115,7 @@ Public Class OrgSettings
         'End With
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
-        l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
 
 
@@ -128,6 +128,10 @@ Public Class OrgSettings
         ' l_OrgNodeList = l_GitReposXML.SelectNodes("/repos/repo/" & RepoSettings.RepoComboBox.Text)
         'Loop through the nodes
 
+        Dim l_current_value As String = OrgComboBox.Text
+        Dim l_found As Boolean = False
+
+
 
         OrgComboBox.Items.Clear()
         For Each l_OrgNode In l_OrgsNode.ChildNodes
@@ -136,13 +140,25 @@ Public Class OrgSettings
 
             OrgComboBox.Items.Add(OrgNameAttribute)
 
+            If l_current_value = OrgNameAttribute Then
+                'ReSelect the current item
+                OrgComboBox.SelectedIndex = OrgComboBox.Items.Count - 1
+                l_found = True
+            End If
+
         Next
+
+        If OrgComboBox.Items.Count > 0 And Not l_found Then
+            'Select the first item
+            OrgComboBox.SelectedIndex = 0
+        End If
+
 
         'If OrgComboBox.Items.Count > 0 Then
         'OrgComboBox.SelectedIndex = 0
         'End If
 
-        ' l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        ' l_GitReposXML.Save(Globals.XMLRepoFilePath())
 
 
     End Sub
@@ -214,7 +230,7 @@ Public Class OrgSettings
     Private Sub AddOrg()
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
-        l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
         With l_GitReposXML.SelectSingleNode(repoOrgSearch).CreateNavigator().AppendChild()
             .WriteStartElement("org")
@@ -289,7 +305,7 @@ Public Class OrgSettings
 
         'l_RepoNode.AppendChild(l_NewRepoNode)
 
-        l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        l_GitReposXML.Save(Globals.XMLRepoFilePath())
 
 
         TestOrgValue()
@@ -314,7 +330,7 @@ Public Class OrgSettings
         'Create the XML Document
 
         'Load the Xml file
-        l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
         ' Dim l_ReposNode As XmlNode = l_GitReposXML.DocumentElement
 
@@ -343,16 +359,16 @@ Public Class OrgSettings
 
         Next
 
-        l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        l_GitReposXML.Save(Globals.XMLRepoFilePath())
 
-        TestOrgValue()
-        readOrgs()
+
     End Sub
 
 
     Private Sub ButtonRemove_Click(sender As Object, e As EventArgs) Handles ButtonRemove.Click
         RemoveOrg()
-
+        TestOrgValue()
+        readOrgs()
     End Sub
 
     Private Sub ButtonUpdate_Click(sender As Object, e As EventArgs) Handles ButtonUpdate.Click
@@ -412,5 +428,8 @@ Public Class OrgSettings
     End Sub
  
  
-     
+  
+    Private Sub Label2_Click(sender As Object, e As EventArgs)
+
+    End Sub
 End Class

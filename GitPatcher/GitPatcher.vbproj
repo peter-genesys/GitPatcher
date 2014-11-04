@@ -145,6 +145,12 @@
     <Compile Include="AppSettings.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Configuration.Designer.vb">
+      <DependentUpon>Configuration.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="OrgSettings.Designer.vb">
       <DependentUpon>OrgSettings.vb</DependentUpon>
     </Compile>
@@ -243,6 +249,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AppSettings.resx">
       <DependentUpon>AppSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration.resx">
+      <DependentUpon>Configuration.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OrgSettings.resx">
       <DependentUpon>OrgSettings.vb</DependentUpon>

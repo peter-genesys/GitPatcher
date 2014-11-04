@@ -180,12 +180,18 @@
         If mergeAndPush.toDoNextStep() Then
             'Switch to develop branch
             GitBash.Switch(Globals.currentRepo, iBranchTo)
-
+            'Verify that the switch occurred and if not, use tortoise to do it.
+            'Thus exposing the issue, so the developer can resolve it, before proceeding.
+            If Globals.currentBranch <> iBranchTo Then
+                Tortoise.Switch(Globals.currentRepo, iBranchTo)
+            End If
+ 
         End If
 
         If mergeAndPush.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(Globals.currentRepo, "origin", iBranchTo)
+            'GitBash.Pull(Globals.currentRepo, "origin", iBranchTo)
+            Tortoise.Pull(Globals.currentRepo)
 
         End If
 

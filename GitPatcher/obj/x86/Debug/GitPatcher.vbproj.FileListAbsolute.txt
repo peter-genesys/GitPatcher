@@ -93,3 +93,4 @@ F:\GitPatcher\GitPatcher\bin\x86\Debug\Oracle.DataAccess.dll
 F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.AppSettings.resources
 F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.RepoSettings.resources
 F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.OrgSettings.resources
+F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.Configuration.resources

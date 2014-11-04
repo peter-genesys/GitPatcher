@@ -48,12 +48,42 @@ Partial Class AppSettings
         'Label26
         '
         Label26.AutoSize = True
-        Label26.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label26.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Label26.Location = New System.Drawing.Point(90, 87)
         Label26.Name = "Label26"
-        Label26.Size = New System.Drawing.Size(99, 13)
+        Label26.Size = New System.Drawing.Size(85, 13)
         Label26.TabIndex = 31
         Label26.Text = "Patch App Code"
+        '
+        'Label1
+        '
+        Label1.AutoSize = True
+        Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label1.Location = New System.Drawing.Point(90, 129)
+        Label1.Name = "Label1"
+        Label1.Size = New System.Drawing.Size(65, 13)
+        Label1.TabIndex = 55
+        Label1.Text = "Apex App Id"
+        '
+        'Label2
+        '
+        Label2.AutoSize = True
+        Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label2.Location = New System.Drawing.Point(90, 170)
+        Label2.Name = "Label2"
+        Label2.Size = New System.Drawing.Size(91, 13)
+        Label2.TabIndex = 56
+        Label2.Text = "Jira or Issue Code"
+        '
+        'Label3
+        '
+        Label3.AutoSize = True
+        Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label3.Location = New System.Drawing.Point(90, 211)
+        Label3.Name = "Label3"
+        Label3.Size = New System.Drawing.Size(84, 13)
+        Label3.TabIndex = 57
+        Label3.Text = "Parsing Schema"
         '
         'AppCodeTextBox
         '
@@ -132,36 +162,6 @@ Partial Class AppSettings
         Me.ParsingSchemaTextBox.Name = "ParsingSchemaTextBox"
         Me.ParsingSchemaTextBox.Size = New System.Drawing.Size(91, 20)
         Me.ParsingSchemaTextBox.TabIndex = 47
-        '
-        'Label1
-        '
-        Label1.AutoSize = True
-        Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label1.Location = New System.Drawing.Point(90, 129)
-        Label1.Name = "Label1"
-        Label1.Size = New System.Drawing.Size(76, 13)
-        Label1.TabIndex = 55
-        Label1.Text = "Apex App Id"
-        '
-        'Label2
-        '
-        Label2.AutoSize = True
-        Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label2.Location = New System.Drawing.Point(90, 170)
-        Label2.Name = "Label2"
-        Label2.Size = New System.Drawing.Size(109, 13)
-        Label2.TabIndex = 56
-        Label2.Text = "Jira or Issue Code"
-        '
-        'Label3
-        '
-        Label3.AutoSize = True
-        Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label3.Location = New System.Drawing.Point(90, 211)
-        Label3.Name = "Label3"
-        Label3.Size = New System.Drawing.Size(98, 13)
-        Label3.TabIndex = 57
-        Label3.Text = "Parsing Schema"
         '
         'AppSettings
         '

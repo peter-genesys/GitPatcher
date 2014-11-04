@@ -96,7 +96,7 @@ Public Class GitPatcher
     End Sub
 
     Private Sub ConfigToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ConfigToolStripMenuItem.Click
-        Dim newchildform As New Config
+        Dim newchildform As New Configuration
         newchildform.MdiParent = Me '  
         newchildform.Show()
     End Sub

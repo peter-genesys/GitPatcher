@@ -32,7 +32,7 @@ Public Class AppSettings
 
         'Load the Xml file
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
-        l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
         'Get the list of name nodes 
         ' Dim l_RepoNode As XmlNode = RepoSettings.getRepoNode(RepoSettings.RepoComboBox.Text)
@@ -90,7 +90,7 @@ Public Class AppSettings
         'Create the XML Document
 
         'Load the Xml file
-        'l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        'l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
         'Dim l_RepoNode As XmlNode = RepoSettings.getRepoNode(RepoSettings.RepoComboBox.Text)
         ' Dim l_OrgNodeList As XmlNodeList = l_RepoNode.SelectNodes("/orgs")
@@ -103,7 +103,7 @@ Public Class AppSettings
         'End With
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
-        l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
 
         Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoAppSearch)
@@ -117,6 +117,10 @@ Public Class AppSettings
         'Loop through the nodes
 
 
+        Dim l_current_value As String = AppComboBox.Text
+        Dim l_found As Boolean = False
+
+
         AppComboBox.Items.Clear()
         For Each l_AppNode In l_AppsNode.ChildNodes
             'Get the RepoName Attribute Value
@@ -124,13 +128,25 @@ Public Class AppSettings
 
             AppComboBox.Items.Add(AppNameAttribute)
 
+            If l_current_value = AppNameAttribute Then
+                'ReSelect the current item
+                AppComboBox.SelectedIndex = AppComboBox.Items.Count - 1
+                l_found = True
+            End If
+
         Next
+
+        If AppComboBox.Items.Count > 0 And Not l_found Then
+            'Select the first item
+            AppComboBox.SelectedIndex = 0
+        End If
+
 
         'If AppComboBox.Items.Count > 0 Then
         ' AppComboBox.SelectedIndex = 0
         ' End If
 
-        ' l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        ' l_GitReposXML.Save(Globals.XMLRepoFilePath())
 
 
     End Sub
@@ -202,7 +218,7 @@ Public Class AppSettings
     Private Sub AddApp()
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
-        l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
         'Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo[@RepoName='" & repoName & "']/apps")
 
@@ -272,7 +288,7 @@ Public Class AppSettings
 
         'l_RepoNode.AppendChild(l_NewRepoNode)
 
-        l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        l_GitReposXML.Save(Globals.XMLRepoFilePath())
 
 
         TestOrgValue()
@@ -297,7 +313,7 @@ Public Class AppSettings
         'Create the XML Document
 
         'Load the Xml file
-        l_GitReposXML.Load("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
         ' Dim l_ReposNode As XmlNode = l_GitReposXML.DocumentElement
 
@@ -326,16 +342,16 @@ Public Class AppSettings
 
         Next
 
-        l_GitReposXML.Save("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")
+        l_GitReposXML.Save(Globals.XMLRepoFilePath())
 
-        TestOrgValue()
-        readApps()
+
     End Sub
 
 
     Private Sub ButtonRemove_Click(sender As Object, e As EventArgs) Handles ButtonRemove.Click
         RemoveApp()
-
+        TestOrgValue()
+        readApps()
     End Sub
 
     Private Sub ButtonUpdate_Click(sender As Object, e As EventArgs) Handles ButtonUpdate.Click

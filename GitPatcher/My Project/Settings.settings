@@ -119,5 +119,8 @@ VM</Value>
     <Setting Name="PatchExportPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">F:\patchbuild</Value>
     </Setting>
+    <Setting Name="XMLRepoFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">F:\GitPatcher\GitPatcher\My Project\GitRepos.xml</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

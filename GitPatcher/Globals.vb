@@ -10,6 +10,13 @@
     Private gJiraProject As String
     'Private gDBRepoPathMask As String
 
+ 
+
+    Public Function XMLRepoFilePath() As String
+
+        Return My.Settings.XMLRepoFilePath
+
+    End Function
 
     Public Function currentDB() As String
 
@@ -122,6 +129,11 @@
         My.Settings.Save()
 
     End Sub
+
+
+
+
+
 
     '  Public Sub setDBRepoPathMask(DBRepoPathMask As String)
     '

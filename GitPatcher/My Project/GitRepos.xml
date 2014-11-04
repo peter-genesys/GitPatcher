@@ -16,4 +16,12 @@
       <app AppName="Warranty" AppCode="wty" AppId="f200" Jira="WTY-" Schema="public_apps" />
     </apps>
   </repo>
+  <repo RepoName="GitPatcher" RepoPath="F:/navigo_alesco/" ApexRelPath="apex/" ODBCjavaRelPath="database/apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database/" ExtrasRelPath="database/" PatchRelPath="patch/" PatchExportPath="export/">
+    <orgs>
+      <org OrgName="Tupperware" OrgCode="tup" PRODTNS="" PRODCONNECT="" UATTNS="" UATCONNECT="" TESTTNS="" TESTCONNECT="" DEVTNS="" DEVCONNECT="" VMTNS="" VMCONNECT="" />
+    </orgs>
+    <apps>
+      <app AppName="PatchTracker" AppCode="f120" AppId="f120" Jira="TRK" Schema="patch_admin" />
+    </apps>
+  </repo>
 </repos>

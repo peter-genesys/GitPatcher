@@ -403,6 +403,18 @@ Namespace My
                 Me("PatchExportPath") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")>  _
+        Public Property XMLRepoFilePath() As String
+            Get
+                Return CType(Me("XMLRepoFilePath"),String)
+            End Get
+            Set
+                Me("XMLRepoFilePath") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
