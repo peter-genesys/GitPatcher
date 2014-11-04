@@ -4,6 +4,25 @@
         Return Replace(ipath, "\", "/")
     End Function
 
+
+    Public Shared Function unix_path_trailing_slash(ipath As String) As String
+        Dim l_path As String
+        'Use only /
+        l_path = unix_path(ipath)
+
+        'Remove leading /
+        l_path = l_path.TrimStart("/")
+ 
+        'Remove trailing /
+        l_path = l_path.TrimEnd("/")
+ 
+        'Add trailing /
+        Return l_path & "/"
+ 
+    End Function
+
+ 
+
     Public Shared Function cleanString(iString) As String
         Return Trim(iString).Replace(Chr(13), "")
 
@@ -152,7 +171,7 @@
 
 
     Public Shared Sub checkBranch(i_searchString)
-        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
+        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
 
         If Not currentBranch.Contains(i_searchString) Then
             MsgBox("Current Branch: " & currentBranch & " is not of type " & i_searchString & Environment.NewLine & Environment.NewLine & "Please change branch manually NOW, or CANCEL this workflow.")

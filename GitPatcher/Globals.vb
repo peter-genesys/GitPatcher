@@ -10,7 +10,141 @@
     Private gJiraProject As String
     'Private gDBRepoPathMask As String
 
+
+    'RepoPathTextBox.Text = l_RepoNode.Attributes.GetNamedItem("RepoPath").Value
+
+    'ApexOffsetTextBox.Text = l_RepoNode.Attributes.GetNamedItem("ApexRelPath").Value
+    'OJDBCjarFileTextBox.Text = l_RepoNode.Attributes.GetNamedItem("ODBCjavaRelPath").Value
+
+    'DBOffsetTextBox.Text = l_RepoNode.Attributes.GetNamedItem("DatabaseRelPath").Value
+    'ExtrasDirListTextBox.Text = l_RepoNode.Attributes.GetNamedItem("ExtrasRelPath").Value
+
+    'PatchOffsetTextBox.Text = l_RepoNode.Attributes.GetNamedItem("PatchRelPath").Value
+    'PatchExportPathTextBox.Text = l_RepoNode.Attributes.GetNamedItem("PatchExportPath").Value
+
+    Public Sub setRepo(Repo As String)
+
+        gRepo = Repo
+
+        My.Settings.CurrentRepo = gRepo
+        My.Settings.Save()
+
+    End Sub
+
+    Public Function getRepo() As String
+        Return gRepo
+    End Function
+
+
+    Private gRepoPath As String
+
+    Public Sub setRepoPath(RepoPath As String)
+        gRepoPath = Common.unix_path_trailing_slash(RepoPath)
+    End Sub
+
  
+    Public Function getRepoPath() As String
+
+        Return gRepoPath
+
+    End Function
+ 
+
+    Private gApexRelPath As String
+
+    Public Sub setApexRelPath(ApexRelPath As String)
+        gApexRelPath = Common.unix_path_trailing_slash(ApexRelPath)
+    End Sub
+
+    Public Function getApexRelPath() As String
+        Return gApexRelPath
+    End Function
+
+
+    Private gODBCjavaRelPath As String
+
+    Public Sub setODBCjavaRelPath(ODBCjavaRelPath As String)
+        gODBCjavaRelPath = Common.unix_path_trailing_slash(ODBCjavaRelPath)
+    End Sub
+
+    Public Function getODBCjavaRelPath() As String
+        Return gODBCjavaRelPath
+    End Function
+ 
+    Private gDatabaseRelPath As String
+
+    Public Sub setDatabaseRelPath(DatabaseRelPath As String)
+        gDatabaseRelPath = Common.unix_path_trailing_slash(DatabaseRelPath)
+    End Sub
+
+    Public Function getDatabaseRelPath() As String
+        Return gDatabaseRelPath
+    End Function
+
+ 
+    Private gExtrasRelPath As String
+
+    Public Sub setExtrasRelPath(ExtrasRelPath As String)
+        gExtrasRelPath = Common.unix_path_trailing_slash(ExtrasRelPath)
+    End Sub
+
+    Public Function getExtrasRelPath() As String
+        Return gExtrasRelPath
+    End Function
+
+    Private gPatchRelPath As String
+
+    Public Sub setPatchRelPath(PatchRelPath As String)
+        gPatchRelPath = Common.unix_path_trailing_slash(PatchRelPath)
+    End Sub
+
+    Public Function getPatchRelPath() As String
+        Return gPatchRelPath
+    End Function
+
+      
+    Private gPatchExportPath As String
+
+    Public Sub setPatchExportPath(PatchExportPath As String)
+        gPatchExportPath = Common.unix_path_trailing_slash(PatchExportPath)
+    End Sub
+
+    Public Function getPatchExportPath() As String
+        Return gPatchExportPath
+    End Function
+
+ 
+    Private gOrgCode As String
+
+    Public Sub setOrgCode(OrgCode As String)
+        gOrgCode = OrgCode
+    End Sub
+
+    Public Function getOrgCode() As String
+        Return gOrgCode
+    End Function
+
+    Private gTNS As String
+
+    Public Sub setTNS(TNS As String)
+        gTNS = TNS
+    End Sub
+
+    Public Function getTNS() As String
+        Return gTNS
+    End Function
+
+    Private gCONNECT As String
+
+    Public Sub setCONNECT(CONNECT As String)
+        gCONNECT = CONNECT
+    End Sub
+
+    Public Function getCONNECT() As String
+        Return gCONNECT
+    End Function
+
+
 
     Public Function XMLRepoFilePath() As String
 
@@ -40,17 +174,11 @@
     '    Return gApexApp
     '
     'End Function
-
-    Public Function currentRepo() As String
-
-        Return gRepo
-
-    End Function
-
+ 
 
 
     Public Function currentLongBranch() As String
-        Return GitSharpFascade.currentBranch(gRepo)
+        Return GitSharpFascade.currentBranch(gRepoPath)
     End Function
 
     Public Function currentBranch() As String
@@ -62,19 +190,25 @@
     Public Function RootPatchDir() As String
 
 
-        Return gRepo & My.Settings.PatchDirOffset & "\"
+        Return gRepoPath & gPatchRelPath
+
+        'My.Settings.PatchDirOffset & "\"
 
     End Function
 
     Public Function RootApexDir() As String
 
-        Return gRepo & My.Settings.ApexDirOffset & "\"
+        Return gRepoPath & gApexRelPath
+
+        'My.Settings.ApexDirOffset & "\"
     End Function
 
     Public Function RootDBDir() As String
 
 
-        Return gRepo & My.Settings.DBDirOffset & "\"
+        Return gRepoPath & gDatabaseRelPath
+
+        'My.Settings.DBDirOffset & "\"
 
     End Function
 
@@ -83,9 +217,9 @@
         'Remove the leading \
         'Append a trailing /
 
-        Dim RepoPathMask As String = My.Settings.DBDirOffset.Substring(1) & "/"
+        'Dim RepoPathMask As String = My.Settings.DBDirOffset.Substring(1) & "/"
 
-        Return RepoPathMask
+        Return gDatabaseRelPath
 
     End Function
 
@@ -93,7 +227,7 @@
     Public Function PatchExportDir() As String
 
 
-        Return My.Settings.PatchExportPath
+        Return gPatchExportPath
 
     End Function
 
@@ -153,16 +287,8 @@
     '    gApex = Apex
     '
     'End Sub
-    Public Sub setRepo(Repo As String)
 
-        gRepo = Repo
-
-        My.Settings.CurrentRepo = gRepo
-        My.Settings.Save()
-
-    End Sub
-
-
+ 
     Public Sub setPatchRunnerFilter(filter As String)
 
         Logger.Note("SAVE PatchRunnerFilter", filter)

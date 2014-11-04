@@ -45,6 +45,7 @@ Partial Class Main
         Me.GITToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBPatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBMinorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateDBMajorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         Me.PatchRunnerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.UnappliedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -67,12 +68,12 @@ Partial Class Main
         Me.RootPatchDirTextBox = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.DBListComboBox = New System.Windows.Forms.ComboBox()
+        Me.DBComboBox = New System.Windows.Forms.ComboBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.ApplicationListComboBox = New System.Windows.Forms.ComboBox()
         Me.RootApexDirTextBox = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.CurrentConnectionTextBox = New System.Windows.Forms.TextBox()
+        Me.CONNECTTextBox = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.ParsingSchemaTextBox = New System.Windows.Forms.TextBox()
         Me.Label8 = New System.Windows.Forms.Label()
@@ -84,7 +85,14 @@ Partial Class Main
         Me.Label11 = New System.Windows.Forms.Label()
         Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.CreateDBMajorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RepoPathTextBox = New System.Windows.Forms.TextBox()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.OrgComboBox = New System.Windows.Forms.ComboBox()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.TNSTextBox = New System.Windows.Forms.TextBox()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.OrgCodeTextBox = New System.Windows.Forms.TextBox()
+        Me.Label15 = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -232,6 +240,12 @@ Partial Class Main
         Me.CreateDBMinorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.CreateDBMinorReleaseToolStripMenuItem.Text = "Create DB Minor Release"
         '
+        'CreateDBMajorReleaseToolStripMenuItem
+        '
+        Me.CreateDBMajorReleaseToolStripMenuItem.Name = "CreateDBMajorReleaseToolStripMenuItem"
+        Me.CreateDBMajorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.CreateDBMajorReleaseToolStripMenuItem.Text = "Create DB Major Release"
+        '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
@@ -334,16 +348,17 @@ Partial Class Main
         'Label1
         '
         Me.Label1.AutoSize = True
+        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(12, 30)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(49, 13)
+        Me.Label1.Size = New System.Drawing.Size(57, 13)
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "Git Repo"
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(25, 83)
+        Me.Label2.Location = New System.Drawing.Point(25, 115)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(72, 13)
         Me.Label2.TabIndex = 3
@@ -351,24 +366,24 @@ Partial Class Main
         '
         'CurrentBranchTextBox
         '
-        Me.CurrentBranchTextBox.Location = New System.Drawing.Point(134, 80)
+        Me.CurrentBranchTextBox.Location = New System.Drawing.Point(120, 112)
         Me.CurrentBranchTextBox.Name = "CurrentBranchTextBox"
         Me.CurrentBranchTextBox.ReadOnly = True
-        Me.CurrentBranchTextBox.Size = New System.Drawing.Size(342, 20)
+        Me.CurrentBranchTextBox.Size = New System.Drawing.Size(356, 20)
         Me.CurrentBranchTextBox.TabIndex = 4
         '
         'RootPatchDirTextBox
         '
-        Me.RootPatchDirTextBox.Location = New System.Drawing.Point(134, 106)
+        Me.RootPatchDirTextBox.Location = New System.Drawing.Point(120, 138)
         Me.RootPatchDirTextBox.Name = "RootPatchDirTextBox"
         Me.RootPatchDirTextBox.ReadOnly = True
-        Me.RootPatchDirTextBox.Size = New System.Drawing.Size(342, 20)
+        Me.RootPatchDirTextBox.Size = New System.Drawing.Size(356, 20)
         Me.RootPatchDirTextBox.TabIndex = 6
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(25, 109)
+        Me.Label3.Location = New System.Drawing.Point(25, 141)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(77, 13)
         Me.Label3.TabIndex = 5
@@ -377,66 +392,69 @@ Partial Class Main
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(12, 161)
+        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Location = New System.Drawing.Point(42, 246)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(53, 13)
+        Me.Label4.Size = New System.Drawing.Size(61, 13)
         Me.Label4.TabIndex = 8
         Me.Label4.Text = "Database"
         '
-        'DBListComboBox
+        'DBComboBox
         '
-        Me.DBListComboBox.FormattingEnabled = True
-        Me.DBListComboBox.Location = New System.Drawing.Point(103, 158)
-        Me.DBListComboBox.Name = "DBListComboBox"
-        Me.DBListComboBox.Size = New System.Drawing.Size(373, 21)
-        Me.DBListComboBox.TabIndex = 7
+        Me.DBComboBox.FormattingEnabled = True
+        Me.DBComboBox.Items.AddRange(New Object() {"PROD", "UAT", "TEST", "DEV", "VM"})
+        Me.DBComboBox.Location = New System.Drawing.Point(134, 243)
+        Me.DBComboBox.Name = "DBComboBox"
+        Me.DBComboBox.Size = New System.Drawing.Size(342, 21)
+        Me.DBComboBox.TabIndex = 7
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(12, 214)
+        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.Location = New System.Drawing.Point(33, 333)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(59, 13)
+        Me.Label5.Size = New System.Drawing.Size(70, 13)
         Me.Label5.TabIndex = 10
         Me.Label5.Text = "Application"
         '
         'ApplicationListComboBox
         '
         Me.ApplicationListComboBox.FormattingEnabled = True
-        Me.ApplicationListComboBox.Location = New System.Drawing.Point(103, 211)
+        Me.ApplicationListComboBox.Location = New System.Drawing.Point(120, 330)
         Me.ApplicationListComboBox.Name = "ApplicationListComboBox"
-        Me.ApplicationListComboBox.Size = New System.Drawing.Size(373, 21)
+        Me.ApplicationListComboBox.Size = New System.Drawing.Size(356, 21)
         Me.ApplicationListComboBox.TabIndex = 9
         '
         'RootApexDirTextBox
         '
-        Me.RootApexDirTextBox.Location = New System.Drawing.Point(134, 132)
+        Me.RootApexDirTextBox.Location = New System.Drawing.Point(120, 164)
         Me.RootApexDirTextBox.Name = "RootApexDirTextBox"
         Me.RootApexDirTextBox.ReadOnly = True
-        Me.RootApexDirTextBox.Size = New System.Drawing.Size(342, 20)
+        Me.RootApexDirTextBox.Size = New System.Drawing.Size(356, 20)
         Me.RootApexDirTextBox.TabIndex = 12
         '
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(25, 135)
+        Me.Label6.Location = New System.Drawing.Point(25, 167)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(73, 13)
         Me.Label6.TabIndex = 11
         Me.Label6.Text = "Root Apex Dir"
         '
-        'CurrentConnectionTextBox
+        'CONNECTTextBox
         '
-        Me.CurrentConnectionTextBox.Location = New System.Drawing.Point(134, 185)
-        Me.CurrentConnectionTextBox.Name = "CurrentConnectionTextBox"
-        Me.CurrentConnectionTextBox.ReadOnly = True
-        Me.CurrentConnectionTextBox.Size = New System.Drawing.Size(342, 20)
-        Me.CurrentConnectionTextBox.TabIndex = 14
+        Me.CONNECTTextBox.Location = New System.Drawing.Point(150, 296)
+        Me.CONNECTTextBox.Name = "CONNECTTextBox"
+        Me.CONNECTTextBox.ReadOnly = True
+        Me.CONNECTTextBox.Size = New System.Drawing.Size(326, 20)
+        Me.CONNECTTextBox.TabIndex = 14
         '
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(25, 188)
+        Me.Label7.Location = New System.Drawing.Point(73, 299)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(61, 13)
         Me.Label7.TabIndex = 13
@@ -444,7 +462,7 @@ Partial Class Main
         '
         'ParsingSchemaTextBox
         '
-        Me.ParsingSchemaTextBox.Location = New System.Drawing.Point(134, 293)
+        Me.ParsingSchemaTextBox.Location = New System.Drawing.Point(134, 412)
         Me.ParsingSchemaTextBox.Name = "ParsingSchemaTextBox"
         Me.ParsingSchemaTextBox.ReadOnly = True
         Me.ParsingSchemaTextBox.Size = New System.Drawing.Size(342, 20)
@@ -453,7 +471,7 @@ Partial Class Main
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(25, 296)
+        Me.Label8.Location = New System.Drawing.Point(25, 415)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(84, 13)
         Me.Label8.TabIndex = 15
@@ -461,16 +479,16 @@ Partial Class Main
         '
         'BranchPathTextBox
         '
-        Me.BranchPathTextBox.Location = New System.Drawing.Point(134, 54)
+        Me.BranchPathTextBox.Location = New System.Drawing.Point(120, 86)
         Me.BranchPathTextBox.Name = "BranchPathTextBox"
         Me.BranchPathTextBox.ReadOnly = True
-        Me.BranchPathTextBox.Size = New System.Drawing.Size(342, 20)
+        Me.BranchPathTextBox.Size = New System.Drawing.Size(356, 20)
         Me.BranchPathTextBox.TabIndex = 18
         '
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(25, 57)
+        Me.Label9.Location = New System.Drawing.Point(25, 89)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(66, 13)
         Me.Label9.TabIndex = 17
@@ -478,7 +496,7 @@ Partial Class Main
         '
         'MinPatchTextBox
         '
-        Me.MinPatchTextBox.Location = New System.Drawing.Point(103, 319)
+        Me.MinPatchTextBox.Location = New System.Drawing.Point(103, 438)
         Me.MinPatchTextBox.Name = "MinPatchTextBox"
         Me.MinPatchTextBox.ReadOnly = True
         Me.MinPatchTextBox.Size = New System.Drawing.Size(373, 20)
@@ -487,7 +505,7 @@ Partial Class Main
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(12, 322)
+        Me.Label10.Location = New System.Drawing.Point(12, 441)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(79, 13)
         Me.Label10.TabIndex = 19
@@ -495,7 +513,7 @@ Partial Class Main
         '
         'ApexAppTextBox
         '
-        Me.ApexAppTextBox.Location = New System.Drawing.Point(134, 267)
+        Me.ApexAppTextBox.Location = New System.Drawing.Point(134, 386)
         Me.ApexAppTextBox.Name = "ApexAppTextBox"
         Me.ApexAppTextBox.ReadOnly = True
         Me.ApexAppTextBox.Size = New System.Drawing.Size(342, 20)
@@ -504,7 +522,7 @@ Partial Class Main
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(25, 270)
+        Me.Label11.Location = New System.Drawing.Point(50, 389)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(53, 13)
         Me.Label11.TabIndex = 21
@@ -512,7 +530,7 @@ Partial Class Main
         '
         'AppCodeTextBox
         '
-        Me.AppCodeTextBox.Location = New System.Drawing.Point(134, 241)
+        Me.AppCodeTextBox.Location = New System.Drawing.Point(134, 360)
         Me.AppCodeTextBox.Name = "AppCodeTextBox"
         Me.AppCodeTextBox.ReadOnly = True
         Me.AppCodeTextBox.Size = New System.Drawing.Size(342, 20)
@@ -521,23 +539,94 @@ Partial Class Main
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(25, 244)
+        Me.Label13.Location = New System.Drawing.Point(77, 363)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(32, 13)
         Me.Label13.TabIndex = 25
         Me.Label13.Text = "Code"
         '
-        'CreateDBMajorReleaseToolStripMenuItem
+        'RepoPathTextBox
         '
-        Me.CreateDBMajorReleaseToolStripMenuItem.Name = "CreateDBMajorReleaseToolStripMenuItem"
-        Me.CreateDBMajorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.CreateDBMajorReleaseToolStripMenuItem.Text = "Create DB Major Release"
+        Me.RepoPathTextBox.Location = New System.Drawing.Point(120, 60)
+        Me.RepoPathTextBox.Name = "RepoPathTextBox"
+        Me.RepoPathTextBox.ReadOnly = True
+        Me.RepoPathTextBox.Size = New System.Drawing.Size(356, 20)
+        Me.RepoPathTextBox.TabIndex = 28
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Location = New System.Drawing.Point(25, 63)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(58, 13)
+        Me.Label12.TabIndex = 27
+        Me.Label12.Text = "Repo Path"
+        '
+        'OrgComboBox
+        '
+        Me.OrgComboBox.FormattingEnabled = True
+        Me.OrgComboBox.Location = New System.Drawing.Point(120, 190)
+        Me.OrgComboBox.Name = "OrgComboBox"
+        Me.OrgComboBox.Size = New System.Drawing.Size(356, 21)
+        Me.OrgComboBox.TabIndex = 29
+        '
+        'Label25
+        '
+        Me.Label25.AutoSize = True
+        Me.Label25.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label25.Location = New System.Drawing.Point(25, 193)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(78, 13)
+        Me.Label25.TabIndex = 30
+        Me.Label25.Text = "Organisation"
+        '
+        'TNSTextBox
+        '
+        Me.TNSTextBox.Location = New System.Drawing.Point(150, 270)
+        Me.TNSTextBox.Name = "TNSTextBox"
+        Me.TNSTextBox.ReadOnly = True
+        Me.TNSTextBox.Size = New System.Drawing.Size(326, 20)
+        Me.TNSTextBox.TabIndex = 32
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Location = New System.Drawing.Point(73, 273)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(29, 13)
+        Me.Label14.TabIndex = 31
+        Me.Label14.Text = "TNS"
+        '
+        'OrgCodeTextBox
+        '
+        Me.OrgCodeTextBox.Location = New System.Drawing.Point(134, 217)
+        Me.OrgCodeTextBox.Name = "OrgCodeTextBox"
+        Me.OrgCodeTextBox.ReadOnly = True
+        Me.OrgCodeTextBox.Size = New System.Drawing.Size(342, 20)
+        Me.OrgCodeTextBox.TabIndex = 34
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Location = New System.Drawing.Point(59, 220)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(52, 13)
+        Me.Label15.TabIndex = 33
+        Me.Label15.Text = "Org Code"
         '
         'Main
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(486, 350)
+        Me.ClientSize = New System.Drawing.Size(486, 495)
+        Me.Controls.Add(Me.OrgCodeTextBox)
+        Me.Controls.Add(Me.Label15)
+        Me.Controls.Add(Me.TNSTextBox)
+        Me.Controls.Add(Me.Label14)
+        Me.Controls.Add(Me.OrgComboBox)
+        Me.Controls.Add(Me.Label25)
+        Me.Controls.Add(Me.RepoPathTextBox)
+        Me.Controls.Add(Me.Label12)
         Me.Controls.Add(Me.AppCodeTextBox)
         Me.Controls.Add(Me.Label13)
         Me.Controls.Add(Me.ApexAppTextBox)
@@ -548,14 +637,14 @@ Partial Class Main
         Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.ParsingSchemaTextBox)
         Me.Controls.Add(Me.Label8)
-        Me.Controls.Add(Me.CurrentConnectionTextBox)
+        Me.Controls.Add(Me.CONNECTTextBox)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.RootApexDirTextBox)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.ApplicationListComboBox)
         Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.DBListComboBox)
+        Me.Controls.Add(Me.DBComboBox)
         Me.Controls.Add(Me.RootPatchDirTextBox)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.CurrentBranchTextBox)
@@ -563,16 +652,16 @@ Partial Class Main
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.RepoComboBox)
         Me.Controls.Add(Me.MenuStrip1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "Main"
         Me.Text = "Main"
-        Me.MenuStrip1.ResumeLayout(false)
-        Me.MenuStrip1.PerformLayout
-        Me.ResumeLayout(false)
-        Me.PerformLayout
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
+        Me.ResumeLayout(False)
+        Me.PerformLayout()
 
-End Sub
+    End Sub
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents GITToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents RepoComboBox As System.Windows.Forms.ComboBox
@@ -583,7 +672,7 @@ End Sub
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents PatchRunnerToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents DBListComboBox As System.Windows.Forms.ComboBox
+    Friend WithEvents DBComboBox As System.Windows.Forms.ComboBox
     Friend WithEvents APEXToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ImportToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ExportToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
@@ -591,7 +680,7 @@ End Sub
     Friend WithEvents ApplicationListComboBox As System.Windows.Forms.ComboBox
     Friend WithEvents RootApexDirTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label6 As System.Windows.Forms.Label
-    Friend WithEvents CurrentConnectionTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents CONNECTTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents ParsingSchemaTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
@@ -635,5 +724,13 @@ End Sub
     Friend WithEvents ToolStripSeparator4 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents CreateDBMajorReleaseToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents RepoPathTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents OrgComboBox As System.Windows.Forms.ComboBox
+    Friend WithEvents Label25 As System.Windows.Forms.Label
+    Friend WithEvents TNSTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label14 As System.Windows.Forms.Label
+    Friend WithEvents OrgCodeTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label15 As System.Windows.Forms.Label
 
 End Class

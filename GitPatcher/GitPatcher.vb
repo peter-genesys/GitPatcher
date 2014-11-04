@@ -107,7 +107,7 @@ Public Class GitPatcher
 
     Private Sub SQLplusToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SQLplusToolStripMenuItem.Click
 
-        Host.executeSQLplus(Globals.currentRepo, Main.get_connect_string(Globals.currentParsingSchema, Globals.currentTNS), False)
+        Host.executeSQLplus(Globals.getRepoPath, Main.get_connect_string(Globals.currentParsingSchema, Globals.currentTNS), False)
     End Sub
  
     Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click

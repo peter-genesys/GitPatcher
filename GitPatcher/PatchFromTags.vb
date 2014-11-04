@@ -69,7 +69,7 @@ Public Class PatchFromTags
         Dim tag_no_padding As Integer = 2
 
         TagsCheckedListBox.Items.Clear()
-        For Each tagname In GitSharpFascade.getTagList(Globals.currentRepo)
+        For Each tagname In GitSharpFascade.getTagList(Globals.getRepoPath)
             If Common.getFirstSegment(tagname, ".") = Globals.currentBranch Then
                 'This is a tag worth listing
                 Dim ticked As Boolean = (gtag_base = Common.getLastSegment(tagname, ".").Substring(0, tag_no_padding)) 'This is a tag worth ticking
@@ -94,7 +94,7 @@ Public Class PatchFromTags
             TreeViewChanges.Nodes.Clear()
 
 
-            For Each change In GitSharpFascade.getTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask & SchemaComboBox.Text, False)
+            For Each change In GitSharpFascade.getTagChanges(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask & SchemaComboBox.Text, False)
 
                 'find or create each node for item
                 TreeViewChanges.AddNode(change, "/", True)
@@ -175,9 +175,9 @@ Public Class PatchFromTags
         'TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
         Dim filenames As Collection = Nothing
-        filenames = GitSharpFascade.exportTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask & SchemaComboBox.Text, changesFiles, PatchDirTextBox.Text)
+        filenames = GitSharpFascade.exportTagChanges(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask & SchemaComboBox.Text, changesFiles, PatchDirTextBox.Text)
 
- 
+
         'Additional file exports 
         Dim ExtraFiles As Collection = New Collection
         'Extra files
@@ -271,7 +271,7 @@ Public Class PatchFromTags
             SchemaComboBox.Items.Clear()
 
 
-            For Each schema In GitSharpFascade.getSchemaList(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask)
+            For Each schema In GitSharpFascade.getSchemaList(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask)
                 SchemaComboBox.Items.Add(schema)
             Next
 
@@ -307,7 +307,7 @@ Public Class PatchFromTags
         TreeViewChanges.ReadCheckedLeafNodes(CheckedChanges)
 
 
-        MsgBox(GitSharpFascade.viewTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, CheckedChanges))
+        MsgBox(GitSharpFascade.viewTagChanges(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, CheckedChanges))
     End Sub
 
 
@@ -370,7 +370,7 @@ Public Class PatchFromTags
 
         Dim Category As String = Nothing
 
-   
+
 
         If targetFiles.Count > 0 Then
 
@@ -478,7 +478,7 @@ Public Class PatchFromTags
                     'Add this file to the normal list
                     l_install_list = l_install_list & Chr(10) & l_install_file_line
                 End If
- 
+
             Next
 
 
@@ -592,7 +592,7 @@ Public Class PatchFromTags
             l_master_file.WriteLine(l_post_install_list)
 
             l_master_file.WriteLine(Chr(10) & "COMMIT;")
- 
+
             l_master_file.Close()
 
             'Convert the file to unix
@@ -656,7 +656,7 @@ Public Class PatchFromTags
             TreeViewPatchOrder.AddCategory("Finalise")
             TreeViewPatchOrder.AddCategory("Post Completion")
             TreeViewPatchOrder.AddCategory("Do Not Execute")
- 
+
             For Each change In ChosenChanges
 
                 Dim l_category As String = Nothing
@@ -869,7 +869,7 @@ Public Class PatchFromTags
         Dim l_old_text = target.Text
         Try
             Dim log As Collection = New Collection
-            log = GitSharpFascade.TagLog(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text)
+            log = GitSharpFascade.TagLog(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text)
 
             target.Text = ChoiceDialog.Ask("You may choose a log message for the " & targetControlName, log, "", "Choose log message", False)
 
@@ -1003,7 +1003,7 @@ Public Class PatchFromTags
         Else
             l_master_filename = "install_lite.sql"
         End If
- 
+
         PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\" & l_master_filename)
 
     End Sub
@@ -1107,7 +1107,7 @@ Public Class PatchFromTags
 
         If createPatchProgress.toDoNextStep() Then
             'Review tags on the branch
-            Tortoise.Log(Globals.currentRepo)
+            Tortoise.Log(Globals.getRepoPath)
         End If
 
 
@@ -1125,7 +1125,7 @@ Public Class PatchFromTags
             MsgBox("Now is a great time to smoke test my work before i commit the patch.", MsgBoxStyle.Information, "Smoke Test")
 
             'Committing changed files to GIT"
-            Tortoise.Commit(Globals.currentRepo, "Commit any patches you've not yet committed", True)
+            Tortoise.Commit(Globals.getRepoPath, "Commit any patches you've not yet committed", True)
         End If
 
 
@@ -1134,22 +1134,22 @@ Public Class PatchFromTags
             'GitSharpFascade.switchBranch(Globals.currentRepo, "master")
             'Tortoise.Switch(Globals.currentRepo)
             'Switch to develop branch
-            GitBash.Switch(Globals.currentRepo, iRebaseBranchOn)
+            GitBash.Switch(Globals.getRepoPath, iRebaseBranchOn)
         End If
 
         If createPatchProgress.toDoNextStep() Then
             'Merge from Feature branch
-            Tortoise.Merge(Globals.currentRepo)
+            Tortoise.Merge(Globals.getRepoPath)
         End If
 
         If createPatchProgress.toDoNextStep() Then
             'Push to origin/develop 
-            GitBash.Push(Globals.currentRepo, "origin", iRebaseBranchOn)
+            GitBash.Push(Globals.getRepoPath, "origin", iRebaseBranchOn)
         End If
 
         If createPatchProgress.toDoNextStep() Then
             'Synch command to verfiy that Push was successful.
-            Tortoise.Sync(Globals.currentRepo)
+            Tortoise.Sync(Globals.getRepoPath)
         End If
 
         If createPatchProgress.toDoNextStep() Then
@@ -1159,7 +1159,7 @@ Public Class PatchFromTags
 
         If createPatchProgress.toDoNextStep() Then
             'GitSharpFascade.switchBranch(Globals.currentRepo, currentBranch)
-            GitBash.Switch(Globals.currentRepo, currentBranch)
+            GitBash.Switch(Globals.getRepoPath, currentBranch)
         End If
 
         If createPatchProgress.toDoNextStep() Then
@@ -1217,7 +1217,7 @@ Public Class PatchFromTags
         Dim extrasDirCol As Collection = extrasDirCollection()
 
         For Each relDir In extrasDirCol
-            Dim aRootDir As String = Globals.currentRepo() & relDir
+            Dim aRootDir As String = Globals.getRepoPath() & relDir
             Dim aRootNode As TreeNode = New TreeNode(aRootDir)
             TreeViewFiles.Nodes.Add(aRootNode)
             PopulateTreeView(aRootDir, aRootNode)
@@ -1228,7 +1228,7 @@ Public Class PatchFromTags
 
     Private Sub ButtonFindFiles_Click(sender As Object, e As EventArgs) Handles ButtonFindFiles.Click
         FindExtras()
- 
+
 
     End Sub
 
@@ -1299,7 +1299,7 @@ Public Class PatchFromTags
 
 
 
- 
+
     Private Sub SchemaComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SchemaComboBox.SelectedIndexChanged
         'FindButton.Visible = True
         FindChanges()
@@ -1412,7 +1412,7 @@ Public Class PatchFromTags
 
             l_master_file.WriteLine("set serveroutput on;")
 
- 
+
 
             'Files have already been sorted into Categories, we only need to list the categories and spit out the files under each.
             For Each l_filename In targetFiles
@@ -1442,7 +1442,7 @@ Public Class PatchFromTags
                                               Chr(10) & unix_path("@" & branch_path & "\" & patch_name & "\" & l_filename & ";")
 
                     End If
- 
+
 
 
                     If String.IsNullOrEmpty(l_all_programs) Then
@@ -1596,15 +1596,15 @@ Public Class PatchFromTags
         uninstallFiles = FileIO.FileList(PatchDirTextBox.Text, "*.drop", PatchDirTextBox.Text)
         FileIO.AppendFileList(PatchDirTextBox.Text, "*.drop", PatchDirTextBox.Text, uninstallFiles)
         FileIO.AppendFileList(PatchDirTextBox.Text, "*.drop", PatchDirTextBox.Text, uninstallFiles)
- 
+
         'List the del files once.
         FileIO.AppendFileList(PatchDirTextBox.Text, "*.del", PatchDirTextBox.Text, uninstallFiles)
-  
+
         'Common.listCollection(uninstallFiles, "del files")
-   
+
         'Write uninstall.sql
 
- 
+
         'Write the uninstall script lite - without patch admin
         writeUnInstallScript(PatchNameTextBox.Text, _
                            Common.getFirstSegment(Globals.currentLongBranch, "/"), _
@@ -1631,7 +1631,7 @@ Public Class PatchFromTags
 
 
     Shared Sub exportPatch(ByVal patchpath As String, _
-                           ByVal patchExportDir As String )
+                           ByVal patchExportDir As String)
 
 
         Dim l_path As String = patchpath
@@ -1682,7 +1682,7 @@ Public Class PatchFromTags
 
     Shared Sub doExportPatch(iPatchPath As String, iPatchName As String)
 
-        Dim l_repo_patch_dir As String = Globals.PatchExportDir & "\" & Common.getLastSegment(Globals.currentRepo, "\") & "\"
+        Dim l_repo_patch_dir As String = Globals.PatchExportDir & "\" & Common.getLastSegment(Globals.getRepoPath, "\") & "\"
 
         Dim l_repo_patch_export_dir As String = l_repo_patch_dir & iPatchName
 

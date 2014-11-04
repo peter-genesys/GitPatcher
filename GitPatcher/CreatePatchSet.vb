@@ -69,7 +69,7 @@ Public Class CreatePatchCollection
         Dim tagseg As String = Nothing
 
         TagsCheckedListBox.Items.Clear()
-        For Each tagname In GitSharpFascade.getTagList(Globals.currentRepo)
+        For Each tagname In GitSharpFascade.getTagList(Globals.getRepoPath)
             tagseg = Common.getFirstSegment(tagname, "-")
             'If tagseg = tagsearch Then
             TagsCheckedListBox.Items.Add(tagname)
@@ -103,7 +103,7 @@ Public Class CreatePatchCollection
 
     End Sub
 
- 
+
     Private Sub FindPatches()
 
         Dim AvailablePatches As Collection = New Collection
@@ -125,12 +125,12 @@ Public Class CreatePatchCollection
         If TagFilterCheckBox.Checked Then
 
             'Find patches between 2 tags
-            For Each change In GitSharpFascade.getTagChanges(Globals.currentRepo, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
+            For Each change In GitSharpFascade.getTagChanges(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
                 'Apply Filters
                 If change.contains("install.sql") And Common.stringContainsSetMember(change, pFindPatchTypes, ",") And Common.stringContainsSetMember(change, pFindPatchFilters, ",") Then
 
                     taggedPatches.Add(Replace(Common.dropLastSegment(Common.dropFirstSegment(change, "/"), "/"), "/", "\"))
- 
+
                 End If
 
             Next
@@ -154,7 +154,7 @@ Public Class CreatePatchCollection
 
             If TagFilterCheckBox.Checked Then
                 patchTagged = False
- 
+
                 For Each change In taggedPatches
                     If change = availablePatch Then
                         patchTagged = True
@@ -180,11 +180,11 @@ Public Class CreatePatchCollection
             MsgBox("No " & pFindPatchTypes & " patches are " & ComboBoxPatchesFilter.SelectedItem & " to " & Globals.currentDB)
 
         End If
- 
+
 
 
     End Sub
- 
+
     Private Sub PatchButton_Click(sender As Object, e As EventArgs) Handles PatchButton.Click
 
         'Create Patch Dir
@@ -201,12 +201,12 @@ Public Class CreatePatchCollection
             Else
                 l_create_folder = l_create_folder & "\" & folder
             End If
- 
+
             FileIO.createFolderIfNotExists(l_create_folder)
         Next
 
         FileIO.createFolderIfNotExists(PatchDirTextBox.Text)
- 
+
         Dim patchableFiles As Collection = New Collection
         TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
@@ -222,7 +222,7 @@ Public Class CreatePatchCollection
         Dim SuperPatches As Collection = New Collection
         'Retrieve checked node items from the SuperPatchesTreeView as a collection of patches.
         SuperPatchesTreeView.ReadCheckedLeafNodes(SuperPatches)
- 
+
         'Write the install script with Patch Admin
         writeInstallScript(PatchNameTextBox.Text, _
                            pCreatePatchType, _
@@ -268,13 +268,13 @@ Public Class CreatePatchCollection
 
 
     End Sub
- 
+
     Private Sub PatchNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchNameTextBox.TextChanged
 
         PatchDirTextBox.Text = Globals.RootPatchDir & Replace(PatchNameTextBox.Text, "/", "\") & "\"
     End Sub
 
- 
+
 
     Shared Sub writeInstallScript(ByVal patch_name As String, _
                                   ByVal patch_type As String, _
@@ -389,7 +389,7 @@ Public Class CreatePatchCollection
 
 
                 l_master_file.WriteLine("set serveroutput on;")
- 
+
 
                 l_master_file.WriteLine( _
                 "execute patch_admin.patch_installer.patch_started( -" _
@@ -435,11 +435,11 @@ Public Class CreatePatchCollection
                 'Write the list of files to execute.
 
                 l_master_file.WriteLine("COMMIT;")
- 
+
             End If
 
             l_master_file.WriteLine("Prompt installing PATCHES" & Chr(10) & l_patches)
- 
+
             If use_patch_admin Then
 
                 l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
@@ -494,11 +494,11 @@ Public Class CreatePatchCollection
                                   ByVal groupPath As String, _
                                   ByVal track_promotion As Boolean)
 
- 
-      
+
+
         For Each l_path In targetFiles
 
-        
+
             Dim l_source_path As String = Globals.RootPatchDir & l_path
             Dim l_target_path As String = patchExportDir & "\" & l_path
 
@@ -523,17 +523,17 @@ Public Class CreatePatchCollection
 
             End Try
 
- 
+
 
         Next
 
         If targetFiles.Count > 0 Then
- 
+
             Dim l_master_lite_filename As String = "install_patchset_lite.sql"
             Dim l_master_lite_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_lite_filename)
 
             l_master_lite_file.WriteLine(Common.unix_path("@" & patchSetPath & "\" & "install_lite.sql"))
-           
+
             l_master_lite_file.Close()
 
             Dim l_master_filename As String = "install_patchset.sql"
@@ -552,7 +552,7 @@ Public Class CreatePatchCollection
 
 
     Private Sub CopySelectedChanges()
- 
+
         'Copy to the new Patchable Tree
         TreeViewPatchOrder.PathSeparator = "#"
         TreeViewPatchOrder.Nodes.Clear()
@@ -583,7 +583,7 @@ Public Class CreatePatchCollection
                 ReorderedChanges = ChosenChanges
                 MsgBox("WARNING: Unordered patches.  Dependancy order is only used when filter is 'Unapplied'")
             End If
- 
+
 
 
             Dim l_label As String
@@ -593,7 +593,7 @@ Public Class CreatePatchCollection
                 l_label = Common.getLastSegment(change, pathSeparator)
                 TreeViewPatchOrder.AddFileToCategory(l_patches_category, l_label, change)
             Next
- 
+
             TreeViewPatchOrder.ExpandAll()
         End If
 
@@ -603,7 +603,7 @@ Public Class CreatePatchCollection
 
 
     Private Sub PatchTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles PatchTabControl.SelectedIndexChanged
- 
+
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageTags" Then
             If TagsCheckedListBox.Items.Count = 0 Then
                 Findtags()
@@ -689,8 +689,8 @@ Public Class CreatePatchCollection
 
 
     Private Sub FindPreReqs()
- 
-         PatchFromTags.FindPatches(PreReqPatchesTreeView, False, PreReqPatchTypeComboBox.SelectedItem)
+
+        PatchFromTags.FindPatches(PreReqPatchesTreeView, False, PreReqPatchTypeComboBox.SelectedItem)
 
     End Sub
 
@@ -703,7 +703,7 @@ Public Class CreatePatchCollection
 
 
     Private Sub FindSuper()
- 
+
         PatchFromTags.FindPatches(SuperPatchesTreeView, False, SupPatchTypeComboBox.SelectedItem)
 
 
@@ -736,7 +736,7 @@ Public Class CreatePatchCollection
     End Sub
 
     Private Sub deriveTags()
-  
+
 
         If TagsCheckedListBox.CheckedItems.Count = 0 Then
             'Nothing checked so select no tags
@@ -760,7 +760,7 @@ Public Class CreatePatchCollection
 
     End Sub
 
- 
+
     Public Shared Sub bumpApexVersion(ByVal i_app_version As String)
         Apex.modCreateApplicationSQL(i_app_version & " " & Today.ToString("dd-MMM-yyyy"), "")
     End Sub
@@ -776,7 +776,7 @@ Public Class CreatePatchCollection
 
         Dim newBranch As String = "release/" & iCreatePatchType & "/" & Globals.currentAppCode & "/" & l_app_version
 
-        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.currentRepo)
+        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
 
         Dim createPatchSetProgress As ProgressDialogue = New ProgressDialogue("Create DB " & iCreatePatchType)
         createPatchSetProgress.MdiParent = GitPatcher
@@ -814,17 +814,17 @@ Public Class CreatePatchCollection
 
         If createPatchSetProgress.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(Globals.currentRepo, "develop")
+            GitBash.Switch(Globals.getRepoPath, "develop")
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(Globals.currentRepo, "origin", "develop")
+            GitBash.Pull(Globals.getRepoPath, "origin", "develop")
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Create and Switch to new collection branch
-            GitBash.createBranch(Globals.currentRepo, newBranch)
+            GitBash.createBranch(Globals.getRepoPath, newBranch)
 
 
         End If
@@ -850,18 +850,18 @@ Public Class CreatePatchCollection
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Commit Apex version 
-            Tortoise.Commit(Globals.currentRepo, "Bump Apex " & Globals.currentApex & " to " & l_app_version)
+            Tortoise.Commit(Globals.getRepoPath, "Bump Apex " & Globals.currentApex & " to " & l_app_version)
 
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Tag this commit
-            GitBash.TagSimple(Globals.currentRepo, l_app_version)
+            GitBash.TagSimple(Globals.getRepoPath, l_app_version)
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Push release to origin with tags
-            GitBash.Push(Globals.currentRepo, "origin", newBranch, True)
+            GitBash.Push(Globals.getRepoPath, "origin", newBranch, True)
 
         End If
 
@@ -921,17 +921,17 @@ Public Class CreatePatchCollection
 
     End Sub
 
- 
+
 
     Private Sub FindButton_Click(sender As Object, e As EventArgs) Handles FindButton.Click
         FindPatches()
     End Sub
 
-  
- 
+
+
     Private Sub ExportButton_Click(sender As Object, e As EventArgs) Handles ExportButton.Click
 
-        Dim l_repo_patch_dir As String = Globals.PatchExportDir & "\" & Common.getLastSegment(Globals.currentRepo, "\") & "\"
+        Dim l_repo_patch_dir As String = Globals.PatchExportDir & "\" & Common.getLastSegment(Globals.getRepoPath, "\") & "\"
 
         Dim l_repo_patch_export_dir As String = l_repo_patch_dir & PatchNameTextBox.Text
 
@@ -974,7 +974,7 @@ Public Class CreatePatchCollection
                            PatchPathTextBox.Text, _
                            TrackPromoCheckBox.Checked)
 
- 
+
         zip.zip_dir(l_repo_patch_dir & PatchNameTextBox.Text & ".zip",
                     l_repo_patch_export_dir)
 

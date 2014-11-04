@@ -72,6 +72,17 @@ Public Class RepoSettings
 
                 hideUpdateButton()
 
+                'Set the Global Values
+                Globals.setRepoPath(l_RepoNode.Attributes.GetNamedItem("RepoPath").Value)
+                Globals.setApexRelPath(l_RepoNode.Attributes.GetNamedItem("ApexRelPath").Value)
+                Globals.setODBCjavaRelPath(l_RepoNode.Attributes.GetNamedItem("ODBCjavaRelPath").Value)
+                Globals.setDatabaseRelPath(l_RepoNode.Attributes.GetNamedItem("DatabaseRelPath").Value)
+                Globals.setExtrasRelPath(l_RepoNode.Attributes.GetNamedItem("ExtrasRelPath").Value)
+                Globals.setPatchRelPath(l_RepoNode.Attributes.GetNamedItem("PatchRelPath").Value)
+                Globals.setPatchExportPath(l_RepoNode.Attributes.GetNamedItem("PatchExportPath").Value)
+ 
+
+
             End If
 
         Next
@@ -83,7 +94,7 @@ Public Class RepoSettings
     End Function
 
 
-    Sub readGitRepos()
+    Sub readGitRepos(ByRef aRepoComboBox As Windows.Forms.ComboBox, ByVal currentValue As String)
         Try
             Dim l_GitReposXML As XmlDocument = New XmlDocument()
 
@@ -104,27 +115,20 @@ Public Class RepoSettings
             'Loop through the nodes
 
 
-            Dim l_current_value As String = RepoComboBox.Text
+            'Dim l_current_value As String = aRepoComboBox.Text
             Dim l_found As Boolean = False
-   
-            RepoComboBox.Items.Clear()
+
+            aRepoComboBox.Items.Clear()
             For Each l_RepoNode In l_RepoNodeList
                 'Get the RepoName Attribute Value
                 Dim RepoNameAttribute = l_RepoNode.Attributes.GetNamedItem("RepoName").Value
-                'Console.Write(RepoNameAttribute)
-                'Get the firstName Element Value
-                '  Dim firstNameValue = m_node.ChildNodes.Item(0).InnerText
-                'Get the lastName Element Value
-                '   Dim lastNameValue = m_node.ChildNodes.Item(1).InnerText
-                'Write Result to the Console
+
+                aRepoComboBox.Items.Add(RepoNameAttribute)
 
 
-                RepoComboBox.Items.Add(RepoNameAttribute)
-
-
-                If l_current_value = RepoNameAttribute Then
+                If currentValue = RepoNameAttribute Then
                     'ReSelect the current item
-                    RepoComboBox.SelectedIndex = RepoComboBox.Items.Count - 1
+                    aRepoComboBox.SelectedIndex = aRepoComboBox.Items.Count - 1
                     l_found = True
                 End If
 
@@ -135,9 +139,6 @@ Public Class RepoSettings
                 RepoComboBox.SelectedIndex = 0
             End If
 
-            ' RepoComboBox.SelectedIndex = RepoComboBox.Items.Count - 1
-
-            ' l_GitReposXML.Save(Globals.XMLRepoFilePath())
 
         Catch errorVariable As Exception
             'Error trapping
@@ -160,7 +161,7 @@ Public Class RepoSettings
 
  
     Private Sub RepoSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        readGitRepos()
+        readGitRepos(RepoComboBox, RepoComboBox.Text)
     End Sub
 
 
@@ -231,7 +232,7 @@ Public Class RepoSettings
 
 
         TestRepoValue()
-        readGitRepos()
+        readGitRepos(RepoComboBox, RepoComboBox.Text)
     End Sub
 
 
@@ -276,7 +277,7 @@ Public Class RepoSettings
     Private Sub ButtonRemove_Click(sender As Object, e As EventArgs) Handles ButtonRemove.Click
         RemoveRepo()
         TestRepoValue()
-        readGitRepos()
+        readGitRepos(RepoComboBox, RepoComboBox.Text)
     End Sub
 
     Private Sub ButtonUpdate_Click(sender As Object, e As EventArgs) Handles ButtonUpdate.Click

@@ -22,8 +22,49 @@ Public Class OrgSettings
 
     End Sub
 
+    Shared Function retrieveOrg(ByVal iOrgName As String, ByVal ipromo As String, ByVal repoName As String) As Boolean
 
-    Function checkOrg(ByVal iOrgName) As Boolean
+
+        Dim l_OrgNode As XmlNode
+
+        'Load the Xml file
+        Dim l_GitReposXML As XmlDocument = New XmlDocument()
+        l_GitReposXML.Load(Globals.XMLRepoFilePath())
+
+        'Get the list of name nodes 
+        ' Dim l_RepoNode As XmlNode = RepoSettings.getRepoNode(RepoSettings.RepoComboBox.Text)
+        ' Dim l_OrgNodeList As XmlNodeList = l_RepoNode.SelectNodes("/org")
+
+
+        Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo[@RepoName='" & repoName & "']/orgs")
+        'Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoOrgSearch)
+
+
+        Dim l_found As Boolean = False
+        'Loop through the nodes
+
+        For Each l_OrgNode In l_OrgsNode.ChildNodes
+            'Get the RepoName Attribute Value
+
+            If l_OrgNode.Attributes.GetNamedItem("OrgName").Value = iOrgName Then
+
+                l_found = True
+
+                Globals.setOrgCode(l_OrgNode.Attributes.GetNamedItem("OrgCode").Value)
+                Globals.setTNS(l_OrgNode.Attributes.GetNamedItem(ipromo & "TNS").Value)
+                Globals.setCONNECT(l_OrgNode.Attributes.GetNamedItem(ipromo & "CONNECT").Value)
+
+            End If
+
+        Next
+
+        Return l_found
+
+    End Function
+
+
+
+    Function checkOrg(ByVal iOrgName As String) As Boolean
 
 
         Dim l_OrgNode As XmlNode
@@ -58,7 +99,7 @@ Public Class OrgSettings
 
                 'OrgCode
                 OrgCodeTextBox.Text = l_OrgNode.Attributes.GetNamedItem("OrgCode").Value
- 
+
                 'Prod
                 PRODTNSTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODTNS").Value
                 PRODCONNECTTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODCONNECT").Value
@@ -93,72 +134,43 @@ Public Class OrgSettings
 
 
 
-    Sub readOrgs()
+    Shared Sub readOrgs(ByRef anOrgComboBox As Windows.Forms.ComboBox, ByVal currentValue As String, ByVal repoName As String)
 
-        'Dim l_GitReposXML As XmlDocument = New XmlDocument()
-
-        'Dim l_OrgNodeList As XmlNodeList
         Dim l_OrgNode As XmlNode
-        'Create the XML Document
-
-        'Load the Xml file
-        'l_GitReposXML.Load(Globals.XMLRepoFilePath())
-
-        'Dim l_RepoNode As XmlNode = RepoSettings.getRepoNode(RepoSettings.RepoComboBox.Text)
-        ' Dim l_OrgNodeList As XmlNodeList = l_RepoNode.SelectNodes("/orgs")
-
-        'With l_GitReposXML.SelectSingleNode("/repos/repo['" & RepoSettings.RepoComboBox.Text & "']/orgs").CreateNavigator().AppendChild()
-        '    .WriteStartElement("org")
-        '    .WriteElementString("OrgName", OrgComboBox.Text)
-        '    .WriteEndElement()
-        '    .Close()
-        'End With
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
         l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
 
 
-        Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoOrgSearch)
-        ' Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['Tupperware']/orgs")
+        Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo[@RepoName='" & repoName & "']/orgs")
 
 
 
-        'Get the list of name nodes 
-        ' l_OrgNodeList = l_GitReposXML.SelectNodes("/repos/repo/" & RepoSettings.RepoComboBox.Text)
-        'Loop through the nodes
-
-        Dim l_current_value As String = OrgComboBox.Text
+        'Dim l_current_value As String = OrgComboBox.Text
         Dim l_found As Boolean = False
 
 
-
-        OrgComboBox.Items.Clear()
+        'Loop through the nodes
+        anOrgComboBox.Items.Clear()
         For Each l_OrgNode In l_OrgsNode.ChildNodes
             'Get the RepoName Attribute Value
             Dim OrgNameAttribute = l_OrgNode.Attributes.GetNamedItem("OrgName").Value
 
-            OrgComboBox.Items.Add(OrgNameAttribute)
+            anOrgComboBox.Items.Add(OrgNameAttribute)
 
-            If l_current_value = OrgNameAttribute Then
+            If currentValue = OrgNameAttribute Then
                 'ReSelect the current item
-                OrgComboBox.SelectedIndex = OrgComboBox.Items.Count - 1
+                anOrgComboBox.SelectedIndex = anOrgComboBox.Items.Count - 1
                 l_found = True
             End If
 
         Next
 
-        If OrgComboBox.Items.Count > 0 And Not l_found Then
+        If anOrgComboBox.Items.Count > 0 And Not l_found Then
             'Select the first item
-            OrgComboBox.SelectedIndex = 0
+            anOrgComboBox.SelectedIndex = 0
         End If
-
-
-        'If OrgComboBox.Items.Count > 0 Then
-        'OrgComboBox.SelectedIndex = 0
-        'End If
-
-        ' l_GitReposXML.Save(Globals.XMLRepoFilePath())
 
 
     End Sub
@@ -173,7 +185,7 @@ Public Class OrgSettings
 
 
     Private Sub DatabaseSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        readOrgs()
+        readOrgs(OrgComboBox, OrgComboBox.Text, repoName)
     End Sub
 
 
@@ -309,7 +321,7 @@ Public Class OrgSettings
 
 
         TestOrgValue()
-        readOrgs()
+        readOrgs(OrgComboBox, OrgComboBox.Text, repoName)
     End Sub
 
 
@@ -368,7 +380,7 @@ Public Class OrgSettings
     Private Sub ButtonRemove_Click(sender As Object, e As EventArgs) Handles ButtonRemove.Click
         RemoveOrg()
         TestOrgValue()
-        readOrgs()
+        readOrgs(OrgComboBox, OrgComboBox.Text, repoName)
     End Sub
 
     Private Sub ButtonUpdate_Click(sender As Object, e As EventArgs) Handles ButtonUpdate.Click
