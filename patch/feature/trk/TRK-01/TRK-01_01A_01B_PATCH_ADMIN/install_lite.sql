@@ -41,16 +41,6 @@ PROMPT patches.tab
 @&&patch_path.patches.tab;
 WHENEVER SQLERROR EXIT FAILURE ROLLBACK
 
-PROMPT DATABASE LINKS
-
-PROMPT patch_admin_backward_dblink.dblink 
-@&&patch_path.patch_admin_backward_dblink.dblink;
-Show error;
-
-PROMPT patch_admin_forward_dblink.dblink 
-@&&patch_path.patch_admin_forward_dblink.dblink;
-Show error;
-
 PROMPT PACKAGE SPECS
 
 PROMPT patch_installer.pks 
@@ -79,10 +69,6 @@ Show error;
 
 PROMPT VIEWS
 
-PROMPT components_unapplied_v.vw 
-@&&patch_path.components_unapplied_v.vw;
-Show error;
-
 PROMPT patch_prereqs_v.vw 
 @&&patch_path.patch_prereqs_v.vw;
 Show error;
@@ -97,14 +83,6 @@ Show error;
 
 PROMPT patches_dependency_v.vw 
 @&&patch_path.patches_dependency_v.vw;
-Show error;
-
-PROMPT patches_unapplied_v.vw 
-@&&patch_path.patches_unapplied_v.vw;
-Show error;
-
-PROMPT patches_unpromoted_v.vw 
-@&&patch_path.patches_unpromoted_v.vw;
 Show error;
 
 PROMPT patches_v.vw 
@@ -144,6 +122,28 @@ Show error;
 
 PROMPT text_manip.pkb 
 @&&patch_path.text_manip.pkb;
+Show error;
+
+PROMPT DATABASE LINKS
+
+PROMPT patch_admin_backward_dblink.dblink 
+@&&patch_path.patch_admin_backward_dblink.dblink;
+Show error;
+
+PROMPT patch_admin_forward_dblink.dblink 
+@&&patch_path.patch_admin_forward_dblink.dblink;
+Show error;
+
+PROMPT patches_unapplied_v.vw 
+@&&patch_path.patches_unapplied_v.vw;
+Show error;
+
+PROMPT patches_unpromoted_v.vw 
+@&&patch_path.patches_unpromoted_v.vw;
+Show error;
+
+PROMPT components_unapplied_v.vw 
+@&&patch_path.components_unapplied_v.vw;
 Show error;
 
 PROMPT TRIGGERS

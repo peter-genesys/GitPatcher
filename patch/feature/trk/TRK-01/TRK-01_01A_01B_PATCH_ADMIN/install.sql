@@ -33,21 +33,16 @@ execute &&PATCH_ADMIN_user..patch_installer.patch_started( -
  ,i_patch_componants   => 'patch_prereqs.tab' -
 ||',patch_supersedes.tab' -
 ||',patches.tab' -
-||',patch_admin_backward_dblink.dblink' -
-||',patch_admin_forward_dblink.dblink' -
 ||',patch_installer.pks' -
 ||',patch_invoker.pks' -
 ||',patch_prereqs_tapi.pks' -
 ||',patch_supersedes_tapi.pks' -
 ||',patches_tapi.pks' -
 ||',text_manip.pks' -
-||',components_unapplied_v.vw' -
 ||',patch_prereqs_v.vw' -
 ||',patch_supersedes_v.vw' -
 ||',patches_components_v.vw' -
 ||',patches_dependency_v.vw' -
-||',patches_unapplied_v.vw' -
-||',patches_unpromoted_v.vw' -
 ||',patches_v.vw' -
 ||',user_object_dependency_v.vw' -
 ||',end_user.grt' -
@@ -57,6 +52,11 @@ execute &&PATCH_ADMIN_user..patch_installer.patch_started( -
 ||',patch_supersedes_tapi.pkb' -
 ||',patches_tapi.pkb' -
 ||',text_manip.pkb' -
+||',patch_admin_backward_dblink.dblink' -
+||',patch_admin_forward_dblink.dblink' -
+||',patches_unapplied_v.vw' -
+||',patches_unpromoted_v.vw' -
+||',components_unapplied_v.vw' -
 ||',patch_prereqs_aud.trg' -
 ||',patch_supersedes_aud.trg' -
 ||',patches_aud.trg' -
@@ -95,16 +95,6 @@ PROMPT patches.tab
 @&&patch_path.patches.tab;
 WHENEVER SQLERROR EXIT FAILURE ROLLBACK
 
-PROMPT DATABASE LINKS
-
-PROMPT patch_admin_backward_dblink.dblink 
-@&&patch_path.patch_admin_backward_dblink.dblink;
-Show error;
-
-PROMPT patch_admin_forward_dblink.dblink 
-@&&patch_path.patch_admin_forward_dblink.dblink;
-Show error;
-
 PROMPT PACKAGE SPECS
 
 PROMPT patch_installer.pks 
@@ -133,10 +123,6 @@ Show error;
 
 PROMPT VIEWS
 
-PROMPT components_unapplied_v.vw 
-@&&patch_path.components_unapplied_v.vw;
-Show error;
-
 PROMPT patch_prereqs_v.vw 
 @&&patch_path.patch_prereqs_v.vw;
 Show error;
@@ -151,14 +137,6 @@ Show error;
 
 PROMPT patches_dependency_v.vw 
 @&&patch_path.patches_dependency_v.vw;
-Show error;
-
-PROMPT patches_unapplied_v.vw 
-@&&patch_path.patches_unapplied_v.vw;
-Show error;
-
-PROMPT patches_unpromoted_v.vw 
-@&&patch_path.patches_unpromoted_v.vw;
 Show error;
 
 PROMPT patches_v.vw 
@@ -198,6 +176,28 @@ Show error;
 
 PROMPT text_manip.pkb 
 @&&patch_path.text_manip.pkb;
+Show error;
+
+PROMPT DATABASE LINKS
+
+PROMPT patch_admin_backward_dblink.dblink 
+@&&patch_path.patch_admin_backward_dblink.dblink;
+Show error;
+
+PROMPT patch_admin_forward_dblink.dblink 
+@&&patch_path.patch_admin_forward_dblink.dblink;
+Show error;
+
+PROMPT patches_unapplied_v.vw 
+@&&patch_path.patches_unapplied_v.vw;
+Show error;
+
+PROMPT patches_unpromoted_v.vw 
+@&&patch_path.patches_unpromoted_v.vw;
+Show error;
+
+PROMPT components_unapplied_v.vw 
+@&&patch_path.components_unapplied_v.vw;
 Show error;
 
 PROMPT TRIGGERS
