@@ -173,11 +173,6 @@
     </Compile>
     <Compile Include="FileInfoEx.vb" />
     <Compile Include="FileIO.vb" />
-    <Compile Include="GitPatcherSettingDBDataSet.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GitPatcherSettingDBDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="GitSharpFascade.vb" />
     <Compile Include="Config.Designer.vb">
       <DependentUpon>Config.vb</DependentUpon>
@@ -285,17 +280,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="GitPatcherSettingDBDataSet.xsc">
-      <DependentUpon>GitPatcherSettingDBDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="GitPatcherSettingDBDataSet.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>GitPatcherSettingDBDataSet.Designer.vb</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="GitPatcherSettingDBDataSet.xss">
-      <DependentUpon>GitPatcherSettingDBDataSet.xsd</DependentUpon>
-    </None>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -373,11 +357,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="GitPatcherSettingDB.sdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
