@@ -1,0 +1,44 @@
+CREATE TABLE patches(
+  patch_id           NUMBER
+ ,patch_name         VARCHAR2(100)
+ ,db_schema          VARCHAR2(30)
+ ,branch_name        VARCHAR2(30)
+ ,tag_from           VARCHAR2(18)
+ ,tag_to             VARCHAR2(18)
+ ,supplementary      VARCHAR2(4)
+ ,patch_desc         VARCHAR2(200)
+ ,patch_componants   CLOB
+ ,patch_create_date  DATE 
+ ,patch_created_by   VARCHAR2 (255)
+ ,note               VARCHAR2 (200)
+ ,log_datetime       DATE
+ ,completed_datetime DATE
+ ,success_yn         VARCHAR2(1) default 'N'
+ ,retired_yn         VARCHAR2(1) default 'N'
+ ,rerunnable_yn      VARCHAR2(1) default 'Y'
+ ,warning_count      NUMBER
+ ,error_count        NUMBER 
+ ,username           VARCHAR2(30) 
+ ,install_log        CLOB
+ ,created_by         VARCHAR2 (255)  
+ ,created_on         DATE DEFAULT sysdate   
+ ,last_updated_by    VARCHAR2 (255) 
+ ,last_updated_on    DATE DEFAULT sysdate 
+);
+
+ALTER TABLE patches 
+    ADD CONSTRAINT patches_PK PRIMARY KEY ( patch_id ) ;
+    
+ALTER TABLE patches 
+    ADD CONSTRAINT patches_UK1 UNIQUE ( patch_name ) ;
+    
+ALTER TABLE patches 
+    ADD CONSTRAINT patches_UK2 UNIQUE (db_schema ,branch_name ,tag_from ,tag_to ,supplementary);
+    
+alter table patches modify tag_from VARCHAR2(40);
+alter table patches modify tag_to   VARCHAR2(40);  
+alter table patches add patch_type VARCHAR2(30) DEFAULT 'feature' NOT NULL;
+ 
+alter table patches modify branch_name VARCHAR2(100); 
+ 
+

@@ -1,0 +1,15 @@
+CREATE TABLE patch_prereqs(
+  patch_prereq_id   NUMBER
+ ,patch_name        VARCHAR2(100) 
+ ,prereq_patch      VARCHAR2(100) 
+ ,created_by        VARCHAR2 (255)  
+ ,created_on        DATE DEFAULT sysdate   
+ ,last_updated_by   VARCHAR2 (255) 
+ ,last_updated_on   DATE DEFAULT sysdate 
+);
+ 
+ALTER TABLE patch_prereqs 
+    ADD CONSTRAINT patch_prereqs_PK PRIMARY KEY ( patch_prereq_id ) ;
+    
+ALTER TABLE patch_prereqs 
+    ADD CONSTRAINT patch_prereqs_UK1 UNIQUE ( patch_name  ,prereq_patch ) ;
