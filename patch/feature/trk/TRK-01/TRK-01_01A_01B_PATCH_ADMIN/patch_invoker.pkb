@@ -66,7 +66,7 @@ END;
  
     --Recompile all objects in dependancy order.
     FOR l_object IN (  select * 
-                       from  user_object_dependency_v 
+                       from  &&patch_admin_user..user_object_dependency_v 
                        where object_name <> 'patch_invoker' ) LOOP
  
      IF l_object.object_type = 'PACKAGE BODY' THEN
