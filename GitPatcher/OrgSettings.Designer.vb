@@ -55,6 +55,7 @@ Partial Class OrgSettings
         Me.VMTNSTextBox = New System.Windows.Forms.TextBox()
         Me.OrgCodeTextBox = New System.Windows.Forms.TextBox()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.OrgInFeatureCheckBox = New System.Windows.Forms.CheckBox()
         Label26 = New System.Windows.Forms.Label()
         Label27 = New System.Windows.Forms.Label()
         Label29 = New System.Windows.Forms.Label()
@@ -76,7 +77,7 @@ Partial Class OrgSettings
         '
         Label26.AutoSize = True
         Label26.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label26.Location = New System.Drawing.Point(24, 95)
+        Label26.Location = New System.Drawing.Point(24, 132)
         Label26.Name = "Label26"
         Label26.Size = New System.Drawing.Size(38, 13)
         Label26.TabIndex = 31
@@ -85,7 +86,7 @@ Partial Class OrgSettings
         'Label27
         '
         Label27.AutoSize = True
-        Label27.Location = New System.Drawing.Point(119, 76)
+        Label27.Location = New System.Drawing.Point(119, 113)
         Label27.Name = "Label27"
         Label27.Size = New System.Drawing.Size(56, 13)
         Label27.TabIndex = 33
@@ -94,7 +95,7 @@ Partial Class OrgSettings
         'Label29
         '
         Label29.AutoSize = True
-        Label29.Location = New System.Drawing.Point(218, 76)
+        Label29.Location = New System.Drawing.Point(218, 113)
         Label29.Name = "Label29"
         Label29.Size = New System.Drawing.Size(77, 13)
         Label29.TabIndex = 35
@@ -104,7 +105,7 @@ Partial Class OrgSettings
         '
         Label12.AutoSize = True
         Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label12.Location = New System.Drawing.Point(24, 259)
+        Label12.Location = New System.Drawing.Point(24, 296)
         Label12.Name = "Label12"
         Label12.Size = New System.Drawing.Size(29, 13)
         Label12.TabIndex = 51
@@ -119,9 +120,100 @@ Partial Class OrgSettings
         Label1.TabIndex = 56
         Label1.Text = "Org Code"
         '
+        'Label2
+        '
+        Label2.AutoSize = True
+        Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label2.Location = New System.Drawing.Point(24, 113)
+        Label2.Name = "Label2"
+        Label2.Size = New System.Drawing.Size(37, 13)
+        Label2.TabIndex = 57
+        Label2.Text = "Promo"
+        AddHandler Label2.Click, AddressOf Me.Label2_Click
+        '
+        'Label4
+        '
+        Label4.AutoSize = True
+        Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label4.Location = New System.Drawing.Point(67, 113)
+        Label4.Name = "Label4"
+        Label4.Size = New System.Drawing.Size(37, 13)
+        Label4.TabIndex = 58
+        Label4.Text = "HotFix"
+        '
+        'Label5
+        '
+        Label5.AutoSize = True
+        Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label5.Location = New System.Drawing.Point(67, 132)
+        Label5.Name = "Label5"
+        Label5.Size = New System.Drawing.Size(38, 13)
+        Label5.TabIndex = 59
+        Label5.Text = "master"
+        '
+        'Label7
+        '
+        Label7.AutoSize = True
+        Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label7.Location = New System.Drawing.Point(67, 174)
+        Label7.Name = "Label7"
+        Label7.Size = New System.Drawing.Size(22, 13)
+        Label7.TabIndex = 61
+        Label7.Text = "uat"
+        '
+        'Label8
+        '
+        Label8.AutoSize = True
+        Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label8.Location = New System.Drawing.Point(24, 174)
+        Label8.Name = "Label8"
+        Label8.Size = New System.Drawing.Size(29, 13)
+        Label8.TabIndex = 60
+        Label8.Text = "UAT"
+        '
+        'Label3
+        '
+        Label3.AutoSize = True
+        Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label3.Location = New System.Drawing.Point(67, 215)
+        Label3.Name = "Label3"
+        Label3.Size = New System.Drawing.Size(24, 13)
+        Label3.TabIndex = 63
+        Label3.Text = "test"
+        '
+        'Label10
+        '
+        Label10.AutoSize = True
+        Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label10.Location = New System.Drawing.Point(24, 215)
+        Label10.Name = "Label10"
+        Label10.Size = New System.Drawing.Size(35, 13)
+        Label10.TabIndex = 62
+        Label10.Text = "TEST"
+        '
+        'Label6
+        '
+        Label6.AutoSize = True
+        Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label6.Location = New System.Drawing.Point(67, 256)
+        Label6.Name = "Label6"
+        Label6.Size = New System.Drawing.Size(45, 13)
+        Label6.TabIndex = 65
+        Label6.Text = "develop"
+        '
+        'Label11
+        '
+        Label11.AutoSize = True
+        Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Label11.Location = New System.Drawing.Point(24, 256)
+        Label11.Name = "Label11"
+        Label11.Size = New System.Drawing.Size(29, 13)
+        Label11.TabIndex = 64
+        Label11.Text = "DEV"
+        '
         'PRODTNSTextBox
         '
-        Me.PRODTNSTextBox.Location = New System.Drawing.Point(122, 92)
+        Me.PRODTNSTextBox.Location = New System.Drawing.Point(122, 129)
         Me.PRODTNSTextBox.Name = "PRODTNSTextBox"
         Me.PRODTNSTextBox.Size = New System.Drawing.Size(90, 20)
         Me.PRODTNSTextBox.TabIndex = 32
@@ -173,63 +265,63 @@ Partial Class OrgSettings
         '
         'PRODCONNECTTextBox
         '
-        Me.PRODCONNECTTextBox.Location = New System.Drawing.Point(218, 92)
+        Me.PRODCONNECTTextBox.Location = New System.Drawing.Point(218, 129)
         Me.PRODCONNECTTextBox.Name = "PRODCONNECTTextBox"
         Me.PRODCONNECTTextBox.Size = New System.Drawing.Size(344, 20)
         Me.PRODCONNECTTextBox.TabIndex = 34
         '
         'UATCONNECTTextBox
         '
-        Me.UATCONNECTTextBox.Location = New System.Drawing.Point(218, 134)
+        Me.UATCONNECTTextBox.Location = New System.Drawing.Point(218, 171)
         Me.UATCONNECTTextBox.Name = "UATCONNECTTextBox"
         Me.UATCONNECTTextBox.Size = New System.Drawing.Size(344, 20)
         Me.UATCONNECTTextBox.TabIndex = 39
         '
         'UATTNSTextBox
         '
-        Me.UATTNSTextBox.Location = New System.Drawing.Point(121, 134)
+        Me.UATTNSTextBox.Location = New System.Drawing.Point(121, 171)
         Me.UATTNSTextBox.Name = "UATTNSTextBox"
         Me.UATTNSTextBox.Size = New System.Drawing.Size(91, 20)
         Me.UATTNSTextBox.TabIndex = 37
         '
         'TESTCONNECTTextBox
         '
-        Me.TESTCONNECTTextBox.Location = New System.Drawing.Point(218, 175)
+        Me.TESTCONNECTTextBox.Location = New System.Drawing.Point(218, 212)
         Me.TESTCONNECTTextBox.Name = "TESTCONNECTTextBox"
         Me.TESTCONNECTTextBox.Size = New System.Drawing.Size(344, 20)
         Me.TESTCONNECTTextBox.TabIndex = 44
         '
         'TESTTNSTextBox
         '
-        Me.TESTTNSTextBox.Location = New System.Drawing.Point(121, 175)
+        Me.TESTTNSTextBox.Location = New System.Drawing.Point(121, 212)
         Me.TESTTNSTextBox.Name = "TESTTNSTextBox"
         Me.TESTTNSTextBox.Size = New System.Drawing.Size(91, 20)
         Me.TESTTNSTextBox.TabIndex = 42
         '
         'DEVCONNECTTextBox
         '
-        Me.DEVCONNECTTextBox.Location = New System.Drawing.Point(218, 216)
+        Me.DEVCONNECTTextBox.Location = New System.Drawing.Point(218, 253)
         Me.DEVCONNECTTextBox.Name = "DEVCONNECTTextBox"
         Me.DEVCONNECTTextBox.Size = New System.Drawing.Size(344, 20)
         Me.DEVCONNECTTextBox.TabIndex = 49
         '
         'DEVTNSTextBox
         '
-        Me.DEVTNSTextBox.Location = New System.Drawing.Point(121, 216)
+        Me.DEVTNSTextBox.Location = New System.Drawing.Point(121, 253)
         Me.DEVTNSTextBox.Name = "DEVTNSTextBox"
         Me.DEVTNSTextBox.Size = New System.Drawing.Size(91, 20)
         Me.DEVTNSTextBox.TabIndex = 47
         '
         'VMCONNECTTextBox
         '
-        Me.VMCONNECTTextBox.Location = New System.Drawing.Point(218, 256)
+        Me.VMCONNECTTextBox.Location = New System.Drawing.Point(218, 293)
         Me.VMCONNECTTextBox.Name = "VMCONNECTTextBox"
         Me.VMCONNECTTextBox.Size = New System.Drawing.Size(344, 20)
         Me.VMCONNECTTextBox.TabIndex = 54
         '
         'VMTNSTextBox
         '
-        Me.VMTNSTextBox.Location = New System.Drawing.Point(121, 256)
+        Me.VMTNSTextBox.Location = New System.Drawing.Point(121, 293)
         Me.VMTNSTextBox.Name = "VMTNSTextBox"
         Me.VMTNSTextBox.Size = New System.Drawing.Size(91, 20)
         Me.VMTNSTextBox.TabIndex = 52
@@ -245,102 +337,22 @@ Partial Class OrgSettings
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
         '
-        'Label2
+        'OrgInFeatureCheckBox
         '
-        Label2.AutoSize = True
-        Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label2.Location = New System.Drawing.Point(24, 76)
-        Label2.Name = "Label2"
-        Label2.Size = New System.Drawing.Size(37, 13)
-        Label2.TabIndex = 57
-        Label2.Text = "Promo"
-        AddHandler Label2.Click, AddressOf Me.Label2_Click
-        '
-        'Label4
-        '
-        Label4.AutoSize = True
-        Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label4.Location = New System.Drawing.Point(67, 76)
-        Label4.Name = "Label4"
-        Label4.Size = New System.Drawing.Size(37, 13)
-        Label4.TabIndex = 58
-        Label4.Text = "HotFix"
-        '
-        'Label5
-        '
-        Label5.AutoSize = True
-        Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label5.Location = New System.Drawing.Point(67, 95)
-        Label5.Name = "Label5"
-        Label5.Size = New System.Drawing.Size(38, 13)
-        Label5.TabIndex = 59
-        Label5.Text = "master"
-        '
-        'Label7
-        '
-        Label7.AutoSize = True
-        Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label7.Location = New System.Drawing.Point(67, 137)
-        Label7.Name = "Label7"
-        Label7.Size = New System.Drawing.Size(22, 13)
-        Label7.TabIndex = 61
-        Label7.Text = "uat"
-        '
-        'Label8
-        '
-        Label8.AutoSize = True
-        Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label8.Location = New System.Drawing.Point(24, 137)
-        Label8.Name = "Label8"
-        Label8.Size = New System.Drawing.Size(29, 13)
-        Label8.TabIndex = 60
-        Label8.Text = "UAT"
-        '
-        'Label3
-        '
-        Label3.AutoSize = True
-        Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label3.Location = New System.Drawing.Point(67, 178)
-        Label3.Name = "Label3"
-        Label3.Size = New System.Drawing.Size(24, 13)
-        Label3.TabIndex = 63
-        Label3.Text = "test"
-        '
-        'Label10
-        '
-        Label10.AutoSize = True
-        Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label10.Location = New System.Drawing.Point(24, 178)
-        Label10.Name = "Label10"
-        Label10.Size = New System.Drawing.Size(35, 13)
-        Label10.TabIndex = 62
-        Label10.Text = "TEST"
-        '
-        'Label6
-        '
-        Label6.AutoSize = True
-        Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label6.Location = New System.Drawing.Point(67, 219)
-        Label6.Name = "Label6"
-        Label6.Size = New System.Drawing.Size(45, 13)
-        Label6.TabIndex = 65
-        Label6.Text = "develop"
-        '
-        'Label11
-        '
-        Label11.AutoSize = True
-        Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label11.Location = New System.Drawing.Point(24, 219)
-        Label11.Name = "Label11"
-        Label11.Size = New System.Drawing.Size(29, 13)
-        Label11.TabIndex = 64
-        Label11.Text = "DEV"
+        Me.OrgInFeatureCheckBox.AutoSize = True
+        Me.OrgInFeatureCheckBox.Location = New System.Drawing.Point(472, 67)
+        Me.OrgInFeatureCheckBox.Name = "OrgInFeatureCheckBox"
+        Me.OrgInFeatureCheckBox.Size = New System.Drawing.Size(95, 30)
+        Me.OrgInFeatureCheckBox.TabIndex = 66
+        Me.OrgInFeatureCheckBox.Text = "Use in Feature" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Path"
+        Me.OrgInFeatureCheckBox.UseVisualStyleBackColor = True
         '
         'OrgSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(594, 319)
+        Me.ClientSize = New System.Drawing.Size(586, 351)
+        Me.Controls.Add(Me.OrgInFeatureCheckBox)
         Me.Controls.Add(Label6)
         Me.Controls.Add(Label11)
         Me.Controls.Add(Label3)
@@ -396,4 +408,5 @@ Partial Class OrgSettings
     Friend WithEvents VMCONNECTTextBox As System.Windows.Forms.TextBox
     Friend WithEvents VMTNSTextBox As System.Windows.Forms.TextBox
     Friend WithEvents OrgCodeTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents OrgInFeatureCheckBox As System.Windows.Forms.CheckBox
 End Class

@@ -75,13 +75,13 @@ Partial Class Main
         Me.Label6 = New System.Windows.Forms.Label()
         Me.CONNECTTextBox = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
-        Me.ParsingSchemaTextBox = New System.Windows.Forms.TextBox()
+        Me.SchemaTextBox = New System.Windows.Forms.TextBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.BranchPathTextBox = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.MinPatchTextBox = New System.Windows.Forms.TextBox()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.ApexAppTextBox = New System.Windows.Forms.TextBox()
+        Me.JiraTextBox = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.AppCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -93,6 +93,14 @@ Partial Class Main
         Me.Label14 = New System.Windows.Forms.Label()
         Me.OrgCodeTextBox = New System.Windows.Forms.TextBox()
         Me.Label15 = New System.Windows.Forms.Label()
+        Me.AppIdTextBox = New System.Windows.Forms.TextBox()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.OrgInFeatureCheckBox = New System.Windows.Forms.CheckBox()
+        Me.AppInFeatureCheckBox = New System.Windows.Forms.CheckBox()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.HotFixTextBox = New System.Windows.Forms.TextBox()
+        Me.Label19 = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -340,9 +348,9 @@ Partial Class Main
         'RepoComboBox
         '
         Me.RepoComboBox.FormattingEnabled = True
-        Me.RepoComboBox.Location = New System.Drawing.Point(103, 27)
+        Me.RepoComboBox.Location = New System.Drawing.Point(86, 27)
         Me.RepoComboBox.Name = "RepoComboBox"
-        Me.RepoComboBox.Size = New System.Drawing.Size(373, 21)
+        Me.RepoComboBox.Size = New System.Drawing.Size(390, 21)
         Me.RepoComboBox.TabIndex = 1
         '
         'Label1
@@ -393,7 +401,7 @@ Partial Class Main
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(42, 246)
+        Me.Label4.Location = New System.Drawing.Point(60, 246)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(61, 13)
         Me.Label4.TabIndex = 8
@@ -403,16 +411,16 @@ Partial Class Main
         '
         Me.DBComboBox.FormattingEnabled = True
         Me.DBComboBox.Items.AddRange(New Object() {"PROD", "UAT", "TEST", "DEV", "VM"})
-        Me.DBComboBox.Location = New System.Drawing.Point(134, 243)
+        Me.DBComboBox.Location = New System.Drawing.Point(150, 243)
         Me.DBComboBox.Name = "DBComboBox"
-        Me.DBComboBox.Size = New System.Drawing.Size(342, 21)
+        Me.DBComboBox.Size = New System.Drawing.Size(326, 21)
         Me.DBComboBox.TabIndex = 7
         '
         'Label5
         '
         Me.Label5.AutoSize = True
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(33, 333)
+        Me.Label5.Location = New System.Drawing.Point(33, 359)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(70, 13)
         Me.Label5.TabIndex = 10
@@ -421,7 +429,7 @@ Partial Class Main
         'ApplicationListComboBox
         '
         Me.ApplicationListComboBox.FormattingEnabled = True
-        Me.ApplicationListComboBox.Location = New System.Drawing.Point(120, 330)
+        Me.ApplicationListComboBox.Location = New System.Drawing.Point(120, 356)
         Me.ApplicationListComboBox.Name = "ApplicationListComboBox"
         Me.ApplicationListComboBox.Size = New System.Drawing.Size(356, 21)
         Me.ApplicationListComboBox.TabIndex = 9
@@ -445,33 +453,33 @@ Partial Class Main
         '
         'CONNECTTextBox
         '
-        Me.CONNECTTextBox.Location = New System.Drawing.Point(150, 296)
+        Me.CONNECTTextBox.Location = New System.Drawing.Point(176, 322)
         Me.CONNECTTextBox.Name = "CONNECTTextBox"
         Me.CONNECTTextBox.ReadOnly = True
-        Me.CONNECTTextBox.Size = New System.Drawing.Size(326, 20)
+        Me.CONNECTTextBox.Size = New System.Drawing.Size(300, 20)
         Me.CONNECTTextBox.TabIndex = 14
         '
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(73, 299)
+        Me.Label7.Location = New System.Drawing.Point(83, 325)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(61, 13)
         Me.Label7.TabIndex = 13
         Me.Label7.Text = "Connection"
         '
-        'ParsingSchemaTextBox
+        'SchemaTextBox
         '
-        Me.ParsingSchemaTextBox.Location = New System.Drawing.Point(134, 412)
-        Me.ParsingSchemaTextBox.Name = "ParsingSchemaTextBox"
-        Me.ParsingSchemaTextBox.ReadOnly = True
-        Me.ParsingSchemaTextBox.Size = New System.Drawing.Size(342, 20)
-        Me.ParsingSchemaTextBox.TabIndex = 16
+        Me.SchemaTextBox.Location = New System.Drawing.Point(150, 464)
+        Me.SchemaTextBox.Name = "SchemaTextBox"
+        Me.SchemaTextBox.ReadOnly = True
+        Me.SchemaTextBox.Size = New System.Drawing.Size(326, 20)
+        Me.SchemaTextBox.TabIndex = 16
         '
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(25, 415)
+        Me.Label8.Location = New System.Drawing.Point(60, 467)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(84, 13)
         Me.Label8.TabIndex = 15
@@ -496,54 +504,55 @@ Partial Class Main
         '
         'MinPatchTextBox
         '
-        Me.MinPatchTextBox.Location = New System.Drawing.Point(103, 438)
+        Me.MinPatchTextBox.Location = New System.Drawing.Point(86, 507)
         Me.MinPatchTextBox.Name = "MinPatchTextBox"
         Me.MinPatchTextBox.ReadOnly = True
-        Me.MinPatchTextBox.Size = New System.Drawing.Size(373, 20)
+        Me.MinPatchTextBox.Size = New System.Drawing.Size(390, 20)
         Me.MinPatchTextBox.TabIndex = 20
         '
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(12, 441)
+        Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label10.Location = New System.Drawing.Point(12, 510)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(79, 13)
+        Me.Label10.Size = New System.Drawing.Size(64, 13)
         Me.Label10.TabIndex = 19
-        Me.Label10.Text = "Minimum Patch"
+        Me.Label10.Text = "Min Patch"
         '
-        'ApexAppTextBox
+        'JiraTextBox
         '
-        Me.ApexAppTextBox.Location = New System.Drawing.Point(134, 386)
-        Me.ApexAppTextBox.Name = "ApexAppTextBox"
-        Me.ApexAppTextBox.ReadOnly = True
-        Me.ApexAppTextBox.Size = New System.Drawing.Size(342, 20)
-        Me.ApexAppTextBox.TabIndex = 22
+        Me.JiraTextBox.Location = New System.Drawing.Point(150, 438)
+        Me.JiraTextBox.Name = "JiraTextBox"
+        Me.JiraTextBox.ReadOnly = True
+        Me.JiraTextBox.Size = New System.Drawing.Size(326, 20)
+        Me.JiraTextBox.TabIndex = 22
         '
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(50, 389)
+        Me.Label11.Location = New System.Drawing.Point(60, 441)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(53, 13)
+        Me.Label11.Size = New System.Drawing.Size(60, 13)
         Me.Label11.TabIndex = 21
-        Me.Label11.Text = "Apex App"
+        Me.Label11.Text = "Issue Code"
         '
         'AppCodeTextBox
         '
-        Me.AppCodeTextBox.Location = New System.Drawing.Point(134, 360)
+        Me.AppCodeTextBox.Location = New System.Drawing.Point(150, 386)
         Me.AppCodeTextBox.Name = "AppCodeTextBox"
         Me.AppCodeTextBox.ReadOnly = True
-        Me.AppCodeTextBox.Size = New System.Drawing.Size(342, 20)
+        Me.AppCodeTextBox.Size = New System.Drawing.Size(221, 20)
         Me.AppCodeTextBox.TabIndex = 26
         '
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(77, 363)
+        Me.Label13.Location = New System.Drawing.Point(60, 389)
         Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(32, 13)
+        Me.Label13.Size = New System.Drawing.Size(54, 13)
         Me.Label13.TabIndex = 25
-        Me.Label13.Text = "Code"
+        Me.Label13.Text = "App Code"
         '
         'RepoPathTextBox
         '
@@ -582,16 +591,16 @@ Partial Class Main
         '
         'TNSTextBox
         '
-        Me.TNSTextBox.Location = New System.Drawing.Point(150, 270)
+        Me.TNSTextBox.Location = New System.Drawing.Point(176, 296)
         Me.TNSTextBox.Name = "TNSTextBox"
         Me.TNSTextBox.ReadOnly = True
-        Me.TNSTextBox.Size = New System.Drawing.Size(326, 20)
+        Me.TNSTextBox.Size = New System.Drawing.Size(300, 20)
         Me.TNSTextBox.TabIndex = 32
         '
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(73, 273)
+        Me.Label14.Location = New System.Drawing.Point(83, 299)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(29, 13)
         Me.Label14.TabIndex = 31
@@ -599,26 +608,106 @@ Partial Class Main
         '
         'OrgCodeTextBox
         '
-        Me.OrgCodeTextBox.Location = New System.Drawing.Point(134, 217)
+        Me.OrgCodeTextBox.Location = New System.Drawing.Point(150, 217)
         Me.OrgCodeTextBox.Name = "OrgCodeTextBox"
         Me.OrgCodeTextBox.ReadOnly = True
-        Me.OrgCodeTextBox.Size = New System.Drawing.Size(342, 20)
+        Me.OrgCodeTextBox.Size = New System.Drawing.Size(221, 20)
         Me.OrgCodeTextBox.TabIndex = 34
         '
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(59, 220)
+        Me.Label15.Location = New System.Drawing.Point(60, 220)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(52, 13)
         Me.Label15.TabIndex = 33
         Me.Label15.Text = "Org Code"
         '
+        'AppIdTextBox
+        '
+        Me.AppIdTextBox.Location = New System.Drawing.Point(150, 412)
+        Me.AppIdTextBox.Name = "AppIdTextBox"
+        Me.AppIdTextBox.ReadOnly = True
+        Me.AppIdTextBox.Size = New System.Drawing.Size(326, 20)
+        Me.AppIdTextBox.TabIndex = 36
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(60, 415)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(65, 13)
+        Me.Label16.TabIndex = 35
+        Me.Label16.Text = "Apex App Id"
+        '
+        'OrgInFeatureCheckBox
+        '
+        Me.OrgInFeatureCheckBox.AutoSize = True
+        Me.OrgInFeatureCheckBox.Enabled = False
+        Me.OrgInFeatureCheckBox.Location = New System.Drawing.Point(459, 220)
+        Me.OrgInFeatureCheckBox.Name = "OrgInFeatureCheckBox"
+        Me.OrgInFeatureCheckBox.Size = New System.Drawing.Size(15, 14)
+        Me.OrgInFeatureCheckBox.TabIndex = 37
+        Me.OrgInFeatureCheckBox.UseVisualStyleBackColor = True
+        '
+        'AppInFeatureCheckBox
+        '
+        Me.AppInFeatureCheckBox.AutoSize = True
+        Me.AppInFeatureCheckBox.Enabled = False
+        Me.AppInFeatureCheckBox.Location = New System.Drawing.Point(459, 362)
+        Me.AppInFeatureCheckBox.Name = "AppInFeatureCheckBox"
+        Me.AppInFeatureCheckBox.Size = New System.Drawing.Size(15, 14)
+        Me.AppInFeatureCheckBox.TabIndex = 38
+        Me.AppInFeatureCheckBox.UseVisualStyleBackColor = True
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(377, 220)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(76, 13)
+        Me.Label17.TabIndex = 39
+        Me.Label17.Text = "Use in Feature"
+        '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Location = New System.Drawing.Point(377, 399)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(76, 13)
+        Me.Label18.TabIndex = 40
+        Me.Label18.Text = "Use in Feature"
+        '
+        'HotFixTextBox
+        '
+        Me.HotFixTextBox.Location = New System.Drawing.Point(176, 270)
+        Me.HotFixTextBox.Name = "HotFixTextBox"
+        Me.HotFixTextBox.ReadOnly = True
+        Me.HotFixTextBox.Size = New System.Drawing.Size(300, 20)
+        Me.HotFixTextBox.TabIndex = 42
+        '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.Location = New System.Drawing.Point(83, 273)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(77, 13)
+        Me.Label19.TabIndex = 41
+        Me.Label19.Text = "Hot Fix Branch"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(486, 495)
+        Me.ClientSize = New System.Drawing.Size(486, 561)
+        Me.Controls.Add(Me.HotFixTextBox)
+        Me.Controls.Add(Me.Label19)
+        Me.Controls.Add(Me.Label18)
+        Me.Controls.Add(Me.Label17)
+        Me.Controls.Add(Me.AppInFeatureCheckBox)
+        Me.Controls.Add(Me.OrgInFeatureCheckBox)
+        Me.Controls.Add(Me.AppIdTextBox)
+        Me.Controls.Add(Me.Label16)
         Me.Controls.Add(Me.OrgCodeTextBox)
         Me.Controls.Add(Me.Label15)
         Me.Controls.Add(Me.TNSTextBox)
@@ -629,13 +718,13 @@ Partial Class Main
         Me.Controls.Add(Me.Label12)
         Me.Controls.Add(Me.AppCodeTextBox)
         Me.Controls.Add(Me.Label13)
-        Me.Controls.Add(Me.ApexAppTextBox)
+        Me.Controls.Add(Me.JiraTextBox)
         Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.MinPatchTextBox)
         Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.BranchPathTextBox)
         Me.Controls.Add(Me.Label9)
-        Me.Controls.Add(Me.ParsingSchemaTextBox)
+        Me.Controls.Add(Me.SchemaTextBox)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.CONNECTTextBox)
         Me.Controls.Add(Me.Label7)
@@ -682,7 +771,7 @@ Partial Class Main
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents CONNECTTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label7 As System.Windows.Forms.Label
-    Friend WithEvents ParsingSchemaTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents SchemaTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents BranchPathTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
@@ -692,7 +781,7 @@ Partial Class Main
     Friend WithEvents MinPatchTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents CreateDBPatchSetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ApexAppTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents JiraTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents AppCodeTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label13 As System.Windows.Forms.Label
@@ -732,5 +821,13 @@ Partial Class Main
     Friend WithEvents Label14 As System.Windows.Forms.Label
     Friend WithEvents OrgCodeTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label15 As System.Windows.Forms.Label
+    Friend WithEvents AppIdTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label16 As System.Windows.Forms.Label
+    Friend WithEvents OrgInFeatureCheckBox As System.Windows.Forms.CheckBox
+    Friend WithEvents AppInFeatureCheckBox As System.Windows.Forms.CheckBox
+    Friend WithEvents Label17 As System.Windows.Forms.Label
+    Friend WithEvents Label18 As System.Windows.Forms.Label
+    Friend WithEvents HotFixTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label19 As System.Windows.Forms.Label
 
 End Class

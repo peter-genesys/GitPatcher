@@ -293,7 +293,7 @@
             'set apex to RUN MODE
             Dim l_build_status As String = Nothing
 
-            If runOnlyDBs.Contains(Globals.currentDB) Then
+            If runOnlyDBs.Contains(Globals.getDB) Then
                 l_build_status = "RUN_ONLY"
             Else
                 l_build_status = "RUN_AND_BUILD"
@@ -309,7 +309,7 @@
         If ImportProgress.toDoNextStep Then
             'Skip reports queries and layouts
 
-            If l_skip_reports_DBs.Contains(Globals.currentDB) Then
+            If l_skip_reports_DBs.Contains(Globals.getDB) Then
                 modInstallSQL()
                 ImportProgress.updateStepDescription(3, "Import will SKIP reports queries and layouts")
             Else

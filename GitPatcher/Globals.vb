@@ -4,24 +4,10 @@
     Private gApex As String
     Private gRepo As String
     Private gApplication As String
-    Private gAppCode As String
-    'Private gApexApp As String
     Private gParsingSchema As String
     Private gJiraProject As String
-    'Private gDBRepoPathMask As String
-
-
-    'RepoPathTextBox.Text = l_RepoNode.Attributes.GetNamedItem("RepoPath").Value
-
-    'ApexOffsetTextBox.Text = l_RepoNode.Attributes.GetNamedItem("ApexRelPath").Value
-    'OJDBCjarFileTextBox.Text = l_RepoNode.Attributes.GetNamedItem("ODBCjavaRelPath").Value
-
-    'DBOffsetTextBox.Text = l_RepoNode.Attributes.GetNamedItem("DatabaseRelPath").Value
-    'ExtrasDirListTextBox.Text = l_RepoNode.Attributes.GetNamedItem("ExtrasRelPath").Value
-
-    'PatchOffsetTextBox.Text = l_RepoNode.Attributes.GetNamedItem("PatchRelPath").Value
-    'PatchExportPathTextBox.Text = l_RepoNode.Attributes.GetNamedItem("PatchExportPath").Value
-
+ 
+ 
     Public Sub setRepo(Repo As String)
 
         gRepo = Repo
@@ -143,7 +129,70 @@
     Public Function getCONNECT() As String
         Return gCONNECT
     End Function
+ 
 
+    Private gAppCode As String
+
+    Public Sub setAppCode(AppCode As String)
+        gAppCode = AppCode
+    End Sub
+
+    Public Function getAppCode() As String
+        Return gAppCode
+    End Function
+
+    Private gAppId As String
+
+    Public Sub setAppId(AppId As String)
+        gAppId = AppId
+    End Sub
+
+    Public Function getAppId() As String
+        Return gAppId
+    End Function
+
+
+    Private gJira As String
+
+    Public Sub setJira(Jira As String)
+        gJira = Jira
+    End Sub
+
+    Public Function getJira() As String
+        Return gJira
+    End Function
+
+
+    Private gSchema As String
+
+    Public Sub setSchema(Schema As String)
+        gSchema = Schema
+    End Sub
+
+    Public Function getSchema() As String
+        Return gSchema
+    End Function
+ 
+    Private gOrgInFeature As String
+
+    Public Sub setOrgInFeature(OrgInFeature As String)
+        gOrgInFeature = OrgInFeature
+    End Sub
+
+    Public Function getOrgInFeature() As String
+        Return gOrgInFeature
+    End Function
+
+    Private gAppInFeature As String
+
+    Public Sub setAppInFeature(AppInFeature As String)
+        gAppInFeature = AppInFeature
+    End Sub
+
+    Public Function getAppInFeature() As String
+        Return gAppInFeature
+    End Function
+ 
 
 
     Public Function XMLRepoFilePath() As String
@@ -152,7 +201,7 @@
 
     End Function
 
-    Public Function currentDB() As String
+    Public Function getDB() As String
 
         Return gDB
 
@@ -359,19 +408,32 @@
         If String.IsNullOrEmpty(iDb) Then
             iDb = gDB
         End If
-        Dim l_Index As Integer = -1
-        For Each db In My.Settings.DBList.Split(Chr(10))
-            l_Index = l_Index + 1
-            db = Trim(db).Replace(Chr(13), "")
-            If db = iDb Then
-                Try
-                    Return Trim(My.Settings.HotFixBranches.Split(Chr(10))(l_Index)).Replace(Chr(13), "")
-                Catch e As System.IndexOutOfRangeException
-                    Return ""
-                End Try
 
-            End If
-        Next
+        If iDb = "PROD" Then
+            Return "master"
+        ElseIf iDb = "UAT" Then
+            Return "uat"
+        ElseIf iDb = "TEST" Then
+            Return "test"
+        ElseIf iDb = "DEV" Then
+            Return "develop"
+        ElseIf iDb = "VM" Then
+            Return ""
+        End If
+ 
+        'Dim l_Index As Integer = -1
+        'For Each db In My.Settings.DBList.Split(Chr(10))
+        '    l_Index = l_Index + 1
+        '    db = Trim(db).Replace(Chr(13), "")
+        '    If db = iDb Then
+        '        Try
+        '            Return Trim(My.Settings.HotFixBranches.Split(Chr(10))(l_Index)).Replace(Chr(13), "")
+        '        Catch e As System.IndexOutOfRangeException
+        '            Return ""
+        '        End Try
+
+        '    End If
+        'Next
         Return ""
 
     End Function

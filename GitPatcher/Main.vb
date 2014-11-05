@@ -2,10 +2,10 @@
 
     Public Sub New()
         InitializeComponent()
-        DBComboBox.SelectedIndex = 0
+        DBComboBox.SelectedIndex = 4 'Default to VM
         loadRepos()
         'loadDBs()
-        loadApexApps()
+        'loadApexApps()
         loadHotFixDBs()
         MinPatchTextBox.Text = My.Settings.MinPatch
  
@@ -45,8 +45,8 @@
         RootApexDirTextBox.Text = Globals.RootApexDir
 
         loadOrgs()
-
-
+        loadApexApps()
+ 
     End Sub
 
 
@@ -65,74 +65,54 @@
         OrgSettings.retrieveOrg(OrgComboBox.Text, DBComboBox.Text, RepoComboBox.Text)
 
         OrgCodeTextBox.Text = Globals.getOrgCode()
+        OrgInFeatureCheckBox.Checked = Globals.getOrgInFeature = "Y"
+        HotFixTextBox.Text = Globals.deriveHotfixBranch
         TNSTextBox.Text = Globals.getTNS()
         CONNECTTextBox.Text = Globals.getCONNECT()
   
     End Sub
 
-
-
+ 
     Public Sub loadOrgs()
 
         OrgSettings.readOrgs(OrgComboBox, OrgComboBox.Text, RepoComboBox.Text)
 
         showOrgSettings()
+ 
+    End Sub
 
 
+    Private Sub showAppSettings()
+ 
+        AppSettings.retrieveApp(ApplicationListComboBox.Text, RepoComboBox.Text)
 
+        AppCodeTextBox.Text = Globals.getAppCode()
+        AppInFeatureCheckBox.Checked = Globals.getAppInFeature = "Y"
+        AppIDTextBox.Text = Globals.getAppId()
+        JiraTextBox.Text = Globals.getJira()
+        SchemaTextBox.Text = Globals.getSchema()
+     
 
     End Sub
 
-    'Private Sub showDBSettings()
-    '    RepoSettings.checkRepo(RepoComboBox.Text)
-    '    RepoPathTextBox.Text = Globals.getRepoPath()
-
-    '    BranchPathTextBox.Text = Globals.currentLongBranch()
-    '    CurrentBranchTextBox.Text = Globals.currentBranch
-    '    RootPatchDirTextBox.Text = Globals.RootPatchDir
-    '    RootApexDirTextBox.Text = Globals.RootApexDir
-
-
-    'End Sub
-
-
-
-    'Public Sub loadDBs()
-
-    '    'OrgSettings.readOrgs(ByRef anOrgComboBox As Windows.Forms.ComboBox, ByVal currentValue As String)
-
-    '    ' (DBListComboBox, My.Settings.CurrentDB)
-    '    showDBSettings()
-
-    '    'DBListComboBox.Items.Clear()
-    '    'For Each DB In My.Settings.DBList.Split(Chr(10))
-    '    '    DB = Trim(DB)
-    '    '    DB = DB.Replace(Chr(13), "")
-    '    '    If (DB.Length > 0) Then
-    '    '        DBListComboBox.Items.Add(DB)
-    '    '    End If
-    '    '    If My.Settings.CurrentDB = DB Then
-    '    '        DBListComboBox.SelectedIndex = DBListComboBox.Items.Count - 1
-    '    '    End If
-    '    'Next
-    'End Sub
-
-
+ 
     Public Sub loadApexApps()
 
-
-        'Now stored as a settings list instead.
-        ApplicationListComboBox.Items.Clear()
-        For Each App In My.Settings.ApplicationsList.Split(Chr(10))
-            App = Trim(App)
-            App = App.Replace(Chr(13), "")
-            If (App.Length > 0) Then
-                ApplicationListComboBox.Items.Add(App)
-            End If
-            If My.Settings.CurrentApp = App Then
-                ApplicationListComboBox.SelectedIndex = ApplicationListComboBox.Items.Count - 1
-            End If
-        Next
+        AppSettings.readApps(ApplicationListComboBox, ApplicationListComboBox.Text, RepoComboBox.Text)
+        showAppSettings()
+ 
+        ''Now stored as a settings list instead.
+        'ApplicationListComboBox.Items.Clear()
+        'For Each App In My.Settings.ApplicationsList.Split(Chr(10))
+        '    App = Trim(App)
+        '    App = App.Replace(Chr(13), "")
+        '    If (App.Length > 0) Then
+        '        ApplicationListComboBox.Items.Add(App)
+        '    End If
+        '    If My.Settings.CurrentApp = App Then
+        '        ApplicationListComboBox.SelectedIndex = ApplicationListComboBox.Items.Count - 1
+        '    End If
+        'Next
 
 
     End Sub
@@ -142,10 +122,7 @@
 
         Globals.setRepo(RepoComboBox.SelectedItem)
         showRepoSettings()
-
-
-
-
+  
     End Sub
 
     'Private Sub PatchFromTagsToolStripMenuItem_Click(sender As Object, e As EventArgs)
@@ -158,8 +135,7 @@
         If Not String.IsNullOrEmpty(RepoComboBox.Text) Then
             showOrgSettings()
         End If
-        'CONNECTTextBox.Text = Globals.currentConnection()
-
+ 
     End Sub
 
     Private Sub ApplicationListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ApplicationListComboBox.SelectedIndexChanged
@@ -168,10 +144,9 @@
 
         'Patch Set
         AppCodeTextBox.Text = Globals.currentAppCode
-        ApexAppTextBox.Text = Globals.currentApex
-        ParsingSchemaTextBox.Text = Globals.currentParsingSchema
-
-
+        JiraTextBox.Text = Globals.currentApex
+        SchemaTextBox.Text = Globals.currentParsingSchema
+ 
     End Sub
 
     Shared Function connect_string(ByVal schema As String, ByVal password As String, ByVal database As String) As String
@@ -561,7 +536,7 @@
 
     Public Sub releaseTo(iTargetDB As String, Optional ByVal iBranchType As String = "")
 
-        Dim lcurrentDB As String = Globals.currentDB()
+        Dim lcurrentDB As String = Globals.getDB()
 
         Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
 

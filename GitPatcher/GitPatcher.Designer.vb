@@ -55,7 +55,6 @@ Partial Class GitPatcher
         Me.MainToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoggingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SQLplusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.WindowsMenu = New System.Windows.Forms.ToolStripMenuItem()
         Me.NewWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CascadeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -277,7 +276,7 @@ Partial Class GitPatcher
         '
         'ToolsMenu
         '
-        Me.ToolsMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ConfigToolStripMenuItem, Me.MainToolStripMenuItem, Me.LoggingToolStripMenuItem, Me.SQLplusToolStripMenuItem, Me.ToolStripMenuItem1})
+        Me.ToolsMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ConfigToolStripMenuItem, Me.MainToolStripMenuItem, Me.LoggingToolStripMenuItem, Me.SQLplusToolStripMenuItem})
         Me.ToolsMenu.Name = "ToolsMenu"
         Me.ToolsMenu.Size = New System.Drawing.Size(48, 20)
         Me.ToolsMenu.Text = "&Tools"
@@ -306,12 +305,6 @@ Partial Class GitPatcher
         Me.SQLplusToolStripMenuItem.Name = "SQLplusToolStripMenuItem"
         Me.SQLplusToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.SQLplusToolStripMenuItem.Text = "SQLplus"
-        '
-        'ToolStripMenuItem1
-        '
-        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
-        Me.ToolStripMenuItem1.Text = "SettingsXML"
         '
         'WindowsMenu
         '
@@ -563,6 +556,5 @@ Partial Class GitPatcher
     Friend WithEvents ConfigToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents LoggingToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SQLplusToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
 
 End Class

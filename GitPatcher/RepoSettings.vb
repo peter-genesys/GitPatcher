@@ -161,7 +161,7 @@ Public Class RepoSettings
 
  
     Private Sub RepoSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        readGitRepos(RepoComboBox, RepoComboBox.Text)
+        readGitRepos(RepoComboBox, Globals.getRepo)
     End Sub
 
 

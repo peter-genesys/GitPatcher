@@ -23,28 +23,59 @@ Public Class AppSettings
     End Sub
 
 
-    Function checkApp(ByVal iAppName) As Boolean
+
+    Shared Function retrieveApp(ByVal iAppName As String, ByVal repoName As String) As Boolean
 
 
         Dim l_AppNode As XmlNode
-
-
 
         'Load the Xml file
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
         l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
-        'Get the list of name nodes 
-        ' Dim l_RepoNode As XmlNode = RepoSettings.getRepoNode(RepoSettings.RepoComboBox.Text)
-        ' Dim l_OrgNodeList As XmlNodeList = l_RepoNode.SelectNodes("/org")
 
+        Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo[@RepoName='" & repoName & "']/apps")
+
+
+        Dim l_found As Boolean = False
+        'Loop through the nodes
+
+        For Each l_AppNode In l_AppsNode.ChildNodes
+            'Get the RepoName Attribute Value
+
+            If l_AppNode.Attributes.GetNamedItem("AppName").Value = iAppName Then
+
+                l_found = True
+
+                Globals.setAppCode(l_AppNode.Attributes.GetNamedItem("AppCode").Value)
+                Globals.setAppInFeature(l_AppNode.Attributes.GetNamedItem("AppInFeature").Value)
+                Globals.setAppId(l_AppNode.Attributes.GetNamedItem("AppId").Value)
+                Globals.setJira(l_AppNode.Attributes.GetNamedItem("Jira").Value)
+                Globals.setSchema(l_AppNode.Attributes.GetNamedItem("Schema").Value)
+
+            End If
+
+        Next
+
+        Return l_found
+
+    End Function
+
+
+
+
+
+    Function checkApp(ByVal iAppName) As Boolean
+
+
+        Dim l_AppNode As XmlNode
+ 
+        'Load the Xml file
+        Dim l_GitReposXML As XmlDocument = New XmlDocument()
+        l_GitReposXML.Load(Globals.XMLRepoFilePath())
+ 
         Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoAppSearch)
-        ' Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['" & repoName & "']/apps")
-
-
-
-        'l_GitReposXML.SelectNodes("/repos/repo/" & RepoSettings.RepoComboBox.Text)
-
+   
         Dim l_found As Boolean = False
         'Loop through the nodes
 
@@ -57,6 +88,8 @@ Public Class AppSettings
 
                 'App Code
                 AppCodeTextBox.Text = l_AppNode.Attributes.GetNamedItem("AppCode").Value
+
+                AppInFeatureCheckBox.Checked = l_AppNode.Attributes.GetNamedItem("AppInFeature").Value = "Y"
 
                 'App Id
                 AppIdTextBox.Text = l_AppNode.Attributes.GetNamedItem("AppId").Value
@@ -81,73 +114,44 @@ Public Class AppSettings
 
 
 
-    Sub readApps()
+    Shared Sub readApps(ByRef anAppComboBox As Windows.Forms.ComboBox, ByVal currentValue As String, ByVal repoName As String)
 
-        'Dim l_GitReposXML As XmlDocument = New XmlDocument()
-
-        'Dim l_OrgNodeList As XmlNodeList
         Dim l_AppNode As XmlNode
         'Create the XML Document
-
-        'Load the Xml file
-        'l_GitReposXML.Load(Globals.XMLRepoFilePath())
-
-        'Dim l_RepoNode As XmlNode = RepoSettings.getRepoNode(RepoSettings.RepoComboBox.Text)
-        ' Dim l_OrgNodeList As XmlNodeList = l_RepoNode.SelectNodes("/orgs")
-
-        'With l_GitReposXML.SelectSingleNode("/repos/repo['" & RepoSettings.RepoComboBox.Text & "']/orgs").CreateNavigator().AppendChild()
-        '    .WriteStartElement("org")
-        '    .WriteElementString("OrgName", OrgComboBox.Text)
-        '    .WriteEndElement()
-        '    .Close()
-        'End With
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
         l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
 
-        Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoAppSearch)
-        'Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['" & repoName & "']/apps")
-        ' Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['Tupperware']/orgs")
+        Dim l_AppsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo[@RepoName='" & repoName & "']/apps")
 
 
-
-        'Get the list of name nodes 
-        ' l_OrgNodeList = l_GitReposXML.SelectNodes("/repos/repo/" & RepoSettings.RepoComboBox.Text)
         'Loop through the nodes
 
 
-        Dim l_current_value As String = AppComboBox.Text
         Dim l_found As Boolean = False
 
 
-        AppComboBox.Items.Clear()
+        anAppComboBox.Items.Clear()
         For Each l_AppNode In l_AppsNode.ChildNodes
             'Get the RepoName Attribute Value
             Dim AppNameAttribute = l_AppNode.Attributes.GetNamedItem("AppName").Value
 
-            AppComboBox.Items.Add(AppNameAttribute)
+            anAppComboBox.Items.Add(AppNameAttribute)
 
-            If l_current_value = AppNameAttribute Then
+            If currentValue = AppNameAttribute Then
                 'ReSelect the current item
-                AppComboBox.SelectedIndex = AppComboBox.Items.Count - 1
+                anAppComboBox.SelectedIndex = anAppComboBox.Items.Count - 1
                 l_found = True
             End If
 
         Next
 
-        If AppComboBox.Items.Count > 0 And Not l_found Then
+        If anAppComboBox.Items.Count > 0 And Not l_found Then
             'Select the first item
-            AppComboBox.SelectedIndex = 0
+            anAppComboBox.SelectedIndex = 0
         End If
-
-
-        'If AppComboBox.Items.Count > 0 Then
-        ' AppComboBox.SelectedIndex = 0
-        ' End If
-
-        ' l_GitReposXML.Save(Globals.XMLRepoFilePath())
-
+  
 
     End Sub
 
@@ -161,7 +165,7 @@ Public Class AppSettings
 
 
     Private Sub DatabaseSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        readApps()
+        readApps(AppComboBox, AppComboBox.Text, repoName)
     End Sub
 
 
@@ -237,6 +241,14 @@ Public Class AppSettings
             .WriteAttributeString("AppCode", AppCodeTextBox.Text)
 
 
+            'AppInFeature
+            If AppInFeatureCheckBox.Checked Then
+                .WriteAttributeString("AppInFeature", "Y")
+            Else
+                .WriteAttributeString("AppInFeature", "N")
+            End If
+
+
             'App Id
             .WriteAttributeString("AppId", AppIdTextBox.Text)
 
@@ -292,7 +304,7 @@ Public Class AppSettings
 
 
         TestOrgValue()
-        readApps()
+        readApps(AppComboBox, AppComboBox.Text, repoName)
     End Sub
 
 
@@ -351,7 +363,7 @@ Public Class AppSettings
     Private Sub ButtonRemove_Click(sender As Object, e As EventArgs) Handles ButtonRemove.Click
         RemoveApp()
         TestOrgValue()
-        readApps()
+        readApps(AppComboBox, AppComboBox.Text, repoName)
     End Sub
 
     Private Sub ButtonUpdate_Click(sender As Object, e As EventArgs) Handles ButtonUpdate.Click
@@ -387,4 +399,7 @@ Public Class AppSettings
 
 
 
+    Private Sub AppInFeatureCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles AppInFeatureCheckBox.CheckedChanged
+        showUpdateButton()
+    End Sub
 End Class

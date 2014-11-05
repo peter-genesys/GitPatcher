@@ -31,14 +31,9 @@ Public Class OrgSettings
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
         l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
-        'Get the list of name nodes 
-        ' Dim l_RepoNode As XmlNode = RepoSettings.getRepoNode(RepoSettings.RepoComboBox.Text)
-        ' Dim l_OrgNodeList As XmlNodeList = l_RepoNode.SelectNodes("/org")
-
-
+ 
         Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo[@RepoName='" & repoName & "']/orgs")
-        'Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoOrgSearch)
-
+  
 
         Dim l_found As Boolean = False
         'Loop through the nodes
@@ -51,6 +46,7 @@ Public Class OrgSettings
                 l_found = True
 
                 Globals.setOrgCode(l_OrgNode.Attributes.GetNamedItem("OrgCode").Value)
+                Globals.setOrgInFeature(l_OrgNode.Attributes.GetNamedItem("OrgInFeature").Value)
                 Globals.setTNS(l_OrgNode.Attributes.GetNamedItem(ipromo & "TNS").Value)
                 Globals.setCONNECT(l_OrgNode.Attributes.GetNamedItem(ipromo & "CONNECT").Value)
 
@@ -68,19 +64,11 @@ Public Class OrgSettings
 
 
         Dim l_OrgNode As XmlNode
-
-
-
+ 
         'Load the Xml file
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
         l_GitReposXML.Load(Globals.XMLRepoFilePath())
-
-        'Get the list of name nodes 
-        ' Dim l_RepoNode As XmlNode = RepoSettings.getRepoNode(RepoSettings.RepoComboBox.Text)
-        ' Dim l_OrgNodeList As XmlNodeList = l_RepoNode.SelectNodes("/org")
-
-
-        'Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo['" & repoName & "']/orgs")
+ 
         Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoOrgSearch)
 
 
@@ -99,6 +87,8 @@ Public Class OrgSettings
 
                 'OrgCode
                 OrgCodeTextBox.Text = l_OrgNode.Attributes.GetNamedItem("OrgCode").Value
+
+                OrgInFeatureCheckBox.Checked = l_OrgNode.Attributes.GetNamedItem("OrgInFeature").Value = "Y"
 
                 'Prod
                 PRODTNSTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODTNS").Value
@@ -190,24 +180,7 @@ Public Class OrgSettings
 
 
     Private Sub TestOrgValue()
-        'Clear all dependant fields
-
-        'Paths
-        'RepoPathTextBox.Text = ""
-
-        'ApexOffsetTextBox.Text = ""
-        'OJDBCjarFileTextBox.Text = ""
-
-        'DBOffsetTextBox.Text = ""
-        'ExtrasDirListTextBox.Text = ""
-
-        'PatchOffsetTextBox.Text = ""
-        'PatchExportPathTextBox.Text = ""
-
-        'SQLpathTextBox.DataBindings.Add("Text", My.Settings, "SQLpath")
-        'GitExeTextBox.DataBindings.Add("Text", My.Settings, "GITpath")
-
-
+ 
         'MsgBox(RepoComboBox.Text)
         ButtonRemove.Visible = False
         ButtonAdd.Visible = False
@@ -251,6 +224,13 @@ Public Class OrgSettings
             'OrgCode
             .WriteAttributeString("OrgCode", OrgCodeTextBox.Text)
 
+            'OrgInFeature
+            If OrgInFeatureCheckBox.Checked Then
+                .WriteAttributeString("OrgInFeature", "Y")
+            Else
+                .WriteAttributeString("OrgInFeature", "N")
+            End If
+ 
             'Prod
             .WriteAttributeString("PRODTNS", PRODTNSTextBox.Text)
             .WriteAttributeString("PRODCONNECT", PRODCONNECTTextBox.Text)
@@ -443,5 +423,9 @@ Public Class OrgSettings
   
     Private Sub Label2_Click(sender As Object, e As EventArgs)
 
+    End Sub
+
+    Private Sub OrgInFeatureCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles OrgInFeatureCheckBox.CheckedChanged
+        showUpdateButton()
     End Sub
 End Class

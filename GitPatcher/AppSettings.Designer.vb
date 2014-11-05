@@ -34,10 +34,11 @@ Partial Class AppSettings
         Me.ButtonAdd = New System.Windows.Forms.Button()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.AppComboBox = New System.Windows.Forms.ComboBox()
-        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.AppIdTextBox = New System.Windows.Forms.TextBox()
         Me.JiraIssueTextBox = New System.Windows.Forms.TextBox()
         Me.ParsingSchemaTextBox = New System.Windows.Forms.TextBox()
+        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.AppInFeatureCheckBox = New System.Windows.Forms.CheckBox()
         Label26 = New System.Windows.Forms.Label()
         Label1 = New System.Windows.Forms.Label()
         Label2 = New System.Windows.Forms.Label()
@@ -49,7 +50,7 @@ Partial Class AppSettings
         '
         Label26.AutoSize = True
         Label26.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label26.Location = New System.Drawing.Point(90, 87)
+        Label26.Location = New System.Drawing.Point(33, 85)
         Label26.Name = "Label26"
         Label26.Size = New System.Drawing.Size(85, 13)
         Label26.TabIndex = 31
@@ -59,7 +60,7 @@ Partial Class AppSettings
         '
         Label1.AutoSize = True
         Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label1.Location = New System.Drawing.Point(90, 129)
+        Label1.Location = New System.Drawing.Point(34, 124)
         Label1.Name = "Label1"
         Label1.Size = New System.Drawing.Size(65, 13)
         Label1.TabIndex = 55
@@ -69,7 +70,7 @@ Partial Class AppSettings
         '
         Label2.AutoSize = True
         Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label2.Location = New System.Drawing.Point(90, 170)
+        Label2.Location = New System.Drawing.Point(34, 165)
         Label2.Name = "Label2"
         Label2.Size = New System.Drawing.Size(91, 13)
         Label2.TabIndex = 56
@@ -79,7 +80,7 @@ Partial Class AppSettings
         '
         Label3.AutoSize = True
         Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Label3.Location = New System.Drawing.Point(90, 211)
+        Label3.Location = New System.Drawing.Point(34, 206)
         Label3.Name = "Label3"
         Label3.Size = New System.Drawing.Size(84, 13)
         Label3.TabIndex = 57
@@ -87,7 +88,7 @@ Partial Class AppSettings
         '
         'AppCodeTextBox
         '
-        Me.AppCodeTextBox.Location = New System.Drawing.Point(202, 84)
+        Me.AppCodeTextBox.Location = New System.Drawing.Point(145, 82)
         Me.AppCodeTextBox.Name = "AppCodeTextBox"
         Me.AppCodeTextBox.Size = New System.Drawing.Size(90, 20)
         Me.AppCodeTextBox.TabIndex = 32
@@ -135,39 +136,50 @@ Partial Class AppSettings
         Me.AppComboBox.FormattingEnabled = True
         Me.AppComboBox.Location = New System.Drawing.Point(93, 41)
         Me.AppComboBox.Name = "AppComboBox"
-        Me.AppComboBox.Size = New System.Drawing.Size(199, 21)
+        Me.AppComboBox.Size = New System.Drawing.Size(283, 21)
         Me.AppComboBox.TabIndex = 8
-        '
-        'MySettingsBindingSource
-        '
-        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
         '
         'AppIdTextBox
         '
-        Me.AppIdTextBox.Location = New System.Drawing.Point(201, 126)
+        Me.AppIdTextBox.Location = New System.Drawing.Point(145, 121)
         Me.AppIdTextBox.Name = "AppIdTextBox"
         Me.AppIdTextBox.Size = New System.Drawing.Size(91, 20)
         Me.AppIdTextBox.TabIndex = 37
         '
         'JiraIssueTextBox
         '
-        Me.JiraIssueTextBox.Location = New System.Drawing.Point(201, 167)
+        Me.JiraIssueTextBox.Location = New System.Drawing.Point(145, 162)
         Me.JiraIssueTextBox.Name = "JiraIssueTextBox"
         Me.JiraIssueTextBox.Size = New System.Drawing.Size(91, 20)
         Me.JiraIssueTextBox.TabIndex = 42
         '
         'ParsingSchemaTextBox
         '
-        Me.ParsingSchemaTextBox.Location = New System.Drawing.Point(201, 208)
+        Me.ParsingSchemaTextBox.Location = New System.Drawing.Point(145, 203)
         Me.ParsingSchemaTextBox.Name = "ParsingSchemaTextBox"
         Me.ParsingSchemaTextBox.Size = New System.Drawing.Size(91, 20)
         Me.ParsingSchemaTextBox.TabIndex = 47
+        '
+        'MySettingsBindingSource
+        '
+        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
+        '
+        'AppInFeatureCheckBox
+        '
+        Me.AppInFeatureCheckBox.AutoSize = True
+        Me.AppInFeatureCheckBox.Location = New System.Drawing.Point(256, 85)
+        Me.AppInFeatureCheckBox.Name = "AppInFeatureCheckBox"
+        Me.AppInFeatureCheckBox.Size = New System.Drawing.Size(120, 17)
+        Me.AppInFeatureCheckBox.TabIndex = 58
+        Me.AppInFeatureCheckBox.Text = "Use in Feature Path"
+        Me.AppInFeatureCheckBox.UseVisualStyleBackColor = True
         '
         'AppSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(316, 254)
+        Me.ClientSize = New System.Drawing.Size(422, 303)
+        Me.Controls.Add(Me.AppInFeatureCheckBox)
         Me.Controls.Add(Label3)
         Me.Controls.Add(Label2)
         Me.Controls.Add(Label1)
@@ -199,4 +211,5 @@ Partial Class AppSettings
     Friend WithEvents AppIdTextBox As System.Windows.Forms.TextBox
     Friend WithEvents JiraIssueTextBox As System.Windows.Forms.TextBox
     Friend WithEvents ParsingSchemaTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents AppInFeatureCheckBox As System.Windows.Forms.CheckBox
 End Class

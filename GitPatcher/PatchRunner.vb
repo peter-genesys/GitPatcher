@@ -16,7 +16,7 @@ Public Class PatchRunner
         'PatchFilterGroupBox.Text = Globals.currentTNS & " Search Criteria"
 
 
-        hotFixTargetDBFilter = Globals.currentDB()
+        hotFixTargetDBFilter = Globals.getDB()
         If hotFixTargetDBFilter = "VM" Then
             hotFixTargetDBFilter = "DEV"
         End If
@@ -122,7 +122,7 @@ Public Class PatchRunner
 
             End While
             dr.Close()
- 
+
             conn.Close()
             conn.Dispose()
 
@@ -135,7 +135,7 @@ Public Class PatchRunner
 
                 Next
 
-                MsgBox("WARNING: Could not determine install order for these patches on " & Globals.currentDB & " . Added to the end of the release." _
+                MsgBox("WARNING: Could not determine install order for these patches on " & Globals.getDB & " . Added to the end of the release." _
                        & Chr(10) & "They may not yet have been applied to the reference database, or perhaps already applied to the target database." _
                        & Chr(10) & l_unordered_patches)
             End If

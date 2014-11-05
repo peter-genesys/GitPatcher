@@ -177,7 +177,7 @@ Public Class CreatePatchCollection
         Cursor.Current = Cursors.Default
 
         If AvailablePatches.Count = 0 Then
-            MsgBox("No " & pFindPatchTypes & " patches are " & ComboBoxPatchesFilter.SelectedItem & " to " & Globals.currentDB)
+            MsgBox("No " & pFindPatchTypes & " patches are " & ComboBoxPatchesFilter.SelectedItem & " to " & Globals.getDB)
 
         End If
 
@@ -769,7 +769,7 @@ Public Class CreatePatchCollection
 
     Public Shared Sub createCollectionProcess(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String, iTargetDB As String)
 
-        Dim lcurrentDB As String = Globals.currentDB
+        Dim lcurrentDB As String = Globals.getDB
         Dim l_app_version = InputBox("Please enter Patchset Code for " & Globals.currentAppCode & "", "New " & Globals.currentApplication & " Version")
 
         'l_app_version = Globals.currentAppCode & "-" & l_app_version

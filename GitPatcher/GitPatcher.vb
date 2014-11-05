@@ -110,7 +110,7 @@ Public Class GitPatcher
         Host.executeSQLplus(Globals.getRepoPath, Main.get_connect_string(Globals.currentParsingSchema, Globals.currentTNS), False)
     End Sub
  
-    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
+    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs)
         Dim newchildform As New RepoSettings
         'newchildform.MdiParent = Me
         newchildform.Show()
