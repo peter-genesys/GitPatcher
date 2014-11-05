@@ -21,7 +21,28 @@
  
     End Function
 
+  
+    Public Shared Function dos_path(ipath As String) As String
+        Return Replace(ipath, "/", "\")
+    End Function
  
+    Public Shared Function dos_path_trailing_slash(ipath As String) As String
+        Dim l_path As String
+        'Use only \
+        l_path = dos_path(ipath)
+
+        'Remove leading \
+        l_path = l_path.TrimStart("\")
+
+        'Remove trailing \
+        l_path = l_path.TrimEnd("\")
+
+        'Add trailing \
+        Return l_path & "\"
+
+    End Function
+
+
 
     Public Shared Function cleanString(iString) As String
         Return Trim(iString).Replace(Chr(13), "")

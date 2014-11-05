@@ -6,12 +6,7 @@ Public Class PatchFromTags
     Dim gRebaseBranchOn As String
     Dim gtag_base As String
 
-
-    Function unix_path(ipath As String) As String
-        Return Replace(ipath, "\", "/")
-    End Function
-
-
+ 
 
     Public Sub New(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String, itag_base As String)
         InitializeComponent()
@@ -126,13 +121,12 @@ Public Class PatchFromTags
             For Each FilePath In extrasCollection
                 If InStr(FilePath, Globals.DBRepoPathMask) = 0 Then
                     'Screened out repo files
-                    Filename = Common.getLastSegment(FilePath, "\")
-                    Try
-                        My.Computer.FileSystem.CopyFile(FilePath, patch_dir & "\" & Filename, True)
 
+                    Try
+                        FileIO.CopyFileToDir(FilePath, patch_dir)
                         filenames.Add(Filename)
                     Catch ex As Exception
-                        MsgBox("Warning: File " & Filename & " could not be exported, but will be in the install file.  It may be a folder.  Deselect, then recreate Patch.")
+                        MsgBox("Warning: File " & FilePath & " could not be exported, but will be in the install file.  It may be a folder.  Deselect, then recreate Patch.")
 
                     End Try
                 End If
@@ -446,12 +440,12 @@ Public Class PatchFromTags
                     If ignoreErrorFiles.Contains(l_filename) Then
                         l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
                                               Chr(10) & "PROMPT " & l_filename & " " & _
-                                              Chr(10) & unix_path("@" & branch_path & "\" & patch_name & "\" & l_filename & ";") & _
+                                              Chr(10) & "@&&patch_path." & l_filename & ";" & _
                                               Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
 
                     Else
                         l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
-                                              Chr(10) & unix_path("@" & branch_path & "\" & patch_name & "\" & l_filename & ";")
+                                            Chr(10) & "@&&patch_path." & l_filename & ";"
 
                     End If
 
@@ -900,7 +894,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub derivePatchDir()
-        PatchDirTextBox.Text = Globals.RootPatchDir & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
+        PatchDirTextBox.Text = Common.dos_path_trailing_slash(Globals.RootPatchDir & PatchPathTextBox.Text & PatchNameTextBox.Text)
     End Sub
 
     Private Sub SupIdTextBox_TextChanged(sender As Object, e As EventArgs) Handles SupIdTextBox.TextChanged
@@ -938,7 +932,7 @@ Public Class PatchFromTags
 
         Dim searchPath As String = Nothing
         If patchType <> "ALL" Then
-            searchPath = patchType & "\"
+            searchPath = patchType & "/"
         End If
 
 
@@ -1004,7 +998,7 @@ Public Class PatchFromTags
             l_master_filename = "install_lite.sql"
         End If
 
-        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "\" & l_master_filename)
+        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename)
 
     End Sub
 
@@ -1377,7 +1371,7 @@ Public Class PatchFromTags
 
 
 
-            Dim l_master_file As New System.IO.StreamWriter(patchDir & "\" & l_master_filename)
+            Dim l_master_file As New System.IO.StreamWriter(Common.dos_path(patchDir & "/" & l_master_filename))
 
             l_master_file.WriteLine("PROMPT LOG TO " & l_log_filename)
             l_master_file.WriteLine("PROMPT .")
@@ -1399,7 +1393,7 @@ Public Class PatchFromTags
 
             l_master_file.WriteLine("define patch_name = '" & patch_name & "'")
             l_master_file.WriteLine("define patch_desc = '" & patch_desc.Replace("'", "''") & "'")
-            l_master_file.WriteLine("define patch_path = '" & branch_path & "/" & patch_name & "/" & "'")
+            l_master_file.WriteLine("define patch_path = '" & Common.unix_path(branch_path & "/" & patch_name & "/") & "'")
 
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
@@ -1434,12 +1428,12 @@ Public Class PatchFromTags
                     If ignoreErrorFiles.Contains(l_filename) Then
                         l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
                                               Chr(10) & "PROMPT " & l_filename & " " & _
-                                              Chr(10) & unix_path("@" & branch_path & "\" & patch_name & "\" & l_filename & ";") & _
+                                              Chr(10) & "@&&patch_path." & l_filename & ";" & _
                                               Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
 
                     Else
                         l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
-                                              Chr(10) & unix_path("@" & branch_path & "\" & patch_name & "\" & l_filename & ";")
+                                              Chr(10) & "@&&patch_path." & l_filename & ";"
 
                     End If
 
@@ -1634,11 +1628,12 @@ Public Class PatchFromTags
                            ByVal patchExportDir As String)
 
 
-        Dim l_path As String = patchpath
+        Dim l_path As String = Common.dos_path(patchpath)
+        Dim l_patchExportDir As String = Common.dos_path(patchExportDir)
 
 
-        Dim l_source_path As String = Globals.RootPatchDir & l_path
-        Dim l_target_path As String = patchExportDir & "\" & l_path
+        Dim l_source_path As String = Common.dos_path(Globals.RootPatchDir & l_path)
+        Dim l_target_path As String = Common.dos_path(l_patchExportDir & "\" & l_path)
 
 
         FileIO.createFolderIfNotExists(l_target_path)
@@ -1649,13 +1644,13 @@ Public Class PatchFromTags
 
         objFolder = objfso.GetFolder(l_source_path)
         For Each objFile In objFolder.Files
-            objfso.CopyFile(l_source_path & "\" & objFile.Name, l_target_path & "\" & objFile.Name, True)
+            FileIO.CopyFile(l_source_path & "\" & objFile.Name, l_target_path & "\" & objFile.Name)
             'Info("using reference file " & objFile.Name)
         Next
 
         'Copy README.txt
         Try
-            objfso.CopyFile(Globals.RootPatchDir & "README.txt", patchExportDir & "\README.txt", True)
+            FileIO.CopyFile(Globals.RootPatchDir & "README.txt", l_patchExportDir & "\README.txt")
         Catch ex As Exception
             MsgBox("No README.txt found, to copy to the patchset.")
 
@@ -1663,16 +1658,16 @@ Public Class PatchFromTags
 
 
         Dim l_master_lite_filename As String = "install_patch_lite.sql"
-        Dim l_master_lite_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_lite_filename)
+        Dim l_master_lite_file As New System.IO.StreamWriter(l_patchExportDir & "\" & l_master_lite_filename)
 
-        l_master_lite_file.WriteLine(Common.unix_path("@" & patchpath & "\" & "install_lite.sql"))
+        l_master_lite_file.WriteLine(Common.unix_path("@" & l_path & "\" & "install_lite.sql"))
 
         l_master_lite_file.Close()
 
         Dim l_master_filename As String = "install_patch.sql"
-        Dim l_master_file As New System.IO.StreamWriter(patchExportDir & "\" & l_master_filename)
+        Dim l_master_file As New System.IO.StreamWriter(l_patchExportDir & "\" & l_master_filename)
 
-        l_master_file.WriteLine(Common.unix_path("@" & patchpath & "\" & "install.sql"))
+        l_master_file.WriteLine(Common.unix_path("@" & l_path & "\" & "install.sql"))
 
         l_master_file.Close()
 

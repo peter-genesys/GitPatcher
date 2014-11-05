@@ -16,11 +16,11 @@
     '
     Public Shared Sub Pull(ByVal i_WorkingDir As String, ByVal iRemote As String, ByVal iBranch As String, Optional ByVal i_wait As Boolean = True)
         Dim client As New GitBashFascade(i_WorkingDir, i_wait)
-        client.Pull(iRemote, iBranch)
+        client.Pull(iRemote, Common.unix_path(iBranch))
     End Sub
     Public Shared Sub Push(ByVal i_WorkingDir As String, ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal i_wait As Boolean = True)
         Dim client As New GitBashFascade(i_WorkingDir, i_wait)
-        client.Push(iRemote, iBranch)
+        client.Push(iRemote, Common.unix_path(iBranch))
     End Sub
     '
     ' Public Shared Sub Push(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
@@ -35,12 +35,12 @@
     '
     Public Shared Sub Switch(ByVal i_WorkingDir As String, ByVal i_newBranch As String, Optional ByVal i_wait As Boolean = True)
         Dim client As New GitBashFascade(i_WorkingDir, i_wait)
-        client.Switch(i_newBranch)
+        client.Switch(Common.unix_path(i_newBranch))
     End Sub
  
     Public Shared Sub createBranch(ByVal i_WorkingDir As String, ByVal i_newBranch As String, Optional ByVal i_wait As Boolean = True)
         Dim client As New GitBashFascade(i_WorkingDir, i_wait)
-        client.createBranch(i_newBranch)
+        client.createBranch(Common.unix_path(i_newBranch))
     End Sub
     '
     ' Public Shared Sub Revert(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)

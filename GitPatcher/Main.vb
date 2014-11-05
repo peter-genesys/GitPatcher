@@ -101,19 +101,7 @@
         AppSettings.readApps(ApplicationListComboBox, ApplicationListComboBox.Text, RepoComboBox.Text)
         showAppSettings()
  
-        ''Now stored as a settings list instead.
-        'ApplicationListComboBox.Items.Clear()
-        'For Each App In My.Settings.ApplicationsList.Split(Chr(10))
-        '    App = Trim(App)
-        '    App = App.Replace(Chr(13), "")
-        '    If (App.Length > 0) Then
-        '        ApplicationListComboBox.Items.Add(App)
-        '    End If
-        '    If My.Settings.CurrentApp = App Then
-        '        ApplicationListComboBox.SelectedIndex = ApplicationListComboBox.Items.Count - 1
-        '    End If
-        'Next
-
+   
 
     End Sub
 
@@ -142,10 +130,7 @@
 
         Globals.setApplication(ApplicationListComboBox.SelectedItem, ApplicationListComboBox.SelectedIndex)
 
-        'Patch Set
-        AppCodeTextBox.Text = Globals.currentAppCode
-        JiraTextBox.Text = Globals.currentApex
-        SchemaTextBox.Text = Globals.currentParsingSchema
+        showAppSettings()
  
     End Sub
 
@@ -268,7 +253,7 @@
 
     Private Sub createNewBranch(iBranchType As String, iBranchFrom As String)
 
-        Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new " & iBranchType & " branch", "Create a new " & iBranchType & " Branch with the standardised naming " & iBranchType & "/" & Me.AppCodeTextBox.Text & "/JIRA.")
+        Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new " & iBranchType & " branch", "Create a new " & iBranchType & " Branch with the standardised naming " & iBranchType & "/" & Globals.deriveFeatureCode() & "ISSUE_ID.")
         newFeature.MdiParent = GitPatcher
         newFeature.addStep("Switch to " & iBranchFrom & " branch")
         newFeature.addStep("Pull from Origin")
@@ -297,9 +282,9 @@
 
         If newFeature.toDoNextStep() Then
             'Create and Switch to new branch
-            Dim branchName As String = InputBox("Enter the Jira Id.", "Jira Id for new " & iBranchType & " Branch", Globals.currentJiraProject & "-")
-            Dim featureClientCode As String = InputBox("Client Code", "Confirm Feature Client Code", Me.AppCodeTextBox.Text)
-            Dim newBranch As String = iBranchType & "/" & featureClientCode & "/" & branchName
+            Dim branchName As String = InputBox("Enter the Issue Id.", "Issue Id for new " & iBranchType & " Branch", Globals.getJira)
+            Dim featureCode As String = InputBox("Feature Code", "Confirm Feature Code", Globals.deriveFeatureCode)
+            Dim newBranch As String = iBranchType & "/" & featureCode & branchName
 
             If Not String.IsNullOrEmpty(branchName) Then
 
@@ -739,4 +724,9 @@
     End Sub
 
   
+    Private Sub SwitchButton_Click(sender As Object, e As EventArgs) Handles SwitchButton.Click
+        Tortoise.Switch(Globals.getRepoPath)
+        BranchPathTextBox.Text = Globals.currentLongBranch()
+        CurrentBranchTextBox.Text = Globals.currentBranch
+    End Sub
 End Class

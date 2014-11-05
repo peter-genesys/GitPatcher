@@ -249,7 +249,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("PRJROV-206_06A_06B_PATCH_ADMIN")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("TRK-01_01")>  _
         Public ReadOnly Property MinPatch() As String
             Get
                 Return CType(Me("MinPatch"),String)

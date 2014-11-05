@@ -1,5 +1,7 @@
 ﻿Public Class FileIO
 
+ 
+
     Shared Sub Confirm(ByVal Message, ByVal Title)
         Dim button As MsgBoxResult
         button = MsgBox(Message, MsgBoxStyle.OkCancel, Title)
@@ -47,7 +49,7 @@
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
 
         ' Check that the file exists
-        Return objFSO.FileExists(i_path)
+        Return objFSO.FileExists(Common.dos_path(i_path))
 
 
     End Function
@@ -58,7 +60,7 @@
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
 
         ' Check that the file exists
-        Return objFSO.FolderExists(i_path)
+        Return objFSO.FolderExists(Common.dos_path(i_path))
 
 
     End Function
@@ -67,7 +69,7 @@
     Shared Sub createFolderIfNotExists(ByVal i_path As String, Optional ByVal i_sep As String = "\")
         'Iteratively creates a full patch starting with Drive:\
         Dim l_incremental_path As String = Nothing
-        Dim l_path_folders() As String = i_path.Split(i_sep)
+        Dim l_path_folders() As String = Common.dos_path(i_path).Split(i_sep)
  
         ' Create the File System Object
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
@@ -92,15 +94,15 @@
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
 
         ' Check that the patch_dir folder exists
-        If objFSO.FolderExists(i_path) Then
-            objFSO.DeleteFolder(i_path)
+        If objFSO.FolderExists(Common.dos_path(i_path)) Then
+            objFSO.DeleteFolder(Common.dos_path(i_path))
         End If
 
 
     End Sub
 
     Shared Sub confirmDeleteFolder(ByVal i_path As String)
-        Dim l_path As String = i_path.Trim("\")
+        Dim l_path As String = Common.dos_path(i_path).Trim("\")
 
         ' Create the File System Object
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
@@ -120,8 +122,8 @@
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
 
         ' Check that the patch_dir folder exists
-        If objFSO.FileExists(i_path) Then
-            objFSO.DeleteFile(i_path)
+        If objFSO.FileExists(Common.dos_path(i_path)) Then
+            objFSO.DeleteFile(Common.dos_path(i_path))
         End If
 
 
@@ -133,31 +135,32 @@
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
 
         ' Check that the patch_dir folder exists
-        If objFSO.FileExists(i_path) Then
-            Confirm("Delete this file: " & i_path, "Confirm File Delete")
+        If objFSO.FileExists(Common.dos_path(i_path)) Then
+            Confirm("Delete this file: " & Common.dos_path(i_path), "Confirm File Delete")
+            objFSO.DeleteFile(Common.dos_path(i_path))
         End If
 
 
     End Sub
 
-    Shared Sub writeFile(ByVal filepath As String, ByVal file_string_data As String, Optional overwrite As Boolean = False)
+    Shared Sub writeFile(ByVal i_path As String, ByVal file_string_data As String, Optional overwrite As Boolean = False)
         'Write the file
         If overwrite Then
-            deleteFileIfExists(filepath)
+            deleteFileIfExists(Common.dos_path(i_path))
         End If
 
-        Dim l_file As New System.IO.StreamWriter(filepath)
+        Dim l_file As New System.IO.StreamWriter(Common.dos_path(i_path))
         l_file.Write(file_string_data)
         l_file.Close()
 
     End Sub
 
 
-    Public Shared Function readFile(ByVal filepath As String) As String
+    Public Shared Function readFile(ByVal i_path As String) As String
 
         Dim file_string_data As String
 
-        Dim l_file As New System.IO.StreamReader(filepath)
+        Dim l_file As New System.IO.StreamReader(Common.dos_path(i_path))
         file_string_data = l_file.ReadToEnd()
         l_file.Close()
 
@@ -165,11 +168,11 @@
 
     End Function
 
-    Public Shared Function readFileLine1(ByVal filepath As String) As String
+    Public Shared Function readFileLine1(ByVal i_path As String) As String
 
         Dim file_string_data As String
 
-        Dim l_file As New System.IO.StreamReader(filepath)
+        Dim l_file As New System.IO.StreamReader(Common.dos_path(i_path))
         file_string_data = l_file.ReadLine()
         l_file.Close()
 
@@ -181,22 +184,28 @@
 
     Public Shared Sub RecursiveSearchContainingFolder(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As Collection, ByVal removePath As String)
 
+
+        Dim lstrPath As String = Common.dos_path(strPath)
+        Dim lremovePath As String = Common.dos_path(removePath)
+        Dim lstrPattern As String = Common.dos_path(strPattern)
+
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
 
-        Dim strFolders() As String = System.IO.Directory.GetDirectories(strPath)
-        Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
+        FileIO.createFolderIfNotExists(lstrPath)
+        Dim strFolders() As String = System.IO.Directory.GetDirectories(lstrPath)
+        Dim strFiles() As String = System.IO.Directory.GetFiles(lstrPath, lstrPattern)
 
         'Add the files
         For Each strFile As String In strFiles
-            lstTarget.Add(strPath.Substring(removePath.Length))
+            lstTarget.Add(lstrPath.Substring(lremovePath.Length))
         Next
 
         'Look through the other folders
         For Each strFolder As String In strFolders
             'Call the procedure again to perform the same operation
-            RecursiveSearchContainingFolder(strFolder, strPattern, lstTarget, removePath)
+            RecursiveSearchContainingFolder(strFolder, lstrPattern, lstTarget, lremovePath)
         Next
 
         Cursor.Current = cursorRevert
@@ -206,24 +215,30 @@
 
     Public Shared Function FileList(ByVal strPath As String, ByVal strPattern As String, ByVal removePath As String, Optional ByVal popKey As Boolean = False) As Collection
 
+        Dim lstrPath As String = Common.dos_path(strPath)
+        Dim lremovePath As String = Common.dos_path(removePath)
+        Dim lstrPattern As String = Common.dos_path(strPattern)
+
+        FileIO.createFolderIfNotExists(lstrPath)
+
         Dim Filenames As Collection = New Collection
         Try
-            Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
+            Dim strFiles() As String = System.IO.Directory.GetFiles(lstrPath, lstrPattern)
 
             'Add the files
             For Each strFile As String In strFiles
                 If popKey Then
-                    Filenames.Add(strFile.Substring(removePath.Length), strFile.Substring(removePath.Length).ToString)
+                    Filenames.Add(strFile.Substring(lremovePath.Length), strFile.Substring(lremovePath.Length).ToString)
                 Else
-                    Filenames.Add(strFile.Substring(removePath.Length))
+                    Filenames.Add(strFile.Substring(lremovePath.Length))
                 End If
 
-                Logger.Note("Added File", strFile.Substring(removePath.Length))
+                Logger.Note("Added File", strFile.Substring(lremovePath.Length))
             Next
 
 
         Catch e As System.IO.DirectoryNotFoundException
-            MsgBox("Path does not exist: " & strPath, MsgBoxStyle.Critical, "Dir does not exist")
+            MsgBox("Path does not exist: " & lstrPath, MsgBoxStyle.Critical, "Dir does not exist")
 
         End Try
 
@@ -234,21 +249,27 @@
 
     Public Shared Sub AppendFileList(ByVal strPath As String, ByVal strPattern As String, ByVal removePath As String, ByRef Filenames As Collection, Optional ByVal popKey As Boolean = False)
 
+        Dim lstrPath As String = Common.dos_path(strPath)
+        Dim lremovePath As String = Common.dos_path(removePath)
+        Dim lstrPattern As String = Common.dos_path(strPattern)
+
+        FileIO.createFolderIfNotExists(lstrPath)
+
         Try
-            Dim strFiles() As String = System.IO.Directory.GetFiles(strPath, strPattern)
+            Dim strFiles() As String = System.IO.Directory.GetFiles(lstrPath, lstrPattern)
 
             'Add the files
             For Each strFile As String In strFiles
                 If popKey Then
-                    Filenames.Add(strFile.Substring(removePath.Length), strFile.Substring(removePath.Length).ToString)
+                    Filenames.Add(strFile.Substring(lremovePath.Length), strFile.Substring(lremovePath.Length).ToString)
                 Else
-                    Filenames.Add(strFile.Substring(removePath.Length))
+                    Filenames.Add(strFile.Substring(lremovePath.Length))
                 End If
 
-                Logger.Note("Added File", strFile.Substring(removePath.Length))
+                Logger.Note("Added File", strFile.Substring(lremovePath.Length))
             Next
         Catch e As System.IO.DirectoryNotFoundException
-            MsgBox("Path does not exist: " & strPath, MsgBoxStyle.Critical, "Dir does not exist")
+            MsgBox("Path does not exist: " & lstrPath, MsgBoxStyle.Critical, "Dir does not exist")
 
         End Try
 
@@ -267,21 +288,24 @@
     End Function
 
     Public Shared Sub FileDOStoUNIX(ByVal i_filename As String)
+
+        Dim lfilename As String = Common.dos_path(i_filename)
+
         'Read the dos file into a string
-        Dim l_dos_file As New System.IO.StreamReader(i_filename)
+        Dim l_dos_file As New System.IO.StreamReader(lfilename)
         Dim l_dos_text As String = l_dos_file.ReadToEnd
         l_dos_file.Close()
         'Delete the dos file
-        Logger.Dbg("Delete dos file: " & i_filename)
-        System.IO.File.Delete(i_filename)
+        Logger.Dbg("Delete dos file: " & lfilename)
+        System.IO.File.Delete(lfilename)
 
         'Convert to unix and add an extra EOL
         Dim l_unix_text As String = convertDOStoUNIX(l_dos_text) & vbLf
- 
-        Dim l_unix_file As New System.IO.StreamWriter(i_filename)
+
+        Dim l_unix_file As New System.IO.StreamWriter(lfilename)
         l_unix_file.Write(l_unix_text)
         l_unix_file.Close()
- 
+
     End Sub
 
 
@@ -291,19 +315,21 @@
         Logger.Dbg("i_label: " & i_label)
         Logger.Dbg("i_value: " & i_value)
 
+        Dim lfilename As String = Common.dos_path(i_filename)
+
         'Read the original file into a string
-        Dim l_orig_file As New System.IO.StreamReader(i_filename)
+        Dim l_orig_file As New System.IO.StreamReader(lfilename)
         Dim l_orig_text As String = l_orig_file.ReadToEnd
         l_orig_file.Close()
         'Delete the original file
-        Logger.Dbg("Delete orig file: " & i_filename)
-        System.IO.File.Delete(i_filename)
+        Logger.Dbg("Delete orig file: " & lfilename)
+        System.IO.File.Delete(lfilename)
 
         'Create the replacement text for the replacement file 
         Dim l_new_text As String = Replace(l_orig_text, i_label, i_value, 1, Len(l_orig_text), vbTextCompare) & vbLf
 
         'Replace the file
-        Dim l_new_file As New System.IO.StreamWriter(i_filename)
+        Dim l_new_file As New System.IO.StreamWriter(lfilename)
         l_new_file.Write(l_new_text)
         l_new_file.Close()
     End Sub
@@ -318,7 +344,7 @@
         Dim objfso = CreateObject("Scripting.FileSystemObject")
         Dim objFolder As Object
         Dim objSubFolder As Object
-        objFolder = objfso.GetFolder(i_dir)
+        objFolder = objfso.GetFolder(Common.dos_path(i_dir))
         Dim objFile As Object
 
         If objFolder.Files.Count > 0 Then
@@ -335,5 +361,17 @@
 
     End Sub
 
+
+    Public Shared Sub CopyFile(ifrompath As String, itopath As String)
+        My.Computer.FileSystem.CopyFile(Common.dos_path(ifrompath), Common.dos_path(itopath), True)
+    End Sub
+
+    Public Shared Sub CopyFileToDir(ifrompath As String, itodir As String)
+ 
+        Dim Filename As String = Common.getLastSegment(Common.dos_path(ifrompath), "\")
+ 
+        CopyFile(ifrompath, itodir & "\" & Filename)
+
+    End Sub
 
 End Class

@@ -101,6 +101,7 @@ Partial Class Main
         Me.Label18 = New System.Windows.Forms.Label()
         Me.HotFixTextBox = New System.Windows.Forms.TextBox()
         Me.Label19 = New System.Windows.Forms.Label()
+        Me.SwitchButton = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -377,7 +378,7 @@ Partial Class Main
         Me.CurrentBranchTextBox.Location = New System.Drawing.Point(120, 112)
         Me.CurrentBranchTextBox.Name = "CurrentBranchTextBox"
         Me.CurrentBranchTextBox.ReadOnly = True
-        Me.CurrentBranchTextBox.Size = New System.Drawing.Size(356, 20)
+        Me.CurrentBranchTextBox.Size = New System.Drawing.Size(274, 20)
         Me.CurrentBranchTextBox.TabIndex = 4
         '
         'RootPatchDirTextBox
@@ -490,7 +491,7 @@ Partial Class Main
         Me.BranchPathTextBox.Location = New System.Drawing.Point(120, 86)
         Me.BranchPathTextBox.Name = "BranchPathTextBox"
         Me.BranchPathTextBox.ReadOnly = True
-        Me.BranchPathTextBox.Size = New System.Drawing.Size(356, 20)
+        Me.BranchPathTextBox.Size = New System.Drawing.Size(274, 20)
         Me.BranchPathTextBox.TabIndex = 18
         '
         'Label9
@@ -542,7 +543,7 @@ Partial Class Main
         Me.AppCodeTextBox.Location = New System.Drawing.Point(150, 386)
         Me.AppCodeTextBox.Name = "AppCodeTextBox"
         Me.AppCodeTextBox.ReadOnly = True
-        Me.AppCodeTextBox.Size = New System.Drawing.Size(221, 20)
+        Me.AppCodeTextBox.Size = New System.Drawing.Size(235, 20)
         Me.AppCodeTextBox.TabIndex = 26
         '
         'Label13
@@ -611,7 +612,7 @@ Partial Class Main
         Me.OrgCodeTextBox.Location = New System.Drawing.Point(150, 217)
         Me.OrgCodeTextBox.Name = "OrgCodeTextBox"
         Me.OrgCodeTextBox.ReadOnly = True
-        Me.OrgCodeTextBox.Size = New System.Drawing.Size(221, 20)
+        Me.OrgCodeTextBox.Size = New System.Drawing.Size(235, 20)
         Me.OrgCodeTextBox.TabIndex = 34
         '
         'Label15
@@ -654,7 +655,7 @@ Partial Class Main
         '
         Me.AppInFeatureCheckBox.AutoSize = True
         Me.AppInFeatureCheckBox.Enabled = False
-        Me.AppInFeatureCheckBox.Location = New System.Drawing.Point(459, 362)
+        Me.AppInFeatureCheckBox.Location = New System.Drawing.Point(459, 389)
         Me.AppInFeatureCheckBox.Name = "AppInFeatureCheckBox"
         Me.AppInFeatureCheckBox.Size = New System.Drawing.Size(15, 14)
         Me.AppInFeatureCheckBox.TabIndex = 38
@@ -663,20 +664,20 @@ Partial Class Main
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(377, 220)
+        Me.Label17.Location = New System.Drawing.Point(391, 221)
         Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(76, 13)
+        Me.Label17.Size = New System.Drawing.Size(62, 13)
         Me.Label17.TabIndex = 39
-        Me.Label17.Text = "Use in Feature"
+        Me.Label17.Text = "Use in Path"
         '
         'Label18
         '
         Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(377, 399)
+        Me.Label18.Location = New System.Drawing.Point(391, 389)
         Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(76, 13)
+        Me.Label18.Size = New System.Drawing.Size(62, 13)
         Me.Label18.TabIndex = 40
-        Me.Label18.Text = "Use in Feature"
+        Me.Label18.Text = "Use in Path"
         '
         'HotFixTextBox
         '
@@ -695,11 +696,21 @@ Partial Class Main
         Me.Label19.TabIndex = 41
         Me.Label19.Text = "Hot Fix Branch"
         '
+        'SwitchButton
+        '
+        Me.SwitchButton.Location = New System.Drawing.Point(401, 87)
+        Me.SwitchButton.Name = "SwitchButton"
+        Me.SwitchButton.Size = New System.Drawing.Size(75, 23)
+        Me.SwitchButton.TabIndex = 43
+        Me.SwitchButton.Text = "Switch"
+        Me.SwitchButton.UseVisualStyleBackColor = True
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(486, 561)
+        Me.Controls.Add(Me.SwitchButton)
         Me.Controls.Add(Me.HotFixTextBox)
         Me.Controls.Add(Me.Label19)
         Me.Controls.Add(Me.Label18)
@@ -829,5 +840,6 @@ Partial Class Main
     Friend WithEvents Label18 As System.Windows.Forms.Label
     Friend WithEvents HotFixTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label19 As System.Windows.Forms.Label
+    Friend WithEvents SwitchButton As System.Windows.Forms.Button
 
 End Class

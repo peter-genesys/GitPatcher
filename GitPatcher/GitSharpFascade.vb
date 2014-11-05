@@ -134,6 +134,8 @@ Public Class GitSharpFascade
 
     Shared Function getSchemaList(ByVal path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String) As Collection
 
+        Dim pathmask_UNIX As String = Common.unix_path(pathmask)
+
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
@@ -162,9 +164,9 @@ Public Class GitSharpFascade
  
             For Each change As Change In c1.CompareAgainst(c2)
 
-                If InStr(change.Path, pathmask) > 0 And change.ChangeType <> ChangeType.Deleted Then
+                If InStr(change.Path, pathmask_UNIX) > 0 And change.ChangeType <> ChangeType.Deleted Then
 
-                    schema = change.Path.Substring(Len(pathmask)).Split("/")(0)
+                    schema = change.Path.Substring(Len(pathmask_UNIX)).Split("/")(0)
 
                     If Not schemas.Contains(schema) Then
                         schemas.Add(schema, schema)
@@ -187,6 +189,8 @@ Public Class GitSharpFascade
 
 
     Shared Function getTagChanges(ByVal path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByVal viewFiles As Boolean) As Collection
+
+        Dim pathmask_UNIX As String = Common.unix_path(pathmask)
 
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
@@ -216,7 +220,7 @@ Public Class GitSharpFascade
 
 
             For Each change As Change In c1.CompareAgainst(c2)
-                If InStr(change.Path, pathmask) > 0 And change.ChangeType <> ChangeType.Deleted Then
+                If InStr(change.Path, pathmask_UNIX) > 0 And change.ChangeType <> ChangeType.Deleted Then
 
                     Console.WriteLine(change.ChangeType & ": " & change.Path)
                     result = result & Chr(10) & change.ChangeType & ": " & change.Path
@@ -245,6 +249,8 @@ Public Class GitSharpFascade
 
     Shared Function viewTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As Collection) As String
 
+        Dim pathmask_UNIX As String = Common.unix_path(pathmask)
+
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
@@ -272,7 +278,7 @@ Public Class GitSharpFascade
 
 
             For Each change As Change In c1.CompareAgainst(c2)
-                If InStr(change.Path, pathmask) > 0 And change.ChangeType <> ChangeType.Deleted Then
+                If InStr(change.Path, pathmask_UNIX) > 0 And change.ChangeType <> ChangeType.Deleted Then
 
                     For Each file In targetFiles
                         If change.Path = file.ToString Then
@@ -304,6 +310,8 @@ Public Class GitSharpFascade
 
     Shared Function exportTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As Collection, patchDir As String) As Collection
 
+        Dim pathmask_UNIX As String = Common.unix_path(pathmask)
+
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
@@ -333,7 +341,7 @@ Public Class GitSharpFascade
 
 
             For Each change As Change In c1.CompareAgainst(c2)
-                If InStr(change.Path, pathmask) > 0 And change.ChangeType <> ChangeType.Deleted Then
+                If InStr(change.Path, pathmask_UNIX) > 0 And change.ChangeType <> ChangeType.Deleted Then
 
                     For Each file In targetFiles
                         If change.Path = file.ToString Then

@@ -24,12 +24,12 @@
       <app AppName="GitPatcher" AppCode="gp" AppInFeature="Y" AppId="" Jira="GP-" Schema="patch_admin" />
     </apps>
   </repo>
-  <repo RepoName="GitPatcherDB" RepoPath="F:\GitPatcherDB" ApexRelPath="apex" ODBCjavaRelPath="apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database" ExtrasRelPath="database" PatchRelPath="patch" PatchExportPath="f:\export">
+  <repo RepoName="Tracker" RepoPath="F:\Tracker" ApexRelPath="apex" ODBCjavaRelPath="apex/oracle/jdbc/lib/ojdbc5.jar" DatabaseRelPath="database" ExtrasRelPath="database" PatchRelPath="patch" PatchExportPath="f:\export">
     <orgs>
       <org OrgName="Tupperware" OrgCode="tup" OrgInFeature="N" PRODTNS="" PRODCONNECT="" UATTNS="" UATCONNECT="" TESTTNS="" TESTCONNECT="" DEVTNS="" DEVCONNECT="" VMTNS="VM" VMCONNECT="10.10.10.13:1521:ORCL" />
     </orgs>
     <apps>
-      <app AppName="GitPatcher" AppCode="gp" AppInFeature="Y" AppId="" Jira="GP-" Schema="patch_admin" />
+      <app AppName="Tracker" AppCode="trk" AppInFeature="Y" AppId="" Jira="TRK-" Schema="patch_admin" />
     </apps>
   </repo>
 </repos>

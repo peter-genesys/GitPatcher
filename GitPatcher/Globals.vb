@@ -25,7 +25,7 @@
     Private gRepoPath As String
 
     Public Sub setRepoPath(RepoPath As String)
-        gRepoPath = Common.unix_path_trailing_slash(RepoPath)
+        gRepoPath = Common.dos_path_trailing_slash(RepoPath)
     End Sub
 
  
@@ -39,7 +39,7 @@
     Private gApexRelPath As String
 
     Public Sub setApexRelPath(ApexRelPath As String)
-        gApexRelPath = Common.unix_path_trailing_slash(ApexRelPath)
+        gApexRelPath = Common.dos_path_trailing_slash(ApexRelPath)
     End Sub
 
     Public Function getApexRelPath() As String
@@ -50,7 +50,7 @@
     Private gODBCjavaRelPath As String
 
     Public Sub setODBCjavaRelPath(ODBCjavaRelPath As String)
-        gODBCjavaRelPath = Common.unix_path_trailing_slash(ODBCjavaRelPath)
+        gODBCjavaRelPath = Common.dos_path_trailing_slash(ODBCjavaRelPath)
     End Sub
 
     Public Function getODBCjavaRelPath() As String
@@ -60,7 +60,7 @@
     Private gDatabaseRelPath As String
 
     Public Sub setDatabaseRelPath(DatabaseRelPath As String)
-        gDatabaseRelPath = Common.unix_path_trailing_slash(DatabaseRelPath)
+        gDatabaseRelPath = Common.dos_path_trailing_slash(DatabaseRelPath)
     End Sub
 
     Public Function getDatabaseRelPath() As String
@@ -71,7 +71,7 @@
     Private gExtrasRelPath As String
 
     Public Sub setExtrasRelPath(ExtrasRelPath As String)
-        gExtrasRelPath = Common.unix_path_trailing_slash(ExtrasRelPath)
+        gExtrasRelPath = Common.dos_path_trailing_slash(ExtrasRelPath)
     End Sub
 
     Public Function getExtrasRelPath() As String
@@ -81,7 +81,7 @@
     Private gPatchRelPath As String
 
     Public Sub setPatchRelPath(PatchRelPath As String)
-        gPatchRelPath = Common.unix_path_trailing_slash(PatchRelPath)
+        gPatchRelPath = Common.dos_path_trailing_slash(PatchRelPath)
     End Sub
 
     Public Function getPatchRelPath() As String
@@ -92,7 +92,7 @@
     Private gPatchExportPath As String
 
     Public Sub setPatchExportPath(PatchExportPath As String)
-        gPatchExportPath = Common.unix_path_trailing_slash(PatchExportPath)
+        gPatchExportPath = Common.dos_path_trailing_slash(PatchExportPath)
     End Sub
 
     Public Function getPatchExportPath() As String
@@ -240,34 +240,26 @@
 
 
         Return gRepoPath & gPatchRelPath
-
-        'My.Settings.PatchDirOffset & "\"
-
+ 
     End Function
 
     Public Function RootApexDir() As String
 
         Return gRepoPath & gApexRelPath
-
-        'My.Settings.ApexDirOffset & "\"
+ 
     End Function
 
     Public Function RootDBDir() As String
 
 
         Return gRepoPath & gDatabaseRelPath
-
-        'My.Settings.DBDirOffset & "\"
+ 
 
     End Function
 
 
     Public Function DBRepoPathMask() As String
-        'Remove the leading \
-        'Append a trailing /
-
-        'Dim RepoPathMask As String = My.Settings.DBDirOffset.Substring(1) & "/"
-
+  
         Return gDatabaseRelPath
 
     End Function
@@ -314,28 +306,7 @@
     End Sub
 
 
-
-
-
-
-    '  Public Sub setDBRepoPathMask(DBRepoPathMask As String)
-    '
-    '      gDBRepoPathMask = DBRepoPathMask
-    '
-    '      My.Settings.DBRepoPathMask = gDBRepoPathMask
-    '      My.Settings.Save()
-    '
-    '  End Sub
-
-
-
-
-
-    'Public Sub setApex(Apex As String)
-    '
-    '    gApex = Apex
-    '
-    'End Sub
+ 
 
  
     Public Sub setPatchRunnerFilter(filter As String)
@@ -370,13 +341,7 @@
 
     End Sub
 
-    'Public Sub setParsingSchema(ParsingSchema As String)
-    '
-    '    gParsingSchema = ParsingSchema
-    '
-    'End Sub
-
-
+  
     Public Function currentConnection() As String
         Dim l_Index As Integer = -1
         For Each db In My.Settings.DBList.Split(Chr(10))
@@ -404,6 +369,26 @@
     End Function
 
 
+    Public Function deriveFeatureCode() As String
+
+    
+        If gAppInFeature = "N" And gOrgInFeature = "N" Then
+            Return ""
+        End If
+        If gAppInFeature = "Y" And gOrgInFeature = "Y" Then
+            Return gAppCode & "_" & gOrgCode & "/"
+        End If
+
+        If gAppInFeature = "Y" Then
+            Return gAppCode & "/"
+        Else
+            Return gOrgCode & "/"
+        End If
+ 
+
+    End Function
+
+
     Public Function deriveHotfixBranch(Optional ByVal iDb As String = "") As String
         If String.IsNullOrEmpty(iDb) Then
             iDb = gDB
@@ -421,19 +406,6 @@
             Return ""
         End If
  
-        'Dim l_Index As Integer = -1
-        'For Each db In My.Settings.DBList.Split(Chr(10))
-        '    l_Index = l_Index + 1
-        '    db = Trim(db).Replace(Chr(13), "")
-        '    If db = iDb Then
-        '        Try
-        '            Return Trim(My.Settings.HotFixBranches.Split(Chr(10))(l_Index)).Replace(Chr(13), "")
-        '        Catch e As System.IndexOutOfRangeException
-        '            Return ""
-        '        End Try
-
-        '    End If
-        'Next
         Return ""
 
     End Function

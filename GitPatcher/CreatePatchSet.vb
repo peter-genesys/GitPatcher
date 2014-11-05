@@ -713,7 +713,7 @@ Public Class CreatePatchCollection
         FindSuper()
     End Sub
 
-    Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs)
+    Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
 
         Dim l_install_file As String = Nothing
         If UsePatchAdminCheckBox.Checked Then
@@ -931,7 +931,7 @@ Public Class CreatePatchCollection
 
     Private Sub ExportButton_Click(sender As Object, e As EventArgs) Handles ExportButton.Click
 
-        Dim l_repo_patch_dir As String = Globals.PatchExportDir & "\" & Common.getLastSegment(Globals.getRepoPath, "\") & "\"
+        Dim l_repo_patch_dir As String = Globals.PatchExportDir & Globals.getRepo & "\"
 
         Dim l_repo_patch_export_dir As String = l_repo_patch_dir & PatchNameTextBox.Text
 
@@ -975,7 +975,7 @@ Public Class CreatePatchCollection
                            TrackPromoCheckBox.Checked)
 
 
-        zip.zip_dir(l_repo_patch_dir & PatchNameTextBox.Text & ".zip",
+        zip.zip_dir(l_repo_patch_export_dir & ".zip",
                     l_repo_patch_export_dir)
 
         Host.RunExplorer(l_repo_patch_export_dir)
@@ -1000,4 +1000,5 @@ Public Class CreatePatchCollection
 
     End Sub
 
+  
 End Class
