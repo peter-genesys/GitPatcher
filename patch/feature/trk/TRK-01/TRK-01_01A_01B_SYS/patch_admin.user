@@ -1,0 +1,23 @@
+CREATE USER &&patch_admin_user identified by &&patch_admin_password;
+
+-- USER SQL
+ALTER USER &&patch_admin_user  
+DEFAULT TABLESPACE "USERS"
+TEMPORARY TABLESPACE "TEMP"
+ACCOUNT UNLOCK ;
+ 
+grant select on dba_objects to &&patch_admin_user ;
+grant select on sys.dependency$ to &&patch_admin_user ;
+ 
+-- ROLES
+grant connect to &&patch_admin_user ;
+ALTER USER &&patch_admin_user  DEFAULT ROLE "CONNECT";
+
+-- SYSTEM PRIVILEGES
+grant create table to &&patch_admin_user ;
+grant create procedure to &&patch_admin_user ;
+grant create trigger to &&patch_admin_user ;
+grant create synonym to &&patch_admin_user ;
+
+-- QUOTAS
+ALTER USER &&patch_admin_user  QUOTA UNLIMITED ON USERS;
