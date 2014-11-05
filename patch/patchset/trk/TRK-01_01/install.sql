@@ -22,7 +22,7 @@ execute patch_admin.patch_installer.patch_started( -
   i_patch_name         => 'TRK-01_01' -
  ,i_patch_type         => 'patchset' -
  ,i_db_schema          => 'PATCH_ADMIN' -
- ,i_branch_name        => 'develop' -
+ ,i_branch_name        => 'release/patchset/trk/TRK-01_01' -
  ,i_tag_from           => 'TRK-01.01A' -
  ,i_tag_to             => 'HEAD' -
  ,i_supplementary      => '' -
