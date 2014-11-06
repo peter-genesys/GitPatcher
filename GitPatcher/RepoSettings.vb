@@ -17,7 +17,7 @@ Public Class RepoSettings
         l_RepoNodeList = l_GitReposXML.SelectNodes("/repos/repo")
 
         Dim l_result As XmlNode
-
+ 
         Dim l_found As Boolean = False
         'Loop through the nodes
 
@@ -98,7 +98,9 @@ Public Class RepoSettings
         Try
             Dim l_GitReposXML As XmlDocument = New XmlDocument()
 
+            Logger.Note("currentRepo", currentValue)
 
+            Logger.Note("XMLRepoFilePath", Globals.XMLRepoFilePath())
 
             Dim l_RepoNodeList As XmlNodeList
             Dim l_RepoNode As XmlNode
@@ -123,6 +125,7 @@ Public Class RepoSettings
                 'Get the RepoName Attribute Value
                 Dim RepoNameAttribute = l_RepoNode.Attributes.GetNamedItem("RepoName").Value
 
+                Logger.Note("RepoNameAttribute", RepoNameAttribute)
                 aRepoComboBox.Items.Add(RepoNameAttribute)
 
 
@@ -134,14 +137,21 @@ Public Class RepoSettings
 
             Next
 
-            If RepoComboBox.Items.Count > 0 And Not l_found Then
+            If aRepoComboBox.Items.Count > 0 And Not l_found Then
                 'Select the first item
-                RepoComboBox.SelectedIndex = 0
+                aRepoComboBox.SelectedIndex = 0
+                l_found = True
             End If
 
+            If Not l_found Then
+                Logger.Dbg("No repo set")
+                Logger.Note("RepoComboBox.Items.Count", aRepoComboBox.Items.Count)
+
+            End If
 
         Catch errorVariable As Exception
             'Error trapping
+            Logger.ShowError(errorVariable.ToString())
             Console.Write(errorVariable.ToString())
         End Try
 

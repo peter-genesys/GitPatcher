@@ -14,8 +14,13 @@
         End If
     End Sub
 
-    Shared Sub Note(ByVal iName As String, ByVal iValue As String, Optional ByVal iTitle As String = "Debug")
+    Shared Sub Note(ByVal iName As String, ByVal iValue As String, Optional ByVal iTitle As String = "Note")
         Dbg(iName & ":" & iValue, iTitle)
     End Sub
 
+    Shared Sub ShowError(ByVal iString As String, Optional ByVal iTitle As String = "Error")
+        Dbg(iString, iTitle)
+    End Sub
+
+   
 End Class

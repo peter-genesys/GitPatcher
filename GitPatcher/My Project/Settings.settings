@@ -117,10 +117,10 @@ VM</Value>
       <Value Profile="(Default)">Data Source=C:\SQLServerCompact\GitPatcherSettingDB.sdf</Value>
     </Setting>
     <Setting Name="PatchExportPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">F:\patchbuild</Value>
+      <Value Profile="(Default)">F:\export</Value>
     </Setting>
     <Setting Name="XMLRepoFilePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">F:\GitPatcher\GitPatcher\My Project\GitRepos.xml</Value>
+      <Value Profile="(Default)">F:\GitRepos.xml</Value>
     </Setting>
   </Settings>
 </SettingsFile>

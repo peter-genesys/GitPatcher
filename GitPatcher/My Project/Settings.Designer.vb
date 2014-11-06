@@ -394,7 +394,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("F:\patchbuild")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("F:\export")>  _
         Public Property PatchExportPath() As String
             Get
                 Return CType(Me("PatchExportPath"),String)
@@ -406,7 +406,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("F:\GitPatcher\GitPatcher\My Project\GitRepos.xml")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("F:\GitRepos.xml")>  _
         Public Property XMLRepoFilePath() As String
             Get
                 Return CType(Me("XMLRepoFilePath"),String)

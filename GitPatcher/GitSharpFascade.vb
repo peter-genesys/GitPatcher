@@ -61,6 +61,7 @@ Public Class GitSharpFascade
             Return repo.CurrentBranch.Name
         Catch
             MsgBox("Oops")
+            Logger.Dbg(path)
             Return "Oops"
         End Try
 

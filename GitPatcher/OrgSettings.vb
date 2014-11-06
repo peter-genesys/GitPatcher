@@ -126,7 +126,6 @@ Public Class OrgSettings
 
     Shared Sub readOrgs(ByRef anOrgComboBox As Windows.Forms.ComboBox, ByVal currentValue As String, ByVal repoName As String)
 
-        Dim l_OrgNode As XmlNode
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
         l_GitReposXML.Load(Globals.XMLRepoFilePath())
@@ -140,9 +139,11 @@ Public Class OrgSettings
         'Dim l_current_value As String = OrgComboBox.Text
         Dim l_found As Boolean = False
 
-
+        Logger.Note("repoName", repoName)
         'Loop through the nodes
         anOrgComboBox.Items.Clear()
+
+        Dim l_OrgNode As XmlNode
         For Each l_OrgNode In l_OrgsNode.ChildNodes
             'Get the RepoName Attribute Value
             Dim OrgNameAttribute = l_OrgNode.Attributes.GetNamedItem("OrgName").Value
