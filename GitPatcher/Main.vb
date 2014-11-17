@@ -2,7 +2,18 @@
 
     Public Sub New()
         InitializeComponent()
-        DBComboBox.SelectedIndex = 4 'Default to VM
+ 
+        Dim DB_count As Integer = -1
+        For Each DB In DBComboBox.Items
+            DB_count = DB_count + 1
+            If DB = Globals.getDB Then
+                DBComboBox.SelectedIndex = DB_count
+            End If
+
+        Next
+  
+
+        'SelectedIndex = 4 'Default to VM
         loadRepos()
         'loadDBs()
         'loadApexApps()

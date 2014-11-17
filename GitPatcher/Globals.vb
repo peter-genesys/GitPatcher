@@ -1,6 +1,6 @@
 ﻿Module Globals
 
-    Private gDB As String
+    Private gDB As String = My.Settings.CurrentDB
     Private gApex As String
     Private gRepo As String
     Private gApplication As String
@@ -56,6 +56,14 @@
     Public Function getODBCjavaRelPath() As String
         Return gODBCjavaRelPath
     End Function
+
+
+    Public Function getODBCjavaAbsPath() As String
+        Return getRepoPath() & gODBCjavaRelPath
+    End Function
+
+
+
  
     Private gDatabaseRelPath As String
 
@@ -71,7 +79,7 @@
     Private gExtrasRelPath As String
 
     Public Sub setExtrasRelPath(ExtrasRelPath As String)
-        gExtrasRelPath = Common.dos_path_trailing_slash(ExtrasRelPath)
+        gExtrasRelPath = Common.dos_path(ExtrasRelPath)
     End Sub
 
     Public Function getExtrasRelPath() As String
@@ -209,12 +217,12 @@
 
     Public Function currentApex() As String
 
-        Return gApex
+        Return getAppId()
 
     End Function
     Public Function currentAppCode() As String
 
-        Return gAppCode
+        Return getAppCode()
 
     End Function
 
@@ -284,13 +292,13 @@
 
     Public Function currentParsingSchema() As String
 
-        Return gParsingSchema
+        Return getSchema()
 
     End Function
 
     Public Function currentJiraProject() As String
 
-        Return gJiraProject
+        Return getJira()
 
     End Function
 
@@ -330,41 +338,47 @@
         gApplication = Application
 
         'derive when application changes
-        gAppCode = Trim(My.Settings.AppCodeList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
+        'gAppCode = Trim(My.Settings.AppCodeList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
         gApex = Trim(My.Settings.AppList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
         gParsingSchema = Trim(My.Settings.ParsingSchemaList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
         gJiraProject = Common.cleanString((My.Settings.JiraProject.Split(Chr(10))(applicationIndex)))
 
-        My.Settings.CurrentApex = gApex
-        My.Settings.CurrentApp = gApplication
+        'My.Settings.CurrentApex = gApex
+        'My.Settings.CurrentApp = gApplication
         My.Settings.Save()
 
     End Sub
 
   
     Public Function currentConnection() As String
-        Dim l_Index As Integer = -1
-        For Each db In My.Settings.DBList.Split(Chr(10))
-            l_Index = l_Index + 1
-            db = Trim(db).Replace(Chr(13), "")
-            If db = gDB Then
-                Return Trim(My.Settings.ConnectionList.Split(Chr(10))(l_Index)).Replace(Chr(13), "")
-            End If
-        Next
-        Return ""
+
+        Return getCONNECT()
+
+        'Dim l_Index As Integer = -1
+        'For Each db In My.Settings.DBList.Split(Chr(10))
+        '    l_Index = l_Index + 1
+        '    db = Trim(db).Replace(Chr(13), "")
+        '    If db = gDB Then
+        '        Return Trim(My.Settings.ConnectionList.Split(Chr(10))(l_Index)).Replace(Chr(13), "")
+        '    End If
+        'Next
+        'Return ""
 
     End Function
 
     Public Function currentTNS() As String
-        Dim l_Index As Integer = -1
-        For Each db In My.Settings.DBList.Split(Chr(10))
-            l_Index = l_Index + 1
-            db = Trim(db).Replace(Chr(13), "")
-            If db = gDB Then
-                Return Trim(My.Settings.TNSList.Split(Chr(10))(l_Index)).Replace(Chr(13), "")
-            End If
-        Next
-        Return ""
+
+        Return getTNS()
+
+        'Dim l_Index As Integer = -1
+        'For Each db In My.Settings.DBList.Split(Chr(10))
+        '    l_Index = l_Index + 1
+        '    db = Trim(db).Replace(Chr(13), "")
+        '    If db = gDB Then
+        '        Return Trim(My.Settings.TNSList.Split(Chr(10))(l_Index)).Replace(Chr(13), "")
+        '    End If
+        'Next
+        'Return ""
 
     End Function
 
@@ -415,9 +429,10 @@
 
         Dim extrasDirCol As New Collection
         Dim l_Index As Integer = -1
-        For Each dirname In My.Settings.ExtrasDirList.Split(Chr(10))
+        Dim l_extras As String = getExtrasRelPath()
+        For Each dirname In l_extras.Split(";")
             l_Index = l_Index + 1
-            dirname = Trim(dirname).Replace(Chr(13), "")
+            'dirname = Trim(dirname).Replace(Chr(13), "")
             extrasDirCol.Add(dirname)
         Next
         Return extrasDirCol

@@ -1201,6 +1201,8 @@ Public Class PatchFromTags
             End If
         Catch ex As UnauthorizedAccessException
             parentNode.Nodes.Add(folder & ": Access Denied")
+        Catch ex As System.IO.DirectoryNotFoundException
+            parentNode.Nodes.Add(dir & ": Path Not Found")
         End Try
     End Sub
 
@@ -1677,10 +1679,10 @@ Public Class PatchFromTags
 
     Shared Sub doExportPatch(iPatchPath As String, iPatchName As String)
 
-        Dim l_repo_patch_dir As String = Globals.PatchExportDir & "\" & Common.getLastSegment(Globals.getRepoPath, "\") & "\"
-
+        Dim l_repo_patch_dir As String = Common.dos_path_trailing_slash(Globals.PatchExportDir & Globals.getRepo)
+        Logger.Note("l_repo_patch_dir", l_repo_patch_dir)
         Dim l_repo_patch_export_dir As String = l_repo_patch_dir & iPatchName
-
+        Logger.Note("l_repo_patch_export_dir", l_repo_patch_export_dir)
 
         'Remove previous patch 
         Try

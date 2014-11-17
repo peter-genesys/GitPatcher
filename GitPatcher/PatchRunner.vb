@@ -506,13 +506,22 @@ Public Class PatchRunner
   
         Dim ReorderedChanges As Collection = New Collection
         TreeViewPatchOrder.ReadTags(ReorderedChanges, False, True, True, False)
-
+        Dim lpatchpath As String = Nothing
+        Dim lpatchname As String = Nothing
+ 
         If ReorderedChanges.Count = 0 Then
             MsgBox("No patches in ordered list.")
         Else
 
             For Each lpatch In ReorderedChanges
-                PatchFromTags.doExportPatch(Common.dropLastSegment(lpatch, "\") & "\", Common.getLastSegment(lpatch, "\"))
+
+                Logger.Note("lpatch", lpatch)
+                lpatchpath = Common.dropLastSegment(lpatch, "\") & "\"
+                Logger.Note("lpatchpath", lpatchpath)
+                lpatchname = Common.getLastSegment(lpatch, "\")
+                Logger.Note("lpatchname", lpatchname)
+
+                PatchFromTags.doExportPatch(lpatchpath, lpatchname)
 
             Next
         End If
