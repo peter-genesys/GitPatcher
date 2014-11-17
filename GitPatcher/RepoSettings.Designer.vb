@@ -46,6 +46,7 @@ Partial Class RepoSettings
         Me.DBButton = New System.Windows.Forms.Button()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.AppButton = New System.Windows.Forms.Button()
+        Me.Label1 = New System.Windows.Forms.Label()
         Label26 = New System.Windows.Forms.Label()
         Label22 = New System.Windows.Forms.Label()
         Label24 = New System.Windows.Forms.Label()
@@ -70,9 +71,9 @@ Partial Class RepoSettings
         Label22.AutoSize = True
         Label22.Location = New System.Drawing.Point(65, 233)
         Label22.Name = "Label22"
-        Label22.Size = New System.Drawing.Size(183, 13)
+        Label22.Size = New System.Drawing.Size(309, 13)
         Label22.TabIndex = 47
-        Label22.Text = "Extra Files Search Dirs Relative Path:"
+        Label22.Text = "Extra Files Search Dirs Relative Path (separated by semi-colon) :"
         '
         'Label24
         '
@@ -236,11 +237,22 @@ Partial Class RepoSettings
         Me.AppButton.Text = "Applications"
         Me.AppButton.UseVisualStyleBackColor = True
         '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.ForeColor = System.Drawing.Color.Red
+        Me.Label1.Location = New System.Drawing.Point(66, 385)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(403, 26)
+        Me.Label1.TabIndex = 54
+        Me.Label1.Text = "Warning: Performing an Update will remove the Repo's Databases and Applications." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "I need to fix this to preserve the Databases and Applications."
+        '
         'RepoSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(594, 460)
+        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.AppButton)
         Me.Controls.Add(Me.DBButton)
         Me.Controls.Add(Me.RepoPathTextBox)
@@ -285,4 +297,5 @@ Partial Class RepoSettings
     Friend WithEvents RepoComboBox As System.Windows.Forms.ComboBox
     Friend WithEvents DBButton As System.Windows.Forms.Button
     Friend WithEvents AppButton As System.Windows.Forms.Button
+    Friend WithEvents Label1 As System.Windows.Forms.Label
 End Class

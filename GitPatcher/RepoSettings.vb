@@ -355,4 +355,6 @@ Public Class RepoSettings
         Dim theApplicationSettings As AppSettings = New AppSettings(RepoComboBox.SelectedItem)
         theApplicationSettings.Show()
     End Sub
+
+   
 End Class

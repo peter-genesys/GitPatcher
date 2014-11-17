@@ -162,11 +162,22 @@
         ''add ojdbc5.jar to the CLASSPATH, in this case its on the checkout path
 
         Dim classpath As String = Environment.GetEnvironmentVariable("CLASSPATH")
+        If String.IsNullOrEmpty(classpath) Then
+            MsgBox("Environment variable CLASSPATH does not exist - please create and repeat.")
+        End If
         'EG \oracle\jdbc\lib\ojdbc5.jar
-        If Not classpath.Contains(apex_dir & My.Settings.JDBCjar) Then
-            classpath = classpath & ";" & apex_dir & My.Settings.JDBCjar
+        'If Not classpath.Contains(apex_dir & My.Settings.JDBCjar) Then
+        '    classpath = classpath & ";" & apex_dir & My.Settings.JDBCjar
+        '    Environment.SetEnvironmentVariable("CLASSPATH", classpath)
+        'End If
+
+        If Not classpath.Contains(Globals.getODBCjavaAbsPath()) Then
+            classpath = classpath & ";" & Globals.getODBCjavaAbsPath()
             Environment.SetEnvironmentVariable("CLASSPATH", classpath)
         End If
+
+
+
 
         Dim app_id As String = fapp_id.Split("f")(1)
         Dim fapp_sql As String = fapp_id & ".sql"
