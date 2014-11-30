@@ -59,7 +59,9 @@ select user||'@'||global_name Connection from global_name;
 PROMPT GRANTS
 
 PROMPT patch_admin_12c.grt 
+WHENEVER SQLERROR CONTINUE
 @&&patch_path.patch_admin_12c.grt;
+WHENEVER SQLERROR EXIT FAILURE ROLLBACK
 
 COMMIT;
 PROMPT Compiling objects in schema ENDUSER
