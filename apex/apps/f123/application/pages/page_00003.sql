@@ -66,6 +66,7 @@ wwv_flow_api.create_page_plug (
   p_plug_source_type=> 'DYNAMIC_QUERY',
   p_plug_query_row_template=> 1,
   p_plug_query_headings_type=> 'COLON_DELMITED_LIST',
+  p_plug_query_row_count_max => 500,
   p_plug_display_condition_type => '',
   p_plug_caching=> 'NOT_CACHED',
   p_plug_comment=> '');

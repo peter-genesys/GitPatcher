@@ -12,6 +12,7 @@
 @application/pages/page_00002.sql
 @application/pages/page_00003.sql
 @application/pages/page_00004.sql
+@application/pages/page_00005.sql
 @application/pages/page_00101.sql
 @application/shared_components/navigation/lists/navigation.sql
 @application/shared_components/navigation/breadcrumbs.sql

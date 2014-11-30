@@ -20,7 +20,7 @@ wwv_flow_api.create_page (
  ,p_help_text => 
 'No help is available for this page.'
  ,p_last_updated_by => 'PETER'
- ,p_last_upd_yyyymmddhh24miss => '20141107180349'
+ ,p_last_upd_yyyymmddhh24miss => '20141120143817'
   );
 null;
  
@@ -39,11 +39,11 @@ s:=s||'select PATCHES_V.PATCH_NAME as PATCH_NAME,'||unistr('\000a')||
 '    PATCHES_V.TAG_TO as TAG_TO,'||unistr('\000a')||
 '    PATCHES_V.SUPPLEMENTARY as SUPPLEMENTARY,'||unistr('\000a')||
 '    PATCHES_V.PATCH_DESC as PATCH_DESC,'||unistr('\000a')||
-'    PATCHES_V.PATCH_COMPONANTS as PATCH_COMPONANTS,'||unistr('\000a')||
-'    PATCHES_V.PATCH_CREATE_DATE as PATCH_CREATE_DATE,'||unistr('\000a')||
-'    PATCHES_V.PAT';
+'    REPLACE(PATCHES_V.PATCH_COMPONANTS,'','',''<BR>'') as PATCH_COMPONANTS,'||unistr('\000a')||
+'    PATCHES_V.PATCH_CREATE_DATE as PATCH_CREATE_DAT';
 
-s:=s||'CH_CREATED_BY as PATCH_CREATED_BY,'||unistr('\000a')||
+s:=s||'E,'||unistr('\000a')||
+'    PATCHES_V.PATCH_CREATED_BY as PATCH_CREATED_BY,'||unistr('\000a')||
 '    PATCHES_V.NOTE as NOTE,'||unistr('\000a')||
 '    PATCHES_V.LOG_DATETIME as LOG_DATETIME,'||unistr('\000a')||
 '    PATCHES_V.COMPLETED_DATETIME as COMPLETED_DATETIME,'||unistr('\000a')||
@@ -52,9 +52,9 @@ s:=s||'CH_CREATED_BY as PATCH_CREATED_BY,'||unistr('\000a')||
 '    PATCHES_V.WARNING_COUNT as WARNING_COUNT,'||unistr('\000a')||
 '    PATCHES_V.RERUNNABLE_YN as RERUNNABLE_YN,'||unistr('\000a')||
 '    PATCHES_V.ERROR_COUNT as ERROR_COUNT,'||unistr('\000a')||
-'    PATCHES_V.USERNAME ';
+'   ';
 
-s:=s||'as USERNAME,'||unistr('\000a')||
+s:=s||' PATCHES_V.USERNAME as USERNAME,'||unistr('\000a')||
 '    PATCHES_V.INSTALL_LOG as INSTALL_LOG,'||unistr('\000a')||
 '    PATCHES_V.CREATED_BY as CREATED_BY,'||unistr('\000a')||
 '    PATCHES_V.CREATED_ON as CREATED_ON,'||unistr('\000a')||
@@ -79,10 +79,13 @@ wwv_flow_api.create_page_plug (
   p_plug_item_display_point=> 'ABOVE',
   p_plug_source=> s,
   p_plug_source_type=> 'DYNAMIC_QUERY',
+  p_translate_title=> 'Y',
+  p_rest_enabled=> 'N',
   p_plug_query_row_template=> 1,
   p_plug_query_headings_type=> 'COLON_DELMITED_LIST',
   p_plug_query_row_count_max => 500,
   p_plug_display_condition_type => '',
+  p_plug_customized=>'0',
   p_plug_caching=> 'NOT_CACHED',
   p_plug_comment=> '');
 end;
@@ -97,11 +100,11 @@ a1:=a1||'select PATCHES_V.PATCH_NAME as PATCH_NAME,'||unistr('\000a')||
 '    PATCHES_V.TAG_TO as TAG_TO,'||unistr('\000a')||
 '    PATCHES_V.SUPPLEMENTARY as SUPPLEMENTARY,'||unistr('\000a')||
 '    PATCHES_V.PATCH_DESC as PATCH_DESC,'||unistr('\000a')||
-'    PATCHES_V.PATCH_COMPONANTS as PATCH_COMPONANTS,'||unistr('\000a')||
-'    PATCHES_V.PATCH_CREATE_DATE as PATCH_CREATE_DATE,'||unistr('\000a')||
-'    PATCHES_V.PAT';
+'    REPLACE(PATCHES_V.PATCH_COMPONANTS,'','',''<BR>'') as PATCH_COMPONANTS,'||unistr('\000a')||
+'    PATCHES_V.PATCH_CREATE_DATE as PATCH_CREATE_DAT';
 
-a1:=a1||'CH_CREATED_BY as PATCH_CREATED_BY,'||unistr('\000a')||
+a1:=a1||'E,'||unistr('\000a')||
+'    PATCHES_V.PATCH_CREATED_BY as PATCH_CREATED_BY,'||unistr('\000a')||
 '    PATCHES_V.NOTE as NOTE,'||unistr('\000a')||
 '    PATCHES_V.LOG_DATETIME as LOG_DATETIME,'||unistr('\000a')||
 '    PATCHES_V.COMPLETED_DATETIME as COMPLETED_DATETIME,'||unistr('\000a')||
@@ -110,9 +113,9 @@ a1:=a1||'CH_CREATED_BY as PATCH_CREATED_BY,'||unistr('\000a')||
 '    PATCHES_V.WARNING_COUNT as WARNING_COUNT,'||unistr('\000a')||
 '    PATCHES_V.RERUNNABLE_YN as RERUNNABLE_YN,'||unistr('\000a')||
 '    PATCHES_V.ERROR_COUNT as ERROR_COUNT,'||unistr('\000a')||
-'    PATCHES_V.USERNAME ';
+'   ';
 
-a1:=a1||'as USERNAME,'||unistr('\000a')||
+a1:=a1||' PATCHES_V.USERNAME as USERNAME,'||unistr('\000a')||
 '    PATCHES_V.INSTALL_LOG as INSTALL_LOG,'||unistr('\000a')||
 '    PATCHES_V.CREATED_BY as CREATED_BY,'||unistr('\000a')||
 '    PATCHES_V.CREATED_ON as CREATED_ON,'||unistr('\000a')||
@@ -467,7 +470,7 @@ wwv_flow_api.create_worksheet_column(
   p_others_may_view        =>'Y',
   p_column_type            =>'CLOB',
   p_display_as             =>'TEXT',
-  p_display_text_as        =>'ESCAPE_SC',
+  p_display_text_as        =>'WITHOUT_MODIFICATION',
   p_heading_alignment      =>'CENTER',
   p_column_alignment       =>'RIGHT',
   p_tz_dependent           =>'N',
@@ -1072,7 +1075,63 @@ end;
 declare
     rc1 varchar2(32767) := null;
 begin
-rc1:=rc1||'PATCH_NAME:DB_SCHEMA:BRANCH_NAME:TAG_FROM:TAG_TO:SUPPLEMENTARY:PATCH_DESC:PATCH_COMPONANTS:PATCH_CREATE_DATE:PATCH_CREATED_BY:NOTE:LOG_DATETIME:COMPLETED_DATETIME:SUCCESS_YN:RETIRED_YN:WARNING_COUNT:RERUNNABLE_YN:ERROR_COUNT:USERNAME:INSTALL_LOG:CREATED_BY:CREATED_ON:LAST_UPDATED_BY:PATCH_TYPE';
+rc1:=rc1||'PATCH_NAME:DB_SCHEMA:BRANCH_NAME:TAG_FROM:TAG_TO:SUPPLEMENTARY:PATCH_DESC:PATCH_CREATE_DATE:NOTE:PATCH_TYPE:';
+
+wwv_flow_api.create_worksheet_rpt(
+  p_id => 14326823159242212+wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_page_id=> 2,
+  p_worksheet_id => 40767208766551144+wwv_flow_api.g_id_offset,
+  p_session_id  => null,
+  p_base_report_id  => null+wwv_flow_api.g_id_offset,
+  p_application_user => 'APXWS_ALTERNATIVE',
+  p_name                    =>'Summary',
+  p_report_seq              =>10,
+  p_report_alias            =>'143269',
+  p_status                  =>'PUBLIC',
+  p_category_id             =>null+wwv_flow_api.g_id_offset,
+  p_is_default              =>'Y',
+  p_display_rows            =>15,
+  p_report_columns          =>rc1,
+  p_sort_column_1           =>'PATCH_NAME',
+  p_sort_direction_1        =>'ASC',
+  p_break_on                =>'PATCH_TYPE:0:0:0:0:0',
+  p_break_enabled_on        =>'PATCH_TYPE:0:0:0:0:0',
+  p_flashback_enabled       =>'N',
+  p_calendar_display_column =>'');
+end;
+/
+declare
+    rc1 varchar2(32767) := null;
+begin
+rc1:=rc1||'PATCH_NAME:PATCH_DESC:NOTE:PATCH_COMPONANTS:INSTALL_LOG:PATCH_TYPE:';
+
+wwv_flow_api.create_worksheet_rpt(
+  p_id => 14327205759256147+wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_page_id=> 2,
+  p_worksheet_id => 40767208766551144+wwv_flow_api.g_id_offset,
+  p_session_id  => null,
+  p_base_report_id  => null+wwv_flow_api.g_id_offset,
+  p_application_user => 'APXWS_ALTERNATIVE',
+  p_name                    =>'Componants',
+  p_report_seq              =>10,
+  p_report_alias            =>'143273',
+  p_status                  =>'PUBLIC',
+  p_category_id             =>null+wwv_flow_api.g_id_offset,
+  p_is_default              =>'Y',
+  p_display_rows            =>15,
+  p_report_columns          =>rc1,
+  p_break_on                =>'PATCH_TYPE:0:0:0:0:0',
+  p_break_enabled_on        =>'PATCH_TYPE:0:0:0:0:0',
+  p_flashback_enabled       =>'N',
+  p_calendar_display_column =>'');
+end;
+/
+declare
+    rc1 varchar2(32767) := null;
+begin
+rc1:=rc1||'PATCH_NAME:PATCH_DESC:PATCH_CREATE_DATE:PATCH_TYPE:COMPLETED_DATETIME:SUCCESS_YN:';
 
 wwv_flow_api.create_worksheet_rpt(
   p_id => 40770419957552453+wwv_flow_api.g_id_offset,
@@ -1089,6 +1148,8 @@ wwv_flow_api.create_worksheet_rpt(
   p_is_default              =>'Y',
   p_display_rows            =>15,
   p_report_columns          =>rc1,
+  p_break_on                =>'PATCH_TYPE:0:0:0:0:0',
+  p_break_enabled_on        =>'PATCH_TYPE:0:0:0:0:0',
   p_flashback_enabled       =>'N',
   p_calendar_display_column =>'');
 end;

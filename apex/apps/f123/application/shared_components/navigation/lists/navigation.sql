@@ -54,6 +54,20 @@ wwv_flow_api.create_list_item (
   p_list_item_current_type=> 'TARGET_PAGE',
   p_list_item_owner=> '');
  
+wwv_flow_api.create_list_item (
+  p_id=> 16478408330433322 + wwv_flow_api.g_id_offset,
+  p_list_id=> 40766409738551141 + wwv_flow_api.g_id_offset,
+  p_list_item_type=> 'LINK',
+  p_list_item_status=> 'PUBLIC',
+  p_item_displayed=> 'BY_DEFAULT',
+  p_list_item_display_sequence=>40,
+  p_list_item_link_text=> 'Installed Patches - Dependency Order',
+  p_list_item_link_target=> 'f?p=&APP_ID.:5:&SESSION.::&DEBUG.::::',
+  p_list_countclicks_y_n=> 'N',
+  p_list_text_01=> '',
+  p_list_item_current_type=> 'TARGET_PAGE',
+  p_list_item_owner=> '');
+ 
 null;
  
 end;
