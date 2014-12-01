@@ -50,7 +50,7 @@
     Private gODBCjavaRelPath As String
 
     Public Sub setODBCjavaRelPath(ODBCjavaRelPath As String)
-        gODBCjavaRelPath = Common.dos_path_trailing_slash(ODBCjavaRelPath)
+        gODBCjavaRelPath = Common.dos_path(ODBCjavaRelPath)
     End Sub
 
     Public Function getODBCjavaRelPath() As String

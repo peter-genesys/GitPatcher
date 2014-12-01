@@ -197,14 +197,15 @@
 
             'write-host "Remove the application directory apex_dir\fapp_id" 
 
-
-            'Remove-Item -Recurse -Force -ErrorAction 0 @("apex_dir\fapp_id")
-            FileIO.deleteFolderIfExists(apex_dir & fapp_id)
-
+ 
         End If
 
 
         If ExportProgress.toDoNextStep() Then
+
+            'Remove-Item -Recurse -Force -ErrorAction 0 @("apex_dir\fapp_id")
+            FileIO.deleteFolderIfExists(apex_dir & fapp_id)
+
             'Splitting into components 
 
             'write-host "Splitting $APP_SQL into its composite files"
@@ -390,12 +391,11 @@
         Dim applicationDir As String = Globals.RootApexDir & Globals.currentApex & "\application\"
         Dim pagesDir As String = applicationDir & "pages\"
 
-        Dim l_skip_reports_DBs As String = "ISDEVL"
+
         Dim fapp_id As String = Globals.currentApex
 
         Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
-        Dim runOnlyDBs As String = "ISDEVL,ISTEST,ISUAT,ISPROD"
-
+ 
         Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import 1 APEX page " & fapp_id & " into DB " & Globals.currentTNS, _
         "Importing 1 APEX page of Application " & Globals.currentApex & " into parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentTNS & Environment.NewLine & _
         "This will overwrite only 1 page in APEX application." & Environment.NewLine & _
