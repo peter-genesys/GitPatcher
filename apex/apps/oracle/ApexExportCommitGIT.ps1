@@ -12,7 +12,7 @@ function ApexExportCommit ( $CONNECTION ,$USER ,$PASSWORD ,$APP_ID ,$CHECKOUT_PA
   #TortoiseGitProc.exe /command:"update" /path:"$CHECKOUT_PATH" | Out-Null
   #add ojdbc5.jar to the CLASSPATH, in this case its on the checkout path
   $CLASSPATH = $Env:CLASSPATH
-  $env:CLASSPATH = "$CLASSPATH;$DIR\oracle\jdbc\lib\ojdbc5.jar" 
+  $env:CLASSPATH = "$CLASSPATH;$DIR\oracle\jdbc\lib\ojdbc6.jar" 
   write-host $Env:CLASSPATH
   $APP_SQL = "f$APP_ID.sql"
   #NB Not exporting application comments

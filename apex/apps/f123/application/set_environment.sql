@@ -4,8 +4,7 @@ prompt  APPLICATION 123 - Tracker
 -- Application Export:
 --   Application:     123
 --   Name:            Tracker
---   Date and Time:   10:27 Sunday November 30, 2014
---   Exported By:     PETER
+--   Exported By:     PATCH_ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
 --   Version:         4.2.6.00.03

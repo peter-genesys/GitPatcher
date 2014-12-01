@@ -7,7 +7,6 @@
 @application/shared_components/navigation/navigation_bar.sql
 @application/shared_components/navigation/tabs/standard/t_home.sql
 @application/pages/page_groups.sql
-@application/comments.sql
 @application/pages/page_00001.sql
 @application/pages/page_00002.sql
 @application/pages/page_00003.sql
