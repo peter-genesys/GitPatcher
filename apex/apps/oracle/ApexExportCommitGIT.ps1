@@ -29,10 +29,10 @@ function ApexExportCommit ( $CONNECTION ,$USER ,$PASSWORD ,$APP_ID ,$CHECKOUT_PA
   write-host "Splitting $APP_SQL into its composite files"
   java oracle.apex.APEXExportSplitter $APP_SQL 
    
-  ##write-host "Adding new files to GIT"
-  ##TortoiseGitProc.exe /command:"add" /path:"$CHECKOUT_PATH"  | Out-Null
+  write-host "Adding new files to GIT"
+  TortoiseGitProc.exe /command:"add" /path:"$CHECKOUT_PATH"  | Out-Null
   ##
-  ##write-host "Committing changed files to GIT"
-  ##TortoiseGitProc.exe /command:"commit" /path:"$CHECKOUT_PATH" /logmsg:"""App $APP_ID has been exported and split""" /closeonend:1  | Out-Null
+  write-host "Committing changed files to GIT"
+  TortoiseGitProc.exe /command:"commit" /path:"$CHECKOUT_PATH" /logmsg:"""App $APP_ID has been exported and split""" /closeonend:1  | Out-Null
 }
  
