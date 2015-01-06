@@ -16,10 +16,10 @@ prompt  APPLICATION 123 - Tracker
 --   Using SQL*Plus as the Oracle user APEX_040200 or as the owner (parsing schema) of the application
  
 -- Application Statistics:
---   Pages:                      6
---     Items:                    3
---     Processes:                4
---     Regions:                  9
+--   Pages:                      7
+--     Items:                    7
+--     Processes:                6
+--     Regions:                 12
 --   Shared Components:
 --     Logic:
 --     Navigation:
@@ -43,6 +43,7 @@ prompt  APPLICATION 123 - Tracker
 --         Breadcrumb:           2
 --         Button:               4
 --         Report:               9
+--       LOVs:                   1
 --     Globalization:
 --     Reports:
  

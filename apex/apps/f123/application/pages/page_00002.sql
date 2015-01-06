@@ -20,7 +20,7 @@ wwv_flow_api.create_page (
  ,p_help_text => 
 'No help is available for this page.'
  ,p_last_updated_by => 'PETER'
- ,p_last_upd_yyyymmddhh24miss => '20141120143817'
+ ,p_last_upd_yyyymmddhh24miss => '20150106130437'
   );
 null;
  
@@ -59,7 +59,8 @@ s:=s||' PATCHES_V.USERNAME as USERNAME,'||unistr('\000a')||
 '    PATCHES_V.CREATED_BY as CREATED_BY,'||unistr('\000a')||
 '    PATCHES_V.CREATED_ON as CREATED_ON,'||unistr('\000a')||
 '    PATCHES_V.LAST_UPDATED_BY as LAST_UPDATED_BY,'||unistr('\000a')||
-'    PATCHES_V.PATCH_TYPE as PATCH_TYPE '||unistr('\000a')||
+'    PATCHES_V.PATCH_TYPE as PATCH_TYPE,'||unistr('\000a')||
+'    null as dependency'||unistr('\000a')||
 ' from PATCHES_V PATCHES_V';
 
 wwv_flow_api.create_page_plug (
@@ -120,7 +121,8 @@ a1:=a1||' PATCHES_V.USERNAME as USERNAME,'||unistr('\000a')||
 '    PATCHES_V.CREATED_BY as CREATED_BY,'||unistr('\000a')||
 '    PATCHES_V.CREATED_ON as CREATED_ON,'||unistr('\000a')||
 '    PATCHES_V.LAST_UPDATED_BY as LAST_UPDATED_BY,'||unistr('\000a')||
-'    PATCHES_V.PATCH_TYPE as PATCH_TYPE '||unistr('\000a')||
+'    PATCHES_V.PATCH_TYPE as PATCH_TYPE,'||unistr('\000a')||
+'    null as dependency'||unistr('\000a')||
 ' from PATCHES_V PATCHES_V';
 
 wwv_flow_api.create_worksheet(
@@ -1072,10 +1074,49 @@ wwv_flow_api.create_worksheet_column(
   p_help_text              =>'No help available for this page item.');
 end;
 /
+begin
+wwv_flow_api.create_worksheet_column(
+  p_id => 17104907690497276+wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_page_id=> 2,
+  p_worksheet_id => 40767208766551144+wwv_flow_api.g_id_offset,
+  p_db_column_name         =>'DEPENDENCY',
+  p_display_order          =>25,
+  p_column_identifier      =>'Y',
+  p_column_label           =>'Dependency',
+  p_report_label           =>'Dependency',
+  p_sync_form_label        =>'Y',
+  p_display_in_default_rpt =>'Y',
+  p_column_link            =>'f?p=&APP_ID.:6:&SESSION.::&DEBUG.::P6_REPORT_SEARCH:#PATCH_NAME#',
+  p_column_linktext        =>'<img src="#IMAGE_PREFIX#ws/small_page.gif" alt="">',
+  p_is_sortable            =>'Y',
+  p_allow_sorting          =>'Y',
+  p_allow_filtering        =>'Y',
+  p_allow_highlighting     =>'Y',
+  p_allow_ctrl_breaks      =>'Y',
+  p_allow_aggregations     =>'Y',
+  p_allow_computations     =>'Y',
+  p_allow_charting         =>'Y',
+  p_allow_group_by         =>'Y',
+  p_allow_hide             =>'Y',
+  p_others_may_edit        =>'Y',
+  p_others_may_view        =>'Y',
+  p_column_type            =>'STRING',
+  p_display_as             =>'TEXT',
+  p_display_text_as        =>'ESCAPE_SC',
+  p_heading_alignment      =>'CENTER',
+  p_column_alignment       =>'LEFT',
+  p_tz_dependent           =>'N',
+  p_rpt_distinct_lov       =>'Y',
+  p_rpt_show_filter_lov    =>'D',
+  p_rpt_filter_date_ranges =>'ALL',
+  p_help_text              =>'');
+end;
+/
 declare
     rc1 varchar2(32767) := null;
 begin
-rc1:=rc1||'PATCH_NAME:DB_SCHEMA:BRANCH_NAME:TAG_FROM:TAG_TO:SUPPLEMENTARY:PATCH_DESC:PATCH_CREATE_DATE:NOTE:PATCH_TYPE:';
+rc1:=rc1||'PATCH_NAME:DB_SCHEMA:BRANCH_NAME:TAG_FROM:TAG_TO:SUPPLEMENTARY:PATCH_DESC:PATCH_CREATE_DATE:NOTE:PATCH_TYPE:DEPENDENCY';
 
 wwv_flow_api.create_worksheet_rpt(
   p_id => 14326823159242212+wwv_flow_api.g_id_offset,
@@ -1104,7 +1145,7 @@ end;
 declare
     rc1 varchar2(32767) := null;
 begin
-rc1:=rc1||'PATCH_NAME:PATCH_DESC:NOTE:PATCH_COMPONANTS:INSTALL_LOG:PATCH_TYPE:';
+rc1:=rc1||'PATCH_NAME:PATCH_DESC:NOTE:PATCH_COMPONANTS:INSTALL_LOG:PATCH_TYPE:DEPENDENCY:';
 
 wwv_flow_api.create_worksheet_rpt(
   p_id => 14327205759256147+wwv_flow_api.g_id_offset,
@@ -1131,7 +1172,7 @@ end;
 declare
     rc1 varchar2(32767) := null;
 begin
-rc1:=rc1||'PATCH_NAME:PATCH_DESC:PATCH_CREATE_DATE:PATCH_TYPE:COMPLETED_DATETIME:SUCCESS_YN:';
+rc1:=rc1||'PATCH_NAME:PATCH_DESC:PATCH_CREATE_DATE:PATCH_TYPE:COMPLETED_DATETIME:SUCCESS_YN:DEPENDENCY:';
 
 wwv_flow_api.create_worksheet_rpt(
   p_id => 40770419957552453+wwv_flow_api.g_id_offset,

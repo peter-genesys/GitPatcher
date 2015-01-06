@@ -6,12 +6,14 @@
 @application/plug-in_setting/item_type_native_yes_no.sql
 @application/shared_components/navigation/navigation_bar.sql
 @application/shared_components/navigation/tabs/standard/t_home.sql
+@application/shared_components/user_interface/lov/p6_report_row_per_page.sql
 @application/pages/page_groups.sql
 @application/pages/page_00001.sql
 @application/pages/page_00002.sql
 @application/pages/page_00003.sql
 @application/pages/page_00004.sql
 @application/pages/page_00005.sql
+@application/pages/page_00006.sql
 @application/pages/page_00101.sql
 @application/shared_components/navigation/lists/navigation.sql
 @application/shared_components/navigation/breadcrumbs.sql
