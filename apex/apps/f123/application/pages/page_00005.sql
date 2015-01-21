@@ -8,6 +8,7 @@ wwv_flow_api.create_page (
   p_flow_id => wwv_flow.g_flow_id
  ,p_id => 5
  ,p_user_interface_id => 40764710612551125 + wwv_flow_api.g_id_offset
+ ,p_tab_set => 'TS1'
  ,p_name => 'Patches Dependency'
  ,p_step_title => 'Patches Dependency'
  ,p_step_sub_title => 'Patches Dependency'
@@ -19,7 +20,7 @@ wwv_flow_api.create_page (
  ,p_help_text => 
 'No help is available for this page.'
  ,p_last_updated_by => 'PETER'
- ,p_last_upd_yyyymmddhh24miss => '20150106133040'
+ ,p_last_upd_yyyymmddhh24miss => '20150121235005'
   );
 null;
  
@@ -1286,7 +1287,7 @@ wwv_flow_api.create_worksheet_rpt(
   p_display_rows            =>50,
   p_report_columns          =>rc1,
   p_break_on                =>'PATCH_TYPE:0:0:0:0:0',
-  p_break_enabled_on        =>'0:0:0:0:0',
+  p_break_enabled_on        =>'0:0:0:0:0:PATCH_TYPE',
   p_flashback_enabled       =>'N',
   p_calendar_display_column =>'');
 end;
