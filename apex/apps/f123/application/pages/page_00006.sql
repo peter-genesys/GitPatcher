@@ -20,7 +20,7 @@ wwv_flow_api.create_page (
  ,p_help_text => 
 'No help is available for this page.'
  ,p_last_updated_by => 'PETER'
- ,p_last_upd_yyyymmddhh24miss => '20150106131200'
+ ,p_last_upd_yyyymmddhh24miss => '20150121121544'
   );
 null;
  
@@ -63,21 +63,10 @@ declare
   l_clob clob;
   l_length number := 1;
 begin
-s:=s||'select * from ('||unistr('\000a')||
-'select '||unistr('\000a')||
-' "PATCH_PREREQ_ID",'||unistr('\000a')||
-' "PATCH_NAME",'||unistr('\000a')||
-' "PREREQ_PATCH",'||unistr('\000a')||
-' "CREATED_BY",'||unistr('\000a')||
-' "CREATED_ON",'||unistr('\000a')||
-' "LAST_UPDATED_BY",'||unistr('\000a')||
-' "LAST_UPDATED_ON"'||unistr('\000a')||
-'from #OWNER#.PATCH_PREREQS_V)'||unistr('\000a')||
-'where ('||unistr('\000a')||
-' instr(upper("PATCH_NAME"),upper(nvl(:P6_REPORT_SEARCH,"PATCH_NAME"))) > 0  or'||unistr('\000a')||
-' instr(upper("PREREQ_PATCH"),upper(nvl(:P6_REPORT_SEARCH,"PREREQ_PATCH"))) > 0 '||unistr('\000a')||
-')'||unistr('\000a')||
-'';
+s:=s||'select * '||unistr('\000a')||
+'from PATCH_PREREQS_V'||unistr('\000a')||
+'where upper(PATCH_NAME) like upper(nvl(:P6_REPORT_SEARCH,PATCH_NAME)) '||unistr('\000a')||
+'or    upper(PREREQ_PATCH) like upper(nvl(:P6_REPORT_SEARCH,PREREQ_PATCH))';
 
 wwv_flow_api.create_report_region (
   p_id=> 17096305308435399 + wwv_flow_api.g_id_offset,
@@ -295,13 +284,10 @@ declare
   l_clob clob;
   l_length number := 1;
 begin
-s:=s||'select PATCH_SUPERSEDES_V.PATCH_NAME as PATCH_NAME,'||unistr('\000a')||
-'    PATCH_SUPERSEDES_V.SUPERSEDES_PATCH as SUPERSEDES_PATCH '||unistr('\000a')||
-' from PATCH_SUPERSEDES_V PATCH_SUPERSEDES_V'||unistr('\000a')||
-'where ('||unistr('\000a')||
-' instr(upper("PATCH_NAME"),upper(nvl(:P6_REPORT_SEARCH,"PATCH_NAME"))) > 0  or'||unistr('\000a')||
-' instr(upper("SUPERSEDES_PATCH"),upper(nvl(:P6_REPORT_SEARCH,"SUPERSEDES_PATCH"))) > 0 '||unistr('\000a')||
-')';
+s:=s||'select *  '||unistr('\000a')||
+'from PATCH_SUPERSEDES_V '||unistr('\000a')||
+'where upper(PATCH_NAME) like upper(nvl(:P6_REPORT_SEARCH,PATCH_NAME)) '||unistr('\000a')||
+'or    upper(SUPERSEDES_PATCH) like upper(nvl(:P6_REPORT_SEARCH,SUPERSEDES_PATCH))';
 
 wwv_flow_api.create_report_region (
   p_id=> 17098803649445955 + wwv_flow_api.g_id_offset,
@@ -347,10 +333,34 @@ declare
 begin
 s := null;
 wwv_flow_api.create_report_columns (
-  p_id=> 17099113211446042 + wwv_flow_api.g_id_offset,
+  p_id=> 17442931681169862 + wwv_flow_api.g_id_offset,
   p_region_id=> 17098803649445955 + wwv_flow_api.g_id_offset,
   p_flow_id=> wwv_flow.g_flow_id,
   p_query_column_id=> 1,
+  p_form_element_id=> null,
+  p_column_alias=> 'PATCH_SUPERSEDES_ID',
+  p_column_display_sequence=> 3,
+  p_column_heading=> 'Patch Supersedes Id',
+  p_column_alignment=>'LEFT',
+  p_heading_alignment=>'CENTER',
+  p_disable_sort_column=>'Y',
+  p_sum_column=> 'N',
+  p_hidden_column=> 'N',
+  p_display_as=>'ESCAPE_SC',
+  p_is_required=> false,
+  p_pk_col_source=> s,
+  p_column_comment=>'');
+end;
+/
+declare
+  s varchar2(32767) := null;
+begin
+s := null;
+wwv_flow_api.create_report_columns (
+  p_id=> 17099113211446042 + wwv_flow_api.g_id_offset,
+  p_region_id=> 17098803649445955 + wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_query_column_id=> 2,
   p_form_element_id=> null,
   p_column_alias=> 'PATCH_NAME',
   p_column_display_sequence=> 1,
@@ -380,7 +390,7 @@ wwv_flow_api.create_report_columns (
   p_id=> 17099223375446042 + wwv_flow_api.g_id_offset,
   p_region_id=> 17098803649445955 + wwv_flow_api.g_id_offset,
   p_flow_id=> wwv_flow.g_flow_id,
-  p_query_column_id=> 2,
+  p_query_column_id=> 3,
   p_form_element_id=> null,
   p_column_alias=> 'SUPERSEDES_PATCH',
   p_column_display_sequence=> 2,
@@ -399,6 +409,102 @@ wwv_flow_api.create_report_columns (
   p_pk_col_source=> s,
   p_lov_display_extra=> 'YES',
   p_include_in_export=> 'Y',
+  p_column_comment=>'');
+end;
+/
+declare
+  s varchar2(32767) := null;
+begin
+s := null;
+wwv_flow_api.create_report_columns (
+  p_id=> 17443030627169863 + wwv_flow_api.g_id_offset,
+  p_region_id=> 17098803649445955 + wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_query_column_id=> 4,
+  p_form_element_id=> null,
+  p_column_alias=> 'CREATED_BY',
+  p_column_display_sequence=> 4,
+  p_column_heading=> 'Created By',
+  p_column_alignment=>'LEFT',
+  p_heading_alignment=>'CENTER',
+  p_disable_sort_column=>'Y',
+  p_sum_column=> 'N',
+  p_hidden_column=> 'N',
+  p_display_as=>'ESCAPE_SC',
+  p_is_required=> false,
+  p_pk_col_source=> s,
+  p_column_comment=>'');
+end;
+/
+declare
+  s varchar2(32767) := null;
+begin
+s := null;
+wwv_flow_api.create_report_columns (
+  p_id=> 17443119966169863 + wwv_flow_api.g_id_offset,
+  p_region_id=> 17098803649445955 + wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_query_column_id=> 5,
+  p_form_element_id=> null,
+  p_column_alias=> 'CREATED_ON',
+  p_column_display_sequence=> 5,
+  p_column_heading=> 'Created On',
+  p_column_alignment=>'LEFT',
+  p_heading_alignment=>'CENTER',
+  p_disable_sort_column=>'Y',
+  p_sum_column=> 'N',
+  p_hidden_column=> 'N',
+  p_display_as=>'ESCAPE_SC',
+  p_is_required=> false,
+  p_pk_col_source=> s,
+  p_column_comment=>'');
+end;
+/
+declare
+  s varchar2(32767) := null;
+begin
+s := null;
+wwv_flow_api.create_report_columns (
+  p_id=> 17443217742169863 + wwv_flow_api.g_id_offset,
+  p_region_id=> 17098803649445955 + wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_query_column_id=> 6,
+  p_form_element_id=> null,
+  p_column_alias=> 'LAST_UPDATED_BY',
+  p_column_display_sequence=> 6,
+  p_column_heading=> 'Last Updated By',
+  p_column_alignment=>'LEFT',
+  p_heading_alignment=>'CENTER',
+  p_disable_sort_column=>'Y',
+  p_sum_column=> 'N',
+  p_hidden_column=> 'N',
+  p_display_as=>'ESCAPE_SC',
+  p_is_required=> false,
+  p_pk_col_source=> s,
+  p_column_comment=>'');
+end;
+/
+declare
+  s varchar2(32767) := null;
+begin
+s := null;
+wwv_flow_api.create_report_columns (
+  p_id=> 17443325812169863 + wwv_flow_api.g_id_offset,
+  p_region_id=> 17098803649445955 + wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_query_column_id=> 7,
+  p_form_element_id=> null,
+  p_column_alias=> 'LAST_UPDATED_ON',
+  p_column_display_sequence=> 7,
+  p_column_heading=> 'Last Updated On',
+  p_column_alignment=>'LEFT',
+  p_heading_alignment=>'CENTER',
+  p_disable_sort_column=>'Y',
+  p_sum_column=> 'N',
+  p_hidden_column=> 'N',
+  p_display_as=>'ESCAPE_SC',
+  p_is_required=> false,
+  p_pk_col_source=> s,
   p_column_comment=>'');
 end;
 /
