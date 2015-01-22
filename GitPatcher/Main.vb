@@ -46,6 +46,25 @@
 
     End Sub
 
+
+    Private Sub SetMergeRebaseButtons()
+
+        Select Case Globals.currentBranch
+            Case "develop", "test", "uat", "master"
+                MergeButton.Show()
+                RebaseButton.Hide()
+
+            Case Else
+                MergeButton.Hide()
+                RebaseButton.Show()
+
+        End Select
+
+    End Sub
+
+
+
+
     Private Sub showRepoSettings()
         RepoSettings.checkRepo(RepoComboBox.Text)
         RepoPathTextBox.Text = Globals.getRepoPath()
@@ -54,10 +73,12 @@
         CurrentBranchTextBox.Text = Globals.currentBranch
         RootPatchDirTextBox.Text = Globals.RootPatchDir
         RootApexDirTextBox.Text = Globals.RootApexDir
-
+ 
+        SetMergeRebaseButtons()
+ 
         loadOrgs()
         loadApexApps()
- 
+
     End Sub
 
 
@@ -66,7 +87,7 @@
 
         RepoSettings.readGitRepos(RepoComboBox, My.Settings.CurrentRepo)
         showRepoSettings()
- 
+
     End Sub
 
 
@@ -80,39 +101,39 @@
         HotFixTextBox.Text = Globals.deriveHotfixBranch
         TNSTextBox.Text = Globals.getTNS()
         CONNECTTextBox.Text = Globals.getCONNECT()
-  
+
     End Sub
 
- 
+
     Public Sub loadOrgs()
 
         OrgSettings.readOrgs(OrgComboBox, OrgComboBox.Text, RepoComboBox.Text)
 
         showOrgSettings()
- 
+
     End Sub
 
 
     Private Sub showAppSettings()
- 
+
         AppSettings.retrieveApp(ApplicationListComboBox.Text, RepoComboBox.Text)
 
         AppCodeTextBox.Text = Globals.getAppCode()
         AppInFeatureCheckBox.Checked = Globals.getAppInFeature = "Y"
-        AppIDTextBox.Text = Globals.getAppId()
+        AppIdTextBox.Text = Globals.getAppId()
         JiraTextBox.Text = Globals.getJira()
         SchemaTextBox.Text = Globals.getSchema()
-     
+
 
     End Sub
 
- 
+
     Public Sub loadApexApps()
 
         AppSettings.readApps(ApplicationListComboBox, ApplicationListComboBox.Text, RepoComboBox.Text)
         showAppSettings()
- 
-   
+
+
 
     End Sub
 
@@ -121,7 +142,7 @@
 
         Globals.setRepo(RepoComboBox.SelectedItem)
         showRepoSettings()
-  
+
     End Sub
 
     'Private Sub PatchFromTagsToolStripMenuItem_Click(sender As Object, e As EventArgs)
@@ -134,7 +155,7 @@
         If Not String.IsNullOrEmpty(RepoComboBox.Text) Then
             showOrgSettings()
         End If
- 
+
     End Sub
 
     Private Sub ApplicationListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ApplicationListComboBox.SelectedIndexChanged
@@ -142,7 +163,7 @@
         Globals.setApplication(ApplicationListComboBox.SelectedItem, ApplicationListComboBox.SelectedIndex)
 
         showAppSettings()
- 
+
     End Sub
 
     Shared Function connect_string(ByVal schema As String, ByVal password As String, ByVal database As String) As String
@@ -734,10 +755,19 @@
         CreatePatchCollection.createCollectionProcess("major", "minor", Me.AppCodeTextBox.Text, "major,minor,patchset,feature,hotfix,ALL", "major,minor,patchset,feature,hotfix,ALL", "TEST")
     End Sub
 
-  
+
     Private Sub SwitchButton_Click(sender As Object, e As EventArgs) Handles SwitchButton.Click
         Tortoise.Switch(Globals.getRepoPath)
         BranchPathTextBox.Text = Globals.currentLongBranch()
         CurrentBranchTextBox.Text = Globals.currentBranch
+        SetMergeRebaseButtons()
+    End Sub
+
+    Private Sub RebaseButton_Click(sender As Object, e As EventArgs) Handles RebaseButton.Click
+        Tortoise.Rebase(Globals.getRepoPath)
+    End Sub
+
+    Private Sub MergeButton_Click(sender As Object, e As EventArgs) Handles MergeButton.Click
+        Tortoise.Merge(Globals.getRepoPath)
     End Sub
 End Class

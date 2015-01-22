@@ -102,6 +102,8 @@ Partial Class Main
         Me.HotFixTextBox = New System.Windows.Forms.TextBox()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.SwitchButton = New System.Windows.Forms.Button()
+        Me.RebaseButton = New System.Windows.Forms.Button()
+        Me.MergeButton = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -705,11 +707,31 @@ Partial Class Main
         Me.SwitchButton.Text = "Switch"
         Me.SwitchButton.UseVisualStyleBackColor = True
         '
+        'RebaseButton
+        '
+        Me.RebaseButton.Location = New System.Drawing.Point(401, 112)
+        Me.RebaseButton.Name = "RebaseButton"
+        Me.RebaseButton.Size = New System.Drawing.Size(75, 23)
+        Me.RebaseButton.TabIndex = 44
+        Me.RebaseButton.Text = "Rebase"
+        Me.RebaseButton.UseVisualStyleBackColor = True
+        '
+        'MergeButton
+        '
+        Me.MergeButton.Location = New System.Drawing.Point(401, 112)
+        Me.MergeButton.Name = "MergeButton"
+        Me.MergeButton.Size = New System.Drawing.Size(75, 23)
+        Me.MergeButton.TabIndex = 45
+        Me.MergeButton.Text = "Merge"
+        Me.MergeButton.UseVisualStyleBackColor = True
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(486, 561)
+        Me.Controls.Add(Me.MergeButton)
+        Me.Controls.Add(Me.RebaseButton)
         Me.Controls.Add(Me.SwitchButton)
         Me.Controls.Add(Me.HotFixTextBox)
         Me.Controls.Add(Me.Label19)
@@ -841,5 +863,7 @@ Partial Class Main
     Friend WithEvents HotFixTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label19 As System.Windows.Forms.Label
     Friend WithEvents SwitchButton As System.Windows.Forms.Button
+    Friend WithEvents RebaseButton As System.Windows.Forms.Button
+    Friend WithEvents MergeButton As System.Windows.Forms.Button
 
 End Class
