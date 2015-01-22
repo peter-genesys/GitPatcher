@@ -201,7 +201,7 @@
         Return gAppInFeature
     End Function
  
-
+ 
 
     Public Function XMLRepoFilePath() As String
 
@@ -312,6 +312,18 @@
         My.Settings.Save()
 
     End Sub
+
+
+    Private gUsePatchAdmin As Boolean
+
+    Public Sub setUsePatchAdmin(UsePatchAdmin As Boolean)
+        gUsePatchAdmin = UsePatchAdmin
+    End Sub
+
+    Public Function getUsePatchAdmin() As Boolean
+        Return gUsePatchAdmin
+    End Function
+
 
 
  

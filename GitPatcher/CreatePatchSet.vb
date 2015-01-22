@@ -649,7 +649,7 @@ Public Class CreatePatchCollection
 
             PatchDirTextBox.Text = Globals.RootPatchDir & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
 
-            UsePatchAdminCheckBox.Checked = True
+            UsePatchAdminCheckBox.Checked = Globals.getUsePatchAdmin
 
             RerunCheckBox.Checked = False
 

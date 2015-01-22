@@ -41,6 +41,8 @@ Public Class PatchRunner
                 RadioButtonAll2.Checked = True
         End Select
 
+        UsePatchAdminCheckBox.Checked = Globals.getUsePatchAdmin
+
         doSearch()
 
 

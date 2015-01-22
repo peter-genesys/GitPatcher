@@ -834,8 +834,8 @@ Public Class PatchFromTags
             derivePatchName()
 
             derivePatchDir()
-
-            UsePatchAdminCheckBox.Checked = True
+ 
+            UsePatchAdminCheckBox.Checked = Globals.getUsePatchAdmin
 
             RerunCheckBox.Checked = True
 

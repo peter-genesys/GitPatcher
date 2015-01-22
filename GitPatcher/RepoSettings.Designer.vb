@@ -44,9 +44,10 @@ Partial Class RepoSettings
         Me.Label25 = New System.Windows.Forms.Label()
         Me.RepoComboBox = New System.Windows.Forms.ComboBox()
         Me.DBButton = New System.Windows.Forms.Button()
-        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.AppButton = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.UsePatchAdminCheckBox = New System.Windows.Forms.CheckBox()
         Label26 = New System.Windows.Forms.Label()
         Label22 = New System.Windows.Forms.Label()
         Label24 = New System.Windows.Forms.Label()
@@ -224,10 +225,6 @@ Partial Class RepoSettings
         Me.DBButton.Text = "Databases"
         Me.DBButton.UseVisualStyleBackColor = True
         '
-        'MySettingsBindingSource
-        '
-        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
-        '
         'AppButton
         '
         Me.AppButton.Location = New System.Drawing.Point(231, 15)
@@ -247,11 +244,26 @@ Partial Class RepoSettings
         Me.Label1.TabIndex = 54
         Me.Label1.Text = "Warning: Performing an Update will remove the Repo's Databases and Applications." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "I need to fix this to preserve the Databases and Applications."
         '
+        'MySettingsBindingSource
+        '
+        Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
+        '
+        'UsePatchAdminCheckBox
+        '
+        Me.UsePatchAdminCheckBox.AutoSize = True
+        Me.UsePatchAdminCheckBox.Location = New System.Drawing.Point(404, 20)
+        Me.UsePatchAdminCheckBox.Name = "UsePatchAdminCheckBox"
+        Me.UsePatchAdminCheckBox.Size = New System.Drawing.Size(108, 17)
+        Me.UsePatchAdminCheckBox.TabIndex = 55
+        Me.UsePatchAdminCheckBox.Text = "Use Patch Admin"
+        Me.UsePatchAdminCheckBox.UseVisualStyleBackColor = True
+        '
         'RepoSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(594, 460)
+        Me.Controls.Add(Me.UsePatchAdminCheckBox)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.AppButton)
         Me.Controls.Add(Me.DBButton)
@@ -298,4 +310,5 @@ Partial Class RepoSettings
     Friend WithEvents DBButton As System.Windows.Forms.Button
     Friend WithEvents AppButton As System.Windows.Forms.Button
     Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents UsePatchAdminCheckBox As System.Windows.Forms.CheckBox
 End Class
