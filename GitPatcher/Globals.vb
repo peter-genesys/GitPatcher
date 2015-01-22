@@ -118,6 +118,22 @@
         Return gOrgCode
     End Function
 
+  
+    Private gOrgName As String
+
+    Public Sub setOrgName(OrgName As String)
+        gOrgName = OrgName
+    End Sub
+
+    Public Function getOrgName() As String
+        Return gOrgName
+    End Function
+
+
+
+
+
+
     Private gTNS As String
 
     Public Sub setTNS(TNS As String)
@@ -201,7 +217,7 @@
         Return gAppInFeature
     End Function
  
-
+ 
 
     Public Function XMLRepoFilePath() As String
 
@@ -312,6 +328,18 @@
         My.Settings.Save()
 
     End Sub
+
+
+    Private gUsePatchAdmin As Boolean
+
+    Public Sub setUsePatchAdmin(UsePatchAdmin As Boolean)
+        gUsePatchAdmin = UsePatchAdmin
+    End Sub
+
+    Public Function getUsePatchAdmin() As Boolean
+        Return gUsePatchAdmin
+    End Function
+
 
 
  

@@ -583,6 +583,7 @@
         If releasing.toDoNextStep() Then
             'Change current DB to release DB
             Globals.setDB(iTargetDB.ToUpper)
+            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepo)
 
         End If
 
@@ -636,6 +637,7 @@
         If releasing.toDoNextStep() Then
             'Revert current DB  
             Globals.setDB(lcurrentDB.ToUpper)
+            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepo)
 
         End If
 

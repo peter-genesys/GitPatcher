@@ -70,6 +70,8 @@ Public Class RepoSettings
                 PatchOffsetTextBox.Text = l_RepoNode.Attributes.GetNamedItem("PatchRelPath").Value
                 PatchExportPathTextBox.Text = l_RepoNode.Attributes.GetNamedItem("PatchExportPath").Value
 
+                UsePatchAdminCheckBox.Checked = (l_RepoNode.Attributes.GetNamedItem("UsePatchAdmin").Value = "True")
+ 
                 hideUpdateButton()
 
                 'Set the Global Values
@@ -80,7 +82,7 @@ Public Class RepoSettings
                 Globals.setExtrasRelPath(l_RepoNode.Attributes.GetNamedItem("ExtrasRelPath").Value)
                 Globals.setPatchRelPath(l_RepoNode.Attributes.GetNamedItem("PatchRelPath").Value)
                 Globals.setPatchExportPath(l_RepoNode.Attributes.GetNamedItem("PatchExportPath").Value)
- 
+                Globals.setUsePatchAdmin(UsePatchAdminCheckBox.Checked)
 
 
             End If
@@ -209,6 +211,20 @@ Public Class RepoSettings
         TestRepoValue()
     End Sub
 
+    Private Sub setRepoAttributes(iRepo As XmlElement)
+        'Paths
+
+        iRepo.SetAttribute("RepoPath", RepoPathTextBox.Text)
+        iRepo.SetAttribute("ApexRelPath", ApexOffsetTextBox.Text)
+        iRepo.SetAttribute("ODBCjavaRelPath", OJDBCjarFileTextBox.Text)
+        iRepo.SetAttribute("DatabaseRelPath", DBOffsetTextBox.Text)
+        iRepo.SetAttribute("ExtrasRelPath", ExtrasDirListTextBox.Text)
+        iRepo.SetAttribute("PatchRelPath", PatchOffsetTextBox.Text)
+        iRepo.SetAttribute("PatchExportPath", PatchExportPathTextBox.Text)
+        iRepo.SetAttribute("UsePatchAdmin", UsePatchAdminCheckBox.Checked.ToString)
+ 
+    End Sub
+
     Private Sub AddRepo()
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
@@ -223,19 +239,11 @@ Public Class RepoSettings
 
         l_NewRepoNode.SetAttribute("RepoName", RepoComboBox.Text)
 
-        'Paths
-
-        l_NewRepoNode.SetAttribute("RepoPath", RepoPathTextBox.Text)
-        l_NewRepoNode.SetAttribute("ApexRelPath", ApexOffsetTextBox.Text)
-        l_NewRepoNode.SetAttribute("ODBCjavaRelPath", OJDBCjarFileTextBox.Text)
-        l_NewRepoNode.SetAttribute("DatabaseRelPath", DBOffsetTextBox.Text)
-        l_NewRepoNode.SetAttribute("ExtrasRelPath", ExtrasDirListTextBox.Text)
-        l_NewRepoNode.SetAttribute("PatchRelPath", PatchOffsetTextBox.Text)
-        l_NewRepoNode.SetAttribute("PatchExportPath", PatchExportPathTextBox.Text)
+        setRepoAttributes(l_NewRepoNode)
 
         l_NewRepoNode.AppendChild(l_GitReposXML.CreateElement("orgs"))
         l_NewRepoNode.AppendChild(l_GitReposXML.CreateElement("apps"))
-  
+
         l_ReposNode.AppendChild(l_NewRepoNode)
 
         l_GitReposXML.Save(Globals.XMLRepoFilePath())
@@ -280,7 +288,7 @@ Public Class RepoSettings
         Next
 
         l_GitReposXML.Save(Globals.XMLRepoFilePath())
- 
+
     End Sub
 
 
@@ -291,8 +299,43 @@ Public Class RepoSettings
     End Sub
 
     Private Sub ButtonUpdate_Click(sender As Object, e As EventArgs) Handles ButtonUpdate.Click
-        RemoveRepo()
-        AddRepo()
+
+        'Modify the repo level attributes, without touching Databases and Applications
+        '1. Load the XML
+        '2. Find the repo
+        '3. Modify the attributes
+        '4. Re-write the XML
+
+
+        Dim l_GitReposXML As XmlDocument = New XmlDocument()
+
+        Dim l_RepoNodeList As XmlNodeList
+        Dim l_RepoNode As XmlNode
+        'Create the XML Document
+
+        'Load the Xml file
+        l_GitReposXML.Load(Globals.XMLRepoFilePath())
+
+        Dim l_ReposNode As XmlNode = l_GitReposXML.DocumentElement
+
+        'Get the list of name nodes 
+        l_RepoNodeList = l_GitReposXML.SelectNodes("/repos/repo")
+        For Each l_RepoNode In l_RepoNodeList
+            'Get the RepoName Attribute Value
+            If l_RepoNode.Attributes.GetNamedItem("RepoName").Value = RepoComboBox.Text Then
+                'Modify attributes of this node
+
+                setRepoAttributes(l_RepoNode)
+
+
+            End If
+
+
+        Next
+
+        l_GitReposXML.Save(Globals.XMLRepoFilePath())
+ 
+
         hideUpdateButton()
 
     End Sub
@@ -332,10 +375,10 @@ Public Class RepoSettings
     Private Sub PatchOffsetTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchOffsetTextBox.TextChanged
         showUpdateButton()
     End Sub
-
-
-    
-
+    Private Sub UsePatchAdminCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles UsePatchAdminCheckBox.CheckedChanged
+        showUpdateButton()
+    End Sub
+  
 
     'Private Sub RepoListTextBox_TextChanged(sender As Object, e As EventArgs) Handles RepoComboBox.TextChanged
     '    Main.loadRepos()
@@ -356,5 +399,6 @@ Public Class RepoSettings
         theApplicationSettings.Show()
     End Sub
 
-   
+
+
 End Class

@@ -119,17 +119,18 @@ Public Class PatchFromTags
         Dim Filename As String = Nothing
         If extrasCollection.Count > 0 Then
             For Each FilePath In extrasCollection
-                If InStr(FilePath, Globals.DBRepoPathMask) = 0 Then
-                    'Screened out repo files
+                'The following filter does not work, and does not appear to be needed.
+                'If InStr(FilePath, Globals.DBRepoPathMask) = 0 Then
+                'Screened out repo files
 
-                    Try
-                        FileIO.CopyFileToDir(FilePath, patch_dir)
-                        filenames.Add(Filename)
-                    Catch ex As Exception
-                        MsgBox("Warning: File " & FilePath & " could not be exported, but will be in the install file.  It may be a folder.  Deselect, then recreate Patch.")
+                Try
+                    FileIO.CopyFileToDir(FilePath, patch_dir)
+                    filenames.Add(Filename)
+                Catch ex As Exception
+                    MsgBox("Warning: File " & FilePath & " could not be exported, but will be in the install file.  It may be a folder.  Deselect, then recreate Patch.")
 
-                    End Try
-                End If
+                End Try
+                'End If
 
             Next
         End If
@@ -834,8 +835,8 @@ Public Class PatchFromTags
             derivePatchName()
 
             derivePatchDir()
-
-            UsePatchAdminCheckBox.Checked = True
+ 
+            UsePatchAdminCheckBox.Checked = Globals.getUsePatchAdmin
 
             RerunCheckBox.Checked = True
 
