@@ -7,7 +7,7 @@ wwv_flow_api.create_tab (
   p_tab_name=> 'T_HOME',
   p_tab_text => 'Home',
   p_tab_step => 1,
-  p_tab_also_current_for_pages => '2',
+  p_tab_also_current_for_pages => '2,3,4,5',
   p_tab_parent_tabset=>'',
   p_tab_comment  => '');
  
@@ -26,6 +26,4 @@ end;
 /
 
 prompt  ...Shared Lists of values
---
-prompt  ...Application Trees
 --

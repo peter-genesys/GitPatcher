@@ -8,7 +8,7 @@ prompt  APPLICATION 123 - Tracker
 --   Flashback:       0
 --   Export Type:     Application Export
 --   Version:         4.2.6.00.03
---   Instance ID:     69302217721093
+--   Instance ID:     61927330293969
 --
 -- Import:
 --   Using Application Builder
@@ -16,10 +16,11 @@ prompt  APPLICATION 123 - Tracker
 --   Using SQL*Plus as the Oracle user APEX_040200 or as the owner (parsing schema) of the application
  
 -- Application Statistics:
---   Pages:                      6
---     Items:                    3
---     Processes:                4
---     Regions:                  9
+--   Pages:                      8
+--     Items:                   34
+--     Processes:                9
+--     Regions:                 14
+--     Buttons:                  2
 --   Shared Components:
 --     Logic:
 --     Navigation:
@@ -27,7 +28,7 @@ prompt  APPLICATION 123 - Tracker
 --         Tabs:                 1
 --       Lists:                  1
 --       Breadcrumbs:            1
---         Entries:              2
+--         Entries:              3
 --       NavBar Entries:         1
 --     Security:
 --       Authentication:         1
@@ -43,6 +44,7 @@ prompt  APPLICATION 123 - Tracker
 --         Breadcrumb:           2
 --         Button:               4
 --         Report:               9
+--       LOVs:                   1
 --     Globalization:
 --     Reports:
  

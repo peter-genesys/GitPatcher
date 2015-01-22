@@ -25,7 +25,7 @@ wwv_flow_api.create_page (
  ,p_help_text => 
 'No help is available for this page.'
  ,p_last_updated_by => 'PETER'
- ,p_last_upd_yyyymmddhh24miss => '20141117101519'
+ ,p_last_upd_yyyymmddhh24miss => '20150121235005'
   );
 null;
  
@@ -47,15 +47,15 @@ s:=s||'select PATCHES_UNPROMOTED_V.PATCH_ID as PATCH_ID,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.PATCH_DESC as PATCH_DESC,';
 
 s:=s||''||unistr('\000a')||
-'    PATCHES_UNPROMOTED_V.PATCH_COMPONANTS as PATCH_COMPONANTS,'||unistr('\000a')||
+'REPLACE(PATCHES_UNPROMOTED_V.PATCH_COMPONANTS,'','',''<BR>'') as PATCH_COMPONANTS,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.PATCH_CREATE_DATE as PATCH_CREATE_DATE,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.NOTE as NOTE,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.PATCH_CREATED_BY as PATCH_CREATED_BY,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.LOG_DATETIME as LOG_DATETIME,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.COMPLETED_DATETIME as COMPLETED_DATETIME,'||unistr('\000a')||
-'    PATCHES_UNPROMOTED_V.SUCCESS_YN as SUCCESS_';
+'    PATCHES_UNPROMOTED_V.SUCCES';
 
-s:=s||'YN,'||unistr('\000a')||
+s:=s||'S_YN as SUCCESS_YN,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.RETIRED_YN as RETIRED_YN,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.RERUNNABLE_YN as RERUNNABLE_YN,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.WARNING_COUNT as WARNING_COUNT,'||unistr('\000a')||
@@ -63,9 +63,9 @@ s:=s||'YN,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.USERNAME as USERNAME,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.INSTALL_LOG as INSTALL_LOG,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.CREATED_BY as CREATED_BY,'||unistr('\000a')||
-'    PATCHES_UNPROMOTED_V.CR';
+'    PATCHES';
 
-s:=s||'EATED_ON as CREATED_ON,'||unistr('\000a')||
+s:=s||'_UNPROMOTED_V.CREATED_ON as CREATED_ON,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.LAST_UPDATED_BY as LAST_UPDATED_BY,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.LAST_UPDATED_ON as LAST_UPDATED_ON,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.PATCH_TYPE as PATCH_TYPE '||unistr('\000a')||
@@ -112,15 +112,15 @@ a1:=a1||'select PATCHES_UNPROMOTED_V.PATCH_ID as PATCH_ID,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.PATCH_DESC as PATCH_DESC,';
 
 a1:=a1||''||unistr('\000a')||
-'    PATCHES_UNPROMOTED_V.PATCH_COMPONANTS as PATCH_COMPONANTS,'||unistr('\000a')||
+'REPLACE(PATCHES_UNPROMOTED_V.PATCH_COMPONANTS,'','',''<BR>'') as PATCH_COMPONANTS,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.PATCH_CREATE_DATE as PATCH_CREATE_DATE,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.NOTE as NOTE,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.PATCH_CREATED_BY as PATCH_CREATED_BY,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.LOG_DATETIME as LOG_DATETIME,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.COMPLETED_DATETIME as COMPLETED_DATETIME,'||unistr('\000a')||
-'    PATCHES_UNPROMOTED_V.SUCCESS_YN as SUCCESS_';
+'    PATCHES_UNPROMOTED_V.SUCCES';
 
-a1:=a1||'YN,'||unistr('\000a')||
+a1:=a1||'S_YN as SUCCESS_YN,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.RETIRED_YN as RETIRED_YN,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.RERUNNABLE_YN as RERUNNABLE_YN,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.WARNING_COUNT as WARNING_COUNT,'||unistr('\000a')||
@@ -128,9 +128,9 @@ a1:=a1||'YN,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.USERNAME as USERNAME,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.INSTALL_LOG as INSTALL_LOG,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.CREATED_BY as CREATED_BY,'||unistr('\000a')||
-'    PATCHES_UNPROMOTED_V.CR';
+'    PATCHES';
 
-a1:=a1||'EATED_ON as CREATED_ON,'||unistr('\000a')||
+a1:=a1||'_UNPROMOTED_V.CREATED_ON as CREATED_ON,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.LAST_UPDATED_BY as LAST_UPDATED_BY,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.LAST_UPDATED_ON as LAST_UPDATED_ON,'||unistr('\000a')||
 '    PATCHES_UNPROMOTED_V.PATCH_TYPE as PATCH_TYPE '||unistr('\000a')||
@@ -519,7 +519,7 @@ wwv_flow_api.create_worksheet_column(
   p_others_may_view        =>'Y',
   p_column_type            =>'CLOB',
   p_display_as             =>'TEXT',
-  p_display_text_as        =>'ESCAPE_SC',
+  p_display_text_as        =>'WITHOUT_MODIFICATION',
   p_heading_alignment      =>'CENTER',
   p_column_alignment       =>'LEFT',
   p_tz_dependent           =>'N',
@@ -1161,7 +1161,7 @@ end;
 declare
     rc1 varchar2(32767) := null;
 begin
-rc1:=rc1||'PATCH_ID:PATCH_NAME:BRANCH_NAME:DB_SCHEMA:TAG_FROM:TAG_TO:SUPPLEMENTARY:PATCH_DESC:PATCH_COMPONANTS:PATCH_CREATE_DATE:NOTE:PATCH_CREATED_BY:LOG_DATETIME:COMPLETED_DATETIME:SUCCESS_YN:RETIRED_YN:RERUNNABLE_YN:WARNING_COUNT:ERROR_COUNT:USERNAME:INSTALL_LOG:CREATED_BY:CREATED_ON:LAST_UPDATED_BY:LAST_UPDATED_ON:PATCH_TYPE';
+rc1:=rc1||'PATCH_TYPE:PATCH_NAME:PATCH_DESC:NOTE:PATCH_CREATE_DATE:PATCH_CREATED_BY:COMPLETED_DATETIME:PATCH_COMPONANTS:';
 
 wwv_flow_api.create_worksheet_rpt(
   p_id => 14275822581359028+wwv_flow_api.g_id_offset,
@@ -1178,6 +1178,8 @@ wwv_flow_api.create_worksheet_rpt(
   p_is_default              =>'Y',
   p_display_rows            =>15,
   p_report_columns          =>rc1,
+  p_break_on                =>'PATCH_TYPE:0:0:0:0:0',
+  p_break_enabled_on        =>'PATCH_TYPE:0:0:0:0:0',
   p_flashback_enabled       =>'N',
   p_calendar_display_column =>'');
 end;

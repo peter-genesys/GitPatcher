@@ -20,7 +20,7 @@ wwv_flow_api.create_page (
  ,p_help_text => 
 'No help is available for this page.'
  ,p_last_updated_by => 'PETER'
- ,p_last_upd_yyyymmddhh24miss => '20141116230338'
+ ,p_last_upd_yyyymmddhh24miss => '20150121235005'
   );
 null;
  
@@ -559,7 +559,7 @@ end;
 declare
     rc1 varchar2(32767) := null;
 begin
-rc1:=rc1||'PATCH_NAME:DB_SCHEMA:BRANCH_NAME:TAG_FROM:TAG_TO:SUPPLEMENTARY:PATCH_DESC:PATCH_CREATE_DATE:PATCH_CREATED_BY:NOTE:RERUNNABLE_YN';
+rc1:=rc1||'PATCH_NAME:PATCH_DESC:NOTE:DB_SCHEMA:PATCH_CREATE_DATE:PATCH_CREATED_BY:RERUNNABLE_YN:';
 
 wwv_flow_api.create_worksheet_rpt(
   p_id => 14272011059298949+wwv_flow_api.g_id_offset,
