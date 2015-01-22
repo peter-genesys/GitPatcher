@@ -45,6 +45,7 @@ Public Class OrgSettings
 
                 l_found = True
 
+                Globals.setOrgName(iOrgName)
                 Globals.setOrgCode(l_OrgNode.Attributes.GetNamedItem("OrgCode").Value)
                 Globals.setOrgInFeature(l_OrgNode.Attributes.GetNamedItem("OrgInFeature").Value)
                 Globals.setTNS(l_OrgNode.Attributes.GetNamedItem(ipromo & "TNS").Value)

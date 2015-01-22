@@ -118,6 +118,22 @@
         Return gOrgCode
     End Function
 
+  
+    Private gOrgName As String
+
+    Public Sub setOrgName(OrgName As String)
+        gOrgName = OrgName
+    End Sub
+
+    Public Function getOrgName() As String
+        Return gOrgName
+    End Function
+
+
+
+
+
+
     Private gTNS As String
 
     Public Sub setTNS(TNS As String)
