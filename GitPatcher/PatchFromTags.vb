@@ -405,21 +405,23 @@ Public Class PatchFromTags
             l_master_file.WriteLine("define patch_path = '" & branch_path & "/" & patch_name & "/" & "'")
 
             l_master_file.WriteLine("SPOOL " & l_log_filename)
-
-            If SYSDBACheckBox.Checked Then
-                l_master_file.WriteLine("CONNECT &&SYS_user/&&SYS_password@&&database as sysdba")
-            Else
-                l_master_file.WriteLine("CONNECT &&" & db_schema & "_user/&&" & db_schema & "_password@&&database")
+ 
+            'Allow user to choose an alternate schema name at patch execution
+            Dim l_schema As String = db_schema
+            If AlternateSchemasCheckBox.Checked Then
+                l_schema = "&&" & db_schema & "_user"
             End If
+
+            'Force use of SYSDBA role
+            Dim l_role As String = ""
+            If SYSDBACheckBox.Checked Then
+                l_role = " as sysdba"
+            End If
+
+            l_master_file.WriteLine("CONNECT " & l_schema & "/&&" & db_schema & "_password@&&database" & l_role)
 
 
             l_master_file.WriteLine("set serveroutput on;")
-
-
-
-
-
-
 
             'Files have already been sorted into Categories, we only need to list the categories and spit out the files under each.
             For Each l_filename In targetFiles
@@ -484,7 +486,7 @@ Public Class PatchFromTags
                     "execute &&PATCH_ADMIN_user..patch_installer.patch_started( -" _
         & Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
         & Chr(10) & " ,i_patch_type         => '" & patch_type & "' -" _
-        & Chr(10) & " ,i_db_schema          => '" & "&&" & db_schema & "_user" & "' -" _
+        & Chr(10) & " ,i_db_schema          => '" & l_schema & "' -" _
         & Chr(10) & " ,i_branch_name        => '" & branch_path & "' -" _
         & Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
         & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
@@ -536,7 +538,7 @@ Public Class PatchFromTags
 
             If use_patch_admin Then
 
-                l_master_file.WriteLine("PROMPT Compiling objects in schema " & db_schema)
+                l_master_file.WriteLine("PROMPT Compiling objects in schema " & l_schema)
                 l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_invoker.compile_post_patch;")
 
                 If db_schema = "PATCH_ADMIN" Then
@@ -832,6 +834,7 @@ Public Class PatchFromTags
             End If
 
             SYSDBACheckBox.Checked = (SchemaComboBox.SelectedItem.ToString = "SYS")
+            AlternateSchemasCheckBox.Checked = False
 
             derivePatchName()
 
@@ -1401,13 +1404,20 @@ Public Class PatchFromTags
 
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
-            If SYSDBACheckBox.Checked Then
-                l_master_file.WriteLine("CONNECT &&SYS_user/&&SYS_password@&&database as sysdba")
-            Else
-                l_master_file.WriteLine("CONNECT &&" & db_schema & "_user/&&" & db_schema & "_password@&&database")
+            'Allow user to choose an alternate schema name at patch execution
+            Dim l_schema As String = db_schema
+            If AlternateSchemasCheckBox.Checked Then
+                l_schema = "&&" & db_schema & "_user"
             End If
 
+            'Force use of SYSDBA role
+            Dim l_role As String = ""
+            If SYSDBACheckBox.Checked Then
+                l_role = " as sysdba"
+            End If
 
+            l_master_file.WriteLine("CONNECT " & l_schema & "/&&" & db_schema & "_password@&&database" & l_role)
+        
             l_master_file.WriteLine("set serveroutput on;")
 
 
