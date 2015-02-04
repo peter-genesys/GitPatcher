@@ -406,7 +406,7 @@ Public Class PatchFromTags
 
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
-            If db_schema = "SYS" Then
+            If SYSDBACheckBox.Checked Then
                 l_master_file.WriteLine("CONNECT &&SYS_user/&&SYS_password@&&database as sysdba")
             Else
                 l_master_file.WriteLine("CONNECT &&" & db_schema & "_user/&&" & db_schema & "_password@&&database")
@@ -831,11 +831,12 @@ Public Class PatchFromTags
                 SupIdTextBox.Text = gDBtarget
             End If
 
+            SYSDBACheckBox.Checked = (SchemaComboBox.SelectedItem.ToString = "SYS")
 
             derivePatchName()
 
             derivePatchDir()
- 
+
             UsePatchAdminCheckBox.Checked = Globals.getUsePatchAdmin
 
             RerunCheckBox.Checked = True
@@ -1400,7 +1401,7 @@ Public Class PatchFromTags
 
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
-            If db_schema = "SYS" Then
+            If SYSDBACheckBox.Checked Then
                 l_master_file.WriteLine("CONNECT &&SYS_user/&&SYS_password@&&database as sysdba")
             Else
                 l_master_file.WriteLine("CONNECT &&" & db_schema & "_user/&&" & db_schema & "_password@&&database")
@@ -1713,4 +1714,6 @@ Public Class PatchFromTags
         doExportPatch(PatchPathTextBox.Text, PatchNameTextBox.Text)
  
     End Sub
+
+ 
 End Class
