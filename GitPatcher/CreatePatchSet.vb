@@ -381,13 +381,9 @@ Public Class CreatePatchCollection
 
             If use_patch_admin Then
 
-                If db_schema = "SYS" Then
-                    l_master_file.WriteLine("CONNECT APEX_SYS/&&APEX_SYS_password@&&database as sysdba")
-                Else
-                    l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database")
-                End If
-
-
+                'Always connects as PATCH_ADMIN
+                l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database")
+ 
                 l_master_file.WriteLine("set serveroutput on;")
 
 

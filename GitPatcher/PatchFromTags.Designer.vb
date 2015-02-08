@@ -24,6 +24,8 @@ Partial Class PatchFromTags
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PatchFromTags))
         Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
+        Me.SYSDBACheckBox = New System.Windows.Forms.CheckBox()
+        Me.ExportPatchButton = New System.Windows.Forms.Button()
         Me.AddUninstallButton = New System.Windows.Forms.Button()
         Me.Label26 = New System.Windows.Forms.Label()
         Me.ButtonPopNotes = New System.Windows.Forms.Button()
@@ -98,7 +100,7 @@ Partial Class PatchFromTags
         Me.RestrictSupByToBranchCheckBox = New System.Windows.Forms.CheckBox()
         Me.SupByButton = New System.Windows.Forms.Button()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.ExportPatchButton = New System.Windows.Forms.Button()
+        Me.AlternateSchemasCheckBox = New System.Windows.Forms.CheckBox()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPageSuper.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
@@ -111,6 +113,8 @@ Partial Class PatchFromTags
         '
         'TabPagePatchDefn
         '
+        Me.TabPagePatchDefn.Controls.Add(Me.AlternateSchemasCheckBox)
+        Me.TabPagePatchDefn.Controls.Add(Me.SYSDBACheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.ExportPatchButton)
         Me.TabPagePatchDefn.Controls.Add(Me.AddUninstallButton)
         Me.TabPagePatchDefn.Controls.Add(Me.Label26)
@@ -147,6 +151,25 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.TabIndex = 2
         Me.TabPagePatchDefn.Text = "Create Patch"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
+        '
+        'SYSDBACheckBox
+        '
+        Me.SYSDBACheckBox.AutoSize = True
+        Me.SYSDBACheckBox.Location = New System.Drawing.Point(277, 540)
+        Me.SYSDBACheckBox.Name = "SYSDBACheckBox"
+        Me.SYSDBACheckBox.Size = New System.Drawing.Size(116, 17)
+        Me.SYSDBACheckBox.TabIndex = 50
+        Me.SYSDBACheckBox.Text = "Use SYSDBA Role"
+        Me.SYSDBACheckBox.UseVisualStyleBackColor = True
+        '
+        'ExportPatchButton
+        '
+        Me.ExportPatchButton.Location = New System.Drawing.Point(80, 726)
+        Me.ExportPatchButton.Name = "ExportPatchButton"
+        Me.ExportPatchButton.Size = New System.Drawing.Size(230, 23)
+        Me.ExportPatchButton.TabIndex = 49
+        Me.ExportPatchButton.Text = "Export Patch"
+        Me.ExportPatchButton.UseVisualStyleBackColor = True
         '
         'AddUninstallButton
         '
@@ -404,7 +427,7 @@ Partial Class PatchFromTags
         Me.TabPageSuper.Location = New System.Drawing.Point(4, 22)
         Me.TabPageSuper.Name = "TabPageSuper"
         Me.TabPageSuper.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageSuper.Size = New System.Drawing.Size(525, 723)
+        Me.TabPageSuper.Size = New System.Drawing.Size(525, 757)
         Me.TabPageSuper.TabIndex = 4
         Me.TabPageSuper.Text = "Supersedes"
         Me.TabPageSuper.UseVisualStyleBackColor = True
@@ -466,7 +489,7 @@ Partial Class PatchFromTags
         Me.TabPagePreReqs.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePreReqs.Name = "TabPagePreReqs"
         Me.TabPagePreReqs.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePreReqs.Size = New System.Drawing.Size(525, 723)
+        Me.TabPagePreReqs.Size = New System.Drawing.Size(525, 757)
         Me.TabPagePreReqs.TabIndex = 3
         Me.TabPagePreReqs.Text = "Pre-Requisites"
         Me.TabPagePreReqs.UseVisualStyleBackColor = True
@@ -541,7 +564,7 @@ Partial Class PatchFromTags
         Me.TabPageTags.Location = New System.Drawing.Point(4, 22)
         Me.TabPageTags.Name = "TabPageTags"
         Me.TabPageTags.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageTags.Size = New System.Drawing.Size(525, 723)
+        Me.TabPageTags.Size = New System.Drawing.Size(525, 757)
         Me.TabPageTags.TabIndex = 0
         Me.TabPageTags.Text = "Tags"
         Me.TabPageTags.UseVisualStyleBackColor = True
@@ -663,7 +686,7 @@ Partial Class PatchFromTags
         Me.TabPageChanges.Location = New System.Drawing.Point(4, 22)
         Me.TabPageChanges.Name = "TabPageChanges"
         Me.TabPageChanges.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageChanges.Size = New System.Drawing.Size(525, 723)
+        Me.TabPageChanges.Size = New System.Drawing.Size(525, 757)
         Me.TabPageChanges.TabIndex = 1
         Me.TabPageChanges.Text = "Changes"
         Me.TabPageChanges.UseVisualStyleBackColor = True
@@ -756,7 +779,7 @@ Partial Class PatchFromTags
         Me.TabPageExtras.Location = New System.Drawing.Point(4, 22)
         Me.TabPageExtras.Name = "TabPageExtras"
         Me.TabPageExtras.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageExtras.Size = New System.Drawing.Size(525, 723)
+        Me.TabPageExtras.Size = New System.Drawing.Size(525, 757)
         Me.TabPageExtras.TabIndex = 6
         Me.TabPageExtras.Text = "Extra Files"
         Me.TabPageExtras.UseVisualStyleBackColor = True
@@ -806,7 +829,7 @@ Partial Class PatchFromTags
         Me.TabPageSuperBy.Controls.Add(Me.Label19)
         Me.TabPageSuperBy.Location = New System.Drawing.Point(4, 22)
         Me.TabPageSuperBy.Name = "TabPageSuperBy"
-        Me.TabPageSuperBy.Size = New System.Drawing.Size(525, 723)
+        Me.TabPageSuperBy.Size = New System.Drawing.Size(525, 757)
         Me.TabPageSuperBy.TabIndex = 5
         Me.TabPageSuperBy.Text = "Superseded By"
         Me.TabPageSuperBy.UseVisualStyleBackColor = True
@@ -858,18 +881,19 @@ Partial Class PatchFromTags
         Me.Label19.Text = "Superseded" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "By"
         Me.Label19.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
-        'ExportPatchButton
+        'AlternateSchemasCheckBox
         '
-        Me.ExportPatchButton.Location = New System.Drawing.Point(80, 726)
-        Me.ExportPatchButton.Name = "ExportPatchButton"
-        Me.ExportPatchButton.Size = New System.Drawing.Size(230, 23)
-        Me.ExportPatchButton.TabIndex = 49
-        Me.ExportPatchButton.Text = "Export Patch"
-        Me.ExportPatchButton.UseVisualStyleBackColor = True
+        Me.AlternateSchemasCheckBox.AutoSize = True
+        Me.AlternateSchemasCheckBox.Location = New System.Drawing.Point(395, 540)
+        Me.AlternateSchemasCheckBox.Name = "AlternateSchemasCheckBox"
+        Me.AlternateSchemasCheckBox.Size = New System.Drawing.Size(115, 17)
+        Me.AlternateSchemasCheckBox.TabIndex = 51
+        Me.AlternateSchemasCheckBox.Text = "Alternate Schemas"
+        Me.AlternateSchemasCheckBox.UseVisualStyleBackColor = True
         '
         'PatchFromTags
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(557, 796)
         Me.Controls.Add(Me.PatchTabControl)
@@ -970,4 +994,6 @@ End Sub
     Friend WithEvents Label29 As System.Windows.Forms.Label
     Friend WithEvents AddUninstallButton As System.Windows.Forms.Button
     Friend WithEvents ExportPatchButton As System.Windows.Forms.Button
+    Friend WithEvents SYSDBACheckBox As System.Windows.Forms.CheckBox
+    Friend WithEvents AlternateSchemasCheckBox As System.Windows.Forms.CheckBox
 End Class
