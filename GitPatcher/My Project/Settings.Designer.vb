@@ -56,37 +56,13 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("F:\apex_apps")>  _
-        Public Property RepoList() As String
-            Get
-                Return CType(Me("RepoList"),String)
-            End Get
-            Set
-                Me("RepoList") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("F:\apex_apps")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property CurrentRepo() As String
             Get
                 Return CType(Me("CurrentRepo"),String)
             End Get
             Set
                 Me("CurrentRepo") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("\patch")>  _
-        Public Property PatchDirOffset() As String
-            Get
-                Return CType(Me("PatchDirOffset"),String)
-            End Get
-            Set
-                Me("PatchDirOffset") = value
             End Set
         End Property
         
@@ -104,19 +80,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("ISPROD"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"ISUAT"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"ISTEST"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"ISDEVL"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"VM")>  _
-        Public Property TNSList() As String
-            Get
-                Return CType(Me("TNSList"),String)
-            End Get
-            Set
-                Me("TNSList") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("VM")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property CurrentDB() As String
             Get
                 Return CType(Me("CurrentDB"),String)
@@ -128,74 +92,13 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("\apex")>  _
-        Public Property ApexDirOffset() As String
-            Get
-                Return CType(Me("ApexDirOffset"),String)
-            End Get
-            Set
-                Me("ApexDirOffset") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("f101")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property CurrentApex() As String
             Get
                 Return CType(Me("CurrentApex"),String)
             End Get
             Set
                 Me("CurrentApex") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("bneoda04.thiess.aus:1521:isprod"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"bneoda05.thiess.aus:1521:isuat"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"bneoda05.thiess."& _ 
-            "aus:1521:istest"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"bneoda05.thiess.aus:1521:isdevl"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"127.0.0.1:1521:ORCL")>  _
-        Public Property ConnectionList() As String
-            Get
-                Return CType(Me("ConnectionList"),String)
-            End Get
-            Set
-                Me("ConnectionList") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("f101"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"f100")>  _
-        Public Property AppList() As String
-            Get
-                Return CType(Me("AppList"),String)
-            End Get
-            Set
-                Me("AppList") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("tpds"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"tpds")>  _
-        Public Property ParsingSchemaList() As String
-            Get
-                Return CType(Me("ParsingSchemaList"),String)
-            End Get
-            Set
-                Me("ParsingSchemaList") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("\oracle\jdbc\lib\ojdbc5.jar")>  _
-        Public Property JDBCjar() As String
-            Get
-                Return CType(Me("JDBCjar"),String)
-            End Get
-            Set
-                Me("JDBCjar") = value
             End Set
         End Property
         
@@ -225,7 +128,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("CFinney"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"JHewett"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"PBurgess")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property RecipientList() As String
             Get
                 Return CType(Me("RecipientList"),String)
@@ -258,37 +161,13 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Prism"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Prism Mobile")>  _
-        Public Property ApplicationsList() As String
-            Get
-                Return CType(Me("ApplicationsList"),String)
-            End Get
-            Set
-                Me("ApplicationsList") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Prism")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property CurrentApp() As String
             Get
                 Return CType(Me("CurrentApp"),String)
             End Get
             Set
                 Me("CurrentApp") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("prism"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"prismmobile")>  _
-        Public Property AppCodeList() As String
-            Get
-                Return CType(Me("AppCodeList"),String)
-            End Get
-            Set
-                Me("AppCodeList") = value
             End Set
         End Property
         
@@ -313,15 +192,6 @@ Namespace My
             End Get
         End Property
         
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("PROD"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"UAT"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"TEST"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"DEV"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"VM")>  _
-        Public ReadOnly Property DBList() As String
-            Get
-                Return CType(Me("DBList"),String)
-            End Get
-        End Property
-        
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("feature")>  _
@@ -332,64 +202,6 @@ Namespace My
             Set
                 Me("PatchRunnerFilter") = value
             End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("\database")>  _
-        Public Property DBDirOffset() As String
-            Get
-                Return CType(Me("DBDirOffset"),String)
-            End Get
-            Set
-                Me("DBDirOffset") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("\database\TPDS")>  _
-        Public Property ExtrasDirList() As String
-            Get
-                Return CType(Me("ExtrasDirList"),String)
-            End Get
-            Set
-                Me("ExtrasDirList") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("PRJROV"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"???")>  _
-        Public Property JiraProject() As String
-            Get
-                Return CType(Me("JiraProject"),String)
-            End Get
-            Set
-                Me("JiraProject") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("database")>  _
-        Public Property DBRepoPathMask() As String
-            Get
-                Return CType(Me("DBRepoPathMask"),String)
-            End Get
-            Set
-                Me("DBRepoPathMask") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.SpecialSettingAttribute(Global.System.Configuration.SpecialSetting.ConnectionString),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=C:\SQLServerCompact\GitPatcherSettingDB.sdf")>  _
-        Public ReadOnly Property GitPatcherSettingDBConnectionString() As String
-            Get
-                Return CType(Me("GitPatcherSettingDBConnectionString"),String)
-            End Get
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _

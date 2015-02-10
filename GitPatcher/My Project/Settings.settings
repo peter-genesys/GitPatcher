@@ -2,51 +2,17 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
   <Profiles />
   <Settings>
-    <Setting Name="RepoList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">F:\apex_apps</Value>
-    </Setting>
     <Setting Name="CurrentRepo" Type="System.String" Scope="User">
-      <Value Profile="(Default)">F:\apex_apps</Value>
-    </Setting>
-    <Setting Name="PatchDirOffset" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\patch</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SQLpath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Oracle\product\11.2.0\client_1\sqlplus.exe</Value>
     </Setting>
-    <Setting Name="TNSList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">ISPROD
-ISUAT
-ISTEST
-ISDEVL
-VM</Value>
-    </Setting>
     <Setting Name="CurrentDB" Type="System.String" Scope="User">
-      <Value Profile="(Default)">VM</Value>
-    </Setting>
-    <Setting Name="ApexDirOffset" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\apex</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="CurrentApex" Type="System.String" Scope="User">
-      <Value Profile="(Default)">f101</Value>
-    </Setting>
-    <Setting Name="ConnectionList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">bneoda04.thiess.aus:1521:isprod
-bneoda05.thiess.aus:1521:isuat
-bneoda05.thiess.aus:1521:istest
-bneoda05.thiess.aus:1521:isdevl
-127.0.0.1:1521:ORCL</Value>
-    </Setting>
-    <Setting Name="AppList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">f101
-f100</Value>
-    </Setting>
-    <Setting Name="ParsingSchemaList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">tpds
-tpds</Value>
-    </Setting>
-    <Setting Name="JDBCjar" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\oracle\jdbc\lib\ojdbc5.jar</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SMTPhost" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -55,9 +21,7 @@ tpds</Value>
       <Value Profile="(Default)">25</Value>
     </Setting>
     <Setting Name="RecipientList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">CFinney
-JHewett
-PBurgess</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="RecipientDomain" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -65,16 +29,8 @@ PBurgess</Value>
     <Setting Name="MinPatch" Type="System.String" Scope="Application">
       <Value Profile="(Default)">TRK-01_01</Value>
     </Setting>
-    <Setting Name="ApplicationsList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Prism
-Prism Mobile</Value>
-    </Setting>
     <Setting Name="CurrentApp" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Prism</Value>
-    </Setting>
-    <Setting Name="AppCodeList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">prism
-prismmobile</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="GITpath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Program Files (x86)\Git\bin\git.exe</Value>
@@ -85,36 +41,8 @@ uat
 test
 develop</Value>
     </Setting>
-    <Setting Name="DBList" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">PROD
-UAT
-TEST
-DEV
-VM</Value>
-    </Setting>
     <Setting Name="PatchRunnerFilter" Type="System.String" Scope="User">
       <Value Profile="(Default)">feature</Value>
-    </Setting>
-    <Setting Name="DBDirOffset" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\database</Value>
-    </Setting>
-    <Setting Name="ExtrasDirList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\database\TPDS</Value>
-    </Setting>
-    <Setting Name="JiraProject" Type="System.String" Scope="User">
-      <Value Profile="(Default)">PRJROV
-???</Value>
-    </Setting>
-    <Setting Name="DBRepoPathMask" Type="System.String" Scope="User">
-      <Value Profile="(Default)">database</Value>
-    </Setting>
-    <Setting Name="GitPatcherSettingDBConnectionString" Type="(Connection string)" Scope="Application">
-      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=C:\SQLServerCompact\GitPatcherSettingDB.sdf&lt;/ConnectionString&gt;
-  &lt;ProviderName&gt;Microsoft.SqlServerCe.Client.4.0&lt;/ProviderName&gt;
-&lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=C:\SQLServerCompact\GitPatcherSettingDB.sdf</Value>
     </Setting>
     <Setting Name="PatchExportPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">F:\export</Value>

@@ -361,21 +361,21 @@
     End Function
 
 
-    Public Sub setApplication(ByVal Application As String, applicationIndex As Integer)
+    'Public Sub setApplication(ByVal Application As String, applicationIndex As Integer)
 
-        gApplication = Application
+    '    gApplication = Application
 
-        'derive when application changes
-        'gAppCode = Trim(My.Settings.AppCodeList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
-        gApex = Trim(My.Settings.AppList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
-        gParsingSchema = Trim(My.Settings.ParsingSchemaList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
-        gJiraProject = Common.cleanString((My.Settings.JiraProject.Split(Chr(10))(applicationIndex)))
+    '    'derive when application changes
+    '    'gAppCode = Trim(My.Settings.AppCodeList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
+    '    gApex = Trim(My.Settings.AppList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
+    '    gParsingSchema = Trim(My.Settings.ParsingSchemaList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
+    '    gJiraProject = Common.cleanString((My.Settings.JiraProject.Split(Chr(10))(applicationIndex)))
 
-        'My.Settings.CurrentApex = gApex
-        'My.Settings.CurrentApp = gApplication
-        My.Settings.Save()
+    '    'My.Settings.CurrentApex = gApex
+    '    'My.Settings.CurrentApp = gApplication
+    '    My.Settings.Save()
 
-    End Sub
+    'End Sub
 
   
     Public Function currentConnection() As String

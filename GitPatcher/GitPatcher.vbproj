@@ -174,12 +174,6 @@
     <Compile Include="FileInfoEx.vb" />
     <Compile Include="FileIO.vb" />
     <Compile Include="GitSharpFascade.vb" />
-    <Compile Include="Config.Designer.vb">
-      <DependentUpon>Config.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Config.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Globals.vb" />
     <Compile Include="Host.vb" />
     <Compile Include="Logger.vb" />
@@ -238,9 +232,6 @@
   <ItemGroup>
     <EmbeddedResource Include="ChoiceDialog.resx">
       <DependentUpon>ChoiceDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Config.resx">
-      <DependentUpon>Config.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AppSettings.resx">
       <DependentUpon>AppSettings.vb</DependentUpon>

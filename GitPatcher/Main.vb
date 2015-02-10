@@ -33,15 +33,24 @@
 
     Public Sub loadHotFixDBs()
         HotFixToolStripComboBox.Items.Clear()
-        For Each DB In My.Settings.DBList.Split(Chr(10))
-            DB = Trim(DB)
-            DB = DB.Replace(Chr(13), "")
-            If Globals.deriveHotfixBranch(DB).Length Then
-                'DB has an assoc hotfix branch so list it.
-                HotFixToolStripComboBox.Items.Add(DB)
-            End If
-  
-        Next
+
+        HotFixToolStripComboBox.Items.Add("PROD")
+        HotFixToolStripComboBox.Items.Add("UAT")
+        HotFixToolStripComboBox.Items.Add("TEST")
+        HotFixToolStripComboBox.Items.Add("DEV")
+
+
+        'For Each DB In My.Settings.DBList.Split(Chr(10))
+        '    DB = Trim(DB)
+        '    DB = DB.Replace(Chr(13), "")
+        '    If Globals.deriveHotfixBranch(DB).Length Then
+        '        'DB has an assoc hotfix branch so list it.
+        '        HotFixToolStripComboBox.Items.Add(DB)
+        '    End If
+
+        'Next
+
+
         HotFixToolStripComboBox.SelectedIndex = 0
 
     End Sub
@@ -159,9 +168,7 @@
     End Sub
 
     Private Sub ApplicationListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ApplicationListComboBox.SelectedIndexChanged
-
-        Globals.setApplication(ApplicationListComboBox.SelectedItem, ApplicationListComboBox.SelectedIndex)
-
+ 
         showAppSettings()
 
     End Sub

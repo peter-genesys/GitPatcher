@@ -42,7 +42,6 @@ F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.xml
 F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.pdb
 F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.vbprojResolveAssemblyReference.cache
 F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.ChoiceDialog.resources
-F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.Config.resources
 F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.CreatePatchCollection.resources
 F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.GitPatcher.resources
 F:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.Main.resources
