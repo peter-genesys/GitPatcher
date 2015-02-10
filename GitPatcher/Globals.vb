@@ -1,13 +1,13 @@
 ﻿Module Globals
 
     Private gDB As String = My.Settings.CurrentDB
-    Private gApex As String
+
     Private gRepo As String
-    Private gApplication As String
+
     Private gParsingSchema As String
     Private gJiraProject As String
- 
- 
+
+
     Public Sub setRepo(Repo As String)
 
         gRepo = Repo
@@ -28,13 +28,13 @@
         gRepoPath = Common.dos_path_trailing_slash(RepoPath)
     End Sub
 
- 
+
     Public Function getRepoPath() As String
 
         Return gRepoPath
 
     End Function
- 
+
 
     Private gApexRelPath As String
 
@@ -64,7 +64,7 @@
 
 
 
- 
+
     Private gDatabaseRelPath As String
 
     Public Sub setDatabaseRelPath(DatabaseRelPath As String)
@@ -75,7 +75,7 @@
         Return gDatabaseRelPath
     End Function
 
- 
+
     Private gExtrasRelPath As String
 
     Public Sub setExtrasRelPath(ExtrasRelPath As String)
@@ -96,7 +96,7 @@
         Return gPatchRelPath
     End Function
 
-      
+
     Private gPatchExportPath As String
 
     Public Sub setPatchExportPath(PatchExportPath As String)
@@ -107,7 +107,7 @@
         Return gPatchExportPath
     End Function
 
- 
+
     Private gOrgCode As String
 
     Public Sub setOrgCode(OrgCode As String)
@@ -118,7 +118,7 @@
         Return gOrgCode
     End Function
 
-  
+
     Private gOrgName As String
 
     Public Sub setOrgName(OrgName As String)
@@ -153,7 +153,7 @@
     Public Function getCONNECT() As String
         Return gCONNECT
     End Function
- 
+
 
     Private gAppCode As String
 
@@ -196,7 +196,7 @@
     Public Function getSchema() As String
         Return gSchema
     End Function
- 
+
     Private gOrgInFeature As String
 
     Public Sub setOrgInFeature(OrgInFeature As String)
@@ -216,8 +216,8 @@
     Public Function getAppInFeature() As String
         Return gAppInFeature
     End Function
- 
- 
+
+
 
     Public Function XMLRepoFilePath() As String
 
@@ -242,11 +242,6 @@
 
     End Function
 
-    'Public Function currentApexApp() As String
-    '
-    '    Return gApexApp
-    '
-    'End Function
  
 
 
@@ -264,26 +259,26 @@
 
 
         Return gRepoPath & gPatchRelPath
- 
+
     End Function
 
     Public Function RootApexDir() As String
 
         Return gRepoPath & gApexRelPath
- 
+
     End Function
 
     Public Function RootDBDir() As String
 
 
         Return gRepoPath & gDatabaseRelPath
- 
+
 
     End Function
 
 
     Public Function DBRepoPathMask() As String
-  
+
         Return gDatabaseRelPath
 
     End Function
@@ -298,13 +293,21 @@
 
 
 
+
  
 
-    Public Function currentApplication() As String
+    Private gAppName As String
 
-        Return gApplication
+    Public Sub setAppName(AppName As String)
+        gAppName = AppName
+    End Sub
 
+    Public Function getAppName() As String
+        Return gAppName
     End Function
+
+
+
 
     Public Function currentParsingSchema() As String
 
@@ -342,9 +345,9 @@
 
 
 
- 
 
- 
+
+
     Public Sub setPatchRunnerFilter(filter As String)
 
         Logger.Note("SAVE PatchRunnerFilter", filter)
@@ -360,53 +363,19 @@
 
     End Function
 
-
-    'Public Sub setApplication(ByVal Application As String, applicationIndex As Integer)
-
-    '    gApplication = Application
-
-    '    'derive when application changes
-    '    'gAppCode = Trim(My.Settings.AppCodeList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
-    '    gApex = Trim(My.Settings.AppList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
-    '    gParsingSchema = Trim(My.Settings.ParsingSchemaList.Split(Chr(10))(applicationIndex)).Replace(Chr(13), "")
-    '    gJiraProject = Common.cleanString((My.Settings.JiraProject.Split(Chr(10))(applicationIndex)))
-
-    '    'My.Settings.CurrentApex = gApex
-    '    'My.Settings.CurrentApp = gApplication
-    '    My.Settings.Save()
-
-    'End Sub
-
+ 
   
     Public Function currentConnection() As String
 
         Return getCONNECT()
-
-        'Dim l_Index As Integer = -1
-        'For Each db In My.Settings.DBList.Split(Chr(10))
-        '    l_Index = l_Index + 1
-        '    db = Trim(db).Replace(Chr(13), "")
-        '    If db = gDB Then
-        '        Return Trim(My.Settings.ConnectionList.Split(Chr(10))(l_Index)).Replace(Chr(13), "")
-        '    End If
-        'Next
-        'Return ""
+ 
 
     End Function
 
     Public Function currentTNS() As String
 
         Return getTNS()
-
-        'Dim l_Index As Integer = -1
-        'For Each db In My.Settings.DBList.Split(Chr(10))
-        '    l_Index = l_Index + 1
-        '    db = Trim(db).Replace(Chr(13), "")
-        '    If db = gDB Then
-        '        Return Trim(My.Settings.TNSList.Split(Chr(10))(l_Index)).Replace(Chr(13), "")
-        '    End If
-        'Next
-        'Return ""
+ 
 
     End Function
 

@@ -160,7 +160,8 @@
     End Sub
 
     Private Sub ApplicationListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ApplicationListComboBox.SelectedIndexChanged
- 
+
+        Globals.setAppName(ApplicationListComboBox.Text)
         showAppSettings()
 
     End Sub

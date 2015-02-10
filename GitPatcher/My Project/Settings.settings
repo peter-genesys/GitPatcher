@@ -11,9 +11,6 @@
     <Setting Name="CurrentDB" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="CurrentApex" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="SMTPhost" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
@@ -29,23 +26,11 @@
     <Setting Name="MinPatch" Type="System.String" Scope="Application">
       <Value Profile="(Default)">TRK-01_01</Value>
     </Setting>
-    <Setting Name="CurrentApp" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="GITpath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Program Files (x86)\Git\bin\git.exe</Value>
     </Setting>
-    <Setting Name="HotFixBranches" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">master
-uat
-test
-develop</Value>
-    </Setting>
     <Setting Name="PatchRunnerFilter" Type="System.String" Scope="User">
       <Value Profile="(Default)">feature</Value>
-    </Setting>
-    <Setting Name="PatchExportPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">F:\export</Value>
     </Setting>
     <Setting Name="XMLRepoFilePath" Type="System.String" Scope="User">
       <Value Profile="(Default)">F:\GitRepos.xml</Value>

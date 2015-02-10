@@ -93,18 +93,6 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property CurrentApex() As String
-            Get
-                Return CType(Me("CurrentApex"),String)
-            End Get
-            Set
-                Me("CurrentApex") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property SMTPhost() As String
             Get
                 Return CType(Me("SMTPhost"),String)
@@ -161,18 +149,6 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property CurrentApp() As String
-            Get
-                Return CType(Me("CurrentApp"),String)
-            End Get
-            Set
-                Me("CurrentApp") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("C:\Program Files (x86)\Git\bin\git.exe")>  _
         Public Property GITpath() As String
             Get
@@ -181,15 +157,6 @@ Namespace My
             Set
                 Me("GITpath") = value
             End Set
-        End Property
-        
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("master"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"uat"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"test"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"develop")>  _
-        Public ReadOnly Property HotFixBranches() As String
-            Get
-                Return CType(Me("HotFixBranches"),String)
-            End Get
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
@@ -201,18 +168,6 @@ Namespace My
             End Get
             Set
                 Me("PatchRunnerFilter") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("F:\export")>  _
-        Public Property PatchExportPath() As String
-            Get
-                Return CType(Me("PatchExportPath"),String)
-            End Get
-            Set
-                Me("PatchExportPath") = value
             End Set
         End Property
         

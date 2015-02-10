@@ -10,7 +10,7 @@ Public Class CreatePatchCollection
     Public Sub New(ByVal iPatchName As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
 
         If String.IsNullOrEmpty(iPatchName) Then
-            Dim l_app_version = InputBox("Please enter a new version for " & Globals.currentAppCode & " in the format: 2.17.01", "New " & Globals.currentApplication & " Version")
+            Dim l_app_version = InputBox("Please enter a new version for " & Globals.currentAppCode & " in the format: 2.17.01", "New " & Globals.getAppName & " Version")
 
             pPatchName = Globals.currentAppCode & "-" & l_app_version
         Else
@@ -59,7 +59,7 @@ Public Class CreatePatchCollection
         Me.Text = "CreatePatchSet - Creating a " & iCreatePatchType & " for " & Globals.currentTNS
 
         AvailablePatchesLabel.Text = "Available" & Chr(10) & iFindPatchTypes & Chr(10) & "Patches"
- 
+
     End Sub
 
 
@@ -383,7 +383,7 @@ Public Class CreatePatchCollection
 
                 'Always connects as PATCH_ADMIN
                 l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database")
- 
+
                 l_master_file.WriteLine("set serveroutput on;")
 
 
@@ -766,7 +766,7 @@ Public Class CreatePatchCollection
     Public Shared Sub createCollectionProcess(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String, iTargetDB As String)
 
         Dim lcurrentDB As String = Globals.getDB
-        Dim l_app_version = InputBox("Please enter Patchset Code for " & Globals.currentAppCode & "", "New " & Globals.currentApplication & " Version")
+        Dim l_app_version = InputBox("Please enter Patchset Code for " & Globals.currentAppCode & "", "New " & Globals.getAppName & " Version")
 
         'l_app_version = Globals.currentAppCode & "-" & l_app_version
 
