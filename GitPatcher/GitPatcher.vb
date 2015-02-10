@@ -86,19 +86,34 @@ Public Class GitPatcher
     Private m_ChildFormNumber As Integer
 
     Public Sub newMainWindow()
-        Dim newchildform As New Main
-        newchildform.MdiParent = Me ' 
-        newchildform.Show()
+
+        Try
+            Dim newchildform As New Main
+            newchildform.MdiParent = Me ' 
+            newchildform.Show()
+        Catch ex As Exception
+            MsgBox("Failure to start Main Form: " & ex.Source & ex.Message)
+            'If you get an error initialising the Main form, open the Configuration form instead.
+            newConfigWindow()
+
+        End Try
+
+
     End Sub
 
     Private Sub MainToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MainToolStripMenuItem.Click
         newMainWindow()
     End Sub
 
-    Private Sub ConfigToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ConfigToolStripMenuItem.Click
+    Public Sub newConfigWindow()
         Dim newchildform As New Configuration
         newchildform.MdiParent = Me '  
         newchildform.Show()
+    End Sub
+
+ 
+    Private Sub ConfigToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ConfigToolStripMenuItem.Click
+        newConfigWindow
     End Sub
 
     Private Sub GitPatcher_Load(sender As Object, e As EventArgs) Handles MyBase.Load

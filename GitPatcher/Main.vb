@@ -1,8 +1,9 @@
 ﻿Public Class Main
 
     Public Sub New()
+
         InitializeComponent()
- 
+
         Dim DB_count As Integer = -1
         For Each DB In DBComboBox.Items
             DB_count = DB_count + 1
@@ -11,7 +12,7 @@
             End If
 
         Next
-  
+
 
         'SelectedIndex = 4 'Default to VM
         loadRepos()
@@ -19,7 +20,7 @@
         'loadApexApps()
         loadHotFixDBs()
         MinPatchTextBox.Text = My.Settings.MinPatch
- 
+
     End Sub
 
 
@@ -38,19 +39,7 @@
         HotFixToolStripComboBox.Items.Add("UAT")
         HotFixToolStripComboBox.Items.Add("TEST")
         HotFixToolStripComboBox.Items.Add("DEV")
-
-
-        'For Each DB In My.Settings.DBList.Split(Chr(10))
-        '    DB = Trim(DB)
-        '    DB = DB.Replace(Chr(13), "")
-        '    If Globals.deriveHotfixBranch(DB).Length Then
-        '        'DB has an assoc hotfix branch so list it.
-        '        HotFixToolStripComboBox.Items.Add(DB)
-        '    End If
-
-        'Next
-
-
+ 
         HotFixToolStripComboBox.SelectedIndex = 0
 
     End Sub
@@ -117,7 +106,10 @@
     Public Sub loadOrgs()
 
         OrgSettings.readOrgs(OrgComboBox, OrgComboBox.Text, RepoComboBox.Text)
-
+ 
+        If String.IsNullOrEmpty(Globals.getDB) Then
+            Globals.setDB("VM")
+        End If
         showOrgSettings()
 
     End Sub
