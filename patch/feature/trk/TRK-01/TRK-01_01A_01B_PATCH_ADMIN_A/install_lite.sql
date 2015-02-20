@@ -23,6 +23,10 @@ CONNECT &&PATCH_ADMIN_user/&&PATCH_ADMIN_password@&&database
 set serveroutput on;
 select user||'@'||global_name Connection from global_name;
 
+PROMPT PROCEDURES
+
+@&&patch_path.create_db_link.prc;
+Show error;
 
 PROMPT DATABASE LINKS
 
@@ -35,7 +39,7 @@ PROMPT patch_admin_forward_dblink.dblink
 Show error;
 
 PROMPT VIEWS
-
+WHENEVER SQLERROR CONTINUE
 PROMPT patches_unapplied_v.vw 
 @&&patch_path.patches_unapplied_v.vw;
 Show error;
@@ -44,9 +48,18 @@ PROMPT components_unapplied_v.vw
 @&&patch_path.components_unapplied_v.vw;
 Show error;
 
+
 PROMPT patches_unpromoted_v.vw 
 @&&patch_path.patches_unpromoted_v.vw;
 Show error;
+WHENEVER SQLERROR EXIT FAILURE ROLLBACK
+
+execute dbms_utility.compile_schema(USER);
+
+select 'INVALID '||object_type||': '||owner ||'.' || OBJECT_NAME "Invalid Objects"
+from sys.dba_objects 
+where owner like UPPER(USER)
+and status ='INVALID';
 
 COMMIT;
 COMMIT;

@@ -31,6 +31,7 @@ execute &&PATCH_ADMIN_user..patch_installer.patch_started( -
  ,i_supplementary      => 'A' -
  ,i_patch_desc         => 'Recreate database links' -
  ,i_patch_componants   => 'patch_admin_backward_dblink.dblink' -
+||',patch_path.create_db_link.prc' -
 ||',patch_admin_forward_dblink.dblink' -
 ||',patches_unapplied_v.vw' -
 ||',components_unapplied_v.vw' -
@@ -54,6 +55,10 @@ i_patch_name     => 'TRK-01_01A_01B_PATCH_ADMIN_A' -
 ,i_prereq_patch  => 'TRK-01_01' );
 select user||'@'||global_name Connection from global_name;
 
+PROMPT PROCEDURES
+
+@&&patch_path.create_db_link.prc;
+Show error;
 
 PROMPT DATABASE LINKS
 
@@ -66,7 +71,7 @@ PROMPT patch_admin_forward_dblink.dblink
 Show error;
 
 PROMPT VIEWS
-
+WHENEVER SQLERROR CONTINUE
 PROMPT patches_unapplied_v.vw 
 @&&patch_path.patches_unapplied_v.vw;
 Show error;
@@ -78,6 +83,7 @@ Show error;
 PROMPT patches_unpromoted_v.vw 
 @&&patch_path.patches_unpromoted_v.vw;
 Show error;
+WHENEVER SQLERROR EXIT FAILURE ROLLBACK
 
 COMMIT;
 PROMPT Compiling objects in schema PATCH_ADMIN
