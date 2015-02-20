@@ -11,10 +11,10 @@ PROMPT To LOOPBACK - Use &&database
 
 SET SERVEROUTPUT ON SIZE 1000000
 begin
-  patch_invoker.create_db_link(i_schema       => '&&PATCH_ADMIN_USER'
-                              ,i_db_name      => '&&PATCH_ADMIN_FORWARD_DB'
-                              ,i_db_link_name => 'PATCH_ADMIN_FORWARD_DBLINK'
-                              ,i_password     => '&&PATCH_ADMIN_PASSWORD');
+  create_db_link(i_schema       => '&&PATCH_ADMIN_USER'
+                ,i_db_name      => '&&PATCH_ADMIN_FORWARD_DB'
+                ,i_db_link_name => 'PATCH_ADMIN_FORWARD_DBLINK'
+                ,i_password     => '&&PATCH_ADMIN_PASSWORD');
 
 end;
 /
