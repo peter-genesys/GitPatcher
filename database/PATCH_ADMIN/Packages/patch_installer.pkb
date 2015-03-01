@@ -463,7 +463,7 @@ FUNCTION get_patch_dependency_tab RETURN patches_tab IS
   l_patch_stack   patches_tab;
   l_patch_set     patch_set_tab;
  
-  CURSOR   c_patches IS 
+  CURSOR   cu_patches IS 
   select   p.*
   from     patches p
   where    success_yn = 'Y' 
@@ -474,20 +474,25 @@ FUNCTION get_patch_dependency_tab RETURN patches_tab IS
   PROCEDURE stack_patch(i_patches         IN patches%ROWTYPE
                       , i_recursion_level IN INTEGER) IS
                       
-    CURSOR c_patch_prereqs(cp_patch_name VARCHAR2) IS
+    CURSOR cu_patch_prereqs(c_patch_name VARCHAR2) IS
     select p.* 
     from   patches p, 
            patch_prereqs pr
     where  p.patch_name = pr.prereq_patch 
-    and    pr.patch_name = cp_patch_name;  
+    and    pr.patch_name = c_patch_name;  
 
-    CURSOR c_patch_superseding(cp_patch_name VARCHAR2) IS
+    CURSOR cu_patch_superseding(c_patch_name VARCHAR2) IS
     select p.* 
     from   patches p, 
            patch_supersedes ps
     where  p.patch_name = ps.patch_name 
-    and    ps.supersedes_patch = cp_patch_name;  
+    and    ps.supersedes_patch = c_patch_name;  
 	
+
+     TYPE patch_tab_typ IS TABLE OF patches%ROWTYPE;
+     l_patch_prereqs_tab    patch_tab_typ;
+     l_patch_supersedes_tab patch_tab_typ;
+
                   
   BEGIN
     IF i_recursion_level > 1000 THEN
@@ -495,29 +500,59 @@ FUNCTION get_patch_dependency_tab RETURN patches_tab IS
     END IF;
     
     IF NOT l_patch_set.EXISTS(i_patches.patch_name) THEN
-    
-      FOR l_prereq_patch in c_patch_prereqs(cp_patch_name => i_patches.patch_name) LOOP
-	    --Before we stack the prereq patch, lets check whether it has been superseded.
-	    declare
-		  l_superseded boolean := false;
-		begin
-	      FOR l_superseding_patch in c_patch_superseding(cp_patch_name => l_prereq_patch.patch_name) LOOP
-			--Stack superseding patches instead...
-			l_superseded := true;
-            stack_patch(i_patches         => l_superseding_patch
-                      , i_recursion_level => i_recursion_level + 1);
-					  
-          END LOOP;
+     
+
+      OPEN cu_patch_prereqs(c_patch_name => i_patches.patch_name); 
+      FETCH cu_patch_prereqs BULK COLLECT INTO l_patch_prereqs_tab;
+      CLOSE cu_patch_prereqs;
  
-		  --exclude superseded from the dependancies too! (but keep retired patches)
-		  if not l_superseded then
-		    --stack the prereq patch
-            stack_patch(i_patches         => l_prereq_patch
-                      , i_recursion_level => i_recursion_level + 1);
-		  end if;
-		end;
+      declare
+        l_prereq_index BINARY_INTEGER;
+      begin  
+        --Loop thru the prereq patches.
+        l_prereq_index := l_patch_prereqs_tab.first;
+        WHILE l_prereq_index IS NOT NULL LOOP
   
-      END LOOP;
+          --Before we stack the prereq patch, lets check whether it has been superseded.
+          declare
+            l_superseded boolean := false;
+          begin
+
+/*
+            OPEN cu_patch_superseding(c_patch_name => l_patch_prereqs_tab(l_prereq_index).patch_name); 
+            FETCH cu_patch_superseding BULK COLLECT INTO l_patch_supersedes_tab;
+            CLOSE cu_patch_superseding;
+       
+            declare
+              l_supersede_index BINARY_INTEGER;
+            begin  
+              --Loop thru the prereq patches.
+              l_supersede_index := l_patch_supersedes_tab.first;
+              WHILE l_supersede_index IS NOT NULL LOOP
+ 
+                --Stack superseding patches instead...
+                l_superseded := true;
+                RAISE_APPLICATION_ERROR(-20000,'Supersede detected');
+                  stack_patch(i_patches         => l_patch_supersedes_tab(l_supersede_index)
+                            , i_recursion_level => i_recursion_level + 1);
+                  
+
+                l_supersede_index := l_patch_supersedes_tab.next(l_supersede_index);             
+              END LOOP;
+            end;
+       */
+            --exclude superseded from the dependancies too! (but keep retired patches)
+            if not l_superseded then
+              --stack the prereq patch
+                  stack_patch(i_patches         => l_patch_prereqs_tab(l_prereq_index)
+                            , i_recursion_level => i_recursion_level + 1);
+            end if;
+          end;
+    
+          l_prereq_index := l_patch_prereqs_tab.next(l_prereq_index);
+        END LOOP;
+      end;
+ 
  
       l_patch_stack.EXTEND;
       l_patch_stack(l_patch_stack.LAST) := i_patches;
@@ -532,7 +567,7 @@ BEGIN
   --initialise the stack.
   l_patch_stack := patches_tab();
  
-  FOR l_patch IN c_patches LOOP
+  FOR l_patch IN cu_patches LOOP
   
     stack_patch(i_patches         => l_patch
               , i_recursion_level => 1);
@@ -707,4 +742,4 @@ END;
  
 END;
 /
-
+show error;
