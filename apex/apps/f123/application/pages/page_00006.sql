@@ -20,7 +20,7 @@ wwv_flow_api.create_page (
  ,p_help_text => 
 'No help is available for this page.'
  ,p_last_updated_by => 'PETER'
- ,p_last_upd_yyyymmddhh24miss => '20150121121544'
+ ,p_last_upd_yyyymmddhh24miss => '20150302003238'
   );
 null;
  
@@ -351,9 +351,10 @@ wwv_flow_api.create_report_columns (
   p_column_heading=> 'Patch Supersedes Id',
   p_column_alignment=>'LEFT',
   p_heading_alignment=>'CENTER',
+  p_default_sort_column_sequence=>0,
   p_disable_sort_column=>'Y',
   p_sum_column=> 'N',
-  p_hidden_column=> 'N',
+  p_hidden_column=> 'Y',
   p_display_as=>'ESCAPE_SC',
   p_is_required=> false,
   p_pk_col_source=> s,
@@ -435,9 +436,10 @@ wwv_flow_api.create_report_columns (
   p_column_heading=> 'Created By',
   p_column_alignment=>'LEFT',
   p_heading_alignment=>'CENTER',
+  p_default_sort_column_sequence=>0,
   p_disable_sort_column=>'Y',
   p_sum_column=> 'N',
-  p_hidden_column=> 'N',
+  p_hidden_column=> 'Y',
   p_display_as=>'ESCAPE_SC',
   p_is_required=> false,
   p_pk_col_source=> s,
@@ -459,9 +461,10 @@ wwv_flow_api.create_report_columns (
   p_column_heading=> 'Created On',
   p_column_alignment=>'LEFT',
   p_heading_alignment=>'CENTER',
+  p_default_sort_column_sequence=>0,
   p_disable_sort_column=>'Y',
   p_sum_column=> 'N',
-  p_hidden_column=> 'N',
+  p_hidden_column=> 'Y',
   p_display_as=>'ESCAPE_SC',
   p_is_required=> false,
   p_pk_col_source=> s,
@@ -483,9 +486,10 @@ wwv_flow_api.create_report_columns (
   p_column_heading=> 'Last Updated By',
   p_column_alignment=>'LEFT',
   p_heading_alignment=>'CENTER',
+  p_default_sort_column_sequence=>0,
   p_disable_sort_column=>'Y',
   p_sum_column=> 'N',
-  p_hidden_column=> 'N',
+  p_hidden_column=> 'Y',
   p_display_as=>'ESCAPE_SC',
   p_is_required=> false,
   p_pk_col_source=> s,
@@ -507,9 +511,10 @@ wwv_flow_api.create_report_columns (
   p_column_heading=> 'Last Updated On',
   p_column_alignment=>'LEFT',
   p_heading_alignment=>'CENTER',
+  p_default_sort_column_sequence=>0,
   p_disable_sort_column=>'Y',
   p_sum_column=> 'N',
-  p_hidden_column=> 'N',
+  p_hidden_column=> 'Y',
   p_display_as=>'ESCAPE_SC',
   p_is_required=> false,
   p_pk_col_source=> s,

@@ -20,7 +20,7 @@ wwv_flow_api.create_page (
  ,p_help_text => 
 'No help is available for this page.'
  ,p_last_updated_by => 'PETER'
- ,p_last_upd_yyyymmddhh24miss => '20150121132001'
+ ,p_last_upd_yyyymmddhh24miss => '20150302002641'
   );
 null;
  
@@ -62,8 +62,11 @@ s:=s||'_COUNT,'||unistr('\000a')||
 '    PATCHES_V.LAST_UPDATED_BY as LAST_UPDATED_BY,'||unistr('\000a')||
 '    PATCHES_V.PATCH_TYPE as PATCH_TYPE,'||unistr('\000a')||
 '    null as dependency,'||unistr('\000a')||
-'    null as edit'||unistr('\000a')||
-' from PATCHES_V PATCHES_V';
+'    null as edit,'||unistr('\000a')||
+'    prereq_count,'||unistr('\000a')||
+'    supersedes_count,'||unistr('\000a')||
+'    superseded_count'||unistr('\000a')||
+' from PATCHES_V ';
 
 wwv_flow_api.create_page_plug (
   p_id=> 40767123845551144 + wwv_flow_api.g_id_offset,
@@ -126,8 +129,11 @@ a1:=a1||'_COUNT,'||unistr('\000a')||
 '    PATCHES_V.LAST_UPDATED_BY as LAST_UPDATED_BY,'||unistr('\000a')||
 '    PATCHES_V.PATCH_TYPE as PATCH_TYPE,'||unistr('\000a')||
 '    null as dependency,'||unistr('\000a')||
-'    null as edit'||unistr('\000a')||
-' from PATCHES_V PATCHES_V';
+'    null as edit,'||unistr('\000a')||
+'    prereq_count,'||unistr('\000a')||
+'    supersedes_count,'||unistr('\000a')||
+'    superseded_count'||unistr('\000a')||
+' from PATCHES_V ';
 
 wwv_flow_api.create_worksheet(
   p_id=> 40767208766551144+wwv_flow_api.g_id_offset,
@@ -664,6 +670,7 @@ wwv_flow_api.create_worksheet_column(
   p_display_text_as        =>'ESCAPE_SC',
   p_heading_alignment      =>'CENTER',
   p_column_alignment       =>'RIGHT',
+  p_format_mask            =>'DD-MON-YYYY HH24:MI',
   p_tz_dependent           =>'N',
   p_rpt_distinct_lov       =>'Y',
   p_rpt_show_filter_lov    =>'D',
@@ -1193,10 +1200,121 @@ wwv_flow_api.create_worksheet_column(
   p_help_text              =>'');
 end;
 /
+begin
+wwv_flow_api.create_worksheet_column(
+  p_id => 17954908239755193+wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_page_id=> 2,
+  p_worksheet_id => 40767208766551144+wwv_flow_api.g_id_offset,
+  p_db_column_name         =>'PREREQ_COUNT',
+  p_display_order          =>28,
+  p_column_identifier      =>'AB',
+  p_column_label           =>'Prereq Count',
+  p_report_label           =>'Prereq Count',
+  p_sync_form_label        =>'Y',
+  p_display_in_default_rpt =>'Y',
+  p_is_sortable            =>'Y',
+  p_allow_sorting          =>'Y',
+  p_allow_filtering        =>'Y',
+  p_allow_highlighting     =>'Y',
+  p_allow_ctrl_breaks      =>'Y',
+  p_allow_aggregations     =>'Y',
+  p_allow_computations     =>'Y',
+  p_allow_charting         =>'Y',
+  p_allow_group_by         =>'Y',
+  p_allow_hide             =>'Y',
+  p_others_may_edit        =>'Y',
+  p_others_may_view        =>'Y',
+  p_column_type            =>'NUMBER',
+  p_display_as             =>'TEXT',
+  p_display_text_as        =>'ESCAPE_SC',
+  p_heading_alignment      =>'CENTER',
+  p_column_alignment       =>'RIGHT',
+  p_tz_dependent           =>'N',
+  p_rpt_distinct_lov       =>'Y',
+  p_rpt_show_filter_lov    =>'D',
+  p_rpt_filter_date_ranges =>'ALL',
+  p_help_text              =>'');
+end;
+/
+begin
+wwv_flow_api.create_worksheet_column(
+  p_id => 17955002409755205+wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_page_id=> 2,
+  p_worksheet_id => 40767208766551144+wwv_flow_api.g_id_offset,
+  p_db_column_name         =>'SUPERSEDES_COUNT',
+  p_display_order          =>29,
+  p_column_identifier      =>'AC',
+  p_column_label           =>'Supersedes Count',
+  p_report_label           =>'Supersedes Count',
+  p_sync_form_label        =>'Y',
+  p_display_in_default_rpt =>'Y',
+  p_is_sortable            =>'Y',
+  p_allow_sorting          =>'Y',
+  p_allow_filtering        =>'Y',
+  p_allow_highlighting     =>'Y',
+  p_allow_ctrl_breaks      =>'Y',
+  p_allow_aggregations     =>'Y',
+  p_allow_computations     =>'Y',
+  p_allow_charting         =>'Y',
+  p_allow_group_by         =>'Y',
+  p_allow_hide             =>'Y',
+  p_others_may_edit        =>'Y',
+  p_others_may_view        =>'Y',
+  p_column_type            =>'NUMBER',
+  p_display_as             =>'TEXT',
+  p_display_text_as        =>'ESCAPE_SC',
+  p_heading_alignment      =>'CENTER',
+  p_column_alignment       =>'RIGHT',
+  p_tz_dependent           =>'N',
+  p_rpt_distinct_lov       =>'Y',
+  p_rpt_show_filter_lov    =>'D',
+  p_rpt_filter_date_ranges =>'ALL',
+  p_help_text              =>'');
+end;
+/
+begin
+wwv_flow_api.create_worksheet_column(
+  p_id => 17955119515755206+wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_page_id=> 2,
+  p_worksheet_id => 40767208766551144+wwv_flow_api.g_id_offset,
+  p_db_column_name         =>'SUPERSEDED_COUNT',
+  p_display_order          =>30,
+  p_column_identifier      =>'AD',
+  p_column_label           =>'Superseded Count',
+  p_report_label           =>'Superseded Count',
+  p_sync_form_label        =>'Y',
+  p_display_in_default_rpt =>'Y',
+  p_is_sortable            =>'Y',
+  p_allow_sorting          =>'Y',
+  p_allow_filtering        =>'Y',
+  p_allow_highlighting     =>'Y',
+  p_allow_ctrl_breaks      =>'Y',
+  p_allow_aggregations     =>'Y',
+  p_allow_computations     =>'Y',
+  p_allow_charting         =>'Y',
+  p_allow_group_by         =>'Y',
+  p_allow_hide             =>'Y',
+  p_others_may_edit        =>'Y',
+  p_others_may_view        =>'Y',
+  p_column_type            =>'NUMBER',
+  p_display_as             =>'TEXT',
+  p_display_text_as        =>'ESCAPE_SC',
+  p_heading_alignment      =>'CENTER',
+  p_column_alignment       =>'RIGHT',
+  p_tz_dependent           =>'N',
+  p_rpt_distinct_lov       =>'Y',
+  p_rpt_show_filter_lov    =>'D',
+  p_rpt_filter_date_ranges =>'ALL',
+  p_help_text              =>'');
+end;
+/
 declare
     rc1 varchar2(32767) := null;
 begin
-rc1:=rc1||'PATCH_NAME:DB_SCHEMA:BRANCH_NAME:TAG_FROM:TAG_TO:SUPPLEMENTARY:PATCH_DESC:PATCH_CREATE_DATE:NOTE:PATCH_TYPE:DEPENDENCY:EDIT:ROWID';
+rc1:=rc1||'PATCH_NAME:DB_SCHEMA:BRANCH_NAME:TAG_FROM:TAG_TO:SUPPLEMENTARY:PATCH_DESC:PATCH_CREATE_DATE:NOTE:PATCH_TYPE:DEPENDENCY:EDIT:ROWID:PREREQ_COUNT:SUPERSEDES_COUNT:SUPERSEDED_COUNT';
 
 wwv_flow_api.create_worksheet_rpt(
   p_id => 14326823159242212+wwv_flow_api.g_id_offset,
@@ -1225,7 +1343,7 @@ end;
 declare
     rc1 varchar2(32767) := null;
 begin
-rc1:=rc1||'PATCH_NAME:PATCH_DESC:NOTE:PATCH_COMPONANTS:INSTALL_LOG:PATCH_TYPE:DEPENDENCY:EDIT:ROWID';
+rc1:=rc1||'PATCH_NAME:PATCH_DESC:NOTE:PATCH_COMPONANTS:INSTALL_LOG:PATCH_TYPE:DEPENDENCY:EDIT:ROWID:PREREQ_COUNT:SUPERSEDES_COUNT:SUPERSEDED_COUNT';
 
 wwv_flow_api.create_worksheet_rpt(
   p_id => 14327205759256147+wwv_flow_api.g_id_offset,
@@ -1252,7 +1370,121 @@ end;
 declare
     rc1 varchar2(32767) := null;
 begin
-rc1:=rc1||'PATCH_NAME:PATCH_DESC:PATCH_CREATE_DATE:PATCH_TYPE:COMPLETED_DATETIME:SUCCESS_YN:DEPENDENCY:EDIT:ROWID';
+rc1:=rc1||'PATCH_NAME:PATCH_DESC:PATCH_CREATE_DATE:PATCH_TYPE:COMPLETED_DATETIME:SUCCESS_YN:PREREQ_COUNT:DEPENDENCY:EDIT:';
+
+wwv_flow_api.create_worksheet_rpt(
+  p_id => 17956907101777763+wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_page_id=> 2,
+  p_worksheet_id => 40767208766551144+wwv_flow_api.g_id_offset,
+  p_session_id  => null,
+  p_base_report_id  => null+wwv_flow_api.g_id_offset,
+  p_application_user => 'APXWS_ALTERNATIVE',
+  p_name                    =>'Supersedes',
+  p_report_seq              =>10,
+  p_report_alias            =>'179570',
+  p_status                  =>'PUBLIC',
+  p_category_id             =>null+wwv_flow_api.g_id_offset,
+  p_is_default              =>'Y',
+  p_display_rows            =>15,
+  p_report_columns          =>rc1,
+  p_sort_column_1           =>'COMPLETED_DATETIME',
+  p_sort_direction_1        =>'DESC',
+  p_sort_column_2           =>'0',
+  p_sort_direction_2        =>'ASC',
+  p_sort_column_3           =>'0',
+  p_sort_direction_3        =>'ASC',
+  p_sort_column_4           =>'0',
+  p_sort_direction_4        =>'ASC',
+  p_sort_column_5           =>'0',
+  p_sort_direction_5        =>'ASC',
+  p_sort_column_6           =>'0',
+  p_sort_direction_6        =>'ASC',
+  p_break_on                =>'PATCH_TYPE:0:0:0:0:0',
+  p_break_enabled_on        =>'PATCH_TYPE:0:0:0:0:0',
+  p_flashback_enabled       =>'N',
+  p_calendar_display_column =>'');
+end;
+/
+begin
+wwv_flow_api.create_worksheet_condition(
+  p_id => 17957326494783365+wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_page_id=> 2,
+  p_worksheet_id => 40767208766551144+wwv_flow_api.g_id_offset,
+  p_report_id => 17956907101777763+wwv_flow_api.g_id_offset,
+  p_condition_type          =>'FILTER',
+  p_allow_delete            =>'Y',
+  p_column_name             =>'SUPERSEDES_COUNT',
+  p_operator                =>'>',
+  p_expr                    =>'0',
+  p_condition_sql           =>'"SUPERSEDES_COUNT" > to_number(#APXWS_EXPR#)',
+  p_condition_display       =>'#APXWS_COL_NAME# > #APXWS_EXPR_NUMBER#  ',
+  p_enabled                 =>'Y',
+  p_column_format           =>'');
+end;
+/
+declare
+    rc1 varchar2(32767) := null;
+begin
+rc1:=rc1||'PATCH_NAME:PATCH_DESC:PATCH_CREATE_DATE:PATCH_TYPE:COMPLETED_DATETIME:SUCCESS_YN:PREREQ_COUNT:DEPENDENCY:EDIT:';
+
+wwv_flow_api.create_worksheet_rpt(
+  p_id => 17957429957784397+wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_page_id=> 2,
+  p_worksheet_id => 40767208766551144+wwv_flow_api.g_id_offset,
+  p_session_id  => null,
+  p_base_report_id  => null+wwv_flow_api.g_id_offset,
+  p_application_user => 'APXWS_ALTERNATIVE',
+  p_name                    =>'Superseded',
+  p_report_seq              =>10,
+  p_report_alias            =>'179575',
+  p_status                  =>'PUBLIC',
+  p_category_id             =>null+wwv_flow_api.g_id_offset,
+  p_is_default              =>'Y',
+  p_display_rows            =>15,
+  p_report_columns          =>rc1,
+  p_sort_column_1           =>'COMPLETED_DATETIME',
+  p_sort_direction_1        =>'DESC',
+  p_sort_column_2           =>'0',
+  p_sort_direction_2        =>'ASC',
+  p_sort_column_3           =>'0',
+  p_sort_direction_3        =>'ASC',
+  p_sort_column_4           =>'0',
+  p_sort_direction_4        =>'ASC',
+  p_sort_column_5           =>'0',
+  p_sort_direction_5        =>'ASC',
+  p_sort_column_6           =>'0',
+  p_sort_direction_6        =>'ASC',
+  p_break_on                =>'PATCH_TYPE:0:0:0:0:0',
+  p_break_enabled_on        =>'PATCH_TYPE:0:0:0:0:0',
+  p_flashback_enabled       =>'N',
+  p_calendar_display_column =>'');
+end;
+/
+begin
+wwv_flow_api.create_worksheet_condition(
+  p_id => 17957902037785784+wwv_flow_api.g_id_offset,
+  p_flow_id=> wwv_flow.g_flow_id,
+  p_page_id=> 2,
+  p_worksheet_id => 40767208766551144+wwv_flow_api.g_id_offset,
+  p_report_id => 17957429957784397+wwv_flow_api.g_id_offset,
+  p_condition_type          =>'FILTER',
+  p_allow_delete            =>'Y',
+  p_column_name             =>'SUPERSEDED_COUNT',
+  p_operator                =>'>',
+  p_expr                    =>'0',
+  p_condition_sql           =>'"SUPERSEDED_COUNT" > to_number(#APXWS_EXPR#)',
+  p_condition_display       =>'#APXWS_COL_NAME# > #APXWS_EXPR_NUMBER#  ',
+  p_enabled                 =>'Y',
+  p_column_format           =>'');
+end;
+/
+declare
+    rc1 varchar2(32767) := null;
+begin
+rc1:=rc1||'PATCH_NAME:PATCH_DESC:PATCH_CREATE_DATE:PATCH_TYPE:COMPLETED_DATETIME:SUCCESS_YN:PREREQ_COUNT:DEPENDENCY:EDIT:';
 
 wwv_flow_api.create_worksheet_rpt(
   p_id => 40770419957552453+wwv_flow_api.g_id_offset,
@@ -1269,6 +1501,18 @@ wwv_flow_api.create_worksheet_rpt(
   p_is_default              =>'Y',
   p_display_rows            =>15,
   p_report_columns          =>rc1,
+  p_sort_column_1           =>'COMPLETED_DATETIME',
+  p_sort_direction_1        =>'DESC',
+  p_sort_column_2           =>'0',
+  p_sort_direction_2        =>'ASC',
+  p_sort_column_3           =>'0',
+  p_sort_direction_3        =>'ASC',
+  p_sort_column_4           =>'0',
+  p_sort_direction_4        =>'ASC',
+  p_sort_column_5           =>'0',
+  p_sort_direction_5        =>'ASC',
+  p_sort_column_6           =>'0',
+  p_sort_direction_6        =>'ASC',
   p_break_on                =>'PATCH_TYPE:0:0:0:0:0',
   p_break_enabled_on        =>'PATCH_TYPE:0:0:0:0:0',
   p_flashback_enabled       =>'N',
