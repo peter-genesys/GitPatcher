@@ -422,10 +422,16 @@
         Apex.restoreCreateApplicationSQL()
     End Sub
 
-    Public Function rebaseBranch(iBranchType As String, iRebaseBranchOn As String) As String
+    Public Function rebaseBranch(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String) As String
 
         Dim tag_no_padding As Integer = 2
         Common.checkBranch(iBranchType)
+
+        Dim l_tag_prefix As String = Nothing
+        If iBranchType = "hotfix" Then
+            l_tag_prefix = iDBtarget.Substring(0, 1)
+        End If
+
 
         Dim currentBranchLong As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
         Dim currentBranchShort As String = Globals.currentBranch
@@ -447,7 +453,7 @@
 
         Next
         Dim l_tag_base As String = l_max_tag + 1
-        l_tag_base = l_tag_base.PadLeft(tag_no_padding, "0")
+        l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_no_padding, "0")
 
         rebasing.MdiParent = GitPatcher
         rebasing.addStep("Commit to Branch: " & currentBranchLong, True, "Ensure the current branch [" & currentBranchShort & "] is free of uncommitted changes.")
@@ -546,8 +552,8 @@
 
 
 
-    Private Sub RebaseFeatureHotfixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureHotfixToolStripMenuItem.Click
-        rebaseBranch("feature", "develop")
+    Private Sub RebaseFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureToolStripMenuItem.Click
+        rebaseBranch("feature", "DEV", "develop")
     End Sub
 
 
@@ -672,7 +678,7 @@
     End Sub
 
     Private Sub RebaseHotFixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseHotFixToolStripMenuItem.Click
-        rebaseBranch("hotfix", Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
+        rebaseBranch("hotfix", HotFixToolStripComboBox.SelectedItem, Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
     End Sub
 
     Private Sub CreateDBHotFixPatchToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CreateDBHotFixPatchToolStripMenuItem1.Click
