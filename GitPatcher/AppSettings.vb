@@ -133,12 +133,15 @@ Public Class AppSettings
 
 
         anAppComboBox.Items.Clear()
+        Globals.resetAppCollection()
+
         For Each l_AppNode In l_AppsNode.ChildNodes
             'Get the RepoName Attribute Value
             Dim AppNameAttribute = l_AppNode.Attributes.GetNamedItem("AppName").Value
 
             anAppComboBox.Items.Add(AppNameAttribute)
-
+            Globals.appendAppCollection(AppNameAttribute)
+ 
             If currentValue = AppNameAttribute Then
                 'ReSelect the current item
                 anAppComboBox.SelectedIndex = anAppComboBox.Items.Count - 1
@@ -151,7 +154,7 @@ Public Class AppSettings
             'Select the first item
             anAppComboBox.SelectedIndex = 0
         End If
-  
+
 
     End Sub
 

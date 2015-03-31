@@ -1,5 +1,5 @@
 ﻿Module Globals
-
+ 
     Private gDB As String = My.Settings.CurrentDB
 
     Private gRepo As String
@@ -342,6 +342,26 @@
     Public Function getUsePatchAdmin() As Boolean
         Return gUsePatchAdmin
     End Function
+
+
+
+    Private gAppCollection As Collection
+
+    Public Sub setAppCollection(AppCollection As Collection)
+        gAppCollection = AppCollection
+    End Sub
+
+    Public Function getAppCollection() As Collection
+        Return gAppCollection
+    End Function
+
+    Public Sub resetAppCollection()
+        gAppCollection = New Collection
+    End Sub
+    Public Sub appendAppCollection(app As String)
+        gAppCollection.Add(app)
+    End Sub
+
 
 
 

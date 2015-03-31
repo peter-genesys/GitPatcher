@@ -118,7 +118,7 @@
     Private Sub showAppSettings()
 
         AppSettings.retrieveApp(ApplicationListComboBox.Text, RepoComboBox.Text)
-
+        Logger.Note("AppName", Globals.getAppName())
         AppCodeTextBox.Text = Globals.getAppCode()
         AppInFeatureCheckBox.Checked = Globals.getAppInFeature = "Y"
         AppIdTextBox.Text = Globals.getAppId()
