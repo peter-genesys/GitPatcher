@@ -28,7 +28,7 @@ Partial Class Main
         Me.NewFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBFeaturePatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.RebaseFeatureHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RebaseFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowindexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TestworkflowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -118,7 +118,7 @@ Partial Class Main
         '
         'GITToolStripMenuItem1
         '
-        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.CreateDBFeaturePatchToolStripMenuItem, Me.ToolStripSeparator2, Me.RebaseFeatureHotfixToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem, Me.TestworkflowToolStripMenuItem, Me.TestrevertToolStripMenuItem, Me.TestCreatePatchSetToolStripMenuItem})
+        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.CreateDBFeaturePatchToolStripMenuItem, Me.ToolStripSeparator2, Me.RebaseFeatureToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem, Me.TestworkflowToolStripMenuItem, Me.TestrevertToolStripMenuItem, Me.TestCreatePatchSetToolStripMenuItem})
         Me.GITToolStripMenuItem1.Name = "GITToolStripMenuItem1"
         Me.GITToolStripMenuItem1.Size = New System.Drawing.Size(67, 20)
         Me.GITToolStripMenuItem1.Text = "FEATURE"
@@ -142,12 +142,12 @@ Partial Class Main
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
         Me.ToolStripSeparator2.Size = New System.Drawing.Size(199, 6)
         '
-        'RebaseFeatureHotfixToolStripMenuItem
+        'RebaseFeatureToolStripMenuItem
         '
-        Me.RebaseFeatureHotfixToolStripMenuItem.Name = "RebaseFeatureHotfixToolStripMenuItem"
-        Me.RebaseFeatureHotfixToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.RebaseFeatureHotfixToolStripMenuItem.Text = "Rebase Feature"
-        Me.RebaseFeatureHotfixToolStripMenuItem.ToolTipText = "Rebase Feature branch on Develop branch"
+        Me.RebaseFeatureToolStripMenuItem.Name = "RebaseFeatureToolStripMenuItem"
+        Me.RebaseFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.RebaseFeatureToolStripMenuItem.Text = "Rebase Feature"
+        Me.RebaseFeatureToolStripMenuItem.ToolTipText = "Rebase Feature branch on Develop branch"
         '
         'MergeAndPushFeatureToolStripMenuItem
         '
@@ -822,7 +822,7 @@ Partial Class Main
     Friend WithEvents ShowindexToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestworkflowToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestrevertToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents RebaseFeatureHotfixToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents RebaseFeatureToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents RELEASEToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ReleaseToISDEVLToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ReleaseToISTESTToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem

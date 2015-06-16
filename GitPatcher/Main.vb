@@ -1,8 +1,9 @@
 ﻿Public Class Main
 
     Public Sub New()
+
         InitializeComponent()
- 
+
         Dim DB_count As Integer = -1
         For Each DB In DBComboBox.Items
             DB_count = DB_count + 1
@@ -11,7 +12,7 @@
             End If
 
         Next
-  
+
 
         'SelectedIndex = 4 'Default to VM
         loadRepos()
@@ -19,7 +20,7 @@
         'loadApexApps()
         loadHotFixDBs()
         MinPatchTextBox.Text = My.Settings.MinPatch
- 
+
     End Sub
 
 
@@ -33,15 +34,12 @@
 
     Public Sub loadHotFixDBs()
         HotFixToolStripComboBox.Items.Clear()
-        For Each DB In My.Settings.DBList.Split(Chr(10))
-            DB = Trim(DB)
-            DB = DB.Replace(Chr(13), "")
-            If Globals.deriveHotfixBranch(DB).Length Then
-                'DB has an assoc hotfix branch so list it.
-                HotFixToolStripComboBox.Items.Add(DB)
-            End If
-  
-        Next
+
+        HotFixToolStripComboBox.Items.Add("PROD")
+        HotFixToolStripComboBox.Items.Add("UAT")
+        HotFixToolStripComboBox.Items.Add("TEST")
+        HotFixToolStripComboBox.Items.Add("DEV")
+ 
         HotFixToolStripComboBox.SelectedIndex = 0
 
     End Sub
@@ -108,7 +106,10 @@
     Public Sub loadOrgs()
 
         OrgSettings.readOrgs(OrgComboBox, OrgComboBox.Text, RepoComboBox.Text)
-
+ 
+        If String.IsNullOrEmpty(Globals.getDB) Then
+            Globals.setDB("VM")
+        End If
         showOrgSettings()
 
     End Sub
@@ -117,7 +118,7 @@
     Private Sub showAppSettings()
 
         AppSettings.retrieveApp(ApplicationListComboBox.Text, RepoComboBox.Text)
-
+        Logger.Note("AppName", Globals.getAppName())
         AppCodeTextBox.Text = Globals.getAppCode()
         AppInFeatureCheckBox.Checked = Globals.getAppInFeature = "Y"
         AppIdTextBox.Text = Globals.getAppId()
@@ -160,8 +161,7 @@
 
     Private Sub ApplicationListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ApplicationListComboBox.SelectedIndexChanged
 
-        Globals.setApplication(ApplicationListComboBox.SelectedItem, ApplicationListComboBox.SelectedIndex)
-
+        Globals.setAppName(ApplicationListComboBox.Text)
         showAppSettings()
 
     End Sub
@@ -422,10 +422,16 @@
         Apex.restoreCreateApplicationSQL()
     End Sub
 
-    Public Function rebaseBranch(iBranchType As String, iRebaseBranchOn As String) As String
+    Public Function rebaseBranch(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String) As String
 
         Dim tag_no_padding As Integer = 2
         Common.checkBranch(iBranchType)
+
+        Dim l_tag_prefix As String = Nothing
+        If iBranchType = "hotfix" Then
+            l_tag_prefix = iDBtarget.Substring(0, 1)
+        End If
+
 
         Dim currentBranchLong As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
         Dim currentBranchShort As String = Globals.currentBranch
@@ -447,7 +453,7 @@
 
         Next
         Dim l_tag_base As String = l_max_tag + 1
-        l_tag_base = l_tag_base.PadLeft(tag_no_padding, "0")
+        l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_no_padding, "0")
 
         rebasing.MdiParent = GitPatcher
         rebasing.addStep("Commit to Branch: " & currentBranchLong, True, "Ensure the current branch [" & currentBranchShort & "] is free of uncommitted changes.")
@@ -546,8 +552,8 @@
 
 
 
-    Private Sub RebaseFeatureHotfixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureHotfixToolStripMenuItem.Click
-        rebaseBranch("feature", "develop")
+    Private Sub RebaseFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureToolStripMenuItem.Click
+        rebaseBranch("feature", "DEV", "develop")
     End Sub
 
 
@@ -672,7 +678,7 @@
     End Sub
 
     Private Sub RebaseHotFixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseHotFixToolStripMenuItem.Click
-        rebaseBranch("hotfix", Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
+        rebaseBranch("hotfix", HotFixToolStripComboBox.SelectedItem, Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
     End Sub
 
     Private Sub CreateDBHotFixPatchToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CreateDBHotFixPatchToolStripMenuItem1.Click

@@ -127,9 +127,25 @@
 
     End Sub
 
+    Public Shared Sub confirmApp()
+
+
+        Dim appChoice As String = Nothing
+
+        appChoice = ChoiceDialog.Ask("Please verify current Apex App", Globals.getAppCollection(), Globals.getAppName(), "Choose App", False, True)
+    
+
+        AppSettings.retrieveApp(appChoice, Main.RepoComboBox.Text)
+
+
+    End Sub
+
+
+
 
     Public Shared Sub ApexExportCommit()
 
+        confirmApp()
 
         Dim connection As String = Globals.currentConnection
         Dim username As String = Globals.currentParsingSchema
@@ -197,7 +213,7 @@
 
             'write-host "Remove the application directory apex_dir\fapp_id" 
 
- 
+
         End If
 
 
@@ -240,6 +256,8 @@
 
     Public Shared Sub ApexImportFromTag()
 
+        confirmApp()
+
         Dim l_skip_reports_DBs As String = "DEV"
         Dim fapp_id As String = Globals.currentApex
 
@@ -255,13 +273,13 @@
 
 
         ImportProgress.MdiParent = GitPatcher
-        ImportProgress.addStep("Choose a tag to install apex from and checkout the tag")
-        ImportProgress.addStep("If tag not like " & Globals.currentAppCode & " relabel apex")
-        ImportProgress.addStep("If db in " & runOnlyDBs & " set apex to RUN_ONLY")
-        ImportProgress.addStep("If db in " & l_skip_reports_DBs & " set install.sql to Skip reports queries and layouts", True, "This is intended to speed up imports into " & l_skip_reports_DBs & ", where they otherwise take upto 30mins")
-        ImportProgress.addStep("Import Apex")
-        ImportProgress.addStep("Restore apex settings in checkout", True, "Revert changes made in steps 3, 4 and 5.  These were only required for the import.  They do not need to be committed.")
-        ImportProgress.addStep("Return to branch: " & currentBranch)
+        ImportProgress.addStep("Choose a tag to install apex from and checkout the tag", False)
+        ImportProgress.addStep("If tag not like " & Globals.currentAppCode & " relabel apex", False)
+        ImportProgress.addStep("If db in " & runOnlyDBs & " set apex to RUN_ONLY", False)
+        ImportProgress.addStep("If db in " & l_skip_reports_DBs & " set install.sql to Skip reports queries and layouts", False, "This is intended to speed up imports into " & l_skip_reports_DBs & ", where they otherwise take upto 30mins")
+        ImportProgress.addStep("Import Apex", True)
+        ImportProgress.addStep("Restore apex settings in checkout", False, "Revert changes made in steps 3, 4 and 5.  These were only required for the import.  They do not need to be committed.")
+        ImportProgress.addStep("Return to branch: " & currentBranch, False)
         ImportProgress.Show()
 
         Do Until ImportProgress.isStarted
@@ -387,7 +405,9 @@
     End Sub
 
     Public Shared Sub ApexImport1PageFromTag()
-
+ 
+        confirmApp()
+ 
         Dim applicationDir As String = Globals.RootApexDir & Globals.currentApex & "\application\"
         Dim pagesDir As String = applicationDir & "pages\"
 
@@ -405,9 +425,9 @@
 
 
         ImportProgress.MdiParent = GitPatcher
-        ImportProgress.addStep("Choose a tag to install apex from and checkout the tag")
+        ImportProgress.addStep("Choose a tag to install apex from and checkout the tag", False)
         ImportProgress.addStep("Import Apex Page", True, "Choose Apex Page from list of pages, to apply to current DB.")
-        ImportProgress.addStep("Return to branch: " & currentBranch)
+        ImportProgress.addStep("Return to branch: " & currentBranch, False)
         ImportProgress.Show()
 
         Do Until ImportProgress.isStarted

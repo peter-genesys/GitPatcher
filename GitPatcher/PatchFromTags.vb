@@ -830,7 +830,8 @@ Public Class PatchFromTags
             PatchPathTextBox.Text = Replace(Globals.currentLongBranch, "/", "\") & "\"
 
             If gBranchType = "hotfix" Then
-                SupIdTextBox.Text = gDBtarget
+                'SupIdTextBox.Text = gDBtarget
+                NoteTextBox.Text = "Hotfix built for " & gDBtarget
             End If
 
             SYSDBACheckBox.Checked = (SchemaComboBox.SelectedItem.ToString = "SYS")
@@ -1099,7 +1100,7 @@ Public Class PatchFromTags
 
         If createPatchProgress.toDoNextStep() Then
             'Rebase branch
-            l_tag_base = Main.rebaseBranch(iBranchType, iRebaseBranchOn)
+            l_tag_base = Main.rebaseBranch(iBranchType, iDBtarget, iRebaseBranchOn)
 
         End If
 

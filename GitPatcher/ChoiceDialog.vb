@@ -12,10 +12,14 @@ Public Class ChoiceDialog
         Me.Close()
     End Sub
 
-    Shared Function Ask(ByVal i_question As String, ByVal i_Choices As Collection, ByVal i_default As String, ByVal i_title As String, Optional ByVal i_reorder As Boolean = True)
+    Shared Function Ask(ByVal i_question As String, ByVal i_Choices As Collection, ByVal i_default As String, ByVal i_title As String, Optional ByVal i_reorder As Boolean = True, Optional ByVal i_hideCancelButton As Boolean = False)
         Dim l_choice As String = Nothing
         Dim l_default_found As Boolean = False
         Dim l_reordered As New Collection
+
+        If i_hideCancelButton Then
+            ChoiceDialog.Cancel_Button.Visible = False
+        End If
 
         ' Set the Window Title
         ChoiceDialog.Text = i_title
@@ -38,7 +42,7 @@ Public Class ChoiceDialog
                 ChoiceDialog.ChoiceComboBox.SelectedIndex = ChoiceDialog.ChoiceComboBox.Items.Count - 1
             End If
         Next
- 
+
 
         ' Set the listbox to the default answer if it's there
         If Not l_default_found Then
