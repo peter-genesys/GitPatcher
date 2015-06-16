@@ -377,8 +377,6 @@
 
     Public Shared Sub Install1Page(ApexPageName As String)
 
-        confirmApp()
-
         Dim applicationDir As String = Globals.RootApexDir & Globals.currentApex & "\application\"
         Dim l_page_num As String = ApexPageName.Substring(5, 5)
         Dim script As String = _
@@ -407,7 +405,9 @@
     End Sub
 
     Public Shared Sub ApexImport1PageFromTag()
-
+ 
+        confirmApp()
+ 
         Dim applicationDir As String = Globals.RootApexDir & Globals.currentApex & "\application\"
         Dim pagesDir As String = applicationDir & "pages\"
 
