@@ -16,12 +16,12 @@ WHENEVER OSERROR EXIT FAILURE ROLLBACK
 WHENEVER SQLERROR EXIT FAILURE ROLLBACK
 
 SPOOL TRK-01_02.log
-CONNECT PATCH_ADMIN/&&PATCH_ADMIN_password@&&database
+CONNECT &&PATCH_ADMIN_user/&&PATCH_ADMIN_password@&&database
 set serveroutput on;
-execute patch_admin.patch_installer.patch_started( -
+execute &&PATCH_ADMIN_user..patch_installer.patch_started( -
   i_patch_name         => 'TRK-01_02' -
  ,i_patch_type         => 'patchset' -
- ,i_db_schema          => 'PATCH_ADMIN' -
+ ,i_db_schema          => '&&PATCH_ADMIN_user.' -
  ,i_branch_name        => 'develop' -
  ,i_tag_from           => 'TRK-01_01' -
  ,i_tag_to             => 'HEAD' -
@@ -40,11 +40,11 @@ execute patch_admin.patch_installer.patch_started( -
 
 PROMPT
 PROMPT Checking Prerequisite patch TRK-01_01
-execute patch_admin.patch_installer.add_patch_prereq( -
+execute &&PATCH_ADMIN_user..patch_installer.add_patch_prereq( -
 i_patch_name     => 'TRK-01_02' -
 ,i_prereq_patch  => 'TRK-01_01' );
 PROMPT Ensure Patch Admin is late enough for this patch
-execute patch_admin.patch_installer.add_patch_prereq( -
+execute &&PATCH_ADMIN_user..patch_installer.add_patch_prereq( -
 i_patch_name     => 'TRK-01_02' -
 ,i_prereq_patch  => 'TRK-01_01' );
 select user||'@'||global_name Connection from global_name;
@@ -57,7 +57,7 @@ PROMPT feature\trk\TRK-01\TRK-01_02A_02B_ENDUSER
 @feature\trk\TRK-01\TRK-01_02A_02B_ENDUSER\install.sql;
 PROMPT feature\trk\TRK-01\TRK-01_02A_02B_SYS 
 @feature\trk\TRK-01\TRK-01_02A_02B_SYS\install.sql;
-execute patch_admin.patch_installer.patch_completed(i_patch_name  => 'TRK-01_02');
+execute &&PATCH_ADMIN_user..patch_installer.patch_completed(i_patch_name  => 'TRK-01_02');
 COMMIT;
 PROMPT 
 PROMPT install.sql - COMPLETED.

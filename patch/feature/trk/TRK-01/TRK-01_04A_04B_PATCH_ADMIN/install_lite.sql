@@ -19,7 +19,7 @@ define patch_name = 'TRK-01_04A_04B_PATCH_ADMIN'
 define patch_desc = 'Fixing Infinite Recursion from superseded patch.'
 define patch_path = 'feature/trk/TRK-01/TRK-01_04A_04B_PATCH_ADMIN/'
 SPOOL TRK-01_04A_04B_PATCH_ADMIN.log
-CONNECT PATCH_ADMIN/&&PATCH_ADMIN_password@&&database
+CONNECT &&PATCH_ADMIN_user/&&PATCH_ADMIN_password@&&database
 set serveroutput on;
 select user||'@'||global_name Connection from global_name;
 
