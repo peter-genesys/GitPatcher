@@ -16,9 +16,9 @@ WHENEVER OSERROR EXIT FAILURE ROLLBACK
 WHENEVER SQLERROR EXIT FAILURE ROLLBACK
 
 SPOOL TRK-01_01.log
-CONNECT PATCH_ADMIN/&&PATCH_ADMIN_password@&&database
+CONNECT &&PATCH_ADMIN_user/&&PATCH_ADMIN_password@&&database
 set serveroutput on;
-execute patch_admin.patch_installer.patch_started( -
+execute &&PATCH_ADMIN_user..patch_installer.patch_started( -
   i_patch_name         => 'TRK-01_01' -
  ,i_patch_type         => 'patchset' -
  ,i_db_schema          => 'PATCH_ADMIN' -
@@ -45,7 +45,7 @@ PROMPT feature\trk\TRK-01\TRK-01_01A_01B_SYS
 @feature\trk\TRK-01\TRK-01_01A_01B_SYS\install.sql;
 PROMPT feature\trk\TRK-01\TRK-01_01A_01B_PATCH_ADMIN 
 @feature\trk\TRK-01\TRK-01_01A_01B_PATCH_ADMIN\install.sql;
-execute patch_admin.patch_installer.patch_completed(i_patch_name  => 'TRK-01_01');
+execute &&PATCH_ADMIN_user..patch_installer.patch_completed(i_patch_name  => 'TRK-01_01');
 COMMIT;
 PROMPT 
 PROMPT install.sql - COMPLETED.
