@@ -42,6 +42,11 @@ execute &&PATCH_ADMIN_user..patch_installer.patch_started( -
  ,i_remove_sups        => 'N' -
  ,i_track_promotion    => 'Y'); 
 
+PROMPT
+PROMPT Checking Prerequisite patch TRK-01_05A_05B_PATCH_ADMIN
+execute &&PATCH_ADMIN_user..patch_installer.add_patch_prereq( -
+i_patch_name     => 'TRK-01_05A_05B_PATCH_ADMIN_FOR' -
+,i_prereq_patch  => 'TRK-01_05A_05B_PATCH_ADMIN' );
 PROMPT Ensure Patch Admin is late enough for this patch
 execute &&PATCH_ADMIN_user..patch_installer.add_patch_prereq( -
 i_patch_name     => 'TRK-01_05A_05B_PATCH_ADMIN_BACK' -
@@ -51,14 +56,12 @@ select user||'@'||global_name Connection from global_name;
 
 PROMPT DATABASE LINKS
 
-PROMPT patch_admin_backward_dblink.dblink 
-@&&patch_path.patch_admin_backward_dblink.dblink;
-Show error;
-
-PROMPT PROCEDURES
-
 PROMPT create_db_link.prc 
 @&&patch_path.create_db_link.prc;
+Show error;
+
+PROMPT patch_admin_backward_dblink.dblink 
+@&&patch_path.patch_admin_backward_dblink.dblink;
 Show error;
 
 PROMPT VIEWS
