@@ -1,4 +1,6 @@
-create or replace view patches_unapplied_v as 
+--Unapplied patches are those from the BACKWARDS DB
+--that have not been successfully applied to this DB.
+create or replace force view patches_unapplied_v as 
 select 
  patch_name                   
 ,db_schema                    
@@ -12,6 +14,4 @@ select
 ,note                         
 ,rerunnable_yn    
 from patches_dependency_v@PATCH_ADMIN_BACKWARD_DBLINK
-where patch_name not in (select patch_name from patches_dependency_v)
-and patch_name not in (select supersedes_patch from patch_supersedes)
-and patch_name not in (select patch_name from patches where retired_yn = 'Y');
+where patch_name not in (select patch_name from installed_patches_v);

@@ -17,5 +17,3 @@ grant select on components_unapplied_v to &&ENDUSER_USER;
 grant select on patches_v to &&ENDUSER_USER;
 
 grant select on patch_prereqs_v to &&ENDUSER_USER;
-
-grant select on patch_supersedes_v to &&ENDUSER_USER;

@@ -1,5 +1,5 @@
 PROMPT Creating a DB Link PATCH_ADMIN_BACKWARD_DBLINK (towards Dev) for use by patches_unapplied_v
-PROMPT Recommended Values for PATCH_ADMIN_FORWARD_DB
+PROMPT Recommended Values for PATCH_ADMIN_BACKWARD_DB
 PROMPT For VM   - Use DEV
 PROMPT For DEV  - Use DEV
 PROMPT For TEST - Use DEV

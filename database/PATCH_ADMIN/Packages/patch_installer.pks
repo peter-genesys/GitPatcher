@@ -102,7 +102,7 @@ FUNCTION f_patches return patches%ROWTYPE;
  
  
   --------------------------------------------------------------
-  -- add_patch_supersedes 
+  -- add_patch_supersedes - deprecated
   --------------------------------------------------------------
   PROCEDURE add_patch_supersedes( i_patch_name       IN VARCHAR2
                                  ,i_supersedes_patch IN VARCHAR2 );

@@ -1,3 +1,4 @@
+--A patch_name has a prereq_patch that must be applied before patch_name.
 CREATE TABLE patch_prereqs(
   patch_prereq_id   NUMBER
  ,patch_name        VARCHAR2(100) 

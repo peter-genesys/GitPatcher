@@ -122,7 +122,7 @@ END;
                           ,i_note              IN VARCHAR2
                           ,i_rerunnable_yn     IN VARCHAR2
                           ,i_remove_prereqs    IN VARCHAR2 DEFAULT 'N'
-                          ,i_remove_sups       IN VARCHAR2 DEFAULT 'N'
+                          ,i_remove_sups       IN VARCHAR2 DEFAULT 'N' --deprecated.
                           ,i_track_promotion   IN VARCHAR2 DEFAULT 'Y'
                           ) IS
                          
@@ -172,12 +172,7 @@ END;
       delete from patch_prereqs where patch_name = l_patch.patch_name;
       dbms_output.put_line(SQL%ROWCOUNT||' patch_prereqs deleted');
     END IF;
-    
-    IF i_remove_sups = 'Y' THEN
-      delete from patch_supersedes where patch_name = l_patch.patch_name;
-      dbms_output.put_line(SQL%ROWCOUNT||' patch_supersedes deleted');
-    END IF;
-
+ 
     COMMIT;
  
     put_lines('Starting patch '||l_patch.patch_name);
@@ -389,32 +384,12 @@ END;
   END;
  
   --------------------------------------------------------------
-  -- add_patch_supersedes 
+  -- add_patch_supersedes - deprecated
   --------------------------------------------------------------
   PROCEDURE add_patch_supersedes( i_patch_name       IN VARCHAR2
                                  ,i_supersedes_patch IN VARCHAR2 ) IS
-    l_patch_supersedes patch_supersedes%ROWTYPE;
-    PRAGMA AUTONOMOUS_TRANSACTION;
-    
   BEGIN
-    --If the superseding patch was successful, then record that a patch was superseded
-    IF get_patches(i_patch_name   => i_patch_name).success_yn = 'Y' THEN
- 
-      l_patch_supersedes.patch_name         := i_patch_name          ;
-      l_patch_supersedes.supersedes_patch   := i_supersedes_patch   ;
-      
-      patch_supersedes_tapi.ins_upd( io_patch_supersedes => l_patch_supersedes);
- 
-      COMMIT;
-      
-      put_lines('SUPERSEDES PATCH:'||i_supersedes_patch);
-    
-    END IF;
-    
-  EXCEPTION
-    WHEN DUP_VAL_ON_INDEX THEN
-      NULL;    
- 
+     NULL;
   END add_patch_supersedes;
   
   --------------------------------------------------------------
@@ -426,7 +401,7 @@ END;
     PRAGMA AUTONOMOUS_TRANSACTION;
     
   BEGIN
-    --If the prerequisite patch was successful, then record that a patch was superseded
+    --If the prerequisite patch was successful, then record that a patch was prerequisite
     IF get_patches(i_patch_name   => i_prereq_patch ).success_yn = 'Y' THEN
  
       l_patch_prereq.patch_name     := i_patch_name      ;
@@ -465,10 +440,8 @@ FUNCTION get_patch_dependency_tab RETURN patches_tab IS
  
   CURSOR   cu_patches IS 
   select   p.*
-  from     patches p
-  where    success_yn = 'Y' 
-  and      retired_yn = 'N' --exclude retired patches
-  and      patch_name not in (select supersedes_patch from patch_supersedes) --exclude superseded patches
+  from     installed_patches_v p
+  where    retired_yn = 'N' --exclude retired patches
   order by completed_datetime;
   
   PROCEDURE stack_patch(i_patches         IN patches%ROWTYPE
@@ -481,19 +454,10 @@ FUNCTION get_patch_dependency_tab RETURN patches_tab IS
     where  p.patch_name = pr.prereq_patch 
     and    pr.patch_name = c_patch_name;  
 
-    CURSOR cu_patch_superseding(c_patch_name VARCHAR2) IS
-    select p.* 
-    from   patches p, 
-           patch_supersedes ps
-    where  p.patch_name = ps.patch_name 
-    and    ps.supersedes_patch = c_patch_name;  
-	
-
+ 
      TYPE patch_tab_typ IS TABLE OF patches%ROWTYPE;
      l_patch_prereqs_tab    patch_tab_typ;
-     l_patch_supersedes_tab patch_tab_typ;
-
-                  
+              
   BEGIN
     IF i_recursion_level > 1000 THEN
       RAISE_APPLICATION_ERROR(-20000,'Infinite Recursion detected');
@@ -513,41 +477,11 @@ FUNCTION get_patch_dependency_tab RETURN patches_tab IS
         l_prereq_index := l_patch_prereqs_tab.first;
         WHILE l_prereq_index IS NOT NULL LOOP
   
-          --Before we stack the prereq patch, lets check whether it has been superseded.
-          declare
-            l_superseded boolean := false;
-          begin
-
-/*
-            OPEN cu_patch_superseding(c_patch_name => l_patch_prereqs_tab(l_prereq_index).patch_name); 
-            FETCH cu_patch_superseding BULK COLLECT INTO l_patch_supersedes_tab;
-            CLOSE cu_patch_superseding;
-       
-            declare
-              l_supersede_index BINARY_INTEGER;
-            begin  
-              --Loop thru the prereq patches.
-              l_supersede_index := l_patch_supersedes_tab.first;
-              WHILE l_supersede_index IS NOT NULL LOOP
  
-                --Stack superseding patches instead...
-                l_superseded := true;
-                RAISE_APPLICATION_ERROR(-20000,'Supersede detected');
-                  stack_patch(i_patches         => l_patch_supersedes_tab(l_supersede_index)
-                            , i_recursion_level => i_recursion_level + 1);
-                  
-
-                l_supersede_index := l_patch_supersedes_tab.next(l_supersede_index);             
-              END LOOP;
-            end;
-       */
-            --exclude superseded from the dependancies too! (but keep retired patches)
-            if not l_superseded then
-              --stack the prereq patch
-                  stack_patch(i_patches         => l_patch_prereqs_tab(l_prereq_index)
-                            , i_recursion_level => i_recursion_level + 1);
-            end if;
-          end;
+          --stack the prereq patch
+          stack_patch(i_patches         => l_patch_prereqs_tab(l_prereq_index)
+                    , i_recursion_level => i_recursion_level + 1);
+ 
     
           l_prereq_index := l_patch_prereqs_tab.next(l_prereq_index);
         END LOOP;
