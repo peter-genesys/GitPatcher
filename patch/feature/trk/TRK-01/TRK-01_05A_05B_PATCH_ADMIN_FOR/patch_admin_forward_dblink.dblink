@@ -1,0 +1,22 @@
+PROMPT Creating a DB Link PATCH_ADMIN_FORWARD_DBLINK (towards Prod) for use by patches_unpromoted_v
+PROMPT Recommended Values for PATCH_ADMIN_FORWARD_DB
+PROMPT For VM   - Use DEV
+PROMPT For DEV  - Use TEST
+PROMPT For TEST - Use UAT
+PROMPT For UAT  - Use PROD
+PROMPT For PROD - Use PROD
+PROMPT 
+PROMPT If comparison DBs are not available just Loopback
+PROMPT To LOOPBACK - Use &&database
+
+SET SERVEROUTPUT ON SIZE 1000000
+begin
+  create_db_link(i_schema       => '&&PATCH_ADMIN_USER'
+                ,i_db_name      => '&&PATCH_ADMIN_FORWARD_DB'
+                ,i_db_link_name => 'PATCH_ADMIN_FORWARD_DBLINK'
+                ,i_password     => '&&PATCH_ADMIN_PASSWORD');
+
+end;
+/
+
+ 
