@@ -62,6 +62,7 @@ FUNCTION f_patches return patches%ROWTYPE;
                           ,i_remove_prereqs    IN VARCHAR2 DEFAULT 'N'
                           ,i_remove_sups       IN VARCHAR2 DEFAULT 'N'
                           ,i_track_promotion   IN VARCHAR2 DEFAULT 'Y'
+                          ,i_retired_yn        IN VARCHAR2 DEFAULT 'N'
                           );
  
   
@@ -100,7 +101,17 @@ FUNCTION f_patches return patches%ROWTYPE;
   --------------------------------------------------------------
   FUNCTION get_patches(i_patch_name       IN VARCHAR2  ) RETURN patches%ROWTYPE;
  
- 
+-----------------------------------------------------------------
+-- is_prereq_patch - is this patch a prereq for another patch.
+-----------------------------------------------------------------
+FUNCTION is_prereq_patch (
+   i_prereq_patch IN PATCH_PREREQS.PREREQ_PATCH%TYPE ) RETURN BOOLEAN;
+
+-----------------------------------------------------------------
+-- is_superseded_patch - is this patch superseded by another patch.
+-----------------------------------------------------------------
+FUNCTION is_superseded_patch (
+   i_supersedes_patch IN patch_supersedes.supersedes_patch%TYPE ) RETURN BOOLEAN;
   --------------------------------------------------------------
   -- add_patch_supersedes - deprecated
   --------------------------------------------------------------
