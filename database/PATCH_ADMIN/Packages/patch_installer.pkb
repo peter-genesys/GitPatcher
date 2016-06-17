@@ -487,8 +487,9 @@ FUNCTION get_patch_dependency_tab RETURN patches_tab IS
  
   CURSOR   cu_patches IS 
   select   p.*
-  from     installed_patches_v p
-  where    retired_yn = 'N' --exclude retired patches
+  from     patches p
+  where    success_yn = 'Y'
+  and      retired_yn = 'N' --exclude retired patches
   order by completed_datetime;
   
   PROCEDURE stack_patch(i_patches         IN patches%ROWTYPE

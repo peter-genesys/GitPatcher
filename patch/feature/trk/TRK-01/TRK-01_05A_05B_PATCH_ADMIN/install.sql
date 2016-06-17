@@ -21,6 +21,7 @@ define patch_path = 'feature/trk/TRK-01/TRK-01_05A_05B_PATCH_ADMIN/'
 SPOOL TRK-01_05A_05B_PATCH_ADMIN.log
 CONNECT PATCH_ADMIN/&&PATCH_ADMIN_password@&&database
 set serveroutput on;
+ 
 execute &&PATCH_ADMIN_user..patch_installer.patch_started( -
   i_patch_name         => 'TRK-01_05A_05B_PATCH_ADMIN' -
  ,i_patch_type         => 'feature' -
@@ -168,6 +169,9 @@ Show error;
 COMMIT;
 PROMPT Compiling objects in schema PATCH_ADMIN
 execute &&PATCH_ADMIN_user..patch_invoker.compile_post_patch;
+ 
+alter package patch_installer compile body;
+
 --PATCH_ADMIN patches are likely to loose the session state of patch_installer, so complete using the patch_name parm.
 execute &&PATCH_ADMIN_user..patch_installer.patch_completed(i_patch_name  => 'TRK-01_05A_05B_PATCH_ADMIN');
 COMMIT;
