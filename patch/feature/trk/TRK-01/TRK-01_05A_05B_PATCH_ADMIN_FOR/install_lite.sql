@@ -25,11 +25,7 @@ select user||'@'||global_name Connection from global_name;
 
 
 PROMPT DATABASE LINKS
-
-PROMPT create_db_link.prc 
-@&&patch_path.create_db_link.prc;
-Show error;
-
+ 
 PROMPT patch_admin_forward_dblink.dblink 
 @&&patch_path.patch_admin_forward_dblink.dblink;
 Show error;

@@ -31,7 +31,6 @@ execute &&PATCH_ADMIN_user..patch_installer.patch_started( -
  ,i_supplementary      => 'BACK' -
  ,i_patch_desc         => 'BG-114 Recreate backward link' -
  ,i_patch_componants   => 'patch_admin_backward_dblink.dblink' -
-||',create_db_link.prc' -
 ||',patches_unapplied_v.vw' -
 ||',components_unapplied_v.vw' -
  ,i_patch_create_date  => '06-12-2016' -
@@ -55,10 +54,6 @@ select user||'@'||global_name Connection from global_name;
 
 
 PROMPT DATABASE LINKS
-
-PROMPT create_db_link.prc 
-@&&patch_path.create_db_link.prc;
-Show error;
 
 PROMPT patch_admin_backward_dblink.dblink 
 @&&patch_path.patch_admin_backward_dblink.dblink;

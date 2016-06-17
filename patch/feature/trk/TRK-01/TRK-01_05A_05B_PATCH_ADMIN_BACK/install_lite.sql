@@ -29,13 +29,7 @@ PROMPT DATABASE LINKS
 PROMPT patch_admin_backward_dblink.dblink 
 @&&patch_path.patch_admin_backward_dblink.dblink;
 Show error;
-
-PROMPT PROCEDURES
-
-PROMPT create_db_link.prc 
-@&&patch_path.create_db_link.prc;
-Show error;
-
+ 
 PROMPT VIEWS
 
 PROMPT patches_unapplied_v.vw 

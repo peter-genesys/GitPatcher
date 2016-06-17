@@ -124,6 +124,7 @@ END;
                           ,i_remove_prereqs    IN VARCHAR2 DEFAULT 'N'
                           ,i_remove_sups       IN VARCHAR2 DEFAULT 'N' --deprecated.
                           ,i_track_promotion   IN VARCHAR2 DEFAULT 'Y'
+                          ,i_retired_yn        IN VARCHAR2 DEFAULT 'N'
                           ) IS
                          
     l_patch patches%ROWTYPE;
@@ -145,6 +146,8 @@ END;
     l_patch.patch_created_by   := i_patch_created_by ;
     l_patch.note               := i_note             ;
     l_patch.rerunnable_yn      := i_rerunnable_yn    ;
+    l_patch.tracking_yn        := i_track_promotion  ;
+    l_patch.retired_yn         := i_retired_yn       ;
  
     BEGIN
       l_patch.patch_create_date  := TO_DATE(i_patch_create_date,'MM-DD-YYYY');
@@ -157,12 +160,7 @@ END;
     l_patch.completed_datetime := NULL;
     l_patch.success_YN         := 'N';
     l_patch.username           := USER;
-    IF i_track_promotion = 'Y' THEN
-      l_patch.retired_yn         := 'N';
-    ELSE
-      l_patch.retired_yn         := 'Y';
-    END IF;
-    
+ 
     dbms_output.enable(1000000);
     
     patches_tapi.ins_upd(io_patches => l_patch);
@@ -382,6 +380,55 @@ END;
     RETURN patches_tapi.patches_uk1(i_patch_name => i_patch_name);
     
   END;
+
+
+-----------------------------------------------------------------
+-- is_prereq_patch - is this patch a prereq for another patch.
+-----------------------------------------------------------------
+FUNCTION is_prereq_patch (
+   i_prereq_patch IN PATCH_PREREQS.PREREQ_PATCH%TYPE ) RETURN BOOLEAN
+IS
+   CURSOR cr_patch_prereqs IS
+      SELECT *
+        FROM PATCH_PREREQS
+       WHERE prereq_patch = i_prereq_patch;
+
+   l_result PATCH_PREREQS%ROWTYPE;
+   l_found   BOOLEAN;
+ 
+BEGIN
+   OPEN cr_patch_prereqs;
+   FETCH cr_patch_prereqs INTO l_result;
+   l_found := cr_patch_prereqs%FOUND;
+   CLOSE cr_patch_prereqs;
+ 
+   RETURN l_found;
+ 
+END is_prereq_patch;
+
+-----------------------------------------------------------------
+-- is_superseded_patch - is this patch superseded by another patch.
+-----------------------------------------------------------------
+FUNCTION is_superseded_patch (
+   i_supersedes_patch IN patch_supersedes.supersedes_patch%TYPE ) RETURN BOOLEAN
+IS
+   CURSOR cr_patch_supersedes IS
+      SELECT *
+        FROM patch_supersedes
+       WHERE supersedes_patch = i_supersedes_patch;
+
+   l_result patch_supersedes%ROWTYPE;
+   l_found   BOOLEAN;
+ 
+BEGIN
+   OPEN cr_patch_supersedes;
+   FETCH cr_patch_supersedes INTO l_result;
+   l_found := cr_patch_supersedes%FOUND;
+   CLOSE cr_patch_supersedes;
+ 
+   RETURN l_found;
+ 
+END is_superseded_patch;
  
   --------------------------------------------------------------
   -- add_patch_supersedes - deprecated

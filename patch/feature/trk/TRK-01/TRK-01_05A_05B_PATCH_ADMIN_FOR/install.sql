@@ -30,8 +30,7 @@ execute &&PATCH_ADMIN_user..patch_installer.patch_started( -
  ,i_tag_to             => 'TRK-01.05B' -
  ,i_supplementary      => 'FOR' -
  ,i_patch_desc         => 'BG-114 Recreate forward link' -
- ,i_patch_componants   => 'create_db_link.prc' -
-||',patch_admin_forward_dblink.dblink' -
+ ,i_patch_componants   => 'patch_admin_forward_dblink.dblink' -
 ||',patches_unpromoted_v.vw' -
  ,i_patch_create_date  => '06-12-2016' -
  ,i_patch_created_by   => 'Peter' -
@@ -54,11 +53,7 @@ select user||'@'||global_name Connection from global_name;
 
 
 PROMPT DATABASE LINKS
-
-PROMPT create_db_link.prc 
-@&&patch_path.create_db_link.prc;
-Show error;
-
+ 
 PROMPT patch_admin_forward_dblink.dblink 
 @&&patch_path.patch_admin_forward_dblink.dblink;
 Show error;

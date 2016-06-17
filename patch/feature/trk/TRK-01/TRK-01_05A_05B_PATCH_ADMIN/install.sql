@@ -29,8 +29,8 @@ execute &&PATCH_ADMIN_user..patch_installer.patch_started( -
  ,i_tag_from           => 'TRK-01.05A' -
  ,i_tag_to             => 'TRK-01.05B' -
  ,i_supplementary      => '' -
- ,i_patch_desc         => 'BG-114 Tuning PATCH_ADMIN' -
- ,i_patch_componants   => 'patch_prereqs.tab' -
+ ,i_patch_desc         => 'Removing patch_supersedes' -
+ ,i_patch_componants   => 'create_db_link.prc' -
 ||',patch_supersedes.tab' -
 ||',patch_supersedes_tapi.pks' -
 ||',installed_patches_v.vw' -
@@ -41,7 +41,7 @@ execute &&PATCH_ADMIN_user..patch_installer.patch_started( -
 ||',patch_installer.pkb' -
  ,i_patch_create_date  => '06-12-2016' -
  ,i_patch_created_by   => 'Peter' -
- ,i_note               => 'Removing patch_supersedes' -
+ ,i_note               => 'Apply to all DBs, then apply BACK and FOR patches' -
  ,i_rerunnable_yn      => 'Y' -
  ,i_remove_prereqs     => 'N' -
  ,i_remove_sups        => 'N' -
@@ -65,11 +65,6 @@ select user||'@'||global_name Connection from global_name;
 
 
 PROMPT TABLES
-
-WHENEVER SQLERROR CONTINUE
-PROMPT patch_prereqs.tab 
-@&&patch_path.patch_prereqs.tab;
-WHENEVER SQLERROR EXIT FAILURE ROLLBACK
 
 WHENEVER SQLERROR CONTINUE
 PROMPT patch_supersedes.tab 
@@ -106,6 +101,10 @@ WHENEVER SQLERROR CONTINUE
 PROMPT patch_supersedes_tapi.pkb 
 @&&patch_path.patch_supersedes_tapi.pkb;
 WHENEVER SQLERROR EXIT FAILURE ROLLBACK
+Show error;
+
+PROMPT create_db_link.prc 
+@&&patch_path.create_db_link.prc;
 Show error;
 
 COMMIT;

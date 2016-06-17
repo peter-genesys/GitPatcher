@@ -1,3 +1,4 @@
+--Cumulative script for patches table.
 CREATE TABLE patches(
   patch_id           NUMBER
  ,patch_name         VARCHAR2(100)
@@ -40,5 +41,7 @@ alter table patches modify tag_to   VARCHAR2(40);
 alter table patches add patch_type VARCHAR2(30) DEFAULT 'feature' NOT NULL;
  
 alter table patches modify branch_name VARCHAR2(100); 
+
+alter table patches add    tracking_yn VARCHAR2(1) default 'Y';
  
 

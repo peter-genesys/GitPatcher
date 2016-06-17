@@ -58,11 +58,11 @@ IS
       SELECT *
         FROM PATCHES
        WHERE
-            (i_db_schema is null or DB_SCHEMA = i_db_schema) AND
-            (i_branch_name is null or BRANCH_NAME = i_branch_name) AND
-            (i_tag_from is null or TAG_FROM = i_tag_from) AND
-            (i_tag_to is null or TAG_TO = i_tag_to) AND
-            (i_supplementary is null or SUPPLEMENTARY = i_supplementary)
+            ((i_db_schema     is null and db_schema     is null) or DB_SCHEMA = i_db_schema) AND
+            ((i_branch_name   is null and branch_name   is null) or BRANCH_NAME = i_branch_name) AND
+            ((i_tag_from      is null and tag_from      is null) or TAG_FROM = i_tag_from) AND
+            ((i_tag_to        is null and tag_to        is null) or TAG_TO = i_tag_to) AND
+            ((i_supplementary is null and supplementary is null) or SUPPLEMENTARY = i_supplementary)
       ;
    l_result PATCHES%ROWTYPE;
    l_found   BOOLEAN;
@@ -99,7 +99,7 @@ IS
       SELECT *
         FROM PATCHES
        WHERE
-            (i_patch_name is null or PATCH_NAME = i_patch_name)
+            ((i_patch_name is null and patch_name is null) or PATCH_NAME = i_patch_name)
       ;
    l_result PATCHES%ROWTYPE;
    l_found   BOOLEAN;

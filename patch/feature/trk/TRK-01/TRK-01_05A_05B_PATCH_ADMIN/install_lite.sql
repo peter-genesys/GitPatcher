@@ -22,19 +22,19 @@ SPOOL TRK-01_05A_05B_PATCH_ADMIN.log
 CONNECT PATCH_ADMIN/&&PATCH_ADMIN_password@&&database
 set serveroutput on;
 select user||'@'||global_name Connection from global_name;
-
-
+ 
 PROMPT TABLES
-
-WHENEVER SQLERROR CONTINUE
-PROMPT patch_prereqs.tab 
-@&&patch_path.patch_prereqs.tab;
-WHENEVER SQLERROR EXIT FAILURE ROLLBACK
 
 WHENEVER SQLERROR CONTINUE
 PROMPT patch_supersedes.tab 
 @&&patch_path.patch_supersedes.tab;
 WHENEVER SQLERROR EXIT FAILURE ROLLBACK
+
+PROMPT PROCEDURES
+
+PROMPT create_db_link.prc 
+@&&patch_path.create_db_link.prc;
+Show error;
 
 PROMPT PACKAGE SPECS
 

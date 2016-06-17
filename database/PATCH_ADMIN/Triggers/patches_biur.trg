@@ -8,8 +8,17 @@ BEGIN
     NULL;
   ELSE
     IF UPDATING AND :OLD.success_YN = 'Y' AND :NEW.rerunnable_yn = 'N' THEN
-      RAISE_APPLICATION_ERROR(-20000,'THIS PATCH HAS BEEN RUN SUCCESSFULLY AND IS NOT FOR RERUN');   
+      RAISE_APPLICATION_ERROR(-20000,'THIS PATCH HAS BEEN RUN SUCCESSFULLY AND IS NOT FOR RERUN!');   
     END IF;
+    IF UPDATING AND :OLD.success_YN = 'Y' AND :NEW.rerunnable_yn = 'Y' AND patch_installer.is_prereq_patch (
+      i_prereq_patch => :OLD.patch_name ) THEN
+      RAISE_APPLICATION_ERROR(-20000,'THIS PATCH WAS A PREREQ PATCH.  IT IS NOT SAFE TO RERUN!');   
+    END IF;
+    IF patch_installer.is_superseded_patch (
+      i_supersedes_patch => :OLD.patch_name ) THEN
+      RAISE_APPLICATION_ERROR(-20000,'THIS PATCH HAS BEEN SUPERSEDED.  IT IS NOT SAFE TO RUN!');   
+    END IF;
+
     :NEW.install_log := 'Logged '||TO_CHAR(:NEW.log_datetime,'DD-MON-YYYY')||chr(10)
               ||:NEW.install_log||chr(10)
               ||:OLD.install_log;
