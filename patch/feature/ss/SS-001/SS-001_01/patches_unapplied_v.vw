@@ -17,3 +17,5 @@ select
 ,rerunnable_yn    
 from &&BACKWARD_SCHEMA..patches_dependency_v
 where patch_name not in (select patch_name from installed_patches_v);
+show error;
+
