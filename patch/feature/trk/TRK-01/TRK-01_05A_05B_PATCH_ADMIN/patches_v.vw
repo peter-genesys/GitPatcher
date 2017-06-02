@@ -6,6 +6,4 @@ select p.*
 ,(select count(*) 
   from PATCH_PREREQS pr
   where pr.PREREQ_PATCH = p.PATCH_NAME) is_prereq_count
-,0 supersedes_count --deprecated
-,0 superseded_count --deprecated
 from patches p;
