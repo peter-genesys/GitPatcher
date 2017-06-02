@@ -393,8 +393,9 @@ Public Class PatchRunner
 
         If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
             FindUnappliedPatches(AvailablePatches)
-        ElseIf ComboBoxPatchesFilter.SelectedItem = "Uninstalled" Or ComboBoxPatchesFilter.SelectedItem = "All" Then
+        ElseIf ComboBoxPatchesFilter.SelectedItem = "Uninstalled" Then
             FindPatches(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Uninstalled")
+            'All patches
         Else
             MsgBox("Choose type of patch to search for.", MsgBoxStyle.Exclamation, "Choose Search criteria")
         End If
