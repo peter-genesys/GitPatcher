@@ -165,22 +165,7 @@ Public Class PatchRunner
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
-
-        'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
-
-        'Harder to get working but no need for TNSNAMES File
-        'Dim oradb As String = "Data Source=(DESCRIPTION=" _
-        '   + "(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=" & Common.getHost & ")(PORT=" & Common.getPort & ")))" _
-        '   + "(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=" & Common.getSid & ")));" _
-        '   + "User Id=patch_admin;Password=patch_admin;"
-
-        Dim conn As New OracleConnection(oradb)
-        Dim sql As String = Nothing
-        Dim cmd As OracleCommand
-        Dim dr As OracleDataReader
-
-
+ 
         foundPatches.Clear()
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
@@ -196,6 +181,20 @@ Public Class PatchRunner
 
             Dim patchMatch As Boolean = False
 
+            'Simple but replies on TNSNAMES File
+            Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
+
+            'Harder to get working but no need for TNSNAMES File
+            'Dim oradb As String = "Data Source=(DESCRIPTION=" _
+            '   + "(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=" & Common.getHost & ")(PORT=" & Common.getPort & ")))" _
+            '   + "(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=" & Common.getSid & ")));" _
+            '   + "User Id=patch_admin;Password=patch_admin;"
+
+            Dim conn As New OracleConnection(oradb)
+            Dim sql As String = Nothing
+            Dim cmd As OracleCommand
+            Dim dr As OracleDataReader
+
 
             Try
 
@@ -208,21 +207,7 @@ Public Class PatchRunner
                     patchMatch = False
                     Dim lPatchName As String = Common.getLastSegment(foundPatches(i), "\")
 
-                    sql = "select max(patch_name) patch_name from patches where patch_name = '" & lPatchName & "' and success_yn = 'Y' "
-
-                    'sql = "select max(patch_name) patch_name from ( " _
-                    '    & "select patch_name from patches " _
-                    '    & "where patch_name = '" & lPatchName & "' " _
-                    '    & "and success_yn = 'Y' " _
-                    '    & "UNION " _
-                    '    & "select ps.supersedes_patch " _
-                    '    & "from patch_supersedes ps, " _
-                    '    & "patches p " _
-                    '    & "where p.patch_name = ps.patch_name " _
-                    '    & "and p.success_yn = 'Y' " _
-                    '    & "and  ps.supersedes_patch = '" & lPatchName & "') "
-
-
+                    sql = "select max(patch_name) patch_name from installed_patches_v where patch_name = '" & lPatchName
 
                     cmd = New OracleCommand(sql, conn)
                     cmd.CommandType = CommandType.Text
@@ -393,8 +378,10 @@ Public Class PatchRunner
 
         If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
             FindUnappliedPatches(AvailablePatches)
-        ElseIf ComboBoxPatchesFilter.SelectedItem = "Uninstalled" Or ComboBoxPatchesFilter.SelectedItem = "All" Then
+        ElseIf ComboBoxPatchesFilter.SelectedItem = "Uninstalled" Then
             FindPatches(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Uninstalled")
+        ElseIf ComboBoxPatchesFilter.SelectedItem = "All" Then
+            FindPatches(AvailablePatches, False) 'Find patches without doing any db search.
         Else
             MsgBox("Choose type of patch to search for.", MsgBoxStyle.Exclamation, "Choose Search criteria")
         End If
