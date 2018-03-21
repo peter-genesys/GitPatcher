@@ -21,7 +21,7 @@ wwv_flow_api.create_page(
 ,p_cache_mode=>'NOCACHE'
 ,p_help_text=>'No help is available for this page.'
 ,p_last_updated_by=>'PETER'
-,p_last_upd_yyyymmddhh24miss=>'20170516214800'
+,p_last_upd_yyyymmddhh24miss=>'20170519230312'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(72821263151899214)
@@ -53,7 +53,7 @@ wwv_flow_api.create_page_plug(
 '    PATCHES_V.RERUNNABLE_YN as RERUNNABLE_YN,',
 '    PATCHES_V.ERROR_COUNT as ERROR_COUNT,',
 '    PATCHES_V.USERNAME as USERNAME,',
-'    PATCHES_V.INSTALL_LOG as INSTALL_LOG,',
+'    REPLACE(PATCHES_V.INSTALL_LOG,''Logged '',''<BR>'') as INSTALL_LOG,',
 '    PATCHES_V.CREATED_BY as CREATED_BY,',
 '    PATCHES_V.CREATED_ON as CREATED_ON,',
 '    PATCHES_V.LAST_UPDATED_BY as LAST_UPDATED_BY,',
@@ -185,8 +185,7 @@ wwv_flow_api.create_worksheet_column(
 ,p_allow_pivot=>'N'
 ,p_column_type=>'CLOB'
 ,p_display_text_as=>'WITHOUT_MODIFICATION'
-,p_column_alignment=>'RIGHT'
-,p_tz_dependent=>'N'
+,p_heading_alignment=>'LEFT'
 ,p_static_id=>'PATCH_COMPONANTS'
 ,p_rpt_show_filter_lov=>'N'
 ,p_help_text=>'No help available for this page item.'
@@ -343,8 +342,8 @@ wwv_flow_api.create_worksheet_column(
 ,p_allow_group_by=>'N'
 ,p_allow_pivot=>'N'
 ,p_column_type=>'CLOB'
+,p_display_text_as=>'WITHOUT_MODIFICATION'
 ,p_column_alignment=>'RIGHT'
-,p_tz_dependent=>'N'
 ,p_static_id=>'INSTALL_LOG'
 ,p_rpt_show_filter_lov=>'N'
 ,p_help_text=>'No help available for this page item.'
