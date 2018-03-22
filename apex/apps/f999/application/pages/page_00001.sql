@@ -20,8 +20,8 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'N'
 ,p_cache_mode=>'NOCACHE'
 ,p_help_text=>'No help is available for this page.'
-,p_last_updated_by=>'BURGESPE'
-,p_last_upd_yyyymmddhh24miss=>'20170503160645'
+,p_last_updated_by=>'PETER'
+,p_last_upd_yyyymmddhh24miss=>'20180322140101'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(72820758119899212)
@@ -32,10 +32,11 @@ wwv_flow_api.create_page_plug(
 ,p_plug_display_sequence=>10
 ,p_include_in_reg_disp_sel_yn=>'N'
 ,p_plug_display_point=>'BODY_3'
-,p_list_id=>wwv_flow_api.id(72820549044899211)
+,p_list_id=>wwv_flow_api.id(90164838464218934)
 ,p_plug_source_type=>'NATIVE_LIST'
 ,p_list_template_id=>wwv_flow_api.id(90145419743216789)
 ,p_plug_query_row_template=>1
+,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(72820972246899213)

@@ -19,12 +19,12 @@ wwv_flow_api.create_page(
 ,p_nav_list_template_options=>'#DEFAULT#'
 ,p_page_is_public_y_n=>'Y'
 ,p_cache_mode=>'NOCACHE'
-,p_last_updated_by=>'BURGESPE'
-,p_last_upd_yyyymmddhh24miss=>'20170503161202'
+,p_last_updated_by=>'PETER'
+,p_last_upd_yyyymmddhh24miss=>'20180322140045'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(72819353722899206)
-,p_plug_name=>'Login'
+,p_plug_name=>'Tracker &PROMO_LEVEL.'
 ,p_region_template_options=>'#DEFAULT#'
 ,p_component_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(90112483887216764)
@@ -122,6 +122,30 @@ wwv_flow_api.create_page_process(
 ,p_process_type=>'NATIVE_PLSQL'
 ,p_process_name=>'Get Username Cookie'
 ,p_process_sql_clob=>':P101_USERNAME := apex_authentication.get_login_username_cookie;'
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(156985679696388661)
+,p_process_sequence=>40
+,p_process_point=>'BEFORE_HEADER'
+,p_process_type=>'NATIVE_PLSQL'
+,p_process_name=>'SetAppItems'
+,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'--This is not a perfect solution to deriving the promotion levels. Just a temporary workaround.',
+'--It really should interogate the linking views to derive this info.',
+'IF V(''APP_ALIAS'') LIKE ''%DEV'' THEN ',
+'  :PREV_LEVEL  := null;',
+'  :PROMO_LEVEL := ''DEV'';',
+'  :NEXT_LEVEL  := ''TEST'';',
+'ELSIF V(''APP_ALIAS'') LIKE ''%TEST'' THEN ',
+'  :PREV_LEVEL  := ''DEV'';',
+'  :PROMO_LEVEL := ''TEST'';',
+'  :NEXT_LEVEL  := ''PROD'';',
+'ELSE ',
+'  :PREV_LEVEL  := ''TEST'';',
+'  :PROMO_LEVEL := ''PROD'';',
+'  :NEXT_LEVEL  := null;',
+'END IF;'))
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 );
 end;
 /

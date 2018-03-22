@@ -15,11 +15,12 @@ prompt APPLICATION 999 - Tracker
 -- Application Statistics:
 --   Pages:                      8
 --     Items:                   31
---     Processes:                9
+--     Processes:               10
 --     Regions:                 15
 --     Buttons:                  5
 --   Shared Components:
 --     Logic:
+--       Items:                  3
 --     Navigation:
 --       Lists:                  2
 --       Breadcrumbs:            1

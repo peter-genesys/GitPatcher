@@ -21,30 +21,34 @@ wwv_flow_api.create_menu_option(
 wwv_flow_api.create_menu_option(
  p_id=>wwv_flow_api.id(50537043214111978)
 ,p_parent_id=>wwv_flow_api.id(72820853868899212)
-,p_short_name=>'Patches Unpromoted'
+,p_short_name=>'Unpromoted to &NEXT_LEVEL.'
+,p_long_name=>'Patches Unpromoted'
 ,p_link=>'f?p=&APP_ID.:4:&SESSION.::&DEBUG.:::'
 ,p_page_id=>4
 );
 wwv_flow_api.create_menu_option(
  p_id=>wwv_flow_api.id(50539062396118273)
 ,p_parent_id=>wwv_flow_api.id(72820853868899212)
-,p_short_name=>'Patches Unapplied'
+,p_short_name=>'Unapplied from &PREV_LEVEL.'
+,p_long_name=>'Patches Unapplied'
 ,p_link=>'f?p=&APP_ID.:3:&SESSION.::&DEBUG.:::'
 ,p_page_id=>3
 );
 wwv_flow_api.create_menu_option(
  p_id=>wwv_flow_api.id(72820853868899212)
 ,p_parent_id=>0
-,p_short_name=>'Home'
-,p_link=>'f?p=&APP_ID.:1:&APP_SESSION.::&DEBUG.'
+,p_short_name=>'Patches'
+,p_long_name=>'Home'
+,p_link=>'f?p=&APP_ID.:1:&SESSION.::&DEBUG.:::'
 ,p_page_id=>1
 );
 wwv_flow_api.create_menu_option(
  p_id=>wwv_flow_api.id(72823846230899220)
 ,p_parent_id=>wwv_flow_api.id(72820853868899212)
 ,p_option_sequence=>20
-,p_short_name=>'Installed Patches'
-,p_link=>'f?p=&APP_ID.:2:&APP_SESSION.::&DEBUG.'
+,p_short_name=>'Installed in &PROMO_LEVEL.'
+,p_long_name=>'Installed Patches'
+,p_link=>'f?p=&APP_ID.:2:&SESSION.::&DEBUG.:::'
 ,p_page_id=>2
 );
 end;

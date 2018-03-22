@@ -21,14 +21,14 @@ wwv_flow_api.create_page(
 ,p_cache_mode=>'NOCACHE'
 ,p_help_text=>'No help is available for this page.'
 ,p_last_updated_by=>'PETER'
-,p_last_upd_yyyymmddhh24miss=>'20170519230312'
+,p_last_upd_yyyymmddhh24miss=>'20180322130451'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(72821263151899214)
 ,p_plug_name=>'Installed Patches'
-,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_region_template_options=>'#DEFAULT#'
 ,p_component_template_options=>'#DEFAULT#'
-,p_plug_template=>wwv_flow_api.id(90112942111216764)
+,p_plug_template=>wwv_flow_api.id(90111842105216762)
 ,p_plug_display_sequence=>10
 ,p_include_in_reg_disp_sel_yn=>'N'
 ,p_plug_display_point=>'BODY_3'

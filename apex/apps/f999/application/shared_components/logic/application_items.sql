@@ -1,5 +1,19 @@
 prompt --application/shared_components/logic/application_items
 begin
-null;
+wwv_flow_api.create_flow_item(
+ p_id=>wwv_flow_api.id(156972754771948929)
+,p_name=>'NEXT_LEVEL'
+,p_protection_level=>'N'
+);
+wwv_flow_api.create_flow_item(
+ p_id=>wwv_flow_api.id(156972909870956204)
+,p_name=>'PREV_LEVEL'
+,p_protection_level=>'N'
+);
+wwv_flow_api.create_flow_item(
+ p_id=>wwv_flow_api.id(156971324000885513)
+,p_name=>'PROMO_LEVEL'
+,p_protection_level=>'N'
+);
 end;
 /

@@ -20,12 +20,12 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'N'
 ,p_cache_mode=>'NOCACHE'
 ,p_help_text=>'No help is available for this page.'
-,p_last_updated_by=>'BURGESPE'
-,p_last_upd_yyyymmddhh24miss=>'20170503160645'
+,p_last_updated_by=>'PETER'
+,p_last_upd_yyyymmddhh24miss=>'20180322123250'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(46323656287579193)
-,p_plug_name=>'Patches Unapplied'
+,p_plug_name=>'Patches Unapplied - to be applied &APP_ALIAS.'
 ,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
 ,p_component_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(90112942111216764)
@@ -47,6 +47,7 @@ wwv_flow_api.create_page_plug(
 ' from PATCHES_UNAPPLIED_V PATCHES_UNAPPLIED_V'))
 ,p_plug_source_type=>'NATIVE_IR'
 ,p_plug_query_row_template=>1
+,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
 );
 wwv_flow_api.create_worksheet(
  p_id=>wwv_flow_api.id(46323743950579193)

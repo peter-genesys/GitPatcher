@@ -10,7 +10,7 @@ wwv_flow_api.create_theme_style(
 ,p_theme_roller_input_file_urls=>'#THEME_IMAGES#less/theme/Vita.less'
 ,p_theme_roller_config=>'{"customCSS":"","vars":{"@utr_Palette1-lighter":"#c17cff","@utr_Palette1-light":"#875faa","@utr_Palette1":"#6f4e8c","@g_Accent-OG":"#f6f1fa","@utr_Palette1-darker":"#4a345e","@g_Accent-BG":"#c17cff","@utr_Palette2-light":"#875faa","@utr_Palette3-norm'
 ||'al":"#6f4e8c","@utr_Palette3-dark":"#5b3f72","@utr_Palette2-darker":"#4a345e","@utr_Palette3-lighter":"#c17cff","@utr_Palette3-light":"#875faa","@utr_Palette3":"#6f4e8c","@utr_Palette3-darker":"#4a345e","@utr_Palette4-lighter":"#c17cff","@utr_Palette'
-||'4-light":"#875faa","@utr_Palette4":"#6f4e8c","@utr_Palette4-dark":"#5b3f72","@utr_Palette4-darker":"#4a345e"}}'
+||'4-light":"#875faa","@utr_Palette4":"#6f4e8c","@utr_Palette4-dark":"#5b3f72","@utr_Palette4-darker":"#4a345e","@Side-Exp":"240px","@Nav-Exp":"200px"}}'
 ,p_theme_roller_output_file_url=>'#THEME_DB_IMAGES#11576267317509973.css'
 ,p_theme_roller_read_only=>false
 );

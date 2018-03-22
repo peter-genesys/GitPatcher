@@ -18,7 +18,7 @@ wwv_flow_api.create_flow(
 ,p_authentication=>'PLUGIN'
 ,p_authentication_id=>wwv_flow_api.id(72819053363899202)
 ,p_application_tab_set=>0
-,p_logo_image=>'TEXT:Tracker'
+,p_logo_image=>'TEXT:Tracker &PROMO_LEVEL.'
 ,p_proxy_server=> nvl(wwv_flow_application_install.get_proxy,'')
 ,p_flow_version=>'release 1.0'
 ,p_flow_status=>'AVAILABLE_W_EDIT_LINK'
@@ -43,7 +43,7 @@ wwv_flow_api.create_flow(
 ,p_substitution_string_06=>'APP_ID_PROD'
 ,p_substitution_value_06=>'998'
 ,p_last_updated_by=>'PETER'
-,p_last_upd_yyyymmddhh24miss=>'20180321214804'
+,p_last_upd_yyyymmddhh24miss=>'20180322140631'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_ui_type_name => null
 );
