@@ -2789,7 +2789,34 @@ BEGIN
     ,created_on                                                                                                                                       
     ,last_updated_by                                                                                                                                  
     ,last_updated_on                                                                                                                                  
-  INTO io_patches;                                                                                                                                    
+  INTO     
+    io_patches.patch_id          
+   ,io_patches.patch_name        
+   ,io_patches.patch_type        
+   ,io_patches.db_schema         
+   ,io_patches.branch_name       
+   ,io_patches.tag_from          
+   ,io_patches.tag_to            
+   ,io_patches.supplementary     
+   ,io_patches.patch_desc        
+   ,io_patches.patch_componants  
+   ,io_patches.patch_create_date 
+   ,io_patches.patch_created_by  
+   ,io_patches.note              
+   ,io_patches.log_datetime      
+   ,io_patches.completed_datetime
+   ,io_patches.success_yn        
+   ,io_patches.retired_yn        
+   ,io_patches.rerunnable_yn     
+   ,io_patches.tracking_yn       
+   ,io_patches.warning_count     
+   ,io_patches.error_count       
+   ,io_patches.username          
+   ,io_patches.install_log       
+   ,io_patches.created_by        
+   ,io_patches.created_on        
+   ,io_patches.last_updated_by   
+   ,io_patches.last_updated_on;                                                                                                                                   
                                                                                                                                                       
 END ins;                                                                                                                                              
                                                                                                                                                       
@@ -3026,8 +3053,35 @@ BEGIN
     ,created_by                                                                                                                                       
     ,created_on                                                                                                                                       
     ,last_updated_by                                                                                                                                  
-    ,last_updated_on                                                                                                                                  
-  INTO io_patches;                                                                                                                                    
+    ,last_updated_on    
+  INTO                                                                                                                                
+    io_patches.patch_id          
+   ,io_patches.patch_name        
+   ,io_patches.patch_type        
+   ,io_patches.db_schema         
+   ,io_patches.branch_name       
+   ,io_patches.tag_from          
+   ,io_patches.tag_to            
+   ,io_patches.supplementary     
+   ,io_patches.patch_desc        
+   ,io_patches.patch_componants  
+   ,io_patches.patch_create_date 
+   ,io_patches.patch_created_by  
+   ,io_patches.note              
+   ,io_patches.log_datetime      
+   ,io_patches.completed_datetime
+   ,io_patches.success_yn        
+   ,io_patches.retired_yn        
+   ,io_patches.rerunnable_yn     
+   ,io_patches.tracking_yn       
+   ,io_patches.warning_count     
+   ,io_patches.error_count       
+   ,io_patches.username          
+   ,io_patches.install_log       
+   ,io_patches.created_by        
+   ,io_patches.created_on        
+   ,io_patches.last_updated_by   
+   ,io_patches.last_updated_on;                                                                                                                               
                                                                                                                                                       
 END;                                                                                                                                                  
                                                                                                                                                       

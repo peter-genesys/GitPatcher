@@ -1,11 +1,12 @@
 --Cumulative script for patches table.
 CREATE TABLE patches(
   patch_id           NUMBER
- ,patch_name         VARCHAR2(100)
+ ,patch_name         VARCHAR2(100) 
+ ,patch_type         VARCHAR2(30) DEFAULT 'feature' NOT NULL 
  ,db_schema          VARCHAR2(30)
- ,branch_name        VARCHAR2(30)
- ,tag_from           VARCHAR2(18)
- ,tag_to             VARCHAR2(18)
+ ,branch_name        VARCHAR2(100)
+ ,tag_from           VARCHAR2(40)
+ ,tag_to             VARCHAR2(40)
  ,supplementary      VARCHAR2(4)
  ,patch_desc         VARCHAR2(200)
  ,patch_componants   CLOB
@@ -17,6 +18,7 @@ CREATE TABLE patches(
  ,success_yn         VARCHAR2(1) default 'N'
  ,retired_yn         VARCHAR2(1) default 'N'
  ,rerunnable_yn      VARCHAR2(1) default 'Y'
+ ,tracking_yn        VARCHAR2(1) default 'Y'
  ,warning_count      NUMBER
  ,error_count        NUMBER 
  ,username           VARCHAR2(30) 
