@@ -1,49 +1,42 @@
---Cumulative script for patches table.
-CREATE TABLE patches(
-  patch_id           NUMBER
- ,patch_name         VARCHAR2(100) 
- ,patch_type         VARCHAR2(30) DEFAULT 'feature' NOT NULL 
- ,db_schema          VARCHAR2(30)
- ,branch_name        VARCHAR2(100)
- ,tag_from           VARCHAR2(40)
- ,tag_to             VARCHAR2(40)
- ,supplementary      VARCHAR2(4)
- ,patch_desc         VARCHAR2(200)
- ,patch_componants   CLOB
- ,patch_create_date  DATE 
- ,patch_created_by   VARCHAR2 (255)
- ,note               VARCHAR2 (200)
- ,log_datetime       DATE
- ,completed_datetime DATE
- ,success_yn         VARCHAR2(1) default 'N'
- ,retired_yn         VARCHAR2(1) default 'N'
- ,rerunnable_yn      VARCHAR2(1) default 'Y'
- ,tracking_yn        VARCHAR2(1) default 'Y'
- ,warning_count      NUMBER
- ,error_count        NUMBER 
- ,username           VARCHAR2(30) 
- ,install_log        CLOB
- ,created_by         VARCHAR2 (255)  
- ,created_on         DATE DEFAULT sysdate   
- ,last_updated_by    VARCHAR2 (255) 
- ,last_updated_on    DATE DEFAULT sysdate 
+CREATE TABLE "PATCHES"(
+  "PATCH_ID"             NUMBER
+  ,"PATCH_NAME"           VARCHAR2(100)
+  ,"DB_SCHEMA"            VARCHAR2(30)
+  ,"BRANCH_NAME"          VARCHAR2(100)
+  ,"TAG_FROM"             VARCHAR2(40)
+  ,"TAG_TO"               VARCHAR2(40)
+  ,"SUPPLEMENTARY"        VARCHAR2(4)
+  ,"PATCH_DESC"           VARCHAR2(200)
+  ,"PATCH_COMPONANTS"     CLOB
+  ,"PATCH_CREATE_DATE"    DATE
+  ,"PATCH_CREATED_BY"     VARCHAR2(255)
+  ,"NOTE"                 VARCHAR2(200)
+  ,"LOG_DATETIME"         DATE
+  ,"COMPLETED_DATETIME"   DATE
+  ,"SUCCESS_YN"           VARCHAR2(1)DEFAULT 'N'
+  ,"RETIRED_YN"           VARCHAR2(1)DEFAULT 'N'
+  ,"RERUNNABLE_YN"        VARCHAR2(1)DEFAULT 'Y'
+  ,"WARNING_COUNT"        NUMBER
+  ,"ERROR_COUNT"          NUMBER
+  ,"USERNAME"             VARCHAR2(30)
+  ,"INSTALL_LOG"          CLOB
+  ,"CREATED_BY"           VARCHAR2(255)
+  ,"CREATED_ON"           DATE DEFAULT SYSDATE
+  ,"LAST_UPDATED_BY"      VARCHAR2(255)
+  ,"LAST_UPDATED_ON"      DATE DEFAULT SYSDATE
+  ,"PATCH_TYPE"           VARCHAR2(30)DEFAULT 'feature'
+    NOT NULL ENABLE
+  ,"TRACKING_YN"          VARCHAR2(1)DEFAULT 'Y'
 );
-
-ALTER TABLE patches 
-    ADD CONSTRAINT patches_PK PRIMARY KEY ( patch_id ) ;
-    
-ALTER TABLE patches 
-    ADD CONSTRAINT patches_UK1 UNIQUE ( patch_name ) ;
-    
-ALTER TABLE patches 
-    ADD CONSTRAINT patches_UK2 UNIQUE (db_schema ,branch_name ,tag_from ,tag_to ,supplementary);
-    
-alter table patches modify tag_from VARCHAR2(40);
-alter table patches modify tag_to   VARCHAR2(40);  
-alter table patches add patch_type VARCHAR2(30) DEFAULT 'feature' NOT NULL;
- 
-alter table patches modify branch_name VARCHAR2(100); 
-
-alter table patches add    tracking_yn VARCHAR2(1) default 'Y';
- 
-
+ALTER TABLE "PATCHES"
+  ADD CONSTRAINT "PATCHES_PK" PRIMARY KEY("PATCH_ID")
+    USING INDEX enable;
+ALTER TABLE "PATCHES" ADD CONSTRAINT "PATCHES_UK1" UNIQUE("PATCH_NAME")
+  USING INDEX enable;
+ALTER TABLE "PATCHES"
+  ADD CONSTRAINT "PATCHES_UK2" UNIQUE("DB_SCHEMA"
+  ,"BRANCH_NAME"
+  ,"TAG_FROM"
+  ,"TAG_TO"
+  ,"SUPPLEMENTARY")
+    USING INDEX enable;

@@ -1,2 +1,17 @@
-create or replace view patch_prereqs_v as 
-select * from patch_prereqs;
+CREATE OR REPLACE FORCE EDITIONABLE VIEW "PATCH_PREREQS_V"(
+  "PATCH_PREREQ_ID"
+  ,"PATCH_NAME"
+  ,"PREREQ_PATCH"
+  ,"CREATED_BY"
+  ,"CREATED_ON"
+  ,"LAST_UPDATED_BY"
+  ,"LAST_UPDATED_ON"
+)AS
+  SELECT "PATCH_PREREQ_ID"
+         ,"PATCH_NAME"
+         ,"PREREQ_PATCH"
+         ,"CREATED_BY"
+         ,"CREATED_ON"
+         ,"LAST_UPDATED_BY"
+         ,"LAST_UPDATED_ON"
+  FROM patch_prereqs;

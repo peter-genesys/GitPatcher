@@ -1,16 +1,16 @@
---A patch_name has a prereq_patch that must be applied before patch_name.
-CREATE TABLE patch_prereqs(
-  patch_prereq_id   NUMBER
- ,patch_name        VARCHAR2(100) 
- ,prereq_patch      VARCHAR2(100) 
- ,created_by        VARCHAR2 (255)  
- ,created_on        DATE DEFAULT sysdate   
- ,last_updated_by   VARCHAR2 (255) 
- ,last_updated_on   DATE DEFAULT sysdate 
+CREATE TABLE "PATCH_PREREQS"(
+  "PATCH_PREREQ_ID"   NUMBER
+  ,"PATCH_NAME"        VARCHAR2(100)
+  ,"PREREQ_PATCH"      VARCHAR2(100)
+  ,"CREATED_BY"        VARCHAR2(255)
+  ,"CREATED_ON"        DATE DEFAULT SYSDATE
+  ,"LAST_UPDATED_BY"   VARCHAR2(255)
+  ,"LAST_UPDATED_ON"   DATE DEFAULT SYSDATE
 );
- 
-ALTER TABLE patch_prereqs 
-    ADD CONSTRAINT patch_prereqs_PK PRIMARY KEY ( patch_prereq_id ) ;
-    
-ALTER TABLE patch_prereqs 
-    ADD CONSTRAINT patch_prereqs_UK1 UNIQUE ( patch_name  ,prereq_patch ) ;
+ALTER TABLE "PATCH_PREREQS"
+  ADD CONSTRAINT "PATCH_PREREQS_PK" PRIMARY KEY("PATCH_PREREQ_ID")
+    USING INDEX enable;
+ALTER TABLE "PATCH_PREREQS"
+  ADD CONSTRAINT "PATCH_PREREQS_UK1" UNIQUE("PATCH_NAME"
+  ,"PREREQ_PATCH")
+    USING INDEX enable;
