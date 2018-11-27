@@ -33,7 +33,7 @@ execute &&PATCH_ADMIN_user..patch_installer.patch_started( -
  ,i_patch_create_date  => '11-11-2014' -
  ,i_patch_created_by   => 'Peter' -
  ,i_note               => '' -
- ,i_rerunnable_yn      => 'N' -
+ ,i_rerunnable_yn      => 'Y' -
  ,i_remove_prereqs     => 'N' -
  ,i_remove_sups        => 'N' -
  ,i_track_promotion    => 'Y'); 
