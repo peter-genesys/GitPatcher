@@ -5,7 +5,6 @@ wwv_flow_api.create_page(
 ,p_user_interface_id=>wwv_flow_api.id(72818849918899195)
 ,p_name=>'Login'
 ,p_alias=>'LOGIN_DESKTOP'
-,p_page_mode=>'NORMAL'
 ,p_step_title=>'Login'
 ,p_reload_on_submit=>'A'
 ,p_warn_on_unsaved_changes=>'N'
@@ -14,11 +13,8 @@ wwv_flow_api.create_page(
 ,p_autocomplete_on_off=>'OFF'
 ,p_step_template=>wwv_flow_api.id(90079636364216728)
 ,p_page_template_options=>'#DEFAULT#'
-,p_dialog_chained=>'Y'
-,p_overwrite_navigation_list=>'N'
 ,p_nav_list_template_options=>'#DEFAULT#'
 ,p_page_is_public_y_n=>'Y'
-,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'PETER'
 ,p_last_upd_yyyymmddhh24miss=>'20180322140045'
 );
@@ -29,9 +25,7 @@ wwv_flow_api.create_page_plug(
 ,p_component_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(90112483887216764)
 ,p_plug_display_sequence=>10
-,p_include_in_reg_disp_sel_yn=>'N'
 ,p_plug_display_point=>'BODY_3'
-,p_plug_query_row_template=>1
 ,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
 ,p_attribute_01=>'N'
 ,p_attribute_02=>'HTML'

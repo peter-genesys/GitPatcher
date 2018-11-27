@@ -5,20 +5,14 @@ wwv_flow_api.create_page(
 ,p_user_interface_id=>wwv_flow_api.id(72818849918899195)
 ,p_tab_set=>'TS1'
 ,p_name=>'Patches Unapplied'
-,p_page_mode=>'NORMAL'
 ,p_step_title=>'Patches Unapplied'
 ,p_reload_on_submit=>'A'
 ,p_warn_on_unsaved_changes=>'N'
 ,p_step_sub_title=>'Patches Unapplied'
 ,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
-,p_first_item=>'NO_FIRST_ITEM'
 ,p_autocomplete_on_off=>'ON'
 ,p_page_template_options=>'#DEFAULT#'
-,p_dialog_chained=>'Y'
-,p_overwrite_navigation_list=>'N'
 ,p_nav_list_template_options=>'#DEFAULT#'
-,p_page_is_public_y_n=>'N'
-,p_cache_mode=>'NOCACHE'
 ,p_help_text=>'No help is available for this page.'
 ,p_last_updated_by=>'PETER'
 ,p_last_upd_yyyymmddhh24miss=>'20180322123250'
@@ -30,8 +24,8 @@ wwv_flow_api.create_page_plug(
 ,p_component_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(90112942111216764)
 ,p_plug_display_sequence=>10
-,p_include_in_reg_disp_sel_yn=>'N'
 ,p_plug_display_point=>'BODY_3'
+,p_query_type=>'SQL'
 ,p_plug_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'select PATCHES_UNAPPLIED_V.PATCH_NAME as PATCH_NAME,',
 '    PATCHES_UNAPPLIED_V.DB_SCHEMA as DB_SCHEMA,',
@@ -46,7 +40,6 @@ wwv_flow_api.create_page_plug(
 '    PATCHES_UNAPPLIED_V.RERUNNABLE_YN as RERUNNABLE_YN ',
 ' from PATCHES_UNAPPLIED_V PATCHES_UNAPPLIED_V'))
 ,p_plug_source_type=>'NATIVE_IR'
-,p_plug_query_row_template=>1
 ,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
 );
 wwv_flow_api.create_worksheet(
@@ -196,7 +189,6 @@ wwv_flow_api.create_worksheet_rpt(
 ,p_is_default=>'Y'
 ,p_display_rows=>15
 ,p_report_columns=>'PATCH_NAME:PATCH_DESC:NOTE:DB_SCHEMA:PATCH_CREATE_DATE:PATCH_CREATED_BY:RERUNNABLE_YN:'
-,p_flashback_enabled=>'N'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(50537147360115221)
@@ -205,12 +197,10 @@ wwv_flow_api.create_page_plug(
 ,p_component_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(90119950620216768)
 ,p_plug_display_sequence=>20
-,p_include_in_reg_disp_sel_yn=>'N'
 ,p_plug_display_point=>'REGION_POSITION_01'
 ,p_menu_id=>wwv_flow_api.id(72820155995899208)
 ,p_plug_source_type=>'NATIVE_BREADCRUMB'
 ,p_menu_template_id=>wwv_flow_api.id(90155628322216800)
-,p_plug_query_row_template=>1
 );
 end;
 /

@@ -5,19 +5,13 @@ wwv_flow_api.create_page(
 ,p_user_interface_id=>wwv_flow_api.id(72818849918899195)
 ,p_tab_set=>'TS1'
 ,p_name=>'Edit Patches'
-,p_page_mode=>'NORMAL'
 ,p_step_title=>'Edit Patches'
 ,p_reload_on_submit=>'A'
 ,p_warn_on_unsaved_changes=>'N'
 ,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
-,p_first_item=>'NO_FIRST_ITEM'
 ,p_autocomplete_on_off=>'ON'
 ,p_page_template_options=>'#DEFAULT#'
-,p_dialog_chained=>'Y'
-,p_overwrite_navigation_list=>'N'
 ,p_nav_list_template_options=>'#DEFAULT#'
-,p_page_is_public_y_n=>'N'
-,p_cache_mode=>'NOCACHE'
 ,p_help_text=>'No help is available for this page.'
 ,p_last_updated_by=>'BURGESPE'
 ,p_last_upd_yyyymmddhh24miss=>'20170503160645'
@@ -29,9 +23,7 @@ wwv_flow_api.create_page_plug(
 ,p_component_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(90112942111216764)
 ,p_plug_display_sequence=>10
-,p_include_in_reg_disp_sel_yn=>'N'
 ,p_plug_display_point=>'BODY_3'
-,p_plug_query_row_template=>1
 ,p_attribute_01=>'N'
 ,p_attribute_02=>'HTML'
 ,p_attribute_03=>'N'
@@ -43,12 +35,10 @@ wwv_flow_api.create_page_plug(
 ,p_component_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(90119950620216768)
 ,p_plug_display_sequence=>10
-,p_include_in_reg_disp_sel_yn=>'N'
 ,p_plug_display_point=>'REGION_POSITION_01'
 ,p_menu_id=>wwv_flow_api.id(72820155995899208)
 ,p_plug_source_type=>'NATIVE_BREADCRUMB'
 ,p_menu_template_id=>wwv_flow_api.id(90155628322216800)
-,p_plug_query_row_template=>1
 );
 wwv_flow_api.create_page_button(
  p_id=>wwv_flow_api.id(49501450728843829)
@@ -647,6 +637,7 @@ wwv_flow_api.create_page_process(
 ,p_attribute_03=>'P7_ROWID'
 ,p_attribute_04=>'ROWID'
 ,p_attribute_11=>'U'
+,p_attribute_12=>'Y'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 ,p_process_success_message=>'Action Processed.'
 );

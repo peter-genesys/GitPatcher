@@ -1,6 +1,12 @@
 prompt --application/plugin_settings
 begin
 wwv_flow_api.create_plugin_setting(
+ p_id=>wwv_flow_api.id(263488354493976)
+,p_plugin_type=>'ITEM TYPE'
+,p_plugin=>'NATIVE_RICH_TEXT_EDITOR'
+,p_attribute_01=>'N'
+);
+wwv_flow_api.create_plugin_setting(
  p_id=>wwv_flow_api.id(11573153234487284)
 ,p_plugin_type=>'REGION TYPE'
 ,p_plugin=>'NATIVE_IR'

@@ -17,9 +17,11 @@ wwv_flow_api.create_flow(
 ,p_flow_image_prefix => nvl(wwv_flow_application_install.get_image_prefix,'')
 ,p_authentication=>'PLUGIN'
 ,p_authentication_id=>wwv_flow_api.id(72819053363899202)
+,p_populate_roles=>'A'
 ,p_application_tab_set=>0
 ,p_logo_image=>'TEXT:Tracker &PROMO_LEVEL.'
-,p_proxy_server=> nvl(wwv_flow_application_install.get_proxy,'')
+,p_proxy_server=>nvl(wwv_flow_application_install.get_proxy,'')
+,p_no_proxy_domains=>nvl(wwv_flow_application_install.get_no_proxy_domains,'')
 ,p_flow_version=>'release 1.0'
 ,p_flow_status=>'AVAILABLE_W_EDIT_LINK'
 ,p_flow_unavailable_text=>'This application is currently unavailable at this time.'
