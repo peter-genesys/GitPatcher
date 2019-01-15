@@ -25,18 +25,111 @@ CREATE TABLE "PATCHES"(
   ,"LAST_UPDATED_BY"      VARCHAR2(255)
   ,"LAST_UPDATED_ON"      DATE DEFAULT SYSDATE
   ,"PATCH_TYPE"           VARCHAR2(30)DEFAULT 'feature'
-    NOT NULL ENABLE
   ,"TRACKING_YN"          VARCHAR2(1)DEFAULT 'Y'
 );
-ALTER TABLE "PATCHES"
-  ADD CONSTRAINT "PATCHES_PK" PRIMARY KEY("PATCH_ID")
-    USING INDEX enable;
-ALTER TABLE "PATCHES" ADD CONSTRAINT "PATCHES_UK1" UNIQUE("PATCH_NAME")
-  USING INDEX enable;
-ALTER TABLE "PATCHES"
-  ADD CONSTRAINT "PATCHES_UK2" UNIQUE("DB_SCHEMA"
-  ,"BRANCH_NAME"
-  ,"TAG_FROM"
-  ,"TAG_TO"
-  ,"SUPPLEMENTARY")
-    USING INDEX enable;
+
+
+--INDEXES
+
+  CREATE UNIQUE INDEX "PATCHES_PK" ON "PATCHES" ("PATCH_ID") 
+  ;
+
+
+  CREATE UNIQUE INDEX "PATCHES_UK1" ON "PATCHES" ("PATCH_NAME") 
+  ;
+
+
+  CREATE UNIQUE INDEX "PATCHES_UK2" ON "PATCHES" ("DB_SCHEMA", "BRANCH_NAME", "TAG_FROM", "TAG_TO", "SUPPLEMENTARY") 
+  ;
+
+
+
+--CONSTRAINTS
+
+  ALTER TABLE "PATCHES" ADD CONSTRAINT "PATCHES_PK" PRIMARY KEY ("PATCH_ID")
+  USING INDEX  ENABLE;
+  ALTER TABLE "PATCHES" ADD CONSTRAINT "PATCHES_UK1" UNIQUE ("PATCH_NAME")
+  USING INDEX  ENABLE;
+  ALTER TABLE "PATCHES" ADD CONSTRAINT "PATCHES_UK2" UNIQUE ("DB_SCHEMA", "BRANCH_NAME", "TAG_FROM", "TAG_TO", "SUPPLEMENTARY")
+  USING INDEX  ENABLE;
+  ALTER TABLE "PATCHES" MODIFY ("PATCH_TYPE" NOT NULL ENABLE);
+
+
+
+--REFERENTIAL CONSTRAINTS
+
+
+--COMMENTS
+
+
+--TRIGGERS
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "PATCHES_AUD" 
+	before insert or update or delete on PATCHES
+	for each row
+declare
+	l_user varchar2(200) := nvl(v('app_user'), user);
+	l_date date := sysdate;
+	l_action varchar2(1);
+begin
+	-- this is a generated trigger, DO NOT make any changes to it directly, or they will be lost
+	--   to make changes please edit app_config.create_audit_scripts
+
+	if inserting then
+		-- if primary is null, then populate it from the guid sequence
+		if :new.PATCH_ID is null then
+			:new.PATCH_ID := to_number(sys_guid(),'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+		end if;
+
+		-- populate creation audit fields
+		:new.CREATED_BY := l_user;
+		:new.CREATED_ON := l_date;
+	end if;
+
+	if updating then
+		-- ensure created audit fields don't change
+		:new.CREATED_BY := :old.CREATED_BY;
+		:new.CREATED_ON := :old.CREATED_ON;
+	end if;
+
+	if inserting or updating then
+		-- populate last updated audit fields
+		:new.LAST_UPDATED_BY := l_user;
+		:new.LAST_UPDATED_ON := l_date;
+	end if;
+
+
+
+end;
+/
+ALTER TRIGGER "PATCHES_AUD" ENABLE;
+  CREATE OR REPLACE EDITIONABLE TRIGGER "PATCHES_BIUR" 
+BEFORE INSERT OR UPDATE ON PATCHES
+REFERENCING OLD AS OLD NEW AS NEW
+FOR EACH ROW
+BEGIN
+  IF :OLD.log_datetime = :NEW.log_datetime THEN
+    --Allows changes to metadata, when not actually running a patch.
+    NULL;
+  ELSE
+    IF UPDATING AND :OLD.success_YN = 'Y' AND :NEW.rerunnable_yn = 'N' THEN
+      RAISE_APPLICATION_ERROR(-20000,'THIS PATCH HAS BEEN RUN SUCCESSFULLY AND IS NOT FOR RERUN!');
+    END IF;
+    IF UPDATING AND :OLD.success_YN = 'Y' AND :NEW.rerunnable_yn = 'Y' AND patch_installer.is_prereq_patch (
+      i_prereq_patch => :OLD.patch_name ) THEN
+      RAISE_APPLICATION_ERROR(-20000,'THIS PATCH WAS A PREREQ PATCH.  IT IS NOT SAFE TO RERUN!');
+    END IF;
+    :NEW.install_log := 'Logged '||TO_CHAR(:NEW.log_datetime,'DD-MON-YYYY')||chr(10)
+              ||:NEW.install_log||chr(10)
+              ||:OLD.install_log;
+  END IF;
+
+END;
+/
+ALTER TRIGGER "PATCHES_BIUR" ENABLE;
+
+
+--GRANTS
+
+
+--SYNONYMS

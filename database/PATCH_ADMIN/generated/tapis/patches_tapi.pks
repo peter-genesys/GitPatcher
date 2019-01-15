@@ -1241,6 +1241,19 @@ PROCEDURE split_rec( i_patches in patches%rowtype
 PROCEDURE merge_old_and_new(i_old_rec  IN     patches%rowtype
                            ,io_new_rec IN OUT patches%rowtype);
 
+
+-----------------------------------------------------------------
+-- merge_old_and_new
+-----------------------------------------------------------------
+-- New rec will include new values of fields listed in i_merge_column_list,
+-- all other fields will keep the old values.
+-- + For every field NOT listed, Replace that value in NEW with orig value from OLD.
+-----------------------------------------------------------------
+
+PROCEDURE merge_old_and_new(i_old_rec        IN     patches%rowtype
+                           ,io_new_rec       IN OUT patches%rowtype
+                           ,i_merge_col_list in     varchar2);
+
 ------------------------------------------------------------------------------
 -- INSERT
 ------------------------------------------------------------------------------
@@ -1445,6 +1458,48 @@ PROCEDURE upd_not_null(
     ,i_last_updated_on    IN patches.last_updated_on%TYPE DEFAULT NULL
     ,i_patch_type         IN patches.patch_type%TYPE DEFAULT NULL
     ,i_tracking_yn        IN patches.tracking_yn%TYPE DEFAULT NULL
+    ,i_raise_error         IN VARCHAR2 DEFAULT 'N'
+);
+
+
+-------------------------------------------------------------------------
+-- upd_opt
+-------------------------------------------------------------------------
+-- update a record
+--   using components, all optional
+--   by pk if given, otherwise by uk1
+--   Updates only columns listed in i_upd_col_list.
+-----------------------------------------------------------------
+PROCEDURE upd_opt(
+     i_patch_id           IN patches.patch_id%TYPE DEFAULT NULL
+    ,i_patch_name         IN patches.patch_name%TYPE DEFAULT NULL
+    ,i_db_schema          IN patches.db_schema%TYPE DEFAULT NULL
+    ,i_branch_name        IN patches.branch_name%TYPE DEFAULT NULL
+    ,i_tag_from           IN patches.tag_from%TYPE DEFAULT NULL
+    ,i_tag_to             IN patches.tag_to%TYPE DEFAULT NULL
+    ,i_supplementary      IN patches.supplementary%TYPE DEFAULT NULL
+    ,i_patch_desc         IN patches.patch_desc%TYPE DEFAULT NULL
+    ,i_patch_componants   IN patches.patch_componants%TYPE DEFAULT NULL
+    ,i_patch_create_date  IN patches.patch_create_date%TYPE DEFAULT NULL
+    ,i_patch_created_by   IN patches.patch_created_by%TYPE DEFAULT NULL
+    ,i_note               IN patches.note%TYPE DEFAULT NULL
+    ,i_log_datetime       IN patches.log_datetime%TYPE DEFAULT NULL
+    ,i_completed_datetime IN patches.completed_datetime%TYPE DEFAULT NULL
+    ,i_success_yn         IN patches.success_yn%TYPE DEFAULT NULL
+    ,i_retired_yn         IN patches.retired_yn%TYPE DEFAULT NULL
+    ,i_rerunnable_yn      IN patches.rerunnable_yn%TYPE DEFAULT NULL
+    ,i_warning_count      IN patches.warning_count%TYPE DEFAULT NULL
+    ,i_error_count        IN patches.error_count%TYPE DEFAULT NULL
+    ,i_username           IN patches.username%TYPE DEFAULT NULL
+    ,i_install_log        IN patches.install_log%TYPE DEFAULT NULL
+    ,i_created_by         IN patches.created_by%TYPE DEFAULT NULL
+    ,i_created_on         IN patches.created_on%TYPE DEFAULT NULL
+    ,i_last_updated_by    IN patches.last_updated_by%TYPE DEFAULT NULL
+    ,i_last_updated_on    IN patches.last_updated_on%TYPE DEFAULT NULL
+    ,i_patch_type         IN patches.patch_type%TYPE DEFAULT NULL
+    ,i_tracking_yn        IN patches.tracking_yn%TYPE DEFAULT NULL
+    ,i_upd_col_list        IN varchar2
+    ,i_raise_error         IN VARCHAR2 DEFAULT 'N'
 );
 
 -----------------------------------------------------------------
@@ -1686,3 +1741,8 @@ RETURN BOOLEAN;
 
 END patches_tapi;
 /
+
+--GRANTS
+
+
+--SYNONYMS

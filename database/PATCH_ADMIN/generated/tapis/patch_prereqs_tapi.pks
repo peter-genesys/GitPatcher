@@ -317,6 +317,19 @@ PROCEDURE split_rec( i_patch_prereqs in patch_prereqs%rowtype
 PROCEDURE merge_old_and_new(i_old_rec  IN     patch_prereqs%rowtype
                            ,io_new_rec IN OUT patch_prereqs%rowtype);
 
+
+-----------------------------------------------------------------
+-- merge_old_and_new
+-----------------------------------------------------------------
+-- New rec will include new values of fields listed in i_merge_column_list,
+-- all other fields will keep the old values.
+-- + For every field NOT listed, Replace that value in NEW with orig value from OLD.
+-----------------------------------------------------------------
+
+PROCEDURE merge_old_and_new(i_old_rec        IN     patch_prereqs%rowtype
+                           ,io_new_rec       IN OUT patch_prereqs%rowtype
+                           ,i_merge_col_list in     varchar2);
+
 ------------------------------------------------------------------------------
 -- INSERT
 ------------------------------------------------------------------------------
@@ -441,6 +454,28 @@ PROCEDURE upd_not_null(
     ,i_created_on      IN patch_prereqs.created_on%TYPE DEFAULT NULL
     ,i_last_updated_by IN patch_prereqs.last_updated_by%TYPE DEFAULT NULL
     ,i_last_updated_on IN patch_prereqs.last_updated_on%TYPE DEFAULT NULL
+    ,i_raise_error         IN VARCHAR2 DEFAULT 'N'
+);
+
+
+-------------------------------------------------------------------------
+-- upd_opt
+-------------------------------------------------------------------------
+-- update a record
+--   using components, all optional
+--   by pk if given, otherwise by uk1
+--   Updates only columns listed in i_upd_col_list.
+-----------------------------------------------------------------
+PROCEDURE upd_opt(
+     i_patch_prereq_id IN patch_prereqs.patch_prereq_id%TYPE DEFAULT NULL
+    ,i_patch_name      IN patch_prereqs.patch_name%TYPE DEFAULT NULL
+    ,i_prereq_patch    IN patch_prereqs.prereq_patch%TYPE DEFAULT NULL
+    ,i_created_by      IN patch_prereqs.created_by%TYPE DEFAULT NULL
+    ,i_created_on      IN patch_prereqs.created_on%TYPE DEFAULT NULL
+    ,i_last_updated_by IN patch_prereqs.last_updated_by%TYPE DEFAULT NULL
+    ,i_last_updated_on IN patch_prereqs.last_updated_on%TYPE DEFAULT NULL
+    ,i_upd_col_list        IN varchar2
+    ,i_raise_error         IN VARCHAR2 DEFAULT 'N'
 );
 
 -----------------------------------------------------------------
@@ -602,3 +637,8 @@ RETURN BOOLEAN;
 
 END patch_prereqs_tapi;
 /
+
+--GRANTS
+
+
+--SYNONYMS

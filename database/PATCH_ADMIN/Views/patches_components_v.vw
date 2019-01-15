@@ -1,4 +1,4 @@
-CREATE OR REPLACE FORCE EDITIONABLE VIEW "PATCHES_COMPONENTS_V"(
+CREATE OR REPLACE EDITIONABLE VIEW "PATCHES_COMPONENTS_V"(
   "PATCH_ID"
   ,"PATCH_NAME"
   ,"DB_SCHEMA"
@@ -56,3 +56,8 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "PATCHES_COMPONENTS_V"(
          ,c.column_value   patch_component
   FROM patches p
        ,TABLE(patch_installer.patch_component_tab(p.patch_name))c;
+
+
+--GRANTS
+
+--SYNONYMS

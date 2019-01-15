@@ -1,15 +1,16 @@
-CREATE OR REPLACE PROCEDURE create_db_link(
+
+  CREATE OR REPLACE EDITIONABLE PROCEDURE "CREATE_DB_LINK" (
     i_schema       IN VARCHAR2
    ,i_db_name      IN VARCHAR2
    ,i_db_link_name IN VARCHAR2
    ,i_password     IN VARCHAR2) authid current_user as
 
     l_command        VARCHAR2(2000);
- 
+
 ---------------------------------------------------------------------------
 --dbms_output feedback.
----------------------------------------------------------------------------  
- 
+---------------------------------------------------------------------------
+
 PROCEDURE put_lines(i_line IN VARCHAR2 ) IS
 --Divide i_line into a number of 100 char lines for easy display and output each.
 
@@ -21,8 +22,8 @@ BEGIN
     l_line := SUBSTR(l_line,G_LINESIZE+1);             --shorten l_line by G_LINESIZE chars from the left.
   END LOOP;
 
-END; 
- 
+END;
+
   --------------------------------------------------------------
   -- do_sql_with_warning
   --------------------------------------------------------------
@@ -51,27 +52,31 @@ END;
       put_lines(SQLERRM);
       put_lines('FAILURE.');
   END;
- 
- 
+
+
 
   BEGIN --MAIN
     dbms_output.enable(1000000);
-  
+
     IF i_db_name IS NOT NULL THEN
       l_command := 'DROP DATABASE LINK ' || i_db_link_name;
       --dbms_output.put_line(l_command);
       do_sql_with_warning(l_command);
-      
-      l_command := 'CREATE DATABASE LINK "' || i_db_link_name 
-              || '" CONNECT TO ' || i_schema 
+
+      l_command := 'CREATE DATABASE LINK "' || i_db_link_name
+              || '" CONNECT TO ' || i_schema
               || ' identified by "'||i_password
               ||'" USING ''' || i_db_name || '''';
       --dbms_output.put_line(l_command);
       do_sql_with_error(l_command);
- 
+
     END IF;
- 
- 
+
+
 END create_db_link;
 /
 
+--GRANTS
+
+
+--SYNONYMS

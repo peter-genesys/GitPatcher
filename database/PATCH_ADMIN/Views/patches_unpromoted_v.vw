@@ -1,4 +1,4 @@
-CREATE OR REPLACE FORCE EDITIONABLE VIEW "PATCHES_UNPROMOTED_V"(
+CREATE OR REPLACE EDITIONABLE VIEW "PATCHES_UNPROMOTED_V"(
   "PATCH_ID"
   ,"PATCH_NAME"
   ,"DB_SCHEMA"
@@ -56,3 +56,9 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "PATCHES_UNPROMOTED_V"(
   WHERE patch_name NOT IN(SELECT patch_name
                           FROM installed_patches_v@patch_admin_forward_dblink
                          );
+
+
+--GRANTS
+
+
+--SYNONYMS

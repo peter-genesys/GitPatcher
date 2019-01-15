@@ -1,4 +1,4 @@
-CREATE OR REPLACE FORCE EDITIONABLE VIEW "COMPONENTS_UNAPPLIED_V"(
+CREATE OR REPLACE EDITIONABLE VIEW "COMPONENTS_UNAPPLIED_V"(
   "PATCH_NAME"
   ,"DB_SCHEMA"
   ,"BRANCH_NAME"
@@ -27,3 +27,8 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "COMPONENTS_UNAPPLIED_V"(
   FROM patches_unapplied_v pu
        ,patches_components_v@patch_admin_backward_dblink pc
   WHERE pu.patch_name = pc.patch_name;
+
+
+--GRANTS
+
+--SYNONYMS

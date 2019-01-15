@@ -1,25 +1,26 @@
-CREATE OR REPLACE PACKAGE BODY text_manip AS 
- 
+
+  CREATE OR REPLACE EDITIONABLE PACKAGE BODY "TEXT_MANIP" AS
+
 --------------------------------------------------------------------------------
 -- Name:   IFF
 --------------------------------------------------------------------------------
-  FUNCTION IFF(i_condition   in boolean 
+  FUNCTION IFF(i_condition   in boolean
                ,i_string_if   in varchar2
                ,i_string_else in varchar2 DEFAULT NULL) RETURN varchar2 IS
- 
+
   BEGIN
     IF i_condition THEN
       RETURN i_string_if;
     ELSE
       RETURN i_string_else;
     END IF;
- 
+
   END IFF;
-  
+
 --------------------------------------------------------------------------------
 -- Name:   SUBSTR2
 --------------------------------------------------------------------------------
-  
+
   FUNCTION SUBSTR2(p_string      IN VARCHAR2
                   ,p_start_pos   IN INTEGER
                   ,p_end_pos     IN INTEGER)
@@ -28,9 +29,9 @@ CREATE OR REPLACE PACKAGE BODY text_manip AS
   IS
   BEGIN
     RETURN SUBSTR(p_string,p_start_pos,p_end_pos - p_start_pos + 1);
-  END SUBSTR2;  
-  
-  
+  END SUBSTR2;
+
+
   --------------------------------------------------------------------
   -- f_add
   --------------------------------------------------------------------
@@ -40,24 +41,24 @@ CREATE OR REPLACE PACKAGE BODY text_manip AS
                  ,i_delim    IN VARCHAR2 DEFAULT ' ') RETURN VARCHAR2 IS
 
   BEGIN
- 
+
     IF i_string_a IS NOT NULL AND
        i_string_b IS NOT NULL THEN
- 
+
       RETURN  i_string_a||i_delim||i_string_b;
 
     ELSE
- 
+
       RETURN  i_string_a||i_string_b;
 
     END IF;
 
   END;
-  
-  --------------------------------------------------------------------  
+
+  --------------------------------------------------------------------
   --GENERIC PATTERN AND TEXT MANIPULATION
-  --------------------------------------------------------------------  
- 
+  --------------------------------------------------------------------
+
   --------------------------------------------------------------------
   -- F_REMOVE_FIRST_ELEMENT
   --
@@ -91,8 +92,8 @@ FUNCTION f_remove_first_element(io_list     IN OUT VARCHAR2
       RETURN 'Error';
 
   END f_remove_first_element;
-     
- 
+
+
 
 
   --------------------------------------------------------------------
@@ -130,7 +131,7 @@ FUNCTION f_remove_first_element(io_list     IN OUT VARCHAR2
 
       IF l_element_count <> i_element_count THEN
         NULL;
- 
+
       END IF;
 
     END IF;
@@ -138,7 +139,7 @@ FUNCTION f_remove_first_element(io_list     IN OUT VARCHAR2
     RETURN l_elements;
 
   END f_remove_elements;
-  
+
 
   --------------------------------------------------------------------
   -- F_EXTRACT_ELEMENT
@@ -158,17 +159,17 @@ FUNCTION f_remove_first_element(io_list     IN OUT VARCHAR2
     l_result        VARCHAR2(400);
 
   BEGIN
-  
+
     IF i_element_pos = 0 THEN
       RETURN NULL;
     END IF;
- 
+
     LOOP
 
       l_element := f_remove_first_element(io_list   => io_list
                                          ,i_delim   => i_delim);
       l_element_count := l_element_count + 1;
- 
+
       IF l_element_count = i_element_pos OR io_list IS NULL THEN
         --keep this one
         l_result := l_element;
@@ -184,7 +185,7 @@ FUNCTION f_remove_first_element(io_list     IN OUT VARCHAR2
     END LOOP;
 
     io_list := l_new_elements;
- 
+
     RETURN l_result;
 
   END;
@@ -237,7 +238,7 @@ FUNCTION f_remove_first_element(io_list     IN OUT VARCHAR2
   -- return last element
   --------------------------------------------------------------------
 
-  FUNCTION f_get_last_element(i_list    IN  VARCHAR2 
+  FUNCTION f_get_last_element(i_list    IN  VARCHAR2
                              ,i_delim   IN  VARCHAR2 DEFAULT ' ' ) RETURN VARCHAR2
   IS
 
@@ -313,14 +314,14 @@ FUNCTION f_remove_first_element(io_list     IN OUT VARCHAR2
   BEGIN
 
     WHILE l_element_count < l_element_pos AND l_string IS NOT NULL LOOP
-        
+
       l_element := f_remove_first_element(io_list   => l_string
                                          ,i_delim   => i_delim);
 
       l_element_count := l_element_count + 1;
- 
+
     END LOOP;
- 
+
     IF l_element_count <> l_element_pos THEN
       --element not found
       l_element := NULL;
@@ -329,7 +330,7 @@ FUNCTION f_remove_first_element(io_list     IN OUT VARCHAR2
     RETURN l_element;
 
   END;
-  
+
   --------------------------------------------------------------------
   -- f_get_first_element
   -- return the first element
@@ -340,13 +341,13 @@ FUNCTION f_remove_first_element(io_list     IN OUT VARCHAR2
 
   BEGIN
 
- 
+
     RETURN f_get_element(i_string       => i_string
                         ,i_element_pos  => 1
                         ,i_delim        => i_delim);
- 
+
   END;
-  
+
   --------------------------------------------------------------------
   -- f_get_first_csv
   -- return the first element separated by ,
@@ -356,28 +357,27 @@ FUNCTION f_remove_first_element(io_list     IN OUT VARCHAR2
 
   BEGIN
 
- 
-    RETURN f_get_first_element(i_string    => i_string 
-                              ,i_delim     => ',');  
-           
- 
+
+    RETURN f_get_first_element(i_string    => i_string
+                              ,i_delim     => ',');
+
+
   END;
- 
+
 ----------------------------------------------------------------------------------------
 -- strip_chars
 ----------------------------------------------------------------------------------------
-  
+
    function strip_chars ( i_string  IN VARCHAR2
                         , i_keep    IN VARCHAR2
                         , i_strip   IN VARCHAR2) RETURN VARCHAR2 is
-            
+
    begin
-   
-     RETURN TRANSLATE(i_string,i_keep||i_strip,i_keep); -- strip punctuation    
- 
+
+     RETURN TRANSLATE(i_string,i_keep||i_strip,i_keep); -- strip punctuation
+
    end;
- 
-  
+
+
 END text_manip;
 /
- 

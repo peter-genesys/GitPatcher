@@ -1,26 +1,27 @@
-CREATE OR REPLACE PACKAGE text_manip AS 
- 
+
+  CREATE OR REPLACE EDITIONABLE PACKAGE "TEXT_MANIP" AS
+
 --------------------------------------------------------------------------------
 -- Name:   IFF
 --------------------------------------------------------------------------------
-  FUNCTION IFF(i_condition   in boolean 
+  FUNCTION IFF(i_condition   in boolean
                ,i_string_if   in varchar2
                ,i_string_else in varchar2 DEFAULT NULL) RETURN varchar2;
-  
+
 --------------------------------------------------------------------------------
 -- Name:   SUBSTR2
 --------------------------------------------------------------------------------
-  
+
   FUNCTION SUBSTR2(p_string      IN VARCHAR2
                   ,p_start_pos   IN INTEGER
                   ,p_end_pos     IN INTEGER)
   --finds the sub string from start_pos to end_pos (inclusive)
   RETURN VARCHAR2;
-  
-  --------------------------------------------------------------------  
+
+  --------------------------------------------------------------------
   --GENERIC PATTERN AND TEXT MANIPULATION
-  --------------------------------------------------------------------  
- 
+  --------------------------------------------------------------------
+
   --------------------------------------------------------------------
   -- F_REMOVE_FIRST_ELEMENT
   --
@@ -76,7 +77,7 @@ FUNCTION f_remove_first_element(io_list     IN OUT VARCHAR2
   -- return last element
   --------------------------------------------------------------------
 
-  FUNCTION f_get_last_element(i_list    IN  VARCHAR2 
+  FUNCTION f_get_last_element(i_list    IN  VARCHAR2
                              ,i_delim   IN  VARCHAR2 DEFAULT ' ' ) RETURN VARCHAR2;
 
   --------------------------------------------------------------------
@@ -104,7 +105,7 @@ FUNCTION f_remove_first_element(io_list     IN OUT VARCHAR2
   FUNCTION f_get_element(i_string      IN VARCHAR2
                         ,i_element_pos IN NUMBER
                         ,i_delim       IN VARCHAR2 DEFAULT ' ' ) RETURN VARCHAR2;
-  
+
   --------------------------------------------------------------------
   -- f_get_first_element
   -- return the first element
@@ -112,22 +113,26 @@ FUNCTION f_remove_first_element(io_list     IN OUT VARCHAR2
 
   FUNCTION f_get_first_element(i_string      IN VARCHAR2
                               ,i_delim       IN VARCHAR2 DEFAULT ' ' ) RETURN VARCHAR2;
-  
+
   --------------------------------------------------------------------
   -- f_get_first_csv
   -- return the first element separated by ,
   --------------------------------------------------------------------
 
   FUNCTION f_get_first_csv(i_string      IN VARCHAR2  ) RETURN VARCHAR2;
- 
- 
+
+
 ----------------------------------------------------------------------------------------
 -- strip_chars
 ----------------------------------------------------------------------------------------
-  
+
    function strip_chars ( i_string  IN VARCHAR2
                         , i_keep    IN VARCHAR2
                         , i_strip   IN VARCHAR2) RETURN VARCHAR2;
 END text_manip;
 /
- 
+
+--GRANTS
+
+
+--SYNONYMS
