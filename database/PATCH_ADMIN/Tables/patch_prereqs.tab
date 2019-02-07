@@ -61,6 +61,11 @@ begin
 	end if;
 
 	if updating then
+    -- ensure PK does not get updated.
+    if :new.PATCH_PREREQ_ID is null then
+      :new.PATCH_PREREQ_ID := :old.PATCH_PREREQ_ID;
+    end if;
+		
 		-- ensure created audit fields don't change
 		:new.CREATED_BY := :old.CREATED_BY;
 		:new.CREATED_ON := :old.CREATED_ON;
