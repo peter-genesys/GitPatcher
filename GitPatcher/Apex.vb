@@ -193,8 +193,8 @@
         End If
 
 
-
-
+        Logger.Dbg("Apex app_id " + fapp_id, "Check app id")
+  
         Dim app_id As String = fapp_id.Split("f")(1)
         Dim fapp_sql As String = fapp_id & ".sql"
         Dim message As String = Nothing
@@ -209,6 +209,8 @@
             '                  , message, apex_dir)
             Host.check_StdErr("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
                       , message, apex_dir)
+
+
             Logger.Dbg(message, "Apex Export Error")
 
             'write-host "Remove the application directory apex_dir\fapp_id" 
