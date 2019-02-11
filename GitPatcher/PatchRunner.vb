@@ -541,13 +541,13 @@ Public Class PatchRunner
 
     End Sub
 
- 
+
 
 
     '
     '   Public Shared Function FindLastPatch(ByVal patch_component As String) As String
     '
- 
+
     '
     '       'Simple but relies on TNSNAMES File
     '       Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
@@ -563,7 +563,7 @@ Public Class PatchRunner
     '       Try
     '
     '           conn.Open()
-    '           cmd.CommandText = "patch_installer.get_last_patch"
+    '           cmd.CommandText = "arm_installer.get_last_patch"
     '           cmd.CommandType = CommandType.StoredProcedure
     '           cmd.Parameters.Add("i_patch_component", OracleDbType.Varchar2, 50)
     '           cmd.Parameters.Item("i_patch_component").Value = patch_component
@@ -615,7 +615,7 @@ Public Class PatchRunner
 
             conn.Open()
 
-            sql = "select patch_installer.get_last_patch('" & patch_component & "') patch_name from dual"
+            sql = "select arm_installer.get_last_patch('" & patch_component & "') patch_name from dual"
 
             cmd = New OracleCommand(sql, conn)
             cmd.CommandType = CommandType.Text

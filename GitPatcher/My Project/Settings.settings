@@ -33,7 +33,10 @@
       <Value Profile="(Default)">feature</Value>
     </Setting>
     <Setting Name="XMLRepoFilePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">F:\GitRepos.xml</Value>
+      <Value Profile="(Default)">..\..\..\GitRepos.xml</Value>
+    </Setting>
+    <Setting Name="JSONRepoFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">..\..\..\GitRepos.json</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -161,3 +161,6 @@ E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.vbproj.CopyComplete
 E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.exe
 E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.xml
 E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.pdb
+E:\GitPatcher\GitPatcher\bin\x86\Debug\Newtonsoft.Json.dll
+E:\GitPatcher\GitPatcher\bin\x86\Debug\Newtonsoft.Json.pdb
+E:\GitPatcher\GitPatcher\bin\x86\Debug\Newtonsoft.Json.xml

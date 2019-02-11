@@ -148,6 +148,7 @@
     <Compile Include="AppSettings.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ConfigReader.vb" />
     <Compile Include="Configuration.Designer.vb">
       <DependentUpon>Configuration.vb</DependentUpon>
     </Compile>

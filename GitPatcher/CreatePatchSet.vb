@@ -38,16 +38,6 @@ Public Class CreatePatchCollection
         Next
 
 
-        SupPatchTypeComboBox.Items.Clear()
-        For Each PatchType In pSupPatchTypes.Split(",")
-            PatchType = Trim(PatchType)
-            PatchType = PatchType.Replace(Chr(13), "")
-            If (PatchType.Length > 0) Then
-                SupPatchTypeComboBox.Items.Add(PatchType)
-                SupPatchTypeComboBox.SelectedIndex = 0
-            End If
-        Next
-
 
         FindTagsButton.Text = "Find Tags like " & Globals.currentAppCode & "-X.XX.XX"
 
@@ -219,48 +209,43 @@ Public Class CreatePatchCollection
         PreReqPatchesTreeView.ReadCheckedLeafNodes(PreReqPatches)
 
 
-        Dim SuperPatches As Collection = New Collection
-        'Retrieve checked node items from the SuperPatchesTreeView as a collection of patches.
-        SuperPatchesTreeView.ReadCheckedLeafNodes(SuperPatches)
 
         'Write the install script with Patch Admin
-        writeInstallScript(PatchNameTextBox.Text, _
-                           pCreatePatchType, _
-                           "PATCH_ADMIN", _
-                           Globals.currentLongBranch, _
-                           Tag1TextBox.Text, _
-                           Tag2TextBox.Text, _
-                           SupIdTextBox.Text, _
-                           PatchDescTextBox.Text, _
-                           NoteTextBox.Text, _
-                           True, _
-                           RerunCheckBox.Checked, _
-                           patchableFiles, _
-                           skipFiles, _
-                           PreReqPatches, _
-                           SuperPatches, _
-                           PatchDirTextBox.Text, _
-                           PatchPathTextBox.Text, _
+        writeInstallScript(PatchNameTextBox.Text,
+                           pCreatePatchType,
+                           "&&APEXRM_user",
+                           Globals.currentLongBranch,
+                           Tag1TextBox.Text,
+                           Tag2TextBox.Text,
+                           SupIdTextBox.Text,
+                           PatchDescTextBox.Text,
+                           NoteTextBox.Text,
+                           True,
+                           RerunCheckBox.Checked,
+                           patchableFiles,
+                           skipFiles,
+                           PreReqPatches,
+                           PatchDirTextBox.Text,
+                           PatchPathTextBox.Text,
                            TrackPromoCheckBox.Checked)
 
         'Write the install_lite script without Patch Admin
-        writeInstallScript(PatchNameTextBox.Text, _
-                           pCreatePatchType, _
-                           "PATCH_ADMIN", _
-                           Globals.currentLongBranch, _
-                           Tag1TextBox.Text, _
-                           Tag2TextBox.Text, _
-                           SupIdTextBox.Text, _
-                           PatchDescTextBox.Text, _
-                           NoteTextBox.Text, _
-                           False, _
-                           RerunCheckBox.Checked, _
-                           patchableFiles, _
-                           skipFiles, _
-                           PreReqPatches, _
-                           SuperPatches, _
-                           PatchDirTextBox.Text, _
-                           PatchPathTextBox.Text, _
+        writeInstallScript(PatchNameTextBox.Text,
+                           pCreatePatchType,
+                           "&&APEXRM_user",
+                           Globals.currentLongBranch,
+                           Tag1TextBox.Text,
+                           Tag2TextBox.Text,
+                           SupIdTextBox.Text,
+                           PatchDescTextBox.Text,
+                           NoteTextBox.Text,
+                           False,
+                           RerunCheckBox.Checked,
+                           patchableFiles,
+                           skipFiles,
+                           PreReqPatches,
+                           PatchDirTextBox.Text,
+                           PatchPathTextBox.Text,
                            TrackPromoCheckBox.Checked)
 
         Host.RunExplorer(PatchDirTextBox.Text)
@@ -276,23 +261,22 @@ Public Class CreatePatchCollection
 
 
 
-    Shared Sub writeInstallScript(ByVal patch_name As String, _
-                                  ByVal patch_type As String, _
-                                  ByVal db_schema As String, _
-                                  ByVal branch_path As String, _
-                                  ByVal tag1_name As String, _
-                                  ByVal tag2_name As String, _
-                                  ByVal supplementary As String, _
-                                  ByVal patch_desc As String, _
-                                  ByVal note As String, _
-                                  ByVal use_patch_admin As Boolean, _
-                                  ByVal rerunnable As Boolean, _
-                                  ByRef targetFiles As Collection, _
-                                  ByRef iSkipFiles As Collection, _
-                                  ByRef prereq_patches As Collection, _
-                                  ByRef supersedes_patches As Collection, _
-                                  ByVal patchDir As String, _
-                                  ByVal groupPath As String, _
+    Shared Sub writeInstallScript(ByVal patch_name As String,
+                                  ByVal patch_type As String,
+                                  ByVal db_schema As String,
+                                  ByVal branch_path As String,
+                                  ByVal tag1_name As String,
+                                  ByVal tag2_name As String,
+                                  ByVal suffix As String,
+                                  ByVal patch_desc As String,
+                                  ByVal note As String,
+                                  ByVal use_patch_admin As Boolean,
+                                  ByVal rerunnable As Boolean,
+                                  ByRef targetFiles As Collection,
+                                  ByRef iSkipFiles As Collection,
+                                  ByRef prereq_patches As Collection,
+                                  ByVal patchDir As String,
+                                  ByVal groupPath As String,
                                   ByVal track_promotion As Boolean)
 
 
@@ -330,11 +314,11 @@ Public Class CreatePatchCollection
             'Dim l_dos_path As String = Replace(l_path, "/", "\")
 
             If iSkipFiles.Contains(l_path) Then
-                l_install_file_line = Chr(10) & "PROMPT SKIPPED FOR TESTING " & l_filename & " " & _
+                l_install_file_line = Chr(10) & "PROMPT SKIPPED FOR TESTING " & l_filename & " " &
                                       Chr(10) & "--@" & l_path & "\" & l_master_filename & ";"
 
             Else
-                l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
+                l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " &
                                       Chr(10) & "@" & l_path & "\" & l_master_filename & ";"
 
             End If
@@ -387,15 +371,15 @@ Public Class CreatePatchCollection
                 l_master_file.WriteLine("set serveroutput on;")
 
 
-                l_master_file.WriteLine( _
-                "execute patch_admin.patch_installer.patch_started( -" _
+                l_master_file.WriteLine(
+                "execute &&APEXRM_user..arm_installer.patch_started( -" _
     & Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
     & Chr(10) & " ,i_patch_type         => '" & patch_type & "' -" _
     & Chr(10) & " ,i_db_schema          => '" & db_schema & "' -" _
     & Chr(10) & " ,i_branch_name        => '" & branch_path & "' -" _
     & Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
     & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
-    & Chr(10) & " ,i_supplementary      => '" & supplementary & "' -" _
+    & Chr(10) & " ,i_supplementary      => '" & suffix & "' -" _
     & Chr(10) & " ,i_patch_desc         => '" & patch_desc & "' -" _
     & Chr(10) & " ,i_patch_componants   => '" & l_all_programs & "' -" _
     & Chr(10) & " ,i_patch_create_date  => '" & DateString & "' -" _
@@ -403,7 +387,6 @@ Public Class CreatePatchCollection
     & Chr(10) & " ,i_note               => '" & note & "' -" _
     & Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
     & Chr(10) & " ,i_remove_prereqs     => 'N' -" _
-    & Chr(10) & " ,i_remove_sups        => 'N' -" _
     & Chr(10) & " ,i_track_promotion    => '" & track_promotion_yn & "'); " _
     & Chr(10))
 
@@ -413,7 +396,7 @@ Public Class CreatePatchCollection
                     l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
                     l_master_file.WriteLine("PROMPT")
                     l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
-                    l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_prereq( -")
+                    l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_patch_prereq( -")
                     l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
                     l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
 
@@ -421,7 +404,7 @@ Public Class CreatePatchCollection
 
                 l_prereq_short_name = My.Settings.MinPatch
                 l_master_file.WriteLine("PROMPT Ensure Patch Admin is late enough for this patch")
-                l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_prereq( -")
+                l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_patch_prereq( -")
                 l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
                 l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
 
@@ -438,18 +421,7 @@ Public Class CreatePatchCollection
 
             If use_patch_admin Then
 
-                l_master_file.WriteLine("execute patch_admin.patch_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
-
-                Dim l_sup_short_name As String = Nothing
-                For Each l_sup_patch In supersedes_patches
-                    l_sup_short_name = Common.getLastSegment(l_sup_patch, "\")
-                    l_master_file.WriteLine("PROMPT")
-                    l_master_file.WriteLine("PROMPT Superseding patch " & l_sup_short_name)
-                    l_master_file.WriteLine("execute patch_admin.patch_installer.add_patch_supersedes( -")
-                    l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
-                    l_master_file.WriteLine(",i_supersedes_patch  => '" & l_sup_short_name & "' );")
-
-                Next
+                l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
 
                 l_master_file.WriteLine("COMMIT;")
             End If
@@ -627,13 +599,6 @@ Public Class CreatePatchCollection
 
         End If
 
-        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageSuper" Then
-            If SuperPatchesTreeView.Nodes.Count = 0 Then
-                FindSuper()
-            End If
-
-
-        End If
 
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
@@ -698,16 +663,6 @@ Public Class CreatePatchCollection
 
 
 
-    Private Sub FindSuper()
-
-        PatchFromTags.FindPatches(SuperPatchesTreeView, False, SupPatchTypeComboBox.SelectedItem)
-
-
-    End Sub
-
-    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
-        FindSuper()
-    End Sub
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
 
