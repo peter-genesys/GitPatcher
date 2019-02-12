@@ -290,8 +290,6 @@
         newFeature.addStep("Switch to " & iBranchFrom & " branch")
         newFeature.addStep("Pull from Origin")
         newFeature.addStep("Create and switch to " & iBranchType & " branch")
-        'newFeature.addStep("Create intial Tag: " & branchName & ".00" )
-
 
 
         newFeature.Show()
@@ -316,7 +314,13 @@
             'Create and Switch to new branch
             Dim branchName As String = InputBox("Enter the Issue Id.", "Issue Id for new " & iBranchType & " Branch", Globals.getJira)
             Dim featureCode As String = InputBox("Feature Code", "Confirm Feature Code", Globals.deriveFeatureCode)
-            Dim newBranch As String = iBranchType & "/" & featureCode & branchName
+            Dim newBranch As String = iBranchType
+            If Globals.getAppInFeature() = "Y" Then
+                newBranch = newBranch & "/" & Globals.currentAppCode
+            End If
+            newBranch = newBranch & "/" & featureCode & branchName
+
+
 
             If Not String.IsNullOrEmpty(branchName) Then
 

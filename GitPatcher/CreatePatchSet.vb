@@ -213,7 +213,7 @@ Public Class CreatePatchCollection
         'Write the install script with Patch Admin
         writeInstallScript(PatchNameTextBox.Text,
                            pCreatePatchType,
-                           "&&APEXRM_user",
+                           "APEXRM",
                            Globals.currentLongBranch,
                            Tag1TextBox.Text,
                            Tag2TextBox.Text,
@@ -232,7 +232,7 @@ Public Class CreatePatchCollection
         'Write the install_lite script without Patch Admin
         writeInstallScript(PatchNameTextBox.Text,
                            pCreatePatchType,
-                           "&&APEXRM_user",
+                           "APEXRM",
                            Globals.currentLongBranch,
                            Tag1TextBox.Text,
                            Tag2TextBox.Text,
@@ -270,7 +270,7 @@ Public Class CreatePatchCollection
                                   ByVal suffix As String,
                                   ByVal patch_desc As String,
                                   ByVal note As String,
-                                  ByVal use_patch_admin As Boolean,
+                                  ByVal use_arm As Boolean,
                                   ByVal rerunnable As Boolean,
                                   ByRef targetFiles As Collection,
                                   ByRef iSkipFiles As Collection,
@@ -282,7 +282,7 @@ Public Class CreatePatchCollection
 
         Dim l_master_filename As String = Nothing
 
-        If use_patch_admin Then
+        If use_arm Then
             l_master_filename = "install.sql"
         Else
             l_master_filename = "install_lite.sql"
@@ -363,10 +363,10 @@ Public Class CreatePatchCollection
 
             l_master_file.WriteLine("SPOOL " & l_log_filename)
 
-            If use_patch_admin Then
+            If use_arm Then
 
                 'Always connects as PATCH_ADMIN
-                l_master_file.WriteLine("CONNECT " & db_schema & "/&&" & db_schema & "_password@&&database")
+                l_master_file.WriteLine("CONNECT &&" & db_schema & "_user/&&" & db_schema & "_password@&&database")
 
                 l_master_file.WriteLine("set serveroutput on;")
 
@@ -376,18 +376,18 @@ Public Class CreatePatchCollection
     & Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
     & Chr(10) & " ,i_patch_type         => '" & patch_type & "' -" _
     & Chr(10) & " ,i_db_schema          => '" & db_schema & "' -" _
+    & Chr(10) & " ,i_app_code           => '' -" _
     & Chr(10) & " ,i_branch_name        => '" & branch_path & "' -" _
     & Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
     & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
-    & Chr(10) & " ,i_supplementary      => '" & suffix & "' -" _
+    & Chr(10) & " ,i_suffix             => '" & suffix & "' -" _
     & Chr(10) & " ,i_patch_desc         => '" & patch_desc & "' -" _
     & Chr(10) & " ,i_patch_componants   => '" & l_all_programs & "' -" _
     & Chr(10) & " ,i_patch_create_date  => '" & DateString & "' -" _
     & Chr(10) & " ,i_patch_created_by   => '" & Environment.UserName & "' -" _
     & Chr(10) & " ,i_note               => '" & note & "' -" _
     & Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
-    & Chr(10) & " ,i_remove_prereqs     => 'N' -" _
-    & Chr(10) & " ,i_track_promotion    => '" & track_promotion_yn & "'); " _
+    & Chr(10) & " ,i_tracking_yn        => '" & track_promotion_yn & "'); " _
     & Chr(10))
 
 
@@ -403,7 +403,7 @@ Public Class CreatePatchCollection
                 Next
 
                 l_prereq_short_name = My.Settings.MinPatch
-                l_master_file.WriteLine("PROMPT Ensure Patch Admin is late enough for this patch")
+                l_master_file.WriteLine("PROMPT Check ARM version supports this patch.")
                 l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_patch_prereq( -")
                 l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
                 l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
@@ -419,7 +419,7 @@ Public Class CreatePatchCollection
 
             l_master_file.WriteLine("Prompt installing PATCHES" & Chr(10) & l_patches)
 
-            If use_patch_admin Then
+            If use_arm Then
 
                 l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
 
@@ -604,7 +604,17 @@ Public Class CreatePatchCollection
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
             'Copy Patchable items to the next list.
 
-            PatchPathTextBox.Text = pCreatePatchType & "\" & Globals.currentAppCode & "\" 'Replace(Globals.currentLongBranch, "/", "\") & "\"
+            'PatchPathTextBox.Text = pCreatePatchType & "\" & Globals.currentAppCode & "\" 'Replace(Globals.currentLongBranch, "/", "\") & "\"
+
+            'PatchPathTextBox.Text = pCreatePatchType
+            PatchPathTextBox.Text = "release\"
+            If Globals.getAppInFeature() = "Y" Then
+                PatchPathTextBox.Text = PatchPathTextBox.Text & Globals.currentAppCode & "\"
+            End If
+            'PatchPathTextBox.Text = PatchPathTextBox.Text & Globals.currentAppCode
+
+
+
 
             derivePatchName()
 
@@ -725,7 +735,15 @@ Public Class CreatePatchCollection
 
         'l_app_version = Globals.currentAppCode & "-" & l_app_version
 
-        Dim newBranch As String = "release/" & iCreatePatchType & "/" & Globals.currentAppCode & "/" & l_app_version
+        'Dim newBranch As String = "release/" & iCreatePatchType & "/" & Globals.currentAppCode & "/" & l_app_version
+
+        Dim newBranch As String = "release"
+
+        If Globals.getAppInFeature() = "Y" Then
+            newBranch = newBranch & "/" & Globals.currentAppCode
+        End If
+
+        newBranch = newBranch & "/" & l_app_version
 
         Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
 

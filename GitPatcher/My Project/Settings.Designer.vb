@@ -68,7 +68,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\Oracle\product\11.2.0\client_1\sqlplus.exe")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\Oracle\product\sqlcl\bin\sql.exe")>  _
         Public Property SQLpath() As String
             Get
                 Return CType(Me("SQLpath"),String)
@@ -140,7 +140,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("TRK-01_01")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0.0.1")>  _
         Public ReadOnly Property MinPatch() As String
             Get
                 Return CType(Me("MinPatch"),String)
@@ -149,7 +149,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\Program Files (x86)\Git\bin\git.exe")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\Program Files\Git\bingit.exe")>  _
         Public Property GITpath() As String
             Get
                 Return CType(Me("GITpath"),String)
