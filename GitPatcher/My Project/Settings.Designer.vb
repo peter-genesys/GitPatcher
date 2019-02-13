@@ -149,7 +149,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\Program Files\Git\bingit.exe")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\Program Files\Git\bin\git.exe")>  _
         Public Property GITpath() As String
             Get
                 Return CType(Me("GITpath"),String)

@@ -461,7 +461,7 @@ Public Class PatchFromTags
         & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
         & Chr(10) & " ,i_suffix             => '" & suffix & "' -" _
         & Chr(10) & " ,i_patch_desc         => '" & patch_desc.Replace("'", "''") & "' -" _
-        & Chr(10) & " ,i_patch_componants   => '" & l_all_programs & "' -" _
+        & Chr(10) & " ,i_patch_components   => '" & l_all_programs & "' -" _
         & Chr(10) & " ,i_patch_create_date  => '" & DateString & "' -" _
         & Chr(10) & " ,i_patch_created_by   => '" & Environment.UserName & "' -" _
         & Chr(10) & " ,i_note               => '" & note.Replace("'", "''") & "' -" _

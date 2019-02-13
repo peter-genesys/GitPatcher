@@ -27,7 +27,7 @@
       <Value Profile="(Default)">0.0.1</Value>
     </Setting>
     <Setting Name="GITpath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Program Files\Git\bingit.exe</Value>
+      <Value Profile="(Default)">C:\Program Files\Git\bin\git.exe</Value>
     </Setting>
     <Setting Name="PatchRunnerFilter" Type="System.String" Scope="User">
       <Value Profile="(Default)">feature</Value>
