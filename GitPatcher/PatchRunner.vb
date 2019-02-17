@@ -41,7 +41,7 @@ Public Class PatchRunner
                 RadioButtonAll2.Checked = True
         End Select
 
-        UsePatchAdminCheckBox.Checked = Globals.getUsePatchAdmin
+        UsePatchAdminCheckBox.Checked = Globals.getUseARM
 
         doSearch()
 
@@ -601,7 +601,7 @@ Public Class PatchRunner
         Cursor.Current = Cursors.WaitCursor
 
         'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
+        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=apexrm;Password=apexrm;"
 
         Dim conn As New OracleConnection(oradb)
         Dim sql As String = Nothing

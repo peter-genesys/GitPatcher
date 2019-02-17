@@ -28,7 +28,8 @@ Public Class PatchFromTags
 
     Private Sub HideTabs()
         PatchTabControl.TabPages.Remove(TabPageExtras)
-        PatchTabControl.TabPages.Remove(TabPagePreReqs)
+        PatchTabControl.TabPages.Remove(TabPagePreReqsA)
+        PatchTabControl.TabPages.Remove(TabPagePreReqsB)
         PatchTabControl.TabPages.Remove(TabPagePatchDefn)
         FindButton.Visible = False
         CopyChangesButton.Visible = False
@@ -36,8 +37,9 @@ Public Class PatchFromTags
     End Sub
     Private Sub ShowTabs()
         PatchTabControl.TabPages.Insert(2, TabPageExtras)
-        PatchTabControl.TabPages.Insert(3, TabPagePreReqs)
-        PatchTabControl.TabPages.Insert(4, TabPagePatchDefn)
+        PatchTabControl.TabPages.Insert(3, TabPagePreReqsA)
+        PatchTabControl.TabPages.Insert(4, TabPagePreReqsB)
+        PatchTabControl.TabPages.Insert(5, TabPagePatchDefn)
     End Sub
 
 
@@ -93,10 +95,8 @@ Public Class PatchFromTags
     End Sub
 
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles FindButton.Click
+    Private Sub FindButton_Click(sender As Object, e As EventArgs) Handles FindButton.Click
         FindChanges()
-
-
     End Sub
 
 
@@ -116,7 +116,6 @@ Public Class PatchFromTags
                     MsgBox("Warning: File " & FilePath & " could not be exported, but will be in the install file.  It may be a folder.  Deselect, then recreate Patch.")
 
                 End Try
-                'End If
 
             Next
         End If
@@ -168,9 +167,13 @@ Public Class PatchFromTags
 
         exportExtraFiles(ExtraFiles, filenames, PatchDirTextBox.Text)
 
-        Dim PreReqPatches As Collection = New Collection
+        Dim PreReqPatchesA As Collection = New Collection
         'Retrieve checked node items from the PreReqPatchesTreeView as a collection of patches.
-        PreReqPatchesTreeView.ReadCheckedLeafNodes(PreReqPatches)
+        PreReqPatchesTreeViewA.ReadCheckedLeafNodes(PreReqPatchesA)
+
+        Dim PreReqPatchesB As Collection = New Collection
+        'Retrieve checked node items from the PreReqPatchesTreeView as a collection of patches.
+        PreReqPatchesTreeViewB.ReadCheckedLeafNodes(PreReqPatchesB)
 
         Try
             Dim filelist As Collection = New Collection
@@ -198,7 +201,8 @@ Public Class PatchFromTags
                                RerunCheckBox.Checked,
                                filelist,
                                checkedFilelist,
-                               PreReqPatches,
+                               PreReqPatchesA,
+                               PreReqPatchesB,
                                PatchDirTextBox.Text,
                                PatchPathTextBox.Text,
                                TrackPromoCheckBox.Checked,
@@ -218,7 +222,8 @@ Public Class PatchFromTags
                                RerunCheckBox.Checked,
                                filelist,
                                checkedFilelist,
-                               PreReqPatches,
+                               PreReqPatchesA,
+                               PreReqPatchesB,
                                PatchDirTextBox.Text,
                                PatchPathTextBox.Text,
                                TrackPromoCheckBox.Checked,
@@ -292,7 +297,8 @@ Public Class PatchFromTags
                                   ByVal rerunnable As Boolean,
                                   ByRef targetFiles As Collection,
                                   ByRef ignoreErrorFiles As Collection,
-                                  ByRef prereq_patches As Collection,
+                                  ByRef prereqs_last_patch As Collection,
+                                  ByRef prereqs_best_order As Collection,
                                   ByVal patchDir As String,
                                   ByVal groupPath As String,
                                   ByVal track_promotion As Boolean,
@@ -477,14 +483,28 @@ Public Class PatchFromTags
 
 
                 Dim l_prereq_short_name As String = Nothing
-                For Each l_prereq_patch In prereq_patches
+                For Each l_prereq_patch In prereqs_last_patch
                     l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
                     If l_prereq_short_name = PatchNameTextBox.Text Then
                         MsgBox("A Patch may NOT have itself as a prerequisite, skipping Prerequisite Patch: " & l_prereq_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
                     Else
                         l_master_file.WriteLine("PROMPT")
                         l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
-                        l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_patch_prereq( -")
+                        l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_prereq_last_patch( -")
+                        l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
+                        l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
+                    End If
+
+                Next
+
+                For Each l_prereq_patch In prereqs_best_order
+                    l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
+                    If l_prereq_short_name = PatchNameTextBox.Text Then
+                        MsgBox("A Patch may NOT have itself as a prerequisite, skipping Prerequisite Patch: " & l_prereq_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
+                    Else
+                        l_master_file.WriteLine("PROMPT")
+                        l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
+                        l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_prereq_best_order( -")
                         l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
                         l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
                     End If
@@ -493,7 +513,7 @@ Public Class PatchFromTags
 
                 l_prereq_short_name = My.Settings.MinPatch
                 l_master_file.WriteLine("PROMPT Ensure ARM is late enough for this patch")
-                l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_patch_prereq( -")
+                l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_prereq_best_order( -")
                 l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
                 l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
 
@@ -728,17 +748,30 @@ Public Class PatchFromTags
             End If
         End If
 
-        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePreReqs" Then
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePreReqsA" Then
 
 
 
-            If PreReqPatchesTreeView.Nodes.Count = 0 Then
+            If PreReqPatchesTreeViewA.Nodes.Count = 0 Then
+                LastPatches()
+            End If
+
+
+        End If
+
+
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePreReqsB" Then
+
+
+
+            If PreReqPatchesTreeViewB.Nodes.Count = 0 Then
                 RestrictPreReqToBranchCheckBox.Checked = True
                 FindPreReqs()
             End If
 
 
         End If
+
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
             'Copy Patchable items to the next list.
@@ -761,7 +794,7 @@ Public Class PatchFromTags
 
             derivePatchDir()
 
-            UsePatchAdminCheckBox.Checked = Globals.getUsePatchAdmin
+            UseARMCheckBox.Checked = Globals.getUseARM
 
             RerunCheckBox.Checked = True
 
@@ -897,7 +930,7 @@ Public Class PatchFromTags
 
 
     Private Sub FindPreReqs()
-        FindPatches(PreReqPatchesTreeView, RestrictPreReqToBranchCheckBox.Checked)
+        FindPatches(PreReqPatchesTreeViewB, RestrictPreReqToBranchCheckBox.Checked)
 
     End Sub
 
@@ -913,7 +946,7 @@ Public Class PatchFromTags
         'Use patch runner to execute with a master script.
         Dim l_master_filename As String = Nothing
 
-        If UsePatchAdminCheckBox.Checked Then
+        If UseARMCheckBox.Checked Then
             l_master_filename = "install.sql"
         Else
             l_master_filename = "install_lite.sql"
@@ -1134,21 +1167,15 @@ Public Class PatchFromTags
 
     Private Sub ButtonFindFiles_Click(sender As Object, e As EventArgs) Handles ButtonFindFiles.Click
         FindExtras()
-
-
     End Sub
 
-
-    Private Sub ButtonLastPatch_Click(sender As Object, e As EventArgs) Handles ButtonLastPatch.Click
-
+    Private Sub LastPatches()
         Dim ChosenChanges As Collection = New Collection
         'Retrieve checked node items from the TreeViewChanges as a collection of files.
         TreeViewChanges.ReadCheckedLeafNodes(ChosenChanges)
 
         'Requery ALL patches
-        RestrictPreReqToBranchCheckBox.Checked = False
-        FindPreReqs()
-
+        FindPatches(PreReqPatchesTreeViewA, False) 'Do not restrict to branch
 
         For Each change In ChosenChanges
             Dim patch_component As String = Common.getLastSegment(change.ToString(), "/")
@@ -1156,9 +1183,9 @@ Public Class PatchFromTags
             If String.IsNullOrEmpty(LastPatch) Then
                 Logger.Dbg("No previous patch for Change: " & patch_component)
             Else
-                'MsgBox("Change: " & patch_component & " LastPatch: " & LastPatch)
+                Logger.Dbg("Change: " & patch_component & " LastPatch: " & LastPatch)
                 Dim l_found As Boolean = False
-                PreReqPatchesTreeView.TickNode(LastPatch, l_found)
+                PreReqPatchesTreeViewA.TickNode(LastPatch, l_found)
 
                 If Not l_found Then
                     MsgBox("Unable to find patch: " & LastPatch & " for Change: " & patch_component)
@@ -1170,8 +1197,15 @@ Public Class PatchFromTags
 
         Next
 
-        'Set Prereq tree to Contract view.
-        PreReqPatchesTreeView.showCheckedNodes()
+        'Set Prereq tree to Collapsed view.
+        PreReqPatchesTreeViewA.showCheckedNodes()
+    End Sub
+
+
+
+    Private Sub ButtonLastPatch_Click(sender As Object, e As EventArgs) Handles ButtonLastPatch.Click
+
+        LastPatches()
 
     End Sub
 
@@ -1194,7 +1228,7 @@ Public Class PatchFromTags
     Private Sub ResetForNewPatch()
 
         TreeViewFiles.Nodes.Clear()
-        PreReqPatchesTreeView.Nodes.Clear()
+        PreReqPatchesTreeViewA.Nodes.Clear()
         TreeViewPatchOrder.Nodes.Clear()
         SupIdTextBox.Text = ""
         PatchDescTextBox.Text = ""
@@ -1219,7 +1253,7 @@ Public Class PatchFromTags
 
 
 
-    Shared Sub exportPatch(ByVal patchpath As String, _
+    Shared Sub exportPatch(ByVal patchpath As String,
                            ByVal patchExportDir As String)
 
 
@@ -1305,5 +1339,6 @@ Public Class PatchFromTags
         doExportPatch(PatchPathTextBox.Text, PatchNameTextBox.Text)
  
     End Sub
+
 
 End Class

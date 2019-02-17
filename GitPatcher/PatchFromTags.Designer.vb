@@ -27,7 +27,6 @@ Partial Class PatchFromTags
         Me.AlternateSchemasCheckBox = New System.Windows.Forms.CheckBox()
         Me.SYSDBACheckBox = New System.Windows.Forms.CheckBox()
         Me.ExportPatchButton = New System.Windows.Forms.Button()
-        Me.AddUninstallButton = New System.Windows.Forms.Button()
         Me.Label26 = New System.Windows.Forms.Label()
         Me.ButtonPopNotes = New System.Windows.Forms.Button()
         Me.ButtonPopDesc = New System.Windows.Forms.Button()
@@ -48,19 +47,18 @@ Partial Class PatchFromTags
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.UsePatchAdminCheckBox = New System.Windows.Forms.CheckBox()
+        Me.UseARMCheckBox = New System.Windows.Forms.CheckBox()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.RerunCheckBox = New System.Windows.Forms.CheckBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.PatchButton = New System.Windows.Forms.Button()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.TabPagePreReqs = New System.Windows.Forms.TabPage()
+        Me.TabPagePreReqsA = New System.Windows.Forms.TabPage()
+        Me.Label25 = New System.Windows.Forms.Label()
         Me.Label23 = New System.Windows.Forms.Label()
-        Me.PreReqPatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
+        Me.PreReqPatchesTreeViewA = New TreeViewEnhanced.TreeViewEnhanced()
         Me.ButtonLastPatch = New System.Windows.Forms.Button()
-        Me.RestrictPreReqToBranchCheckBox = New System.Windows.Forms.CheckBox()
-        Me.PreReqButton = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.TabPageTags = New System.Windows.Forms.TabPage()
         Me.Label28 = New System.Windows.Forms.Label()
@@ -85,16 +83,25 @@ Partial Class PatchFromTags
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ViewButton = New System.Windows.Forms.Button()
         Me.TabPageExtras = New System.Windows.Forms.TabPage()
+        Me.Label24 = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.TreeViewFiles = New TreeViewEnhanced.TreeViewEnhanced()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.ButtonFindFiles = New System.Windows.Forms.Button()
+        Me.TabPagePreReqsB = New System.Windows.Forms.TabPage()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.RestrictPreReqToBranchCheckBox = New System.Windows.Forms.CheckBox()
+        Me.PreReqButton = New System.Windows.Forms.Button()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.PreReqPatchesTreeViewB = New TreeViewEnhanced.TreeViewEnhanced()
+        Me.Label19 = New System.Windows.Forms.Label()
         Me.TabPagePatchDefn.SuspendLayout()
-        Me.TabPagePreReqs.SuspendLayout()
+        Me.TabPagePreReqsA.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.PatchTabControl.SuspendLayout()
         Me.TabPageChanges.SuspendLayout()
         Me.TabPageExtras.SuspendLayout()
+        Me.TabPagePreReqsB.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabPagePatchDefn
@@ -102,7 +109,6 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.Controls.Add(Me.AlternateSchemasCheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.SYSDBACheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.ExportPatchButton)
-        Me.TabPagePatchDefn.Controls.Add(Me.AddUninstallButton)
         Me.TabPagePatchDefn.Controls.Add(Me.Label26)
         Me.TabPagePatchDefn.Controls.Add(Me.ButtonPopNotes)
         Me.TabPagePatchDefn.Controls.Add(Me.ButtonPopDesc)
@@ -123,7 +129,7 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.Controls.Add(Me.Label11)
         Me.TabPagePatchDefn.Controls.Add(Me.Label8)
         Me.TabPagePatchDefn.Controls.Add(Me.Label10)
-        Me.TabPagePatchDefn.Controls.Add(Me.UsePatchAdminCheckBox)
+        Me.TabPagePatchDefn.Controls.Add(Me.UseARMCheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.Label9)
         Me.TabPagePatchDefn.Controls.Add(Me.RerunCheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.Label5)
@@ -141,7 +147,7 @@ Partial Class PatchFromTags
         'AlternateSchemasCheckBox
         '
         Me.AlternateSchemasCheckBox.AutoSize = True
-        Me.AlternateSchemasCheckBox.Location = New System.Drawing.Point(395, 540)
+        Me.AlternateSchemasCheckBox.Location = New System.Drawing.Point(395, 567)
         Me.AlternateSchemasCheckBox.Name = "AlternateSchemasCheckBox"
         Me.AlternateSchemasCheckBox.Size = New System.Drawing.Size(115, 17)
         Me.AlternateSchemasCheckBox.TabIndex = 51
@@ -151,7 +157,7 @@ Partial Class PatchFromTags
         'SYSDBACheckBox
         '
         Me.SYSDBACheckBox.AutoSize = True
-        Me.SYSDBACheckBox.Location = New System.Drawing.Point(277, 540)
+        Me.SYSDBACheckBox.Location = New System.Drawing.Point(277, 567)
         Me.SYSDBACheckBox.Name = "SYSDBACheckBox"
         Me.SYSDBACheckBox.Size = New System.Drawing.Size(116, 17)
         Me.SYSDBACheckBox.TabIndex = 50
@@ -166,20 +172,12 @@ Partial Class PatchFromTags
         Me.ExportPatchButton.TabIndex = 49
         Me.ExportPatchButton.Text = "Export Patch"
         Me.ExportPatchButton.UseVisualStyleBackColor = True
-        '
-        'AddUninstallButton
-        '
-        Me.AddUninstallButton.Location = New System.Drawing.Point(80, 668)
-        Me.AddUninstallButton.Name = "AddUninstallButton"
-        Me.AddUninstallButton.Size = New System.Drawing.Size(230, 23)
-        Me.AddUninstallButton.TabIndex = 48
-        Me.AddUninstallButton.Text = "Add Uninstall"
-        Me.AddUninstallButton.UseVisualStyleBackColor = True
+        Me.ExportPatchButton.Visible = False
         '
         'Label26
         '
         Me.Label26.AutoSize = True
-        Me.Label26.Location = New System.Drawing.Point(222, 22)
+        Me.Label26.Location = New System.Drawing.Point(222, 40)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(221, 13)
         Me.Label26.TabIndex = 47
@@ -189,7 +187,7 @@ Partial Class PatchFromTags
         'ButtonPopNotes
         '
         Me.ButtonPopNotes.Image = Global.GitPatcher.My.Resources.Resources.Search_16
-        Me.ButtonPopNotes.Location = New System.Drawing.Point(489, 584)
+        Me.ButtonPopNotes.Location = New System.Drawing.Point(489, 611)
         Me.ButtonPopNotes.Name = "ButtonPopNotes"
         Me.ButtonPopNotes.Size = New System.Drawing.Size(22, 22)
         Me.ButtonPopNotes.TabIndex = 46
@@ -198,7 +196,7 @@ Partial Class PatchFromTags
         'ButtonPopDesc
         '
         Me.ButtonPopDesc.Image = Global.GitPatcher.My.Resources.Resources.Search_16
-        Me.ButtonPopDesc.Location = New System.Drawing.Point(489, 557)
+        Me.ButtonPopDesc.Location = New System.Drawing.Point(489, 584)
         Me.ButtonPopDesc.Name = "ButtonPopDesc"
         Me.ButtonPopDesc.Size = New System.Drawing.Size(22, 22)
         Me.ButtonPopDesc.TabIndex = 45
@@ -208,7 +206,7 @@ Partial Class PatchFromTags
         '
         Me.TreeViewPatchOrder.BackColor = System.Drawing.Color.AliceBlue
         Me.TreeViewPatchOrder.CheckBoxes = True
-        Me.TreeViewPatchOrder.Location = New System.Drawing.Point(80, 76)
+        Me.TreeViewPatchOrder.Location = New System.Drawing.Point(80, 103)
         Me.TreeViewPatchOrder.Name = "TreeViewPatchOrder"
         Me.TreeViewPatchOrder.Size = New System.Drawing.Size(429, 351)
         Me.TreeViewPatchOrder.TabIndex = 44
@@ -225,7 +223,7 @@ Partial Class PatchFromTags
         'TrackPromoCheckBox
         '
         Me.TrackPromoCheckBox.AutoSize = True
-        Me.TrackPromoCheckBox.Location = New System.Drawing.Point(167, 540)
+        Me.TrackPromoCheckBox.Location = New System.Drawing.Point(167, 567)
         Me.TrackPromoCheckBox.Name = "TrackPromoCheckBox"
         Me.TrackPromoCheckBox.Size = New System.Drawing.Size(104, 17)
         Me.TrackPromoCheckBox.TabIndex = 35
@@ -234,7 +232,7 @@ Partial Class PatchFromTags
         '
         'PatchPathTextBox
         '
-        Me.PatchPathTextBox.Location = New System.Drawing.Point(80, 462)
+        Me.PatchPathTextBox.Location = New System.Drawing.Point(80, 489)
         Me.PatchPathTextBox.Name = "PatchPathTextBox"
         Me.PatchPathTextBox.ReadOnly = True
         Me.PatchPathTextBox.Size = New System.Drawing.Size(429, 20)
@@ -242,21 +240,21 @@ Partial Class PatchFromTags
         '
         'NoteTextBox
         '
-        Me.NoteTextBox.Location = New System.Drawing.Point(80, 585)
+        Me.NoteTextBox.Location = New System.Drawing.Point(80, 612)
         Me.NoteTextBox.Name = "NoteTextBox"
         Me.NoteTextBox.Size = New System.Drawing.Size(411, 20)
         Me.NoteTextBox.TabIndex = 24
         '
         'PatchNameTextBox
         '
-        Me.PatchNameTextBox.Location = New System.Drawing.Point(80, 489)
+        Me.PatchNameTextBox.Location = New System.Drawing.Point(80, 516)
         Me.PatchNameTextBox.Name = "PatchNameTextBox"
         Me.PatchNameTextBox.Size = New System.Drawing.Size(429, 20)
         Me.PatchNameTextBox.TabIndex = 16
         '
         'PatchDirTextBox
         '
-        Me.PatchDirTextBox.Location = New System.Drawing.Point(80, 514)
+        Me.PatchDirTextBox.Location = New System.Drawing.Point(80, 541)
         Me.PatchDirTextBox.Name = "PatchDirTextBox"
         Me.PatchDirTextBox.ReadOnly = True
         Me.PatchDirTextBox.Size = New System.Drawing.Size(429, 20)
@@ -264,21 +262,21 @@ Partial Class PatchFromTags
         '
         'SupIdTextBox
         '
-        Me.SupIdTextBox.Location = New System.Drawing.Point(80, 433)
+        Me.SupIdTextBox.Location = New System.Drawing.Point(80, 460)
         Me.SupIdTextBox.Name = "SupIdTextBox"
         Me.SupIdTextBox.Size = New System.Drawing.Size(51, 20)
         Me.SupIdTextBox.TabIndex = 22
         '
         'PatchDescTextBox
         '
-        Me.PatchDescTextBox.Location = New System.Drawing.Point(80, 559)
+        Me.PatchDescTextBox.Location = New System.Drawing.Point(80, 586)
         Me.PatchDescTextBox.Name = "PatchDescTextBox"
         Me.PatchDescTextBox.Size = New System.Drawing.Size(411, 20)
         Me.PatchDescTextBox.TabIndex = 20
         '
         'ExecuteButton
         '
-        Me.ExecuteButton.Location = New System.Drawing.Point(80, 641)
+        Me.ExecuteButton.Location = New System.Drawing.Point(80, 668)
         Me.ExecuteButton.Name = "ExecuteButton"
         Me.ExecuteButton.Size = New System.Drawing.Size(230, 23)
         Me.ExecuteButton.TabIndex = 0
@@ -288,7 +286,7 @@ Partial Class PatchFromTags
         'Label18
         '
         Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(10, 465)
+        Me.Label18.Location = New System.Drawing.Point(10, 492)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(60, 13)
         Me.Label18.TabIndex = 34
@@ -296,7 +294,7 @@ Partial Class PatchFromTags
         '
         'CopyChangesButton
         '
-        Me.CopyChangesButton.Location = New System.Drawing.Point(77, 17)
+        Me.CopyChangesButton.Location = New System.Drawing.Point(77, 35)
         Me.CopyChangesButton.Name = "CopyChangesButton"
         Me.CopyChangesButton.Size = New System.Drawing.Size(139, 23)
         Me.CopyChangesButton.TabIndex = 32
@@ -306,7 +304,7 @@ Partial Class PatchFromTags
         'Label16
         '
         Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(137, 436)
+        Me.Label16.Location = New System.Drawing.Point(137, 463)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(288, 13)
         Me.Label16.TabIndex = 31
@@ -315,7 +313,7 @@ Partial Class PatchFromTags
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(10, 76)
+        Me.Label12.Location = New System.Drawing.Point(10, 103)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(28, 13)
         Me.Label12.TabIndex = 30
@@ -324,7 +322,7 @@ Partial Class PatchFromTags
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(77, 43)
+        Me.Label11.Location = New System.Drawing.Point(77, 61)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(281, 13)
         Me.Label11.TabIndex = 29
@@ -333,7 +331,7 @@ Partial Class PatchFromTags
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(10, 436)
+        Me.Label8.Location = New System.Drawing.Point(10, 463)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(38, 13)
         Me.Label8.TabIndex = 23
@@ -342,26 +340,26 @@ Partial Class PatchFromTags
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(77, 60)
+        Me.Label10.Location = New System.Drawing.Point(77, 78)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(256, 13)
         Me.Label10.TabIndex = 27
         Me.Label10.Text = "A tick indicates errors are to be ignored for this script."
         '
-        'UsePatchAdminCheckBox
+        'UseARMCheckBox
         '
-        Me.UsePatchAdminCheckBox.AutoSize = True
-        Me.UsePatchAdminCheckBox.Location = New System.Drawing.Point(317, 641)
-        Me.UsePatchAdminCheckBox.Name = "UsePatchAdminCheckBox"
-        Me.UsePatchAdminCheckBox.Size = New System.Drawing.Size(108, 17)
-        Me.UsePatchAdminCheckBox.TabIndex = 19
-        Me.UsePatchAdminCheckBox.Text = "Use Patch Admin"
-        Me.UsePatchAdminCheckBox.UseVisualStyleBackColor = True
+        Me.UseARMCheckBox.AutoSize = True
+        Me.UseARMCheckBox.Location = New System.Drawing.Point(317, 668)
+        Me.UseARMCheckBox.Name = "UseARMCheckBox"
+        Me.UseARMCheckBox.Size = New System.Drawing.Size(115, 17)
+        Me.UseARMCheckBox.TabIndex = 19
+        Me.UseARMCheckBox.Text = "Use Apex-Rel-Man"
+        Me.UseARMCheckBox.UseVisualStyleBackColor = True
         '
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(10, 588)
+        Me.Label9.Location = New System.Drawing.Point(10, 615)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(35, 13)
         Me.Label9.TabIndex = 25
@@ -370,7 +368,7 @@ Partial Class PatchFromTags
         'RerunCheckBox
         '
         Me.RerunCheckBox.AutoSize = True
-        Me.RerunCheckBox.Location = New System.Drawing.Point(80, 540)
+        Me.RerunCheckBox.Location = New System.Drawing.Point(80, 567)
         Me.RerunCheckBox.Name = "RerunCheckBox"
         Me.RerunCheckBox.Size = New System.Drawing.Size(81, 17)
         Me.RerunCheckBox.TabIndex = 18
@@ -380,7 +378,7 @@ Partial Class PatchFromTags
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(10, 517)
+        Me.Label5.Location = New System.Drawing.Point(10, 544)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(51, 13)
         Me.Label5.TabIndex = 15
@@ -389,7 +387,7 @@ Partial Class PatchFromTags
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(10, 562)
+        Me.Label7.Location = New System.Drawing.Point(10, 589)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(60, 13)
         Me.Label7.TabIndex = 21
@@ -397,7 +395,7 @@ Partial Class PatchFromTags
         '
         'PatchButton
         '
-        Me.PatchButton.Location = New System.Drawing.Point(80, 612)
+        Me.PatchButton.Location = New System.Drawing.Point(80, 639)
         Me.PatchButton.Name = "PatchButton"
         Me.PatchButton.Size = New System.Drawing.Size(230, 23)
         Me.PatchButton.TabIndex = 7
@@ -407,73 +405,64 @@ Partial Class PatchFromTags
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(10, 492)
+        Me.Label6.Location = New System.Drawing.Point(10, 519)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(66, 13)
         Me.Label6.TabIndex = 17
         Me.Label6.Text = "Patch Name"
         '
-        'TabPagePreReqs
+        'TabPagePreReqsA
         '
-        Me.TabPagePreReqs.Controls.Add(Me.Label23)
-        Me.TabPagePreReqs.Controls.Add(Me.PreReqPatchesTreeView)
-        Me.TabPagePreReqs.Controls.Add(Me.ButtonLastPatch)
-        Me.TabPagePreReqs.Controls.Add(Me.RestrictPreReqToBranchCheckBox)
-        Me.TabPagePreReqs.Controls.Add(Me.PreReqButton)
-        Me.TabPagePreReqs.Controls.Add(Me.Label13)
-        Me.TabPagePreReqs.Location = New System.Drawing.Point(4, 22)
-        Me.TabPagePreReqs.Name = "TabPagePreReqs"
-        Me.TabPagePreReqs.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePreReqs.Size = New System.Drawing.Size(525, 757)
-        Me.TabPagePreReqs.TabIndex = 3
-        Me.TabPagePreReqs.Text = "Pre-Requisites"
-        Me.TabPagePreReqs.UseVisualStyleBackColor = True
+        Me.TabPagePreReqsA.Controls.Add(Me.Label25)
+        Me.TabPagePreReqsA.Controls.Add(Me.Label23)
+        Me.TabPagePreReqsA.Controls.Add(Me.PreReqPatchesTreeViewA)
+        Me.TabPagePreReqsA.Controls.Add(Me.ButtonLastPatch)
+        Me.TabPagePreReqsA.Controls.Add(Me.Label13)
+        Me.TabPagePreReqsA.Location = New System.Drawing.Point(4, 22)
+        Me.TabPagePreReqsA.Name = "TabPagePreReqsA"
+        Me.TabPagePreReqsA.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPagePreReqsA.Size = New System.Drawing.Size(525, 757)
+        Me.TabPagePreReqsA.TabIndex = 3
+        Me.TabPagePreReqsA.Text = "Last Patches"
+        Me.TabPagePreReqsA.UseVisualStyleBackColor = True
+        '
+        'Label25
+        '
+        Me.Label25.AutoSize = True
+        Me.Label25.Location = New System.Drawing.Point(77, 16)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(390, 13)
+        Me.Label25.TabIndex = 55
+        Me.Label25.Text = "The Last Patch of any component of this patch, will be deemed a Pre-Req Patch."
         '
         'Label23
         '
         Me.Label23.AutoSize = True
-        Me.Label23.Location = New System.Drawing.Point(74, 77)
+        Me.Label23.Location = New System.Drawing.Point(74, 61)
         Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(342, 13)
+        Me.Label23.Size = New System.Drawing.Size(413, 26)
         Me.Label23.TabIndex = 53
-        Me.Label23.Text = "This patch will require all ticked patches to have been already installed."
+        Me.Label23.Text = "Before this patch will install, these prerequisite Last Patches must have been in" &
+    "stalled. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Then once this patch is installed, these Last Patches will no longer " &
+    "be rerunnable."
         '
-        'PreReqPatchesTreeView
+        'PreReqPatchesTreeViewA
         '
-        Me.PreReqPatchesTreeView.BackColor = System.Drawing.Color.Wheat
-        Me.PreReqPatchesTreeView.CheckBoxes = True
-        Me.PreReqPatchesTreeView.Location = New System.Drawing.Point(77, 93)
-        Me.PreReqPatchesTreeView.Name = "PreReqPatchesTreeView"
-        Me.PreReqPatchesTreeView.Size = New System.Drawing.Size(429, 571)
-        Me.PreReqPatchesTreeView.TabIndex = 50
+        Me.PreReqPatchesTreeViewA.BackColor = System.Drawing.Color.Wheat
+        Me.PreReqPatchesTreeViewA.CheckBoxes = True
+        Me.PreReqPatchesTreeViewA.Location = New System.Drawing.Point(77, 93)
+        Me.PreReqPatchesTreeViewA.Name = "PreReqPatchesTreeViewA"
+        Me.PreReqPatchesTreeViewA.Size = New System.Drawing.Size(429, 571)
+        Me.PreReqPatchesTreeViewA.TabIndex = 50
         '
         'ButtonLastPatch
         '
-        Me.ButtonLastPatch.Location = New System.Drawing.Point(367, 35)
+        Me.ButtonLastPatch.Location = New System.Drawing.Point(77, 35)
         Me.ButtonLastPatch.Name = "ButtonLastPatch"
         Me.ButtonLastPatch.Size = New System.Drawing.Size(139, 23)
         Me.ButtonLastPatch.TabIndex = 45
         Me.ButtonLastPatch.Text = "Find Last Patches"
         Me.ButtonLastPatch.UseVisualStyleBackColor = True
-        '
-        'RestrictPreReqToBranchCheckBox
-        '
-        Me.RestrictPreReqToBranchCheckBox.AutoSize = True
-        Me.RestrictPreReqToBranchCheckBox.Location = New System.Drawing.Point(222, 41)
-        Me.RestrictPreReqToBranchCheckBox.Name = "RestrictPreReqToBranchCheckBox"
-        Me.RestrictPreReqToBranchCheckBox.Size = New System.Drawing.Size(111, 17)
-        Me.RestrictPreReqToBranchCheckBox.TabIndex = 34
-        Me.RestrictPreReqToBranchCheckBox.Text = "Restrict to Branch"
-        Me.RestrictPreReqToBranchCheckBox.UseVisualStyleBackColor = True
-        '
-        'PreReqButton
-        '
-        Me.PreReqButton.Location = New System.Drawing.Point(77, 35)
-        Me.PreReqButton.Name = "PreReqButton"
-        Me.PreReqButton.Size = New System.Drawing.Size(139, 23)
-        Me.PreReqButton.TabIndex = 33
-        Me.PreReqButton.Text = "Search"
-        Me.PreReqButton.UseVisualStyleBackColor = True
         '
         'Label13
         '
@@ -597,7 +586,8 @@ Partial Class PatchFromTags
         Me.PatchTabControl.Controls.Add(Me.TabPageTags)
         Me.PatchTabControl.Controls.Add(Me.TabPageChanges)
         Me.PatchTabControl.Controls.Add(Me.TabPageExtras)
-        Me.PatchTabControl.Controls.Add(Me.TabPagePreReqs)
+        Me.PatchTabControl.Controls.Add(Me.TabPagePreReqsA)
+        Me.PatchTabControl.Controls.Add(Me.TabPagePreReqsB)
         Me.PatchTabControl.Controls.Add(Me.TabPagePatchDefn)
         Me.PatchTabControl.Location = New System.Drawing.Point(12, 12)
         Me.PatchTabControl.Name = "PatchTabControl"
@@ -645,7 +635,7 @@ Partial Class PatchFromTags
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(96, 9)
+        Me.Label17.Location = New System.Drawing.Point(386, 10)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(77, 13)
         Me.Label17.TabIndex = 15
@@ -653,7 +643,7 @@ Partial Class PatchFromTags
         '
         'SchemaCountTextBox
         '
-        Me.SchemaCountTextBox.Location = New System.Drawing.Point(179, 9)
+        Me.SchemaCountTextBox.Location = New System.Drawing.Point(469, 10)
         Me.SchemaCountTextBox.Name = "SchemaCountTextBox"
         Me.SchemaCountTextBox.ReadOnly = True
         Me.SchemaCountTextBox.Size = New System.Drawing.Size(37, 20)
@@ -662,7 +652,7 @@ Partial Class PatchFromTags
         'SchemaComboBox
         '
         Me.SchemaComboBox.FormattingEnabled = True
-        Me.SchemaComboBox.Location = New System.Drawing.Point(367, 9)
+        Me.SchemaComboBox.Location = New System.Drawing.Point(367, 36)
         Me.SchemaComboBox.Name = "SchemaComboBox"
         Me.SchemaComboBox.Size = New System.Drawing.Size(139, 21)
         Me.SchemaComboBox.TabIndex = 10
@@ -670,7 +660,7 @@ Partial Class PatchFromTags
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(315, 9)
+        Me.Label4.Location = New System.Drawing.Point(315, 36)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(46, 13)
         Me.Label4.TabIndex = 11
@@ -705,6 +695,7 @@ Partial Class PatchFromTags
         '
         'TabPageExtras
         '
+        Me.TabPageExtras.Controls.Add(Me.Label24)
         Me.TabPageExtras.Controls.Add(Me.Label22)
         Me.TabPageExtras.Controls.Add(Me.TreeViewFiles)
         Me.TabPageExtras.Controls.Add(Me.Label21)
@@ -716,6 +707,16 @@ Partial Class PatchFromTags
         Me.TabPageExtras.TabIndex = 6
         Me.TabPageExtras.Text = "Extra Files"
         Me.TabPageExtras.UseVisualStyleBackColor = True
+        '
+        'Label24
+        '
+        Me.Label24.AutoSize = True
+        Me.Label24.Location = New System.Drawing.Point(77, 16)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(413, 13)
+        Me.Label24.TabIndex = 54
+        Me.Label24.Text = "Add any file direct from the current checkout.  Need not be to committed nor chan" &
+    "ged."
         '
         'Label22
         '
@@ -753,6 +754,79 @@ Partial Class PatchFromTags
         Me.ButtonFindFiles.Text = "Find Files"
         Me.ButtonFindFiles.UseVisualStyleBackColor = True
         '
+        'TabPagePreReqsB
+        '
+        Me.TabPagePreReqsB.Controls.Add(Me.Label30)
+        Me.TabPagePreReqsB.Controls.Add(Me.RestrictPreReqToBranchCheckBox)
+        Me.TabPagePreReqsB.Controls.Add(Me.PreReqButton)
+        Me.TabPagePreReqsB.Controls.Add(Me.Label14)
+        Me.TabPagePreReqsB.Controls.Add(Me.PreReqPatchesTreeViewB)
+        Me.TabPagePreReqsB.Controls.Add(Me.Label19)
+        Me.TabPagePreReqsB.Location = New System.Drawing.Point(4, 22)
+        Me.TabPagePreReqsB.Name = "TabPagePreReqsB"
+        Me.TabPagePreReqsB.Size = New System.Drawing.Size(525, 757)
+        Me.TabPagePreReqsB.TabIndex = 7
+        Me.TabPagePreReqsB.Text = "Best Order"
+        Me.TabPagePreReqsB.UseVisualStyleBackColor = True
+        '
+        'Label30
+        '
+        Me.Label30.AutoSize = True
+        Me.Label30.Location = New System.Drawing.Point(77, 16)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(443, 13)
+        Me.Label30.TabIndex = 62
+        Me.Label30.Text = "Nominate any recent patch that this patch, or its components, are expected to dep" &
+    "end upon."
+        '
+        'RestrictPreReqToBranchCheckBox
+        '
+        Me.RestrictPreReqToBranchCheckBox.AutoSize = True
+        Me.RestrictPreReqToBranchCheckBox.Location = New System.Drawing.Point(222, 39)
+        Me.RestrictPreReqToBranchCheckBox.Name = "RestrictPreReqToBranchCheckBox"
+        Me.RestrictPreReqToBranchCheckBox.Size = New System.Drawing.Size(111, 17)
+        Me.RestrictPreReqToBranchCheckBox.TabIndex = 61
+        Me.RestrictPreReqToBranchCheckBox.Text = "Restrict to Branch"
+        Me.RestrictPreReqToBranchCheckBox.UseVisualStyleBackColor = True
+        '
+        'PreReqButton
+        '
+        Me.PreReqButton.Location = New System.Drawing.Point(77, 35)
+        Me.PreReqButton.Name = "PreReqButton"
+        Me.PreReqButton.Size = New System.Drawing.Size(139, 23)
+        Me.PreReqButton.TabIndex = 60
+        Me.PreReqButton.Text = "Search"
+        Me.PreReqButton.UseVisualStyleBackColor = True
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Location = New System.Drawing.Point(74, 61)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(443, 26)
+        Me.Label14.TabIndex = 59
+        Me.Label14.Text = "Before this patch will install, these prerequisite Best Order Patches must have b" &
+    "een installed. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Once this patch is installed, these prerequisites may still be " &
+    "rerun, if required."
+        '
+        'PreReqPatchesTreeViewB
+        '
+        Me.PreReqPatchesTreeViewB.BackColor = System.Drawing.Color.Wheat
+        Me.PreReqPatchesTreeViewB.CheckBoxes = True
+        Me.PreReqPatchesTreeViewB.Location = New System.Drawing.Point(77, 93)
+        Me.PreReqPatchesTreeViewB.Name = "PreReqPatchesTreeViewB"
+        Me.PreReqPatchesTreeViewB.Size = New System.Drawing.Size(429, 571)
+        Me.PreReqPatchesTreeViewB.TabIndex = 58
+        '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.Location = New System.Drawing.Point(28, 93)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(43, 13)
+        Me.Label19.TabIndex = 54
+        Me.Label19.Text = "Prereqs"
+        '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -764,8 +838,8 @@ Partial Class PatchFromTags
         Me.Text = "PatchFromTags"
         Me.TabPagePatchDefn.ResumeLayout(False)
         Me.TabPagePatchDefn.PerformLayout()
-        Me.TabPagePreReqs.ResumeLayout(False)
-        Me.TabPagePreReqs.PerformLayout()
+        Me.TabPagePreReqsA.ResumeLayout(False)
+        Me.TabPagePreReqsA.PerformLayout()
         Me.TabPageTags.ResumeLayout(False)
         Me.TabPageTags.PerformLayout()
         Me.PatchTabControl.ResumeLayout(False)
@@ -773,6 +847,8 @@ Partial Class PatchFromTags
         Me.TabPageChanges.PerformLayout()
         Me.TabPageExtras.ResumeLayout(False)
         Me.TabPageExtras.PerformLayout()
+        Me.TabPagePreReqsB.ResumeLayout(False)
+        Me.TabPagePreReqsB.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -793,16 +869,14 @@ Partial Class PatchFromTags
     Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents UsePatchAdminCheckBox As System.Windows.Forms.CheckBox
+    Friend WithEvents UseARMCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents RerunCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents PatchButton As System.Windows.Forms.Button
     Friend WithEvents Label6 As System.Windows.Forms.Label
-    Friend WithEvents TabPagePreReqs As System.Windows.Forms.TabPage
-    Friend WithEvents RestrictPreReqToBranchCheckBox As System.Windows.Forms.CheckBox
-    Friend WithEvents PreReqButton As System.Windows.Forms.Button
+    Friend WithEvents TabPagePreReqsA As System.Windows.Forms.TabPage
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents TabPageTags As System.Windows.Forms.TabPage
     Friend WithEvents FindTagsButton As System.Windows.Forms.Button
@@ -818,7 +892,7 @@ Partial Class PatchFromTags
     Friend WithEvents Label21 As System.Windows.Forms.Label
     Friend WithEvents ButtonLastPatch As System.Windows.Forms.Button
     Friend WithEvents TreeViewPatchOrder As TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels
-    Friend WithEvents PreReqPatchesTreeView As TreeViewEnhanced.TreeViewEnhanced
+    Friend WithEvents PreReqPatchesTreeViewA As TreeViewEnhanced.TreeViewEnhanced
     Friend WithEvents TreeViewFiles As TreeViewEnhanced.TreeViewEnhanced
     Friend WithEvents TabPageChanges As System.Windows.Forms.TabPage
     Friend WithEvents TreeViewChanges As TreeViewEnhanced.TreeViewEnhanced
@@ -838,8 +912,16 @@ Partial Class PatchFromTags
     Friend WithEvents Label22 As System.Windows.Forms.Label
     Friend WithEvents Label28 As System.Windows.Forms.Label
     Friend WithEvents Label29 As System.Windows.Forms.Label
-    Friend WithEvents AddUninstallButton As System.Windows.Forms.Button
     Friend WithEvents ExportPatchButton As System.Windows.Forms.Button
     Friend WithEvents SYSDBACheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents AlternateSchemasCheckBox As System.Windows.Forms.CheckBox
+    Friend WithEvents TabPagePreReqsB As TabPage
+    Friend WithEvents Label14 As Label
+    Friend WithEvents PreReqPatchesTreeViewB As TreeViewEnhanced.TreeViewEnhanced
+    Friend WithEvents Label19 As Label
+    Friend WithEvents RestrictPreReqToBranchCheckBox As CheckBox
+    Friend WithEvents PreReqButton As Button
+    Friend WithEvents Label24 As Label
+    Friend WithEvents Label25 As Label
+    Friend WithEvents Label30 As Label
 End Class

@@ -620,7 +620,7 @@ Public Class CreatePatchCollection
 
             PatchDirTextBox.Text = Globals.RootPatchDir & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
 
-            UsePatchAdminCheckBox.Checked = Globals.getUsePatchAdmin
+            UsePatchAdminCheckBox.Checked = Globals.getUseARM
 
             RerunCheckBox.Checked = False
 

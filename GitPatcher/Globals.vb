@@ -339,7 +339,7 @@
         gUsePatchAdmin = UsePatchAdmin
     End Sub
 
-    Public Function getUsePatchAdmin() As Boolean
+    Public Function getUseARM() As Boolean
         Return gUsePatchAdmin
     End Function
 
