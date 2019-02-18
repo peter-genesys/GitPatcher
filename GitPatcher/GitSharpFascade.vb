@@ -71,7 +71,11 @@ Public Class GitSharpFascade
     Shared Sub switchBranch(ByVal path, ByVal branchName)
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
         Dim existingBranch As GitSharp.Branch = New Branch(repo, branchName)
-        repo.SwitchToBranch(existingBranch)
+        Try
+            repo.SwitchToBranch(existingBranch)
+        Catch e As GitSharp.Core.Exceptions.CheckoutConflictException
+            MsgBox(e.Message)
+        End Try
 
     End Sub
 

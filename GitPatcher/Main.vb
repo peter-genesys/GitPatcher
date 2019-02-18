@@ -486,7 +486,8 @@
 
         If rebasing.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(Globals.getRepoPath, iRebaseBranchOn)
+            'GitBash.Switch(Globals.getRepoPath, iRebaseBranchOn)
+            GitSharpFascade.switchBranch(Globals.getRepoPath, iRebaseBranchOn)
         End If
         If rebasing.toDoNextStep() Then
             'Pull from origin/develop

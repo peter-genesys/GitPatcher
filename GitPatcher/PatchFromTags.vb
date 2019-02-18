@@ -1082,7 +1082,10 @@ Public Class PatchFromTags
             'GitSharpFascade.switchBranch(Globals.currentRepo, "master")
             'Tortoise.Switch(Globals.currentRepo)
             'Switch to develop branch
-            GitBash.Switch(Globals.getRepoPath, iRebaseBranchOn)
+            'GitBash.Switch(Globals.getRepoPath, iRebaseBranchOn)
+            GitSharpFascade.switchBranch(Globals.getRepoPath, iRebaseBranchOn)
+
+
         End If
 
         If createPatchProgress.toDoNextStep() Then
