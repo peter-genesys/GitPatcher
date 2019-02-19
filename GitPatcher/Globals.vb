@@ -1,5 +1,9 @@
-﻿Module Globals
- 
+﻿Imports GitSharp
+
+Module Globals
+
+    Private commit1 As Commit
+
     Private gDB As String = My.Settings.CurrentDB
 
     Private gRepo As String
@@ -7,6 +11,24 @@
     Private gParsingSchema As String
     Private gJiraProject As String
 
+
+    Private gCommit1 As Commit
+    Private gCommit2 As Commit
+
+    Public Sub setCommits(commit1 As Commit, commit2 As Commit)
+
+        gCommit1 = commit1
+        gCommit2 = commit2
+
+    End Sub
+
+    Public Function getCommit1() As Commit
+        Return gCommit1
+    End Function
+
+    Public Function getCommit2() As Commit
+        Return gCommit2
+    End Function
 
     Public Sub setRepo(Repo As String)
 
@@ -242,7 +264,7 @@
 
     End Function
 
- 
+
 
 
     Public Function currentLongBranch() As String
@@ -294,7 +316,7 @@
 
 
 
- 
+
 
     Private gAppName As String
 
@@ -383,26 +405,26 @@
 
     End Function
 
- 
-  
+
+
     Public Function currentConnection() As String
 
         Return getCONNECT()
- 
+
 
     End Function
 
     Public Function currentTNS() As String
 
         Return getTNS()
- 
+
 
     End Function
 
 
     Public Function deriveFeatureCode() As String
 
-    
+
         If gAppInFeature = "N" And gOrgInFeature = "N" Then
             Return ""
         End If
@@ -415,7 +437,7 @@
         Else
             Return gOrgCode & "/"
         End If
- 
+
 
     End Function
 
@@ -436,7 +458,7 @@
         ElseIf iDb = "VM" Then
             Return ""
         End If
- 
+
         Return ""
 
     End Function

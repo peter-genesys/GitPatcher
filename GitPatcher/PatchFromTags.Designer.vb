@@ -61,6 +61,7 @@ Partial Class PatchFromTags
         Me.ButtonLastPatch = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.TabPageTags = New System.Windows.Forms.TabPage()
+        Me.UseSHA1Button = New System.Windows.Forms.Button()
         Me.Label28 = New System.Windows.Forms.Label()
         Me.Label29 = New System.Windows.Forms.Label()
         Me.Label27 = New System.Windows.Forms.Label()
@@ -72,6 +73,14 @@ Partial Class PatchFromTags
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.PatchTabControl = New System.Windows.Forms.TabControl()
+        Me.TabPageSHA1 = New System.Windows.Forms.TabPage()
+        Me.UseTagsButton = New System.Windows.Forms.Button()
+        Me.Label31 = New System.Windows.Forms.Label()
+        Me.Label32 = New System.Windows.Forms.Label()
+        Me.SHA1TextBox1 = New System.Windows.Forms.TextBox()
+        Me.SHA1TextBox2 = New System.Windows.Forms.TextBox()
+        Me.Label33 = New System.Windows.Forms.Label()
+        Me.Label34 = New System.Windows.Forms.Label()
         Me.TabPageChanges = New System.Windows.Forms.TabPage()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.TreeViewChanges = New TreeViewEnhanced.TreeViewEnhanced()
@@ -95,10 +104,12 @@ Partial Class PatchFromTags
         Me.Label14 = New System.Windows.Forms.Label()
         Me.PreReqPatchesTreeViewB = New TreeViewEnhanced.TreeViewEnhanced()
         Me.Label19 = New System.Windows.Forms.Label()
+        Me.FindsSHA1Button = New System.Windows.Forms.Button()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPagePreReqsA.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.PatchTabControl.SuspendLayout()
+        Me.TabPageSHA1.SuspendLayout()
         Me.TabPageChanges.SuspendLayout()
         Me.TabPageExtras.SuspendLayout()
         Me.TabPagePreReqsB.SuspendLayout()
@@ -475,6 +486,7 @@ Partial Class PatchFromTags
         '
         'TabPageTags
         '
+        Me.TabPageTags.Controls.Add(Me.UseSHA1Button)
         Me.TabPageTags.Controls.Add(Me.Label28)
         Me.TabPageTags.Controls.Add(Me.Label29)
         Me.TabPageTags.Controls.Add(Me.Label27)
@@ -493,10 +505,19 @@ Partial Class PatchFromTags
         Me.TabPageTags.Text = "Tags"
         Me.TabPageTags.UseVisualStyleBackColor = True
         '
+        'UseSHA1Button
+        '
+        Me.UseSHA1Button.Location = New System.Drawing.Point(367, 36)
+        Me.UseSHA1Button.Name = "UseSHA1Button"
+        Me.UseSHA1Button.Size = New System.Drawing.Size(139, 23)
+        Me.UseSHA1Button.TabIndex = 56
+        Me.UseSHA1Button.Text = "Use SHA-1"
+        Me.UseSHA1Button.UseVisualStyleBackColor = True
+        '
         'Label28
         '
         Me.Label28.AutoSize = True
-        Me.Label28.Location = New System.Drawing.Point(222, 632)
+        Me.Label28.Location = New System.Drawing.Point(222, 661)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(79, 13)
         Me.Label28.TabIndex = 54
@@ -505,7 +526,7 @@ Partial Class PatchFromTags
         'Label29
         '
         Me.Label29.AutoSize = True
-        Me.Label29.Location = New System.Drawing.Point(222, 658)
+        Me.Label29.Location = New System.Drawing.Point(222, 687)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(74, 13)
         Me.Label29.TabIndex = 55
@@ -514,7 +535,7 @@ Partial Class PatchFromTags
         'Label27
         '
         Me.Label27.AutoSize = True
-        Me.Label27.Location = New System.Drawing.Point(74, 60)
+        Me.Label27.Location = New System.Drawing.Point(74, 77)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(173, 13)
         Me.Label27.TabIndex = 53
@@ -522,9 +543,9 @@ Partial Class PatchFromTags
         '
         'FindTagsButton
         '
-        Me.FindTagsButton.Location = New System.Drawing.Point(77, 17)
+        Me.FindTagsButton.Location = New System.Drawing.Point(77, 36)
         Me.FindTagsButton.Name = "FindTagsButton"
-        Me.FindTagsButton.Size = New System.Drawing.Size(230, 23)
+        Me.FindTagsButton.Size = New System.Drawing.Size(139, 23)
         Me.FindTagsButton.TabIndex = 14
         Me.FindTagsButton.Text = "Find Tags"
         Me.FindTagsButton.UseVisualStyleBackColor = True
@@ -533,15 +554,15 @@ Partial Class PatchFromTags
         '
         Me.TagsCheckedListBox.CheckOnClick = True
         Me.TagsCheckedListBox.FormattingEnabled = True
-        Me.TagsCheckedListBox.Location = New System.Drawing.Point(77, 76)
+        Me.TagsCheckedListBox.Location = New System.Drawing.Point(77, 93)
         Me.TagsCheckedListBox.Name = "TagsCheckedListBox"
-        Me.TagsCheckedListBox.Size = New System.Drawing.Size(397, 529)
+        Me.TagsCheckedListBox.Size = New System.Drawing.Size(429, 559)
         Me.TagsCheckedListBox.TabIndex = 12
         '
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(20, 76)
+        Me.Label15.Location = New System.Drawing.Point(40, 93)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(31, 13)
         Me.Label15.TabIndex = 13
@@ -549,7 +570,7 @@ Partial Class PatchFromTags
         '
         'Tag1TextBox
         '
-        Me.Tag1TextBox.Location = New System.Drawing.Point(77, 629)
+        Me.Tag1TextBox.Location = New System.Drawing.Point(77, 658)
         Me.Tag1TextBox.Name = "Tag1TextBox"
         Me.Tag1TextBox.ReadOnly = True
         Me.Tag1TextBox.Size = New System.Drawing.Size(139, 20)
@@ -557,7 +578,7 @@ Partial Class PatchFromTags
         '
         'Tag2TextBox
         '
-        Me.Tag2TextBox.Location = New System.Drawing.Point(77, 655)
+        Me.Tag2TextBox.Location = New System.Drawing.Point(77, 684)
         Me.Tag2TextBox.Name = "Tag2TextBox"
         Me.Tag2TextBox.ReadOnly = True
         Me.Tag2TextBox.Size = New System.Drawing.Size(139, 20)
@@ -566,7 +587,7 @@ Partial Class PatchFromTags
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(20, 632)
+        Me.Label1.Location = New System.Drawing.Point(20, 661)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(52, 13)
         Me.Label1.TabIndex = 1
@@ -575,7 +596,7 @@ Partial Class PatchFromTags
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(20, 658)
+        Me.Label2.Location = New System.Drawing.Point(20, 687)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(42, 13)
         Me.Label2.TabIndex = 3
@@ -584,6 +605,7 @@ Partial Class PatchFromTags
         'PatchTabControl
         '
         Me.PatchTabControl.Controls.Add(Me.TabPageTags)
+        Me.PatchTabControl.Controls.Add(Me.TabPageSHA1)
         Me.PatchTabControl.Controls.Add(Me.TabPageChanges)
         Me.PatchTabControl.Controls.Add(Me.TabPageExtras)
         Me.PatchTabControl.Controls.Add(Me.TabPagePreReqsA)
@@ -594,6 +616,82 @@ Partial Class PatchFromTags
         Me.PatchTabControl.SelectedIndex = 0
         Me.PatchTabControl.Size = New System.Drawing.Size(533, 783)
         Me.PatchTabControl.TabIndex = 18
+        '
+        'TabPageSHA1
+        '
+        Me.TabPageSHA1.Controls.Add(Me.FindsSHA1Button)
+        Me.TabPageSHA1.Controls.Add(Me.UseTagsButton)
+        Me.TabPageSHA1.Controls.Add(Me.Label31)
+        Me.TabPageSHA1.Controls.Add(Me.Label32)
+        Me.TabPageSHA1.Controls.Add(Me.SHA1TextBox1)
+        Me.TabPageSHA1.Controls.Add(Me.SHA1TextBox2)
+        Me.TabPageSHA1.Controls.Add(Me.Label33)
+        Me.TabPageSHA1.Controls.Add(Me.Label34)
+        Me.TabPageSHA1.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageSHA1.Name = "TabPageSHA1"
+        Me.TabPageSHA1.Size = New System.Drawing.Size(525, 757)
+        Me.TabPageSHA1.TabIndex = 8
+        Me.TabPageSHA1.Text = "SHA-1"
+        Me.TabPageSHA1.UseVisualStyleBackColor = True
+        '
+        'UseTagsButton
+        '
+        Me.UseTagsButton.Location = New System.Drawing.Point(367, 36)
+        Me.UseTagsButton.Name = "UseTagsButton"
+        Me.UseTagsButton.Size = New System.Drawing.Size(139, 23)
+        Me.UseTagsButton.TabIndex = 62
+        Me.UseTagsButton.Text = "Use Tags"
+        Me.UseTagsButton.UseVisualStyleBackColor = True
+        '
+        'Label31
+        '
+        Me.Label31.AutoSize = True
+        Me.Label31.Location = New System.Drawing.Point(364, 89)
+        Me.Label31.Name = "Label31"
+        Me.Label31.Size = New System.Drawing.Size(97, 13)
+        Me.Label31.TabIndex = 60
+        Me.Label31.Text = "AFTER this commit"
+        '
+        'Label32
+        '
+        Me.Label32.AutoSize = True
+        Me.Label32.Location = New System.Drawing.Point(364, 115)
+        Me.Label32.Name = "Label32"
+        Me.Label32.Size = New System.Drawing.Size(137, 13)
+        Me.Label32.TabIndex = 61
+        Me.Label32.Text = "UPTO including this commit"
+        '
+        'SHA1TextBox1
+        '
+        Me.SHA1TextBox1.Location = New System.Drawing.Point(77, 86)
+        Me.SHA1TextBox1.Name = "SHA1TextBox1"
+        Me.SHA1TextBox1.Size = New System.Drawing.Size(281, 20)
+        Me.SHA1TextBox1.TabIndex = 56
+        '
+        'SHA1TextBox2
+        '
+        Me.SHA1TextBox2.Location = New System.Drawing.Point(77, 112)
+        Me.SHA1TextBox2.Name = "SHA1TextBox2"
+        Me.SHA1TextBox2.Size = New System.Drawing.Size(281, 20)
+        Me.SHA1TextBox2.TabIndex = 58
+        '
+        'Label33
+        '
+        Me.Label33.AutoSize = True
+        Me.Label33.Location = New System.Drawing.Point(10, 89)
+        Me.Label33.Name = "Label33"
+        Me.Label33.Size = New System.Drawing.Size(64, 13)
+        Me.Label33.TabIndex = 57
+        Me.Label33.Text = "From SHA-1"
+        '
+        'Label34
+        '
+        Me.Label34.AutoSize = True
+        Me.Label34.Location = New System.Drawing.Point(20, 115)
+        Me.Label34.Name = "Label34"
+        Me.Label34.Size = New System.Drawing.Size(54, 13)
+        Me.Label34.TabIndex = 59
+        Me.Label34.Text = "To SHA-1"
         '
         'TabPageChanges
         '
@@ -678,7 +776,7 @@ Partial Class PatchFromTags
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(28, 93)
+        Me.Label3.Location = New System.Drawing.Point(22, 93)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(49, 13)
         Me.Label3.TabIndex = 6
@@ -827,6 +925,15 @@ Partial Class PatchFromTags
         Me.Label19.TabIndex = 54
         Me.Label19.Text = "Prereqs"
         '
+        'FindsSHA1Button
+        '
+        Me.FindsSHA1Button.Location = New System.Drawing.Point(77, 36)
+        Me.FindsSHA1Button.Name = "FindsSHA1Button"
+        Me.FindsSHA1Button.Size = New System.Drawing.Size(139, 23)
+        Me.FindsSHA1Button.TabIndex = 63
+        Me.FindsSHA1Button.Text = "Find SHA-1"
+        Me.FindsSHA1Button.UseVisualStyleBackColor = True
+        '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -843,6 +950,8 @@ Partial Class PatchFromTags
         Me.TabPageTags.ResumeLayout(False)
         Me.TabPageTags.PerformLayout()
         Me.PatchTabControl.ResumeLayout(False)
+        Me.TabPageSHA1.ResumeLayout(False)
+        Me.TabPageSHA1.PerformLayout()
         Me.TabPageChanges.ResumeLayout(False)
         Me.TabPageChanges.PerformLayout()
         Me.TabPageExtras.ResumeLayout(False)
@@ -924,4 +1033,14 @@ Partial Class PatchFromTags
     Friend WithEvents Label24 As Label
     Friend WithEvents Label25 As Label
     Friend WithEvents Label30 As Label
+    Friend WithEvents UseSHA1Button As Button
+    Friend WithEvents TabPageSHA1 As TabPage
+    Friend WithEvents UseTagsButton As Button
+    Friend WithEvents Label31 As Label
+    Friend WithEvents Label32 As Label
+    Friend WithEvents SHA1TextBox1 As TextBox
+    Friend WithEvents SHA1TextBox2 As TextBox
+    Friend WithEvents Label33 As Label
+    Friend WithEvents Label34 As Label
+    Friend WithEvents FindsSHA1Button As Button
 End Class

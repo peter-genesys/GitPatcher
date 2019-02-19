@@ -6,8 +6,6 @@ Public Class PatchFromTags
     Dim gRebaseBranchOn As String
     Dim gtag_base As String
 
- 
-
     Public Sub New(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String, itag_base As String)
         InitializeComponent()
 
@@ -20,10 +18,22 @@ Public Class PatchFromTags
         gRebaseBranchOn = iRebaseBranchOn
         gtag_base = itag_base
 
+        PatchTabControl.TabPages.Remove(TabPageSHA1)
+
         HideTabs()
 
         ExecuteButton.Text = "Execute Patch on " & Globals.currentTNS
 
+    End Sub
+
+    Private Sub UseTags()
+        PatchTabControl.TabPages.Insert(1, TabPageTags)
+        PatchTabControl.TabPages.Remove(TabPageSHA1)
+    End Sub
+
+    Private Sub UseSHA1()
+        PatchTabControl.TabPages.Insert(1, TabPageSHA1)
+        PatchTabControl.TabPages.Remove(TabPageTags)
     End Sub
 
     Private Sub HideTabs()
@@ -65,24 +75,73 @@ Public Class PatchFromTags
 
     End Sub
 
+    Private Sub deriveSchemas()
+        'NB This routine also causes the Globals.commit1 and Globals.commit2 to be calculated, for reuse in the Wizard.
+        If String.IsNullOrEmpty(SchemaComboBox.Text) Then
+            SchemaComboBox.Items.Clear()
+
+            If PatchTabControl.TabPages.Contains(TabPageTags) Then
+                'Tags
+                Logger.Dbg("Load schemas from Tags")
+
+                GitSharpFascade.setCommitsFromTags(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text)
+
+                'For Each schema In GitSharpFascade.tagsGetSchemaList(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask)
+                'SchemaComboBox.Items.Add(schema)
+                'Next
+            Else
+                Logger.Dbg("Load schemas from SHA1s")
+                If SHA1TextBox1.Text = "" Then
+                    Throw (New Halt("First SHA-1 is required"))
+                End If
+                If SHA1TextBox2.Text = "" Then
+                    Throw (New Halt("Second SHA-1 is required"))
+                End If
+
+                GitSharpFascade.setCommitsFromSHA1(Globals.getRepoPath, SHA1TextBox1.Text, SHA1TextBox2.Text)
+                'GitSharpFascade.SHAsetCommits(Globals.getRepoPath, SHA1TextBox1.Text, SHA1TextBox2.Text)
+
+                'SHA1
+                'For Each schema In GitSharpFascade.SHA1getSchemaList(Globals.getRepoPath, SHA1TextBox1.Text, SHA1TextBox2.Text, Globals.DBRepoPathMask)
+
+            End If
+
+            For Each schema In GitSharpFascade.getSchemaList(Globals.DBRepoPathMask)
+                SchemaComboBox.Items.Add(schema)
+            Next
+
+            SchemaCountTextBox.Text = SchemaComboBox.Items.Count
+
+            'If exactly one schema found then select it
+            'otherwise force user to choose one.
+            If SchemaComboBox.Items.Count = 0 Then
+                MsgBox("No schemas found.  Please check location of tags or SHA-1 (esp SHA-1 order)")
+            ElseIf SchemaComboBox.Items.Count = 0 Then
+                SchemaComboBox.SelectedIndex = 0
+            Else
+                Logger.Dbg("Multiple schemas")
+            End If
+        End If
+    End Sub
+
+
+
     Private Sub FindChanges()
         Try
             If SchemaComboBox.Text = "" Then
                 Throw (New Halt("Schema not selected"))
             End If
 
-
-
             TreeViewChanges.PathSeparator = "/"
             TreeViewChanges.Nodes.Clear()
 
-
-            For Each change In GitSharpFascade.getTagChanges(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask & SchemaComboBox.Text, False)
+            For Each change In GitSharpFascade.getChanges(Globals.getRepoPath, Globals.DBRepoPathMask & SchemaComboBox.Text, False)
 
                 'find or create each node for item
                 TreeViewChanges.AddNode(change, "/", True)
 
             Next
+
             TreeViewChanges.ExpandAll()
 
             HideTabs()
@@ -155,7 +214,7 @@ Public Class PatchFromTags
         'TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
         Dim filenames As Collection = Nothing
-        filenames = GitSharpFascade.exportTagChanges(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask & SchemaComboBox.Text, changesFiles, PatchDirTextBox.Text)
+        filenames = GitSharpFascade.exportChanges(Globals.getRepoPath, Globals.DBRepoPathMask & SchemaComboBox.Text, changesFiles, PatchDirTextBox.Text)
 
 
         'Additional file exports 
@@ -240,26 +299,6 @@ Public Class PatchFromTags
 
     End Sub
 
-    Private Sub deriveSchemas()
-        If String.IsNullOrEmpty(SchemaComboBox.Text) Then
-            SchemaComboBox.Items.Clear()
-
-
-            For Each schema In GitSharpFascade.getSchemaList(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask)
-                SchemaComboBox.Items.Add(schema)
-            Next
-
-            SchemaCountTextBox.Text = SchemaComboBox.Items.Count
-
-            'If exactly one schema found then select it
-            'otherwise force user to choose one.
-            If SchemaComboBox.Items.Count = 1 Then
-                SchemaComboBox.SelectedIndex = 0
-            Else
-                Logger.Dbg("Multiple schemas")
-            End If
-        End If
-    End Sub
 
 
 
@@ -270,8 +309,7 @@ Public Class PatchFromTags
         'Retrieve checked node items from the TreeViewChanges as a collection of changes.
         TreeViewChanges.ReadCheckedLeafNodes(CheckedChanges)
 
-
-        MsgBox(GitSharpFascade.viewTagChanges(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, CheckedChanges))
+        MsgBox(GitSharpFascade.viewChanges(Globals.getRepoPath, "database/" & SchemaComboBox.Text, CheckedChanges))
     End Sub
 
 
@@ -822,7 +860,8 @@ Public Class PatchFromTags
         Dim l_old_text = target.Text
         Try
             Dim log As Collection = New Collection
-            log = GitSharpFascade.TagLog(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text)
+            'log = GitSharpFascade.TagLog(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text)
+            log = GitSharpFascade.Log(Globals.getRepoPath)
 
             target.Text = ChoiceDialog.Ask("You may choose a log message for the " & targetControlName, log, "", "Choose log message", False)
 
@@ -836,17 +875,34 @@ Public Class PatchFromTags
 
     Private Sub derivePatchName()
 
-        If Not String.IsNullOrEmpty(Tag1TextBox.Text) And Not String.IsNullOrEmpty(Tag2TextBox.Text) And SchemaComboBox.Items.Count > 0 Then
+        If PatchTabControl.TabPages.Contains(TabPageTags) Then
+            If Not String.IsNullOrEmpty(Tag1TextBox.Text) And Not String.IsNullOrEmpty(Tag2TextBox.Text) And SchemaComboBox.Items.Count > 0 Then
 
-            'PatchNameTextBox.Text = Globals.currentBranch & "_" & Common.dropFirstSegment(Tag1TextBox.Text, ".") & "_" & Common.dropFirstSegment(Tag2TextBox.Text, ".") & "_" & SchemaComboBox.SelectedItem.ToString
-            PatchNameTextBox.Text = Tag2TextBox.Text.TrimEnd("B") & "." & SchemaComboBox.SelectedItem.ToString
+                'PatchNameTextBox.Text = Globals.currentBranch & "_" & Common.dropFirstSegment(Tag1TextBox.Text, ".") & "_" & Common.dropFirstSegment(Tag2TextBox.Text, ".") & "_" & SchemaComboBox.SelectedItem.ToString
+                PatchNameTextBox.Text = Tag2TextBox.Text.TrimEnd("B") & "." & SchemaComboBox.SelectedItem.ToString
 
-            If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
-                PatchNameTextBox.Text = PatchNameTextBox.Text & "." & SupIdTextBox.Text
+                If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
+                    PatchNameTextBox.Text = PatchNameTextBox.Text & "." & SupIdTextBox.Text
+
+                End If
+            Else
+                MsgBox("Please select two tags, then review changes ensuring you select a schema, to allow derivation of PatchName")
 
             End If
         Else
-            MsgBox("Please select two tags, then review changes ensuring you select a schema, to allow derivation of PatchName")
+            'SHA-1
+            If SHA1TextBox1.Text <> "" And SHA1TextBox2.Text <> "" And SchemaComboBox.Items.Count > 0 Then
+
+                PatchNameTextBox.Text = Globals.currentBranch & "." & SchemaComboBox.SelectedItem.ToString
+
+                If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
+                    PatchNameTextBox.Text = PatchNameTextBox.Text & "." & SupIdTextBox.Text
+
+                End If
+            Else
+                MsgBox("Please select two SHAs, then review changes ensuring you select a schema, to allow derivation of PatchName")
+
+            End If
 
         End If
 
@@ -1343,5 +1399,15 @@ Public Class PatchFromTags
  
     End Sub
 
+    Private Sub UseSHA1Button_Click(sender As Object, e As EventArgs) Handles UseSHA1Button.Click
+        UseSHA1()
+    End Sub
 
+    Private Sub UseTagsButton_Click(sender As Object, e As EventArgs) Handles UseTagsButton.Click
+        UseTags()
+    End Sub
+
+    Private Sub FindsSHA1Button_Click(sender As Object, e As EventArgs) Handles FindsSHA1Button.Click
+        Tortoise.Log(Globals.getRepoPath, False) 'Do not wait.
+    End Sub
 End Class
