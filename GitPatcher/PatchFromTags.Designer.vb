@@ -74,6 +74,7 @@ Partial Class PatchFromTags
         Me.Label2 = New System.Windows.Forms.Label()
         Me.PatchTabControl = New System.Windows.Forms.TabControl()
         Me.TabPageSHA1 = New System.Windows.Forms.TabPage()
+        Me.FindsSHA1Button = New System.Windows.Forms.Button()
         Me.UseTagsButton = New System.Windows.Forms.Button()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
@@ -104,7 +105,6 @@ Partial Class PatchFromTags
         Me.Label14 = New System.Windows.Forms.Label()
         Me.PreReqPatchesTreeViewB = New TreeViewEnhanced.TreeViewEnhanced()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.FindsSHA1Button = New System.Windows.Forms.Button()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPagePreReqsA.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
@@ -634,6 +634,15 @@ Partial Class PatchFromTags
         Me.TabPageSHA1.Text = "SHA-1"
         Me.TabPageSHA1.UseVisualStyleBackColor = True
         '
+        'FindsSHA1Button
+        '
+        Me.FindsSHA1Button.Location = New System.Drawing.Point(77, 36)
+        Me.FindsSHA1Button.Name = "FindsSHA1Button"
+        Me.FindsSHA1Button.Size = New System.Drawing.Size(139, 23)
+        Me.FindsSHA1Button.TabIndex = 63
+        Me.FindsSHA1Button.Text = "Find SHA-1"
+        Me.FindsSHA1Button.UseVisualStyleBackColor = True
+        '
         'UseTagsButton
         '
         Me.UseTagsButton.Location = New System.Drawing.Point(367, 36)
@@ -924,15 +933,6 @@ Partial Class PatchFromTags
         Me.Label19.Size = New System.Drawing.Size(43, 13)
         Me.Label19.TabIndex = 54
         Me.Label19.Text = "Prereqs"
-        '
-        'FindsSHA1Button
-        '
-        Me.FindsSHA1Button.Location = New System.Drawing.Point(77, 36)
-        Me.FindsSHA1Button.Name = "FindsSHA1Button"
-        Me.FindsSHA1Button.Size = New System.Drawing.Size(139, 23)
-        Me.FindsSHA1Button.TabIndex = 63
-        Me.FindsSHA1Button.Text = "Find SHA-1"
-        Me.FindsSHA1Button.UseVisualStyleBackColor = True
         '
         'PatchFromTags
         '

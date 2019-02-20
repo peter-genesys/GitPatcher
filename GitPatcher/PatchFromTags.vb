@@ -20,6 +20,7 @@ Public Class PatchFromTags
 
         PatchTabControl.TabPages.Remove(TabPageSHA1)
 
+        HideChangesTab()
         HideTabs()
 
         ExecuteButton.Text = "Execute Patch on " & Globals.currentTNS
@@ -27,16 +28,28 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub UseTags()
-        PatchTabControl.TabPages.Insert(1, TabPageTags)
+        PatchTabControl.TabPages.Insert(0, TabPageTags)
         PatchTabControl.TabPages.Remove(TabPageSHA1)
+        HideTabs()
     End Sub
 
     Private Sub UseSHA1()
-        PatchTabControl.TabPages.Insert(1, TabPageSHA1)
+        PatchTabControl.TabPages.Insert(0, TabPageSHA1)
         PatchTabControl.TabPages.Remove(TabPageTags)
+        HideTabs()
+    End Sub
+
+    Private Sub HideChangesTab()
+        PatchTabControl.TabPages.Remove(TabPageChanges)
+    End Sub
+
+    Private Sub ShowChangesTab()
+        PatchTabControl.TabPages.Remove(TabPageChanges)
+        PatchTabControl.TabPages.Insert(1, TabPageChanges)
     End Sub
 
     Private Sub HideTabs()
+
         PatchTabControl.TabPages.Remove(TabPageExtras)
         PatchTabControl.TabPages.Remove(TabPagePreReqsA)
         PatchTabControl.TabPages.Remove(TabPagePreReqsB)
@@ -46,6 +59,7 @@ Public Class PatchFromTags
 
     End Sub
     Private Sub ShowTabs()
+
         PatchTabControl.TabPages.Insert(2, TabPageExtras)
         PatchTabControl.TabPages.Insert(3, TabPagePreReqsA)
         PatchTabControl.TabPages.Insert(4, TabPagePreReqsB)
@@ -77,50 +91,48 @@ Public Class PatchFromTags
 
     Private Sub deriveSchemas()
         'NB This routine also causes the Globals.commit1 and Globals.commit2 to be calculated, for reuse in the Wizard.
+
         If String.IsNullOrEmpty(SchemaComboBox.Text) Then
             SchemaComboBox.Items.Clear()
 
-            If PatchTabControl.TabPages.Contains(TabPageTags) Then
-                'Tags
-                Logger.Dbg("Load schemas from Tags")
+            Try
 
-                GitSharpFascade.setCommitsFromTags(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text)
+                If PatchTabControl.TabPages.Contains(TabPageTags) Then
+                    'Tags
+                    Logger.Dbg("Load schemas from Tags")
 
-                'For Each schema In GitSharpFascade.tagsGetSchemaList(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask)
-                'SchemaComboBox.Items.Add(schema)
-                'Next
-            Else
-                Logger.Dbg("Load schemas from SHA1s")
-                If SHA1TextBox1.Text = "" Then
-                    Throw (New Halt("First SHA-1 is required"))
-                End If
-                If SHA1TextBox2.Text = "" Then
-                    Throw (New Halt("Second SHA-1 is required"))
+                    GitSharpFascade.setCommitsFromTags(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text)
+
+                Else
+                    Logger.Dbg("Load schemas from SHA1s")
+
+                    GitSharpFascade.setCommitsFromSHA1(Globals.getRepoPath, SHA1TextBox1.Text, SHA1TextBox2.Text)
+
+
                 End If
 
-                GitSharpFascade.setCommitsFromSHA1(Globals.getRepoPath, SHA1TextBox1.Text, SHA1TextBox2.Text)
-                'GitSharpFascade.SHAsetCommits(Globals.getRepoPath, SHA1TextBox1.Text, SHA1TextBox2.Text)
+                For Each schema In GitSharpFascade.getSchemaList(Globals.DBRepoPathMask)
+                    SchemaComboBox.Items.Add(schema)
+                Next
 
-                'SHA1
-                'For Each schema In GitSharpFascade.SHA1getSchemaList(Globals.getRepoPath, SHA1TextBox1.Text, SHA1TextBox2.Text, Globals.DBRepoPathMask)
+                SchemaCountTextBox.Text = SchemaComboBox.Items.Count
 
-            End If
+                'If exactly one schema found then select it
+                'otherwise force user to choose one.
+                If SchemaComboBox.Items.Count = 0 Then
+                    MsgBox("No schemas found.  Please check location of tags or SHA-1 (esp SHA-1 order)")
 
-            For Each schema In GitSharpFascade.getSchemaList(Globals.DBRepoPathMask)
-                SchemaComboBox.Items.Add(schema)
-            Next
+                ElseIf SchemaComboBox.Items.Count = 1 Then
+                    SchemaComboBox.SelectedIndex = 0
+                Else
+                    MsgBox("There are changes across " & SchemaComboBox.Items.Count.ToString & " schemas.")
+                    Logger.Dbg("Multiple schemas")
+                End If
+            Catch ex As Exception
+                MsgBox("Unable to find Changes" & vbCrLf & ex.Message)
+            End Try
 
-            SchemaCountTextBox.Text = SchemaComboBox.Items.Count
 
-            'If exactly one schema found then select it
-            'otherwise force user to choose one.
-            If SchemaComboBox.Items.Count = 0 Then
-                MsgBox("No schemas found.  Please check location of tags or SHA-1 (esp SHA-1 order)")
-            ElseIf SchemaComboBox.Items.Count = 0 Then
-                SchemaComboBox.SelectedIndex = 0
-            Else
-                Logger.Dbg("Multiple schemas")
-            End If
         End If
     End Sub
 
@@ -1279,9 +1291,17 @@ Public Class PatchFromTags
 
     Private Sub TagsCheckedListBox_Click(sender As Object, e As EventArgs) Handles TagsCheckedListBox.Click
         'If tags are changed then we will clear the selected changes and the schema list.
+        SchemaCountTextBox.Text = "0"
         SchemaComboBox.Text = ""
         TreeViewChanges.Nodes.Clear()
         HideTabs()
+        If TagsCheckedListBox.CheckedItems.Count > 1 Then
+            ShowChangesTab()
+        Else
+            HideChangesTab()
+        End If
+
+
     End Sub
 
     Private Sub ResetForNewPatch()
@@ -1409,5 +1429,27 @@ Public Class PatchFromTags
 
     Private Sub FindsSHA1Button_Click(sender As Object, e As EventArgs) Handles FindsSHA1Button.Click
         Tortoise.Log(Globals.getRepoPath, False) 'Do not wait.
+    End Sub
+
+    Private Sub showHideChangesTab()
+        SchemaCountTextBox.Text = "0"
+        SchemaComboBox.Text = ""
+        TreeViewChanges.Nodes.Clear()
+        HideTabs()
+        If SHA1TextBox1.Text <> "" And SHA1TextBox2.Text <> "" Then
+            ShowChangesTab()
+        Else
+            HideChangesTab()
+        End If
+    End Sub
+
+
+
+    Private Sub SHA1TextBox1_TextChanged(sender As Object, e As EventArgs) Handles SHA1TextBox1.TextChanged
+        showHideChangesTab()
+    End Sub
+
+    Private Sub SHA1TextBox2_TextChanged(sender As Object, e As EventArgs) Handles SHA1TextBox2.TextChanged
+        showHideChangesTab()
     End Sub
 End Class

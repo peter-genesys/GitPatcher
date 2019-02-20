@@ -196,26 +196,38 @@ Public Class GitSharpFascade
 
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
 
-        Dim t1 As Tag = repo.[Get](Of Tag)(tag1_name)
-        Dim t2 As Tag = repo.[Get](Of Tag)(tag2_name)
+        If tag1_name = "" Then
+            Throw New System.Exception("1st Tag is required")
+        End If
+        If tag2_name = "" Then
+            Throw New System.Exception("2nd Tag is required")
+        End If
 
-        Try
-            If Not t1.IsTag Then
-                Throw (New Halt("1st Tag (" & tag1_name & ") does not exist."))
-            End If
+        Dim tag1 As Tag = repo.[Get](Of Tag)(tag1_name)
+        Dim tag2 As Tag = repo.[Get](Of Tag)(tag2_name)
 
-            If Not t2.IsTag Then
-                Throw (New Halt("2nd Tag (" & tag2_name & ") does not exist."))
-            End If
+        If tag1 Is Nothing Then
+            Throw New System.Exception("1st Tag (" & tag1_name & ") is unrecognised.")
+        End If
+        If tag2 Is Nothing Then
+            Throw New System.Exception("2nd Tag (" & tag2_name & ") is unrecognised.")
+        End If
 
-            Dim commit1 As Commit = repo.[Get](Of Tag)(tag1_name).Target
-            Dim commit2 As Commit = repo.[Get](Of Tag)(tag2_name).Target
+        If Not tag1.IsTag Then
+            Throw New System.Exception("1st Tag (" & tag1_name & ") does not exist.")
+        End If
 
-            Globals.setCommits(commit1, commit2)
+        If Not tag2.IsTag Then
+            Throw New System.Exception("2nd Tag (" & tag2_name & ") does not exist.")
+        End If
 
-        Catch tag_not_found As Halt
 
-        End Try
+        Dim commit1 As Commit = repo.[Get](Of Tag)(tag1_name).Target
+        Dim commit2 As Commit = repo.[Get](Of Tag)(tag2_name).Target
+
+        Globals.setCommits(commit1, commit2)
+
+
 
     End Sub
 
@@ -223,22 +235,32 @@ Public Class GitSharpFascade
 
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
 
+        If SHA1_1 = "" Then
+            Throw New System.Exception("1st SHA-1 is required")
+        End If
+        If SHA1_2 = "" Then
+            Throw New System.Exception("2nd SHA-1 is required")
+        End If
+
         Dim commit1 As Commit = repo.[Get](Of Commit)(SHA1_1)
         Dim commit2 As Commit = repo.[Get](Of Commit)(SHA1_2)
-        Try
-            If Not commit1.IsCommit Then
-                Throw (New Halt("1st SHA-1 (" & SHA1_1 & ") does not exist."))
-            End If
 
-            If Not commit2.IsCommit Then
-                Throw (New Halt("2nd SHA-1 (" & SHA1_2 & ") does not exist."))
-            End If
+        If commit1 Is Nothing Then
+            Throw New System.Exception("1st SHA-1 (" & SHA1_1 & ") is unrecognised.")
+        End If
+        If commit2 Is Nothing Then
+            Throw New System.Exception("2nd SHA-1 (" & SHA1_2 & ") is unrecognised.")
+        End If
 
-            Globals.setCommits(commit1, commit2)
+        If Not commit1.IsCommit Then
+            Throw New System.Exception("1st SHA-1 (" & SHA1_1 & ") does not exist.")
+        End If
 
-        Catch tag_not_found As Halt
+        If Not commit2.IsCommit Then
+            Throw New System.Exception("2nd SHA-1 (" & SHA1_2 & ") does not exist.")
+        End If
 
-        End Try
+        Globals.setCommits(commit1, commit2)
 
     End Sub
 
