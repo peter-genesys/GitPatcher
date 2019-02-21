@@ -1289,7 +1289,7 @@ Public Class PatchFromTags
         PopDesc(NoteTextBox, "Notes")
     End Sub
 
-    Private Sub TagsCheckedListBox_Click(sender As Object, e As EventArgs) Handles TagsCheckedListBox.Click
+    Private Sub TagsCheckedListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TagsCheckedListBox.SelectedIndexChanged
         'If tags are changed then we will clear the selected changes and the schema list.
         SchemaCountTextBox.Text = "0"
         SchemaComboBox.Text = ""
