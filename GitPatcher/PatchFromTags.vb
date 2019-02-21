@@ -354,7 +354,7 @@ Public Class PatchFromTags
                                   ByVal track_promotion As Boolean,
                                   ByVal alt_schema As Boolean)
 
-        Dim l_app_code As String = "TRK"
+        Dim l_app_code As String = Globals.getAppCode().ToUpper()
 
         Dim l_file_extension As String = Nothing
         Dim l_install_file_line As String = Nothing
@@ -873,7 +873,7 @@ Public Class PatchFromTags
         Try
             Dim log As Collection = New Collection
             'log = GitSharpFascade.TagLog(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text)
-            log = GitSharpFascade.Log(Globals.getRepoPath)
+            log = GitSharpFascade.Log()
 
             target.Text = ChoiceDialog.Ask("You may choose a log message for the " & targetControlName, log, "", "Choose log message", False)
 
