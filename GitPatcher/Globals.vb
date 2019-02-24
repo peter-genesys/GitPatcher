@@ -57,8 +57,10 @@ Module Globals
     Private gRepoPath As String
 
     Public Sub setRepoPath(RepoPath As String)
-        gRepoPath = RepoPath 'Common.dos_path_trailing_slash(RepoPath)
-        setRepo(gRepoPath) 'Set the repo too!
+
+        setRepo(RepoPath) 'Set the repository (before adding trailing slash
+        gRepoPath = Common.dos_path_trailing_slash(RepoPath)
+
     End Sub
 
 
