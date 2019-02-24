@@ -15,6 +15,7 @@
 
 
         'SelectedIndex = 4 'Default to VM
+
         loadRepos()
         'loadDBs()
         'loadApexApps()
@@ -33,13 +34,14 @@
     End Sub
 
     Public Sub loadHotFixDBs()
+        Logger.Dbg("Main.loadHotFixDBs")
         HotFixToolStripComboBox.Items.Clear()
 
         HotFixToolStripComboBox.Items.Add("PROD")
         HotFixToolStripComboBox.Items.Add("UAT")
         HotFixToolStripComboBox.Items.Add("TEST")
         HotFixToolStripComboBox.Items.Add("DEV")
- 
+
         HotFixToolStripComboBox.SelectedIndex = 0
 
     End Sub
@@ -64,6 +66,7 @@
 
 
     Private Sub showRepoSettings()
+        Logger.Dbg("Main.showRepoSettings")
         RepoSettings.checkRepo(RepoComboBox.Text)
         RepoPathTextBox.Text = Globals.getRepoPath()
 
@@ -71,9 +74,9 @@
         CurrentBranchTextBox.Text = Globals.currentBranch
         RootPatchDirTextBox.Text = Globals.RootPatchDir
         RootApexDirTextBox.Text = Globals.RootApexDir
- 
+
         SetMergeRebaseButtons()
- 
+
         loadOrgs()
         loadApexApps()
 
@@ -83,6 +86,7 @@
 
     Public Sub loadRepos()
 
+        Logger.Dbg("Main.loadRepos")
         RepoSettings.readGitRepos(RepoComboBox, My.Settings.CurrentRepo)
         showRepoSettings()
 
@@ -141,7 +145,7 @@
 
     Private Sub RepoComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles RepoComboBox.SelectedIndexChanged
 
-        Globals.setRepo(RepoComboBox.SelectedItem)
+        Globals.setRepoName(RepoComboBox.SelectedItem)
         showRepoSettings()
 
     End Sub
@@ -202,7 +206,7 @@
 
     Public Sub mergeAndPushBranch(iBranchType As String, iBranchTo As String)
         Common.checkBranch(iBranchType)
-        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
+        Dim currentBranch As String = GitOp.currentBranch()
 
         Dim mergeAndPush As ProgressDialogue = New ProgressDialogue("Merge and Push branch:  " & currentBranch)
         mergeAndPush.MdiParent = GitPatcher
@@ -366,11 +370,11 @@
 
 
     Private Sub TagtestToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        GitBash.TagSimple(Globals.getRepoPath, "DEMOTAG")
+        GitOp.createTag("DEMOTAG")
     End Sub
 
     Private Sub ShowindexToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowindexToolStripMenuItem.Click
-        GitSharpFascade.getIndexedChanges(Globals.getRepoPath)
+        GitOp.getIndexedChanges()
     End Sub
 
     Private Sub TestworkflowToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestworkflowToolStripMenuItem.Click
@@ -437,7 +441,7 @@
         End If
 
 
-        Dim currentBranchLong As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
+        Dim currentBranchLong As String = GitOp.currentBranch()
         Dim currentBranchShort As String = Globals.currentBranch
 
         Dim rebasing As ProgressDialogue = New ProgressDialogue("Rebase branch " & currentBranchLong)
@@ -445,9 +449,9 @@
         Dim l_max_tag As Integer = 0
 
         Dim tagnames As Collection = New Collection
-        tagnames = GitSharpFascade.getTagList(Globals.getRepoPath, tagnames, Globals.currentBranch)
+        tagnames = GitOp.getTagList(tagnames, Globals.currentBranch)
         For Each tagname In tagnames
-            Dim tag_no As String = Common.getLastSegment(tagname, ".").Substring(0, tag_no_padding)
+            Dim tag_no As String = Common.getLastSegment(tagname.ToString, ".").Substring(0, tag_no_padding)
             Try
                 If tag_no > l_max_tag Then
                     l_max_tag = tag_no
@@ -487,11 +491,11 @@
         If rebasing.toDoNextStep() Then
             'Switch to develop branch
             'GitBash.Switch(Globals.getRepoPath, iRebaseBranchOn)
-            GitSharpFascade.switchBranch(Globals.getRepoPath, iRebaseBranchOn)
+            GitOp.switchBranch(iRebaseBranchOn)
         End If
         If rebasing.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(Globals.getRepoPath, "origin", iRebaseBranchOn)
+            GitOp.pullCurrentBranch()
         End If
 
         If rebasing.toDoNextStep() Then
@@ -499,14 +503,14 @@
             l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please enter 2 digit numeric tag for next patch.", "Create Tag for next patch", l_tag_base)
             Dim l_tagA As String = currentBranchShort & "." & l_tag_base & "A"
             rebasing.updateStepDescription(3, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
-            GitBash.TagSimple(Globals.getRepoPath, l_tagA)
+            GitOp.createTag(l_tagA)
 
         End If
 
 
         If rebasing.toDoNextStep() Then
             'Return to branch
-            GitBash.Switch(Globals.getRepoPath, currentBranchLong)
+            GitOp.switchBranch(currentBranchLong)
         End If
 
         If rebasing.toDoNextStep() Then
@@ -518,7 +522,7 @@
             'Tag Branch
             Dim l_tagB As String = currentBranchShort & "." & l_tag_base & "B"
             rebasing.updateStepDescription(6, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
-            GitBash.TagSimple(Globals.getRepoPath, l_tagB)
+            GitOp.createTag(l_tagB)
 
         End If
 
@@ -566,7 +570,7 @@
 
         Dim lcurrentDB As String = Globals.getDB()
 
-        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
+        Dim currentBranch As String = GitOp.currentBranch()
 
         Dim releaseFromBranch As String = Globals.deriveHotfixBranch(iTargetDB)
 
@@ -594,7 +598,7 @@
         If releasing.toDoNextStep() Then
             'Change current DB to release DB
             Globals.setDB(iTargetDB.ToUpper)
-            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepo)
+            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
 
         End If
 
@@ -611,8 +615,8 @@
             'Choose a tag to import from
             Dim tagnames As Collection = New Collection
             tagnames.Add("HEAD")
-            tagnames = GitSharpFascade.getTagList(Globals.getRepoPath, tagnames, Globals.currentBranch)
-            tagnames = GitSharpFascade.getTagList(Globals.getRepoPath, tagnames, AppCodeTextBox.Text)
+            tagnames = GitOp.getTagList(tagnames, Globals.currentBranch)
+            tagnames = GitOp.getTagList(tagnames, AppCodeTextBox.Text)
 
 
             Dim PatchTag As String = Nothing
@@ -648,7 +652,7 @@
         If releasing.toDoNextStep() Then
             'Revert current DB  
             Globals.setDB(lcurrentDB.ToUpper)
-            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepo)
+            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
 
         End If
 

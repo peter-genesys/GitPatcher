@@ -76,7 +76,7 @@ Public Class PatchFromTags
         Dim tag_no_padding As Integer = 2
 
         TagsCheckedListBox.Items.Clear()
-        For Each tagname In GitSharpFascade.getTagList(Globals.getRepoPath)
+        For Each tagname In GitOp.getTagList()
             If Common.getFirstSegment(tagname, ".") = Globals.currentBranch Then
                 'This is a tag worth listing
                 Dim ticked As Boolean = (gtag_base = Common.getLastSegment(tagname, ".").Substring(0, tag_no_padding)) 'This is a tag worth ticking
@@ -101,17 +101,17 @@ Public Class PatchFromTags
                     'Tags
                     Logger.Dbg("Load schemas from Tags")
 
-                    GitSharpFascade.setCommitsFromTags(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text)
+                    GitOp.setCommitsFromTags(Tag1TextBox.Text, Tag2TextBox.Text)
 
                 Else
                     Logger.Dbg("Load schemas from SHA1s")
 
-                    GitSharpFascade.setCommitsFromSHA1(Globals.getRepoPath, SHA1TextBox1.Text, SHA1TextBox2.Text)
+                    GitOp.setCommitsFromSHA(SHA1TextBox1.Text, SHA1TextBox2.Text)
 
 
                 End If
 
-                For Each schema In GitSharpFascade.getSchemaList(Globals.DBRepoPathMask)
+                For Each schema In GitOp.getSchemaList(Globals.DBRepoPathMask)
                     SchemaComboBox.Items.Add(schema)
                 Next
 
@@ -147,7 +147,7 @@ Public Class PatchFromTags
             TreeViewChanges.PathSeparator = "/"
             TreeViewChanges.Nodes.Clear()
 
-            For Each change In GitSharpFascade.getChanges(Globals.getRepoPath, Globals.DBRepoPathMask & SchemaComboBox.Text, False)
+            For Each change In GitOp.getChanges(Globals.DBRepoPathMask & SchemaComboBox.Text, False)
 
                 'find or create each node for item
                 TreeViewChanges.AddNode(change, "/", True)
@@ -226,7 +226,7 @@ Public Class PatchFromTags
         'TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
         Dim filenames As Collection = Nothing
-        filenames = GitSharpFascade.exportChanges(Globals.getRepoPath, Globals.DBRepoPathMask & SchemaComboBox.Text, changesFiles, PatchDirTextBox.Text)
+        filenames = GitOp.exportChanges(Globals.DBRepoPathMask & SchemaComboBox.Text, changesFiles, PatchDirTextBox.Text)
 
 
         'Additional file exports 
@@ -321,7 +321,7 @@ Public Class PatchFromTags
         'Retrieve checked node items from the TreeViewChanges as a collection of changes.
         TreeViewChanges.ReadCheckedLeafNodes(CheckedChanges)
 
-        MsgBox(GitSharpFascade.viewChanges(Globals.getRepoPath, "database/" & SchemaComboBox.Text, CheckedChanges))
+        MsgBox(GitOp.viewChanges(Globals.getRepoPath, "database/" & SchemaComboBox.Text, CheckedChanges))
     End Sub
 
 
@@ -873,7 +873,7 @@ Public Class PatchFromTags
         Try
             Dim log As Collection = New Collection
             'log = GitSharpFascade.TagLog(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text)
-            log = GitSharpFascade.Log()
+            log = GitOp.Log()
 
             target.Text = ChoiceDialog.Ask("You may choose a log message for the " & targetControlName, log, "", "Choose log message", False)
 
@@ -1147,11 +1147,7 @@ Public Class PatchFromTags
 
         If createPatchProgress.toDoNextStep() Then
             'switch
-            'GitSharpFascade.switchBranch(Globals.currentRepo, "master")
-            'Tortoise.Switch(Globals.currentRepo)
-            'Switch to develop branch
-            'GitBash.Switch(Globals.getRepoPath, iRebaseBranchOn)
-            GitSharpFascade.switchBranch(Globals.getRepoPath, iRebaseBranchOn)
+            GitOp.switchBranch(iRebaseBranchOn)
 
 
         End If
@@ -1163,7 +1159,7 @@ Public Class PatchFromTags
 
         If createPatchProgress.toDoNextStep() Then
             'Push to origin/develop 
-            GitBash.Push(Globals.getRepoPath, "origin", iRebaseBranchOn)
+            GitOp.pushBranch(iRebaseBranchOn)
         End If
 
         If createPatchProgress.toDoNextStep() Then
@@ -1178,7 +1174,7 @@ Public Class PatchFromTags
 
         If createPatchProgress.toDoNextStep() Then
             'GitSharpFascade.switchBranch(Globals.currentRepo, currentBranch)
-            GitBash.Switch(Globals.getRepoPath, currentBranch)
+            GitOp.switchBranch(currentBranch)
         End If
 
         If createPatchProgress.toDoNextStep() Then
@@ -1385,7 +1381,7 @@ Public Class PatchFromTags
 
     Shared Sub doExportPatch(iPatchPath As String, iPatchName As String)
 
-        Dim l_repo_patch_dir As String = Common.dos_path_trailing_slash(Globals.PatchExportDir & Globals.getRepo)
+        Dim l_repo_patch_dir As String = Common.dos_path_trailing_slash(Globals.PatchExportDir & Globals.getRepoName)
         Logger.Note("l_repo_patch_dir", l_repo_patch_dir)
         Dim l_repo_patch_export_dir As String = l_repo_patch_dir & iPatchName
         Logger.Note("l_repo_patch_export_dir", l_repo_patch_export_dir)

@@ -59,7 +59,7 @@ Public Class CreatePatchCollection
         Dim tagseg As String = Nothing
 
         TagsCheckedListBox.Items.Clear()
-        For Each tagname In GitSharpFascade.getTagList(Globals.getRepoPath)
+        For Each tagname In GitOp.getTagList()
             tagseg = Common.getFirstSegment(tagname, "-")
             'If tagseg = tagsearch Then
             TagsCheckedListBox.Items.Add(tagname)
@@ -112,10 +112,12 @@ Public Class CreatePatchCollection
             TagFilterCheckBox.Checked = False
         End If
 
+        GitOp.setCommitsFromTags(Tag1TextBox.Text, Tag2TextBox.Text)
+
         If TagFilterCheckBox.Checked Then
 
             'Find patches between 2 tags
-            For Each change In GitSharpFascade.getTagChanges(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, "patch/", False)
+            For Each change In GitOp.getChanges("patch/", False)
                 'Apply Filters
                 If change.contains("install.sql") And Common.stringContainsSetMember(change, pFindPatchTypes, ",") And Common.stringContainsSetMember(change, pFindPatchFilters, ",") Then
 
@@ -745,7 +747,7 @@ Public Class CreatePatchCollection
 
         newBranch = newBranch & "/" & l_app_version
 
-        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
+        Dim currentBranch As String = GitOp.currentBranch()
 
         Dim createPatchSetProgress As ProgressDialogue = New ProgressDialogue("Create DB " & iCreatePatchType)
         createPatchSetProgress.MdiParent = GitPatcher
@@ -900,7 +902,7 @@ Public Class CreatePatchCollection
 
     Private Sub ExportButton_Click(sender As Object, e As EventArgs) Handles ExportButton.Click
 
-        Dim l_repo_patch_dir As String = Globals.PatchExportDir & Globals.getRepo & "\"
+        Dim l_repo_patch_dir As String = Globals.PatchExportDir & Globals.getRepoName & "\"
 
         Dim l_repo_patch_export_dir As String = l_repo_patch_dir & PatchNameTextBox.Text
 

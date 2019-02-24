@@ -263,7 +263,7 @@
         Dim l_skip_reports_DBs As String = "DEV"
         Dim fapp_id As String = Globals.currentApex
 
-        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
+        Dim currentBranch As String = GitOp.currentBranch()
         Dim runOnlyDBs As String = "DEV,TEST,UAT,PROD"
 
         Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import APEX application " & fapp_id & " into DB " & Globals.currentTNS, _
@@ -292,8 +292,8 @@
             'Choose a tag to import from
             Dim tagnames As Collection = New Collection
             tagnames.Add("HEAD")
-            tagnames = GitSharpFascade.getTagList(Globals.getRepoPath, tagnames, Globals.currentBranch)
-            tagnames = GitSharpFascade.getTagList(Globals.getRepoPath, tagnames, Globals.currentAppCode)
+            tagnames = GitOp.getTagList(tagnames, Globals.currentBranch)
+            tagnames = GitOp.getTagList(tagnames, Globals.currentAppCode)
 
 
             Dim tagApexVersion As String = Nothing
@@ -301,7 +301,7 @@
 
 
             'Checkout the tag
-            GitBash.Switch(Globals.getRepoPath, tagApexVersion)
+            GitOp.switchBranch(tagApexVersion)
             If ImportProgress.toDoNextStep Then
                 'If tag not like Globals.currentAppCode relabel apex
 
@@ -416,8 +416,8 @@
 
         Dim fapp_id As String = Globals.currentApex
 
-        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
- 
+        Dim currentBranch As String = GitOp.currentBranch()
+
         Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import 1 APEX page " & fapp_id & " into DB " & Globals.currentTNS, _
         "Importing 1 APEX page of Application " & Globals.currentApex & " into parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentTNS & Environment.NewLine & _
         "This will overwrite only 1 page in APEX application." & Environment.NewLine & _
@@ -443,8 +443,8 @@
                 'Choose a tag to import from
                 Dim tagnames As Collection = New Collection
                 tagnames.Add("HEAD")
-                tagnames = GitSharpFascade.getTagList(Globals.getRepoPath, tagnames, Globals.currentBranch)
-                tagnames = GitSharpFascade.getTagList(Globals.getRepoPath, tagnames, Globals.currentAppCode)
+                tagnames = GitOp.getTagList(tagnames, Globals.currentBranch)
+                tagnames = GitOp.getTagList(tagnames, Globals.currentAppCode)
 
 
                 Dim tagApexVersion As String = Nothing
@@ -473,7 +473,7 @@
 
             If ImportProgress.toDoNextStep Then
                 'Return to branch
-                GitBash.Switch(Globals.getRepoPath, currentBranch)
+                GitOp.switchBranch(currentBranch)
             End If
 
             ImportProgress.toDoNextStep()

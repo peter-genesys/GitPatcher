@@ -1,12 +1,12 @@
-﻿Imports GitSharp
+﻿Imports LibGit2Sharp
+
 
 Module Globals
 
-    Private commit1 As Commit
 
     Private gDB As String = My.Settings.CurrentDB
 
-    Private gRepo As String
+    Private gRepoName As String
 
     Private gParsingSchema As String
     Private gJiraProject As String
@@ -14,6 +14,16 @@ Module Globals
 
     Private gCommit1 As Commit
     Private gCommit2 As Commit
+    Private gRepo As Repository
+
+    Public Sub setRepo(repoPath As String)
+        gRepo = New Repository(repoPath)
+    End Sub
+
+
+    Public Function getRepo() As Repository
+        Return gRepo
+    End Function
 
     Public Sub setCommits(commit1 As Commit, commit2 As Commit)
 
@@ -30,24 +40,25 @@ Module Globals
         Return gCommit2
     End Function
 
-    Public Sub setRepo(Repo As String)
+    Public Sub setRepoName(RepoName As String)
 
-        gRepo = Repo
+        gRepoName = RepoName
 
-        My.Settings.CurrentRepo = gRepo
+        My.Settings.CurrentRepo = gRepoName
         My.Settings.Save()
 
     End Sub
 
-    Public Function getRepo() As String
-        Return gRepo
+    Public Function getRepoName() As String
+        Return gRepoName
     End Function
 
 
     Private gRepoPath As String
 
     Public Sub setRepoPath(RepoPath As String)
-        gRepoPath = Common.dos_path_trailing_slash(RepoPath)
+        gRepoPath = RepoPath 'Common.dos_path_trailing_slash(RepoPath)
+        setRepo(gRepoPath) 'Set the repo too!
     End Sub
 
 
@@ -268,7 +279,8 @@ Module Globals
 
 
     Public Function currentLongBranch() As String
-        Return GitSharpFascade.currentBranch(gRepoPath)
+
+        Return GitOp.currentBranch()
     End Function
 
     Public Function currentBranch() As String

@@ -36,9 +36,10 @@ Public Class RepoSettings
  
     End Function
 
- 
+
 
     Function checkRepo(ByVal iRepoName) As Boolean
+        Logger.Dbg("RepoSettings.checkRepo")
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
         Dim l_RepoNodeList As XmlNodeList
@@ -71,7 +72,7 @@ Public Class RepoSettings
                 PatchExportPathTextBox.Text = l_RepoNode.Attributes.GetNamedItem("PatchExportPath").Value
 
                 UsePatchAdminCheckBox.Checked = (l_RepoNode.Attributes.GetNamedItem("UsePatchAdmin").Value = "True")
- 
+
                 hideUpdateButton()
 
                 'Set the Global Values
@@ -89,6 +90,8 @@ Public Class RepoSettings
 
         Next
 
+        Logger.Dbg("DONE-RepoSettings.checkRepo")
+
         Return l_found
 
 
@@ -97,6 +100,7 @@ Public Class RepoSettings
 
 
     Sub readGitRepos(ByRef aRepoComboBox As Windows.Forms.ComboBox, ByVal currentValue As String)
+        Logger.Dbg("RepoSettings.readGitRepos")
         Try
             Dim l_GitReposXML As XmlDocument = New XmlDocument()
 
@@ -156,7 +160,7 @@ Public Class RepoSettings
             Logger.ShowError(errorVariable.ToString())
             Console.Write(errorVariable.ToString())
         End Try
-
+        Logger.Dbg("DONE-RepoSettings.readGitRepos")
 
     End Sub
 
@@ -173,7 +177,7 @@ Public Class RepoSettings
 
  
     Private Sub RepoSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        readGitRepos(RepoComboBox, Globals.getRepo)
+        readGitRepos(RepoComboBox, Globals.getRepoName)
     End Sub
 
 
