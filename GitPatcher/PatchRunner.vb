@@ -1,4 +1,4 @@
-﻿Imports Oracle.DataAccess.Client ' VB.NET
+﻿Imports Oracle.ManagedDataAccess.Client ' VB.NET
 
 
 Public Class PatchRunner
@@ -41,7 +41,7 @@ Public Class PatchRunner
                 RadioButtonAll2.Checked = True
         End Select
 
-        UsePatchAdminCheckBox.Checked = Globals.getUsePatchAdmin
+        UsePatchAdminCheckBox.Checked = Globals.getUseARM
 
         doSearch()
 
@@ -83,7 +83,7 @@ Public Class PatchRunner
         Dim orderedPatches As Collection = New Collection
 
         'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
+        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=apexrm;Password=apexrm;"
 
         Dim conn As New OracleConnection(oradb)
         Dim sql As String = Nothing
@@ -182,7 +182,7 @@ Public Class PatchRunner
             Dim patchMatch As Boolean = False
 
             'Simple but replies on TNSNAMES File
-            Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
+            Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=apexrm;Password=apexrm;"
 
             'Harder to get working but no need for TNSNAMES File
             'Dim oradb As String = "Data Source=(DESCRIPTION=" _
@@ -207,7 +207,7 @@ Public Class PatchRunner
                     patchMatch = False
                     Dim lPatchName As String = Common.getLastSegment(foundPatches(i), "\")
 
-                    sql = "select max(patch_name) patch_name from installed_patches_v where patch_name = '" & lPatchName
+                    sql = "select max(patch_name) patch_name from ARM_INSTALLED_PATCH_V where patch_name = '" & lPatchName
 
                     cmd = New OracleCommand(sql, conn)
                     cmd.CommandType = CommandType.Text
@@ -268,7 +268,7 @@ Public Class PatchRunner
         End If
 
         'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
+        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=apexrm;Password=apexrm;"
 
         Dim conn As New OracleConnection(oradb)
         Dim sql As String = Nothing
@@ -282,7 +282,7 @@ Public Class PatchRunner
 
             conn.Open()
 
-            sql = "select patch_name from patches_unapplied_v"
+            sql = "select patch_name from ARM_UNAPPLIED_V"
 
             cmd = New OracleCommand(sql, conn)
             cmd.CommandType = CommandType.Text
@@ -541,13 +541,13 @@ Public Class PatchRunner
 
     End Sub
 
- 
+
 
 
     '
     '   Public Shared Function FindLastPatch(ByVal patch_component As String) As String
     '
- 
+
     '
     '       'Simple but relies on TNSNAMES File
     '       Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
@@ -563,7 +563,7 @@ Public Class PatchRunner
     '       Try
     '
     '           conn.Open()
-    '           cmd.CommandText = "patch_installer.get_last_patch"
+    '           cmd.CommandText = "arm_installer.get_last_patch"
     '           cmd.CommandType = CommandType.StoredProcedure
     '           cmd.Parameters.Add("i_patch_component", OracleDbType.Varchar2, 50)
     '           cmd.Parameters.Item("i_patch_component").Value = patch_component
@@ -601,7 +601,7 @@ Public Class PatchRunner
         Cursor.Current = Cursors.WaitCursor
 
         'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
+        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=apexrm;Password=apexrm;"
 
         Dim conn As New OracleConnection(oradb)
         Dim sql As String = Nothing
@@ -615,7 +615,7 @@ Public Class PatchRunner
 
             conn.Open()
 
-            sql = "select patch_installer.get_last_patch('" & patch_component & "') patch_name from dual"
+            sql = "select arm_installer.get_last_patch('" & patch_component & "') patch_name from dual"
 
             cmd = New OracleCommand(sql, conn)
             cmd.CommandType = CommandType.Text

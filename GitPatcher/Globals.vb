@@ -1,31 +1,66 @@
-﻿Module Globals
- 
+﻿Imports LibGit2Sharp
+
+
+Module Globals
+
+
     Private gDB As String = My.Settings.CurrentDB
 
-    Private gRepo As String
+    Private gRepoName As String
 
     Private gParsingSchema As String
     Private gJiraProject As String
 
 
-    Public Sub setRepo(Repo As String)
+    Private gCommit1 As Commit
+    Private gCommit2 As Commit
+    Private gRepo As Repository
 
-        gRepo = Repo
+    Public Sub setRepo(repoPath As String)
+        gRepo = New Repository(repoPath)
+    End Sub
 
-        My.Settings.CurrentRepo = gRepo
+
+    Public Function getRepo() As Repository
+        Return gRepo
+    End Function
+
+    Public Sub setCommits(commit1 As Commit, commit2 As Commit)
+
+        gCommit1 = commit1
+        gCommit2 = commit2
+
+    End Sub
+
+    Public Function getCommit1() As Commit
+        Return gCommit1
+    End Function
+
+    Public Function getCommit2() As Commit
+        Return gCommit2
+    End Function
+
+    Public Sub setRepoName(RepoName As String)
+
+        gRepoName = RepoName
+
+        My.Settings.CurrentRepo = gRepoName
         My.Settings.Save()
 
     End Sub
 
-    Public Function getRepo() As String
-        Return gRepo
+    Public Function getRepoName() As String
+        Return gRepoName
     End Function
 
 
     Private gRepoPath As String
 
     Public Sub setRepoPath(RepoPath As String)
+
+        setRepo(RepoPath) 'Set the repository (before adding trailing slash
         gRepoPath = Common.dos_path_trailing_slash(RepoPath)
+
     End Sub
 
 
@@ -242,11 +277,12 @@
 
     End Function
 
- 
+
 
 
     Public Function currentLongBranch() As String
-        Return GitSharpFascade.currentBranch(gRepoPath)
+
+        Return GitOp.currentBranch()
     End Function
 
     Public Function currentBranch() As String
@@ -294,7 +330,7 @@
 
 
 
- 
+
 
     Private gAppName As String
 
@@ -339,7 +375,7 @@
         gUsePatchAdmin = UsePatchAdmin
     End Sub
 
-    Public Function getUsePatchAdmin() As Boolean
+    Public Function getUseARM() As Boolean
         Return gUsePatchAdmin
     End Function
 
@@ -383,26 +419,26 @@
 
     End Function
 
- 
-  
+
+
     Public Function currentConnection() As String
 
         Return getCONNECT()
- 
+
 
     End Function
 
     Public Function currentTNS() As String
 
         Return getTNS()
- 
+
 
     End Function
 
 
     Public Function deriveFeatureCode() As String
 
-    
+
         If gAppInFeature = "N" And gOrgInFeature = "N" Then
             Return ""
         End If
@@ -415,7 +451,7 @@
         Else
             Return gOrgCode & "/"
         End If
- 
+
 
     End Function
 
@@ -436,7 +472,7 @@
         ElseIf iDb = "VM" Then
             Return ""
         End If
- 
+
         Return ""
 
     End Function

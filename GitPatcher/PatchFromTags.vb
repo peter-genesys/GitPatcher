@@ -6,8 +6,6 @@ Public Class PatchFromTags
     Dim gRebaseBranchOn As String
     Dim gtag_base As String
 
- 
-
     Public Sub New(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String, itag_base As String)
         InitializeComponent()
 
@@ -20,37 +18,51 @@ Public Class PatchFromTags
         gRebaseBranchOn = iRebaseBranchOn
         gtag_base = itag_base
 
-        'NOT CURRENTLY USING THE TabPageSuperBy TABPAGE
-        PatchTabControl.TabPages.Remove(TabPageSuperBy)
+        PatchTabControl.TabPages.Remove(TabPageSHA1)
 
+        HideChangesTab()
         HideTabs()
-
-        'If gBranchType <> "hotfix" Then
-        '  PatchTabControl.TabPages.Remove(TabPageSuperBy)
-        'End If
-
-        'PatchTabControl.TabPages("TabPagePatchDefn").Hide()
-        'PatchTabControl.TabPages(2).Hide()
-
-        'PatchTabControl.TabPages.TabPagePatchDefn Remove(TabPageSuperBy)
 
         ExecuteButton.Text = "Execute Patch on " & Globals.currentTNS
 
     End Sub
 
+    Private Sub UseTags()
+        PatchTabControl.TabPages.Insert(0, TabPageTags)
+        PatchTabControl.TabPages.Remove(TabPageSHA1)
+        HideTabs()
+    End Sub
+
+    Private Sub UseSHA1()
+        PatchTabControl.TabPages.Insert(0, TabPageSHA1)
+        PatchTabControl.TabPages.Remove(TabPageTags)
+        HideTabs()
+    End Sub
+
+    Private Sub HideChangesTab()
+        PatchTabControl.TabPages.Remove(TabPageChanges)
+    End Sub
+
+    Private Sub ShowChangesTab()
+        PatchTabControl.TabPages.Remove(TabPageChanges)
+        PatchTabControl.TabPages.Insert(1, TabPageChanges)
+    End Sub
+
     Private Sub HideTabs()
+
         PatchTabControl.TabPages.Remove(TabPageExtras)
-        PatchTabControl.TabPages.Remove(TabPagePreReqs)
-        PatchTabControl.TabPages.Remove(TabPageSuper)
+        PatchTabControl.TabPages.Remove(TabPagePreReqsA)
+        PatchTabControl.TabPages.Remove(TabPagePreReqsB)
         PatchTabControl.TabPages.Remove(TabPagePatchDefn)
         FindButton.Visible = False
         CopyChangesButton.Visible = False
 
     End Sub
     Private Sub ShowTabs()
+
         PatchTabControl.TabPages.Insert(2, TabPageExtras)
-        PatchTabControl.TabPages.Insert(3, TabPagePreReqs)
-        PatchTabControl.TabPages.Insert(4, TabPageSuper)
+        PatchTabControl.TabPages.Insert(3, TabPagePreReqsA)
+        PatchTabControl.TabPages.Insert(4, TabPagePreReqsB)
         PatchTabControl.TabPages.Insert(5, TabPagePatchDefn)
     End Sub
 
@@ -64,7 +76,7 @@ Public Class PatchFromTags
         Dim tag_no_padding As Integer = 2
 
         TagsCheckedListBox.Items.Clear()
-        For Each tagname In GitSharpFascade.getTagList(Globals.getRepoPath)
+        For Each tagname In GitOp.getTagList()
             If Common.getFirstSegment(tagname, ".") = Globals.currentBranch Then
                 'This is a tag worth listing
                 Dim ticked As Boolean = (gtag_base = Common.getLastSegment(tagname, ".").Substring(0, tag_no_padding)) 'This is a tag worth ticking
@@ -77,24 +89,71 @@ Public Class PatchFromTags
 
     End Sub
 
+    Private Sub deriveSchemas()
+        'NB This routine also causes the Globals.commit1 and Globals.commit2 to be calculated, for reuse in the Wizard.
+
+        If String.IsNullOrEmpty(SchemaComboBox.Text) Then
+            SchemaComboBox.Items.Clear()
+
+            Try
+
+                If PatchTabControl.TabPages.Contains(TabPageTags) Then
+                    'Tags
+                    Logger.Dbg("Load schemas from Tags")
+
+                    GitOp.setCommitsFromTags(Tag1TextBox.Text, Tag2TextBox.Text)
+
+                Else
+                    Logger.Dbg("Load schemas from SHA1s")
+
+                    GitOp.setCommitsFromSHA(SHA1TextBox1.Text, SHA1TextBox2.Text)
+
+
+                End If
+
+                For Each schema In GitOp.getSchemaList(Globals.DBRepoPathMask)
+                    SchemaComboBox.Items.Add(schema)
+                Next
+
+                SchemaCountTextBox.Text = SchemaComboBox.Items.Count
+
+                'If exactly one schema found then select it
+                'otherwise force user to choose one.
+                If SchemaComboBox.Items.Count = 0 Then
+                    MsgBox("No schemas found.  Please check location of tags or SHA-1 (esp SHA-1 order)")
+
+                ElseIf SchemaComboBox.Items.Count = 1 Then
+                    SchemaComboBox.SelectedIndex = 0
+                Else
+                    MsgBox("There are changes across " & SchemaComboBox.Items.Count.ToString & " schemas.")
+                    Logger.Dbg("Multiple schemas")
+                End If
+            Catch ex As Exception
+                MsgBox("Unable to find Changes" & vbCrLf & ex.Message)
+            End Try
+
+
+        End If
+    End Sub
+
+
+
     Private Sub FindChanges()
         Try
             If SchemaComboBox.Text = "" Then
                 Throw (New Halt("Schema not selected"))
             End If
 
-
-
             TreeViewChanges.PathSeparator = "/"
             TreeViewChanges.Nodes.Clear()
 
-
-            For Each change In GitSharpFascade.getTagChanges(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask & SchemaComboBox.Text, False)
+            For Each change In GitOp.getChanges(Globals.DBRepoPathMask & SchemaComboBox.Text, False)
 
                 'find or create each node for item
                 TreeViewChanges.AddNode(change, "/", True)
 
             Next
+
             TreeViewChanges.ExpandAll()
 
             HideTabs()
@@ -107,10 +166,8 @@ Public Class PatchFromTags
     End Sub
 
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles FindButton.Click
+    Private Sub FindButton_Click(sender As Object, e As EventArgs) Handles FindButton.Click
         FindChanges()
-
-
     End Sub
 
 
@@ -130,7 +187,6 @@ Public Class PatchFromTags
                     MsgBox("Warning: File " & FilePath & " could not be exported, but will be in the install file.  It may be a folder.  Deselect, then recreate Patch.")
 
                 End Try
-                'End If
 
             Next
         End If
@@ -170,7 +226,7 @@ Public Class PatchFromTags
         'TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
         Dim filenames As Collection = Nothing
-        filenames = GitSharpFascade.exportTagChanges(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask & SchemaComboBox.Text, changesFiles, PatchDirTextBox.Text)
+        filenames = GitOp.exportChanges(Globals.DBRepoPathMask & SchemaComboBox.Text, changesFiles, PatchDirTextBox.Text)
 
 
         'Additional file exports 
@@ -182,21 +238,14 @@ Public Class PatchFromTags
 
         exportExtraFiles(ExtraFiles, filenames, PatchDirTextBox.Text)
 
-        Dim PreReqPatches As Collection = New Collection
+        Dim PreReqPatchesA As Collection = New Collection
         'Retrieve checked node items from the PreReqPatchesTreeView as a collection of patches.
-        PreReqPatchesTreeView.ReadCheckedLeafNodes(PreReqPatches)
+        PreReqPatchesTreeViewA.ReadCheckedLeafNodes(PreReqPatchesA)
 
+        Dim PreReqPatchesB As Collection = New Collection
+        'Retrieve checked node items from the PreReqPatchesTreeView as a collection of patches.
+        PreReqPatchesTreeViewB.ReadCheckedLeafNodes(PreReqPatchesB)
 
-        Dim SuperPatches As Collection = New Collection
-
-        'Retrieve checked node items from the SuperPatchesTreeView as a collection of patches.
-        SuperPatchesTreeView.ReadCheckedLeafNodes(SuperPatches)
-
-        Dim SuperByPatches As Collection = New Collection
-
-
-        'Retrieve checked node items from the SuperByPatchesTreeView as a collection of patches.
-        SuperByPatchesTreeView.ReadCheckedLeafNodes(SuperByPatches)
         Try
             Dim filelist As Collection = New Collection
             'Ok - no longer need the filenames list created by exportTagChanges and exportExtraFiles
@@ -209,46 +258,47 @@ Public Class PatchFromTags
             TreeViewPatchOrder.ReadTags(checkedFilelist, False, True, False, True)
 
 
-            'Write the install script - using patch admin
-            writeInstallScript(PatchNameTextBox.Text, _
-                               Common.getFirstSegment(Globals.currentLongBranch, "/"), _
-                               SchemaComboBox.Text, _
-                               Globals.currentLongBranch, _
-                               Tag1TextBox.Text, _
-                               Tag2TextBox.Text, _
-                               SupIdTextBox.Text, _
-                               PatchDescTextBox.Text, _
-                               NoteTextBox.Text, _
-                               True, _
-                               RerunCheckBox.Checked, _
-                               filelist, _
-                               checkedFilelist, _
-                               PreReqPatches, _
-                               SuperPatches, _
-                               SuperByPatches, _
-                               PatchDirTextBox.Text, _
-                               PatchPathTextBox.Text, _
-                               TrackPromoCheckBox.Checked)
-            'Write the install script lite - without patch admin
-            writeInstallScript(PatchNameTextBox.Text, _
-                               Common.getFirstSegment(Globals.currentLongBranch, "/"), _
-                               SchemaComboBox.Text, _
-                               Globals.currentLongBranch, _
-                               Tag1TextBox.Text, _
-                               Tag2TextBox.Text, _
-                               SupIdTextBox.Text, _
-                               PatchDescTextBox.Text, _
-                               NoteTextBox.Text, _
-                               False, _
-                               RerunCheckBox.Checked, _
-                               filelist, _
-                               checkedFilelist, _
-                               PreReqPatches, _
-                               SuperPatches, _
-                               SuperByPatches, _
-                               PatchDirTextBox.Text, _
-                               PatchPathTextBox.Text, _
-                               TrackPromoCheckBox.Checked)
+            'Write the install script - using ARM
+            writeInstallScript(PatchNameTextBox.Text,
+                               Common.getFirstSegment(Globals.currentLongBranch, "/"),
+                               SchemaComboBox.Text,
+                               Globals.currentLongBranch,
+                               Tag1TextBox.Text,
+                               Tag2TextBox.Text,
+                               SupIdTextBox.Text,
+                               PatchDescTextBox.Text,
+                               NoteTextBox.Text,
+                               True,
+                               RerunCheckBox.Checked,
+                               filelist,
+                               checkedFilelist,
+                               PreReqPatchesA,
+                               PreReqPatchesB,
+                               PatchDirTextBox.Text,
+                               PatchPathTextBox.Text,
+                               TrackPromoCheckBox.Checked,
+                               AlternateSchemasCheckBox.Checked
+                                )
+            'Write the install script lite - without ARM
+            writeInstallScript(PatchNameTextBox.Text,
+                               Common.getFirstSegment(Globals.currentLongBranch, "/"),
+                               SchemaComboBox.Text,
+                               Globals.currentLongBranch,
+                               Tag1TextBox.Text,
+                               Tag2TextBox.Text,
+                               SupIdTextBox.Text,
+                               PatchDescTextBox.Text,
+                               NoteTextBox.Text,
+                               False,
+                               RerunCheckBox.Checked,
+                               filelist,
+                               checkedFilelist,
+                               PreReqPatchesA,
+                               PreReqPatchesB,
+                               PatchDirTextBox.Text,
+                               PatchPathTextBox.Text,
+                               TrackPromoCheckBox.Checked,
+                               AlternateSchemasCheckBox.Checked)
 
 
             Host.RunExplorer(PatchDirTextBox.Text)
@@ -261,38 +311,8 @@ Public Class PatchFromTags
 
     End Sub
 
-    Private Sub deriveSchemas()
-        If String.IsNullOrEmpty(SchemaComboBox.Text) Then
-            SchemaComboBox.Items.Clear()
 
 
-            For Each schema In GitSharpFascade.getSchemaList(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, Globals.DBRepoPathMask)
-                SchemaComboBox.Items.Add(schema)
-            Next
-
-            SchemaCountTextBox.Text = SchemaComboBox.Items.Count
-
-            'If exactly one schema found then select it
-            'otherwise force user to choose one.
-            If SchemaComboBox.Items.Count = 1 Then
-                SchemaComboBox.SelectedIndex = 0
-            Else
-                Logger.Dbg("Multiple schemas")
-            End If
-        End If
-    End Sub
-
-
-
-    '  Private Sub Tag2TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag2TextBox.TextChanged
-    '
-    '      deriveSchemas()
-    '
-    '  End Sub
-    '
-    '  Private Sub Tag1TextBox_TextChanged(sender As Object, e As EventArgs) Handles Tag1TextBox.TextChanged
-    '      deriveSchemas()
-    '  End Sub
 
     Private Sub ViewButton_Click(sender As Object, e As EventArgs) Handles ViewButton.Click
 
@@ -301,8 +321,7 @@ Public Class PatchFromTags
         'Retrieve checked node items from the TreeViewChanges as a collection of changes.
         TreeViewChanges.ReadCheckedLeafNodes(CheckedChanges)
 
-
-        MsgBox(GitSharpFascade.viewTagChanges(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text, "database/" & SchemaComboBox.Text, CheckedChanges))
+        MsgBox(GitOp.viewChanges(Globals.getRepoPath, "database/" & SchemaComboBox.Text, CheckedChanges))
     End Sub
 
 
@@ -315,27 +334,27 @@ Public Class PatchFromTags
 
 
 
-    Private Sub writeInstallScript(ByVal patch_name As String, _
-                                  ByVal patch_type As String, _
-                                  ByVal db_schema As String, _
-                                  ByVal branch_path As String, _
-                                  ByVal tag1_name As String, _
-                                  ByVal tag2_name As String, _
-                                  ByVal supplementary As String, _
-                                  ByVal patch_desc As String, _
-                                  ByVal note As String, _
-                                  ByVal use_patch_admin As Boolean, _
-                                  ByVal rerunnable As Boolean, _
-                                  ByRef targetFiles As Collection, _
-                                  ByRef ignoreErrorFiles As Collection, _
-                                  ByRef prereq_patches As Collection, _
-                                  ByRef supersedes_patches As Collection, _
-                                  ByRef superseded_by_patches As Collection, _
-                                  ByVal patchDir As String, _
-                                  ByVal groupPath As String, _
-                                  ByVal track_promotion As Boolean)
+    Private Sub writeInstallScript(ByVal patch_name As String,
+                                  ByVal patch_type As String,
+                                  ByVal db_schema As String,
+                                  ByVal branch_path As String,
+                                  ByVal tag1_name As String,
+                                  ByVal tag2_name As String,
+                                  ByVal suffix As String,
+                                  ByVal patch_desc As String,
+                                  ByVal note As String,
+                                  ByVal use_arm As Boolean,
+                                  ByVal rerunnable As Boolean,
+                                  ByRef targetFiles As Collection,
+                                  ByRef ignoreErrorFiles As Collection,
+                                  ByRef prereqs_last_patch As Collection,
+                                  ByRef prereqs_best_order As Collection,
+                                  ByVal patchDir As String,
+                                  ByVal groupPath As String,
+                                  ByVal track_promotion As Boolean,
+                                  ByVal alt_schema As Boolean)
 
-
+        Dim l_app_code As String = Globals.getAppCode().ToUpper()
 
         Dim l_file_extension As String = Nothing
         Dim l_install_file_line As String = Nothing
@@ -357,6 +376,11 @@ Public Class PatchFromTags
         End If
 
 
+        Dim alt_schema_yn As String = "N"
+        If alt_schema Then
+            alt_schema_yn = "Y"
+        End If
+
 
         Dim l_patch_started As String = Nothing
 
@@ -372,7 +396,7 @@ Public Class PatchFromTags
             Dim l_log_filename As String = patch_name & ".log"
             Dim l_master_filename As String = Nothing
 
-            If use_patch_admin Then
+            If use_arm Then
                 l_master_filename = "install.sql"
             Else
                 l_master_filename = "install_lite.sql"
@@ -405,10 +429,10 @@ Public Class PatchFromTags
             l_master_file.WriteLine("define patch_path = '" & branch_path & "/" & patch_name & "/" & "'")
 
             l_master_file.WriteLine("SPOOL " & l_log_filename)
- 
+
             'Allow user to choose an alternate schema name at patch execution
             Dim l_schema As String = db_schema
-            If AlternateSchemasCheckBox.Checked Then
+            If alt_schema Then
                 l_schema = "&&" & db_schema & "_user"
             End If
 
@@ -441,13 +465,13 @@ Public Class PatchFromTags
 
                     'This is a releaseable file, so put an entry in the script.
                     If ignoreErrorFiles.Contains(l_filename) Then
-                        l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
-                                              Chr(10) & "PROMPT " & l_filename & " " & _
-                                              Chr(10) & "@&&patch_path." & l_filename & ";" & _
+                        l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" &
+                                              Chr(10) & "PROMPT " & l_filename & " " &
+                                              Chr(10) & "@&&patch_path." & l_filename & ";" &
                                               Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
 
                     Else
-                        l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
+                        l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " &
                                             Chr(10) & "@&&patch_path." & l_filename & ";"
 
                     End If
@@ -480,26 +504,28 @@ Public Class PatchFromTags
 
 
 
-            If use_patch_admin Then
+            If use_arm Then
 
-                l_patch_started = _
-                    "execute &&PATCH_ADMIN_user..patch_installer.patch_started( -" _
+                l_patch_started =
+                    "execute &&APEXRM_user..arm_installer.patch_started( -" _
         & Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
         & Chr(10) & " ,i_patch_type         => '" & patch_type & "' -" _
         & Chr(10) & " ,i_db_schema          => '" & l_schema & "' -" _
+        & Chr(10) & " ,i_app_code           => '" & l_app_code & "' -" _
         & Chr(10) & " ,i_branch_name        => '" & branch_path & "' -" _
         & Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
         & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
-        & Chr(10) & " ,i_supplementary      => '" & supplementary & "' -" _
+        & Chr(10) & " ,i_suffix             => '" & suffix & "' -" _
         & Chr(10) & " ,i_patch_desc         => '" & patch_desc.Replace("'", "''") & "' -" _
-        & Chr(10) & " ,i_patch_componants   => '" & l_all_programs & "' -" _
+        & Chr(10) & " ,i_patch_components   => '" & l_all_programs & "' -" _
         & Chr(10) & " ,i_patch_create_date  => '" & DateString & "' -" _
         & Chr(10) & " ,i_patch_created_by   => '" & Environment.UserName & "' -" _
         & Chr(10) & " ,i_note               => '" & note.Replace("'", "''") & "' -" _
         & Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
-        & Chr(10) & " ,i_remove_prereqs     => 'N' -" _
-        & Chr(10) & " ,i_remove_sups        => 'N' -" _
-        & Chr(10) & " ,i_track_promotion    => '" & track_promotion_yn & "'); " _
+        & Chr(10) & " ,i_tracking_yn        => '" & track_promotion_yn & "' -" _
+        & Chr(10) & " ,i_alt_schema_yn      => '" & alt_schema_yn & "' -" _
+        & Chr(10) & " ,i_retired_yn         => 'N' -" _
+        & Chr(10) & " ,i_remove_prereqs     => 'N' );" _
         & Chr(10)
 
 
@@ -507,14 +533,28 @@ Public Class PatchFromTags
 
 
                 Dim l_prereq_short_name As String = Nothing
-                For Each l_prereq_patch In prereq_patches
+                For Each l_prereq_patch In prereqs_last_patch
                     l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
                     If l_prereq_short_name = PatchNameTextBox.Text Then
                         MsgBox("A Patch may NOT have itself as a prerequisite, skipping Prerequisite Patch: " & l_prereq_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
                     Else
                         l_master_file.WriteLine("PROMPT")
                         l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
-                        l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_prereq( -")
+                        l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_prereq_last_patch( -")
+                        l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
+                        l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
+                    End If
+
+                Next
+
+                For Each l_prereq_patch In prereqs_best_order
+                    l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
+                    If l_prereq_short_name = PatchNameTextBox.Text Then
+                        MsgBox("A Patch may NOT have itself as a prerequisite, skipping Prerequisite Patch: " & l_prereq_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
+                    Else
+                        l_master_file.WriteLine("PROMPT")
+                        l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
+                        l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_prereq_best_order( -")
                         l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
                         l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
                     End If
@@ -522,8 +562,8 @@ Public Class PatchFromTags
                 Next
 
                 l_prereq_short_name = My.Settings.MinPatch
-                l_master_file.WriteLine("PROMPT Ensure Patch Admin is late enough for this patch")
-                l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_prereq( -")
+                l_master_file.WriteLine("PROMPT Ensure ARM is late enough for this patch")
+                l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_prereq_best_order( -")
                 l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
                 l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
 
@@ -536,45 +576,21 @@ Public Class PatchFromTags
 
             l_master_file.WriteLine(Chr(10) & "COMMIT;")
 
-            If use_patch_admin Then
+            If use_arm Then
 
                 l_master_file.WriteLine("PROMPT Compiling objects in schema " & l_schema)
-                l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_invoker.compile_post_patch;")
+                l_master_file.WriteLine("execute &&APEXRM_user..arm_invoker.compile_post_patch;")
 
-                If db_schema = "PATCH_ADMIN" Then
-                    l_master_file.WriteLine("--PATCH_ADMIN patches are likely to loose the session state of patch_installer, so complete using the patch_name parm.")
-                    l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
+                If db_schema = "APEXRM" Then
+                    l_master_file.WriteLine("--APEXRM patches are likely to loose the session state of arm_installer, so complete using the patch_name parm.")
+                    l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
                 Else
-                    l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.patch_completed;")
+                    l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed;")
                 End If
 
-                Dim l_sup_short_name As String = Nothing
-                For Each l_sup_patch In supersedes_patches
-                    l_sup_short_name = Common.getLastSegment(l_sup_patch, "\")
-                    If l_sup_short_name = PatchNameTextBox.Text Then
-                        MsgBox("A Patch may NOT supersede itself, skipping Supersedes Patch: " & l_sup_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
-                    Else
-                        l_master_file.WriteLine("PROMPT")
-                        l_master_file.WriteLine("PROMPT Supersedes patch " & l_sup_short_name)
-                        l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_supersedes( -")
-                        l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
-                        l_master_file.WriteLine(",i_supersedes_patch  => '" & l_sup_short_name & "' );")
-                    End If
-                Next
 
-                For Each l_sup_patch In superseded_by_patches
-                    l_sup_short_name = Common.getLastSegment(l_sup_patch, "\")
-                    If l_sup_short_name = PatchNameTextBox.Text Then
-                        MsgBox("A Patch may NOT be superseded by itself, skipping Superseded By Patch: " & l_sup_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
-                    Else
 
-                        l_master_file.WriteLine("PROMPT")
-                        l_master_file.WriteLine("PROMPT Superseded by patch " & l_sup_short_name)
-                        l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_supersedes( -")
-                        l_master_file.WriteLine("i_patch_name     => '" & l_sup_short_name & "' -")
-                        l_master_file.WriteLine(",i_supersedes_patch  => '" & patch_name & "' );")
-                    End If
-                Next
+
 
             End If
 
@@ -782,38 +798,25 @@ Public Class PatchFromTags
             End If
         End If
 
-        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePreReqs" Then
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePreReqsA" Then
 
 
 
-            If PreReqPatchesTreeView.Nodes.Count = 0 Then
+            If PreReqPatchesTreeViewA.Nodes.Count = 0 Then
+                LastPatches()
+            End If
+
+
+        End If
+
+
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePreReqsB" Then
+
+
+
+            If PreReqPatchesTreeViewB.Nodes.Count = 0 Then
                 RestrictPreReqToBranchCheckBox.Checked = True
                 FindPreReqs()
-            End If
-
-
-        End If
-
-        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageSuper" Then
-
-
-
-            If SuperPatchesTreeView.Nodes.Count = 0 Then
-                RestrictSupToBranchCheckBox.Checked = True
-                FindSuper()
-            End If
-
-
-        End If
-
-
-        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageSuperBy" Then
-
-
-
-            If SuperByPatchesTreeView.Nodes.Count = 0 Then
-                RestrictSupByToBranchCheckBox.Checked = True
-                FindSuperBy()
             End If
 
 
@@ -841,7 +844,7 @@ Public Class PatchFromTags
 
             derivePatchDir()
 
-            UsePatchAdminCheckBox.Checked = Globals.getUsePatchAdmin
+            UseARMCheckBox.Checked = Globals.getUseARM
 
             RerunCheckBox.Checked = True
 
@@ -869,7 +872,8 @@ Public Class PatchFromTags
         Dim l_old_text = target.Text
         Try
             Dim log As Collection = New Collection
-            log = GitSharpFascade.TagLog(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text)
+            'log = GitSharpFascade.TagLog(Globals.getRepoPath, Tag1TextBox.Text, Tag2TextBox.Text)
+            log = GitOp.Log()
 
             target.Text = ChoiceDialog.Ask("You may choose a log message for the " & targetControlName, log, "", "Choose log message", False)
 
@@ -883,16 +887,34 @@ Public Class PatchFromTags
 
     Private Sub derivePatchName()
 
-        If Not String.IsNullOrEmpty(Tag1TextBox.Text) And Not String.IsNullOrEmpty(Tag2TextBox.Text) And SchemaComboBox.Items.Count > 0 Then
+        If PatchTabControl.TabPages.Contains(TabPageTags) Then
+            If Not String.IsNullOrEmpty(Tag1TextBox.Text) And Not String.IsNullOrEmpty(Tag2TextBox.Text) And SchemaComboBox.Items.Count > 0 Then
 
-            PatchNameTextBox.Text = Globals.currentBranch & "_" & Common.dropFirstSegment(Tag1TextBox.Text, ".") & "_" & Common.dropFirstSegment(Tag2TextBox.Text, ".") & "_" & SchemaComboBox.SelectedItem.ToString
+                'PatchNameTextBox.Text = Globals.currentBranch & "_" & Common.dropFirstSegment(Tag1TextBox.Text, ".") & "_" & Common.dropFirstSegment(Tag2TextBox.Text, ".") & "_" & SchemaComboBox.SelectedItem.ToString
+                PatchNameTextBox.Text = Tag2TextBox.Text.TrimEnd("B") & "." & SchemaComboBox.SelectedItem.ToString
 
-            If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
-                PatchNameTextBox.Text = PatchNameTextBox.Text & "_" & SupIdTextBox.Text
+                If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
+                    PatchNameTextBox.Text = PatchNameTextBox.Text & "." & SupIdTextBox.Text
+
+                End If
+            Else
+                MsgBox("Please select two tags, then review changes ensuring you select a schema, to allow derivation of PatchName")
 
             End If
         Else
-            MsgBox("Please select two tags, then review changes ensuring you select a schema, to allow derivation of PatchName")
+            'SHA-1
+            If SHA1TextBox1.Text <> "" And SHA1TextBox2.Text <> "" And SchemaComboBox.Items.Count > 0 Then
+
+                PatchNameTextBox.Text = Globals.currentBranch & "." & SchemaComboBox.SelectedItem.ToString
+
+                If Not String.IsNullOrEmpty(SupIdTextBox.Text.Trim) Then
+                    PatchNameTextBox.Text = PatchNameTextBox.Text & "." & SupIdTextBox.Text
+
+                End If
+            Else
+                MsgBox("Please select two SHAs, then review changes ensuring you select a schema, to allow derivation of PatchName")
+
+            End If
 
         End If
 
@@ -976,7 +998,7 @@ Public Class PatchFromTags
 
 
     Private Sub FindPreReqs()
-        FindPatches(PreReqPatchesTreeView, RestrictPreReqToBranchCheckBox.Checked)
+        FindPatches(PreReqPatchesTreeViewB, RestrictPreReqToBranchCheckBox.Checked)
 
     End Sub
 
@@ -986,19 +1008,13 @@ Public Class PatchFromTags
 
     End Sub
 
-    Private Sub FindSuper()
-        FindPatches(SuperPatchesTreeView, RestrictSupToBranchCheckBox.Checked)
-    End Sub
 
-    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles SupButton.Click
-        FindSuper()
-    End Sub
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecuteButton.Click
         'Use patch runner to execute with a master script.
         Dim l_master_filename As String = Nothing
 
-        If UsePatchAdminCheckBox.Checked Then
+        If UseARMCheckBox.Checked Then
             l_master_filename = "install.sql"
         Else
             l_master_filename = "install_lite.sql"
@@ -1041,7 +1057,7 @@ Public Class PatchFromTags
 
         Tortoise.Commit(PatchDirTextBox.Text, lUntracked & "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
 
-        Mail.SendNotification(lUntracked & "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
+        'Mail.SendNotification(lUntracked & "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
 
         'user
         'branch
@@ -1052,136 +1068,6 @@ Public Class PatchFromTags
 
     End Sub
 
-
-    Public Shared Sub createPatchProcess(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String)
-
-        Common.checkBranch(iBranchType)
-        Dim l_tag_base As String = Nothing
-
-        Dim currentBranch As String = Globals.currentLongBranch()
-        Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")
-        createPatchProgress.MdiParent = GitPatcher
-        createPatchProgress.addStep("Export Apex to branch: " & currentBranch, False, "Using the Apex Export workflow")
-        createPatchProgress.addStep("Use QCGU to generate changed domain data: " & currentBranch, False, "Think hard!  Did i change any domains, tables, security or menus?  " _
-                                 & "If so, i should logon to QCGU and generate that data out. " _
-                                 & "Then commit it too." _
-                                 & "Regenerate: Menu (new pages, menu changes), Security (new pages, security changes), Tapis (table or view column changes), Domains (new or changed tables or views, new domains or domain ussage changed)")
-        createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow")
-        createPatchProgress.addStep("Review tags on Branch: " & currentBranch)
-        createPatchProgress.addStep("Create edit, test", True, "Now is a great time to smoke test my work before i commit the patch.")
-        createPatchProgress.addStep("Commit to Branch: " & currentBranch)
-        createPatchProgress.addStep("Switch to " & iRebaseBranchOn & " branch")
-        createPatchProgress.addStep("Merge from Branch: " & currentBranch, True, "Please select the Branch:" & currentBranch & " from the Tortoise Merge Dialogue")
-        createPatchProgress.addStep("Push to Origin", True, "If at this stage there is an error because your " & iRebaseBranchOn & " branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
-        createPatchProgress.addStep("Synch to Verify Push", True, "Should say '0 commits ahead orgin/" & iRebaseBranchOn & "'.  " _
-                                 & "If NOT, then the push FAILED. Your " & iRebaseBranchOn & " branch is now out of date, so is your rebase from it, and any patches COULD BE stale. " _
-                                 & "In this situation, it is safest to restart the Create Patch process to ensure you are patching the lastest merged files. ")
-        createPatchProgress.addStep("Release to " & iDBtarget, True)
-        createPatchProgress.addStep("Return to Branch: " & currentBranch)
-        createPatchProgress.addStep("Snapshot VM", True, "Create a snapshot of your current VM state, to use as your next restore point.  I label mine with the patch_name of the last applied patch.")
-        createPatchProgress.Show()
-
-
-        Do Until createPatchProgress.isStarted
-            Common.wait(1000)
-        Loop
-
-        If createPatchProgress.toDoNextStep() Then
-            'Export Apex to branch
-            Apex.ApexExportCommit()
-
-        End If
-
-        If createPatchProgress.toDoNextStep() Then
-            'QCGU
-            MsgBox("Please launch QCGU and generate Domain data", MsgBoxStyle.Exclamation, "QCGU")
-
-        End If
-
-        If createPatchProgress.toDoNextStep() Then
-            'Rebase branch
-            l_tag_base = Main.rebaseBranch(iBranchType, iDBtarget, iRebaseBranchOn)
-
-        End If
-
-
-        If createPatchProgress.toDoNextStep() Then
-            'Review tags on the branch
-            Tortoise.Log(Globals.getRepoPath)
-        End If
-
-
-        If createPatchProgress.toDoNextStep() Then
-
-            Dim Wizard As New PatchFromTags(iBranchType, iDBtarget, iRebaseBranchOn, l_tag_base)
-            'newchildform.MdiParent = GitPatcher
-            Wizard.ShowDialog() 'NEED TO WAIT HERE!!
-
-
-        End If
-
-
-        If createPatchProgress.toDoNextStep() Then
-            MsgBox("Now is a great time to smoke test my work before i commit the patch.", MsgBoxStyle.Information, "Smoke Test")
-
-            'Committing changed files to GIT"
-            Tortoise.Commit(Globals.getRepoPath, "Commit any patches you've not yet committed", True)
-        End If
-
-
-        If createPatchProgress.toDoNextStep() Then
-            'switch
-            'GitSharpFascade.switchBranch(Globals.currentRepo, "master")
-            'Tortoise.Switch(Globals.currentRepo)
-            'Switch to develop branch
-            GitBash.Switch(Globals.getRepoPath, iRebaseBranchOn)
-        End If
-
-        If createPatchProgress.toDoNextStep() Then
-            'Merge from Feature branch
-            Tortoise.Merge(Globals.getRepoPath)
-        End If
-
-        If createPatchProgress.toDoNextStep() Then
-            'Push to origin/develop 
-            GitBash.Push(Globals.getRepoPath, "origin", iRebaseBranchOn)
-        End If
-
-        If createPatchProgress.toDoNextStep() Then
-            'Synch command to verfiy that Push was successful.
-            Tortoise.Sync(Globals.getRepoPath)
-        End If
-
-        If createPatchProgress.toDoNextStep() Then
-            'Release to DB Target
-            Main.releaseTo(iDBtarget, iBranchType)
-        End If
-
-        If createPatchProgress.toDoNextStep() Then
-            'GitSharpFascade.switchBranch(Globals.currentRepo, currentBranch)
-            GitBash.Switch(Globals.getRepoPath, currentBranch)
-        End If
-
-        If createPatchProgress.toDoNextStep() Then
-            'Snapshot VM
-            MsgBox("Create a snapshot of your current VM state, to use as your next restore point.", MsgBoxStyle.Exclamation, "Snapshot VM")
-
-        End If
-
-        'Finish
-        createPatchProgress.toDoNextStep()
-
-
-    End Sub
-
-    Private Sub FindSuperBy()
-        FindPatches(SuperByPatchesTreeView, RestrictSupByToBranchCheckBox.Checked)
-    End Sub
-
-
-    Private Sub SupByButton_Click(sender As Object, e As EventArgs) Handles SupByButton.Click
-        FindSuperBy()
-    End Sub
 
 
 
@@ -1230,21 +1116,15 @@ Public Class PatchFromTags
 
     Private Sub ButtonFindFiles_Click(sender As Object, e As EventArgs) Handles ButtonFindFiles.Click
         FindExtras()
-
-
     End Sub
 
-
-    Private Sub ButtonLastPatch_Click(sender As Object, e As EventArgs) Handles ButtonLastPatch.Click
-
+    Private Sub LastPatches()
         Dim ChosenChanges As Collection = New Collection
         'Retrieve checked node items from the TreeViewChanges as a collection of files.
         TreeViewChanges.ReadCheckedLeafNodes(ChosenChanges)
 
         'Requery ALL patches
-        RestrictPreReqToBranchCheckBox.Checked = False
-        FindPreReqs()
-
+        FindPatches(PreReqPatchesTreeViewA, False) 'Do not restrict to branch
 
         For Each change In ChosenChanges
             Dim patch_component As String = Common.getLastSegment(change.ToString(), "/")
@@ -1252,9 +1132,9 @@ Public Class PatchFromTags
             If String.IsNullOrEmpty(LastPatch) Then
                 Logger.Dbg("No previous patch for Change: " & patch_component)
             Else
-                'MsgBox("Change: " & patch_component & " LastPatch: " & LastPatch)
+                Logger.Dbg("Change: " & patch_component & " LastPatch: " & LastPatch)
                 Dim l_found As Boolean = False
-                PreReqPatchesTreeView.TickNode(LastPatch, l_found)
+                PreReqPatchesTreeViewA.TickNode(LastPatch, l_found)
 
                 If Not l_found Then
                     MsgBox("Unable to find patch: " & LastPatch & " for Change: " & patch_component)
@@ -1266,8 +1146,15 @@ Public Class PatchFromTags
 
         Next
 
-        'Set Prereq tree to Contract view.
-        PreReqPatchesTreeView.showCheckedNodes()
+        'Set Prereq tree to Collapsed view.
+        PreReqPatchesTreeViewA.showCheckedNodes()
+    End Sub
+
+
+
+    Private Sub ButtonLastPatch_Click(sender As Object, e As EventArgs) Handles ButtonLastPatch.Click
+
+        LastPatches()
 
     End Sub
 
@@ -1280,19 +1167,25 @@ Public Class PatchFromTags
         PopDesc(NoteTextBox, "Notes")
     End Sub
 
-    Private Sub TagsCheckedListBox_Click(sender As Object, e As EventArgs) Handles TagsCheckedListBox.Click
+    Private Sub TagsCheckedListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TagsCheckedListBox.SelectedIndexChanged
         'If tags are changed then we will clear the selected changes and the schema list.
+        SchemaCountTextBox.Text = "0"
         SchemaComboBox.Text = ""
         TreeViewChanges.Nodes.Clear()
         HideTabs()
+        If TagsCheckedListBox.CheckedItems.Count > 1 Then
+            ShowChangesTab()
+        Else
+            HideChangesTab()
+        End If
+
+
     End Sub
 
     Private Sub ResetForNewPatch()
 
         TreeViewFiles.Nodes.Clear()
-        PreReqPatchesTreeView.Nodes.Clear()
-        SuperPatchesTreeView.Nodes.Clear()
-        SuperByPatchesTreeView.Nodes.Clear()
+        PreReqPatchesTreeViewA.Nodes.Clear()
         TreeViewPatchOrder.Nodes.Clear()
         SupIdTextBox.Text = ""
         PatchDescTextBox.Text = ""
@@ -1317,329 +1210,7 @@ Public Class PatchFromTags
 
 
 
-    Private Sub writeUnInstallScript(ByVal patch_name As String, _
-                                     ByVal patch_type As String, _
-                                  ByVal db_schema As String, _
-                                  ByVal branch_path As String, _
-                                  ByVal tag1_name As String, _
-                                  ByVal tag2_name As String, _
-                                  ByVal supplementary As String, _
-                                  ByVal patch_desc As String, _
-                                  ByVal note As String, _
-                                  ByVal use_patch_admin As Boolean, _
-                                  ByVal rerunnable As Boolean, _
-                                  ByRef targetFiles As Collection, _
-                                  ByRef ignoreErrorFiles As Collection, _
-                                  ByVal patchDir As String, _
-                                  ByVal groupPath As String, _
-                                  ByVal track_promotion As Boolean)
-
-
-
-        Dim l_file_extension As String = Nothing
-        Dim l_install_file_line As String = Nothing
-
-        Dim l_all_programs As String = Nothing
-
-
-        Dim l_show_error As String = "Show error;"
-
-        Dim rerunnable_yn As String = "N"
-        If rerunnable Then
-            rerunnable_yn = "Y"
-        End If
-
-
-        Dim track_promotion_yn As String = "N"
-        If track_promotion Then
-            track_promotion_yn = "Y"
-        End If
-
-
-
-        Dim l_patch_started As String = Nothing
-
-        Dim l_install_list As String = Nothing
-        Dim l_post_install_list As String = Nothing
-
-        Dim Category As String = Nothing
-
-
-
-        If targetFiles.Count > 0 Then
-
-            Dim l_log_filename As String = patch_name & "_uninstall.log"
-            Dim l_master_filename As String = Nothing
-
-            If use_patch_admin Then
-                l_master_filename = "uninstall.sql"
-            Else
-                l_master_filename = "uninstall_lite.sql"
-            End If
-
-
-
-            Dim l_master_file As New System.IO.StreamWriter(Common.dos_path(patchDir & "/" & l_master_filename))
-
-            l_master_file.WriteLine("PROMPT LOG TO " & l_log_filename)
-            l_master_file.WriteLine("PROMPT .")
-            l_master_file.WriteLine("SET AUTOCOMMIT OFF")
-            l_master_file.WriteLine("SET AUTOPRINT ON")
-            l_master_file.WriteLine("SET ECHO ON")
-            l_master_file.WriteLine("SET FEEDBACK ON")
-            l_master_file.WriteLine("SET PAUSE OFF")
-            l_master_file.WriteLine("SET SERVEROUTPUT ON SIZE 1000000")
-            l_master_file.WriteLine("SET TERMOUT ON")
-            l_master_file.WriteLine("SET TRIMOUT ON")
-            l_master_file.WriteLine("SET VERIFY ON")
-            l_master_file.WriteLine("SET trims on pagesize 3000")
-            l_master_file.WriteLine("SET auto off")
-            l_master_file.WriteLine("SET verify off echo off define on")
-            l_master_file.WriteLine("WHENEVER OSERROR EXIT FAILURE ROLLBACK")
-            l_master_file.WriteLine("WHENEVER SQLERROR EXIT FAILURE ROLLBACK")
-            l_master_file.WriteLine("")
-
-            l_master_file.WriteLine("define patch_name = '" & patch_name & "'")
-            l_master_file.WriteLine("define patch_desc = '" & patch_desc.Replace("'", "''") & "'")
-            l_master_file.WriteLine("define patch_path = '" & Common.unix_path(branch_path & "/" & patch_name & "/") & "'")
-
-            l_master_file.WriteLine("SPOOL " & l_log_filename)
-
-            'Allow user to choose an alternate schema name at patch execution
-            Dim l_schema As String = db_schema
-            If AlternateSchemasCheckBox.Checked Then
-                l_schema = "&&" & db_schema & "_user"
-            End If
-
-            'Force use of SYSDBA role
-            Dim l_role As String = ""
-            If SYSDBACheckBox.Checked Then
-                l_role = " as sysdba"
-            End If
-
-            l_master_file.WriteLine("CONNECT " & l_schema & "/&&" & db_schema & "_password@&&database" & l_role)
-        
-            l_master_file.WriteLine("set serveroutput on;")
-
-
-
-            'Files have already been sorted into Categories, we only need to list the categories and spit out the files under each.
-            For Each l_filename In targetFiles
-
-
-                'Sort the files by files extention into lists.
-
-                If Not l_filename.contains(".") Then
-                    'No file extension so assume this is a Category heading.
-                    Category = l_filename.ToUpper
-                    l_install_file_line = Chr(10) & "PROMPT " & Category
-
-
-                Else
-
-                    l_file_extension = l_filename.Split(".")(1)
-
-                    'This is a releaseable file, so put an entry in the script.
-                    If ignoreErrorFiles.Contains(l_filename) Then
-                        l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" & _
-                                              Chr(10) & "PROMPT " & l_filename & " " & _
-                                              Chr(10) & "@&&patch_path." & l_filename & ";" & _
-                                              Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
-
-                    Else
-                        l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " & _
-                                              Chr(10) & "@&&patch_path." & l_filename & ";"
-
-                    End If
-
-
-
-                    If String.IsNullOrEmpty(l_all_programs) Then
-                        l_all_programs = l_filename
-                    Else
-                        l_all_programs = l_all_programs & "' -" & Chr(10) & "||'," & l_filename
-                    End If
-
-
-                End If
-
-                'Add this file to the normal list
-                l_install_list = l_install_list & Chr(10) & l_install_file_line
-
-
-            Next
-
-
-
-            '    If use_patch_admin Then
-
-            '        l_patch_started = _
-            '            "execute &&PATCH_ADMIN_user..patch_installer.patch_started( -" _
-            '& Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
-            '& Chr(10) & " ,i_patch_type         => '" & patch_type & "' -" _
-            '& Chr(10) & " ,i_db_schema          => '" & "&&" & db_schema & "_user" & "' -" _
-            '& Chr(10) & " ,i_branch_name        => '" & branch_path & "' -" _
-            '& Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
-            '& Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
-            '& Chr(10) & " ,i_supplementary      => '" & supplementary & "' -" _
-            '& Chr(10) & " ,i_patch_desc         => '" & patch_desc.Replace("'", "''") & "' -" _
-            '& Chr(10) & " ,i_patch_componants   => '" & l_all_programs & "' -" _
-            '& Chr(10) & " ,i_patch_create_date  => '" & DateString & "' -" _
-            '& Chr(10) & " ,i_patch_created_by   => '" & Environment.UserName & "' -" _
-            '& Chr(10) & " ,i_note               => '" & note.Replace("'", "''") & "' -" _
-            '& Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
-            '& Chr(10) & " ,i_remove_prereqs     => 'N' -" _
-            '& Chr(10) & " ,i_remove_sups        => 'N' -" _
-            '& Chr(10) & " ,i_track_promotion    => '" & track_promotion_yn & "'); " _
-            '& Chr(10)
-
-
-            '        l_master_file.WriteLine(l_patch_started)
-
-
-            '        Dim l_prereq_short_name As String = Nothing
-            '        For Each l_prereq_patch In prereq_patches
-            '            l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
-            '            If l_prereq_short_name = PatchNameTextBox.Text Then
-            '                MsgBox("A Patch may NOT have itself as a prerequisite, skipping Prerequisite Patch: " & l_prereq_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
-            '            Else
-            '                l_master_file.WriteLine("PROMPT")
-            '                l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
-            '                l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_prereq( -")
-            '                l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
-            '                l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
-            '            End If
-
-            '        Next
-
-            '        l_prereq_short_name = My.Settings.MinPatch
-            '        l_master_file.WriteLine("PROMPT Ensure Patch Admin is late enough for this patch")
-            '        l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_prereq( -")
-            '        l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
-            '        l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
-
-            '    End If
-
-            l_master_file.WriteLine("select user||'@'||global_name Connection from global_name;")
-
-            'Write the list of files to execute.
-            l_master_file.WriteLine(l_install_list)
-
-            l_master_file.WriteLine(Chr(10) & "COMMIT;")
-
-            'If use_patch_admin Then
-
-            '    l_master_file.WriteLine("PROMPT Compiling objects in schema " & db_schema)
-            '    l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_invoker.compile_post_patch;")
-
-            '    If db_schema = "PATCH_ADMIN" Then
-            '        l_master_file.WriteLine("--PATCH_ADMIN patches are likely to loose the session state of patch_installer, so complete using the patch_name parm.")
-            '        l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
-            '    Else
-            '        l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.patch_completed;")
-            '    End If
-
-            '    Dim l_sup_short_name As String = Nothing
-            '    For Each l_sup_patch In supersedes_patches
-            '        l_sup_short_name = Common.getLastSegment(l_sup_patch, "\")
-            '        If l_sup_short_name = PatchNameTextBox.Text Then
-            '            MsgBox("A Patch may NOT supersede itself, skipping Supersedes Patch: " & l_sup_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
-            '        Else
-            '            l_master_file.WriteLine("PROMPT")
-            '            l_master_file.WriteLine("PROMPT Supersedes patch " & l_sup_short_name)
-            '            l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_supersedes( -")
-            '            l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
-            '            l_master_file.WriteLine(",i_supersedes_patch  => '" & l_sup_short_name & "' );")
-            '        End If
-            '    Next
-
-            '    For Each l_sup_patch In superseded_by_patches
-            '        l_sup_short_name = Common.getLastSegment(l_sup_patch, "\")
-            '        If l_sup_short_name = PatchNameTextBox.Text Then
-            '            MsgBox("A Patch may NOT be superseded by itself, skipping Superseded By Patch: " & l_sup_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
-            '        Else
-
-            '            l_master_file.WriteLine("PROMPT")
-            '            l_master_file.WriteLine("PROMPT Superseded by patch " & l_sup_short_name)
-            '            l_master_file.WriteLine("execute &&PATCH_ADMIN_user..patch_installer.add_patch_supersedes( -")
-            '            l_master_file.WriteLine("i_patch_name     => '" & l_sup_short_name & "' -")
-            '            l_master_file.WriteLine(",i_supersedes_patch  => '" & patch_name & "' );")
-            '        End If
-            '    Next
-
-            'End If
-
-            l_master_file.WriteLine("COMMIT;")
-
-            l_master_file.WriteLine("PROMPT ")
-            l_master_file.WriteLine("PROMPT " & l_master_filename & " - COMPLETED.")
-
-            l_master_file.WriteLine("spool off;")
-
-
-
-            l_master_file.Close()
-
-            'Convert the file to unix
-            FileIO.FileDOStoUNIX(patchDir & "\" & l_master_filename)
-
-        End If
-
-
-    End Sub
-
-
-
-    Private Sub AddUninstallButton_Click(sender As Object, e As EventArgs) Handles AddUninstallButton.Click
-        'Find .del files and .drop files and call them from a new uninstall.sql
-
-        Dim ignoreErrorFiles As Collection = New Collection
-        'Will ignore errors form the Drop files
-        ignoreErrorFiles = FileIO.FileList(PatchDirTextBox.Text, "*.drop", PatchDirTextBox.Text, True)
-
-        'Common.listCollection(ignoreErrorFiles, "ignore files")
-
-        'List the *.drop files 3 times, they will run 3 times.
-        Dim uninstallFiles As Collection = New Collection
-
-        uninstallFiles = FileIO.FileList(PatchDirTextBox.Text, "*.drop", PatchDirTextBox.Text)
-        FileIO.AppendFileList(PatchDirTextBox.Text, "*.drop", PatchDirTextBox.Text, uninstallFiles)
-        FileIO.AppendFileList(PatchDirTextBox.Text, "*.drop", PatchDirTextBox.Text, uninstallFiles)
-
-        'List the del files once.
-        FileIO.AppendFileList(PatchDirTextBox.Text, "*.del", PatchDirTextBox.Text, uninstallFiles)
-
-        'Common.listCollection(uninstallFiles, "del files")
-
-        'Write uninstall.sql
-
-
-        'Write the uninstall script lite - without patch admin
-        writeUnInstallScript(PatchNameTextBox.Text, _
-                           Common.getFirstSegment(Globals.currentLongBranch, "/"), _
-                           SchemaComboBox.Text, _
-                           Globals.currentLongBranch, _
-                           Tag1TextBox.Text, _
-                           Tag2TextBox.Text, _
-                           SupIdTextBox.Text, _
-                           PatchDescTextBox.Text, _
-                           NoteTextBox.Text, _
-                           False, _
-                           RerunCheckBox.Checked, _
-                           uninstallFiles, _
-                           ignoreErrorFiles, _
-                           PatchDirTextBox.Text, _
-                           PatchPathTextBox.Text, _
-                           TrackPromoCheckBox.Checked)
-
-
-
-
-
-    End Sub
-
-
-    Shared Sub exportPatch(ByVal patchpath As String, _
+    Shared Sub exportPatch(ByVal patchpath As String,
                            ByVal patchExportDir As String)
 
 
@@ -1692,7 +1263,7 @@ Public Class PatchFromTags
 
     Shared Sub doExportPatch(iPatchPath As String, iPatchName As String)
 
-        Dim l_repo_patch_dir As String = Common.dos_path_trailing_slash(Globals.PatchExportDir & Globals.getRepo)
+        Dim l_repo_patch_dir As String = Common.dos_path_trailing_slash(Globals.PatchExportDir & Globals.getRepoName)
         Logger.Note("l_repo_patch_dir", l_repo_patch_dir)
         Dim l_repo_patch_export_dir As String = l_repo_patch_dir & iPatchName
         Logger.Note("l_repo_patch_export_dir", l_repo_patch_export_dir)
@@ -1726,5 +1297,37 @@ Public Class PatchFromTags
  
     End Sub
 
- 
+    Private Sub UseSHA1Button_Click(sender As Object, e As EventArgs) Handles UseSHA1Button.Click
+        UseSHA1()
+    End Sub
+
+    Private Sub UseTagsButton_Click(sender As Object, e As EventArgs) Handles UseTagsButton.Click
+        UseTags()
+    End Sub
+
+    Private Sub FindsSHA1Button_Click(sender As Object, e As EventArgs) Handles FindsSHA1Button.Click
+        Tortoise.Log(Globals.getRepoPath, False) 'Do not wait.
+    End Sub
+
+    Private Sub showHideChangesTab()
+        SchemaCountTextBox.Text = "0"
+        SchemaComboBox.Text = ""
+        TreeViewChanges.Nodes.Clear()
+        HideTabs()
+        If SHA1TextBox1.Text <> "" And SHA1TextBox2.Text <> "" Then
+            ShowChangesTab()
+        Else
+            HideChangesTab()
+        End If
+    End Sub
+
+
+
+    Private Sub SHA1TextBox1_TextChanged(sender As Object, e As EventArgs) Handles SHA1TextBox1.TextChanged
+        showHideChangesTab()
+    End Sub
+
+    Private Sub SHA1TextBox2_TextChanged(sender As Object, e As EventArgs) Handles SHA1TextBox2.TextChanged
+        showHideChangesTab()
+    End Sub
 End Class

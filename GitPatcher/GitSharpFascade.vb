@@ -12,14 +12,14 @@ End Class 'Halt
 Public Class GitSharpFascade
     Dim halt As Exception
 
-    Dim repo As GitSharp.Repository
+    'Dim repo As GitSharp.Repository
 
-    Public Sub New(ByVal path)
-        'Dim dir As System.IO.DirectoryInfo
-        'dir = New IO.DirectoryInfo(path)
-        repo = New Repository(path)
-
-    End Sub
+    'Public Sub New(ByVal path)
+    '    'Dim dir As System.IO.DirectoryInfo
+    '    'dir = New IO.DirectoryInfo(path)
+    '    repo = New Repository(path)
+    '
+    'End Sub
 
 
     Shared Function getTagList(ByVal path As String, ByVal currentTags As Collection, Optional ByVal filter As String = Nothing) As Collection
@@ -71,7 +71,11 @@ Public Class GitSharpFascade
     Shared Sub switchBranch(ByVal path, ByVal branchName)
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
         Dim existingBranch As GitSharp.Branch = New Branch(repo, branchName)
-        repo.SwitchToBranch(existingBranch)
+        Try
+            repo.SwitchToBranch(existingBranch)
+        Catch e As GitSharp.Core.Exceptions.CheckoutConflictException
+            MsgBox(e.Message)
+        End Try
 
     End Sub
 
@@ -133,7 +137,114 @@ Public Class GitSharpFascade
  
     End Sub
 
-    Shared Function getSchemaList(ByVal path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String) As Collection
+
+
+    Shared Sub setCommitsFromTags(ByVal path As String, ByVal tag1_name As String, ByVal tag2_name As String)
+
+        Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
+
+        If tag1_name = "" Then
+            Throw New System.Exception("1st Tag is required")
+        End If
+        If tag2_name = "" Then
+            Throw New System.Exception("2nd Tag is required")
+        End If
+
+        Dim tag1 As Tag = repo.[Get](Of Tag)(tag1_name)
+        Dim tag2 As Tag = repo.[Get](Of Tag)(tag2_name)
+
+        If tag1 Is Nothing Then
+            Throw New System.Exception("1st Tag (" & tag1_name & ") is unrecognised.")
+        End If
+        If tag2 Is Nothing Then
+            Throw New System.Exception("2nd Tag (" & tag2_name & ") is unrecognised.")
+        End If
+
+        If Not tag1.IsTag Then
+            Throw New System.Exception("1st Tag (" & tag1_name & ") does not exist.")
+        End If
+
+        If Not tag2.IsTag Then
+            Throw New System.Exception("2nd Tag (" & tag2_name & ") does not exist.")
+        End If
+
+
+        Dim commit1 As Commit = repo.[Get](Of Tag)(tag1_name).Target
+        Dim commit2 As Commit = repo.[Get](Of Tag)(tag2_name).Target
+
+        Globals.setCommits(commit1, commit2)
+
+
+
+    End Sub
+
+    Shared Sub setCommitsFromSHA1(ByVal path As String, ByVal SHA1_1 As String, ByVal SHA1_2 As String)
+
+        Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
+
+        If SHA1_1 = "" Then
+            Throw New System.Exception("1st SHA-1 is required")
+        End If
+        If SHA1_2 = "" Then
+            Throw New System.Exception("2nd SHA-1 is required")
+        End If
+
+        Dim commit1 As Commit = repo.[Get](Of Commit)(SHA1_1)
+        Dim commit2 As Commit = repo.[Get](Of Commit)(SHA1_2)
+
+        If commit1 Is Nothing Then
+            Throw New System.Exception("1st SHA-1 (" & SHA1_1 & ") is unrecognised.")
+        End If
+        If commit2 Is Nothing Then
+            Throw New System.Exception("2nd SHA-1 (" & SHA1_2 & ") is unrecognised.")
+        End If
+
+        If Not commit1.IsCommit Then
+            Throw New System.Exception("1st SHA-1 (" & SHA1_1 & ") does not exist.")
+        End If
+
+        If Not commit2.IsCommit Then
+            Throw New System.Exception("2nd SHA-1 (" & SHA1_2 & ") does not exist.")
+        End If
+
+        Globals.setCommits(commit1, commit2)
+
+    End Sub
+
+    Shared Function getSchemaList(ByVal pathmask As String) As Collection
+
+        Dim pathmask_UNIX As String = Common.unix_path(pathmask)
+
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
+
+        Dim schemas As Collection = New Collection
+        Dim schema As String
+
+
+        For Each change As Change In Globals.getCommit1.CompareAgainst(Globals.getCommit2)
+
+            If InStr(change.Path, pathmask_UNIX) > 0 And change.ChangeType <> ChangeType.Deleted Then
+
+                schema = change.Path.Substring(Len(pathmask_UNIX)).Split("/")(0)
+
+                If Not schemas.Contains(schema) Then
+                    schemas.Add(schema, schema)
+                    Console.WriteLine(schema)
+                End If
+
+            End If
+        Next
+
+        Cursor.Current = cursorRevert
+
+        Return schemas
+
+    End Function
+
+
+    Shared Function getChanges(ByVal path As String, ByVal pathmask As String, ByVal viewFiles As Boolean) As Collection
 
         Dim pathmask_UNIX As String = Common.unix_path(pathmask)
 
@@ -142,48 +253,30 @@ Public Class GitSharpFascade
         Cursor.Current = Cursors.WaitCursor
 
         Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
-
         Dim result As String = Nothing
 
-        Dim t1 As Tag = repo.[Get](Of Tag)(tag1_name)
-        Dim t2 As Tag = repo.[Get](Of Tag)(tag2_name)
+        Dim changes As Collection = New Collection
 
-        Dim schemas As Collection = New Collection
-        Dim schema As String
+        For Each change As Change In Globals.getCommit1.CompareAgainst(Globals.getCommit2)
+            If InStr(change.Path, pathmask_UNIX) > 0 And change.ChangeType <> ChangeType.Deleted Then
 
-        Try
-            If Not t1.IsTag Then
-                Throw (New Halt("Tag 1 (" & tag1_name & ") does not exist."))
-            End If
+                Console.WriteLine(change.ChangeType & ": " & change.Path)
+                result = result & Chr(10) & change.ChangeType & ": " & change.Path
+                changes.Add(change.Path)
 
-            If Not t2.IsTag Then
-                Throw (New Halt("Tag 2 (" & tag2_name & ") does not exist."))
-            End If
 
-            Dim c1 As Commit = repo.[Get](Of Tag)(tag1_name).Target
-            Dim c2 As Commit = repo.[Get](Of Tag)(tag2_name).Target
- 
-            For Each change As Change In c1.CompareAgainst(c2)
-
-                If InStr(change.Path, pathmask_UNIX) > 0 And change.ChangeType <> ChangeType.Deleted Then
-
-                    schema = change.Path.Substring(Len(pathmask_UNIX)).Split("/")(0)
-
-                    If Not schemas.Contains(schema) Then
-                        schemas.Add(schema, schema)
-                        Console.WriteLine(schema)
-                    End If
+                If viewFiles Then
+                    Dim file_string_data As String = New Blob(repo, change.ChangedObject.Hash).Data
+                    MsgBox(file_string_data)
 
                 End If
-            Next
 
-        Catch tag_not_found As Halt
-
-        End Try
+            End If
+        Next
 
         Cursor.Current = cursorRevert
 
-        Return schemas
+        Return changes
 
     End Function
 
@@ -248,7 +341,7 @@ Public Class GitSharpFascade
     End Function
 
 
-    Shared Function viewTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As Collection) As String
+    Shared Function viewChanges(ByVal repo_path As String, ByVal pathmask As String, ByRef targetFiles As Collection) As String
 
         Dim pathmask_UNIX As String = Common.unix_path(pathmask)
 
@@ -260,46 +353,28 @@ Public Class GitSharpFascade
 
         Dim result As String = Nothing
 
-        Dim t1 As Tag = repo.[Get](Of Tag)(tag1_name)
-        Dim t2 As Tag = repo.[Get](Of Tag)(tag2_name)
-
         Dim changes As Collection = New Collection
 
-        Try
-            If Not t1.IsTag Then
-                Throw (New Halt("Tag 1 (" & tag1_name & ") does not exist."))
+
+        For Each change As Change In Globals.getCommit1.CompareAgainst(Globals.getCommit2)
+            If InStr(change.Path, pathmask_UNIX) > 0 And change.ChangeType <> ChangeType.Deleted Then
+
+                For Each file In targetFiles
+                    If change.Path = file.ToString Then
+                        Dim file_string_data As String = New Blob(repo, change.ChangedObject.Hash).Data
+                        MsgBox(file_string_data)
+
+                        Clipboard.Clear()
+                        Clipboard.SetText(file_string_data)
+
+                        result = result & Chr(10) & change.Path
+
+                    End If
+                Next
+
             End If
+        Next
 
-            If Not t2.IsTag Then
-                Throw (New Halt("Tag 2 (" & tag2_name & ") does not exist."))
-            End If
-
-            Dim c1 As Commit = repo.[Get](Of Tag)(tag1_name).Target
-            Dim c2 As Commit = repo.[Get](Of Tag)(tag2_name).Target
-
-
-            For Each change As Change In c1.CompareAgainst(c2)
-                If InStr(change.Path, pathmask_UNIX) > 0 And change.ChangeType <> ChangeType.Deleted Then
-
-                    For Each file In targetFiles
-                        If change.Path = file.ToString Then
-                            Dim file_string_data As String = New Blob(repo, change.ChangedObject.Hash).Data
-                            MsgBox(file_string_data)
-
-                            Clipboard.Clear()
-                            Clipboard.SetText(file_string_data)
-
-                            result = result & Chr(10) & change.Path
-
-                        End If
-                    Next
-
-                End If
-            Next
-
-        Catch tag_not_found As Halt
-
-        End Try
 
         Cursor.Current = cursorRevert
 
@@ -308,8 +383,7 @@ Public Class GitSharpFascade
 
     End Function
 
-
-    Shared Function exportTagChanges(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, ByVal pathmask As String, ByRef targetFiles As Collection, patchDir As String) As Collection
+    Shared Function exportChanges(ByVal repo_path As String, ByVal pathmask As String, ByRef targetFiles As Collection, patchDir As String) As Collection
 
         Dim pathmask_UNIX As String = Common.unix_path(pathmask)
 
@@ -323,25 +397,10 @@ Public Class GitSharpFascade
 
         Dim result As String = Nothing
 
-        Dim t1 As Tag = repo.[Get](Of Tag)(tag1_name)
-        Dim t2 As Tag = repo.[Get](Of Tag)(tag2_name)
-
         Dim filePathList As Collection = New Collection
 
-        Try
-            If Not t1.IsTag Then
-                Throw (New Halt("Tag 1 (" & tag1_name & ") does not exist."))
-            End If
 
-            If Not t2.IsTag Then
-                Throw (New Halt("Tag 2 (" & tag2_name & ") does not exist."))
-            End If
-
-            Dim c1 As Commit = repo.[Get](Of Tag)(tag1_name).Target
-            Dim c2 As Commit = repo.[Get](Of Tag)(tag2_name).Target
-
-
-            For Each change As Change In c1.CompareAgainst(c2)
+        For Each change As Change In Globals.getCommit1.CompareAgainst(Globals.getCommit2)
                 If InStr(change.Path, pathmask_UNIX) > 0 And change.ChangeType <> ChangeType.Deleted Then
 
                     For Each file In targetFiles
@@ -361,9 +420,7 @@ Public Class GitSharpFascade
                 End If
             Next
 
-        Catch tag_not_found As Halt
 
-        End Try
 
         Cursor.Current = cursorRevert
 
@@ -374,50 +431,30 @@ Public Class GitSharpFascade
 
 
 
-    Shared Function TagLog(ByVal repo_path As String, ByVal tag1_name As String, ByVal tag2_name As String, Optional ByVal headeronly As Boolean = True) As Collection
+
+    Shared Function Log(Optional ByVal headeronly As Boolean = True) As Collection
 
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
 
-        'Returns a log list from Tag 1 to Tag 2
-        Dim repo As GitSharp.Repository = New GitSharp.Repository(repo_path)
-
-        Dim result As String = Nothing
-
-        Dim t1 As Tag = repo.[Get](Of Tag)(tag1_name)
-        Dim t2 As Tag = repo.[Get](Of Tag)(tag2_name)
+        'Returns a log list from Commit 1 to Commit 2
 
         Dim logList As Collection = New Collection
 
-        Try
-            If Not t1.IsTag Then
-                Throw (New Halt("Tag 1 (" & tag1_name & ") does not exist."))
+        Dim ancestorCommit As Commit
+        For Each ancestorCommit In Globals.getCommit2.Ancestors
+            If ancestorCommit = Globals.getCommit1 Then Exit For
+
+            Dim logMessage As String = Nothing
+            If headeronly Then
+                logMessage = Common.getFirstSegment(ancestorCommit.Message, Chr(10))
+            Else
+                logMessage = ancestorCommit.Message
             End If
+            logList.Add(logMessage)
+        Next
 
-            If Not t2.IsTag Then
-                Throw (New Halt("Tag 2 (" & tag2_name & ") does not exist."))
-            End If
-
-            Dim c1 As Commit = repo.[Get](Of Tag)(tag1_name).Target
-            Dim c2 As Commit = repo.[Get](Of Tag)(tag2_name).Target
-
-            Dim ancestorCommit As Commit
-            For Each ancestorCommit In c2.Ancestors
-                If ancestorCommit = c1 Then Exit For
- 
-                Dim logMessage As String = Nothing
-                If headeronly Then
-                    logMessage = Common.getFirstSegment(ancestorCommit.Message, Chr(10))
-                Else
-                    logMessage = ancestorCommit.Message
-                End If
-                logList.Add(logMessage)
-            Next
-
-        Catch tag_not_found As Halt
-
-        End Try
 
         Cursor.Current = cursorRevert
 
@@ -425,6 +462,9 @@ Public Class GitSharpFascade
 
 
     End Function
+
+
+
 
 
 

@@ -4,41 +4,42 @@ Imports System.Xml
 
 Public Class RepoSettings
 
+    'CURRENTLY UNUSED.
+    'Function getRepoNode(ByVal iRepoName) As XmlNode
 
-    Function getRepoNode(ByVal iRepoName) As XmlNode
+    '    Dim l_GitReposXML As XmlDocument = New XmlDocument()
+    '    Dim l_RepoNodeList As XmlNodeList
+    '    Dim l_RepoNode As XmlNode
+    '    'Load the Xml file
+    '    l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
-        Dim l_GitReposXML As XmlDocument = New XmlDocument()
-        Dim l_RepoNodeList As XmlNodeList
-        Dim l_RepoNode As XmlNode
-        'Load the Xml file
-        l_GitReposXML.Load(Globals.XMLRepoFilePath())
+    '    'Get the list of name nodes 
+    '    l_RepoNodeList = l_GitReposXML.SelectNodes("/repos/repo")
 
-        'Get the list of name nodes 
-        l_RepoNodeList = l_GitReposXML.SelectNodes("/repos/repo")
+    '    Dim l_result As XmlNode
 
-        Dim l_result As XmlNode
- 
-        Dim l_found As Boolean = False
-        'Loop through the nodes
+    '    Dim l_found As Boolean = False
+    '    'Loop through the nodes
 
-        For Each l_RepoNode In l_RepoNodeList
-            'Get the RepoName Attribute Value
+    '    For Each l_RepoNode In l_RepoNodeList
+    '        'Get the RepoName Attribute Value
 
-            If l_RepoNode.Attributes.GetNamedItem("RepoName").Value = iRepoName Then
+    '        If l_RepoNode.Attributes.GetNamedItem("RepoName").Value = iRepoName Then
 
-                l_result = l_RepoNode
-  
-            End If
+    '            l_result = l_RepoNode
 
-        Next
+    '        End If
 
-        Return l_result
- 
-    End Function
+    '    Next
 
- 
+    '    Return l_result
+
+    'End Function
+
+
 
     Function checkRepo(ByVal iRepoName) As Boolean
+        Logger.Dbg("RepoSettings.checkRepo")
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
         Dim l_RepoNodeList As XmlNodeList
@@ -71,7 +72,7 @@ Public Class RepoSettings
                 PatchExportPathTextBox.Text = l_RepoNode.Attributes.GetNamedItem("PatchExportPath").Value
 
                 UsePatchAdminCheckBox.Checked = (l_RepoNode.Attributes.GetNamedItem("UsePatchAdmin").Value = "True")
- 
+
                 hideUpdateButton()
 
                 'Set the Global Values
@@ -89,6 +90,8 @@ Public Class RepoSettings
 
         Next
 
+        Logger.Dbg("DONE-RepoSettings.checkRepo")
+
         Return l_found
 
 
@@ -97,6 +100,7 @@ Public Class RepoSettings
 
 
     Sub readGitRepos(ByRef aRepoComboBox As Windows.Forms.ComboBox, ByVal currentValue As String)
+        Logger.Dbg("RepoSettings.readGitRepos")
         Try
             Dim l_GitReposXML As XmlDocument = New XmlDocument()
 
@@ -156,7 +160,7 @@ Public Class RepoSettings
             Logger.ShowError(errorVariable.ToString())
             Console.Write(errorVariable.ToString())
         End Try
-
+        Logger.Dbg("DONE-RepoSettings.readGitRepos")
 
     End Sub
 
@@ -173,7 +177,7 @@ Public Class RepoSettings
 
  
     Private Sub RepoSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        readGitRepos(RepoComboBox, Globals.getRepo)
+        readGitRepos(RepoComboBox, Globals.getRepoName)
     End Sub
 
 

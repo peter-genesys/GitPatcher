@@ -6,7 +6,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SQLpath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Oracle\product\11.2.0\client_1\sqlplus.exe</Value>
+      <Value Profile="(Default)">C:\Oracle\product\sqlcl\bin\sql.exe</Value>
     </Setting>
     <Setting Name="CurrentDB" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -24,16 +24,19 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="MinPatch" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">TRK-01_01</Value>
+      <Value Profile="(Default)">ARM-01.02.APEXRM</Value>
     </Setting>
     <Setting Name="GITpath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Program Files (x86)\Git\bin\git.exe</Value>
+      <Value Profile="(Default)">C:\Program Files\Git\bin\git.exe</Value>
     </Setting>
     <Setting Name="PatchRunnerFilter" Type="System.String" Scope="User">
       <Value Profile="(Default)">feature</Value>
     </Setting>
     <Setting Name="XMLRepoFilePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">F:\GitRepos.xml</Value>
+      <Value Profile="(Default)">..\..\..\GitRepos.xml</Value>
+    </Setting>
+    <Setting Name="JSONRepoFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">..\..\..\GitRepos.json</Value>
     </Setting>
   </Settings>
 </SettingsFile>

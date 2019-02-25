@@ -196,9 +196,9 @@ Partial Class PatchRunner
         Me.UsePatchAdminCheckBox.AutoSize = True
         Me.UsePatchAdminCheckBox.Location = New System.Drawing.Point(156, 18)
         Me.UsePatchAdminCheckBox.Name = "UsePatchAdminCheckBox"
-        Me.UsePatchAdminCheckBox.Size = New System.Drawing.Size(108, 17)
+        Me.UsePatchAdminCheckBox.Size = New System.Drawing.Size(115, 17)
         Me.UsePatchAdminCheckBox.TabIndex = 53
-        Me.UsePatchAdminCheckBox.Text = "Use Patch Admin"
+        Me.UsePatchAdminCheckBox.Text = "Use Apex-Rel-Man"
         Me.UsePatchAdminCheckBox.UseVisualStyleBackColor = True
         '
         'Label4
@@ -296,7 +296,7 @@ Partial Class PatchRunner
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(280, 39)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "This is intended for individual patches only." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Patchsets should be exported while" & _
+        Me.Label6.Text = "This is intended for individual patches only." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Patchsets should be exported while" &
     " creating the patchset." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "The is no solution yet for Minor and Major releases."
         '
         'ExportPatchesButton

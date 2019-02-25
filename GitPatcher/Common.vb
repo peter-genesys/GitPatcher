@@ -192,7 +192,7 @@
 
 
     Public Shared Sub checkBranch(i_searchString)
-        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
+        Dim currentBranch As String = GitOp.currentBranch()
 
         If Not currentBranch.Contains(i_searchString) Then
             MsgBox("Current Branch: " & currentBranch & " is not of type " & i_searchString & Environment.NewLine & Environment.NewLine & "Please change branch manually NOW, or CANCEL this workflow.")

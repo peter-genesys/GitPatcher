@@ -15,6 +15,7 @@
 
 
         'SelectedIndex = 4 'Default to VM
+
         loadRepos()
         'loadDBs()
         'loadApexApps()
@@ -33,13 +34,14 @@
     End Sub
 
     Public Sub loadHotFixDBs()
+        Logger.Dbg("Main.loadHotFixDBs")
         HotFixToolStripComboBox.Items.Clear()
 
         HotFixToolStripComboBox.Items.Add("PROD")
         HotFixToolStripComboBox.Items.Add("UAT")
         HotFixToolStripComboBox.Items.Add("TEST")
         HotFixToolStripComboBox.Items.Add("DEV")
- 
+
         HotFixToolStripComboBox.SelectedIndex = 0
 
     End Sub
@@ -64,6 +66,7 @@
 
 
     Private Sub showRepoSettings()
+        Logger.Dbg("Main.showRepoSettings")
         RepoSettings.checkRepo(RepoComboBox.Text)
         RepoPathTextBox.Text = Globals.getRepoPath()
 
@@ -71,9 +74,9 @@
         CurrentBranchTextBox.Text = Globals.currentBranch
         RootPatchDirTextBox.Text = Globals.RootPatchDir
         RootApexDirTextBox.Text = Globals.RootApexDir
- 
+
         SetMergeRebaseButtons()
- 
+
         loadOrgs()
         loadApexApps()
 
@@ -83,6 +86,7 @@
 
     Public Sub loadRepos()
 
+        Logger.Dbg("Main.loadRepos")
         RepoSettings.readGitRepos(RepoComboBox, My.Settings.CurrentRepo)
         showRepoSettings()
 
@@ -141,7 +145,7 @@
 
     Private Sub RepoComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles RepoComboBox.SelectedIndexChanged
 
-        Globals.setRepo(RepoComboBox.SelectedItem)
+        Globals.setRepoName(RepoComboBox.SelectedItem)
         showRepoSettings()
 
     End Sub
@@ -188,7 +192,7 @@
     Private Sub ImportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportToolStripMenuItem.Click
 
 
-        Apex.ApexImportFromTag()
+        WF_Apex.ApexImportFromTag()
 
 
     End Sub
@@ -196,140 +200,23 @@
     Private Sub ExportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportToolStripMenuItem.Click
 
 
-        Apex.ApexExportCommit()
+        WF_Apex.ApexExportCommit()
 
     End Sub
-
-    Public Sub mergeAndPushBranch(iBranchType As String, iBranchTo As String)
-        Common.checkBranch(iBranchType)
-        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
-
-        Dim mergeAndPush As ProgressDialogue = New ProgressDialogue("Merge and Push branch:  " & currentBranch)
-        mergeAndPush.MdiParent = GitPatcher
-        mergeAndPush.addStep("Switch to " & iBranchTo & " branch")
-        mergeAndPush.addStep("Pull from Origin")
-        mergeAndPush.addStep("Merge from branch: " & currentBranch, True, "Please select the Branch:" & currentBranch & " from the Tortoise Merge Dialogue")
-        mergeAndPush.addStep("Commit - incase of merge conflict")
-        mergeAndPush.addStep("Push to Origin")
-        mergeAndPush.addStep("Synch to Verify Push", True, "Should say '0 commits ahead orgin/" & iBranchTo & "'.  " _
-                                 & "If NOT, then the push FAILED. Your " & iBranchTo & " branch is now out of date, so your merged files could be stale. " _
-                                 & "In this situation, it is safest to perform a Rebase and then restart the Merge process to ensure you are pushing the lastest merged files. ")
-        mergeAndPush.addStep("Return to branch: " & currentBranch)
-
-        mergeAndPush.Show()
-
-        Do Until mergeAndPush.isStarted
-            Common.wait(1000)
-        Loop
-
-        If mergeAndPush.toDoNextStep() Then
-            'Switch to develop branch
-            GitBash.Switch(Globals.getRepoPath, iBranchTo)
-            'Verify that the switch occurred and if not, use tortoise to do it.
-            'Thus exposing the issue, so the developer can resolve it, before proceeding.
-            If Globals.currentBranch <> iBranchTo Then
-                Tortoise.Switch(Globals.getRepoPath, iBranchTo)
-            End If
-
-        End If
-
-        If mergeAndPush.toDoNextStep() Then
-            'Pull from origin/develop
-            'GitBash.Pull(Globals.currentRepo, "origin", iBranchTo)
-            Tortoise.Pull(Globals.getRepoPath)
-
-        End If
-
-        If mergeAndPush.toDoNextStep() Then
-            'Merge from Feature branch
-            'TortoiseMerge(Globals.currentRepo, currentBranch)
-            Tortoise.Merge(Globals.getRepoPath)
-        End If
-
-        If mergeAndPush.toDoNextStep() Then
-            'Commit - incase of merge conflict
-            Tortoise.Commit(Globals.getRepoPath, "Merged " & currentBranch & " [CANCEL IF NO MERGE CONFLICTS]")
-
-
-        End If
-
-        If mergeAndPush.toDoNextStep() Then
-            'Push to origin/develop 
-            GitBash.Push(Globals.getRepoPath, "origin", iBranchTo)
-
-        End If
-
-
-        If mergeAndPush.toDoNextStep() Then
-            'Synch command to verfiy that Push was successful.
-            Tortoise.Sync(Globals.getRepoPath)
-        End If
-
-        If mergeAndPush.toDoNextStep() Then
-            'Return to branch
-            'GitSharpFascade.switchBranch(Globals.currentRepo, currentBranch)
-            GitBash.Switch(Globals.getRepoPath, currentBranch)
-        End If
-
-        mergeAndPush.toDoNextStep()
-
-    End Sub
-
 
 
     Private Sub MergeAndPushFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MergeAndPushFeatureToolStripMenuItem.Click
 
-        mergeAndPushBranch("feature", "develop")
+        WF_mergeAndPush.mergeAndPushBranch("feature", "develop")
 
     End Sub
 
-    Private Sub createNewBranch(iBranchType As String, iBranchFrom As String)
-
-        Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new " & iBranchType & " branch", "Create a new " & iBranchType & " Branch with the standardised naming " & iBranchType & "/" & Globals.deriveFeatureCode() & "ISSUE_ID.")
-        newFeature.MdiParent = GitPatcher
-        newFeature.addStep("Switch to " & iBranchFrom & " branch")
-        newFeature.addStep("Pull from Origin")
-        newFeature.addStep("Create and switch to " & iBranchType & " branch")
-        'newFeature.addStep("Create intial Tag: " & branchName & ".00" )
 
 
+    Private Sub NewFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewFeatureToolStripMenuItem.Click
 
-        newFeature.Show()
-
-        Do Until newFeature.isStarted
-            Common.wait(1000)
-        Loop
-
-        If newFeature.toDoNextStep() Then
-            'Switch to develop branch
-            GitBash.Switch(Globals.getRepoPath, iBranchFrom)
-
-        End If
-
-        If newFeature.toDoNextStep() Then
-            'Pull from origin/develop
-            GitBash.Pull(Globals.getRepoPath, "origin", iBranchFrom)
-
-        End If
-
-        If newFeature.toDoNextStep() Then
-            'Create and Switch to new branch
-            Dim branchName As String = InputBox("Enter the Issue Id.", "Issue Id for new " & iBranchType & " Branch", Globals.getJira)
-            Dim featureCode As String = InputBox("Feature Code", "Confirm Feature Code", Globals.deriveFeatureCode)
-            Dim newBranch As String = iBranchType & "/" & featureCode & branchName
-
-            If Not String.IsNullOrEmpty(branchName) Then
-
-                newFeature.updateTitle("Create new " & iBranchType & " branch:  " & branchName)
-                newFeature.updateStepDescription(2, "Create and switch to " & iBranchType & " branch: " & newBranch)
-
-                GitBash.createBranch(Globals.getRepoPath, newBranch)
-
-            End If
-
-            newFeature.toDoNextStep()
-
-        End If
+        'Call worksflow
+        WF_newBranch.createNewBranch("feature", "develop")
 
         'Close and Open Main window to refresh it.
         Me.Close()
@@ -337,12 +224,8 @@
 
     End Sub
 
-    Private Sub NewFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewFeatureToolStripMenuItem.Click
-        createNewBranch("feature", "develop")
-    End Sub
-
     Private Sub CreateDBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBPatchSetToolStripMenuItem.Click
-        CreatePatchCollection.createCollectionProcess("patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL", "TEST")
+        WF_release.createReleaseProcess("patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL", "TEST")
     End Sub
 
     'Private Sub DBPatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs)
@@ -356,64 +239,22 @@
     'End Sub
 
     Private Sub CreateDBMinorReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBMinorReleaseToolStripMenuItem.Click
-        CreatePatchCollection.createCollectionProcess("minor", "patchset", Me.AppCodeTextBox.Text, "minor,patchset,feature,hotfix,ALL", "minor,patchset,feature,hotfix,ALL", "TEST")
+        WF_release.createReleaseProcess("minor", "patchset", Me.AppCodeTextBox.Text, "minor,patchset,feature,hotfix,ALL", "minor,patchset,feature,hotfix,ALL", "TEST")
     End Sub
 
 
 
     Private Sub TagtestToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        GitBash.TagSimple(Globals.getRepoPath, "DEMOTAG")
+        GitOp.createTag("DEMOTAG")
     End Sub
 
     Private Sub ShowindexToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowindexToolStripMenuItem.Click
-        GitSharpFascade.getIndexedChanges(Globals.getRepoPath)
+        GitOp.getIndexedChanges()
     End Sub
 
     Private Sub TestworkflowToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestworkflowToolStripMenuItem.Click
 
-        Dim testWorkflow As ProgressDialogue = New ProgressDialogue("test variable workflow")
-        testWorkflow.MdiParent = GitPatcher
-        testWorkflow.addStep("Choose a tag to import from")
-        testWorkflow.addStep("Checkout the tag", False)
-        testWorkflow.addStep("If tag not like ")
-        testWorkflow.addStep("Import Apex", False)
-        testWorkflow.addStep("Return to branch:")
-
-
-        testWorkflow.Show()
-
-        Do Until testWorkflow.isStarted
-            Common.wait(1000)
-        Loop
-
-        If testWorkflow.toDoNextStep() Then
-            MsgBox("doing 0")
-
-        End If
-        If testWorkflow.toDoNextStep() Then
-            MsgBox("doing 1")
-
-        End If
-
-        If testWorkflow.toDoNextStep() Then
-            MsgBox("doing 2")
-
-        End If
-        If testWorkflow.toDoNextStep() Then
-            MsgBox("doing 3")
-
-        End If
-
-        ' If testWorkflow.toDoNextStep() Then
-        '     MsgBox("doing 4")
-        '
-        ' End If
-        '
-
-        'testWorkflow.toDoNextStep()
-
-        testWorkflow.stopAndClose()
-
+        WF_test.test()
 
     End Sub
 
@@ -422,316 +263,57 @@
         Apex.restoreCreateApplicationSQL()
     End Sub
 
-    Public Function rebaseBranch(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String) As String
-
-        Dim tag_no_padding As Integer = 2
-        Common.checkBranch(iBranchType)
-
-        Dim l_tag_prefix As String = Nothing
-        If iBranchType = "hotfix" Then
-            l_tag_prefix = iDBtarget.Substring(0, 1)
-        End If
-
-
-        Dim currentBranchLong As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
-        Dim currentBranchShort As String = Globals.currentBranch
-
-        Dim rebasing As ProgressDialogue = New ProgressDialogue("Rebase branch " & currentBranchLong)
-
-        Dim l_max_tag As Integer = 0
-
-        Dim tagnames As Collection = New Collection
-        tagnames = GitSharpFascade.getTagList(Globals.getRepoPath, tagnames, Globals.currentBranch)
-        For Each tagname In tagnames
-            Dim tag_no As String = Common.getLastSegment(tagname, ".").Substring(0, tag_no_padding)
-            Try
-                If tag_no > l_max_tag Then
-                    l_max_tag = tag_no
-                End If
-            Catch
-            End Try
-
-        Next
-        Dim l_tag_base As String = l_max_tag + 1
-        l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_no_padding, "0")
-
-        rebasing.MdiParent = GitPatcher
-        rebasing.addStep("Commit to Branch: " & currentBranchLong, True, "Ensure the current branch [" & currentBranchShort & "] is free of uncommitted changes.")
-        rebasing.addStep("Switch to " & iRebaseBranchOn & " branch", True, "If you get an error concerning uncommitted changes.  Please resolve the changes and then RESTART this process to ensure the switch to " & iRebaseBranchOn & " branch is successful.")
-        rebasing.addStep("Pull from Origin")
-        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & "." & l_tag_base & "A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & CurrentBranchTextBox.Text & ".99A")
-        rebasing.addStep("Return to branch: " & currentBranchLong)
-        rebasing.addStep("Rebase Branch: " & currentBranchLong & " From Upstream:" & iRebaseBranchOn, True, "Please select the Upstream Branch:" & iRebaseBranchOn & " from the Tortoise Rebase Dialogue")
-        rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & "." & l_tag_base & "B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.")
-        rebasing.addStep("Revert your VM", True, "Before running patches, consider reverting to a VM snapshot prior to the development of your current work, or swapping to a unit test VM.")
-        rebasing.addStep("Use PatchRunner to run Unapplied Patches", True)
-        rebasing.addStep("Import Apex from HEAD of branch: " & currentBranchLong, True, "Using the Apex Import workflow")
-        rebasing.addStep("Post-Rebase Snapshot", True, "Before creating new patches, snapshot the VM again.  Use this snapshot as a quick restore to point restest patches that have failed, on first execution.")
-
-        rebasing.Show()
-
-        Do Until rebasing.isStarted
-            Common.wait(1000)
-        Loop
-
-
-        If rebasing.toDoNextStep() Then
-            'Committing changed files to GIT"
-            Tortoise.Commit(Globals.getRepoPath, "CANCEL IF NOT NEEDED: Ensure the current branch [" & currentBranchShort & "] is free of uncommitted changes.", True)
-        End If
-
-        If rebasing.toDoNextStep() Then
-            'Switch to develop branch
-            GitBash.Switch(Globals.getRepoPath, iRebaseBranchOn)
-        End If
-        If rebasing.toDoNextStep() Then
-            'Pull from origin/develop
-            GitBash.Pull(Globals.getRepoPath, "origin", iRebaseBranchOn)
-        End If
-
-        If rebasing.toDoNextStep() Then
-            'Tag the develop head
-            l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please enter 2 digit numeric tag for next patch.", "Create Tag for next patch", l_tag_base)
-            Dim l_tagA As String = currentBranchShort & "." & l_tag_base & "A"
-            rebasing.updateStepDescription(3, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
-            GitBash.TagSimple(Globals.getRepoPath, l_tagA)
-
-        End If
-
-
-        If rebasing.toDoNextStep() Then
-            'Return to branch
-            GitBash.Switch(Globals.getRepoPath, currentBranchLong)
-        End If
-
-        If rebasing.toDoNextStep() Then
-            'Rebase branch
-            Tortoise.Rebase(Globals.getRepoPath)
-        End If
-
-        If rebasing.toDoNextStep() Then
-            'Tag Branch
-            Dim l_tagB As String = currentBranchShort & "." & l_tag_base & "B"
-            rebasing.updateStepDescription(6, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
-            GitBash.TagSimple(Globals.getRepoPath, l_tagB)
-
-        End If
-
-        If rebasing.toDoNextStep() Then
-            'Revert VM
-            MsgBox("Please create a snapshot of your current VM state, and then revert to a state prior the work about to be patched.", MsgBoxStyle.Exclamation, "Revert VM")
-
-        End If
-
-
-        If rebasing.toDoNextStep() Then
-            'Use PatchRunner to run Unapplied Patches
-            Dim newchildform As New PatchRunner("Unapplied")
-            'newchildform.MdiParent = GitPatcher
-            newchildform.ShowDialog() 'NEED TO WAIT HERE!!
-
-        End If
-
-        If rebasing.toDoNextStep() Then
-            'Import Apex from HEAD of branch
-            Apex.ApexImportFromTag()
-
-        End If
-
-        If rebasing.toDoNextStep() Then
-            'Post-Rebase Snapshot 
-            MsgBox("Before creating new patches, snapshot the VM again.", MsgBoxStyle.Exclamation, "Post-Rebase Snapshot")
-
-        End If
-
-        'Finish
-        rebasing.toDoNextStep()
-
-        Return l_tag_base
-    End Function
-
 
 
     Private Sub RebaseFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureToolStripMenuItem.Click
-        rebaseBranch("feature", "DEV", "develop")
+        WF_rebase.rebaseBranch("feature", "DEV", "develop")
     End Sub
-
-
-    Public Sub releaseTo(iTargetDB As String, Optional ByVal iBranchType As String = "")
-
-        Dim lcurrentDB As String = Globals.getDB()
-
-        Dim currentBranch As String = GitSharpFascade.currentBranch(Globals.getRepoPath)
-
-        Dim releaseFromBranch As String = Globals.deriveHotfixBranch(iTargetDB)
-
-        Dim releasing As ProgressDialogue = New ProgressDialogue("Release to " & iTargetDB)
-
-        releasing.MdiParent = GitPatcher
-        releasing.addStep("Change current DB to : " & iTargetDB)
-        releasing.addStep("Switch to " & releaseFromBranch & " branch", False)
-        releasing.addStep("Pull from Origin to " & releaseFromBranch & " branch", False)
-
-        releasing.addStep("Choose a tag to release from and checkout the tag", False)
-
-        releasing.addStep("Use PatchRunner to run Uninstalled Patches", True, "")
-        releasing.addStep("Import Apex", True, "Using the Apex Import workflow")
-        releasing.addStep("Smoke Test", True, "Perform a quick test to verify the patched system is working in " & iTargetDB)
-        releasing.addStep("Revert current DB to : " & lcurrentDB)
-        releasing.Show()
-
-
-
-        Do Until releasing.isStarted
-            Common.wait(1000)
-        Loop
-
-        If releasing.toDoNextStep() Then
-            'Change current DB to release DB
-            Globals.setDB(iTargetDB.ToUpper)
-            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepo)
-
-        End If
-
-        If releasing.toDoNextStep() Then
-            'Switch to develop branch
-            GitBash.Switch(Globals.getRepoPath, releaseFromBranch)
-        End If
-        If releasing.toDoNextStep() Then
-            'Pull from origin/develop
-            GitBash.Pull(Globals.getRepoPath, "origin", releaseFromBranch)
-        End If
-
-        If releasing.toDoNextStep() Then
-            'Choose a tag to import from
-            Dim tagnames As Collection = New Collection
-            tagnames.Add("HEAD")
-            tagnames = GitSharpFascade.getTagList(Globals.getRepoPath, tagnames, Globals.currentBranch)
-            tagnames = GitSharpFascade.getTagList(Globals.getRepoPath, tagnames, AppCodeTextBox.Text)
-
-
-            Dim PatchTag As String = Nothing
-            PatchTag = ChoiceDialog.Ask("Please choose a tag for patch installs", tagnames, "HEAD", "Choose tag")
-
-            'Checkout the tag
-            GitBash.Switch(Globals.getRepoPath, PatchTag)
-
-        End If
-
-
-        If releasing.toDoNextStep() Then
-            'Use PatchRunner to run  Uninstalled Patches
-            Dim newchildform As New PatchRunner("Uninstalled", iBranchType)
-            'newchildform.MdiParent = GitPatcher
-            newchildform.ShowDialog() 'NEED TO WAIT HERE!!
-
-        End If
-
-        If releasing.toDoNextStep() Then
-            'Import Apex 
-            Apex.ApexImportFromTag()
-
-        End If
-
-        If releasing.toDoNextStep() Then
-            'Smoke Test 
-            MsgBox("Perform a quick test to verify the patched system is working in " & iTargetDB, MsgBoxStyle.Information, "Smoke Test")
-
-        End If
-
-
-        If releasing.toDoNextStep() Then
-            'Revert current DB  
-            Globals.setDB(lcurrentDB.ToUpper)
-            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepo)
-
-        End If
-
-        'Finish
-        releasing.toDoNextStep()
-    End Sub
-
-
 
     Private Sub ReleaseToISDEVLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISDEVLToolStripMenuItem.Click
-        releaseTo("DEV")
+        WF_release.releaseTo("DEV")
     End Sub
 
     Private Sub ReleaseToISTESTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISTESTToolStripMenuItem.Click
-        releaseTo("TEST")
+        WF_release.releaseTo("TEST")
     End Sub
 
     Private Sub ReleaseToISUATToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISUATToolStripMenuItem.Click
-        releaseTo("UAT")
+        WF_release.releaseTo("UAT")
     End Sub
 
     Private Sub ReleaseToISPRODToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISPRODToolStripMenuItem.Click
-        releaseTo("PROD")
+        WF_release.releaseTo("PROD")
     End Sub
 
     Private Sub NewHotfixToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles NewHotFixToolStripMenuItem1.Click
-        createNewBranch("hotfix", Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
+        WF_newBranch.createNewBranch("hotfix", Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
     End Sub
 
     Private Sub MergeAndPushHotfixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MergeAndPushHotfixToolStripMenuItem.Click
-        mergeAndPushBranch("hotfix", Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
+        WF_mergeAndPush.mergeAndPushBranch("hotfix", Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
     End Sub
 
     Private Sub RebaseHotFixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseHotFixToolStripMenuItem.Click
-        rebaseBranch("hotfix", HotFixToolStripComboBox.SelectedItem, Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
+        WF_rebase.rebaseBranch("hotfix", HotFixToolStripComboBox.SelectedItem, Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
     End Sub
 
     Private Sub CreateDBHotFixPatchToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CreateDBHotFixPatchToolStripMenuItem1.Click
-        PatchFromTags.createPatchProcess("hotfix", HotFixToolStripComboBox.SelectedItem, Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
+        WF_createPatch.createPatchProcess("hotfix", HotFixToolStripComboBox.SelectedItem, Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
     End Sub
 
     Private Sub CreateDBFeaturePatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBFeaturePatchToolStripMenuItem.Click
-        PatchFromTags.createPatchProcess("feature", "DEV", Globals.deriveHotfixBranch("DEV"))
+        WF_createPatch.createPatchProcess("feature", "DEV", Globals.deriveHotfixBranch("DEV"))
     End Sub
 
     Private Sub TestCreatePatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestCreatePatchSetToolStripMenuItem.Click
         'Create, edit And test collection
-        Dim Wizard As New CreatePatchCollection("prism-2.17.04", "patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
+        Dim Wizard As New CreateRelease("prism-2.17.04", "patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
         Wizard.ShowDialog() 'WAITING HERE!!
     End Sub
 
     Private Sub MultiDBHotFixPatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MultiDBHotFixPatchToolStripMenuItem.Click
-        Common.checkBranch("hotfix")
-        Dim patchThisDB As Boolean = False
-        Dim multiHotFix As ProgressDialogue = New ProgressDialogue("Multi HotFix Patch for " & HotFixToolStripComboBox.SelectedItem & " Downwards")
-
-        multiHotFix.MdiParent = GitPatcher
-
-        For i = 0 To HotFixToolStripComboBox.Items.Count - 1
-
-            If HotFixToolStripComboBox.Items(i) = HotFixToolStripComboBox.SelectedItem Then
-                patchThisDB = True
-            End If
-
-            multiHotFix.addStep("Create a HotFix Patch for DB : " & HotFixToolStripComboBox.Items(i), patchThisDB)
-
-        Next
-
-        multiHotFix.Show()
-
-        Do Until multiHotFix.isStarted
-            Common.wait(1000)
-        Loop
-
-        For i = 0 To HotFixToolStripComboBox.Items.Count - 1
-
-            If multiHotFix.toDoNextStep() Then
-                PatchFromTags.createPatchProcess("hotfix", HotFixToolStripComboBox.Items(i), Globals.deriveHotfixBranch(HotFixToolStripComboBox.Items(i)))
-            End If
-
-        Next
-
-
-        'Finish
-        multiHotFix.toDoNextStep()
-
+        WF_hotFixRelease.hotFixRelease(HotFixToolStripComboBox)
     End Sub
-
 
     Private Sub UnappliedToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UnappliedToolStripMenuItem.Click
         Dim newchildform As New PatchRunner("Unapplied")
@@ -752,7 +334,7 @@
     End Sub
 
     Private Sub Import1PageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Import1PageToolStripMenuItem.Click
-        Apex.ApexImport1PageFromTag()
+        WF_Apex.ApexImport1PageFromTag()
     End Sub
 
     Private Sub GITToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GITToolStripMenuItem.Click
@@ -760,7 +342,7 @@
     End Sub
 
     Private Sub CreateDBMajorReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBMajorReleaseToolStripMenuItem.Click
-        CreatePatchCollection.createCollectionProcess("major", "minor", Me.AppCodeTextBox.Text, "major,minor,patchset,feature,hotfix,ALL", "major,minor,patchset,feature,hotfix,ALL", "TEST")
+        WF_release.createReleaseProcess("major", "minor", Me.AppCodeTextBox.Text, "major,minor,patchset,feature,hotfix,ALL", "major,minor,patchset,feature,hotfix,ALL", "TEST")
     End Sub
 
 
