@@ -137,63 +137,31 @@ Public Class GitOp
 
         options.MergeOptions = New MergeOptions()
         options.MergeOptions.FailOnConflict = True
+
+
+        'May need this later to embed credential details..
+
+        'options.FetchOptions.CredentialsProvider = New LibGit2Sharp.Credentials(CredentialsProvider()
+        'options.FetchOptions.CredentialsProvider = New CredentialsProvider(DefaultCredentials)
         'options.FetchOptions.CredentialsProvider() = New CredentialsProvider(
         '(url, usernameFromUrl, types) >=
         '    New UsernamePasswordCredentials()
         '    {
-        '        Username = "peter.a.burgess@gmail.com",
-        '        Password = "1gitissafe"
+        '        Username = "",
+        '        Password = ""
         '    })
 
+        'Get signature details from the current repo
+        Dim UserName As String = Globals.getRepo.Config(10).Value
+        Dim UserEmail As String = Globals.getRepo.Config(11).Value
+        Logger.Note("UserName", UserName)
+        Logger.Note("UserEmail", UserEmail)
 
+        Dim mySignature As Signature = New Signature(UserName, UserEmail, New DateTimeOffset(DateTime.Now))
 
-        'options.FetchOptions.CredentialsProvider = New LibGit2Sharp.Credentials(CredentialsProvider()
-
-
-        ' options.FetchOptions = New FetchOptions();
-
-        'options.FetchOptions.CredentialsProvider = New CredentialsProvider(DefaultCredentials)
-
-
-
-        '    {
-        '// Credential information to fetch
-        'LibGit2Sharp.PullOptions options = New LibGit2Sharp.PullOptions();
-        'options.FetchOptions = New FetchOptions();
-        'options.FetchOptions.CredentialsProvider = New CredentialsHandler(
-        '    (url, usernameFromUrl, types) >=
-        '        New UsernamePasswordCredentials()
-        '        {
-        '            Username = USERNAME,
-        '            Password = PASSWORD
-        '        });
-
-        '// User information to create a merge commit
-        'var Signature = New LibGit2Sharp.Signature(
-        '    New Identity("MERGE_USER_NAME", "MERGE_USER_EMAIL"), DateTimeOffset.Now);
-
-        '// Pull
-        'Commands.Pull(repo, Signature, options);
-        '} 
-
-        'options.FetchOptions.CredentialsProvider = New CredentialsHandler((url, usernameFromUrl, types) >= New UsernamePasswordCredentials()
-        '    {
-        '        Username = _UserName,
-        '        Password = _Password
-        '    });
-
-        'options.FetchOptions.CredentialsProvider = New CredentialsHandler(DefaultCredentials)
-        ')
-        Dim mySignature As Signature = New Signature("peter.a.burgess@gmail.com", "1gitissafe", New DateTimeOffset(DateTime.Now))
-
-
+        'Pull the branch
         Dim myMergeResult As MergeResult = Commands.Pull(Globals.getRepo, mySignature, options)
 
-
-        'Dim Merger As New Merger()
-
-        'Dim existingBranch As Branch = Globals.getRepo.Branches(ibranch_name)
-        'Globals.getRepo().Network.Pull(existingBranch)
 
     End Sub
 
