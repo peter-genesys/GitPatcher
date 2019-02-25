@@ -764,22 +764,22 @@ Public Class CreateRelease
 
 
         'Export each patch, and create the patch_install.sql
-        exportPatchSet(PatchNameTextBox.Text, _
-                           pCreatePatchType, _
-                           "PATCH_ADMIN", _
-                           Globals.currentLongBranch, _
-                           Tag1TextBox.Text, _
-                           Tag2TextBox.Text, _
-                           SupIdTextBox.Text, _
-                           PatchDescTextBox.Text, _
-                           NoteTextBox.Text, _
-                           UsePatchAdminCheckBox.Checked, _
-                           RerunCheckBox.Checked, _
-                           patchableFiles, _
-                           PatchDirTextBox.Text, _
-                           l_repo_patch_export_dir, _
-                           PatchPathTextBox.Text & PatchNameTextBox.Text, _
-                           PatchPathTextBox.Text, _
+        exportPatchSet(PatchNameTextBox.Text,
+                           pCreatePatchType,
+                           "APEXRM",
+                           Globals.currentLongBranch,
+                           Tag1TextBox.Text,
+                           Tag2TextBox.Text,
+                           SupIdTextBox.Text,
+                           PatchDescTextBox.Text,
+                           NoteTextBox.Text,
+                           UsePatchAdminCheckBox.Checked,
+                           RerunCheckBox.Checked,
+                           patchableFiles,
+                           PatchDirTextBox.Text,
+                           l_repo_patch_export_dir,
+                           PatchPathTextBox.Text & PatchNameTextBox.Text,
+                           PatchPathTextBox.Text,
                            TrackPromoCheckBox.Checked)
 
 
