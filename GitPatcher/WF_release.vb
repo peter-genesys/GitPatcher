@@ -37,11 +37,13 @@
 
         If releasing.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(Globals.getRepoPath, releaseFromBranch)
+            GitOp.switchBranch(releaseFromBranch)
+
         End If
         If releasing.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(Globals.getRepoPath, "origin", releaseFromBranch)
+            GitOp.pullBranch(releaseFromBranch)
+
         End If
 
         If releasing.toDoNextStep() Then
@@ -56,7 +58,8 @@
             PatchTag = ChoiceDialog.Ask("Please choose a tag for patch installs", tagnames, "HEAD", "Choose tag")
 
             'Checkout the tag
-            GitBash.Switch(Globals.getRepoPath, PatchTag)
+            GitOp.switchBranch(PatchTag)
+
 
         End If
 
@@ -150,17 +153,20 @@
 
         If createPatchSetProgress.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(Globals.getRepoPath, "develop")
+            GitOp.switchBranch("develop")
+
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(Globals.getRepoPath, "origin", "develop")
+            GitOp.pullBranch("develop")
+  
 
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Create and Switch to new collection branch
-            GitBash.createBranch(Globals.getRepoPath, newBranch)
+            GitOp.createAndSwitchBranch(newBranch)
+
 
 
         End If
@@ -197,7 +203,8 @@
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Push release to origin with tags
-            GitBash.Push(Globals.getRepoPath, "origin", newBranch, True)
+            GitOp.pushBranch("newBranch") 'previous call to GitBash.Push sent tags and it waited (synchronously)
+            'GitBash.Push(Globals.getRepoPath, "origin", newBranch, True)
 
         End If
 

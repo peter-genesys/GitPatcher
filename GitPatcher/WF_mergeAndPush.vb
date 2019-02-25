@@ -24,12 +24,8 @@
 
         If mergeAndPush.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(Globals.getRepoPath, iBranchTo)
-            'Verify that the switch occurred and if not, use tortoise to do it.
-            'Thus exposing the issue, so the developer can resolve it, before proceeding.
-            If Globals.currentBranch <> iBranchTo Then
-                Tortoise.Switch(Globals.getRepoPath, iBranchTo)
-            End If
+            GitOp.switchBranch(iBranchTo)
+
 
         End If
 
@@ -55,7 +51,8 @@
 
         If mergeAndPush.toDoNextStep() Then
             'Push to origin/develop 
-            GitBash.Push(Globals.getRepoPath, "origin", iBranchTo)
+            GitOp.pushBranch(iBranchTo)
+
 
         End If
 
@@ -68,7 +65,8 @@
         If mergeAndPush.toDoNextStep() Then
             'Return to branch
             'GitSharpFascade.switchBranch(Globals.currentRepo, currentBranch)
-            GitBash.Switch(Globals.getRepoPath, currentBranch)
+            GitOp.switchBranch(currentBranch)
+
         End If
 
         mergeAndPush.toDoNextStep()

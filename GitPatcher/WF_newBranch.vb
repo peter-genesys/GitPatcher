@@ -16,13 +16,14 @@
 
         If newFeature.toDoNextStep() Then
             'Switch to develop branch
-            GitBash.Switch(Globals.getRepoPath, iBranchFrom)
+            GitOp.switchBranch(iBranchFrom)
+   
 
         End If
 
         If newFeature.toDoNextStep() Then
             'Pull from origin/develop
-            GitBash.Pull(Globals.getRepoPath, "origin", iBranchFrom)
+            GitOp.pullBranch(iBranchFrom)
 
         End If
 
@@ -43,7 +44,7 @@
                 newFeature.updateTitle("Create new " & iBranchType & " branch:  " & branchName)
                 newFeature.updateStepDescription(2, "Create and switch to " & iBranchType & " branch: " & newBranch)
 
-                GitBash.createBranch(Globals.getRepoPath, newBranch)
+                GitOp.createAndSwitchBranch(newBranch)
 
             End If
 

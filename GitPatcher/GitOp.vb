@@ -78,14 +78,14 @@ Public Class GitOp
 
     End Function
 
-    Shared Sub createBranch(ByVal branchName)
+    Shared Sub createBranch(ByVal branchName As String)
         'Create a new local branch
 
         Dim newBranch As Branch = Globals.getRepo.CreateBranch(branchName)
 
     End Sub
 
-    Shared Sub switchBranch(ByVal branchName)
+    Shared Sub switchBranch(ByVal branchName As String)
         'Switch to an existing local branch
 
         Dim existingBranch As Branch = Globals.getRepo.Branches(branchName)
@@ -97,9 +97,16 @@ Public Class GitOp
             MsgBox(e.Message)
         End Try
 
+        'Verify that the switch occurred and if not, use tortoise to do it.
+        'Thus exposing the issue, so the developer can resolve it, before proceeding.
+        If Globals.currentBranch <> branchName Then
+            Tortoise.Switch(Globals.getRepoPath, branchName)
+        End If
+
+
     End Sub
 
-    Shared Sub createAndSwitchBranch(ByVal branchName)
+    Shared Sub createAndSwitchBranch(ByVal branchName As String)
         'Create then switch to a local branch
 
         createBranch(branchName)
@@ -108,7 +115,7 @@ Public Class GitOp
     End Sub
 
 
-    Shared Sub createTag(ByVal tagName)
+    Shared Sub createTag(ByVal tagName As String)
         'create a tag at the head
 
         Dim newTag As Tag = Globals.getRepo.ApplyTag(tagName)
@@ -118,6 +125,10 @@ Public Class GitOp
 
     Shared Sub pushBranch(ByVal ibranch_name As String)
         'push any branch
+        '? Does this push tags
+        '? Is it synchronous /  asynchronous
+
+        'Dim thePushOptions As PushOptions = New PushOptions()
 
         Dim existingBranch As Branch = Globals.getRepo.Branches(ibranch_name)
         Globals.getRepo().Network.Push(existingBranch)
@@ -516,9 +527,21 @@ Public Class GitOp
     End Function
 
 
+    Public Shared Function describe(ByVal branchName As String)
 
+        Dim branchTip = Globals.getRepo.Branches(branchName).Tip
 
+        Return Globals.getRepo.Describe(branchTip, New DescribeOptions With {.Strategy = DescribeStrategy.All})
 
+    End Function
+
+    Public Shared Function describeTags(ByVal branchName As String)
+
+        Dim branchTip = Globals.getRepo.Branches(branchName).Tip
+
+        Return Globals.getRepo.Describe(branchTip, New DescribeOptions With {.Strategy = DescribeStrategy.Tags})
+
+    End Function
 
 End Class
 

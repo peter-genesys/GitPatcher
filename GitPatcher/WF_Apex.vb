@@ -190,7 +190,8 @@
                     'alternative method
                     'l_label = Host.getOutput("""" & My.Settings.GITpath & """ describe --tags", Globals.currentRepo) 
 
-                    l_label = "GIT Tag: " & GitBash.describeTags(Globals.getRepoPath)
+                    l_label = "GIT Tag: " & GitOp.describeTags(Globals.currentBranch())
+
                     ImportProgress.updateStepDescription(1, "Relabel apex with " & l_label)
 
                     Apex.modCreateApplicationSQL(l_label, "")
@@ -246,7 +247,8 @@
 
         If ImportProgress.toDoNextStep Then
             'Return to branch
-            GitBash.Switch(Globals.getRepoPath, currentBranch)
+            GitOp.switchBranch(currentBranch)
+
         End If
 
         ImportProgress.toDoNextStep()
