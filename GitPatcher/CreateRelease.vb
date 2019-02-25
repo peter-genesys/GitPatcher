@@ -1,5 +1,5 @@
 ﻿
-Public Class CreatePatchCollection
+Public Class CreateRelease
     Private pPatchName As String = Nothing
     Private pCreatePatchType As String = Nothing
     Private pFindPatchTypes As String = Nothing
@@ -139,7 +139,7 @@ Public Class CreatePatchCollection
             'Check patch matches filter
             patchMatch = False
 
-            If (String.IsNullOrEmpty(pFindPatchTypes) Or Common.stringContainsSetMember(availablePatch, pFindPatchTypes, ",")) And _
+            If (String.IsNullOrEmpty(pFindPatchTypes) Or Common.stringContainsSetMember(availablePatch, pFindPatchTypes, ",")) And
                 (Not Me.AppFilterCheckBox.Checked Or Common.stringContainsSetMember(availablePatch, pFindPatchFilters, ",")) Then
                 patchMatch = True
             End If
@@ -446,22 +446,22 @@ Public Class CreatePatchCollection
 
 
 
-    Shared Sub exportPatchSet(ByVal patch_name As String, _
-                                  ByVal patch_type As String, _
-                                  ByVal db_schema As String, _
-                                  ByVal branch_path As String, _
-                                  ByVal tag1_name As String, _
-                                  ByVal tag2_name As String, _
-                                  ByVal supplementary As String, _
-                                  ByVal patch_desc As String, _
-                                  ByVal note As String, _
-                                  ByVal use_patch_admin As Boolean, _
-                                  ByVal rerunnable As Boolean, _
-                                  ByRef targetFiles As Collection, _
-                                  ByVal patchDir As String, _
-                                  ByVal patchExportDir As String, _
-                                  ByVal patchSetPath As String, _
-                                  ByVal groupPath As String, _
+    Shared Sub exportPatchSet(ByVal patch_name As String,
+                                  ByVal patch_type As String,
+                                  ByVal db_schema As String,
+                                  ByVal branch_path As String,
+                                  ByVal tag1_name As String,
+                                  ByVal tag2_name As String,
+                                  ByVal supplementary As String,
+                                  ByVal patch_desc As String,
+                                  ByVal note As String,
+                                  ByVal use_patch_admin As Boolean,
+                                  ByVal rerunnable As Boolean,
+                                  ByRef targetFiles As Collection,
+                                  ByVal patchDir As String,
+                                  ByVal patchExportDir As String,
+                                  ByVal patchSetPath As String,
+                                  ByVal groupPath As String,
                                   ByVal track_promotion As Boolean)
 
 
@@ -728,169 +728,6 @@ Public Class CreatePatchCollection
         Apex.modCreateApplicationSQL(i_app_version & " " & Today.ToString("dd-MMM-yyyy"), "")
     End Sub
 
-
-
-    Public Shared Sub createCollectionProcess(ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String, iTargetDB As String)
-
-        Dim lcurrentDB As String = Globals.getDB
-        Dim l_app_version = InputBox("Please enter Patchset Code for " & Globals.currentAppCode & "", "New " & Globals.getAppName & " Version")
-
-        'l_app_version = Globals.currentAppCode & "-" & l_app_version
-
-        'Dim newBranch As String = "release/" & iCreatePatchType & "/" & Globals.currentAppCode & "/" & l_app_version
-
-        Dim newBranch As String = "release"
-
-        If Globals.getAppInFeature() = "Y" Then
-            newBranch = newBranch & "/" & Globals.currentAppCode
-        End If
-
-        newBranch = newBranch & "/" & l_app_version
-
-        Dim currentBranch As String = GitOp.currentBranch()
-
-        Dim createPatchSetProgress As ProgressDialogue = New ProgressDialogue("Create DB " & iCreatePatchType)
-        createPatchSetProgress.MdiParent = GitPatcher
-
-        createPatchSetProgress.addStep("Switch to develop branch")
-        createPatchSetProgress.addStep("Pull from origin/develop")
-        createPatchSetProgress.addStep("Create and Switch to release Branch: " & newBranch)
-
-        createPatchSetProgress.addStep("Change current DB to : " & iTargetDB)
-
-        createPatchSetProgress.addStep("Create, edit and test " & iCreatePatchType)
-        createPatchSetProgress.addStep("Bump Apex version to " & l_app_version)
-        createPatchSetProgress.addStep("Commit Apex version " & l_app_version)
-        createPatchSetProgress.addStep("Tag this release as " & l_app_version)
-        createPatchSetProgress.addStep("Push to origin/" & newBranch)
-
-        createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to develop", False)
-        createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to test", True)
-        createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to uat", False)
-        createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to master", False)
-
-        createPatchSetProgress.addStep("Release to ISDEVL", False)
-        createPatchSetProgress.addStep("Release to ISTEST", True)
-        createPatchSetProgress.addStep("Release to ISUAT", False)
-        createPatchSetProgress.addStep("Release to ISPROD", False)
-        createPatchSetProgress.addStep("Revert current DB to : " & lcurrentDB)
-        'createPatchSetProgress.addStep("Export Patchset")
-        'Import
-
-        createPatchSetProgress.Show()
-
-        Do Until createPatchSetProgress.isStarted
-            Common.wait(1000)
-        Loop
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Switch to develop branch
-            GitBash.Switch(Globals.getRepoPath, "develop")
-
-        End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Pull from origin/develop
-            GitBash.Pull(Globals.getRepoPath, "origin", "develop")
-
-        End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Create and Switch to new collection branch
-            GitBash.createBranch(Globals.getRepoPath, newBranch)
-
-
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Change current DB to release DB
-            Globals.setDB(iTargetDB.ToUpper)
-
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-
-            'Create, edit And test collection
-            Dim Wizard As New CreatePatchCollection(l_app_version, iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes, iSupPatchTypes)
-            Wizard.ShowDialog() 'WAITING HERE!!
-
-
-        End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Bump Apex version 
-            bumpApexVersion(l_app_version)
-
-        End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Commit Apex version 
-            Tortoise.Commit(Globals.getRepoPath, "Bump Apex " & Globals.currentApex & " to " & l_app_version)
-
-
-        End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Tag this commit
-            GitBash.TagSimple(Globals.getRepoPath, l_app_version)
-
-        End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Push release to origin with tags
-            GitBash.Push(Globals.getRepoPath, "origin", newBranch, True)
-
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Merge Patchset to develop 
-            Main.mergeAndPushBranch("patchset", "develop")
-
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Merge Patchset to test 
-            Main.mergeAndPushBranch("patchset", "test")
-
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Merge Patchset to uat 
-            Main.mergeAndPushBranch("patchset", "uat")
-
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Merge Patchset to master 
-            Main.mergeAndPushBranch("patchset", "master")
-
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Release to ISDEVL
-            Main.releaseTo("DEV")
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Release to ISTEST
-            Main.releaseTo("TEST")
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Release to ISTEST
-            Main.releaseTo("UAT")
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Release to ISTEST
-            Main.releaseTo("PROD")
-        End If
-
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Revert current DB  
-            Globals.setDB(lcurrentDB.ToUpper)
-
-        End If
-
-        'Done
-        createPatchSetProgress.toDoNextStep()
-
-    End Sub
 
 
 

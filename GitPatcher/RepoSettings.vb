@@ -4,37 +4,37 @@ Imports System.Xml
 
 Public Class RepoSettings
 
+    'CURRENTLY UNUSED.
+    'Function getRepoNode(ByVal iRepoName) As XmlNode
 
-    Function getRepoNode(ByVal iRepoName) As XmlNode
+    '    Dim l_GitReposXML As XmlDocument = New XmlDocument()
+    '    Dim l_RepoNodeList As XmlNodeList
+    '    Dim l_RepoNode As XmlNode
+    '    'Load the Xml file
+    '    l_GitReposXML.Load(Globals.XMLRepoFilePath())
 
-        Dim l_GitReposXML As XmlDocument = New XmlDocument()
-        Dim l_RepoNodeList As XmlNodeList
-        Dim l_RepoNode As XmlNode
-        'Load the Xml file
-        l_GitReposXML.Load(Globals.XMLRepoFilePath())
+    '    'Get the list of name nodes 
+    '    l_RepoNodeList = l_GitReposXML.SelectNodes("/repos/repo")
 
-        'Get the list of name nodes 
-        l_RepoNodeList = l_GitReposXML.SelectNodes("/repos/repo")
+    '    Dim l_result As XmlNode
 
-        Dim l_result As XmlNode
- 
-        Dim l_found As Boolean = False
-        'Loop through the nodes
+    '    Dim l_found As Boolean = False
+    '    'Loop through the nodes
 
-        For Each l_RepoNode In l_RepoNodeList
-            'Get the RepoName Attribute Value
+    '    For Each l_RepoNode In l_RepoNodeList
+    '        'Get the RepoName Attribute Value
 
-            If l_RepoNode.Attributes.GetNamedItem("RepoName").Value = iRepoName Then
+    '        If l_RepoNode.Attributes.GetNamedItem("RepoName").Value = iRepoName Then
 
-                l_result = l_RepoNode
-  
-            End If
+    '            l_result = l_RepoNode
 
-        Next
+    '        End If
 
-        Return l_result
- 
-    End Function
+    '    Next
+
+    '    Return l_result
+
+    'End Function
 
 
 

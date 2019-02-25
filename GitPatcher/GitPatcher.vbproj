@@ -177,10 +177,10 @@
     </Compile>
     <Compile Include="GitBash.vb" />
     <Compile Include="GitBashFascade.vb" />
-    <Compile Include="CreatePatchSet.Designer.vb">
-      <DependentUpon>CreatePatchSet.vb</DependentUpon>
+    <Compile Include="CreateRelease.Designer.vb">
+      <DependentUpon>CreateRelease.vb</DependentUpon>
     </Compile>
-    <Compile Include="CreatePatchSet.vb">
+    <Compile Include="CreateRelease.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FileInfoEx.vb" />
@@ -238,6 +238,14 @@
     </Compile>
     <Compile Include="Tortoise.vb" />
     <Compile Include="TortoiseFascade.vb" />
+    <Compile Include="WF_Apex.vb" />
+    <Compile Include="WF_hotFixRelease.vb" />
+    <Compile Include="WF_mergeAndPush.vb" />
+    <Compile Include="WF_newBranch.vb" />
+    <Compile Include="WF_rebase.vb" />
+    <Compile Include="WF_release.vb" />
+    <Compile Include="WF_test.vb" />
+    <Compile Include="WF_createPatch.vb" />
     <Compile Include="zip.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -256,8 +264,8 @@
     <EmbeddedResource Include="RepoSettings.resx">
       <DependentUpon>RepoSettings.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CreatePatchSet.resx">
-      <DependentUpon>CreatePatchSet.vb</DependentUpon>
+    <EmbeddedResource Include="CreateRelease.resx">
+      <DependentUpon>CreateRelease.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GitPatcher.resx">
       <DependentUpon>GitPatcher.vb</DependentUpon>

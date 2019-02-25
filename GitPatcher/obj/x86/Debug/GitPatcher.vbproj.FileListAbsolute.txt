@@ -192,7 +192,6 @@ D:\GitRepos\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.AppSettings.resources
 D:\GitRepos\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.Configuration.resources
 D:\GitRepos\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.OrgSettings.resources
 D:\GitRepos\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.RepoSettings.resources
-D:\GitRepos\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.CreatePatchCollection.resources
 D:\GitRepos\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.GitPatcher.resources
 D:\GitRepos\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.Main.resources
 D:\GitRepos\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.Resources.resources
@@ -235,3 +234,4 @@ D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\LibGit2Sharp.dll.config
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\LibGit2Sharp.dll
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\LibGit2Sharp.pdb
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\LibGit2Sharp.xml
+D:\GitRepos\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.CreateRelease.resources
