@@ -1,4 +1,4 @@
-﻿Imports Oracle.DataAccess.Client ' VB.NET
+﻿Imports Oracle.ManagedDataAccess.Client ' VB.NET
 
 
 Public Class PatchRunner
@@ -207,7 +207,7 @@ Public Class PatchRunner
                     patchMatch = False
                     Dim lPatchName As String = Common.getLastSegment(foundPatches(i), "\")
 
-                    sql = "select max(patch_name) patch_name from installed_patches_v where patch_name = '" & lPatchName
+                    sql = "select max(patch_name) patch_name from ARM_INSTALLED_PATCH_V where patch_name = '" & lPatchName
 
                     cmd = New OracleCommand(sql, conn)
                     cmd.CommandType = CommandType.Text
@@ -282,7 +282,7 @@ Public Class PatchRunner
 
             conn.Open()
 
-            sql = "select patch_name from patches_unapplied_v"
+            sql = "select patch_name from ARM_UNAPPLIED_V"
 
             cmd = New OracleCommand(sql, conn)
             cmd.CommandType = CommandType.Text

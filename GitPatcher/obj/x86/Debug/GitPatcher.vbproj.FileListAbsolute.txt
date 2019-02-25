@@ -235,3 +235,4 @@ D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\LibGit2Sharp.dll
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\LibGit2Sharp.pdb
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\LibGit2Sharp.xml
 D:\GitRepos\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.CreateRelease.resources
+D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\Oracle.ManagedDataAccess.dll
