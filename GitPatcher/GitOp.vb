@@ -100,7 +100,7 @@ Public Class GitOp
         'Verify that the switch occurred and if not, use tortoise to do it.
         'Thus exposing the issue, so the developer can resolve it, before proceeding.
         If Globals.currentBranch <> branchName Then
-            Tortoise.Switch(Globals.getRepoPath, branchName)
+            Tortoise.Switch(Globals.getRepoPath)
         End If
 
 

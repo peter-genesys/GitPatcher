@@ -75,8 +75,10 @@ Public Class PatchFromTags
 
         Dim tag_no_padding As Integer = 2
 
+
         TagsCheckedListBox.Items.Clear()
-        For Each tagname In GitOp.getTagList()
+        For Each myTag In GitOp.getTagList()
+            Dim tagname As String = myTag.ToString()
             If Common.getFirstSegment(tagname, ".") = Globals.currentBranch Then
                 'This is a tag worth listing
                 Dim ticked As Boolean = (gtag_base = Common.getLastSegment(tagname, ".").Substring(0, tag_no_padding)) 'This is a tag worth ticking
