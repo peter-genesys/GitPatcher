@@ -126,7 +126,6 @@ E:\GitPatcher\GitPatcher\bin\x86\Debug\GitPatcher.pdb
 E:\GitPatcher\GitPatcher\bin\x86\Debug\GitPatcher.xml
 E:\GitPatcher\GitPatcher\bin\x86\Debug\GitSharp.Core.dll
 E:\GitPatcher\GitPatcher\bin\x86\Debug\GitSharp.dll
-E:\GitPatcher\GitPatcher\bin\x86\Debug\Oracle.DataAccess.dll
 E:\GitPatcher\GitPatcher\bin\x86\Debug\System.Data.SqlServerCe.dll
 E:\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes2Levels.dll
 E:\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewEnhanced.dll
@@ -148,7 +147,6 @@ E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.AppSettings.resources
 E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.Configuration.resources
 E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.OrgSettings.resources
 E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.RepoSettings.resources
-E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.CreatePatchCollection.resources
 E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.GitPatcher.resources
 E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.Main.resources
 E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.Resources.resources
@@ -236,3 +234,5 @@ D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\LibGit2Sharp.pdb
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\LibGit2Sharp.xml
 D:\GitRepos\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.CreateRelease.resources
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\Oracle.ManagedDataAccess.dll
+E:\GitPatcher\GitPatcher\bin\x86\Debug\Oracle.ManagedDataAccess.dll
+E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.CreateRelease.resources
