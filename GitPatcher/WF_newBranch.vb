@@ -16,7 +16,7 @@
 
         If newFeature.toDoNextStep() Then
             'Switch to develop branch
-            GitOp.switchBranch(iBranchFrom)
+            GitOp.SwitchBranch(iBranchFrom)
    
 
         End If

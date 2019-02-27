@@ -77,7 +77,7 @@
 
         If createPatchProgress.toDoNextStep() Then
             'switch
-            GitOp.switchBranch(iRebaseBranchOn)
+            GitOp.SwitchBranch(iRebaseBranchOn)
 
 
         End If
@@ -104,7 +104,7 @@
 
         If createPatchProgress.toDoNextStep() Then
             'GitSharpFascade.switchBranch(Globals.currentRepo, currentBranch)
-            GitOp.switchBranch(currentBranch)
+            GitOp.SwitchBranch(currentBranch)
         End If
 
         If createPatchProgress.toDoNextStep() Then

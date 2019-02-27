@@ -21,40 +21,124 @@ Public Class GitOp
     '
     'End Sub
 
+    Shared Function GetCommitFromSHA(ByVal SHA As String, Optional ByVal shaAlias As String = Nothing) As Commit
 
-    Shared Function getTagList(ByVal currentTags As Collection, Optional ByVal filter As String = Nothing) As Collection
-        'Input currentTags - a collection of tag names
-        'Input filter      - search for matching tag names
-        'Output tagnames   - a collection of tag names, initialised with currentTags
-        '  If filter is null then all tag names found in the repo are appended to tagnames.
-        '  If filter is NOT null then only tag names that contain the filter will be appended to tagnames.
+        If SHA = "" Then
+            Throw New System.Exception(shaAlias & "SHA is required")
+        End If
+
+        Dim theTag As Tag = Globals.getRepo.Tags(SHA)
+
+        If theTag Is Nothing Then
+            Throw New System.Exception(shaAlias & "SHA (" & shaAlias & ") is unrecognised.")
+        End If
+
+        Dim theCommit As Commit = Globals.getRepo().Lookup(Of Commit)(SHA)
+
+        Return theCommit
+
+    End Function
 
 
-        Dim tagnames As Collection = currentTags
+    Shared Function GetCommitFromTagName(ByVal tagName As String, Optional ByVal tagAlias As String = Nothing) As Commit
+
+        Dim theCommit As Commit
+
+        If tagName = "" Then
+            Throw New System.Exception(tagAlias & "Tag is required")
+        End If
+
+        If tagName = "HEAD" Then
+            'If Tag is HEAD, find the tip commit of the HEAD branch 
+            Dim theBranch As Branch = Globals.getRepo().Head
+            theCommit = theBranch.Tip
+
+        Else
+            Dim theTag As Tag = Globals.getRepo.Tags(tagName)
+
+            If theTag Is Nothing Then
+                Throw New System.Exception(tagAlias & "Tag (" & tagName & ") is unrecognised.")
+            End If
+
+            theCommit = Globals.getRepo().Lookup(Of Commit)(theTag.Target.Sha)
+
+        End If
+
+        Return theCommit
+
+    End Function
+
+    Shared Function getTagNameList(ByVal inTagNames As Collection, Optional ByVal tagNameFilter As String = Nothing) As Collection
+        'Input inTagNames         - a collection of tagNames
+        'Input tagNameFilter  - search for matching tag names
+        'Output outTagNames       - a collection of tagNames, initialised with inTagNames
+        '  If tagNameFilter is null then all tags found in the repo are appended to outTagNames.
+        '  If tagNameFilter is NOT null then only tags with tag name that contain the filter will be appended to outTagNames.
+
+
+        Dim outTagNames As Collection = inTagNames
 
         For Each Tag In Globals.getRepo.Tags
-            If String.IsNullOrEmpty(filter) Then
-                tagnames.Add(Tag.Reference)
-            ElseIf Tag.ToString.Contains(filter) Then
-                tagnames.Add(Tag.Reference)
+            If String.IsNullOrEmpty(tagNameFilter) Then
+                outTagNames.Add(Tag.FriendlyName)
+            ElseIf Tag.FriendlyName.Contains(tagNameFilter) Then
+                outTagNames.Add(Tag.FriendlyName)
             End If
 
         Next
 
-        Return tagnames
+        Return outTagNames
 
     End Function
 
-    Shared Function getTagList(Optional ByVal filter As String = Nothing) As Collection
 
-        'Input filter      - search for matching tag names
-        'Output  tagnames  - a collection of tag names.  
-        '  If filter is null then all tag names found in the repo are returned.
-        '  If filter is NOT nutl then only tag names that contain the filter will be returned.
+    Shared Function getTagNameList(Optional ByVal tagNameFilter As String = Nothing) As Collection
 
-        Dim tagnames As Collection = New Collection
+        'Input tagNameFilter  - search for matching tag names
+        'Output outTagNames       - a collection of tagNames, initialised with an empty set of tagNames
+        '  If tagNameFilter is null then all tags found in the repo are appended to outTagNames.
+        '  If tagNameFilter is NOT null then only tags with tag name that contain the filter will be appended to outTagNames.
 
-        Return getTagList(tagnames, filter)
+        Dim outTagNames As Collection = New Collection
+
+        Return getTagNameList(outTagNames, tagNameFilter)
+
+    End Function
+
+    Shared Function getTagList(ByVal inTags As Collection, Optional ByVal tagNameFilter As String = Nothing) As Collection
+        'Input inTags         - a collection of tags
+        'Input tagNameFilter  - search for matching tag names
+        'Output outTags       - a collection of tags, initialised with inTags
+        '  If tagNameFilter is null then all tags found in the repo are appended to outTags.
+        '  If tagNameFilter is NOT null then only tags with tag name that contain the filter will be appended to outTags.
+
+
+        Dim outTags As Collection = inTags
+
+        For Each Tag In Globals.getRepo.Tags
+            If String.IsNullOrEmpty(tagNameFilter) Then
+                outTags.Add(Tag)
+            ElseIf Tag.FriendlyName.Contains(tagNameFilter) Then
+                outTags.Add(Tag)
+            End If
+
+        Next
+
+        Return outTags
+
+    End Function
+
+
+    Shared Function getTagList(Optional ByVal tagNameFilter As String = Nothing) As Collection
+
+        'Input tagNameFilter  - search for matching tag names
+        'Output outTags       - a collection of tags, initialised with an empty set of tags
+        '  If tagNameFilter is null then all tags found in the repo are appended to outTags.
+        '  If tagNameFilter is NOT null then only tags with tag name that contain the filter will be appended to outTags.
+
+        Dim outTags As Collection = New Collection
+
+        Return getTagList(outTags, tagNameFilter)
 
     End Function
 
@@ -64,7 +148,7 @@ Public Class GitOp
     ' Return True
     ' End Function
 
-    Shared Function currentBranch() As String
+    Shared Function CurrentBranch() As String
         'Return the name of the branch at the head.
 
         Try
@@ -85,12 +169,37 @@ Public Class GitOp
 
     End Sub
 
-    Shared Sub switchBranch(ByVal branchName As String)
+    Shared Sub SwitchCommit(ByVal theCommit As Commit)
+        'Switch to any existing commit
+
+        Try
+
+            Commands.Checkout(Globals.getRepo, theCommit)
+
+        Catch e As Exception
+            MsgBox(e.Message)
+        End Try
+
+        ''Verify that the switch occurred and if not, use tortoise to do it.
+        ''Thus exposing the issue, so the developer can resolve it, before proceeding.
+        'If Globals.currentBranch <> branchName Then
+        '    Tortoise.Switch(Globals.getRepoPath)
+        'End If
+
+
+    End Sub
+
+
+
+
+
+    Shared Sub SwitchBranch(ByVal branchName As String)
         'Switch to an existing local branch
 
         Dim existingBranch As Branch = Globals.getRepo.Branches(branchName)
 
         Try
+
             Commands.Checkout(Globals.getRepo, existingBranch)
 
         Catch e As Exception
@@ -100,17 +209,44 @@ Public Class GitOp
         'Verify that the switch occurred and if not, use tortoise to do it.
         'Thus exposing the issue, so the developer can resolve it, before proceeding.
         If Globals.currentBranch <> branchName Then
-            Tortoise.Switch(Globals.getRepoPath, branchName)
+            Tortoise.Switch(Globals.getRepoPath)
         End If
 
 
     End Sub
 
+    Shared Sub SwitchHead()
+        'Switch to an existing local branch, pointed to by head
+
+        Dim theBranch As Branch = Globals.getRepo().Head
+
+        SwitchBranch(theBranch.FriendlyName)
+
+    End Sub
+
+
+    Shared Sub SwitchTagName(ByVal theTagName As String)
+
+        If theTagName = "HEAD" Then
+            'Checkout the head
+            GitOp.SwitchHead()
+
+            'This would also Switch to HEAD.tip 
+            'But may be better to switch to HEAD by branch name than by commit.
+            'GitOp.SwitchCommit(GitOp.GetCommitFromTagName('HEAD'))
+        Else
+            'Checkout the tag
+            GitOp.SwitchCommit(GitOp.GetCommitFromTagName(theTagName))
+        End If
+
+    End Sub
+
+
     Shared Sub createAndSwitchBranch(ByVal branchName As String)
         'Create then switch to a local branch
 
         createBranch(branchName)
-        switchBranch(branchName)
+        SwitchBranch(branchName)
 
     End Sub
 
@@ -138,7 +274,7 @@ Public Class GitOp
     Shared Sub pushCurrentBranch()
         'push current branch
 
-        pushBranch(currentBranch)
+        pushBranch(CurrentBranch)
 
     End Sub
 
@@ -179,12 +315,13 @@ Public Class GitOp
     Shared Sub pullCurrentBranch()
         'push current branch
 
-        pullBranch(currentBranch())
+        pullBranch(CurrentBranch())
 
     End Sub
 
 
     Shared Sub getIndexedChanges()
+        'NOT CURRENTLY USED - LINKED TO HIDDEN MENU ITEM "ShowIndex"
         'I have not yet figured out what this is for
         'I think it might have been a debugging tool from a hidden menu item. ShowindexToolStripMenuItem
 
@@ -225,24 +362,11 @@ Public Class GitOp
 
 
     Shared Sub setCommitsFromSHA(ByVal SHA_1 As String, ByVal SHA_2 As String)
+
         'Find the commits referred to by SHA 1 and SHA 2 and store them in persistent variables in the Globals module
 
-        If SHA_1 = "" Then
-            Throw New System.Exception("1st SHA is required")
-        End If
-        If SHA_2 = "" Then
-            Throw New System.Exception("2nd SHA is required")
-        End If
-
-        Dim commit1 As Commit = Globals.getRepo().Lookup(Of Commit)(SHA_1)
-        Dim commit2 As Commit = Globals.getRepo().Lookup(Of Commit)(SHA_2)
-
-        If commit1 Is Nothing Then
-            Throw New System.Exception("1st SHA (" & SHA_1 & ") is unrecognised.")
-        End If
-        If commit2 Is Nothing Then
-            Throw New System.Exception("2nd SHA (" & SHA_2 & ") is unrecognised.")
-        End If
+        Dim commit1 As Commit = GetCommitFromSHA(SHA_1, "1st ")
+        Dim commit2 As Commit = GetCommitFromSHA(SHA_2, "2nd ")
 
         Globals.setCommits(commit1, commit2)
 
@@ -252,24 +376,10 @@ Public Class GitOp
 
         'Find the commits referred to by Tag 1 and Tag 2 and store them in persistent variables in the Globals module
 
-        If tag1_name = "" Then
-            Throw New System.Exception("1st Tag is required")
-        End If
-        If tag2_name = "" Then
-            Throw New System.Exception("2nd Tag is required")
-        End If
+        Dim commit1 As Commit = GetCommitFromTagName(tag1_name, "1st ")
+        Dim commit2 As Commit = GetCommitFromTagName(tag2_name, "2nd ")
 
-        Dim tag1 As Tag = Globals.getRepo.Tags(tag1_name)
-        Dim tag2 As Tag = Globals.getRepo.Tags(tag2_name)
-
-        If tag1 Is Nothing Then
-            Throw New System.Exception("1st Tag (" & tag1_name & ") is unrecognised.")
-        End If
-        If tag2 Is Nothing Then
-            Throw New System.Exception("2nd Tag (" & tag2_name & ") is unrecognised.")
-        End If
-
-        setCommitsFromSHA(tag1.Target.Sha, tag2.Target.Sha)
+        Globals.setCommits(commit1, commit2)
 
     End Sub
 
@@ -405,7 +515,7 @@ Public Class GitOp
     'End Function
 
 
-    Shared Function viewChanges(ByVal repo_path As String, ByVal pathmask As String, ByRef targetFiles As Collection) As String
+    Shared Function ViewChanges(ByVal pathmask As String, ByRef targetFiles As Collection) As String
 
         Dim pathmask_UNIX As String = Common.unix_path(pathmask)
 
@@ -425,7 +535,7 @@ Public Class GitOp
                 For Each file In targetFiles
 
                     If change.Path = file.ToString Then
-                        Dim file_string_data As String = Globals.getRepo.Lookup(Of Blob)(change.Oid).ToString
+                        Dim file_string_data As String = Globals.getRepo.Lookup(Of Blob)(change.Oid).GetContentText
                         MsgBox(file_string_data)
 
                         Clipboard.Clear()
@@ -448,7 +558,7 @@ Public Class GitOp
 
     End Function
 
-    Shared Function exportChanges(ByVal pathmask As String, ByRef targetFiles As Collection, patchDir As String) As Collection
+    Shared Function ExportChanges(ByVal pathmask As String, ByRef targetFiles As Collection, patchDir As String) As Collection
 
         Dim pathmask_UNIX As String = Common.unix_path(pathmask)
 
@@ -471,7 +581,8 @@ Public Class GitOp
                 For Each file In targetFiles
 
                     If change.Path = file.ToString Then
-                        Dim file_string_data As String = Globals.getRepo.Lookup(Of Blob)(change.Oid).ToString
+                        Dim file_string_data As String = Globals.getRepo.Lookup(Of Blob)(change.Oid).GetContentText
+
                         'MsgBox(file_string_data)
 
                         FileIO.writeFile(patchDir & "\" & change.Path.Split("/").Last, file_string_data)
@@ -495,7 +606,7 @@ Public Class GitOp
     End Function
 
 
-    Shared Function Log(Optional ByVal headeronly As Boolean = True) As Collection
+    Shared Function Log(Optional ByVal headerOnly As Boolean = True) As Collection
 
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
@@ -510,7 +621,7 @@ Public Class GitOp
             If ancestorCommit = Globals.getCommit1 Then Exit For
 
             Dim logMessage As String = Nothing
-            If headeronly Then
+            If headerOnly Then
                 logMessage = Common.getFirstSegment(ancestorCommit.Message, Chr(10))
             Else
                 logMessage = ancestorCommit.Message

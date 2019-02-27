@@ -282,7 +282,7 @@ Module Globals
 
     Public Function currentLongBranch() As String
 
-        Return GitOp.currentBranch()
+        Return GitOp.CurrentBranch()
     End Function
 
     Public Function currentBranch() As String

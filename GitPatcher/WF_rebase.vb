@@ -1,4 +1,6 @@
-﻿Friend Class WF_rebase
+﻿Imports LibGit2Sharp
+
+Friend Class WF_rebase
     Shared Function rebaseBranch(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String) As String
 
         Dim tag_no_padding As Integer = 2
@@ -10,17 +12,16 @@
         End If
 
 
-        Dim currentBranchLong As String = GitOp.currentBranch()
+        Dim currentBranchLong As String = GitOp.CurrentBranch()
         Dim currentBranchShort As String = Globals.currentBranch
 
         Dim rebasing As ProgressDialogue = New ProgressDialogue("Rebase branch " & currentBranchLong)
 
         Dim l_max_tag As Integer = 0
 
-        Dim tagnames As Collection = New Collection
-        tagnames = GitOp.getTagList(tagnames, Globals.currentBranch)
-        For Each tagname In tagnames
-            Dim tag_no As String = Common.getLastSegment(tagname.ToString, ".").Substring(0, tag_no_padding)
+        For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch)
+
+            Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_no_padding)
             Try
                 If tag_no > l_max_tag Then
                     l_max_tag = tag_no
@@ -60,7 +61,7 @@
         If rebasing.toDoNextStep() Then
             'Switch to develop branch
             'GitBash.Switch(Globals.getRepoPath, iRebaseBranchOn)
-            GitOp.switchBranch(iRebaseBranchOn)
+            GitOp.SwitchBranch(iRebaseBranchOn)
         End If
         If rebasing.toDoNextStep() Then
             'Pull from origin/develop
@@ -79,7 +80,7 @@
 
         If rebasing.toDoNextStep() Then
             'Return to branch
-            GitOp.switchBranch(currentBranchLong)
+            GitOp.SwitchBranch(currentBranchLong)
         End If
 
         If rebasing.toDoNextStep() Then
