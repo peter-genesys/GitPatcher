@@ -1,4 +1,4 @@
-﻿
+﻿Imports LibGit2Sharp
 Public Class CreateRelease
     Private pPatchName As String = Nothing
     Private pCreatePatchType As String = Nothing
@@ -59,10 +59,11 @@ Public Class CreateRelease
         Dim tagseg As String = Nothing
 
         TagsCheckedListBox.Items.Clear()
-        For Each tagname In GitOp.getTagList()
-            tagseg = Common.getFirstSegment(tagname, "-")
+        For Each thisTag As Tag In GitOp.getTagList()
+            tagseg = Common.getFirstSegment(thisTag.FriendlyName, "-")
+            'Looks like this used to search for tags by appCode, but not doing this ATM.
             'If tagseg = tagsearch Then
-            TagsCheckedListBox.Items.Add(tagname)
+            TagsCheckedListBox.Items.Add(thisTag.FriendlyName)
             'End If
         Next
 

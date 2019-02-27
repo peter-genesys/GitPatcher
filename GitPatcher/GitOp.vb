@@ -22,39 +22,41 @@ Public Class GitOp
     'End Sub
 
 
-    Shared Function getTagList(ByVal currentTags As Collection, Optional ByVal filter As String = Nothing) As Collection
-        'Input currentTags - a collection of tag names
-        'Input filter      - search for matching tag names
-        'Output tagnames   - a collection of tag names, initialised with currentTags
-        '  If filter is null then all tag names found in the repo are appended to tagnames.
-        '  If filter is NOT null then only tag names that contain the filter will be appended to tagnames.
+
+    Shared Function getTagList(ByVal inTags As Collection, Optional ByVal tagNameFilter As String = Nothing) As Collection
+        'Input inTags         - a collection of tags
+        'Input tagNameFilter  - search for matching tag names
+        'Output outTags       - a collection of tags, initialised with inTags
+        '  If tagNameFilter is null then all tags found in the repo are appended to outTags.
+        '  If tagNameFilter is NOT null then only tags with tag name that contain the filter will be appended to outTags.
 
 
-        Dim tagnames As Collection = currentTags
+        Dim outTags As Collection = inTags
 
         For Each Tag In Globals.getRepo.Tags
-            If String.IsNullOrEmpty(filter) Then
-                tagnames.Add(Tag.Reference)
-            ElseIf Tag.ToString.Contains(filter) Then
-                tagnames.Add(Tag.Reference)
+            If String.IsNullOrEmpty(tagNameFilter) Then
+                outTags.Add(Tag)
+            ElseIf Tag.FriendlyName.Contains(tagNameFilter) Then
+                outTags.Add(Tag)
             End If
 
         Next
 
-        Return tagnames
+        Return outTags
 
     End Function
 
-    Shared Function getTagList(Optional ByVal filter As String = Nothing) As Collection
 
-        'Input filter      - search for matching tag names
-        'Output  tagnames  - a collection of tag names.  
-        '  If filter is null then all tag names found in the repo are returned.
-        '  If filter is NOT nutl then only tag names that contain the filter will be returned.
+    Shared Function getTagList(Optional ByVal tagNameFilter As String = Nothing) As Collection
 
-        Dim tagnames As Collection = New Collection
+        'Input tagNameFilter  - search for matching tag names
+        'Output outTags       - a collection of tags, initialised with an empty set of tags
+        '  If tagNameFilter is null then all tags found in the repo are appended to outTags.
+        '  If tagNameFilter is NOT null then only tags with tag name that contain the filter will be appended to outTags.
 
-        Return getTagList(tagnames, filter)
+        Dim outTags As Collection = New Collection
+
+        Return getTagList(outTags, tagNameFilter)
 
     End Function
 
@@ -64,7 +66,7 @@ Public Class GitOp
     ' Return True
     ' End Function
 
-    Shared Function currentBranch() As String
+    Shared Function CurrentBranch() As String
         'Return the name of the branch at the head.
 
         Try
@@ -85,12 +87,34 @@ Public Class GitOp
 
     End Sub
 
-    Shared Sub switchBranch(ByVal branchName As String)
+    Shared Sub SwitchCommit(ByVal theCommit As Commit)
+        'Switch to any existing commit
+
+        Try
+
+            Commands.Checkout(Globals.getRepo, theCommit)
+
+        Catch e As Exception
+            MsgBox(e.Message)
+        End Try
+
+        ''Verify that the switch occurred and if not, use tortoise to do it.
+        ''Thus exposing the issue, so the developer can resolve it, before proceeding.
+        'If Globals.currentBranch <> branchName Then
+        '    Tortoise.Switch(Globals.getRepoPath)
+        'End If
+
+
+    End Sub
+
+
+    Shared Sub SwitchBranch(ByVal branchName As String)
         'Switch to an existing local branch
 
         Dim existingBranch As Branch = Globals.getRepo.Branches(branchName)
 
         Try
+
             Commands.Checkout(Globals.getRepo, existingBranch)
 
         Catch e As Exception
@@ -110,7 +134,7 @@ Public Class GitOp
         'Create then switch to a local branch
 
         createBranch(branchName)
-        switchBranch(branchName)
+        SwitchBranch(branchName)
 
     End Sub
 
@@ -138,7 +162,7 @@ Public Class GitOp
     Shared Sub pushCurrentBranch()
         'push current branch
 
-        pushBranch(currentBranch)
+        pushBranch(CurrentBranch)
 
     End Sub
 
@@ -179,7 +203,7 @@ Public Class GitOp
     Shared Sub pullCurrentBranch()
         'push current branch
 
-        pullBranch(currentBranch())
+        pullBranch(CurrentBranch())
 
     End Sub
 
@@ -405,7 +429,7 @@ Public Class GitOp
     'End Function
 
 
-    Shared Function viewChanges(ByVal repo_path As String, ByVal pathmask As String, ByRef targetFiles As Collection) As String
+    Shared Function ViewChanges(ByVal pathmask As String, ByRef targetFiles As Collection) As String
 
         Dim pathmask_UNIX As String = Common.unix_path(pathmask)
 
@@ -425,7 +449,7 @@ Public Class GitOp
                 For Each file In targetFiles
 
                     If change.Path = file.ToString Then
-                        Dim file_string_data As String = Globals.getRepo.Lookup(Of Blob)(change.Oid).ToString
+                        Dim file_string_data As String = Globals.getRepo.Lookup(Of Blob)(change.Oid).GetContentText
                         MsgBox(file_string_data)
 
                         Clipboard.Clear()
@@ -448,7 +472,7 @@ Public Class GitOp
 
     End Function
 
-    Shared Function exportChanges(ByVal pathmask As String, ByRef targetFiles As Collection, patchDir As String) As Collection
+    Shared Function ExportChanges(ByVal pathmask As String, ByRef targetFiles As Collection, patchDir As String) As Collection
 
         Dim pathmask_UNIX As String = Common.unix_path(pathmask)
 
@@ -471,7 +495,8 @@ Public Class GitOp
                 For Each file In targetFiles
 
                     If change.Path = file.ToString Then
-                        Dim file_string_data As String = Globals.getRepo.Lookup(Of Blob)(change.Oid).ToString
+                        Dim file_string_data As String = Globals.getRepo.Lookup(Of Blob)(change.Oid).GetContentText
+
                         'MsgBox(file_string_data)
 
                         FileIO.writeFile(patchDir & "\" & change.Path.Split("/").Last, file_string_data)
@@ -495,7 +520,7 @@ Public Class GitOp
     End Function
 
 
-    Shared Function Log(Optional ByVal headeronly As Boolean = True) As Collection
+    Shared Function Log(Optional ByVal headerOnly As Boolean = True) As Collection
 
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
@@ -510,7 +535,7 @@ Public Class GitOp
             If ancestorCommit = Globals.getCommit1 Then Exit For
 
             Dim logMessage As String = Nothing
-            If headeronly Then
+            If headerOnly Then
                 logMessage = Common.getFirstSegment(ancestorCommit.Message, Chr(10))
             Else
                 logMessage = ancestorCommit.Message

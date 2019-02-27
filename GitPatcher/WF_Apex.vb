@@ -141,7 +141,7 @@
         Dim l_skip_reports_DBs As String = "DEV"
         Dim fapp_id As String = Globals.currentApex
 
-        Dim currentBranch As String = GitOp.currentBranch()
+        Dim currentBranch As String = GitOp.CurrentBranch()
         Dim runOnlyDBs As String = "DEV,TEST,UAT,PROD"
 
         Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import APEX application " & fapp_id & " into DB " & Globals.currentTNS,
@@ -179,7 +179,7 @@
 
 
             'Checkout the tag
-            GitOp.switchBranch(tagApexVersion)
+            GitOp.SwitchBranch(tagApexVersion)
             If ImportProgress.toDoNextStep Then
                 'If tag not like Globals.currentAppCode relabel apex
 
@@ -247,7 +247,7 @@
 
         If ImportProgress.toDoNextStep Then
             'Return to branch
-            GitOp.switchBranch(currentBranch)
+            GitOp.SwitchBranch(currentBranch)
 
         End If
 
@@ -267,7 +267,7 @@
 
         Dim fapp_id As String = Globals.currentApex
 
-        Dim currentBranch As String = GitOp.currentBranch()
+        Dim currentBranch As String = GitOp.CurrentBranch()
 
         Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import 1 APEX page " & fapp_id & " into DB " & Globals.currentTNS,
         "Importing 1 APEX page of Application " & Globals.currentApex & " into parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentTNS & Environment.NewLine &
@@ -324,7 +324,7 @@
 
             If ImportProgress.toDoNextStep Then
                 'Return to branch
-                GitOp.switchBranch(currentBranch)
+                GitOp.SwitchBranch(currentBranch)
             End If
 
             ImportProgress.toDoNextStep()

@@ -2,7 +2,7 @@
     Shared Sub mergeAndPushBranch(iBranchType As String, iBranchTo As String)
         'THIS ONE
         Common.checkBranch(iBranchType)
-        Dim currentBranch As String = GitOp.currentBranch()
+        Dim currentBranch As String = GitOp.CurrentBranch()
 
         Dim mergeAndPush As ProgressDialogue = New ProgressDialogue("Merge and Push branch:  " & currentBranch)
         mergeAndPush.MdiParent = GitPatcher
@@ -24,7 +24,7 @@
 
         If mergeAndPush.toDoNextStep() Then
             'Switch to develop branch
-            GitOp.switchBranch(iBranchTo)
+            GitOp.SwitchBranch(iBranchTo)
 
 
         End If
@@ -65,7 +65,7 @@
         If mergeAndPush.toDoNextStep() Then
             'Return to branch
             'GitSharpFascade.switchBranch(Globals.currentRepo, currentBranch)
-            GitOp.switchBranch(currentBranch)
+            GitOp.SwitchBranch(currentBranch)
 
         End If
 

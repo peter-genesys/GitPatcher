@@ -3,7 +3,7 @@
 
         Dim lcurrentDB As String = Globals.getDB()
 
-        Dim currentBranch As String = GitOp.currentBranch()
+        Dim currentBranch As String = GitOp.CurrentBranch()
 
         Dim releaseFromBranch As String = Globals.deriveHotfixBranch(iTargetDB)
 
@@ -37,7 +37,7 @@
 
         If releasing.toDoNextStep() Then
             'Switch to develop branch
-            GitOp.switchBranch(releaseFromBranch)
+            GitOp.SwitchBranch(releaseFromBranch)
 
         End If
         If releasing.toDoNextStep() Then
@@ -58,7 +58,7 @@
             PatchTag = ChoiceDialog.Ask("Please choose a tag for patch installs", tagnames, "HEAD", "Choose tag")
 
             'Checkout the tag
-            GitOp.switchBranch(PatchTag)
+            GitOp.SwitchBranch(PatchTag)
 
 
         End If
@@ -115,7 +115,7 @@
 
         newBranch = newBranch & "/" & l_app_version
 
-        Dim currentBranch As String = GitOp.currentBranch()
+        Dim currentBranch As String = GitOp.CurrentBranch()
 
         Dim createPatchSetProgress As ProgressDialogue = New ProgressDialogue("Create DB " & iCreatePatchType)
         createPatchSetProgress.MdiParent = GitPatcher
@@ -153,7 +153,7 @@
 
         If createPatchSetProgress.toDoNextStep() Then
             'Switch to develop branch
-            GitOp.switchBranch("develop")
+            GitOp.SwitchBranch("develop")
 
 
         End If

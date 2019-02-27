@@ -1,4 +1,5 @@
-﻿
+﻿Imports LibGit2Sharp
+
 Public Class PatchFromTags
 
     Dim gBranchType As String
@@ -75,14 +76,13 @@ Public Class PatchFromTags
 
         Dim tag_no_padding As Integer = 2
 
-
         TagsCheckedListBox.Items.Clear()
-        For Each myTag In GitOp.getTagList()
-            Dim tagname As String = myTag.ToString()
-            If Common.getFirstSegment(tagname, ".") = Globals.currentBranch Then
+        For Each thisTag As Tag In GitOp.getTagList()
+
+            If Common.getFirstSegment(thisTag.FriendlyName, ".") = Globals.currentBranch Then
                 'This is a tag worth listing
-                Dim ticked As Boolean = (gtag_base = Common.getLastSegment(tagname, ".").Substring(0, tag_no_padding)) 'This is a tag worth ticking
-                TagsCheckedListBox.Items.Add(tagname, ticked)
+                Dim ticked As Boolean = (gtag_base = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_no_padding)) 'This is a tag worth ticking
+                TagsCheckedListBox.Items.Add(thisTag.FriendlyName, ticked)
 
             End If
         Next
@@ -127,10 +127,13 @@ Public Class PatchFromTags
                 ElseIf SchemaComboBox.Items.Count = 1 Then
                     SchemaComboBox.SelectedIndex = 0
                 Else
-                    MsgBox("There are changes across " & SchemaComboBox.Items.Count.ToString & " schemas.")
+                    CreateObject("WScript.Shell").Popup("There are changes across " & SchemaComboBox.Items.Count.ToString & " schemas.", 0.5, "Multiple Schemas")
+
+                    'MsgBox("There are changes across " & SchemaComboBox.Items.Count.ToString & " schemas.")
                     Logger.Dbg("Multiple schemas")
                 End If
             Catch ex As Exception
+                Logger.Dbg(ex.Message)
                 MsgBox("Unable to find Changes" & vbCrLf & ex.Message)
             End Try
 
@@ -186,6 +189,7 @@ Public Class PatchFromTags
                     FileIO.CopyFileToDir(FilePath, patch_dir)
                     filenames.Add(Filename)
                 Catch ex As Exception
+                    Logger.Dbg(ex.Message)
                     MsgBox("Warning: File " & FilePath & " could not be exported, but will be in the install file.  It may be a folder.  Deselect, then recreate Patch.")
 
                 End Try
@@ -228,7 +232,7 @@ Public Class PatchFromTags
         'TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
         Dim filenames As Collection = Nothing
-        filenames = GitOp.exportChanges(Globals.DBRepoPathMask & SchemaComboBox.Text, changesFiles, PatchDirTextBox.Text)
+        filenames = GitOp.ExportChanges(Globals.DBRepoPathMask & SchemaComboBox.Text, changesFiles, PatchDirTextBox.Text)
 
 
         'Additional file exports 
@@ -305,7 +309,7 @@ Public Class PatchFromTags
 
             Host.RunExplorer(PatchDirTextBox.Text)
         Catch ex As ArgumentException
-            'MsgBox(ex.ToString)
+            Logger.Dbg(ex.Message)
             MsgBox("There are duplicated filenames in the patch.  You may have selected an Extra File that is already in the Patch.")
 
         End Try
@@ -323,7 +327,7 @@ Public Class PatchFromTags
         'Retrieve checked node items from the TreeViewChanges as a collection of changes.
         TreeViewChanges.ReadCheckedLeafNodes(CheckedChanges)
 
-        MsgBox(GitOp.viewChanges(Globals.getRepoPath, "database/" & SchemaComboBox.Text, CheckedChanges))
+        MsgBox(GitOp.ViewChanges("database/" & SchemaComboBox.Text, CheckedChanges))
     End Sub
 
 
@@ -1035,7 +1039,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub deriveTags()
-        'MsgBox("TagsCheckedListBox.SelectedIndexChanged")
+        Logger.Dbg("deriveTags")
 
         If TagsCheckedListBox.CheckedItems.Count > 0 Then
             Tag1TextBox.Text = TagsCheckedListBox.CheckedItems.Item(0)
@@ -1094,8 +1098,10 @@ Public Class PatchFromTags
                 Next
             End If
         Catch ex As UnauthorizedAccessException
+            Logger.Dbg(ex.Message)
             parentNode.Nodes.Add(folder & ": Access Denied")
         Catch ex As System.IO.DirectoryNotFoundException
+            Logger.Dbg(ex.Message)
             parentNode.Nodes.Add(dir & ": Path Not Found")
         End Try
     End Sub
@@ -1240,6 +1246,7 @@ Public Class PatchFromTags
         Try
             FileIO.CopyFile(Globals.RootPatchDir & "README.txt", l_patchExportDir & "\README.txt")
         Catch ex As Exception
+            Logger.Dbg(ex.Message)
             MsgBox("No README.txt found, to copy to the patchset.")
 
         End Try
