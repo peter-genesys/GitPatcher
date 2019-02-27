@@ -23,6 +23,57 @@ Public Class GitOp
 
 
 
+    Shared Function GetCommitFromTagName(ByVal tagName As String) As Commit
+
+        Dim theTag As Tag = Globals.getRepo.Tags(tagName)
+
+        If theTag Is Nothing Then
+            Throw New System.Exception("Tag (" & tagName & ") is unrecognised.")
+        End If
+
+        Dim theCommit As Commit = Globals.getRepo().Lookup(Of Commit)(theTag.Target.Sha)
+
+        Return theCommit
+
+    End Function
+
+    Shared Function getTagNameList(ByVal inTagNames As Collection, Optional ByVal tagNameFilter As String = Nothing) As Collection
+        'Input inTagNames         - a collection of tagNames
+        'Input tagNameFilter  - search for matching tag names
+        'Output outTagNames       - a collection of tagNames, initialised with inTagNames
+        '  If tagNameFilter is null then all tags found in the repo are appended to outTagNames.
+        '  If tagNameFilter is NOT null then only tags with tag name that contain the filter will be appended to outTagNames.
+
+
+        Dim outTagNames As Collection = inTagNames
+
+        For Each Tag In Globals.getRepo.Tags
+            If String.IsNullOrEmpty(tagNameFilter) Then
+                outTagNames.Add(Tag.FriendlyName)
+            ElseIf Tag.FriendlyName.Contains(tagNameFilter) Then
+                outTagNames.Add(Tag.FriendlyName)
+            End If
+
+        Next
+
+        Return outTagNames
+
+    End Function
+
+
+    Shared Function getTagNameList(Optional ByVal tagNameFilter As String = Nothing) As Collection
+
+        'Input tagNameFilter  - search for matching tag names
+        'Output outTagNames       - a collection of tagNames, initialised with an empty set of tagNames
+        '  If tagNameFilter is null then all tags found in the repo are appended to outTagNames.
+        '  If tagNameFilter is NOT null then only tags with tag name that contain the filter will be appended to outTagNames.
+
+        Dim outTagNames As Collection = New Collection
+
+        Return getTagNameList(outTagNames, tagNameFilter)
+
+    End Function
+
     Shared Function getTagList(ByVal inTags As Collection, Optional ByVal tagNameFilter As String = Nothing) As Collection
         'Input inTags         - a collection of tags
         'Input tagNameFilter  - search for matching tag names
@@ -108,6 +159,9 @@ Public Class GitOp
     End Sub
 
 
+
+
+
     Shared Sub SwitchBranch(ByVal branchName As String)
         'Switch to an existing local branch
 
@@ -129,6 +183,30 @@ Public Class GitOp
 
 
     End Sub
+
+    Shared Sub SwitchHead()
+        'Switch to an existing local branch, pointed to by head
+
+        Dim theBranch As Branch = Globals.getRepo().Head
+
+        SwitchBranch(theBranch.FriendlyName)
+
+    End Sub
+
+
+    Shared Sub SwitchTagName(ByVal theTagName As String)
+
+        If theTagName = "HEAD" Then
+            'Checkout the head
+            GitOp.SwitchHead()
+        Else
+            'Checkout the tag
+            GitOp.SwitchCommit(GitOp.GetCommitFromTagName(theTagName))
+
+        End If
+
+    End Sub
+
 
     Shared Sub createAndSwitchBranch(ByVal branchName As String)
         'Create then switch to a local branch
@@ -209,6 +287,7 @@ Public Class GitOp
 
 
     Shared Sub getIndexedChanges()
+        'NOT CURRENTLY USED - LINKED TO HIDDEN MENU ITEM "ShowIndex"
         'I have not yet figured out what this is for
         'I think it might have been a debugging tool from a hidden menu item. ShowindexToolStripMenuItem
 

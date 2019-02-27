@@ -170,16 +170,16 @@
             'Choose a tag to import from
             Dim tagnames As Collection = New Collection
             tagnames.Add("HEAD")
-            tagnames = GitOp.getTagList(tagnames, Globals.currentBranch)
-            tagnames = GitOp.getTagList(tagnames, Globals.currentAppCode)
+            tagnames = GitOp.getTagNameList(tagnames, Globals.currentBranch)
+            tagnames = GitOp.getTagNameList(tagnames, Globals.currentAppCode)
 
 
             Dim tagApexVersion As String = Nothing
             tagApexVersion = ChoiceDialog.Ask("Please choose a tag for apex install", tagnames, "HEAD", "Choose tag")
 
-
             'Checkout the tag
-            GitOp.SwitchBranch(tagApexVersion)
+            GitOp.SwitchTagName(tagApexVersion)
+
             If ImportProgress.toDoNextStep Then
                 'If tag not like Globals.currentAppCode relabel apex
 
@@ -294,12 +294,15 @@
                 'Choose a tag to import from
                 Dim tagnames As Collection = New Collection
                 tagnames.Add("HEAD")
-                tagnames = GitOp.getTagList(tagnames, Globals.currentBranch)
-                tagnames = GitOp.getTagList(tagnames, Globals.currentAppCode)
+                tagnames = GitOp.getTagNameList(tagnames, Globals.currentBranch)
+                tagnames = GitOp.getTagNameList(tagnames, Globals.currentAppCode)
 
 
                 Dim tagApexVersion As String = Nothing
                 tagApexVersion = ChoiceDialog.Ask("Please choose a tag for apex install", tagnames, "HEAD", "Choose tag")
+
+                'Checkout the tag
+                GitOp.SwitchTagName(tagApexVersion)
 
             End If
 

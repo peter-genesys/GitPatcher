@@ -50,16 +50,14 @@
             'Choose a tag to import from
             Dim tagnames As Collection = New Collection
             tagnames.Add("HEAD")
-            tagnames = GitOp.getTagList(tagnames, Globals.currentBranch)
-            tagnames = GitOp.getTagList(tagnames, Globals.getAppCode)
+            tagnames = GitOp.getTagNameList(tagnames, Globals.currentBranch)
+            tagnames = GitOp.getTagNameList(tagnames, Globals.getAppCode)
 
 
             Dim PatchTag As String = Nothing
             PatchTag = ChoiceDialog.Ask("Please choose a tag for patch installs", tagnames, "HEAD", "Choose tag")
 
-            'Checkout the tag
-            GitOp.SwitchBranch(PatchTag)
-
+            GitOp.SwitchTagName(PatchTag)
 
         End If
 

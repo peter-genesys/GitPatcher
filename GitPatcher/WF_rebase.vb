@@ -23,9 +23,9 @@ Friend Class WF_rebase
         'branchTags = GitOp.getTagList(branchTags, Globals.currentBranch)
         'For Each myTag As Tag In branchTags
 
-        For Each myTag As Tag In GitOp.getTagList(Globals.currentBranch)
+        For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch)
 
-            Dim tag_no As String = Common.getLastSegment(myTag.FriendlyName, ".").Substring(0, tag_no_padding)
+            Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_no_padding)
             Try
                 If tag_no > l_max_tag Then
                     l_max_tag = tag_no
