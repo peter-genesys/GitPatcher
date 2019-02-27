@@ -21,14 +21,35 @@ Public Class GitOp
     '
     'End Sub
 
+    Shared Function GetCommitFromSHA(ByVal SHA As String, Optional ByVal shaAlias As String = Nothing) As Commit
+
+        If SHA = "" Then
+            Throw New System.Exception(shaAlias & "SHA is required")
+        End If
+
+        Dim theTag As Tag = Globals.getRepo.Tags(SHA)
+
+        If theTag Is Nothing Then
+            Throw New System.Exception(shaAlias & "SHA (" & shaAlias & ") is unrecognised.")
+        End If
+
+        Dim theCommit As Commit = Globals.getRepo().Lookup(Of Commit)(SHA)
+
+        Return theCommit
+
+    End Function
 
 
-    Shared Function GetCommitFromTagName(ByVal tagName As String) As Commit
+    Shared Function GetCommitFromTagName(ByVal tagName As String, Optional ByVal tagAlias As String = Nothing) As Commit
+
+        If tagName = "" Then
+            Throw New System.Exception(tagAlias & "Tag is required")
+        End If
 
         Dim theTag As Tag = Globals.getRepo.Tags(tagName)
 
         If theTag Is Nothing Then
-            Throw New System.Exception("Tag (" & tagName & ") is unrecognised.")
+            Throw New System.Exception(tagAlias & "Tag (" & tagName & ") is unrecognised.")
         End If
 
         Dim theCommit As Commit = Globals.getRepo().Lookup(Of Commit)(theTag.Target.Sha)
@@ -328,24 +349,11 @@ Public Class GitOp
 
 
     Shared Sub setCommitsFromSHA(ByVal SHA_1 As String, ByVal SHA_2 As String)
+
         'Find the commits referred to by SHA 1 and SHA 2 and store them in persistent variables in the Globals module
 
-        If SHA_1 = "" Then
-            Throw New System.Exception("1st SHA is required")
-        End If
-        If SHA_2 = "" Then
-            Throw New System.Exception("2nd SHA is required")
-        End If
-
-        Dim commit1 As Commit = Globals.getRepo().Lookup(Of Commit)(SHA_1)
-        Dim commit2 As Commit = Globals.getRepo().Lookup(Of Commit)(SHA_2)
-
-        If commit1 Is Nothing Then
-            Throw New System.Exception("1st SHA (" & SHA_1 & ") is unrecognised.")
-        End If
-        If commit2 Is Nothing Then
-            Throw New System.Exception("2nd SHA (" & SHA_2 & ") is unrecognised.")
-        End If
+        Dim commit1 As Commit = GetCommitFromSHA(SHA_1, "1st ")
+        Dim commit2 As Commit = GetCommitFromSHA(SHA_2, "2nd ")
 
         Globals.setCommits(commit1, commit2)
 
@@ -355,24 +363,10 @@ Public Class GitOp
 
         'Find the commits referred to by Tag 1 and Tag 2 and store them in persistent variables in the Globals module
 
-        If tag1_name = "" Then
-            Throw New System.Exception("1st Tag is required")
-        End If
-        If tag2_name = "" Then
-            Throw New System.Exception("2nd Tag is required")
-        End If
+        Dim commit1 As Commit = GetCommitFromTagName(tag1_name, "1st ")
+        Dim commit2 As Commit = GetCommitFromTagName(tag2_name, "2nd ")
 
-        Dim tag1 As Tag = Globals.getRepo.Tags(tag1_name)
-        Dim tag2 As Tag = Globals.getRepo.Tags(tag2_name)
-
-        If tag1 Is Nothing Then
-            Throw New System.Exception("1st Tag (" & tag1_name & ") is unrecognised.")
-        End If
-        If tag2 Is Nothing Then
-            Throw New System.Exception("2nd Tag (" & tag2_name & ") is unrecognised.")
-        End If
-
-        setCommitsFromSHA(tag1.Target.Sha, tag2.Target.Sha)
+        Globals.setCommits(commit1, commit2)
 
     End Sub
 

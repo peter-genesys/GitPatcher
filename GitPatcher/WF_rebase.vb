@@ -19,10 +19,6 @@ Friend Class WF_rebase
 
         Dim l_max_tag As Integer = 0
 
-        'Dim branchTags As Collection = New Collection
-        'branchTags = GitOp.getTagList(branchTags, Globals.currentBranch)
-        'For Each myTag As Tag In branchTags
-
         For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch)
 
             Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_no_padding)

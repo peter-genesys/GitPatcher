@@ -230,7 +230,9 @@ Public Class CreateRelease
                            PreReqPatches,
                            PatchDirTextBox.Text,
                            PatchPathTextBox.Text,
-                           TrackPromoCheckBox.Checked)
+                           TrackPromoCheckBox.Checked,
+                           True,
+                           False)
 
         'Write the install_lite script without Patch Admin
         writeInstallScript(PatchNameTextBox.Text,
@@ -249,7 +251,9 @@ Public Class CreateRelease
                            PreReqPatches,
                            PatchDirTextBox.Text,
                            PatchPathTextBox.Text,
-                           TrackPromoCheckBox.Checked)
+                           TrackPromoCheckBox.Checked,
+                           True,
+                           False)
 
         Host.RunExplorer(PatchDirTextBox.Text)
 
@@ -280,7 +284,9 @@ Public Class CreateRelease
                                   ByRef prereq_patches As Collection,
                                   ByVal patchDir As String,
                                   ByVal groupPath As String,
-                                  ByVal track_promotion As Boolean)
+                                  ByVal track_promotion As Boolean,
+                                  ByVal alt_schema As Boolean,
+                                  ByVal retired As Boolean)
 
 
         Dim l_master_filename As String = Nothing
@@ -310,6 +316,18 @@ Public Class CreateRelease
         If track_promotion Then
             track_promotion_yn = "Y"
         End If
+
+        Dim alt_schema_yn As String = "N"
+        If alt_schema Then
+            alt_schema_yn = "Y"
+        End If
+
+        Dim retired_yn As String = "N"
+        If retired Then
+            retired_yn = "Y"
+        End If
+
+
 
         For Each l_path In targetFiles
 
@@ -385,12 +403,14 @@ Public Class CreateRelease
     & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
     & Chr(10) & " ,i_suffix             => '" & suffix & "' -" _
     & Chr(10) & " ,i_patch_desc         => '" & patch_desc & "' -" _
-    & Chr(10) & " ,i_patch_componants   => '" & l_all_programs & "' -" _
+    & Chr(10) & " ,i_patch_components   => '" & l_all_programs & "' -" _
     & Chr(10) & " ,i_patch_create_date  => '" & DateString & "' -" _
     & Chr(10) & " ,i_patch_created_by   => '" & Environment.UserName & "' -" _
     & Chr(10) & " ,i_note               => '" & note & "' -" _
     & Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
-    & Chr(10) & " ,i_tracking_yn        => '" & track_promotion_yn & "'); " _
+    & Chr(10) & " ,i_tracking_yn        => '" & track_promotion_yn & "' -" _
+    & Chr(10) & " ,i_alt_schema_yn      => '" & alt_schema_yn & "' -" _
+    & Chr(10) & " ,i_retired_yn         => '" & retired_yn & "'); " _
     & Chr(10))
 
 
