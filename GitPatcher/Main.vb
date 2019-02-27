@@ -360,4 +360,8 @@
     Private Sub MergeButton_Click(sender As Object, e As EventArgs) Handles MergeButton.Click
         Tortoise.Merge(Globals.getRepoPath)
     End Sub
+
+    Private Sub CreateDBReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBReleaseToolStripMenuItem.Click
+        WF_release.createReleaseProcess("release", "feature,hotfix,version", Me.AppCodeTextBox.Text, "release,feature,hotfix,version,ALL", "release,feature,hotfix,ALL", "TEST")
+    End Sub
 End Class
