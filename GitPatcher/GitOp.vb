@@ -42,17 +42,27 @@ Public Class GitOp
 
     Shared Function GetCommitFromTagName(ByVal tagName As String, Optional ByVal tagAlias As String = Nothing) As Commit
 
+        Dim theCommit As Commit
+
         If tagName = "" Then
             Throw New System.Exception(tagAlias & "Tag is required")
         End If
 
-        Dim theTag As Tag = Globals.getRepo.Tags(tagName)
+        If tagName = "HEAD" Then
+            'If Tag is HEAD, find the tip commit of the HEAD branch 
+            Dim theBranch As Branch = Globals.getRepo().Head
+            theCommit = theBranch.Tip
 
-        If theTag Is Nothing Then
-            Throw New System.Exception(tagAlias & "Tag (" & tagName & ") is unrecognised.")
+        Else
+            Dim theTag As Tag = Globals.getRepo.Tags(tagName)
+
+            If theTag Is Nothing Then
+                Throw New System.Exception(tagAlias & "Tag (" & tagName & ") is unrecognised.")
+            End If
+
+            theCommit = Globals.getRepo().Lookup(Of Commit)(theTag.Target.Sha)
+
         End If
-
-        Dim theCommit As Commit = Globals.getRepo().Lookup(Of Commit)(theTag.Target.Sha)
 
         Return theCommit
 
@@ -220,10 +230,13 @@ Public Class GitOp
         If theTagName = "HEAD" Then
             'Checkout the head
             GitOp.SwitchHead()
+
+            'This would also Switch to HEAD.tip 
+            'But may be better to switch to HEAD by branch name than by commit.
+            'GitOp.SwitchCommit(GitOp.GetCommitFromTagName('HEAD'))
         Else
             'Checkout the tag
             GitOp.SwitchCommit(GitOp.GetCommitFromTagName(theTagName))
-
         End If
 
     End Sub
