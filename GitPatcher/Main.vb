@@ -109,8 +109,9 @@
 
     Public Sub loadOrgs()
 
-        OrgSettings.readOrgs(OrgComboBox, OrgComboBox.Text, RepoComboBox.Text)
- 
+        'OrgSettings.readOrgs(OrgComboBox, OrgComboBox.Text, RepoComboBox.Text)
+        OrgSettings.readOrgs(OrgComboBox, Globals.getOrgName(), RepoComboBox.Text)
+
         If String.IsNullOrEmpty(Globals.getDB) Then
             Globals.setDB("VM")
         End If
@@ -363,5 +364,10 @@
 
     Private Sub CreateDBReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBReleaseToolStripMenuItem.Click
         WF_release.createReleaseProcess("release", "feature,hotfix,version", Me.AppCodeTextBox.Text, "release,feature,hotfix,version,ALL", "release,feature,hotfix,ALL", "TEST")
+    End Sub
+
+    Private Sub OrgComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles OrgComboBox.SelectedIndexChanged
+        'setOrgCode(OrgComboBox.SelectedItem)
+        setOrgName(OrgComboBox.SelectedText)
     End Sub
 End Class
