@@ -7,11 +7,14 @@
         Dim currentBranch As String = Globals.currentLongBranch()
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")
         createPatchProgress.MdiParent = GitPatcher
-        createPatchProgress.addStep("Export Apex to branch: " & currentBranch, False, "Using the Apex Export workflow")
-        createPatchProgress.addStep("Use QCGU to generate changed domain data: " & currentBranch, False, "Think hard!  Did i change any domains, tables, security or menus?  " _
-                                 & "If so, i should logon to QCGU and generate that data out. " _
-                                 & "Then commit it too." _
-                                 & "Regenerate: Menu (new pages, menu changes), Security (new pages, security changes), Tapis (table or view column changes), Domains (new or changed tables or views, new domains or domain ussage changed)")
+        createPatchProgress.addStep("Export Apex Apps to " & iBranchType & " branch: " & currentBranch, False, "Using Apex2Git or the Apex Export workflow")
+        createPatchProgress.addStep("Use SmartGen to spool changed config data: " & currentBranch, False,
+                                    "Did I change any config data?  " &
+                                    "Do I need to spool any table changes or generate related objects?  " &
+                                    "If so, logon to SmartGen, generate and/or spool code. " &
+                                    "Use db-spooler to spool the objects to the local filesystem. " &
+                                    "Then commit it too.")
+        ' "Regenerate: Menu (new pages, menu changes), Security (new pages, security changes), Tapis (table or view column changes), Domains (new or changed tables or views, new domains or domain ussage changed)")
         createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow")
         createPatchProgress.addStep("Review tags on Branch: " & currentBranch)
         createPatchProgress.addStep("Create edit, test", True, "Now is a great time to smoke test my work before i commit the patch.")
@@ -34,13 +37,14 @@
 
         If createPatchProgress.toDoNextStep() Then
             'Export Apex to branch
-            WF_Apex.ApexExportCommit()
+            'WF_Apex.ApexExportCommit()
+            MsgBox("Please start Apex2Gen from the tools dir, to export the Apex Apps", MsgBoxStyle.Exclamation, "Apex2Gen")
 
         End If
 
         If createPatchProgress.toDoNextStep() Then
-            'QCGU
-            MsgBox("Please launch QCGU and generate Domain data", MsgBoxStyle.Exclamation, "QCGU")
+            'SMARTGEN
+            MsgBox("Please logon to SmartGen and generate/spool objects", MsgBoxStyle.Exclamation, "SmartGen")
 
         End If
 
@@ -68,10 +72,10 @@
 
 
         If createPatchProgress.toDoNextStep() Then
-            MsgBox("Now is a great time to smoke test my work before i commit the patch.", MsgBoxStyle.Information, "Smoke Test")
+            'MsgBox("Now is a great time to smoke test my work before i commit the patch.", MsgBoxStyle.Information, "Smoke Test")
 
             'Committing changed files to GIT"
-            Tortoise.Commit(Globals.getRepoPath, "Commit any patches you've not yet committed", True)
+            Tortoise.Commit(Globals.getRepoPath, "Commit any patches, or changes made while patching, that you've not yet committed", True)
         End If
 
 

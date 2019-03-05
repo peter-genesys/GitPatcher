@@ -3,7 +3,7 @@
 
 Module Globals
 
-
+    Private gFlow As String = My.Settings.Flow
     Private gDB As String = My.Settings.CurrentDB
 
     Private gRepoName As String
@@ -477,6 +477,11 @@ Module Globals
 
 
     Public Function deriveHotfixBranch(Optional ByVal iDb As String = "") As String
+
+        If gFlow = "GitHubFlow" Then
+            Return "master"
+        End If
+
         If String.IsNullOrEmpty(iDb) Then
             iDb = gDB
         End If

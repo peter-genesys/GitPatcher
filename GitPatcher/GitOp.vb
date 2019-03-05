@@ -206,9 +206,12 @@ Public Class GitOp
             MsgBox(e.Message)
         End Try
 
+        Logger.Note("Globals.currentLongBranch ", Globals.currentLongBranch)
+        Logger.Note("Globals.currentBranch ", Globals.currentBranch)
+
         'Verify that the switch occurred and if not, use tortoise to do it.
         'Thus exposing the issue, so the developer can resolve it, before proceeding.
-        If Globals.currentBranch <> branchName Then
+        If Globals.currentLongBranch <> branchName Then
             Tortoise.Switch(Globals.getRepoPath)
         End If
 
@@ -313,7 +316,7 @@ Public Class GitOp
     End Sub
 
     Shared Sub pullCurrentBranch()
-        'push current branch
+        'pull current branch
 
         pullBranch(CurrentBranch())
 
@@ -653,6 +656,33 @@ Public Class GitOp
         Return Globals.getRepo.Describe(branchTip, New DescribeOptions With {.Strategy = DescribeStrategy.Tags})
 
     End Function
+
+    Public Shared Function IsDirty() As Boolean
+
+        ' Dim branchTip = Globals.getRepo.Branches(branchName).Tip
+
+        Dim repoStatus As RepositoryStatus = Globals.getRepo.RetrieveStatus()
+
+        Return repoStatus.IsDirty
+
+    End Function
+
+    Public Shared Function RepoStatus() As RepositoryStatus
+
+        Return Globals.getRepo.RetrieveStatus()
+
+    End Function
+
+    Public Shared Function ChangedFiles() As Integer
+
+        Dim repoStatus As RepositoryStatus = Globals.getRepo.RetrieveStatus()
+        Dim changedFilesCount As Integer = repoStatus.Missing.Count + repoStatus.Modified.Count + repoStatus.Removed.Count + repoStatus.Added.Count
+
+        Return changedFilesCount
+
+    End Function
+
+
 
 End Class
 

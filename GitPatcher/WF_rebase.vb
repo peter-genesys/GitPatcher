@@ -55,7 +55,12 @@ Friend Class WF_rebase
 
         If rebasing.toDoNextStep() Then
             'Committing changed files to GIT"
-            Tortoise.Commit(Globals.getRepoPath, "CANCEL IF NOT NEEDED: Ensure the current branch [" & currentBranchShort & "] is free of uncommitted changes.", True)
+            If GitOp.ChangedFiles() > 0 And GitOp.IsDirty() Then
+
+                MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
+                Tortoise.Commit(Globals.getRepoPath, "Ensure the current branch [" & currentBranchShort & "] is free of uncommitted changes.", True)
+
+            End If
         End If
 
         If rebasing.toDoNextStep() Then

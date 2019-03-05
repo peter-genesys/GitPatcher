@@ -135,7 +135,7 @@ Partial Class Main
         '
         Me.CreateDBFeaturePatchToolStripMenuItem.Name = "CreateDBFeaturePatchToolStripMenuItem"
         Me.CreateDBFeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.CreateDBFeaturePatchToolStripMenuItem.Text = "Create DB Feature Patch"
+        Me.CreateDBFeaturePatchToolStripMenuItem.Text = "Feature Patch"
         Me.CreateDBFeaturePatchToolStripMenuItem.ToolTipText = "Create patch includes Rebase, Merge and Push to Develop"
         '
         'ToolStripSeparator2
