@@ -609,18 +609,26 @@ Public Class GitOp
     End Function
 
 
-    Shared Function Log(Optional ByVal headerOnly As Boolean = True) As Collection
 
+    Shared Function Log(Optional ByVal headerOnly As Boolean = True) As Collection
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
 
         'Returns a log list from Commit 1 to Commit 2
 
+        Dim filter = New CommitFilter() With {
+        .IncludeReachableFrom = Globals.getCommit2.Sha,  'TO
+        .ExcludeReachableFrom = Globals.getCommit1.Sha   'FROM
+        }
+
+        Dim commitList = Globals.getRepo.Commits.QueryBy(filter).ToList()
+
         Dim logList As Collection = New Collection
 
         Dim ancestorCommit As Commit
-        For Each ancestorCommit In Globals.getCommit2.Parents
+
+        For Each ancestorCommit In commitList
             If ancestorCommit = Globals.getCommit1 Then Exit For
 
             Dim logMessage As String = Nothing
@@ -632,13 +640,13 @@ Public Class GitOp
             logList.Add(logMessage)
         Next
 
-
         Cursor.Current = cursorRevert
 
         Return logList
 
 
     End Function
+
 
 
     Public Shared Function describe(ByVal branchName As String)

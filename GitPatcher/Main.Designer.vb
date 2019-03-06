@@ -251,18 +251,21 @@ Partial Class Main
         Me.CreateDBPatchSetToolStripMenuItem.Name = "CreateDBPatchSetToolStripMenuItem"
         Me.CreateDBPatchSetToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.CreateDBPatchSetToolStripMenuItem.Text = "Create DB Patch Set"
+        Me.CreateDBPatchSetToolStripMenuItem.Visible = False
         '
         'CreateDBMinorReleaseToolStripMenuItem
         '
         Me.CreateDBMinorReleaseToolStripMenuItem.Name = "CreateDBMinorReleaseToolStripMenuItem"
         Me.CreateDBMinorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.CreateDBMinorReleaseToolStripMenuItem.Text = "Create DB Minor Release"
+        Me.CreateDBMinorReleaseToolStripMenuItem.Visible = False
         '
         'CreateDBMajorReleaseToolStripMenuItem
         '
         Me.CreateDBMajorReleaseToolStripMenuItem.Name = "CreateDBMajorReleaseToolStripMenuItem"
         Me.CreateDBMajorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.CreateDBMajorReleaseToolStripMenuItem.Text = "Create DB Major Release"
+        Me.CreateDBMajorReleaseToolStripMenuItem.Visible = False
         '
         'ToolStripSeparator4
         '

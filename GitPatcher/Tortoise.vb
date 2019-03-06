@@ -54,5 +54,10 @@
         Dim client As New TortoiseFascade(i_wait)
         client.Sync(i_WorkingDir)
     End Sub
- 
+
+    Public Shared Sub StashSave(ByVal i_WorkingDir As String, ByVal i_msg As String, Optional ByVal i_wait As Boolean = True)
+        Dim client As New TortoiseFascade(i_wait)
+        client.StashSave(i_WorkingDir, i_msg)
+    End Sub
+
 End Class

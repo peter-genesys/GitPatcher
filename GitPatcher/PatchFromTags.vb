@@ -726,7 +726,7 @@ Public Class PatchFromTags
                         l_category = "Roles"
                     Case "job"
                         l_category = "Jobs"
-                    Case "sdl"
+                    Case "dat", "pop"
                         l_category = "Data"
                     Case "dblink"
                         l_category = "Database Links"
@@ -756,6 +756,7 @@ Public Class PatchFromTags
 
                 l_label = Common.getLastSegment(change, pathSeparator)
                 TreeViewPatchOrder.AddFileToCategory(l_category, l_label, change)
+
             Next
 
             TreeViewPatchOrder.RemoveChildlessLevel1Nodes()
