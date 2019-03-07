@@ -199,7 +199,6 @@ Public Class GitOp
         Dim existingBranch As Branch = Globals.getRepo.Branches(branchName)
 
         Try
-
             Commands.Checkout(Globals.getRepo, existingBranch)
 
         Catch e As Exception
@@ -252,6 +251,28 @@ Public Class GitOp
         SwitchBranch(branchName)
 
     End Sub
+
+
+    Shared Sub Merge(ByVal targetBranch As String)
+        'Merge the targetBranch into the current branch 
+        'NB NoFastForward
+        Dim options As MergeOptions = New MergeOptions()
+        options.FastForwardStrategy = FastForwardStrategy.NoFastForward
+
+        Dim UserName As String = Globals.getRepo.Config(10).Value
+        Dim UserEmail As String = Globals.getRepo.Config(11).Value
+        Logger.Note("UserName", UserName)
+        Logger.Note("UserEmail", UserEmail)
+
+        Dim mySignature As Signature = New Signature(UserName, UserEmail, New DateTimeOffset(DateTime.Now))
+
+        Globals.getRepo.Merge(Globals.getRepo.Branches(targetBranch).Tip, mySignature, options)
+
+    End Sub
+
+
+
+
 
 
     Shared Sub createTag(ByVal tagName As String)

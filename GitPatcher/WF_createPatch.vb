@@ -88,7 +88,10 @@
 
         If createPatchProgress.toDoNextStep() Then
             'Merge from Feature branch
-            Tortoise.Merge(Globals.getRepoPath)
+
+            'Tortoise.Merge(Globals.getRepoPath)
+            GitOp.Merge(currentBranch)
+
         End If
 
         If createPatchProgress.toDoNextStep() Then
