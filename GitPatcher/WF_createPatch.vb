@@ -72,17 +72,35 @@
 
 
         If createPatchProgress.toDoNextStep() Then
-            'MsgBox("Now is a great time to smoke test my work before i commit the patch.", MsgBoxStyle.Information, "Smoke Test")
+            'User chooses to commit, but don't bother unless the checkout is also dirty (meaning there is at least 1 staged or unstaged change)
+            If GitOp.IsDirty() Then
+                Logger.Dbg("User chose to commit and the checkout is also dirty")
 
+                'Committing changed files to GIT
+                'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
+                Tortoise.Commit(Globals.getRepoPath, "Commit any patches, or changes made while patching, that you've not yet committed", True)
+                'Tortoise.Commit(Globals.getRepoPath, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes.", True)
+
+            End If
+        Else
+            'User chooses to NOT to commit, but commit anyway if there is at least 1 staged change
             'Committing changed files to GIT"
-            Tortoise.Commit(Globals.getRepoPath, "Commit any patches, or changes made while patching, that you've not yet committed", True)
+            If GitOp.ChangedFiles() > 0 Then
+                Logger.Dbg("User chose NOT to commit but the checkout has staged changes")
+
+                MsgBox("Files have been changed. Please commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
+                Tortoise.Commit(Globals.getRepoPath, "Commit any patches, or changes made while patching, that you've not yet committed", True)
+                'MsgBox("Files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
+                'Tortoise.Commit(Globals.getRepoPath, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes.", True)
+
+            End If
+
         End If
 
 
         If createPatchProgress.toDoNextStep() Then
             'switch
             GitOp.SwitchBranch(iRebaseBranchOn)
-
 
         End If
 

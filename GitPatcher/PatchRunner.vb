@@ -632,10 +632,9 @@ Public Class PatchRunner
             conn.Close()
             conn.Dispose()
 
-
-
         Catch ex As Exception ' catches any error
             MessageBox.Show(ex.Message.ToString())
+            Return ex.Message.ToString()
         Finally
             ' In a real application, put cleanup code here.
 
