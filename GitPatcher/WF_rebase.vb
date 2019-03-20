@@ -34,12 +34,12 @@ Friend Class WF_rebase
         l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_no_padding, "0")
 
         rebasing.MdiParent = GitPatcher
-        rebasing.addStep("Commit to Branch: " & currentBranchLong, True, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no staged changes.")
-        rebasing.addStep("Stash Save: " & currentBranchLong, True, "Stash Save to ensure the current branch [" & currentBranchShort & "] contains no staged changes.")
+        rebasing.addStep("Commit to Branch: " & currentBranchLong, False, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no staged changes.")
+        rebasing.addStep("Stash Save: " & currentBranchLong, False, "Stash Save to ensure the current branch [" & currentBranchShort & "] contains no staged changes.")
         rebasing.addStep("Switch to " & iRebaseBranchOn & " branch", True, "If you get an error concerning uncommitted changes.  Please resolve the changes and then RESTART this process to ensure the switch to " & iRebaseBranchOn & " branch is successful.")
         rebasing.addStep("Pull from Origin")
         rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & "." & l_tag_base & "A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & currentBranchShort & ".99A")
-        rebasing.addStep("Return to branch: " & currentBranchLong)
+        rebasing.addStep("Return to branch: " & currentBranchLong, True)
         rebasing.addStep("Rebase Branch: " & currentBranchLong & " From Upstream:" & iRebaseBranchOn, True, "Please select the Upstream Branch:" & iRebaseBranchOn & " from the Tortoise Rebase Dialogue")
         rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & "." & l_tag_base & "B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.")
         rebasing.addStep("Revert your VM", True, "Before running patches, consider reverting to a VM snapshot prior to the development of your current work, or swapping to a unit test VM.")

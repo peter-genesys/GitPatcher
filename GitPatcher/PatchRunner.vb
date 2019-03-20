@@ -83,7 +83,7 @@ Public Class PatchRunner
         Dim orderedPatches As Collection = New Collection
 
         'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=apexrm;Password=apexrm;"
+        Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
 
         Dim conn As New OracleConnection(oradb)
         Dim sql As String = Nothing
@@ -182,7 +182,7 @@ Public Class PatchRunner
             Dim patchMatch As Boolean = False
 
             'Simple but replies on TNSNAMES File
-            Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=apexrm;Password=apexrm;"
+            Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
 
             'Harder to get working but no need for TNSNAMES File
             'Dim oradb As String = "Data Source=(DESCRIPTION=" _
@@ -268,7 +268,7 @@ Public Class PatchRunner
         End If
 
         'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=apexrm;Password=apexrm;"
+        Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
 
         Dim conn As New OracleConnection(oradb)
         Dim sql As String = Nothing
@@ -601,7 +601,7 @@ Public Class PatchRunner
         Cursor.Current = Cursors.WaitCursor
 
         'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=apexrm;Password=apexrm;"
+        Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
 
         Dim conn As New OracleConnection(oradb)
         Dim sql As String = Nothing

@@ -174,10 +174,6 @@ Module Globals
     End Function
 
 
-
-
-
-
     Private gTNS As String
 
     Public Sub setTNS(TNS As String)
@@ -199,6 +195,12 @@ Module Globals
     Public Function getCONNECT() As String
         Return gCONNECT
     End Function
+
+    Public Function getDATASOURCE() As String
+        'Return Connect details if given, otherwise use the TNS entry name.
+        Return If(gCONNECT, gTNS)
+    End Function
+
 
 
     Private gAppCode As String
