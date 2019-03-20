@@ -1148,11 +1148,10 @@ Public Class PatchFromTags
         For Each change In ChosenChanges
             Dim patch_component As String = Common.getLastSegment(change.ToString(), "/")
             Dim LastPatch As String = PatchRunner.FindLastPatch(patch_component)
-            If LastPatch.StartsWith("ORA") Then
-                Exit Sub
-            End If
             If String.IsNullOrEmpty(LastPatch) Then
                 Logger.Dbg("No previous patch for Change: " & patch_component)
+            ElseIf LastPatch.StartsWith("ORA") Then
+                Exit Sub
             Else
                 Logger.Dbg("Change: " & patch_component & " LastPatch: " & LastPatch)
                 Dim l_found As Boolean = False

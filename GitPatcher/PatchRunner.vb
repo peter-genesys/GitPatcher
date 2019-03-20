@@ -207,7 +207,7 @@ Public Class PatchRunner
                     patchMatch = False
                     Dim lPatchName As String = Common.getLastSegment(foundPatches(i), "\")
 
-                    sql = "select max(patch_name) patch_name from ARM_INSTALLED_PATCH_V where patch_name = '" & lPatchName
+                    sql = "select max(patch_name) patch_name from ARM_INSTALLED_PATCH_V where patch_name = '" & lPatchName & "'"
 
                     cmd = New OracleCommand(sql, conn)
                     cmd.CommandType = CommandType.Text
