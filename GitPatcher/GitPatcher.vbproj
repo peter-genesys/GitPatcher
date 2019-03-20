@@ -14,6 +14,9 @@
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -28,9 +31,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -117,9 +117,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="TreeViewDraggableNodes">
-      <HintPath>..\..\TreeViewDraggableNodes\TreeViewDraggableNodes\bin\Debug\TreeViewDraggableNodes.dll</HintPath>
-    </Reference>
     <Reference Include="TreeViewDraggableNodes2Levels">
       <HintPath>..\..\TreeViewDraggableNodes2Levels\TreeViewDraggableNodes2Levels\bin\Debug\TreeViewDraggableNodes2Levels.dll</HintPath>
     </Reference>

@@ -726,7 +726,7 @@ Public Class PatchFromTags
                         l_category = "Roles"
                     Case "job"
                         l_category = "Jobs"
-                    Case "sdl"
+                    Case "dat", "pop"
                         l_category = "Data"
                     Case "dblink"
                         l_category = "Database Links"
@@ -756,6 +756,7 @@ Public Class PatchFromTags
 
                 l_label = Common.getLastSegment(change, pathSeparator)
                 TreeViewPatchOrder.AddFileToCategory(l_category, l_label, change)
+
             Next
 
             TreeViewPatchOrder.RemoveChildlessLevel1Nodes()
@@ -1056,12 +1057,22 @@ Public Class PatchFromTags
 
     Private Sub CommitButton_Click(sender As Object, e As EventArgs) Handles CommitButton.Click
 
+        Dim lSchemaDir As String = Globals.getRepoPath & Globals.getDatabaseRelPath & SchemaComboBox.SelectedItem.ToString
+
+        Logger.Note("lSchemaDir", lSchemaDir)
+
         Dim lUntracked As String = Nothing
         If Not Me.TrackPromoCheckBox.Checked Then
             lUntracked = "UNTRACKED "
         End If
 
         Tortoise.Commit(PatchDirTextBox.Text, lUntracked & "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
+
+        'Extra commit, if there are still changed files
+        If GitOp.ChangedFiles() > 0 Then
+            Logger.Dbg("Changes still exist, so offer to commit them.")
+            Tortoise.Commit(lSchemaDir, "FIXED For: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
+        End If
 
         'Mail.SendNotification(lUntracked & "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, "Patch created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
 
@@ -1139,6 +1150,8 @@ Public Class PatchFromTags
             Dim LastPatch As String = PatchRunner.FindLastPatch(patch_component)
             If String.IsNullOrEmpty(LastPatch) Then
                 Logger.Dbg("No previous patch for Change: " & patch_component)
+            ElseIf LastPatch.StartsWith("ORA") Then
+                Exit Sub
             Else
                 Logger.Dbg("Change: " & patch_component & " LastPatch: " & LastPatch)
                 Dim l_found As Boolean = False

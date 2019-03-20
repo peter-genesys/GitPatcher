@@ -194,6 +194,15 @@ Namespace My
                 Me("JSONRepoFilePath") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("GitHubFLow")>  _
+        Public ReadOnly Property Flow() As String
+            Get
+                Return CType(Me("Flow"),String)
+            End Get
+        End Property
     End Class
 End Namespace
 

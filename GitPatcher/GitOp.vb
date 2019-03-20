@@ -199,16 +199,18 @@ Public Class GitOp
         Dim existingBranch As Branch = Globals.getRepo.Branches(branchName)
 
         Try
-
             Commands.Checkout(Globals.getRepo, existingBranch)
 
         Catch e As Exception
             MsgBox(e.Message)
         End Try
 
+        Logger.Note("Globals.currentLongBranch ", Globals.currentLongBranch)
+        Logger.Note("Globals.currentBranch ", Globals.currentBranch)
+
         'Verify that the switch occurred and if not, use tortoise to do it.
         'Thus exposing the issue, so the developer can resolve it, before proceeding.
-        If Globals.currentBranch <> branchName Then
+        If Globals.currentLongBranch <> branchName Then
             Tortoise.Switch(Globals.getRepoPath)
         End If
 
@@ -249,6 +251,28 @@ Public Class GitOp
         SwitchBranch(branchName)
 
     End Sub
+
+
+    Shared Sub Merge(ByVal targetBranch As String)
+        'Merge the targetBranch into the current branch 
+        'NB NoFastForward
+        Dim options As MergeOptions = New MergeOptions()
+        options.FastForwardStrategy = FastForwardStrategy.NoFastForward
+
+        Dim UserName As String = Globals.getRepo.Config(10).Value
+        Dim UserEmail As String = Globals.getRepo.Config(11).Value
+        Logger.Note("UserName", UserName)
+        Logger.Note("UserEmail", UserEmail)
+
+        Dim mySignature As Signature = New Signature(UserName, UserEmail, New DateTimeOffset(DateTime.Now))
+
+        Globals.getRepo.Merge(Globals.getRepo.Branches(targetBranch).Tip, mySignature, options)
+
+    End Sub
+
+
+
+
 
 
     Shared Sub createTag(ByVal tagName As String)
@@ -313,7 +337,7 @@ Public Class GitOp
     End Sub
 
     Shared Sub pullCurrentBranch()
-        'push current branch
+        'pull current branch
 
         pullBranch(CurrentBranch())
 
@@ -606,18 +630,26 @@ Public Class GitOp
     End Function
 
 
-    Shared Function Log(Optional ByVal headerOnly As Boolean = True) As Collection
 
+    Shared Function Log(Optional ByVal headerOnly As Boolean = True) As Collection
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
 
         'Returns a log list from Commit 1 to Commit 2
 
+        Dim filter = New CommitFilter() With {
+        .IncludeReachableFrom = Globals.getCommit2.Sha,  'TO
+        .ExcludeReachableFrom = Globals.getCommit1.Sha   'FROM
+        }
+
+        Dim commitList = Globals.getRepo.Commits.QueryBy(filter).ToList()
+
         Dim logList As Collection = New Collection
 
         Dim ancestorCommit As Commit
-        For Each ancestorCommit In Globals.getCommit2.Parents
+
+        For Each ancestorCommit In commitList
             If ancestorCommit = Globals.getCommit1 Then Exit For
 
             Dim logMessage As String = Nothing
@@ -629,13 +661,13 @@ Public Class GitOp
             logList.Add(logMessage)
         Next
 
-
         Cursor.Current = cursorRevert
 
         Return logList
 
 
     End Function
+
 
 
     Public Shared Function describe(ByVal branchName As String)
@@ -653,6 +685,33 @@ Public Class GitOp
         Return Globals.getRepo.Describe(branchTip, New DescribeOptions With {.Strategy = DescribeStrategy.Tags})
 
     End Function
+
+    Public Shared Function IsDirty() As Boolean
+
+        ' Dim branchTip = Globals.getRepo.Branches(branchName).Tip
+
+        Dim repoStatus As RepositoryStatus = Globals.getRepo.RetrieveStatus()
+
+        Return repoStatus.IsDirty
+
+    End Function
+
+    Public Shared Function RepoStatus() As RepositoryStatus
+
+        Return Globals.getRepo.RetrieveStatus()
+
+    End Function
+
+    Public Shared Function ChangedFiles() As Integer
+
+        Dim repoStatus As RepositoryStatus = Globals.getRepo.RetrieveStatus()
+        Dim changedFilesCount As Integer = repoStatus.Missing.Count + repoStatus.Modified.Count + repoStatus.Removed.Count + repoStatus.Added.Count
+
+        Return changedFilesCount
+
+    End Function
+
+
 
 End Class
 

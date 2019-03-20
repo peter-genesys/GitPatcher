@@ -176,8 +176,6 @@ D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\GitSharp.Core.pdb
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\GitSharp.Core.xml
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\Newtonsoft.Json.pdb
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\Newtonsoft.Json.xml
-D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes.pdb
-D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes.xml
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes2Levels.pdb
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes2Levels.xml
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewEnhanced.pdb
@@ -236,3 +234,4 @@ D:\GitRepos\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.CreateRelease.resourc
 D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\Oracle.ManagedDataAccess.dll
 E:\GitPatcher\GitPatcher\bin\x86\Debug\Oracle.ManagedDataAccess.dll
 E:\GitPatcher\GitPatcher\obj\x86\Debug\GitPatcher.CreateRelease.resources
+D:\GitRepos\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewEnhanced.dll

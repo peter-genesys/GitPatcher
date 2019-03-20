@@ -43,6 +43,7 @@ Partial Class Main
         Me.RebaseHotFixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MergeAndPushHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GITToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateDBReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBPatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBMinorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBMajorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -104,7 +105,6 @@ Partial Class Main
         Me.SwitchButton = New System.Windows.Forms.Button()
         Me.RebaseButton = New System.Windows.Forms.Button()
         Me.MergeButton = New System.Windows.Forms.Button()
-        Me.CreateDBReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -135,7 +135,7 @@ Partial Class Main
         '
         Me.CreateDBFeaturePatchToolStripMenuItem.Name = "CreateDBFeaturePatchToolStripMenuItem"
         Me.CreateDBFeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.CreateDBFeaturePatchToolStripMenuItem.Text = "Create DB Feature Patch"
+        Me.CreateDBFeaturePatchToolStripMenuItem.Text = "Feature Patch"
         Me.CreateDBFeaturePatchToolStripMenuItem.ToolTipText = "Create patch includes Rebase, Merge and Push to Develop"
         '
         'ToolStripSeparator2
@@ -240,23 +240,32 @@ Partial Class Main
         Me.GITToolStripMenuItem.Size = New System.Drawing.Size(58, 20)
         Me.GITToolStripMenuItem.Text = "PATCH"
         '
+        'CreateDBReleaseToolStripMenuItem
+        '
+        Me.CreateDBReleaseToolStripMenuItem.Name = "CreateDBReleaseToolStripMenuItem"
+        Me.CreateDBReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.CreateDBReleaseToolStripMenuItem.Text = "Create DB Release"
+        '
         'CreateDBPatchSetToolStripMenuItem
         '
         Me.CreateDBPatchSetToolStripMenuItem.Name = "CreateDBPatchSetToolStripMenuItem"
         Me.CreateDBPatchSetToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.CreateDBPatchSetToolStripMenuItem.Text = "Create DB Patch Set"
+        Me.CreateDBPatchSetToolStripMenuItem.Visible = False
         '
         'CreateDBMinorReleaseToolStripMenuItem
         '
         Me.CreateDBMinorReleaseToolStripMenuItem.Name = "CreateDBMinorReleaseToolStripMenuItem"
         Me.CreateDBMinorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.CreateDBMinorReleaseToolStripMenuItem.Text = "Create DB Minor Release"
+        Me.CreateDBMinorReleaseToolStripMenuItem.Visible = False
         '
         'CreateDBMajorReleaseToolStripMenuItem
         '
         Me.CreateDBMajorReleaseToolStripMenuItem.Name = "CreateDBMajorReleaseToolStripMenuItem"
         Me.CreateDBMajorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.CreateDBMajorReleaseToolStripMenuItem.Text = "Create DB Major Release"
+        Me.CreateDBMajorReleaseToolStripMenuItem.Visible = False
         '
         'ToolStripSeparator4
         '
@@ -725,12 +734,6 @@ Partial Class Main
         Me.MergeButton.TabIndex = 45
         Me.MergeButton.Text = "Merge"
         Me.MergeButton.UseVisualStyleBackColor = True
-        '
-        'CreateDBReleaseToolStripMenuItem
-        '
-        Me.CreateDBReleaseToolStripMenuItem.Name = "CreateDBReleaseToolStripMenuItem"
-        Me.CreateDBReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.CreateDBReleaseToolStripMenuItem.Text = "Create DB Release"
         '
         'Main
         '

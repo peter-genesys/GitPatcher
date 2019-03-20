@@ -62,6 +62,15 @@
 
     End Sub
 
+    Private Sub SetFeatureMenuItems()
+
+        Dim showMenuItems As Boolean = Globals.currentLongBranch.Contains("feature")
+
+        CreateDBFeaturePatchToolStripMenuItem.Visible = showMenuItems
+        RebaseFeatureToolStripMenuItem.Visible = showMenuItems
+        MergeAndPushFeatureToolStripMenuItem.Visible = showMenuItems
+
+    End Sub
 
 
 
@@ -75,6 +84,7 @@
         RootPatchDirTextBox.Text = Globals.RootPatchDir
         RootApexDirTextBox.Text = Globals.RootApexDir
 
+        SetFeatureMenuItems()
         SetMergeRebaseButtons()
 
         loadOrgs()
@@ -109,8 +119,9 @@
 
     Public Sub loadOrgs()
 
-        OrgSettings.readOrgs(OrgComboBox, OrgComboBox.Text, RepoComboBox.Text)
- 
+        'OrgSettings.readOrgs(OrgComboBox, OrgComboBox.Text, RepoComboBox.Text)
+        OrgSettings.readOrgs(OrgComboBox, Globals.getOrgName(), RepoComboBox.Text)
+
         If String.IsNullOrEmpty(Globals.getDB) Then
             Globals.setDB("VM")
         End If
@@ -207,7 +218,7 @@
 
     Private Sub MergeAndPushFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MergeAndPushFeatureToolStripMenuItem.Click
 
-        WF_mergeAndPush.mergeAndPushBranch("feature", "develop")
+        WF_mergeAndPush.mergeAndPushBranch("feature", Globals.deriveHotfixBranch("DEV"))
 
     End Sub
 
@@ -216,7 +227,7 @@
     Private Sub NewFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewFeatureToolStripMenuItem.Click
 
         'Call worksflow
-        WF_newBranch.createNewBranch("feature", "develop")
+        WF_newBranch.createNewBranch("feature", Globals.deriveHotfixBranch("DEV"))
 
         'Close and Open Main window to refresh it.
         Me.Close()
@@ -266,7 +277,7 @@
 
 
     Private Sub RebaseFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureToolStripMenuItem.Click
-        WF_rebase.rebaseBranch("feature", "DEV", "develop")
+        WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"))
     End Sub
 
     Private Sub ReleaseToISDEVLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISDEVLToolStripMenuItem.Click
@@ -350,6 +361,7 @@
         Tortoise.Switch(Globals.getRepoPath)
         BranchPathTextBox.Text = Globals.currentLongBranch()
         CurrentBranchTextBox.Text = Globals.currentBranch
+        SetFeatureMenuItems()
         SetMergeRebaseButtons()
     End Sub
 
@@ -363,5 +375,14 @@
 
     Private Sub CreateDBReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBReleaseToolStripMenuItem.Click
         WF_release.createReleaseProcess("release", "feature,hotfix,version", Me.AppCodeTextBox.Text, "release,feature,hotfix,version,ALL", "release,feature,hotfix,ALL", "TEST")
+    End Sub
+
+    Private Sub OrgComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles OrgComboBox.SelectedIndexChanged
+        'setOrgCode(OrgComboBox.SelectedItem)
+        setOrgName(OrgComboBox.SelectedText)
+    End Sub
+
+    Private Sub GITToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles GITToolStripMenuItem1.Click
+
     End Sub
 End Class

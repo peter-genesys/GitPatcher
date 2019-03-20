@@ -3,7 +3,7 @@
 
 Module Globals
 
-
+    Private gFlow As String = My.Settings.Flow
     Private gDB As String = My.Settings.CurrentDB
 
     Private gRepoName As String
@@ -17,6 +17,7 @@ Module Globals
     Private gRepo As Repository
 
     Public Sub setRepo(repoPath As String)
+        Logger.Dbg("Globals.setRepo(" & repoPath & ")")
         gRepo = New Repository(repoPath)
     End Sub
 
@@ -41,7 +42,7 @@ Module Globals
     End Function
 
     Public Sub setRepoName(RepoName As String)
-
+        Logger.Dbg("Globals.setRepoName(" & RepoName & ")")
         gRepoName = RepoName
 
         My.Settings.CurrentRepo = gRepoName
@@ -57,7 +58,7 @@ Module Globals
     Private gRepoPath As String
 
     Public Sub setRepoPath(RepoPath As String)
-
+        Logger.Dbg("Globals.setRepoPath(" & RepoPath & ")")
         setRepo(RepoPath) 'Set the repository (before adding trailing slash
         gRepoPath = Common.dos_path_trailing_slash(RepoPath)
 
@@ -74,6 +75,7 @@ Module Globals
     Private gApexRelPath As String
 
     Public Sub setApexRelPath(ApexRelPath As String)
+        Logger.Dbg("Globals.setApexRelPath(" & ApexRelPath & ")")
         gApexRelPath = Common.dos_path_trailing_slash(ApexRelPath)
     End Sub
 
@@ -85,6 +87,7 @@ Module Globals
     Private gODBCjavaRelPath As String
 
     Public Sub setODBCjavaRelPath(ODBCjavaRelPath As String)
+        Logger.Dbg("Globals.setODBCjavaRelPath(" & ODBCjavaRelPath & ")")
         gODBCjavaRelPath = Common.dos_path(ODBCjavaRelPath)
     End Sub
 
@@ -103,6 +106,7 @@ Module Globals
     Private gDatabaseRelPath As String
 
     Public Sub setDatabaseRelPath(DatabaseRelPath As String)
+        Logger.Dbg("Globals.setDatabaseRelPath(" & DatabaseRelPath & ")")
         gDatabaseRelPath = Common.dos_path_trailing_slash(DatabaseRelPath)
     End Sub
 
@@ -114,6 +118,7 @@ Module Globals
     Private gExtrasRelPath As String
 
     Public Sub setExtrasRelPath(ExtrasRelPath As String)
+        Logger.Dbg("Globals.setExtrasRelPath(" & ExtrasRelPath & ")")
         gExtrasRelPath = Common.dos_path(ExtrasRelPath)
     End Sub
 
@@ -124,6 +129,7 @@ Module Globals
     Private gPatchRelPath As String
 
     Public Sub setPatchRelPath(PatchRelPath As String)
+        Logger.Dbg("Globals.setPatchRelPath(" & PatchRelPath & ")")
         gPatchRelPath = Common.dos_path_trailing_slash(PatchRelPath)
     End Sub
 
@@ -135,6 +141,7 @@ Module Globals
     Private gPatchExportPath As String
 
     Public Sub setPatchExportPath(PatchExportPath As String)
+        Logger.Dbg("Globals.setPatchExportPath(" & PatchExportPath & ")")
         gPatchExportPath = Common.dos_path_trailing_slash(PatchExportPath)
     End Sub
 
@@ -146,6 +153,7 @@ Module Globals
     Private gOrgCode As String
 
     Public Sub setOrgCode(OrgCode As String)
+        Logger.Dbg("Globals.setOrgCode(" & OrgCode & ")")
         gOrgCode = OrgCode
     End Sub
 
@@ -157,6 +165,7 @@ Module Globals
     Private gOrgName As String
 
     Public Sub setOrgName(OrgName As String)
+        Logger.Dbg("Globals.setOrgName(" & OrgName & ")")
         gOrgName = OrgName
     End Sub
 
@@ -172,6 +181,7 @@ Module Globals
     Private gTNS As String
 
     Public Sub setTNS(TNS As String)
+        Logger.Dbg("Globals.setTNS(" & TNS & ")")
         gTNS = TNS
     End Sub
 
@@ -182,6 +192,7 @@ Module Globals
     Private gCONNECT As String
 
     Public Sub setCONNECT(CONNECT As String)
+        Logger.Dbg("Globals.setCONNECT(" & CONNECT & ")")
         gCONNECT = CONNECT
     End Sub
 
@@ -193,6 +204,7 @@ Module Globals
     Private gAppCode As String
 
     Public Sub setAppCode(AppCode As String)
+        Logger.Dbg("Globals.setAppCode(" & AppCode & ")")
         gAppCode = AppCode
     End Sub
 
@@ -203,6 +215,7 @@ Module Globals
     Private gAppId As String
 
     Public Sub setAppId(AppId As String)
+        Logger.Dbg("Globals.setAppId(" & AppId & ")")
         gAppId = AppId
     End Sub
 
@@ -214,6 +227,7 @@ Module Globals
     Private gJira As String
 
     Public Sub setJira(Jira As String)
+        Logger.Dbg("Globals.setJira(" & Jira & ")")
         gJira = Jira
     End Sub
 
@@ -225,6 +239,7 @@ Module Globals
     Private gSchema As String
 
     Public Sub setSchema(Schema As String)
+        Logger.Dbg("Globals.setSchema(" & Schema & ")")
         gSchema = Schema
     End Sub
 
@@ -235,6 +250,7 @@ Module Globals
     Private gOrgInFeature As String
 
     Public Sub setOrgInFeature(OrgInFeature As String)
+        Logger.Dbg("Globals.setOrgInFeature(" & OrgInFeature & ")")
         gOrgInFeature = OrgInFeature
     End Sub
 
@@ -245,6 +261,7 @@ Module Globals
     Private gAppInFeature As String
 
     Public Sub setAppInFeature(AppInFeature As String)
+        Logger.Dbg("Globals.setAppInFeature(" & AppInFeature & ")")
         gAppInFeature = AppInFeature
     End Sub
 
@@ -335,6 +352,7 @@ Module Globals
     Private gAppName As String
 
     Public Sub setAppName(AppName As String)
+        Logger.Dbg("Globals.setAppName(" & AppName & ")")
         gAppName = AppName
     End Sub
 
@@ -372,6 +390,7 @@ Module Globals
     Private gUsePatchAdmin As Boolean
 
     Public Sub setUsePatchAdmin(UsePatchAdmin As Boolean)
+        Logger.Dbg("Globals.setUsePatchAdmin(" & UsePatchAdmin & ")")
         gUsePatchAdmin = UsePatchAdmin
     End Sub
 
@@ -395,6 +414,7 @@ Module Globals
         gAppCollection = New Collection
     End Sub
     Public Sub appendAppCollection(app As String)
+        Logger.Dbg("Globals.appendAppCollection(" & app & ")")
         gAppCollection.Add(app)
     End Sub
 
@@ -457,6 +477,11 @@ Module Globals
 
 
     Public Function deriveHotfixBranch(Optional ByVal iDb As String = "") As String
+
+        If gFlow = "GitHubFlow" Then
+            Return "master"
+        End If
+
         If String.IsNullOrEmpty(iDb) Then
             iDb = gDB
         End If

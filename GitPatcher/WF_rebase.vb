@@ -34,7 +34,8 @@ Friend Class WF_rebase
         l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_no_padding, "0")
 
         rebasing.MdiParent = GitPatcher
-        rebasing.addStep("Commit to Branch: " & currentBranchLong, True, "Ensure the current branch [" & currentBranchShort & "] is free of uncommitted changes.")
+        rebasing.addStep("Commit to Branch: " & currentBranchLong, True, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no staged changes.")
+        rebasing.addStep("Stash Save: " & currentBranchLong, True, "Stash Save to ensure the current branch [" & currentBranchShort & "] contains no staged changes.")
         rebasing.addStep("Switch to " & iRebaseBranchOn & " branch", True, "If you get an error concerning uncommitted changes.  Please resolve the changes and then RESTART this process to ensure the switch to " & iRebaseBranchOn & " branch is successful.")
         rebasing.addStep("Pull from Origin")
         rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & "." & l_tag_base & "A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & currentBranchShort & ".99A")
@@ -54,9 +55,52 @@ Friend Class WF_rebase
 
 
         If rebasing.toDoNextStep() Then
+            'User chooses to commit, but don't bother unless the checkout is also dirty (meaning there is at least 1 staged or unstaged change)
+            If GitOp.IsDirty() Then
+                Logger.Dbg("User chose to commit and the checkout is also dirty")
+
+                'Committing changed files to GIT
+                'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
+                Tortoise.Commit(Globals.getRepoPath, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes.", True)
+
+            End If
+        Else
+            'User chooses to NOT to commit, but commit anyway if there is at least 1 staged change
             'Committing changed files to GIT"
-            Tortoise.Commit(Globals.getRepoPath, "CANCEL IF NOT NEEDED: Ensure the current branch [" & currentBranchShort & "] is free of uncommitted changes.", True)
+            If GitOp.ChangedFiles() > 0 Then
+                Logger.Dbg("User chose NOT to commit but the checkout has staged changes")
+
+                MsgBox("Files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
+                Tortoise.Commit(Globals.getRepoPath, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes.", True)
+
+            End If
+
+
         End If
+
+        If rebasing.toDoNextStep() Then
+            'User chooses to StashSave, but don't bother unless the checkout is also dirty (meaning there is at least 1 staged or unstaged change)
+            If GitOp.IsDirty() Then
+                Logger.Dbg("User chose to commit and the checkout is also dirty")
+
+                'StashSave changes
+                'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
+                Tortoise.StashSave(Globals.getRepoPath, "Ensure the current branch [" & currentBranchShort & "] is free of uncommitted changes.", True)
+
+            End If
+        Else
+            'User chooses to NOT to StashSave, but commit anyway if there is at least 1 staged change
+            'Committing changed files to GIT"
+            If GitOp.ChangedFiles() > 0 Then
+                Logger.Dbg("User chose NOT to commit but the checkout has staged changes")
+
+                MsgBox("Files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
+                Tortoise.StashSave(Globals.getRepoPath, "Stash Save to ensure the current branch [" & currentBranchShort & "] contains no staged changes.", True)
+
+            End If
+
+        End If
+
 
         If rebasing.toDoNextStep() Then
             'Switch to develop branch
@@ -72,7 +116,7 @@ Friend Class WF_rebase
             'Tag the develop head
             l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please enter 2 digit numeric tag for next patch.", "Create Tag for next patch", l_tag_base)
             Dim l_tagA As String = currentBranchShort & "." & l_tag_base & "A"
-            rebasing.updateStepDescription(3, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
+            rebasing.updateStepDescription(4, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
             GitOp.createTag(l_tagA)
 
         End If
@@ -91,7 +135,7 @@ Friend Class WF_rebase
         If rebasing.toDoNextStep() Then
             'Tag Branch
             Dim l_tagB As String = currentBranchShort & "." & l_tag_base & "B"
-            rebasing.updateStepDescription(6, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
+            rebasing.updateStepDescription(7, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
             GitOp.createTag(l_tagB)
 
         End If

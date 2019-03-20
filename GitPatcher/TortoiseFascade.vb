@@ -23,7 +23,7 @@
     End Property
 
 
-    Private Sub execute()
+    Private Sub Execute()
         tortoise.StartInfo = tortoiseSetup
         tortoise.Start()
         If (tortoiseWait) Then
@@ -35,63 +35,73 @@
     ' Add files to GIT with tortoiseGit
     Public Sub Add(ByVal i_path)
         tortoiseSetup.Arguments = "/command:add /path:""" & i_path & """ /closeonend:1"
-        execute()
+        Execute()
     End Sub
 
 
     ' Comit files to GIT with tortoiseGit
     Public Sub Commit(ByVal i_path, ByVal i_logmsg)
         tortoiseSetup.Arguments = "/command:commit /path:""" & i_path & """ /logmsg:""" & i_logmsg & """ /closeonend:1"
-        execute()
+        Execute()
     End Sub
 
 
     ' Show log of current branch with tortoiseGit
     Public Sub ShowLog(ByVal i_path)
         tortoiseSetup.Arguments = "/command:log /path:""" & i_path & """ /closeonend:1"
-        execute()
+        Execute()
     End Sub
 
     Public Sub Pull(ByVal i_path)
         tortoiseSetup.Arguments = "/command:pull /path:""" & i_path & """ /closeonend:1"
-        execute()
+        Execute()
     End Sub
 
     Public Sub Push(ByVal i_path)
         tortoiseSetup.Arguments = "/command:push /path:""" & i_path & """ /closeonend:1"
-        execute()
+        Execute()
     End Sub
 
     Public Sub Merge(ByVal i_path)
         'tortoiseSetup.Arguments = "/command:merge /path:""" & i_path & """ /branch:""" & i_merge_branch & """ /closeonend:1"
         tortoiseSetup.Arguments = "/command:merge /path:""" & i_path & """ /closeonend:1"
-        execute()
+        Execute()
     End Sub
 
     Public Sub Switch(ByVal i_path)
         tortoiseSetup.Arguments = "/command:switch /path:""" & i_path & """ /closeonend:1"
-        execute()
+        Execute()
     End Sub
 
     Public Sub Revert(ByVal i_path)
         tortoiseSetup.Arguments = "/command:revert /path:""" & i_path & """ /closeonend:1"
-        execute()
+        Execute()
     End Sub
 
     Public Sub Tag(ByVal i_path)
         tortoiseSetup.Arguments = "/command:tag /path:""" & i_path & """ /closeonend:1"
-        execute()
+        Execute()
     End Sub
 
     Public Sub Rebase(ByVal i_path)
         tortoiseSetup.Arguments = "/command:rebase /path:""" & i_path & """ /closeonend:1"
-        execute()
+        Execute()
     End Sub
 
     Public Sub Sync(ByVal i_path)
         tortoiseSetup.Arguments = "/command:sync /path:""" & i_path & """ /closeonend:1"
-        execute()
+        Execute()
     End Sub
+
+    Public Sub StashSave(ByVal i_path, ByVal i_msg)
+        'StashSave    Opens the stash save dialog For the working tree located In /path. 
+        'A prefilled mesage can be achieved by Using the /msg parameter.
+        tortoiseSetup.Arguments = "/command:stashsave /path:""" & i_path & """ /msg:""" & i_msg & """ /closeonend:1"
+        Execute()
+    End Sub
+
+
+
 
 
     ' Start Tortoise Repo Browser

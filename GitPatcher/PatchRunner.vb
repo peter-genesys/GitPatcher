@@ -207,7 +207,7 @@ Public Class PatchRunner
                     patchMatch = False
                     Dim lPatchName As String = Common.getLastSegment(foundPatches(i), "\")
 
-                    sql = "select max(patch_name) patch_name from ARM_INSTALLED_PATCH_V where patch_name = '" & lPatchName
+                    sql = "select max(patch_name) patch_name from ARM_INSTALLED_PATCH_V where patch_name = '" & lPatchName & "'"
 
                     cmd = New OracleCommand(sql, conn)
                     cmd.CommandType = CommandType.Text
@@ -632,10 +632,9 @@ Public Class PatchRunner
             conn.Close()
             conn.Dispose()
 
-
-
         Catch ex As Exception ' catches any error
             MessageBox.Show(ex.Message.ToString())
+            Return ex.Message.ToString()
         Finally
             ' In a real application, put cleanup code here.
 
