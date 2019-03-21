@@ -129,14 +129,14 @@ Partial Class Main
         Me.NewFeatureToolStripMenuItem.Name = "NewFeatureToolStripMenuItem"
         Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.NewFeatureToolStripMenuItem.Text = "New Feature"
-        Me.NewFeatureToolStripMenuItem.ToolTipText = "Branch Feature from Develop branch"
+        Me.NewFeatureToolStripMenuItem.ToolTipText = "Branch Feature from master branch"
         '
         'CreateDBFeaturePatchToolStripMenuItem
         '
         Me.CreateDBFeaturePatchToolStripMenuItem.Name = "CreateDBFeaturePatchToolStripMenuItem"
         Me.CreateDBFeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.CreateDBFeaturePatchToolStripMenuItem.Text = "Feature Patch"
-        Me.CreateDBFeaturePatchToolStripMenuItem.ToolTipText = "Create patch includes Rebase, Merge and Push to Develop"
+        Me.CreateDBFeaturePatchToolStripMenuItem.ToolTipText = "Create patch includes Rebase, Merge and Push to master"
         '
         'ToolStripSeparator2
         '
@@ -148,14 +148,14 @@ Partial Class Main
         Me.RebaseFeatureToolStripMenuItem.Name = "RebaseFeatureToolStripMenuItem"
         Me.RebaseFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.RebaseFeatureToolStripMenuItem.Text = "Rebase Feature"
-        Me.RebaseFeatureToolStripMenuItem.ToolTipText = "Rebase Feature branch on Develop branch"
+        Me.RebaseFeatureToolStripMenuItem.ToolTipText = "Rebase Feature branch on master branch"
         '
         'MergeAndPushFeatureToolStripMenuItem
         '
         Me.MergeAndPushFeatureToolStripMenuItem.Name = "MergeAndPushFeatureToolStripMenuItem"
         Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature"
-        Me.MergeAndPushFeatureToolStripMenuItem.ToolTipText = "Merge Feature branch to Develop branch"
+        Me.MergeAndPushFeatureToolStripMenuItem.ToolTipText = "Merge Feature branch to master branch"
         '
         'ShowindexToolStripMenuItem
         '
@@ -191,6 +191,7 @@ Partial Class Main
         Me.HOTFIXToolStripMenuItem.Name = "HOTFIXToolStripMenuItem"
         Me.HOTFIXToolStripMenuItem.Size = New System.Drawing.Size(60, 20)
         Me.HOTFIXToolStripMenuItem.Text = "HOTFIX"
+        Me.HOTFIXToolStripMenuItem.Visible = False
         '
         'HotFixToolStripComboBox
         '
@@ -282,19 +283,19 @@ Partial Class Main
         'UnappliedToolStripMenuItem
         '
         Me.UnappliedToolStripMenuItem.Name = "UnappliedToolStripMenuItem"
-        Me.UnappliedToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.UnappliedToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.UnappliedToolStripMenuItem.Text = "Unapplied Patches"
         '
         'UninstalledToolStripMenuItem
         '
         Me.UninstalledToolStripMenuItem.Name = "UninstalledToolStripMenuItem"
-        Me.UninstalledToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.UninstalledToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.UninstalledToolStripMenuItem.Text = "Uninstalled Patches"
         '
         'AllPatchesToolStripMenuItem
         '
         Me.AllPatchesToolStripMenuItem.Name = "AllPatchesToolStripMenuItem"
-        Me.AllPatchesToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.AllPatchesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.AllPatchesToolStripMenuItem.Text = "All Patches"
         '
         'APEXToolStripMenuItem
@@ -303,6 +304,7 @@ Partial Class Main
         Me.APEXToolStripMenuItem.Name = "APEXToolStripMenuItem"
         Me.APEXToolStripMenuItem.Size = New System.Drawing.Size(47, 20)
         Me.APEXToolStripMenuItem.Text = "APEX"
+        Me.APEXToolStripMenuItem.Visible = False
         '
         'ImportToolStripMenuItem
         '
@@ -333,6 +335,7 @@ Partial Class Main
         Me.RELEASEToolStripMenuItem.Name = "RELEASEToolStripMenuItem"
         Me.RELEASEToolStripMenuItem.Size = New System.Drawing.Size(64, 20)
         Me.RELEASEToolStripMenuItem.Text = "RELEASE"
+        Me.RELEASEToolStripMenuItem.Visible = False
         '
         'ReleaseToISDEVLToolStripMenuItem
         '
