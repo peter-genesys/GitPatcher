@@ -7,7 +7,7 @@
         Dim currentBranch As String = Globals.currentLongBranch()
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")
         createPatchProgress.MdiParent = GitPatcher
-        createPatchProgress.addStep("Export Apex Apps to " & iBranchType & " branch: " & currentBranch, False, "Using Apex2Git or the Apex Export workflow")
+        createPatchProgress.addStep("Export Apex Apps to " & iBranchType & " branch: " & currentBranch, False, "Using Apex2Git, export from the VM any apps you have changed.") ' or the Apex Export workflow")
         createPatchProgress.addStep("Use SmartGen to spool changed config data: " & currentBranch, False,
                                     "Did I change any config data?  " &
                                     "Do I need to spool any table changes or generate related objects?  " &
@@ -38,7 +38,7 @@
         If createPatchProgress.toDoNextStep() Then
             'Export Apex to branch
             'WF_Apex.ApexExportCommit()
-            MsgBox("Please start Apex2Gen from the tools dir, to export the Apex Apps", MsgBoxStyle.Exclamation, "Apex2Gen")
+            MsgBox("Using Apex2Git, export from the VM any apps you have changed. Apex2Git is in the tools dir.", MsgBoxStyle.Exclamation, "Apex2Git")
 
         End If
 

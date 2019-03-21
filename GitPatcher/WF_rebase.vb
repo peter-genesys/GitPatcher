@@ -44,7 +44,8 @@ Friend Class WF_rebase
         rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & "." & l_tag_base & "B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.")
         rebasing.addStep("Revert your VM", True, "Before running patches, consider reverting to a VM snapshot prior to the development of your current work, or swapping to a unit test VM.")
         rebasing.addStep("Use PatchRunner to run Unapplied Patches", True)
-        rebasing.addStep("Import Apex from HEAD of branch: " & currentBranchLong, True, "Using the Apex Import workflow")
+        rebasing.addStep("Import Apex from HEAD of branch: " & currentBranchLong, True, "Using the Apex2Git.  Please inspect new commits on the master branch to determine which apps to import.")
+        'rebasing.addStep("Import Apex from HEAD of branch: " & currentBranchLong, True, "Using the Apex Import workflow")
         rebasing.addStep("Post-Rebase Snapshot", True, "Before creating new patches, snapshot the VM again.  Use this snapshot as a quick restore to point restest patches that have failed, on first execution.")
 
         rebasing.Show()
@@ -157,7 +158,9 @@ Friend Class WF_rebase
 
         If rebasing.toDoNextStep() Then
             'Import Apex from HEAD of branch
-            WF_Apex.ApexImportFromTag()
+            MsgBox("Using the Apex2Git.  Please inspect new commits on the master branch to determine which apps to import.", MsgBoxStyle.Exclamation, "Import Apps into VM")
+
+            'WF_Apex.ApexImportFromTag()
 
         End If
 

@@ -256,24 +256,28 @@ Public Class GitOp
     Shared Sub Merge(ByVal targetBranch As String)
         'Merge the targetBranch into the current branch 
         'NB NoFastForward
-        Try
-            Dim options As MergeOptions = New MergeOptions()
-            options.FastForwardStrategy = FastForwardStrategy.NoFastForward
 
-            Dim UserName As String = Globals.getRepo.Config(10).Value
-            Dim UserEmail As String = Globals.getRepo.Config(11).Value
-            Logger.Note("UserName", UserName)
-            Logger.Note("UserEmail", UserEmail)
+        'Temporary fix - disable GitOp.Merge - ALWAYS use Tortoise.Merge
+        Tortoise.Merge(Globals.getRepoPath)
 
-            Dim mySignature As Signature = New Signature(UserName, UserEmail, New DateTimeOffset(DateTime.Now))
+        'Try
+        '    Dim options As MergeOptions = New MergeOptions()
+        '    options.FastForwardStrategy = FastForwardStrategy.NoFastForward
 
-            Globals.getRepo.Merge(Globals.getRepo.Branches(targetBranch).Tip, mySignature, options)
+        '    Dim UserName As String = Globals.getRepo.Config(10).Value
+        '    Dim UserEmail As String = Globals.getRepo.Config(11).Value
+        '    Logger.Note("UserName", UserName)
+        '    Logger.Note("UserEmail", UserEmail)
 
-        Catch e As Exception
-            MsgBox(e.Message)
-            'If GitOp.Merge fails try Tortoise.Merge instead.
-            Tortoise.Merge(Globals.getRepoPath)
-        End Try
+        '    Dim mySignature As Signature = New Signature(UserName, UserEmail, New DateTimeOffset(DateTime.Now))
+
+        '    Globals.getRepo.Merge(Globals.getRepo.Branches(targetBranch).Tip, mySignature, options)
+
+        'Catch e As Exception
+        '    MsgBox(e.Message)
+        '    'If GitOp.Merge fails try Tortoise.Merge instead.
+        '    Tortoise.Merge(Globals.getRepoPath)
+        'End Try
 
 
 
