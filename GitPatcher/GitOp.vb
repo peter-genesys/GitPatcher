@@ -171,6 +171,8 @@ Public Class GitOp
 
     Shared Sub SwitchCommit(ByVal theCommit As Commit)
         'Switch to any existing commit
+        'GitBash.Switch(Globals.getRepoPath, branchName)
+        'Tortoise.Switch(ibranch_name, True)
 
         Try
 
@@ -195,6 +197,8 @@ Public Class GitOp
 
     Shared Sub SwitchBranch(ByVal branchName As String)
         'Switch to an existing local branch
+        'GitBash.Switch(Globals.getRepoPath, branchName)
+        'Tortoise.Switch(ibranch_name, True)
 
         Dim existingBranch As Branch = Globals.getRepo.Branches(branchName)
 
@@ -246,6 +250,8 @@ Public Class GitOp
 
     Shared Sub createAndSwitchBranch(ByVal branchName As String)
         'Create then switch to a local branch
+        'GitBash.createBranch(Globals.getRepoPath, newBranch)
+
 
         createBranch(branchName)
         SwitchBranch(branchName)
@@ -297,14 +303,21 @@ Public Class GitOp
 
 
     Shared Sub pushBranch(ByVal ibranch_name As String)
-        'push any branch
-        '? Does this push tags
-        '? Is it synchronous /  asynchronous
 
-        'Dim thePushOptions As PushOptions = New PushOptions()
+        'TEMP workaround use TGit or GitBash
+        Tortoise.Push(ibranch_name, True)
+        'GitBash.Push(Globals.getRepoPath, "origin", ibranch_name, True)
 
-        Dim existingBranch As Branch = Globals.getRepo.Branches(ibranch_name)
-        Globals.getRepo().Network.Push(existingBranch)
+
+        ''push any branch
+        ''? Does this push tags
+        ''? Is it synchronous /  asynchronous
+        ''Dim thePushOptions As PushOptions = New PushOptions()
+
+        'BUG - code below MAY be corrupting the index.
+
+        'Dim existingBranch As Branch = Globals.getRepo.Branches(ibranch_name)
+        'Globals.getRepo().Network.Push(existingBranch)
 
     End Sub
 
@@ -316,6 +329,11 @@ Public Class GitOp
     End Sub
 
     Shared Sub pullBranch(ByVal ibranch_name As String)
+
+        'GitBash.Pull(Globals.getRepoPath, "origin", ibranch_name)
+        'Pull(ibranch_name, True)
+
+
         'pull any branch
         Dim options As PullOptions = New PullOptions()
 
