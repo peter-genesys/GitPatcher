@@ -233,7 +233,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("TGIT")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("LGIT")>  _
         Public ReadOnly Property MergeTool() As String
             Get
                 Return CType(Me("MergeTool"),String)

@@ -51,7 +51,7 @@
       <Value Profile="(Default)">LGIT</Value>
     </Setting>
     <Setting Name="MergeTool" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">TGIT</Value>
+      <Value Profile="(Default)">LGIT</Value>
     </Setting>
   </Settings>
 </SettingsFile>
