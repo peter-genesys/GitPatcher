@@ -394,37 +394,42 @@ Public Class GitOp
                 GitBash.Pull(Globals.getRepoPath, "origin", ibranch_name)
                 'MsgBox(ToolName + " GitBash not currently implimented")
             Case "LGIT"
-                'pull any branch
-                Dim options As PullOptions = New PullOptions()
+                Try
+                    'pull any branch
+                    Dim options As PullOptions = New PullOptions()
 
-                options.MergeOptions = New MergeOptions()
-                options.MergeOptions.FailOnConflict = True
+                    options.MergeOptions = New MergeOptions()
+                    options.MergeOptions.FailOnConflict = True
 
-                'May need this later to embed credential details..
+                    'May need this later to embed credential details..
 
-                'options.FetchOptions.CredentialsProvider = New LibGit2Sharp.Credentials(CredentialsProvider()
-                'options.FetchOptions.CredentialsProvider = New CredentialsProvider(DefaultCredentials)
-                'options.FetchOptions.CredentialsProvider() = New CredentialsProvider(
-                '(url, usernameFromUrl, types) >=
-                '    New UsernamePasswordCredentials()
-                '    {
-                '        Username = "",
-                '        Password = ""
-                '    })
+                    'options.FetchOptions.CredentialsProvider = New LibGit2Sharp.Credentials(CredentialsProvider()
+                    'options.FetchOptions.CredentialsProvider = New CredentialsProvider(DefaultCredentials)
+                    'options.FetchOptions.CredentialsProvider() = New CredentialsProvider(
+                    '(url, usernameFromUrl, types) >=
+                    '    New UsernamePasswordCredentials()
+                    '    {
+                    '        Username = "",
+                    '        Password = ""
+                    '    })
 
-                'Get signature details from the current repo
-                Dim UserName As String = Globals.getRepo.Config(10).Value
-                Dim UserEmail As String = Globals.getRepo.Config(11).Value
-                Logger.Note("UserName", UserName)
-                Logger.Note("UserEmail", UserEmail)
+                    'Get signature details from the current repo
+                    Dim UserName As String = Globals.getRepo.Config(10).Value
+                    Dim UserEmail As String = Globals.getRepo.Config(11).Value
+                    Logger.Note("UserName", UserName)
+                    Logger.Note("UserEmail", UserEmail)
 
-                Dim mySignature As Signature = New Signature(UserName, UserEmail, New DateTimeOffset(DateTime.Now))
+                    Dim mySignature As Signature = New Signature(UserName, UserEmail, New DateTimeOffset(DateTime.Now))
 
-                'Pull the branch
-                Dim myMergeResult As MergeResult = Commands.Pull(Globals.getRepo, mySignature, options)
+                    'Pull the branch
+                    Dim myMergeResult As MergeResult = Commands.Pull(Globals.getRepo, mySignature, options)
 
-                'MsgBox(ToolName + " LibGit2 not currently implimented")
-
+                    'MsgBox(ToolName + " LibGit2 not currently implimented")
+                Catch e As Exception
+                    MsgBox(e.Message)
+                    'If GitOp.Merge fails try Tortoise.Pull instead.
+                    Tortoise.Pull(Globals.getRepoPath)
+                End Try
             Case "SGIT"
                 MsgBox(ToolName + " GitSharp not currently implimented")
             Case Else
