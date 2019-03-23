@@ -203,10 +203,10 @@ Public Class GitOp
             Case "TGIT"
                 Tortoise.Switch(Globals.getRepoPath)
                 'MsgBox(ToolName + " TortoiseGit not currently implimented")
-            Case "GITB"
+            Case "BGIT"
                 GitBash.Switch(Globals.getRepoPath, branchName)
                 'MsgBox(ToolName + " GitBash not currently implimented")
-            Case "LIBG"
+            Case "LGIT"
                 Dim existingBranch As Branch = Globals.getRepo.Branches(branchName)
 
                 Try
@@ -227,7 +227,7 @@ Public Class GitOp
 
                 'MsgBox(ToolName + " LibGit2 not currently implimented")
 
-            Case "GITS"
+            Case "SGIT"
                 MsgBox(ToolName + " GitSharp not currently implimented")
             Case Else
                 MsgBox("Unknown " + ToolName + " setting " + theSetting)
@@ -284,10 +284,10 @@ Public Class GitOp
             Case "TGIT"
                 Tortoise.Merge(Globals.getRepoPath)
                 'MsgBox(ToolName + " TortoiseGit not currently implimented")
-            Case "GITB"
+            Case "BGIT"
                 'GitBash.Merge(Globals.getRepoPath, branchName)
                 MsgBox(ToolName + " GitBash not currently implimented")
-            Case "LIBG"
+            Case "LGIT"
                 Try
                     Dim options As MergeOptions = New MergeOptions()
                     options.FastForwardStrategy = FastForwardStrategy.NoFastForward
@@ -309,7 +309,7 @@ Public Class GitOp
 
                 'MsgBox(ToolName + " LibGit2 not currently implimented")
 
-            Case "GITS"
+            Case "SGIT"
                 MsgBox(ToolName + " GitSharp not currently implimented")
             Case Else
                 MsgBox("Unknown " + ToolName + " setting " + theSetting)
@@ -340,10 +340,10 @@ Public Class GitOp
             Case "TGIT"
                 Tortoise.Push(Globals.getRepoPath)
                 'MsgBox(ToolName + " TortoiseGit not currently implimented")
-            Case "GITB"
+            Case "BGIT"
                 GitBash.Push(Globals.getRepoPath, "origin", ibranch_name, True)
                 'MsgBox(ToolName + " GitBash not currently implimented")
-            Case "LIBG"
+            Case "LGIT"
                 'push any branch
                 '? Does this push tags
                 '? Is it synchronous /  asynchronous
@@ -356,7 +356,7 @@ Public Class GitOp
 
                 'MsgBox(ToolName + " LibGit2 not currently implimented")
 
-            Case "GITS"
+            Case "SGIT"
                 MsgBox(ToolName + " GitSharp not currently implimented")
             Case Else
                 MsgBox("Unknown " + ToolName + " setting " + theSetting)
@@ -382,10 +382,10 @@ Public Class GitOp
             Case "TGIT"
                 Tortoise.Pull(Globals.getRepoPath)
                 'MsgBox(ToolName + " TortoiseGit not currently implimented")
-            Case "GITB"
+            Case "BGIT"
                 GitBash.Pull(Globals.getRepoPath, "origin", ibranch_name)
                 'MsgBox(ToolName + " GitBash not currently implimented")
-            Case "LIBG"
+            Case "LGIT"
                 'pull any branch
                 Dim options As PullOptions = New PullOptions()
 
@@ -417,7 +417,7 @@ Public Class GitOp
 
                 'MsgBox(ToolName + " LibGit2 not currently implimented")
 
-            Case "GITS"
+            Case "SGIT"
                 MsgBox(ToolName + " GitSharp not currently implimented")
             Case Else
                 MsgBox("Unknown " + ToolName + " setting " + theSetting)
