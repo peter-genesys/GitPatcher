@@ -136,8 +136,6 @@ E:\GitPatcher\GitPatcher\bin\x86\Debug\GitSharp.pdb
 E:\GitPatcher\GitPatcher\bin\x86\Debug\GitSharp.xml
 E:\GitPatcher\GitPatcher\bin\x86\Debug\GitSharp.Core.pdb
 E:\GitPatcher\GitPatcher\bin\x86\Debug\GitSharp.Core.xml
-E:\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes.pdb
-E:\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes.xml
 E:\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes2Levels.pdb
 E:\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewDraggableNodes2Levels.xml
 E:\GitPatcher\GitPatcher\bin\x86\Debug\TreeViewEnhanced.pdb

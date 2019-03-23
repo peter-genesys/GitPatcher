@@ -203,6 +203,42 @@ Namespace My
                 Return CType(Me("Flow"),String)
             End Get
         End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("TGIT")>  _
+        Public ReadOnly Property PushTool() As String
+            Get
+                Return CType(Me("PushTool"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("TGIT")>  _
+        Public ReadOnly Property PullTool() As String
+            Get
+                Return CType(Me("PullTool"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("TGIT")>  _
+        Public ReadOnly Property SwitchTool() As String
+            Get
+                Return CType(Me("SwitchTool"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("TGIT")>  _
+        Public ReadOnly Property MergeTool() As String
+            Get
+                Return CType(Me("MergeTool"),String)
+            End Get
+        End Property
     End Class
 End Namespace
 
