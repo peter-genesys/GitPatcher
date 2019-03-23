@@ -206,7 +206,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("TGIT")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("BGIT")>  _
         Public ReadOnly Property PushTool() As String
             Get
                 Return CType(Me("PushTool"),String)

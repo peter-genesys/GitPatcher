@@ -341,7 +341,15 @@ Public Class GitOp
                 Tortoise.Push(Globals.getRepoPath)
                 'MsgBox(ToolName + " TortoiseGit not currently implimented")
             Case "BGIT"
-                GitBash.Push(Globals.getRepoPath, "origin", ibranch_name, True)
+                Try
+                    GitBash.Push(Globals.getRepoPath, "origin", ibranch_name, True)
+
+                Catch e As Exception
+                    MsgBox(e.Message)
+                    'If GitBash.Push fails try Tortoise.Push instead.
+                    Tortoise.Push(Globals.getRepoPath)
+                End Try
+
                 'MsgBox(ToolName + " GitBash not currently implimented")
             Case "LGIT"
                 'push any branch
