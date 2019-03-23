@@ -41,5 +41,17 @@
     <Setting Name="Flow" Type="System.String" Scope="Application">
       <Value Profile="(Default)">GitHubFLow</Value>
     </Setting>
+    <Setting Name="PushTool" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">TGIT</Value>
+    </Setting>
+    <Setting Name="PullTool" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">TGIT</Value>
+    </Setting>
+    <Setting Name="SwitchTool" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">TGIT</Value>
+    </Setting>
+    <Setting Name="MergeTool" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">TGIT</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

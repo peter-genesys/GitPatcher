@@ -202,7 +202,7 @@
         End If
         If createPatchSetProgress.toDoNextStep() Then
             'Push release to origin with tags
-            GitOp.pushBranch("newBranch") 'previous call to GitBash.Push sent tags and it waited (synchronously)
+            GitOp.pushBranch(newBranch) 'previous call to GitBash.Push sent tags and it waited (synchronously)
             'GitBash.Push(Globals.getRepoPath, "origin", newBranch, True)
 
         End If
