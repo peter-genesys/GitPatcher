@@ -9,10 +9,11 @@
     '     client.ShowLog(i_WorkingDir)
     ' End Sub
     '
-    ' Public Shared Sub Add(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
-    '     Dim client As New TortoiseFascade(i_wait)
-    '     client.Add(i_WorkingDir)
-    ' End Sub
+    Public Shared Sub Add(ByVal i_WorkingDir As String, ByVal i_files As String, Optional ByVal i_wait As Boolean = True)
+
+        Dim client As New GitBashFascade(i_WorkingDir, i_wait)
+        client.Add(i_files)
+    End Sub
     '
     Public Shared Sub Pull(ByVal i_WorkingDir As String, ByVal iRemote As String, ByVal iBranch As String, Optional ByVal i_wait As Boolean = True)
         Dim client As New GitBashFascade(i_WorkingDir, i_wait)

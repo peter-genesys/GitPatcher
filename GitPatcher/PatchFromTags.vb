@@ -1066,6 +1066,9 @@ Public Class PatchFromTags
             lUntracked = "UNTRACKED "
         End If
 
+        'Use GitBash to silently add files prior to calling commit dialog.
+        GitBash.Add(Globals.getRepoPath, PatchDirTextBox.Text & "/*", True)
+
         Tortoise.Commit(PatchDirTextBox.Text, lUntracked & "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
 
         'Extra commit, if there are still changed files
