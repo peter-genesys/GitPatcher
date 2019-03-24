@@ -352,17 +352,18 @@ Public Class GitOp
 
                 'MsgBox(ToolName + " GitBash not currently implimented")
             Case "LGIT"
-                'push any branch
-                '? Does this push tags
-                '? Is it synchronous /  asynchronous
-                'Dim thePushOptions As PushOptions = New PushOptions()
+                ''push any branch
+                ''? Does this push tags
+                ''? Is it synchronous /  asynchronous
+                ''Dim thePushOptions As PushOptions = New PushOptions()
 
-                'BUG - code below MAY be corrupting the index.
+                ''BUG - THE CODE BELOW SEEMED TO WORK - BUT CORRUPTS the INDEX or PACKFILES
+                ''Resulting PackFile Index mismatch errors that "infect" the repo
 
-                Dim existingBranch As Branch = Globals.getRepo.Branches(ibranch_name)
-                Globals.getRepo().Network.Push(existingBranch)
+                'Dim existingBranch As Branch = Globals.getRepo.Branches(ibranch_name)
+                'Globals.getRepo().Network.Push(existingBranch)
 
-                'MsgBox(ToolName + " LibGit2 not currently implimented")
+                MsgBox(ToolName + " LibGit2 not currently implimented")
 
             Case "SGIT"
                 MsgBox(ToolName + " GitSharp not currently implimented")

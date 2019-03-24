@@ -105,6 +105,8 @@ Partial Class Main
         Me.SwitchButton = New System.Windows.Forms.Button()
         Me.RebaseButton = New System.Windows.Forms.Button()
         Me.MergeButton = New System.Windows.Forms.Button()
+        Me.TextBoxReleaseId = New System.Windows.Forms.TextBox()
+        Me.Label20 = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -283,19 +285,19 @@ Partial Class Main
         'UnappliedToolStripMenuItem
         '
         Me.UnappliedToolStripMenuItem.Name = "UnappliedToolStripMenuItem"
-        Me.UnappliedToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.UnappliedToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.UnappliedToolStripMenuItem.Text = "Unapplied Patches"
         '
         'UninstalledToolStripMenuItem
         '
         Me.UninstalledToolStripMenuItem.Name = "UninstalledToolStripMenuItem"
-        Me.UninstalledToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.UninstalledToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.UninstalledToolStripMenuItem.Text = "Uninstalled Patches"
         '
         'AllPatchesToolStripMenuItem
         '
         Me.AllPatchesToolStripMenuItem.Name = "AllPatchesToolStripMenuItem"
-        Me.AllPatchesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AllPatchesToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.AllPatchesToolStripMenuItem.Text = "All Patches"
         '
         'APEXToolStripMenuItem
@@ -309,24 +311,24 @@ Partial Class Main
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.ImportToolStripMenuItem.Text = "Import Full"
         '
         'ExportToolStripMenuItem
         '
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.ExportToolStripMenuItem.Text = "Export Full"
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(177, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(145, 6)
         '
         'Import1PageToolStripMenuItem
         '
         Me.Import1PageToolStripMenuItem.Name = "Import1PageToolStripMenuItem"
-        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.Import1PageToolStripMenuItem.Text = "Import 1 page"
         '
         'RELEASEToolStripMenuItem
@@ -340,25 +342,25 @@ Partial Class Main
         'ReleaseToISDEVLToolStripMenuItem
         '
         Me.ReleaseToISDEVLToolStripMenuItem.Name = "ReleaseToISDEVLToolStripMenuItem"
-        Me.ReleaseToISDEVLToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToISDEVLToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToISDEVLToolStripMenuItem.Text = "Release to DEV"
         '
         'ReleaseToISTESTToolStripMenuItem
         '
         Me.ReleaseToISTESTToolStripMenuItem.Name = "ReleaseToISTESTToolStripMenuItem"
-        Me.ReleaseToISTESTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToISTESTToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToISTESTToolStripMenuItem.Text = "Release to TEST"
         '
         'ReleaseToISUATToolStripMenuItem
         '
         Me.ReleaseToISUATToolStripMenuItem.Name = "ReleaseToISUATToolStripMenuItem"
-        Me.ReleaseToISUATToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToISUATToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToISUATToolStripMenuItem.Text = "Release to UAT"
         '
         'ReleaseToISPRODToolStripMenuItem
         '
         Me.ReleaseToISPRODToolStripMenuItem.Name = "ReleaseToISPRODToolStripMenuItem"
-        Me.ReleaseToISPRODToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToISPRODToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToISPRODToolStripMenuItem.Text = "Release to PROD"
         '
         'RepoComboBox
@@ -738,11 +740,31 @@ Partial Class Main
         Me.MergeButton.Text = "Merge"
         Me.MergeButton.UseVisualStyleBackColor = True
         '
+        'TextBoxReleaseId
+        '
+        Me.TextBoxReleaseId.Location = New System.Drawing.Point(86, 533)
+        Me.TextBoxReleaseId.Name = "TextBoxReleaseId"
+        Me.TextBoxReleaseId.ReadOnly = True
+        Me.TextBoxReleaseId.Size = New System.Drawing.Size(390, 20)
+        Me.TextBoxReleaseId.TabIndex = 47
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label20.Location = New System.Drawing.Point(12, 536)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(53, 13)
+        Me.Label20.TabIndex = 46
+        Me.Label20.Text = "Release"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(486, 561)
+        Me.Controls.Add(Me.TextBoxReleaseId)
+        Me.Controls.Add(Me.Label20)
         Me.Controls.Add(Me.MergeButton)
         Me.Controls.Add(Me.RebaseButton)
         Me.Controls.Add(Me.SwitchButton)
@@ -879,4 +901,6 @@ Partial Class Main
     Friend WithEvents RebaseButton As System.Windows.Forms.Button
     Friend WithEvents MergeButton As System.Windows.Forms.Button
     Friend WithEvents CreateDBReleaseToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents TextBoxReleaseId As TextBox
+    Friend WithEvents Label20 As Label
 End Class

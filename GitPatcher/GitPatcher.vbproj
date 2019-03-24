@@ -118,7 +118,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="TreeViewDraggableNodes2Levels">
-      <HintPath>..\..\TreeViewDraggableNodes2Levels\TreeViewDraggableNodes2Levels\bin\Debug\TreeViewDraggableNodes2Levels.dll</HintPath>
+      <HintPath>..\..\TreeViewOrderer\TreeViewDraggableNodes2Levels\bin\Debug\TreeViewDraggableNodes2Levels.dll</HintPath>
     </Reference>
     <Reference Include="TreeViewEnhanced">
       <HintPath>..\..\TreeViewEnhanced\TreeViewEnhanced\bin\Debug\TreeViewEnhanced.dll</HintPath>

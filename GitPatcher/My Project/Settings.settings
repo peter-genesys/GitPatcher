@@ -53,5 +53,8 @@
     <Setting Name="MergeTool" Type="System.String" Scope="Application">
       <Value Profile="(Default)">LGIT</Value>
     </Setting>
+    <Setting Name="ReleaseId" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">GP-0.1.6</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
