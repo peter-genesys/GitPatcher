@@ -21,6 +21,8 @@
         'loadApexApps()
         loadHotFixDBs()
         MinPatchTextBox.Text = My.Settings.MinPatch
+        TextBoxReleaseId.Text = My.Settings.ReleaseId
+
 
     End Sub
 
@@ -382,7 +384,5 @@
         setOrgName(OrgComboBox.SelectedText)
     End Sub
 
-    Private Sub GITToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles GITToolStripMenuItem1.Click
 
-    End Sub
 End Class

@@ -239,6 +239,15 @@ Namespace My
                 Return CType(Me("MergeTool"),String)
             End Get
         End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.1.6")>  _
+        Public ReadOnly Property ReleaseId() As String
+            Get
+                Return CType(Me("ReleaseId"),String)
+            End Get
+        End Property
     End Class
 End Namespace
 
