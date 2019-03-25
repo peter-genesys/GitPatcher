@@ -707,7 +707,7 @@ Public Class CreateRelease
         End If
 
         'Use patch runner to execute with a master script.
-        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & l_install_file)
+        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & l_install_file)
 
     End Sub
 

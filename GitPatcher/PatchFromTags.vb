@@ -1027,7 +1027,7 @@ Public Class PatchFromTags
             l_master_filename = "install_lite.sql"
         End If
 
-        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.currentTNS & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename)
+        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename)
 
     End Sub
 

@@ -441,7 +441,7 @@ Public Class PatchRunner
 
         MasterScriptListBox.Items.Clear()
 
-        MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.currentTNS & "'")
+        MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.getDATASOURCE & "'")
 
         Dim l_master_filename As String = Nothing
 

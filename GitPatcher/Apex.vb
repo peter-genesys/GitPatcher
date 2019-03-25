@@ -153,7 +153,7 @@
         'Import Apex
         Host.executeSQLscriptInteractive(pageInstallScriptName _
                                        , applicationDir _
-                                       , Main.get_connect_string(Globals.currentParsingSchema, Globals.currentTNS))
+                                       , Main.get_connect_string(Globals.currentParsingSchema, Globals.currentTNS, Globals.getDATASOURCE))
         'Remove the temp file again
         FileIO.deleteFileIfExists(pageInstallScriptName)
 

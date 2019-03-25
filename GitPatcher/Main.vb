@@ -195,9 +195,9 @@
     End Function
 
 
-    Shared Function get_connect_string(ByVal schema As String, ByVal database As String) As String
+    Shared Function get_connect_string(ByVal schema As String, ByVal database As String, ByVal datasource As String) As String
 
-        Return connect_string(schema, get_password(schema, database), database)
+        Return connect_string(schema, get_password(schema, database), datasource)
 
     End Function
 
