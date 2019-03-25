@@ -1067,7 +1067,16 @@ Public Class PatchFromTags
         End If
 
         'Use GitBash to silently add files prior to calling commit dialog.
-        GitBash.Add(Globals.getRepoPath, PatchDirTextBox.Text & "/*", True)
+        Try
+            GitBash.Add(Globals.getRepoPath, PatchDirTextBox.Text & "/*", True)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            MsgBox("Unable to Add Files with GitBash. Check GitBash configuration.")
+            'If GitBash.Push fails just let the process continue.
+            'User will add files via the commit dialog
+        End Try
+
+
 
         Tortoise.Commit(PatchDirTextBox.Text, lUntracked & "NEW Patch: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
 

@@ -344,8 +344,9 @@ Public Class GitOp
                 Try
                     GitBash.Push(Globals.getRepoPath, "origin", ibranch_name, True)
 
-                Catch e As Exception
-                    MsgBox(e.Message)
+                Catch ex As Exception
+                    MsgBox(ex.Message)
+                    MsgBox("Unable to Push Branch with GitBash. Check GitBash configuration.")
                     'If GitBash.Push fails try Tortoise.Push instead.
                     Tortoise.Push(Globals.getRepoPath)
                 End Try
