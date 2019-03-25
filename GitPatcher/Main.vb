@@ -384,5 +384,9 @@
         setOrgName(OrgComboBox.SelectedText)
     End Sub
 
+    Private Sub MainActivated(sender As Object, e As EventArgs) Handles Me.Activated
+        'Refresh repo info
+        showRepoSettings()
+    End Sub
 
 End Class

@@ -33,11 +33,11 @@
     End Sub
 
 
-    '   ' Add files to GIT with tortoiseGit
-    '   Public Sub Add(ByVal i_path)
-    '       GitBashSetup.Arguments = "/command:add /path:""" & i_path & """ /closeonend:1"
-    '       execute()
-    '   End Sub
+    ' Add files to GIT with GitBash
+    Public Sub Add(ByVal i_files)
+        GitBashSetup.Arguments = "add " & i_files 'git add files
+        execute()
+    End Sub
     '
     '
     '   ' Commit files to GIT with tortoiseGit
