@@ -389,4 +389,15 @@
         showRepoSettings()
     End Sub
 
+    Private Sub QueuedToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles QueuedToolStripMenuItem.Click
+        Dim newchildform As New ApexAppInstaller("Queued")
+        newchildform.MdiParent = GitPatcher
+        newchildform.Show()
+    End Sub
+
+    Private Sub AllApexAppsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllApexAppsToolStripMenuItem.Click
+        Dim newchildform As New ApexAppInstaller("All")
+        newchildform.MdiParent = GitPatcher
+        newchildform.Show()
+    End Sub
 End Class

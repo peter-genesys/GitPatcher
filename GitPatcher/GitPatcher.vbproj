@@ -139,6 +139,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apex.vb" />
+    <Compile Include="ApexAppInstaller.Designer.vb">
+      <DependentUpon>ApexAppInstaller.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ApexAppInstaller.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ChoiceDialog.Designer.vb">
       <DependentUpon>ChoiceDialog.vb</DependentUpon>
     </Compile>
@@ -246,6 +252,9 @@
     <Compile Include="zip.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ApexAppInstaller.resx">
+      <DependentUpon>ApexAppInstaller.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ChoiceDialog.resx">
       <DependentUpon>ChoiceDialog.vb</DependentUpon>
     </EmbeddedResource>
