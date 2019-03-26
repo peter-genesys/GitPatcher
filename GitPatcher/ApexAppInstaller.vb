@@ -3,7 +3,7 @@
 Public Class ApexAppInstaller
 
 
-    Public Sub New(Optional ByVal ienqueuedStatus As String = "All", Optional ByVal iBranchType As String = "")
+    Public Sub New(Optional ByVal ienqueuedStatus As String = "All", Optional ByVal queuedBy As String = "me")
         InitializeComponent()
 
         'Other legal values Unapplied and Uninstalled
@@ -23,19 +23,17 @@ Public Class ApexAppInstaller
         '    iBranchType = Globals.getPatchRunnerFilter
         'End If
 
-        'Logger.Note("iBranchType", iBranchType)
-        'Select Case iBranchType
-        '    Case "feature"
-        '        RadioButtonFeature.Checked = True
-        '    Case "hotfix"
-        '        RadioButtonHotfix.Checked = True
-        '    Case "patchset"
-        '        RadioButtonPatchSet.Checked = True
-        '    Case "all"
-        '        RadioButtonAll2.Checked = True
-        '    Case Else
-        '        RadioButtonAll2.Checked = True
-        'End Select
+        Logger.Note("queuedBy", queuedBy)
+        Select Case queuedBy
+            Case "me"
+                RadioButtonMe.Checked = True
+            Case "others"
+                RadioButtonOthers.Checked = True
+            Case "anyone"
+                RadioButtonAnyone.Checked = True
+            Case Else
+                RadioButtonAnyone.Checked = True
+        End Select
 
         UsePatchAdminCheckBox.Checked = Globals.getUseARM
 
@@ -45,7 +43,7 @@ Public Class ApexAppInstaller
     End Sub
 
 
-    Public Shared Sub FindQueuedApps(ByRef foundApps As Collection)
+    Public Sub FindQueuedApps(ByRef foundApps As Collection)
 
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
@@ -68,13 +66,20 @@ Public Class ApexAppInstaller
 
         Dim patchMatch As Boolean = False
 
-        'This time loop through unapplied patches first and show in list if available in dir.
+        'Get a list of queued apps from the target database.
         Try
 
             conn.Open()
 
-            sql = "select schema, app_id from arm_app_queue_v where installed_on is null"
-            'sql = "select schema, app_id from arm_app_queue_v where installed_on is not null and queued_by_me = 'Y'"
+            If RadioButtonMe.Checked Then
+                sql = "select schema, app_id from arm_app_queue_v where installed_on is not null and queued_by_me = 'Y'"
+            ElseIf RadioButtonOthers.Checked Then
+                sql = "select schema, app_id from arm_app_queue_v where installed_on is not null and queued_by_me = 'N'"
+            ElseIf RadioButtonAnyone.Checked Then
+                sql = "select schema, app_id from arm_app_queue_v where installed_on is null"
+            End If
+
+
 
             cmd = New OracleCommand(sql, conn)
             cmd.CommandType = CommandType.Text
@@ -130,10 +135,10 @@ Public Class ApexAppInstaller
 
         If ComboBoxAppsFilter.SelectedItem = "Queued" Then
             FindQueuedApps(AvailableApps)
-            'ElseIf ComboBoxAppsFilter.SelectedItem = "Uninstalled" Then
-            '    FindPatches(AvailableApps, ComboBoxAppsFilter.SelectedItem = "Uninstalled")
-            'ElseIf ComboBoxAppsFilter.SelectedItem = "All" Then
-            '    FindPatches(AvailableApps, False) 'Find patches without doing any db search.
+            AvailableAppsTreeView.populateTreeFromCollection(AvailableApps) '@TODO - make this checked by default
+            '@TODO ElseIf ComboBoxAppsFilter.SelectedItem = "All" Then
+            '    FindPatches(AvailableApps, False) 'Find apps without doing any db search.
+            ' Dont check them.
         Else
             MsgBox("Choose type of patch to search for.", MsgBoxStyle.Exclamation, "Choose Search criteria")
         End If
@@ -143,7 +148,7 @@ Public Class ApexAppInstaller
 
         Logger.Dbg("Populate Tree")
 
-        AvailableAppsTreeView.populateTreeFromCollection(AvailableApps)
+
 
 
     End Sub
