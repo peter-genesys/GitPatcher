@@ -50,8 +50,8 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub HideTabs()
-
         PatchTabControl.TabPages.Remove(TabPageExtras)
+        PatchTabControl.TabPages.Remove(TabPageApexApps)
         PatchTabControl.TabPages.Remove(TabPagePreReqsA)
         PatchTabControl.TabPages.Remove(TabPagePreReqsB)
         PatchTabControl.TabPages.Remove(TabPagePatchDefn)
@@ -62,9 +62,10 @@ Public Class PatchFromTags
     Private Sub ShowTabs()
 
         PatchTabControl.TabPages.Insert(2, TabPageExtras)
-        PatchTabControl.TabPages.Insert(3, TabPagePreReqsA)
-        PatchTabControl.TabPages.Insert(4, TabPagePreReqsB)
-        PatchTabControl.TabPages.Insert(5, TabPagePatchDefn)
+        PatchTabControl.TabPages.Insert(3, TabPageApexApps)
+        PatchTabControl.TabPages.Insert(4, TabPagePreReqsA)
+        PatchTabControl.TabPages.Insert(5, TabPagePreReqsB)
+        PatchTabControl.TabPages.Insert(6, TabPagePatchDefn)
     End Sub
 
 
@@ -74,14 +75,14 @@ Public Class PatchFromTags
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
 
-        Dim tag_no_padding As Integer = 2
+        Dim tag_num_padding As Integer = 2
 
         TagsCheckedListBox.Items.Clear()
         For Each thisTag As Tag In GitOp.getTagList()
 
             If Common.getFirstSegment(thisTag.FriendlyName, ".") = Globals.currentBranch Then
                 'This is a tag worth listing
-                Dim ticked As Boolean = (gtag_base = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_no_padding)) 'This is a tag worth ticking
+                Dim ticked As Boolean = (gtag_base = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)) 'This is a tag worth ticking
                 TagsCheckedListBox.Items.Add(thisTag.FriendlyName, ticked)
 
             End If
@@ -119,10 +120,23 @@ Public Class PatchFromTags
 
                 SchemaCountTextBox.Text = SchemaComboBox.Items.Count
 
+                AppOnlyCheckBox.Checked = False
+
                 'If exactly one schema found then select it
                 'otherwise force user to choose one.
-                If SchemaComboBox.Items.Count = 0 Then
-                    MsgBox("No schemas found.  Please check location of tags or SHA-1 (esp SHA-1 order)")
+                If SchemaComboBox.Items.Count = 0 And GitOp.getChanges(Globals.getApexRelPath, False).Count > 0 Then
+
+                    'App-Only Patch 
+                    AppOnlyCheckBox.Checked = True
+                    SchemaComboBox.Items.Add("APEXRM")               'Use APEXRM schema - TODO need to make this the generic version.
+                    SchemaComboBox.SelectedIndex = 0                 'Select APEXRM - This will show the remaining Tabs.
+                    PatchTabControl.TabPages.Remove(TabPageExtras)   'Hide Extra Files tab in an App-Only Patch.
+                    PatchTabControl.TabPages.Remove(TabPagePreReqsA) 'Hide Last Patches tab since there are no componants to calculate a dependency from.
+
+                    MsgBox("No database changes found. But Apex Apps have been changed.  This Apex-Only patch will run as APEXRM.")
+
+                ElseIf SchemaComboBox.Items.Count = 0 Then
+                    MsgBox("No database or Apex App changes found.  Please check location of tags or SHA-1 (esp SHA-1 order)")
 
                 ElseIf SchemaComboBox.Items.Count = 1 Then
                     SchemaComboBox.SelectedIndex = 0
@@ -244,6 +258,11 @@ Public Class PatchFromTags
 
         exportExtraFiles(ExtraFiles, filenames, PatchDirTextBox.Text)
 
+        'Apps
+        Dim ChosenApps As Collection = New Collection
+        'Retrieve checked node items from the TreeViewApps as a collection of Apps.
+        TreeViewApps.ReadCheckedLeafNodes(ChosenApps)
+
         Dim PreReqPatchesA As Collection = New Collection
         'Retrieve checked node items from the PreReqPatchesTreeView as a collection of patches.
         PreReqPatchesTreeViewA.ReadCheckedLeafNodes(PreReqPatchesA)
@@ -278,6 +297,7 @@ Public Class PatchFromTags
                                RerunCheckBox.Checked,
                                filelist,
                                checkedFilelist,
+                               ChosenApps,
                                PreReqPatchesA,
                                PreReqPatchesB,
                                PatchDirTextBox.Text,
@@ -297,6 +317,7 @@ Public Class PatchFromTags
                                NoteTextBox.Text,
                                False,
                                RerunCheckBox.Checked,
+                               ChosenApps,
                                filelist,
                                checkedFilelist,
                                PreReqPatchesA,
@@ -353,6 +374,7 @@ Public Class PatchFromTags
                                   ByVal rerunnable As Boolean,
                                   ByRef targetFiles As Collection,
                                   ByRef ignoreErrorFiles As Collection,
+                                  ByRef queueApexApps As Collection,
                                   ByRef prereqs_last_patch As Collection,
                                   ByRef prereqs_best_order As Collection,
                                   ByVal patchDir As String,
@@ -397,227 +419,242 @@ Public Class PatchFromTags
 
 
 
-        If targetFiles.Count > 0 Then
+        '@TODO If targetFiles.Count > 0 or AppOnlyCheckBox.Checked Then
 
-            Dim l_log_filename As String = patch_name & ".log"
-            Dim l_master_filename As String = Nothing
+        Dim l_log_filename As String = patch_name & ".log"
+        Dim l_master_filename As String = Nothing
 
-            If use_arm Then
-                l_master_filename = "install.sql"
+        If use_arm Then
+            l_master_filename = "install.sql"
+        Else
+            l_master_filename = "install_lite.sql"
+        End If
+
+
+
+        Dim l_master_file As New System.IO.StreamWriter(patchDir & "\" & l_master_filename)
+
+        l_master_file.WriteLine("PROMPT LOG TO " & l_log_filename)
+        l_master_file.WriteLine("PROMPT .")
+        l_master_file.WriteLine("SET AUTOCOMMIT OFF")
+        l_master_file.WriteLine("SET AUTOPRINT ON")
+        l_master_file.WriteLine("SET ECHO ON")
+        l_master_file.WriteLine("SET FEEDBACK ON")
+        l_master_file.WriteLine("SET PAUSE OFF")
+        l_master_file.WriteLine("SET SERVEROUTPUT ON SIZE 1000000")
+        l_master_file.WriteLine("SET TERMOUT ON")
+        l_master_file.WriteLine("SET TRIMOUT ON")
+        l_master_file.WriteLine("SET VERIFY ON")
+        l_master_file.WriteLine("SET trims on pagesize 3000")
+        l_master_file.WriteLine("SET auto off")
+        l_master_file.WriteLine("SET verify off echo off define on")
+        l_master_file.WriteLine("WHENEVER OSERROR EXIT FAILURE ROLLBACK")
+        l_master_file.WriteLine("WHENEVER SQLERROR EXIT FAILURE ROLLBACK")
+        l_master_file.WriteLine("")
+
+        l_master_file.WriteLine("define patch_name = '" & patch_name & "'")
+        l_master_file.WriteLine("define patch_desc = '" & patch_desc.Replace("'", "''") & "'")
+        l_master_file.WriteLine("define patch_path = '" & branch_path & "/" & patch_name & "/" & "'")
+
+        l_master_file.WriteLine("SPOOL " & l_log_filename)
+
+        'Allow user to choose an alternate schema name at patch execution
+        Dim l_schema As String = db_schema
+        If alt_schema Then
+            l_schema = "&&" & db_schema & "_user"
+        End If
+
+        'Force use of SYSDBA role
+        Dim l_role As String = ""
+        If SYSDBACheckBox.Checked Then
+            l_role = " as sysdba"
+        End If
+
+        l_master_file.WriteLine("CONNECT " & l_schema & "/&&" & db_schema & "_password@&&database" & l_role)
+
+
+        l_master_file.WriteLine("set serveroutput on;")
+
+        'Files have already been sorted into Categories, we only need to list the categories and spit out the files under each.
+        For Each l_filename In targetFiles
+
+
+            'Sort the files by files extention into lists.
+
+            If Not l_filename.contains(".") Then
+                'No file extension so assume this is a Category heading.
+                Category = l_filename.ToUpper
+                l_install_file_line = Chr(10) & "PROMPT " & Category
+
+
             Else
-                l_master_filename = "install_lite.sql"
-            End If
 
+                l_file_extension = l_filename.Split(".")(1)
 
-
-            Dim l_master_file As New System.IO.StreamWriter(patchDir & "\" & l_master_filename)
-
-            l_master_file.WriteLine("PROMPT LOG TO " & l_log_filename)
-            l_master_file.WriteLine("PROMPT .")
-            l_master_file.WriteLine("SET AUTOCOMMIT OFF")
-            l_master_file.WriteLine("SET AUTOPRINT ON")
-            l_master_file.WriteLine("SET ECHO ON")
-            l_master_file.WriteLine("SET FEEDBACK ON")
-            l_master_file.WriteLine("SET PAUSE OFF")
-            l_master_file.WriteLine("SET SERVEROUTPUT ON SIZE 1000000")
-            l_master_file.WriteLine("SET TERMOUT ON")
-            l_master_file.WriteLine("SET TRIMOUT ON")
-            l_master_file.WriteLine("SET VERIFY ON")
-            l_master_file.WriteLine("SET trims on pagesize 3000")
-            l_master_file.WriteLine("SET auto off")
-            l_master_file.WriteLine("SET verify off echo off define on")
-            l_master_file.WriteLine("WHENEVER OSERROR EXIT FAILURE ROLLBACK")
-            l_master_file.WriteLine("WHENEVER SQLERROR EXIT FAILURE ROLLBACK")
-            l_master_file.WriteLine("")
-
-            l_master_file.WriteLine("define patch_name = '" & patch_name & "'")
-            l_master_file.WriteLine("define patch_desc = '" & patch_desc.Replace("'", "''") & "'")
-            l_master_file.WriteLine("define patch_path = '" & branch_path & "/" & patch_name & "/" & "'")
-
-            l_master_file.WriteLine("SPOOL " & l_log_filename)
-
-            'Allow user to choose an alternate schema name at patch execution
-            Dim l_schema As String = db_schema
-            If alt_schema Then
-                l_schema = "&&" & db_schema & "_user"
-            End If
-
-            'Force use of SYSDBA role
-            Dim l_role As String = ""
-            If SYSDBACheckBox.Checked Then
-                l_role = " as sysdba"
-            End If
-
-            l_master_file.WriteLine("CONNECT " & l_schema & "/&&" & db_schema & "_password@&&database" & l_role)
-
-
-            l_master_file.WriteLine("set serveroutput on;")
-
-            'Files have already been sorted into Categories, we only need to list the categories and spit out the files under each.
-            For Each l_filename In targetFiles
-
-
-                'Sort the files by files extention into lists.
-
-                If Not l_filename.contains(".") Then
-                    'No file extension so assume this is a Category heading.
-                    Category = l_filename.ToUpper
-                    l_install_file_line = Chr(10) & "PROMPT " & Category
-
+                'This is a releaseable file, so put an entry in the script.
+                If ignoreErrorFiles.Contains(l_filename) Then
+                    l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" &
+                                          Chr(10) & "PROMPT " & l_filename & " " &
+                                          Chr(10) & "@&&patch_path." & l_filename & ";" &
+                                          Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
 
                 Else
-
-                    l_file_extension = l_filename.Split(".")(1)
-
-                    'This is a releaseable file, so put an entry in the script.
-                    If ignoreErrorFiles.Contains(l_filename) Then
-                        l_install_file_line = Chr(10) & "WHENEVER SQLERROR CONTINUE" &
-                                              Chr(10) & "PROMPT " & l_filename & " " &
-                                              Chr(10) & "@&&patch_path." & l_filename & ";" &
-                                              Chr(10) & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK"
-
-                    Else
-                        l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " &
-                                            Chr(10) & "@&&patch_path." & l_filename & ";"
-
-                    End If
-
-                    'Add Show Error after these file types.
-                    If "tps,tpb,pks,pls,pkb,plb,fnc,prc,vw,trg,dblink,mv".Contains(l_file_extension) Then
-                        l_install_file_line = l_install_file_line & Chr(10) & l_show_error
-                    End If
-
-
-                    If String.IsNullOrEmpty(l_all_programs) Then
-                        l_all_programs = l_filename
-                    Else
-                        l_all_programs = l_all_programs & "' -" & Chr(10) & "||'," & l_filename
-                    End If
-
+                    l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " &
+                                        Chr(10) & "@&&patch_path." & l_filename & ";"
 
                 End If
 
-                If Category = "POST COMPLETION" Then
-                    l_post_install_list = l_post_install_list & Chr(10) & l_install_file_line
-                ElseIf Category = "DO NOT EXECUTE" Then
-                    'Do nothing
+                'Add Show Error after these file types.
+                If "tps,tpb,pks,pls,pkb,plb,fnc,prc,vw,trg,dblink,mv".Contains(l_file_extension) Then
+                    l_install_file_line = l_install_file_line & Chr(10) & l_show_error
+                End If
+
+
+                If String.IsNullOrEmpty(l_all_programs) Then
+                    l_all_programs = l_filename
                 Else
-                    'Add this file to the normal list
-                    l_install_list = l_install_list & Chr(10) & l_install_file_line
+                    l_all_programs = l_all_programs & "' -" & Chr(10) & "||'," & l_filename
+                End If
+
+
+            End If
+
+            If Category = "POST COMPLETION" Then
+                l_post_install_list = l_post_install_list & Chr(10) & l_install_file_line
+            ElseIf Category = "DO NOT EXECUTE" Then
+                'Do nothing
+            Else
+                'Add this file to the normal list
+                l_install_list = l_install_list & Chr(10) & l_install_file_line
+            End If
+
+        Next
+
+
+
+        If use_arm Then
+
+            l_patch_started =
+                "execute &&APEXRM_user..arm_installer.patch_started( -" _
+    & Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
+    & Chr(10) & " ,i_patch_type         => '" & patch_type & "' -" _
+    & Chr(10) & " ,i_db_schema          => '" & l_schema & "' -" _
+    & Chr(10) & " ,i_app_code           => '" & l_app_code & "' -" _
+    & Chr(10) & " ,i_branch_name        => '" & branch_path & "' -" _
+    & Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
+    & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
+    & Chr(10) & " ,i_suffix             => '" & suffix & "' -" _
+    & Chr(10) & " ,i_patch_desc         => '" & patch_desc.Replace("'", "''") & "' -" _
+    & Chr(10) & " ,i_patch_components   => '" & l_all_programs & "' -" _
+    & Chr(10) & " ,i_patch_create_date  => '" & DateString & "' -" _
+    & Chr(10) & " ,i_patch_created_by   => '" & Environment.UserName & "' -" _
+    & Chr(10) & " ,i_note               => '" & note.Replace("'", "''") & "' -" _
+    & Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
+    & Chr(10) & " ,i_tracking_yn        => '" & track_promotion_yn & "' -" _
+    & Chr(10) & " ,i_alt_schema_yn      => '" & alt_schema_yn & "' -" _
+    & Chr(10) & " ,i_retired_yn         => 'N' -" _
+    & Chr(10) & " ,i_remove_prereqs     => 'N' );" _
+    & Chr(10)
+
+
+            l_master_file.WriteLine(l_patch_started)
+
+
+            Dim l_prereq_short_name As String = Nothing
+            For Each l_prereq_patch In prereqs_last_patch
+                l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
+                If l_prereq_short_name = PatchNameTextBox.Text Then
+                    MsgBox("A Patch may NOT have itself as a prerequisite, skipping Prerequisite Patch: " & l_prereq_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
+                Else
+                    l_master_file.WriteLine("PROMPT")
+                    l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
+                    l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_prereq_last_patch( -")
+                    l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
+                    l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
                 End If
 
             Next
 
-
-
-            If use_arm Then
-
-                l_patch_started =
-                    "execute &&APEXRM_user..arm_installer.patch_started( -" _
-        & Chr(10) & "  i_patch_name         => '" & patch_name & "' -" _
-        & Chr(10) & " ,i_patch_type         => '" & patch_type & "' -" _
-        & Chr(10) & " ,i_db_schema          => '" & l_schema & "' -" _
-        & Chr(10) & " ,i_app_code           => '" & l_app_code & "' -" _
-        & Chr(10) & " ,i_branch_name        => '" & branch_path & "' -" _
-        & Chr(10) & " ,i_tag_from           => '" & tag1_name & "' -" _
-        & Chr(10) & " ,i_tag_to             => '" & tag2_name & "' -" _
-        & Chr(10) & " ,i_suffix             => '" & suffix & "' -" _
-        & Chr(10) & " ,i_patch_desc         => '" & patch_desc.Replace("'", "''") & "' -" _
-        & Chr(10) & " ,i_patch_components   => '" & l_all_programs & "' -" _
-        & Chr(10) & " ,i_patch_create_date  => '" & DateString & "' -" _
-        & Chr(10) & " ,i_patch_created_by   => '" & Environment.UserName & "' -" _
-        & Chr(10) & " ,i_note               => '" & note.Replace("'", "''") & "' -" _
-        & Chr(10) & " ,i_rerunnable_yn      => '" & rerunnable_yn & "' -" _
-        & Chr(10) & " ,i_tracking_yn        => '" & track_promotion_yn & "' -" _
-        & Chr(10) & " ,i_alt_schema_yn      => '" & alt_schema_yn & "' -" _
-        & Chr(10) & " ,i_retired_yn         => 'N' -" _
-        & Chr(10) & " ,i_remove_prereqs     => 'N' );" _
-        & Chr(10)
-
-
-                l_master_file.WriteLine(l_patch_started)
-
-
-                Dim l_prereq_short_name As String = Nothing
-                For Each l_prereq_patch In prereqs_last_patch
-                    l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
-                    If l_prereq_short_name = PatchNameTextBox.Text Then
-                        MsgBox("A Patch may NOT have itself as a prerequisite, skipping Prerequisite Patch: " & l_prereq_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
-                    Else
-                        l_master_file.WriteLine("PROMPT")
-                        l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
-                        l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_prereq_last_patch( -")
-                        l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
-                        l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
-                    End If
-
-                Next
-
-                For Each l_prereq_patch In prereqs_best_order
-                    l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
-                    If l_prereq_short_name = PatchNameTextBox.Text Then
-                        MsgBox("A Patch may NOT have itself as a prerequisite, skipping Prerequisite Patch: " & l_prereq_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
-                    Else
-                        l_master_file.WriteLine("PROMPT")
-                        l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
-                        l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_prereq_best_order( -")
-                        l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
-                        l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
-                    End If
-
-                Next
-
-                l_prereq_short_name = My.Settings.MinPatch
-                l_master_file.WriteLine("PROMPT Ensure ARM is late enough for this patch")
-                l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_prereq_best_order( -")
-                l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
-                l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
-
-            End If
-
-            l_master_file.WriteLine("select user||'@'||global_name Connection from global_name;")
-
-            'Write the list of files to execute.
-            l_master_file.WriteLine(l_install_list)
-
-            l_master_file.WriteLine(Chr(10) & "COMMIT;")
-
-            If use_arm Then
-
-                l_master_file.WriteLine("PROMPT Compiling objects in schema " & l_schema)
-                l_master_file.WriteLine("execute &&APEXRM_user..arm_invoker.compile_post_patch;")
-
-                If db_schema = "APEXRM" Then
-                    l_master_file.WriteLine("--APEXRM patches are likely to loose the session state of arm_installer, so complete using the patch_name parm.")
-                    l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
+            For Each l_prereq_patch In prereqs_best_order
+                l_prereq_short_name = Common.getLastSegment(l_prereq_patch, "\")
+                If l_prereq_short_name = PatchNameTextBox.Text Then
+                    MsgBox("A Patch may NOT have itself as a prerequisite, skipping Prerequisite Patch: " & l_prereq_short_name, MsgBoxStyle.Exclamation, "Illegal Patch Dependency")
                 Else
-                    l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed;")
+                    l_master_file.WriteLine("PROMPT")
+                    l_master_file.WriteLine("PROMPT Checking Prerequisite patch " & l_prereq_short_name)
+                    l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_prereq_best_order( -")
+                    l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
+                    l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
                 End If
 
+            Next
 
-
-
-
-            End If
-
-            l_master_file.WriteLine("COMMIT;")
-
-            l_master_file.WriteLine("PROMPT ")
-            l_master_file.WriteLine("PROMPT " & l_master_filename & " - COMPLETED.")
-
-            l_master_file.WriteLine("spool off;")
-
-            'Now we want to do the Post Completion node.
-            l_master_file.WriteLine(l_post_install_list)
-
-            l_master_file.WriteLine(Chr(10) & "COMMIT;")
-
-            l_master_file.Close()
-
-            'Convert the file to unix
-            FileIO.FileDOStoUNIX(patchDir & "\" & l_master_filename)
+            l_prereq_short_name = My.Settings.MinPatch
+            l_master_file.WriteLine("PROMPT Ensure ARM is late enough for this patch")
+            l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_prereq_best_order( -")
+            l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
+            l_master_file.WriteLine(",i_prereq_patch  => '" & l_prereq_short_name & "' );")
 
         End If
+
+        l_master_file.WriteLine("select user||'@'||global_name Connection from global_name;")
+
+        'Write the list of files to execute.
+        l_master_file.WriteLine(l_install_list)
+
+        l_master_file.WriteLine(Chr(10) & "COMMIT;")
+
+        If use_arm Then
+
+            l_master_file.WriteLine("PROMPT Compiling objects in schema " & l_schema)
+            l_master_file.WriteLine("execute &&APEXRM_user..arm_invoker.compile_post_patch;")
+
+
+            For Each App In queueApexApps
+                MsgBox("Enqueue " & App.ToString)
+                Dim l_parsing_schema As String = Common.getNthSegment(App, "/", 1)        '1st componant
+                Dim l_app_id As String = Common.getNthSegment(App, "/", 2).TrimStart("f") '2nd componant, and trim off the "f"
+
+                l_master_file.WriteLine("PROMPT Enqueue Apex App " & l_app_id)
+                l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.add_apex_app( -")
+                l_master_file.WriteLine("i_patch_name     => '" & patch_name & "' -")
+                l_master_file.WriteLine(",i_app_id     => '" & l_app_id & "' -")
+                l_master_file.WriteLine(",i_schema  => '" & l_parsing_schema & "' );")
+
+            Next
+
+
+            If db_schema = "APEXRM" Then
+                l_master_file.WriteLine("--APEXRM patches are likely to loose the session state of arm_installer, so complete using the patch_name parm.")
+                l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
+            Else
+                l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed;")
+            End If
+
+
+
+
+
+        End If
+
+        l_master_file.WriteLine("COMMIT;")
+
+        l_master_file.WriteLine("PROMPT ")
+        l_master_file.WriteLine("PROMPT " & l_master_filename & " - COMPLETED.")
+
+        l_master_file.WriteLine("spool off;")
+
+        'Now we want to do the Post Completion node.
+        l_master_file.WriteLine(l_post_install_list)
+
+        l_master_file.WriteLine(Chr(10) & "COMMIT;")
+
+        l_master_file.Close()
+
+        'Convert the file to unix
+        FileIO.FileDOStoUNIX(patchDir & "\" & l_master_filename)
+
+        'End If
 
 
     End Sub
@@ -805,6 +842,13 @@ Public Class PatchFromTags
             End If
         End If
 
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageApexApps" Then
+            If TreeViewApps.Nodes.Count = 0 Then
+                FindApps()
+            End If
+        End If
+
+
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePreReqsA" Then
 
 
@@ -857,9 +901,24 @@ Public Class PatchFromTags
 
             TrackPromoCheckBox.Checked = True
 
-            If TreeViewPatchOrder.Nodes.Count = 0 Then
-                CopySelectedChanges()
+
+            Dim ChosenChanges As Collection = New Collection
+            'Repo changes
+            'Retrieve checked node items from the TreeViewChanges as a collection of files.
+            TreeViewChanges.ReadCheckedLeafNodes(ChosenChanges)
+
+
+            If AppOnlyCheckBox.Checked = False Then
+                If TreeViewPatchOrder.Nodes.Count = 0 Then
+                    CopySelectedChanges()
+                End If
             End If
+
+            Dim ChosenApps As Collection = New Collection
+            'Apps
+            'Retrieve checked node items from the TreeViewApps as a collection of files.
+            TreeViewApps.ReadCheckedLeafNodes(ChosenApps)
+            Common.listCollection(ChosenApps, "Apex Apps to be queued")
 
             'Show/hide buttons
             PatchButton.Visible = Not String.IsNullOrEmpty(PatchNameTextBox.Text)
@@ -1100,15 +1159,17 @@ Public Class PatchFromTags
 
 
 
-    Private Sub PopulateTreeView(ByVal dir As String, ByVal parentNode As TreeNode)
+    Private Sub PopulateTreeView(ByVal dir As String, ByVal parentNode As TreeNode, ByVal useFilter As Boolean, ByVal pathFilter As String)
         Dim folder As String = String.Empty
         Try
 
             Dim files() As String = System.IO.Directory.GetFiles(dir) ', strPattern)
             Dim fileNode As TreeNode = Nothing
             For Each file In files
-                fileNode = New TreeNode(Common.getLastSegment(file, "\")) 'translate to relative URL
-                parentNode.Nodes.Add(fileNode)
+                If Not useFilter Or file.Contains(pathFilter) Then
+                    fileNode = New TreeNode(Common.getLastSegment(file, "\"))  'translate to relative URL
+                    parentNode.Nodes.Add(fileNode)
+                End If
             Next
 
             Dim folders() As String = IO.Directory.GetDirectories(dir)
@@ -1117,7 +1178,7 @@ Public Class PatchFromTags
                 For Each folder In folders
                     childNode = New TreeNode(Common.getLastSegment(folder, "\")) 'translate to relative URL
                     parentNode.Nodes.Add(childNode)
-                    PopulateTreeView(folder, childNode)
+                    PopulateTreeView(folder, childNode, useFilter, pathFilter)
                 Next
             End If
         Catch ex As UnauthorizedAccessException
@@ -1139,8 +1200,9 @@ Public Class PatchFromTags
             Dim aRootDir As String = Globals.getRepoPath() & relDir
             Dim aRootNode As TreeNode = New TreeNode(aRootDir)
             TreeViewFiles.Nodes.Add(aRootNode)
-            PopulateTreeView(aRootDir, aRootNode)
+            PopulateTreeView(aRootDir, aRootNode, RestrictExtraFilesToSchemaCheckBox.Checked, Globals.DBRepoPathMask & SchemaComboBox.Text)
         Next
+
     End Sub
 
 
@@ -1363,5 +1425,53 @@ Public Class PatchFromTags
 
     Private Sub SHA1TextBox2_TextChanged(sender As Object, e As EventArgs) Handles SHA1TextBox2.TextChanged
         showHideChangesTab()
+    End Sub
+
+    Private Sub FindApps()
+        Try
+            'If SchemaComboBox.Text = "" Then
+            '   Throw (New Halt("Schema not selected"))
+            'End If
+
+            TreeViewApps.PathSeparator = "/"
+            TreeViewApps.Nodes.Clear()
+
+            For Each change In GitOp.getChanges(Globals.getApexRelPath, False)
+
+                Dim appNameNode As String = Common.getNthSegment(change, "/", 3) & "/" & Common.getNthSegment(change, "/", 4)
+
+                TreeViewApps.AddNode(appNameNode, "/", True)
+
+                ''Common.getNthSegment(App, "/", 3)
+
+                'Dim l_pos As Integer = 0
+                'Dim l_count As Integer = 0
+                'While l_pos < appNameNode.Length And l_count < 4 And appNameNode.IndexOf("/", l_pos + 1) > 0
+                '    l_pos = appNameNode.IndexOf("/", l_pos + 1)
+                '    l_count = l_count + 1
+                'End While
+
+                'appNameNode = appNameNode.Substring(0, l_pos)
+
+                ''find or create each node for item
+                ''TreeViewApps.AddNode(change, "/", True)
+                'TreeViewApps.AddNode(appNameNode, "/", True)
+
+            Next
+
+            TreeViewApps.ExpandAll()
+
+            'HideTabs()
+            'ShowTabs()
+            'ResetForNewPatch()
+
+        Catch schema_not_selected As Halt
+            MsgBox("Please select a schema")
+        End Try
+    End Sub
+
+
+    Private Sub FindAppsButton_Click(sender As Object, e As EventArgs) Handles FindAppsButton.Click
+        FindApps()
     End Sub
 End Class

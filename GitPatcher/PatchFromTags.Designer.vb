@@ -98,6 +98,11 @@ Partial Class PatchFromTags
         Me.TreeViewFiles = New TreeViewEnhanced.TreeViewEnhanced()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.ButtonFindFiles = New System.Windows.Forms.Button()
+        Me.TabPageApexApps = New System.Windows.Forms.TabPage()
+        Me.Label35 = New System.Windows.Forms.Label()
+        Me.TreeViewApps = New TreeViewEnhanced.TreeViewEnhanced()
+        Me.Label36 = New System.Windows.Forms.Label()
+        Me.FindAppsButton = New System.Windows.Forms.Button()
         Me.TabPagePreReqsB = New System.Windows.Forms.TabPage()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.RestrictPreReqToBranchCheckBox = New System.Windows.Forms.CheckBox()
@@ -105,6 +110,8 @@ Partial Class PatchFromTags
         Me.Label14 = New System.Windows.Forms.Label()
         Me.PreReqPatchesTreeViewB = New TreeViewEnhanced.TreeViewEnhanced()
         Me.Label19 = New System.Windows.Forms.Label()
+        Me.RestrictExtraFilesToSchemaCheckBox = New System.Windows.Forms.CheckBox()
+        Me.AppOnlyCheckBox = New System.Windows.Forms.CheckBox()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPagePreReqsA.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
@@ -112,11 +119,13 @@ Partial Class PatchFromTags
         Me.TabPageSHA1.SuspendLayout()
         Me.TabPageChanges.SuspendLayout()
         Me.TabPageExtras.SuspendLayout()
+        Me.TabPageApexApps.SuspendLayout()
         Me.TabPagePreReqsB.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabPagePatchDefn
         '
+        Me.TabPagePatchDefn.Controls.Add(Me.AppOnlyCheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.AlternateSchemasCheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.SYSDBACheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.ExportPatchButton)
@@ -305,7 +314,7 @@ Partial Class PatchFromTags
         '
         'CopyChangesButton
         '
-        Me.CopyChangesButton.Location = New System.Drawing.Point(77, 35)
+        Me.CopyChangesButton.Location = New System.Drawing.Point(77, 36)
         Me.CopyChangesButton.Name = "CopyChangesButton"
         Me.CopyChangesButton.Size = New System.Drawing.Size(139, 23)
         Me.CopyChangesButton.TabIndex = 32
@@ -468,7 +477,7 @@ Partial Class PatchFromTags
         '
         'ButtonLastPatch
         '
-        Me.ButtonLastPatch.Location = New System.Drawing.Point(77, 35)
+        Me.ButtonLastPatch.Location = New System.Drawing.Point(77, 36)
         Me.ButtonLastPatch.Name = "ButtonLastPatch"
         Me.ButtonLastPatch.Size = New System.Drawing.Size(139, 23)
         Me.ButtonLastPatch.TabIndex = 45
@@ -513,6 +522,7 @@ Partial Class PatchFromTags
         Me.UseSHA1Button.TabIndex = 56
         Me.UseSHA1Button.Text = "Use SHA-1"
         Me.UseSHA1Button.UseVisualStyleBackColor = True
+        Me.UseSHA1Button.Visible = False
         '
         'Label28
         '
@@ -608,6 +618,7 @@ Partial Class PatchFromTags
         Me.PatchTabControl.Controls.Add(Me.TabPageSHA1)
         Me.PatchTabControl.Controls.Add(Me.TabPageChanges)
         Me.PatchTabControl.Controls.Add(Me.TabPageExtras)
+        Me.PatchTabControl.Controls.Add(Me.TabPageApexApps)
         Me.PatchTabControl.Controls.Add(Me.TabPagePreReqsA)
         Me.PatchTabControl.Controls.Add(Me.TabPagePreReqsB)
         Me.PatchTabControl.Controls.Add(Me.TabPagePatchDefn)
@@ -802,6 +813,7 @@ Partial Class PatchFromTags
         '
         'TabPageExtras
         '
+        Me.TabPageExtras.Controls.Add(Me.RestrictExtraFilesToSchemaCheckBox)
         Me.TabPageExtras.Controls.Add(Me.Label24)
         Me.TabPageExtras.Controls.Add(Me.Label22)
         Me.TabPageExtras.Controls.Add(Me.TreeViewFiles)
@@ -854,12 +866,63 @@ Partial Class PatchFromTags
         '
         'ButtonFindFiles
         '
-        Me.ButtonFindFiles.Location = New System.Drawing.Point(77, 35)
+        Me.ButtonFindFiles.Location = New System.Drawing.Point(77, 36)
         Me.ButtonFindFiles.Name = "ButtonFindFiles"
         Me.ButtonFindFiles.Size = New System.Drawing.Size(139, 23)
         Me.ButtonFindFiles.TabIndex = 5
         Me.ButtonFindFiles.Text = "Find Files"
         Me.ButtonFindFiles.UseVisualStyleBackColor = True
+        '
+        'TabPageApexApps
+        '
+        Me.TabPageApexApps.Controls.Add(Me.Label35)
+        Me.TabPageApexApps.Controls.Add(Me.TreeViewApps)
+        Me.TabPageApexApps.Controls.Add(Me.Label36)
+        Me.TabPageApexApps.Controls.Add(Me.FindAppsButton)
+        Me.TabPageApexApps.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageApexApps.Name = "TabPageApexApps"
+        Me.TabPageApexApps.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPageApexApps.Size = New System.Drawing.Size(525, 757)
+        Me.TabPageApexApps.TabIndex = 9
+        Me.TabPageApexApps.Text = "Apex Apps"
+        Me.TabPageApexApps.UseVisualStyleBackColor = True
+        '
+        'Label35
+        '
+        Me.Label35.AutoSize = True
+        Me.Label35.Location = New System.Drawing.Point(74, 77)
+        Me.Label35.Name = "Label35"
+        Me.Label35.Size = New System.Drawing.Size(436, 13)
+        Me.Label35.TabIndex = 55
+        Me.Label35.Text = "Ticked apps will be imported by the patch. Apps from any parsing schema may be im" &
+    "ported."
+        '
+        'TreeViewApps
+        '
+        Me.TreeViewApps.BackColor = System.Drawing.Color.Wheat
+        Me.TreeViewApps.CheckBoxes = True
+        Me.TreeViewApps.Location = New System.Drawing.Point(77, 93)
+        Me.TreeViewApps.Name = "TreeViewApps"
+        Me.TreeViewApps.Size = New System.Drawing.Size(429, 571)
+        Me.TreeViewApps.TabIndex = 54
+        '
+        'Label36
+        '
+        Me.Label36.AutoSize = True
+        Me.Label36.Location = New System.Drawing.Point(13, 93)
+        Me.Label36.Name = "Label36"
+        Me.Label36.Size = New System.Drawing.Size(58, 13)
+        Me.Label36.TabIndex = 53
+        Me.Label36.Text = "Apex Apps"
+        '
+        'FindAppsButton
+        '
+        Me.FindAppsButton.Location = New System.Drawing.Point(77, 36)
+        Me.FindAppsButton.Name = "FindAppsButton"
+        Me.FindAppsButton.Size = New System.Drawing.Size(139, 23)
+        Me.FindAppsButton.TabIndex = 5
+        Me.FindAppsButton.Text = "Find Apex Apps"
+        Me.FindAppsButton.UseVisualStyleBackColor = True
         '
         'TabPagePreReqsB
         '
@@ -898,7 +961,7 @@ Partial Class PatchFromTags
         '
         'PreReqButton
         '
-        Me.PreReqButton.Location = New System.Drawing.Point(77, 35)
+        Me.PreReqButton.Location = New System.Drawing.Point(77, 36)
         Me.PreReqButton.Name = "PreReqButton"
         Me.PreReqButton.Size = New System.Drawing.Size(139, 23)
         Me.PreReqButton.TabIndex = 60
@@ -934,6 +997,27 @@ Partial Class PatchFromTags
         Me.Label19.TabIndex = 54
         Me.Label19.Text = "Prereqs"
         '
+        'RestrictExtraFilesToSchemaCheckBox
+        '
+        Me.RestrictExtraFilesToSchemaCheckBox.AutoSize = True
+        Me.RestrictExtraFilesToSchemaCheckBox.Location = New System.Drawing.Point(222, 39)
+        Me.RestrictExtraFilesToSchemaCheckBox.Name = "RestrictExtraFilesToSchemaCheckBox"
+        Me.RestrictExtraFilesToSchemaCheckBox.Size = New System.Drawing.Size(116, 17)
+        Me.RestrictExtraFilesToSchemaCheckBox.TabIndex = 62
+        Me.RestrictExtraFilesToSchemaCheckBox.Text = "Restrict to Schema"
+        Me.RestrictExtraFilesToSchemaCheckBox.UseVisualStyleBackColor = True
+        '
+        'AppOnlyCheckBox
+        '
+        Me.AppOnlyCheckBox.AutoSize = True
+        Me.AppOnlyCheckBox.Enabled = False
+        Me.AppOnlyCheckBox.Location = New System.Drawing.Point(77, 13)
+        Me.AppOnlyCheckBox.Name = "AppOnlyCheckBox"
+        Me.AppOnlyCheckBox.Size = New System.Drawing.Size(101, 17)
+        Me.AppOnlyCheckBox.TabIndex = 52
+        Me.AppOnlyCheckBox.Text = "Apex-Apps-Only"
+        Me.AppOnlyCheckBox.UseVisualStyleBackColor = True
+        '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -956,6 +1040,8 @@ Partial Class PatchFromTags
         Me.TabPageChanges.PerformLayout()
         Me.TabPageExtras.ResumeLayout(False)
         Me.TabPageExtras.PerformLayout()
+        Me.TabPageApexApps.ResumeLayout(False)
+        Me.TabPageApexApps.PerformLayout()
         Me.TabPagePreReqsB.ResumeLayout(False)
         Me.TabPagePreReqsB.PerformLayout()
         Me.ResumeLayout(False)
@@ -1043,4 +1129,11 @@ Partial Class PatchFromTags
     Friend WithEvents Label33 As Label
     Friend WithEvents Label34 As Label
     Friend WithEvents FindsSHA1Button As Button
+    Friend WithEvents TabPageApexApps As TabPage
+    Friend WithEvents Label35 As Label
+    Friend WithEvents TreeViewApps As TreeViewEnhanced.TreeViewEnhanced
+    Friend WithEvents Label36 As Label
+    Friend WithEvents FindAppsButton As Button
+    Friend WithEvents RestrictExtraFilesToSchemaCheckBox As CheckBox
+    Friend WithEvents AppOnlyCheckBox As CheckBox
 End Class
