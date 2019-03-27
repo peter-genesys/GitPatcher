@@ -611,7 +611,7 @@ Public Class PatchFromTags
 
 
             For Each App In queueApexApps
-                MsgBox("Enqueue " & App.ToString)
+                Logger.Dbg("Enqueue " & App.ToString)
                 Dim l_parsing_schema As String = Common.getNthSegment(App, "/", 1)        '1st componant
                 Dim l_app_id As String = Common.getNthSegment(App, "/", 2).TrimStart("f") '2nd componant, and trim off the "f"
 
@@ -908,7 +908,9 @@ Public Class PatchFromTags
             TreeViewChanges.ReadCheckedLeafNodes(ChosenChanges)
 
 
-            If AppOnlyCheckBox.Checked = False Then
+            If AppOnlyCheckBox.Checked Then
+                PatchDescTextBox.Text = "Apex Apps Only"
+            Else
                 If TreeViewPatchOrder.Nodes.Count = 0 Then
                     CopySelectedChanges()
                 End If
@@ -918,7 +920,12 @@ Public Class PatchFromTags
             'Apps
             'Retrieve checked node items from the TreeViewApps as a collection of files.
             TreeViewApps.ReadCheckedLeafNodes(ChosenApps)
-            Common.listCollection(ChosenApps, "Apex Apps to be queued")
+            'Common.listCollection(ChosenApps, "Apex Apps to be queued")
+
+            For Each App In ChosenApps
+                NoteTextBox.Text = NoteTextBox.Text & Common.getLastSegment(App, "/") & " "
+            Next
+
 
             'Show/hide buttons
             PatchButton.Visible = Not String.IsNullOrEmpty(PatchNameTextBox.Text)
