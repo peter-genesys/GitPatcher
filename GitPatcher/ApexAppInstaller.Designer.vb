@@ -23,7 +23,7 @@ Partial Class ApexAppInstaller
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ApexAppInstaller))
-        Me.PatchRunnerTabControl = New System.Windows.Forms.TabControl()
+        Me.AppInstallerTabControl = New System.Windows.Forms.TabControl()
         Me.AppSelectorTabPage = New System.Windows.Forms.TabPage()
         Me.UsePatchAdminCheckBox = New System.Windows.Forms.CheckBox()
         Me.AvailableAppsTreeView = New TreeViewEnhanced.TreeViewEnhanced()
@@ -34,33 +34,26 @@ Partial Class ApexAppInstaller
         Me.RadioButtonMe = New System.Windows.Forms.RadioButton()
         Me.RadioButtonOthers = New System.Windows.Forms.RadioButton()
         Me.SearchApexAppsButton = New System.Windows.Forms.Button()
-        Me.OrderTabPage = New System.Windows.Forms.TabPage()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.TreeViewPatchOrder = New TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels()
-        Me.CopyChangesButton = New System.Windows.Forms.Button()
         Me.RunTabPage = New System.Windows.Forms.TabPage()
         Me.MasterScriptListBox = New System.Windows.Forms.ListBox()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.ExecutePatchButton = New System.Windows.Forms.Button()
-        Me.PatchRunnerTabControl.SuspendLayout()
+        Me.InstallApexAppsButton = New System.Windows.Forms.Button()
+        Me.AppInstallerTabControl.SuspendLayout()
         Me.AppSelectorTabPage.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
-        Me.OrderTabPage.SuspendLayout()
         Me.RunTabPage.SuspendLayout()
         Me.SuspendLayout()
         '
-        'PatchRunnerTabControl
+        'AppInstallerTabControl
         '
-        Me.PatchRunnerTabControl.Controls.Add(Me.AppSelectorTabPage)
-        Me.PatchRunnerTabControl.Controls.Add(Me.OrderTabPage)
-        Me.PatchRunnerTabControl.Controls.Add(Me.RunTabPage)
-        Me.PatchRunnerTabControl.Location = New System.Drawing.Point(9, 9)
-        Me.PatchRunnerTabControl.MaximumSize = New System.Drawing.Size(1000, 1000)
-        Me.PatchRunnerTabControl.Name = "PatchRunnerTabControl"
-        Me.PatchRunnerTabControl.SelectedIndex = 0
-        Me.PatchRunnerTabControl.Size = New System.Drawing.Size(458, 738)
-        Me.PatchRunnerTabControl.TabIndex = 1
+        Me.AppInstallerTabControl.Controls.Add(Me.AppSelectorTabPage)
+        Me.AppInstallerTabControl.Controls.Add(Me.RunTabPage)
+        Me.AppInstallerTabControl.Location = New System.Drawing.Point(9, 9)
+        Me.AppInstallerTabControl.MaximumSize = New System.Drawing.Size(1000, 1000)
+        Me.AppInstallerTabControl.Name = "AppInstallerTabControl"
+        Me.AppInstallerTabControl.SelectedIndex = 0
+        Me.AppInstallerTabControl.Size = New System.Drawing.Size(458, 738)
+        Me.AppInstallerTabControl.TabIndex = 1
         '
         'AppSelectorTabPage
         '
@@ -168,60 +161,11 @@ Partial Class ApexAppInstaller
         Me.SearchApexAppsButton.Text = "Search"
         Me.SearchApexAppsButton.UseVisualStyleBackColor = True
         '
-        'OrderTabPage
-        '
-        Me.OrderTabPage.Controls.Add(Me.Label4)
-        Me.OrderTabPage.Controls.Add(Me.Label2)
-        Me.OrderTabPage.Controls.Add(Me.TreeViewPatchOrder)
-        Me.OrderTabPage.Controls.Add(Me.CopyChangesButton)
-        Me.OrderTabPage.Location = New System.Drawing.Point(4, 22)
-        Me.OrderTabPage.Name = "OrderTabPage"
-        Me.OrderTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.OrderTabPage.Size = New System.Drawing.Size(450, 712)
-        Me.OrderTabPage.TabIndex = 2
-        Me.OrderTabPage.Text = "Order"
-        Me.OrderTabPage.UseVisualStyleBackColor = True
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(6, 71)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(210, 13)
-        Me.Label4.TabIndex = 52
-        Me.Label4.Text = "Order of Execution - Drag n' drop to reorder"
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(153, 38)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(217, 13)
-        Me.Label2.TabIndex = 51
-        Me.Label2.Text = "(Rechecks dependancy order, can be slow.)"
-        '
-        'TreeViewPatchOrder
-        '
-        Me.TreeViewPatchOrder.BackColor = System.Drawing.Color.AliceBlue
-        Me.TreeViewPatchOrder.Location = New System.Drawing.Point(7, 87)
-        Me.TreeViewPatchOrder.Name = "TreeViewPatchOrder"
-        Me.TreeViewPatchOrder.Size = New System.Drawing.Size(429, 615)
-        Me.TreeViewPatchOrder.TabIndex = 50
-        '
-        'CopyChangesButton
-        '
-        Me.CopyChangesButton.Location = New System.Drawing.Point(8, 33)
-        Me.CopyChangesButton.Name = "CopyChangesButton"
-        Me.CopyChangesButton.Size = New System.Drawing.Size(139, 23)
-        Me.CopyChangesButton.TabIndex = 49
-        Me.CopyChangesButton.Text = "Copy Patches"
-        Me.CopyChangesButton.UseVisualStyleBackColor = True
-        '
         'RunTabPage
         '
         Me.RunTabPage.Controls.Add(Me.MasterScriptListBox)
         Me.RunTabPage.Controls.Add(Me.Label3)
-        Me.RunTabPage.Controls.Add(Me.ExecutePatchButton)
+        Me.RunTabPage.Controls.Add(Me.InstallApexAppsButton)
         Me.RunTabPage.Location = New System.Drawing.Point(4, 22)
         Me.RunTabPage.Name = "RunTabPage"
         Me.RunTabPage.Padding = New System.Windows.Forms.Padding(3)
@@ -247,38 +191,36 @@ Partial Class ApexAppInstaller
         Me.Label3.TabIndex = 3
         Me.Label3.Text = "Master List Script"
         '
-        'ExecutePatchButton
+        'InstallApexAppsButton
         '
-        Me.ExecutePatchButton.Location = New System.Drawing.Point(8, 33)
-        Me.ExecutePatchButton.Name = "ExecutePatchButton"
-        Me.ExecutePatchButton.Size = New System.Drawing.Size(139, 23)
-        Me.ExecutePatchButton.TabIndex = 1
-        Me.ExecutePatchButton.Text = "Install Apex Apps"
-        Me.ExecutePatchButton.UseVisualStyleBackColor = True
+        Me.InstallApexAppsButton.Location = New System.Drawing.Point(8, 33)
+        Me.InstallApexAppsButton.Name = "InstallApexAppsButton"
+        Me.InstallApexAppsButton.Size = New System.Drawing.Size(139, 23)
+        Me.InstallApexAppsButton.TabIndex = 1
+        Me.InstallApexAppsButton.Text = "Install Apex Apps"
+        Me.InstallApexAppsButton.UseVisualStyleBackColor = True
         '
         'ApexAppInstaller
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(476, 756)
-        Me.Controls.Add(Me.PatchRunnerTabControl)
+        Me.Controls.Add(Me.AppInstallerTabControl)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "ApexAppInstaller"
         Me.Text = "ApexAppInstaller"
-        Me.PatchRunnerTabControl.ResumeLayout(False)
+        Me.AppInstallerTabControl.ResumeLayout(False)
         Me.AppSelectorTabPage.ResumeLayout(False)
         Me.AppSelectorTabPage.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
-        Me.OrderTabPage.ResumeLayout(False)
-        Me.OrderTabPage.PerformLayout()
         Me.RunTabPage.ResumeLayout(False)
         Me.RunTabPage.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
 
-    Friend WithEvents PatchRunnerTabControl As TabControl
+    Friend WithEvents AppInstallerTabControl As TabControl
     Friend WithEvents AppSelectorTabPage As TabPage
     Friend WithEvents AvailableAppsTreeView As TreeViewEnhanced.TreeViewEnhanced
     Friend WithEvents ComboBoxAppsFilter As ComboBox
@@ -288,14 +230,9 @@ Partial Class ApexAppInstaller
     Friend WithEvents RadioButtonMe As RadioButton
     Friend WithEvents RadioButtonOthers As RadioButton
     Friend WithEvents SearchApexAppsButton As Button
-    Friend WithEvents OrderTabPage As TabPage
-    Friend WithEvents Label4 As Label
-    Friend WithEvents Label2 As Label
-    Friend WithEvents TreeViewPatchOrder As TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels
-    Friend WithEvents CopyChangesButton As Button
     Friend WithEvents RunTabPage As TabPage
     Friend WithEvents MasterScriptListBox As ListBox
     Friend WithEvents Label3 As Label
-    Friend WithEvents ExecutePatchButton As Button
+    Friend WithEvents InstallApexAppsButton As Button
     Friend WithEvents UsePatchAdminCheckBox As CheckBox
 End Class

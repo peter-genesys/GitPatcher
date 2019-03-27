@@ -43,7 +43,7 @@ Public Class ApexAppInstaller
     End Sub
 
 
-    Public Sub FindQueuedApps(ByRef foundApps As Collection)
+    Public Sub FindApps(ByRef foundApps As Collection, ByRef queuedOnly As Boolean)
 
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
@@ -57,66 +57,73 @@ Public Class ApexAppInstaller
 
         End If
 
-        Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
+        If queuedOnly Then
 
-        Dim conn As New OracleConnection(oradb)
-        Dim sql As String = Nothing
-        Dim cmd As OracleCommand
-        Dim dr As OracleDataReader
+            Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
 
-        Dim patchMatch As Boolean = False
+            Dim conn As New OracleConnection(oradb)
+            Dim sql As String = Nothing
+            Dim cmd As OracleCommand
+            Dim dr As OracleDataReader
 
-        'Get a list of queued apps from the target database.
-        Try
+            'Dim patchMatch As Boolean = False
 
-            conn.Open()
+            'Get a list of queued apps from the target database.
+            Try
 
-            If RadioButtonMe.Checked Then
-                sql = "select schema, app_id from arm_app_queue_v where installed_on is not null and queued_by_me = 'Y'"
-            ElseIf RadioButtonOthers.Checked Then
-                sql = "select schema, app_id from arm_app_queue_v where installed_on is not null and queued_by_me = 'N'"
-            ElseIf RadioButtonAnyone.Checked Then
-                sql = "select schema, app_id from arm_app_queue_v where installed_on is null"
-            End If
+                conn.Open()
 
-
-
-            cmd = New OracleCommand(sql, conn)
-            cmd.CommandType = CommandType.Text
-            dr = cmd.ExecuteReader()
-
-            While (dr.Read())
-                Dim l_app_id As String = dr.Item("app_id")
-                Dim l_schema As String = dr.Item("schema")
-                Dim l_app_found As Boolean = False
-
-                For i As Integer = 1 To availableApps.Count
-
-                    If availableApps(i).ToString().Contains(l_schema & "/f" & l_app_id) Then
-                        foundApps.Add(availableApps(i))
-                        l_app_found = True
-                    End If
-
-                Next
-
-                If Not l_app_found Then
-                    MsgBox("WARNING: Apex App " & l_app_id & " is not present in the local checkout.")
+                If RadioButtonMe.Checked Then
+                    sql = "select schema, app_id from arm_app_queue_v where installed_on is null and queued_by_me = 'Y'"
+                ElseIf RadioButtonOthers.Checked Then
+                    sql = "select schema, app_id from arm_app_queue_v where installed_on is null and queued_by_me = 'N'"
+                ElseIf RadioButtonAnyone.Checked Then
+                    sql = "select schema, app_id from arm_app_queue_v where installed_on is null"
                 End If
 
-            End While
-
-            dr.Close()
-
-            conn.Close()
-            conn.Dispose()
 
 
-        Catch ex As Exception ' catches any error
-            MessageBox.Show(ex.Message.ToString())
-        Finally
-            ' In a real application, put cleanup code here.
+                cmd = New OracleCommand(sql, conn)
+                cmd.CommandType = CommandType.Text
+                dr = cmd.ExecuteReader()
 
-        End Try
+                While (dr.Read())
+                    Dim l_app_id As String = dr.Item("app_id")
+                    Dim l_schema As String = dr.Item("schema")
+                    Dim l_app_found As Boolean = False
+
+                    For i As Integer = 1 To availableApps.Count
+
+                        If availableApps(i).ToString().Contains(l_schema & "\f" & l_app_id) Then
+                            foundApps.Add(availableApps(i))
+                            l_app_found = True
+                        End If
+
+                    Next
+
+                    If Not l_app_found Then
+                        MsgBox("WARNING: " & l_schema & " Apex App " & l_app_id & " is queued, but not present in this branch " & Globals.currentBranch & " of repo " & Globals.getRepoName)
+                    End If
+
+                End While
+
+                dr.Close()
+
+                conn.Close()
+                conn.Dispose()
+
+
+            Catch ex As Exception ' catches any error
+                MessageBox.Show(ex.Message.ToString())
+            Finally
+                ' In a real application, put cleanup code here.
+
+            End Try
+
+        Else
+            foundApps = availableApps
+
+        End If
 
         If foundApps.Count = 0 Then
             MsgBox("No Apex Apps matched the search criteria.", MsgBoxStyle.Information, "No Apps found")
@@ -133,15 +140,20 @@ Public Class ApexAppInstaller
 
         Dim AvailableApps As Collection = New Collection
 
-        If ComboBoxAppsFilter.SelectedItem = "Queued" Then
-            FindQueuedApps(AvailableApps)
-            AvailableAppsTreeView.populateTreeFromCollection(AvailableApps, True) 'check the queued apps, by default.
-            '@TODO ElseIf ComboBoxAppsFilter.SelectedItem = "All" Then
-            '    FindPatches(AvailableApps, False) 'Find apps without doing any db search.
-            ' Dont check them.
-        Else
-            MsgBox("Choose type of patch to search for.", MsgBoxStyle.Exclamation, "Choose Search criteria")
-        End If
+        'If ComboBoxAppsFilter.SelectedItem = "Queued" Then
+        '    FindApps(AvailableApps, True)
+        '    AvailableAppsTreeView.populateTreeFromCollection(AvailableApps, True) 'check the queued apps, by default.
+        '    '@TODO ElseIf ComboBoxAppsFilter.SelectedItem = "All" Then
+        '    '    FindPatches(AvailableApps, False) 'Find apps without doing any db search.
+        '    ' Dont check them.
+        'Else
+        '    MsgBox("Choose Queued or All.", MsgBoxStyle.Exclamation, "Choose Search criteria")
+        'End If
+
+
+        FindApps(AvailableApps, ComboBoxAppsFilter.SelectedItem = "Queued") 'check for queued apps only
+        AvailableAppsTreeView.populateTreeFromCollection(AvailableApps, ComboBoxAppsFilter.SelectedItem = "Queued") 'check the queued apps, by default.
+
 
         'Logger.Dbg("Filtering")
         'filterQueuedBy(AvailableApps)
@@ -156,4 +168,98 @@ Public Class ApexAppInstaller
     Private Sub SearchApexAppsButton_Click(sender As Object, e As EventArgs) Handles SearchApexAppsButton.Click
         doSearch()
     End Sub
+
+    Public Shared Sub RunMasterScript(scriptData As String)
+
+        Dim masterScriptName As String = Globals.RootApexDir & "temp_master_script.sql"
+
+        FileIO.writeFile(masterScriptName, scriptData, True)
+
+        Host.executeSQLscriptInteractive(masterScriptName, Globals.RootApexDir)
+
+        FileIO.deleteFileIfExists(masterScriptName)
+
+    End Sub
+
+
+    Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles InstallApexAppsButton.Click
+
+        'Format as script
+        Dim masterList As String = Nothing
+
+        For i As Integer = 0 To MasterScriptListBox.Items.Count - 1
+
+            masterList = masterList & Chr(10) & MasterScriptListBox.Items(i).ToString()
+
+        Next
+
+        RunMasterScript(masterList)
+
+
+    End Sub
+
+    Private Sub CopySelectedApps()
+
+        'Apps to run
+        'Retrieve checked node items from the AvailableAppsTreeView as a collection of files.
+
+        Dim ChosenApps As Collection = New Collection
+        AvailableAppsTreeView.ReadCheckedLeafNodes(ChosenApps)
+
+        If ChosenApps.Count = 0 Then
+            MsgBox("No apex apps selected.")
+        Else
+            'Common.listCollection(ChosenApps, "Chosen Apps")
+
+            MasterScriptListBox.Items.Clear()
+            MasterScriptListBox.Items.Add("SET SERVEROUTPUT ON")
+            MasterScriptListBox.Items.Add("WHENEVER OSERROR EXIT FAILURE ROLLBACK")
+            MasterScriptListBox.Items.Add("WHENEVER SQLERROR EXIT FAILURE ROLLBACK")
+            MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.getDATASOURCE & "'")
+
+            For Each App In ChosenApps
+                Dim lSchema = Common.getFirstSegment(App, "\")
+                Dim lAppId = Common.getLastSegment(App, "\")
+
+                MasterScriptListBox.Items.Add("CONNECT " & lSchema & "/&&" & lSchema & "_password@&&database")
+                MasterScriptListBox.Items.Add("execute arm_installer.set_security_for_apex_import(-")
+                MasterScriptListBox.Items.Add("     i_schema => '" & lSchema & "'-")
+                MasterScriptListBox.Items.Add("   , i_workspace => '&&" & lAppId & "_WORKSPACE');")
+                MasterScriptListBox.Items.Add("cd " & App)
+                MasterScriptListBox.Items.Add("@install.sql")
+
+                If UsePatchAdminCheckBox.Checked Then
+                    MasterScriptListBox.Items.Add("execute arm_installer.done_apex_app(i_app_id => " & lAppId.TrimStart("f") & ");")
+                End If
+
+                MasterScriptListBox.Items.Add("cd ..\..")
+
+            Next
+
+        End If
+
+
+
+    End Sub
+
+
+    Private Sub AppInstallerTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles AppInstallerTabControl.SelectedIndexChanged
+
+
+        'If (AppInstallerTabControl.SelectedTab.Name.ToString) = "OrderTabPage" Then
+        '    If TreeViewPatchOrder.Nodes.Count = 0 Then
+        '        CopySelectedChanges()
+        '    End If
+        'Else
+        If (AppInstallerTabControl.SelectedTab.Name.ToString) = "RunTabPage" Then
+                CopySelectedApps()
+                'PopMasterScriptListBox()
+
+                'ElseIf (AppInstallerTabControl.SelectedTab.Name.ToString) = "ExportTabPage" Then
+                '   PopPatchListBox()
+
+            End If
+
+    End Sub
+
 End Class
