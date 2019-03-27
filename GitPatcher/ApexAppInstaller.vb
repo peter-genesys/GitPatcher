@@ -135,7 +135,7 @@ Public Class ApexAppInstaller
 
         If ComboBoxAppsFilter.SelectedItem = "Queued" Then
             FindQueuedApps(AvailableApps)
-            AvailableAppsTreeView.populateTreeFromCollection(AvailableApps) '@TODO - make this checked by default
+            AvailableAppsTreeView.populateTreeFromCollection(AvailableApps, True) 'check the queued apps, by default.
             '@TODO ElseIf ComboBoxAppsFilter.SelectedItem = "All" Then
             '    FindPatches(AvailableApps, False) 'Find apps without doing any db search.
             ' Dont check them.

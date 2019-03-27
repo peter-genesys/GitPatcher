@@ -125,7 +125,7 @@ Partial Class ApexAppInstaller
         Me.GroupBox1.Size = New System.Drawing.Size(139, 92)
         Me.GroupBox1.TabIndex = 38
         Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Queued By Filter"
+        Me.GroupBox1.Text = "Queued-By Filter"
         '
         'RadioButtonAnyone
         '
