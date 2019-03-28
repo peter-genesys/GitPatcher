@@ -164,8 +164,8 @@ Public Class CreateRelease
 
         Next
 
-        'Populate the treeview.
-        AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches)
+        'Populate the treeview, tick unapplied by default
+        AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Unapplied")
 
         Cursor.Current = Cursors.Default
 
