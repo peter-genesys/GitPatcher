@@ -234,7 +234,7 @@
             'Import Apex
             Host.executeSQLscriptInteractive("install.sql" _
                                            , Globals.RootApexDir & Globals.currentApex _
-                                           , Main.get_connect_string(Globals.currentParsingSchema, Globals.currentTNS))
+                                           , Main.get_connect_string(Globals.currentParsingSchema, Globals.currentTNS, Globals.getDATASOURCE))
 
         End If
 

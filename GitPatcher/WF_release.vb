@@ -17,7 +17,10 @@
         releasing.addStep("Choose a tag to release from and checkout the tag", False)
 
         releasing.addStep("Use PatchRunner to run Uninstalled Patches", True, "")
-        releasing.addStep("Import Apex", True, "Using the Apex2Git") '"Using the Apex Import workflow")
+
+        releasing.addStep("Import any queued apps: " & releaseFromBranch, True, "Any Apex Apps that were included in a patch, must be reinstalled now. ")
+
+        'releasing.addStep("Import Apex", True, "Using the Apex2Git") '"Using the Apex Import workflow")
         releasing.addStep("Smoke Test", True, "Perform a quick test to verify the patched system is working in " & iTargetDB)
         releasing.addStep("Revert current DB to : " & lcurrentDB)
         releasing.Show()
@@ -71,11 +74,18 @@
         End If
 
         If releasing.toDoNextStep() Then
-            'Import Apex 
-            MsgBox("Import the changed Apex apps into " & iTargetDB & " using Apex2Git", MsgBoxStyle.Information, "Apex2Git")
-            'WF_Apex.ApexImportFromTag()
-
+            'Install queued Apex Apps.
+            Dim newchildform As New ApexAppInstaller("Queued")
+            'newchildform.MdiParent = GitPatcher
+            newchildform.ShowDialog() 'ShowDialog - means wait.
         End If
+
+        'If releasing.toDoNextStep() Then
+        '    'Import Apex 
+        '    MsgBox("Import the changed Apex apps into " & iTargetDB & " using Apex2Git", MsgBoxStyle.Information, "Apex2Git")
+        '    'WF_Apex.ApexImportFromTag()
+
+        'End If
 
         If releasing.toDoNextStep() Then
             'Smoke Test 

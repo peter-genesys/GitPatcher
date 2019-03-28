@@ -19,6 +19,9 @@
         createPatchProgress.addStep("Review tags on Branch: " & currentBranch)
         createPatchProgress.addStep("Create edit, test", True, "Now is a great time to smoke test my work before i commit the patch.")
         createPatchProgress.addStep("Commit to Branch: " & currentBranch, False)
+
+        createPatchProgress.addStep("Import any queued apps: " & currentBranch, True, "Any Apex Apps that were included in a patch, must be reinstalled now. ")
+
         createPatchProgress.addStep("Switch to " & iRebaseBranchOn & " branch", True)
         createPatchProgress.addStep("Merge from Branch: " & currentBranch, True, "Please select the Branch:" & currentBranch & " from the Tortoise Merge Dialogue")
         createPatchProgress.addStep("Push to Origin", True, "If at this stage there is an error because your " & iRebaseBranchOn & " branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
@@ -95,6 +98,13 @@
 
             End If
 
+        End If
+
+        If createPatchProgress.toDoNextStep() Then
+            'Run your app changes
+            Dim newchildform As New ApexAppInstaller("Queued")
+            'newchildform.MdiParent = GitPatcher
+            newchildform.ShowDialog() 'ShowDialog - means wait.
         End If
 
 

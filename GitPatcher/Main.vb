@@ -195,9 +195,9 @@
     End Function
 
 
-    Shared Function get_connect_string(ByVal schema As String, ByVal database As String) As String
+    Shared Function get_connect_string(ByVal schema As String, ByVal database As String, ByVal datasource As String) As String
 
-        Return connect_string(schema, get_password(schema, database), database)
+        Return connect_string(schema, get_password(schema, database), datasource)
 
     End Function
 
@@ -389,4 +389,15 @@
         showRepoSettings()
     End Sub
 
+    Private Sub QueuedToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles QueuedToolStripMenuItem.Click
+        Dim newchildform As New ApexAppInstaller("Queued")
+        newchildform.MdiParent = GitPatcher
+        newchildform.Show()
+    End Sub
+
+    Private Sub AllApexAppsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllApexAppsToolStripMenuItem.Click
+        Dim newchildform As New ApexAppInstaller("All")
+        newchildform.MdiParent = GitPatcher
+        newchildform.Show()
+    End Sub
 End Class

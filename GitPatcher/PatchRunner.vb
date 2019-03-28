@@ -97,7 +97,7 @@ Public Class PatchRunner
 
             conn.Open()
 
-            sql = "select patch_name from patches_unapplied_v"
+            sql = "select patch_name from ARM_UNAPPLIED_V"
 
 
             cmd = New OracleCommand(sql, conn)
@@ -390,9 +390,10 @@ Public Class PatchRunner
         filterPatchType(AvailablePatches)
 
         Logger.Dbg("Populate Tree")
- 
-        AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches)
-  
+
+        'Populate the treeview, tick unapplied by default
+        AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Unapplied")
+
 
     End Sub
 
@@ -441,7 +442,7 @@ Public Class PatchRunner
 
         MasterScriptListBox.Items.Clear()
 
-        MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.currentTNS & "'")
+        MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.getDATASOURCE & "'")
 
         Dim l_master_filename As String = Nothing
 
