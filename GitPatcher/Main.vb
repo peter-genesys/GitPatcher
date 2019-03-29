@@ -329,18 +329,30 @@
     End Sub
 
     Private Sub UnappliedToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UnappliedToolStripMenuItem.Click
+
+        'Pull
+        GitOp.pullCurrentBranch()
+
         Dim newchildform As New PatchRunner("Unapplied")
         newchildform.MdiParent = GitPatcher
         newchildform.Show()
     End Sub
 
     Private Sub UninstalledToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UninstalledToolStripMenuItem.Click
+
+        'Pull
+        GitOp.pullCurrentBranch()
+
         Dim newchildform As New PatchRunner("Uninstalled")
         newchildform.MdiParent = GitPatcher
         newchildform.Show()
     End Sub
 
     Private Sub AllPatchesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllPatchesToolStripMenuItem.Click
+
+        'Pull
+        GitOp.pullCurrentBranch()
+
         Dim newchildform As New PatchRunner("All")
         newchildform.MdiParent = GitPatcher
         newchildform.Show()
@@ -390,14 +402,23 @@
     End Sub
 
     Private Sub QueuedToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles QueuedToolStripMenuItem.Click
+
+        'Pull
+        GitOp.pullCurrentBranch()
+
         Dim newchildform As New ApexAppInstaller("Queued")
         newchildform.MdiParent = GitPatcher
         newchildform.Show()
     End Sub
 
     Private Sub AllApexAppsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllApexAppsToolStripMenuItem.Click
+
+        'Pull
+        GitOp.pullCurrentBranch()
+
         Dim newchildform As New ApexAppInstaller("All")
         newchildform.MdiParent = GitPatcher
         newchildform.Show()
     End Sub
+
 End Class

@@ -57,6 +57,9 @@ Partial Class Main
         Me.ExportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.Import1PageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ApexAppInstallerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.QueuedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AllApexAppsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RELEASEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReleaseToISDEVLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReleaseToISTESTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -107,9 +110,6 @@ Partial Class Main
         Me.MergeButton = New System.Windows.Forms.Button()
         Me.TextBoxReleaseId = New System.Windows.Forms.TextBox()
         Me.Label20 = New System.Windows.Forms.Label()
-        Me.ApexAppInstallerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.QueuedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AllApexAppsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -313,29 +313,48 @@ Partial Class Main
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(169, 22)
         Me.ImportToolStripMenuItem.Text = "Import Full"
         Me.ImportToolStripMenuItem.Visible = False
         '
         'ExportToolStripMenuItem
         '
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(169, 22)
         Me.ExportToolStripMenuItem.Text = "Export Full"
         Me.ExportToolStripMenuItem.Visible = False
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(177, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(166, 6)
         Me.ToolStripSeparator3.Visible = False
         '
         'Import1PageToolStripMenuItem
         '
         Me.Import1PageToolStripMenuItem.Name = "Import1PageToolStripMenuItem"
-        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(169, 22)
         Me.Import1PageToolStripMenuItem.Text = "Import 1 page"
         Me.Import1PageToolStripMenuItem.Visible = False
+        '
+        'ApexAppInstallerToolStripMenuItem
+        '
+        Me.ApexAppInstallerToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.QueuedToolStripMenuItem, Me.AllApexAppsToolStripMenuItem})
+        Me.ApexAppInstallerToolStripMenuItem.Name = "ApexAppInstallerToolStripMenuItem"
+        Me.ApexAppInstallerToolStripMenuItem.Size = New System.Drawing.Size(169, 22)
+        Me.ApexAppInstallerToolStripMenuItem.Text = "Apex App Installer"
+        '
+        'QueuedToolStripMenuItem
+        '
+        Me.QueuedToolStripMenuItem.Name = "QueuedToolStripMenuItem"
+        Me.QueuedToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
+        Me.QueuedToolStripMenuItem.Text = "Queued Apex Apps"
+        '
+        'AllApexAppsToolStripMenuItem
+        '
+        Me.AllApexAppsToolStripMenuItem.Name = "AllApexAppsToolStripMenuItem"
+        Me.AllApexAppsToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
+        Me.AllApexAppsToolStripMenuItem.Text = "All Apex Apps"
         '
         'RELEASEToolStripMenuItem
         '
@@ -763,25 +782,6 @@ Partial Class Main
         Me.Label20.Size = New System.Drawing.Size(53, 13)
         Me.Label20.TabIndex = 46
         Me.Label20.Text = "Release"
-        '
-        'ApexAppInstallerToolStripMenuItem
-        '
-        Me.ApexAppInstallerToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.QueuedToolStripMenuItem, Me.AllApexAppsToolStripMenuItem})
-        Me.ApexAppInstallerToolStripMenuItem.Name = "ApexAppInstallerToolStripMenuItem"
-        Me.ApexAppInstallerToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.ApexAppInstallerToolStripMenuItem.Text = "Apex App Installer"
-        '
-        'QueuedToolStripMenuItem
-        '
-        Me.QueuedToolStripMenuItem.Name = "QueuedToolStripMenuItem"
-        Me.QueuedToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.QueuedToolStripMenuItem.Text = "Queued Apex Apps"
-        '
-        'AllApexAppsToolStripMenuItem
-        '
-        Me.AllApexAppsToolStripMenuItem.Name = "AllApexAppsToolStripMenuItem"
-        Me.AllApexAppsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.AllApexAppsToolStripMenuItem.Text = "All Apex Apps"
         '
         'Main
         '

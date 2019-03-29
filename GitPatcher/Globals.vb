@@ -310,6 +310,13 @@ Module Globals
 
     End Function
 
+    Public Function currentBranchType() As String
+
+        Return Common.getFirstSegment(Globals.currentLongBranch, "/")
+
+    End Function
+
+
     Public Function RootPatchDir() As String
 
 

@@ -396,6 +396,7 @@ Public Class GitOp
                 GitBash.Pull(Globals.getRepoPath, "origin", ibranch_name)
                 'MsgBox(ToolName + " GitBash not currently implimented")
             Case "LGIT"
+                'LGIT pulls from current upstream
                 Try
                     'pull any branch
                     Dim options As PullOptions = New PullOptions()
@@ -430,6 +431,10 @@ Public Class GitOp
                 Catch e As Exception
                     MsgBox(e.Message)
                     'If GitOp.Merge fails try Tortoise.Pull instead.
+                    If Globals.currentBranchType = "feature" Then
+                        MsgBox("Looks like you are on a feature branch.  This pull may have failed because your feature does not exist on the remote.  If so, just ignore this error and cancel the following Pull Dialog.")
+                    End If
+
                     Tortoise.Pull(Globals.getRepoPath)
                 End Try
             Case "SGIT"
