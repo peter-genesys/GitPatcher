@@ -1231,7 +1231,7 @@ Public Class PatchFromTags
             Dim LastPatch As String = PatchRunner.FindLastPatch(patch_component)
             If String.IsNullOrEmpty(LastPatch) Then
                 Logger.Dbg("No previous patch for Change: " & patch_component)
-            ElseIf LastPatch.StartsWith("ORA") Then
+            ElseIf LastPatch = "TIMEOUT" Then
                 Exit Sub
             Else
                 Logger.Dbg("Change: " & patch_component & " LastPatch: " & LastPatch)

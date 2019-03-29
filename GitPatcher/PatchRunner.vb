@@ -621,7 +621,7 @@ Public Class PatchRunner
             cmd = New OracleCommand(sql, conn)
             cmd.CommandType = CommandType.Text
             dr = cmd.ExecuteReader()
-
+            'cmd.CommandTimeout = 10 'It does timeout, but takes about 15secs regardless of whether this line is here or not.
             dr.Read()
 
 
@@ -635,7 +635,7 @@ Public Class PatchRunner
 
         Catch ex As Exception ' catches any error
             MessageBox.Show(ex.Message.ToString())
-            Return ex.Message.ToString()
+            Return "TIMEOUT" 'propagate as error code.
         Finally
             ' In a real application, put cleanup code here.
 
