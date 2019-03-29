@@ -210,6 +210,25 @@
 
     End Sub
 
+    Public Shared Sub MsgBoxCollection(ByVal i_collection As Collection, iTitle As String)
+
+        Dim BigList As String = ""
+        For Each lcollectionRow In i_collection
+            BigList = BigList & lcollectionRow.ToString & Chr(10)
+        Next
+        MsgBox(BigList, MsgBoxStyle.Information, iTitle)
+    End Sub
+
+    Public Shared Function CollectionToText(ByVal i_collection As Collection) As String
+
+        Dim Text As String = ""
+        For Each lcollectionRow In i_collection
+            Text = Text & lcollectionRow.ToString & Chr(10)
+        Next
+        Return Text
+
+    End Function
+
 
 
     Shared Sub zip7_dir(ByVal i_zip_file As String,

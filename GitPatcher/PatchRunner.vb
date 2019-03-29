@@ -277,12 +277,15 @@ Public Class PatchRunner
 
         Dim patchMatch As Boolean = False
 
+        Dim MissingPatchList As Collection = New Collection
+
         'This time loop through unapplied patches first and show in list if available in dir.
         Try
 
             conn.Open()
 
             sql = "select patch_name from ARM_UNAPPLIED_V"
+            'sql = "select 'test1' patch_name from dual union all select 'test2' patch_name from dual"
 
             cmd = New OracleCommand(sql, conn)
             cmd.CommandType = CommandType.Text
@@ -302,7 +305,8 @@ Public Class PatchRunner
                 Next
 
                 If Not l_patch_found Then
-                    MsgBox("WARNING: Unapplied patch " & l_patch_name & " is not present in the local checkout.")
+                    'MsgBox("WARNING: Unapplied patch " & l_patch_name & " is not present in the local checkout.")
+                    MissingPatchList.Add(l_patch_name)
                 End If
 
             End While
@@ -320,8 +324,15 @@ Public Class PatchRunner
 
         End Try
 
+        If MissingPatchList.Count > 0 Then
+
+            MsgBox("Repo: " & Globals.getRepoName & "     Branch: " & Globals.currentBranch & Chr(10) & Chr(10) _
+                 & Common.CollectionToText(MissingPatchList), MsgBoxStyle.Information, "These Unapplied Patches are not present")
+
+        End If
+
         If foundPatches.Count = 0 Then
-            MsgBox("No patches matched the search criteria.", MsgBoxStyle.Information, "No patches found")
+            MsgBox("No patches were found, that matched the search criteria.", MsgBoxStyle.Information, "No Patches Found")
         End If
 
 
