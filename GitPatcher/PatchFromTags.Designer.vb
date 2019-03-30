@@ -22,8 +22,10 @@ Partial Class PatchFromTags
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PatchFromTags))
         Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
+        Me.AppOnlyCheckBox = New System.Windows.Forms.CheckBox()
         Me.AlternateSchemasCheckBox = New System.Windows.Forms.CheckBox()
         Me.SYSDBACheckBox = New System.Windows.Forms.CheckBox()
         Me.ExportPatchButton = New System.Windows.Forms.Button()
@@ -93,6 +95,7 @@ Partial Class PatchFromTags
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ViewButton = New System.Windows.Forms.Button()
         Me.TabPageExtras = New System.Windows.Forms.TabPage()
+        Me.RestrictExtraFilesToSchemaCheckBox = New System.Windows.Forms.CheckBox()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.TreeViewFiles = New TreeViewEnhanced.TreeViewEnhanced()
@@ -110,8 +113,8 @@ Partial Class PatchFromTags
         Me.Label14 = New System.Windows.Forms.Label()
         Me.PreReqPatchesTreeViewB = New TreeViewEnhanced.TreeViewEnhanced()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.RestrictExtraFilesToSchemaCheckBox = New System.Windows.Forms.CheckBox()
-        Me.AppOnlyCheckBox = New System.Windows.Forms.CheckBox()
+        Me.TagsContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.MoveTag = New System.Windows.Forms.ToolStripMenuItem()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPagePreReqsA.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
@@ -121,6 +124,7 @@ Partial Class PatchFromTags
         Me.TabPageExtras.SuspendLayout()
         Me.TabPageApexApps.SuspendLayout()
         Me.TabPagePreReqsB.SuspendLayout()
+        Me.TagsContextMenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabPagePatchDefn
@@ -163,6 +167,17 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.TabIndex = 2
         Me.TabPagePatchDefn.Text = "Create Patch"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
+        '
+        'AppOnlyCheckBox
+        '
+        Me.AppOnlyCheckBox.AutoSize = True
+        Me.AppOnlyCheckBox.Enabled = False
+        Me.AppOnlyCheckBox.Location = New System.Drawing.Point(77, 13)
+        Me.AppOnlyCheckBox.Name = "AppOnlyCheckBox"
+        Me.AppOnlyCheckBox.Size = New System.Drawing.Size(101, 17)
+        Me.AppOnlyCheckBox.TabIndex = 52
+        Me.AppOnlyCheckBox.Text = "Apex-Apps-Only"
+        Me.AppOnlyCheckBox.UseVisualStyleBackColor = True
         '
         'AlternateSchemasCheckBox
         '
@@ -563,6 +578,7 @@ Partial Class PatchFromTags
         'TagsCheckedListBox
         '
         Me.TagsCheckedListBox.CheckOnClick = True
+        Me.TagsCheckedListBox.ContextMenuStrip = Me.TagsContextMenuStrip
         Me.TagsCheckedListBox.FormattingEnabled = True
         Me.TagsCheckedListBox.Location = New System.Drawing.Point(77, 93)
         Me.TagsCheckedListBox.Name = "TagsCheckedListBox"
@@ -827,6 +843,16 @@ Partial Class PatchFromTags
         Me.TabPageExtras.Text = "Extra Files"
         Me.TabPageExtras.UseVisualStyleBackColor = True
         '
+        'RestrictExtraFilesToSchemaCheckBox
+        '
+        Me.RestrictExtraFilesToSchemaCheckBox.AutoSize = True
+        Me.RestrictExtraFilesToSchemaCheckBox.Location = New System.Drawing.Point(222, 39)
+        Me.RestrictExtraFilesToSchemaCheckBox.Name = "RestrictExtraFilesToSchemaCheckBox"
+        Me.RestrictExtraFilesToSchemaCheckBox.Size = New System.Drawing.Size(116, 17)
+        Me.RestrictExtraFilesToSchemaCheckBox.TabIndex = 62
+        Me.RestrictExtraFilesToSchemaCheckBox.Text = "Restrict to Schema"
+        Me.RestrictExtraFilesToSchemaCheckBox.UseVisualStyleBackColor = True
+        '
         'Label24
         '
         Me.Label24.AutoSize = True
@@ -997,26 +1023,18 @@ Partial Class PatchFromTags
         Me.Label19.TabIndex = 54
         Me.Label19.Text = "Prereqs"
         '
-        'RestrictExtraFilesToSchemaCheckBox
+        'TagsContextMenuStrip
         '
-        Me.RestrictExtraFilesToSchemaCheckBox.AutoSize = True
-        Me.RestrictExtraFilesToSchemaCheckBox.Location = New System.Drawing.Point(222, 39)
-        Me.RestrictExtraFilesToSchemaCheckBox.Name = "RestrictExtraFilesToSchemaCheckBox"
-        Me.RestrictExtraFilesToSchemaCheckBox.Size = New System.Drawing.Size(116, 17)
-        Me.RestrictExtraFilesToSchemaCheckBox.TabIndex = 62
-        Me.RestrictExtraFilesToSchemaCheckBox.Text = "Restrict to Schema"
-        Me.RestrictExtraFilesToSchemaCheckBox.UseVisualStyleBackColor = True
+        Me.TagsContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MoveTag})
+        Me.TagsContextMenuStrip.Name = "TagsContextMenuStrip"
+        Me.TagsContextMenuStrip.Size = New System.Drawing.Size(181, 48)
         '
-        'AppOnlyCheckBox
+        'MoveTag
         '
-        Me.AppOnlyCheckBox.AutoSize = True
-        Me.AppOnlyCheckBox.Enabled = False
-        Me.AppOnlyCheckBox.Location = New System.Drawing.Point(77, 13)
-        Me.AppOnlyCheckBox.Name = "AppOnlyCheckBox"
-        Me.AppOnlyCheckBox.Size = New System.Drawing.Size(101, 17)
-        Me.AppOnlyCheckBox.TabIndex = 52
-        Me.AppOnlyCheckBox.Text = "Apex-Apps-Only"
-        Me.AppOnlyCheckBox.UseVisualStyleBackColor = True
+        Me.MoveTag.Name = "MoveTag"
+        Me.MoveTag.Size = New System.Drawing.Size(180, 22)
+        Me.MoveTag.Text = "Update Tag"
+        Me.MoveTag.ToolTipText = "Move this tag to the head of the current branch.  IE to the latest commit"
         '
         'PatchFromTags
         '
@@ -1044,6 +1062,7 @@ Partial Class PatchFromTags
         Me.TabPageApexApps.PerformLayout()
         Me.TabPagePreReqsB.ResumeLayout(False)
         Me.TabPagePreReqsB.PerformLayout()
+        Me.TagsContextMenuStrip.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -1136,4 +1155,6 @@ Partial Class PatchFromTags
     Friend WithEvents FindAppsButton As Button
     Friend WithEvents RestrictExtraFilesToSchemaCheckBox As CheckBox
     Friend WithEvents AppOnlyCheckBox As CheckBox
+    Friend WithEvents TagsContextMenuStrip As ContextMenuStrip
+    Friend WithEvents MoveTag As ToolStripMenuItem
 End Class

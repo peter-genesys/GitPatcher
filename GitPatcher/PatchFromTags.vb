@@ -1488,4 +1488,18 @@ Public Class PatchFromTags
     Private Sub FindAppsButton_Click(sender As Object, e As EventArgs) Handles FindAppsButton.Click
         FindApps()
     End Sub
+
+    Private Sub MoveTag_Click(sender As Object, e As EventArgs) Handles MoveTag.Click
+        'Move this tag to the head of the current branch.
+        If TagsCheckedListBox.SelectedIndex = -1 Then
+
+            MsgBox("Please select a Tag first.", MsgBoxStyle.Information, "No Tag Selected")
+
+        Else
+
+            'MsgBox(TagsCheckedListBox.SelectedItem)
+            GitOp.createTag(TagsCheckedListBox.SelectedItem, False)
+
+        End If
+    End Sub
 End Class

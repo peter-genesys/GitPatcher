@@ -323,10 +323,34 @@ Public Class GitOp
 
 
 
-    Shared Sub createTag(ByVal tagName As String)
+    Shared Sub createTag(ByVal tagName As String, Optional ByVal force As Boolean = False)
         'create a tag at the head
+        Try
 
-        Dim newTag As Tag = Globals.getRepo.ApplyTag(tagName)
+            Dim newTag As Tag = Globals.getRepo.ApplyTag(tagName)
+
+        Catch ex As LibGit2SharpException
+
+            If Not force Then
+                Logger.Dbg(ex.Message)
+                'Confirm move of tag
+                Dim result As Integer = MessageBox.Show("Update existing Tag " & tagName &
+                    Chr(10) & "The tag will be moved to the head of the current branch " & Globals.currentBranch & ".", "Confirm Tag Update", MessageBoxButtons.OKCancel)
+                If result = DialogResult.Cancel Then
+                    Exit Sub
+                End If
+            End If
+
+            Globals.getRepo.Tags.Remove(tagName)
+
+            Dim newTag2 As Tag = Globals.getRepo.ApplyTag(tagName)
+            MessageBox.Show("Tag updated.")
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+
+        End Try
+
 
     End Sub
 
