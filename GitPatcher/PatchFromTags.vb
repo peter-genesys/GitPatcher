@@ -715,14 +715,22 @@ Public Class PatchFromTags
 
             For Each change In ChosenChanges
 
+                Dim l_ignore_errors As Boolean = False
                 Dim l_category As String = Nothing
                 Dim l_file_extension As String = Common.getLastSegment(change, ".")
+                If l_file_extension = "alt" Then
+                    'File ends in "alt" - for the purpose of categorizing, look at the next segment.
+                    'lets see if it was tab.alt or pop.alt 
+                    'So drop the alt and test the next segment.
+                    l_file_extension = Common.getLastSegment(Common.dropLastSegment(change, "."), ".")
+                End If
                 Dim l_label As String
                 Select Case l_file_extension
                     Case "user"
                         l_category = "Users"
                     Case "tab"
                         l_category = "Tables"
+                        l_ignore_errors = True
                     Case "seq"
                         l_category = "Sequences"
                     Case "tps"
@@ -777,7 +785,6 @@ Public Class PatchFromTags
                         l_category = "Finalise"
                     Case "post"
                         l_category = "Post Completion"
-
                     Case Else
                         l_category = "Do Not Execute"
                 End Select
@@ -792,7 +799,7 @@ Public Class PatchFromTags
                 End If
 
                 l_label = Common.getLastSegment(change, pathSeparator)
-                TreeViewPatchOrder.AddFileToCategory(l_category, l_label, change)
+                TreeViewPatchOrder.AddFileToCategory(l_category, l_label, change, l_ignore_errors)
 
             Next
 
