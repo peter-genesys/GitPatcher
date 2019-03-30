@@ -136,7 +136,10 @@ Public Class PatchFromTags
                     MsgBox("No database changes found. But Apex Apps have been changed.  This Apex-Only patch will run as APEXRM.")
 
                 ElseIf SchemaComboBox.Items.Count = 0 Then
-                    MsgBox("No database or Apex App changes found.  Please check location of tags or SHA-1 (esp SHA-1 order)")
+                    'MsgBox("No database or Apex App changes found.  Please check location of tags or SHA-1 (esp SHA-1 order)")
+                    MsgBox("No Database or Apex App changes were found between the chosen tags." &
+                 Chr(10) & "Check the positions of tags " & Tag1TextBox.Text & " and " & Tag2TextBox.Text & " in the log.")
+                    Tortoise.Log(Globals.getRepoPath, True) 'wait.
 
                 ElseIf SchemaComboBox.Items.Count = 1 Then
                     SchemaComboBox.SelectedIndex = 0
