@@ -19,7 +19,9 @@
 
 
 
-    Public Shared Sub ApexExportCommit()
+    Public Shared Sub ApexExportCommit() 'Deprecated.  
+        'This routine uses a hostout to oracle.apex.APEXExport And oracle.apex.APEXExportSplitter
+        'This function has now been built into SQLcl.
 
         confirmApp()
 
@@ -125,6 +127,120 @@
         If ExportProgress.toDoNextStep() Then
             'Revert invalid changes from your checkout
             Tortoise.Revert(apex_dir & fapp_id)
+        End If
+
+        ExportProgress.toDoNextStep()
+
+
+    End Sub
+
+
+    Public Shared Sub ApexSplitExportCommit(ByVal iSchema As String, ByVal iAppId As String)
+
+        'confirmApp()
+
+        Dim connection As String = Globals.currentConnection
+        Dim username As String = iSchema
+
+        Dim fapp_id As String = iAppId
+        Dim apex_dir As String = Globals.RootApexDir
+
+        Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Export APEX application " & fapp_id & " from DB " & Globals.currentTNS & " " & connection,
+            "Exporting APEX application " & Globals.currentApex & " from parsing schema " & username & " in DB " & Globals.currentTNS & Environment.NewLine &
+            "This writes individual apex files to the GIT Repo checkout, and then prompt to add and commit the changes." & Environment.NewLine &
+            Environment.NewLine &
+            "Consider which branch you are exporting to." & Environment.NewLine &
+            "To commit any existing changes, close this workflow and perform a GIT COMMIT.")
+
+        ExportProgress.MdiParent = GitPatcher
+        ExportProgress.addStep("Export Apex App " & fapp_id & ", split into components")
+        ExportProgress.addStep("Add new files to GIT repository")
+        ExportProgress.addStep("Commit valid changes to GIT repository")
+        ExportProgress.addStep("Revert invalid changes from your checkout")
+        ExportProgress.Show()
+
+        Do Until ExportProgress.isStarted
+            Common.wait(1000)
+        Loop
+
+        Logger.Dbg("Apex app_id " + fapp_id, "Check app id")
+
+        Dim app_id As String = fapp_id.Split("f")(1)
+
+        Dim appDir As String = apex_dir & iSchema & "/" & fapp_id
+
+        Dim fapp_sql As String = fapp_id & ".sql"
+        Dim message As String = Nothing
+
+        'PROGRESS 0
+        If ExportProgress.toDoNextStep() Then
+
+            FileIO.deleteFolderIfExists(appDir)
+
+            'Dim password = Main.get_password(Globals.currentParsingSchema, Globals.currentTNS)
+
+            Dim lMasterScript As String
+            lMasterScript = "connect smartgen/smartgen@" & Globals.getDATASOURCE &
+                   Environment.NewLine & "Apex export -applicationid 146 -skipExportDate -split" &
+                   Environment.NewLine & "Exit;"
+
+            '#Pipe APP_ID To ApexSplitExport As param 
+            'echo "$APP_ID" | & $Config.sqlcl_path "$user/$pword@$connection" "@$SCRIPT_DIR\ApexSplitExport.sql" 
+
+
+
+            'MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.getDATASOURCE & "'")
+
+
+            Host.executeDynamicSQLScript(lMasterScript, apex_dir & iSchema, True)
+
+
+            'Export Apex as a single file
+            'NB Not exporting application comments
+            'Host.runInteractive("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
+            '                  , message, apex_dir)
+            'Host.check_StdErr("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
+            '         , message, apex_dir)
+
+
+            'Logger.Dbg(message, "Apex Export Error")
+
+            'write-host "Remove the application directory apex_dir\fapp_id" 
+
+
+        End If
+
+
+        'If ExportProgress.toDoNextStep() Then
+
+        '    'Remove-Item -Recurse -Force -ErrorAction 0 @("apex_dir\fapp_id")
+        '    FileIO.deleteFolderIfExists(apex_dir & fapp_id)
+
+        '    'Splitting into components 
+
+        '    'write-host "Splitting $APP_SQL into its composite files"
+        '    'java oracle.apex.APEXExportSplitter $APP_SQL 
+        '    Host.check_StdErr("java oracle.apex.APEXExportSplitter " & fapp_sql, message, apex_dir)
+
+        '    Logger.Dbg(message, "Apex Export Splitter Error")
+
+        'End If
+
+        If ExportProgress.toDoNextStep() Then
+            'Add new files to GIT repository 
+            Tortoise.Add(appDir, True)
+
+        End If
+
+        If ExportProgress.toDoNextStep() Then
+            'Commit valid changes to GIT repository  
+            Tortoise.Commit(appDir, "App " & fapp_id & " exported and split - IF YOU DIDNT CHANGE IT PLEASE DONT COMMIT IT", True)
+
+        End If
+
+        If ExportProgress.toDoNextStep() Then
+            'Revert invalid changes from your checkout
+            Tortoise.Revert(appDir)
         End If
 
         ExportProgress.toDoNextStep()

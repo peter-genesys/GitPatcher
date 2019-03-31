@@ -421,4 +421,11 @@
         newchildform.Show()
     End Sub
 
+    Private Sub ApexAppExporterToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ApexAppExporterToolStripMenuItem.Click
+
+        Dim newchildform As New ApexAppExporter
+        newchildform.MdiParent = GitPatcher
+        newchildform.Show()
+
+    End Sub
 End Class

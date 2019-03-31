@@ -165,6 +165,12 @@
     <Compile Include="Configuration.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ApexAppExporter.Designer.vb">
+      <DependentUpon>ApexAppExporter.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ApexAppExporter.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GitOp.vb" />
     <Compile Include="OrgSettings.Designer.vb">
       <DependentUpon>OrgSettings.vb</DependentUpon>
@@ -263,6 +269,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration.resx">
       <DependentUpon>Configuration.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ApexAppExporter.resx">
+      <DependentUpon>ApexAppExporter.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OrgSettings.resx">
       <DependentUpon>OrgSettings.vb</DependentUpon>
