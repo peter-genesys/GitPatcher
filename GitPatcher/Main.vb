@@ -258,7 +258,7 @@
 
 
     Private Sub TagtestToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        GitOp.createTag("DEMOTAG")
+        GitOp.createTagHead("DEMOTAG")
     End Sub
 
     Private Sub ShowindexToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowindexToolStripMenuItem.Click

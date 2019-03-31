@@ -121,7 +121,7 @@ Friend Class WF_rebase
             l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please enter 2 digit numeric tag for next patch.", "Create Tag for next patch", l_tag_base)
             Dim l_tagA As String = currentBranchShort & "." & l_tag_base & "A"
             rebasing.updateStepDescription(4, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
-            GitOp.createTag(l_tagA)
+            GitOp.createTagHead(l_tagA)
 
         End If
 
@@ -140,7 +140,7 @@ Friend Class WF_rebase
             'Tag Branch
             Dim l_tagB As String = currentBranchShort & "." & l_tag_base & "B"
             rebasing.updateStepDescription(7, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
-            GitOp.createTag(l_tagB)
+            GitOp.createTagHead(l_tagB)
 
         End If
 

@@ -68,7 +68,8 @@ Partial Class PatchFromTags
         Me.FindTagsButton = New System.Windows.Forms.Button()
         Me.TagsCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.TagsContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.MoveTag = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MoveTagToHead = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MoveTagToSHA = New System.Windows.Forms.ToolStripMenuItem()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.PatchTabControl = New System.Windows.Forms.TabControl()
         Me.TabPageSHA1 = New System.Windows.Forms.TabPage()
@@ -81,6 +82,12 @@ Partial Class PatchFromTags
         Me.Label33 = New System.Windows.Forms.Label()
         Me.Label34 = New System.Windows.Forms.Label()
         Me.TabPageChanges = New System.Windows.Forms.TabPage()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.Tag1TextBox = New System.Windows.Forms.TextBox()
+        Me.Tag2TextBox = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.TreeViewChanges = New TreeViewEnhanced.TreeViewEnhanced()
         Me.Label17 = New System.Windows.Forms.Label()
@@ -109,12 +116,6 @@ Partial Class PatchFromTags
         Me.Label14 = New System.Windows.Forms.Label()
         Me.PreReqPatchesTreeViewB = New TreeViewEnhanced.TreeViewEnhanced()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.Label28 = New System.Windows.Forms.Label()
-        Me.Label29 = New System.Windows.Forms.Label()
-        Me.Tag1TextBox = New System.Windows.Forms.TextBox()
-        Me.Tag2TextBox = New System.Windows.Forms.TextBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPagePreReqsA.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
@@ -563,16 +564,22 @@ Partial Class PatchFromTags
         '
         'TagsContextMenuStrip
         '
-        Me.TagsContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MoveTag})
+        Me.TagsContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MoveTagToHead, Me.MoveTagToSHA})
         Me.TagsContextMenuStrip.Name = "TagsContextMenuStrip"
-        Me.TagsContextMenuStrip.Size = New System.Drawing.Size(136, 26)
+        Me.TagsContextMenuStrip.Size = New System.Drawing.Size(181, 70)
         '
-        'MoveTag
+        'MoveTagToHead
         '
-        Me.MoveTag.Name = "MoveTag"
-        Me.MoveTag.Size = New System.Drawing.Size(135, 22)
-        Me.MoveTag.Text = "Update Tag"
-        Me.MoveTag.ToolTipText = "Move this tag to the head of the current branch.  IE to the latest commit"
+        Me.MoveTagToHead.Name = "MoveTagToHead"
+        Me.MoveTagToHead.Size = New System.Drawing.Size(180, 22)
+        Me.MoveTagToHead.Text = "Move Tag to Head"
+        Me.MoveTagToHead.ToolTipText = "Move this tag to the head of the current branch.  IE to the latest commit"
+        '
+        'MoveTagToSHA
+        '
+        Me.MoveTagToSHA.Name = "MoveTagToSHA"
+        Me.MoveTagToSHA.Size = New System.Drawing.Size(180, 22)
+        Me.MoveTagToSHA.Text = "Move Tag to SHA-1"
         '
         'Label15
         '
@@ -708,6 +715,58 @@ Partial Class PatchFromTags
         Me.TabPageChanges.TabIndex = 1
         Me.TabPageChanges.Text = "Changes"
         Me.TabPageChanges.UseVisualStyleBackColor = True
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.Location = New System.Drawing.Point(222, 13)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(79, 13)
+        Me.Label28.TabIndex = 60
+        Me.Label28.Text = "AFTER this tag"
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Location = New System.Drawing.Point(222, 39)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(74, 13)
+        Me.Label29.TabIndex = 61
+        Me.Label29.Text = "UPTO this tag"
+        '
+        'Tag1TextBox
+        '
+        Me.Tag1TextBox.Location = New System.Drawing.Point(77, 10)
+        Me.Tag1TextBox.Name = "Tag1TextBox"
+        Me.Tag1TextBox.ReadOnly = True
+        Me.Tag1TextBox.Size = New System.Drawing.Size(139, 20)
+        Me.Tag1TextBox.TabIndex = 56
+        '
+        'Tag2TextBox
+        '
+        Me.Tag2TextBox.Location = New System.Drawing.Point(77, 36)
+        Me.Tag2TextBox.Name = "Tag2TextBox"
+        Me.Tag2TextBox.ReadOnly = True
+        Me.Tag2TextBox.Size = New System.Drawing.Size(139, 20)
+        Me.Tag2TextBox.TabIndex = 58
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(20, 13)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(52, 13)
+        Me.Label1.TabIndex = 57
+        Me.Label1.Text = "From Tag"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(20, 39)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(42, 13)
+        Me.Label2.TabIndex = 59
+        Me.Label2.Text = "To Tag"
         '
         'Label20
         '
@@ -984,58 +1043,6 @@ Partial Class PatchFromTags
         Me.Label19.TabIndex = 54
         Me.Label19.Text = "Prereqs"
         '
-        'Label28
-        '
-        Me.Label28.AutoSize = True
-        Me.Label28.Location = New System.Drawing.Point(222, 13)
-        Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(79, 13)
-        Me.Label28.TabIndex = 60
-        Me.Label28.Text = "AFTER this tag"
-        '
-        'Label29
-        '
-        Me.Label29.AutoSize = True
-        Me.Label29.Location = New System.Drawing.Point(222, 39)
-        Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(74, 13)
-        Me.Label29.TabIndex = 61
-        Me.Label29.Text = "UPTO this tag"
-        '
-        'Tag1TextBox
-        '
-        Me.Tag1TextBox.Location = New System.Drawing.Point(77, 10)
-        Me.Tag1TextBox.Name = "Tag1TextBox"
-        Me.Tag1TextBox.ReadOnly = True
-        Me.Tag1TextBox.Size = New System.Drawing.Size(139, 20)
-        Me.Tag1TextBox.TabIndex = 56
-        '
-        'Tag2TextBox
-        '
-        Me.Tag2TextBox.Location = New System.Drawing.Point(77, 36)
-        Me.Tag2TextBox.Name = "Tag2TextBox"
-        Me.Tag2TextBox.ReadOnly = True
-        Me.Tag2TextBox.Size = New System.Drawing.Size(139, 20)
-        Me.Tag2TextBox.TabIndex = 58
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(20, 13)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(52, 13)
-        Me.Label1.TabIndex = 57
-        Me.Label1.Text = "From Tag"
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(20, 39)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(42, 13)
-        Me.Label2.TabIndex = 59
-        Me.Label2.Text = "To Tag"
-        '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1150,11 +1157,12 @@ Partial Class PatchFromTags
     Friend WithEvents RestrictExtraFilesToSchemaCheckBox As CheckBox
     Friend WithEvents AppOnlyCheckBox As CheckBox
     Friend WithEvents TagsContextMenuStrip As ContextMenuStrip
-    Friend WithEvents MoveTag As ToolStripMenuItem
+    Friend WithEvents MoveTagToHead As ToolStripMenuItem
     Friend WithEvents Label28 As Label
     Friend WithEvents Label29 As Label
     Friend WithEvents Tag1TextBox As TextBox
     Friend WithEvents Tag2TextBox As TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
+    Friend WithEvents MoveTagToSHA As ToolStripMenuItem
 End Class

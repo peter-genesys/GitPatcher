@@ -1492,17 +1492,38 @@ Public Class PatchFromTags
         FindApps()
     End Sub
 
-    Private Sub MoveTag_Click(sender As Object, e As EventArgs) Handles MoveTag.Click
+    Private Sub MoveTagToHead_Click(sender As Object, e As EventArgs) Handles MoveTagToHead.Click
         'Move this tag to the head of the current branch.
         If TagsCheckedListBox.SelectedIndex = -1 Then
 
             MsgBox("Please select a Tag first.", MsgBoxStyle.Information, "No Tag Selected")
 
         Else
+            Logger.Dbg(TagsCheckedListBox.SelectedItem)
 
-            'MsgBox(TagsCheckedListBox.SelectedItem)
-            GitOp.createTag(TagsCheckedListBox.SelectedItem, False)
+            GitOp.createTagHead(TagsCheckedListBox.SelectedItem)
 
         End If
+    End Sub
+
+    Private Sub MoveTagToSHA_Click(sender As Object, e As EventArgs) Handles MoveTagToSHA.Click
+        'Move this tag to an SHA-1
+        If TagsCheckedListBox.SelectedIndex = -1 Then
+
+            MsgBox("Please select a Tag first.", MsgBoxStyle.Information, "No Tag Selected")
+
+        Else
+            Logger.Dbg(TagsCheckedListBox.SelectedItem)
+
+
+            Tortoise.Log(Globals.getRepoPath, False) 'do not wait.
+            Dim toSHA As String = InputBox("Copy and Paste the SHA-1 of the new tag position from the log.", "New SHA-1 for Tag " & TagsCheckedListBox.SelectedItem)
+
+            If Not String.IsNullOrEmpty(toSHA) Then
+                'toSHA given so change to it.
+                GitOp.createTagSHA(TagsCheckedListBox.SelectedItem, toSHA)
+            End If
+        End If
+
     End Sub
 End Class
