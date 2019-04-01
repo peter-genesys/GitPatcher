@@ -10,6 +10,18 @@ Public Class ApexAppExporter
 
     End Sub
 
+    Public Function NewAAE()
+        InitializeComponent()
+
+        Me.MdiParent = GitPatcher
+        Me.Show()
+
+        doSearch()
+
+        Return True
+
+    End Function
+
 
     Public Sub FindApps(ByRef foundApps As Collection)
 

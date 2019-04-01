@@ -37,7 +37,7 @@ Friend Class WF_rebase
         Next
 
 
-            Dim l_tag_base As String = l_max_tag + 1
+        Dim l_tag_base As String = l_max_tag + 1
         l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_num_padding, "0")
 
         rebasing.MdiParent = GitPatcher
