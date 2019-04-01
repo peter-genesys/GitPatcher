@@ -323,10 +323,70 @@ Public Class GitOp
 
 
 
-    Shared Sub createTag(ByVal tagName As String)
+    Shared Sub createTagHead(ByVal tagName As String, Optional ByVal force As Boolean = False)
         'create a tag at the head
+        Dim newTag As Tag
 
-        Dim newTag As Tag = Globals.getRepo.ApplyTag(tagName)
+        Try
+
+            newTag = Globals.getRepo.ApplyTag(tagName)
+
+        Catch ex As LibGit2SharpException
+
+            If Not force Then
+                Logger.Dbg(ex.Message)
+                'Confirm move of tag
+                Dim result As Integer = MessageBox.Show("Update existing Tag " & tagName &
+                    Chr(10) & "The tag will be moved to the head of the current branch " & Globals.currentBranch & ".", "Confirm Tag Update", MessageBoxButtons.OKCancel)
+                If result = DialogResult.Cancel Then
+                    Exit Sub
+                End If
+            End If
+
+            Globals.getRepo.Tags.Remove(tagName)
+
+            newTag = Globals.getRepo.ApplyTag(tagName)
+            MessageBox.Show("Tag updated to head.")
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+
+        End Try
+
+
+    End Sub
+
+    Shared Sub createTagSHA(ByVal tagName As String, ByVal tagSHA As String, Optional ByVal force As Boolean = False)
+        'create a tag at the SHA
+
+        Dim newTag As Tag
+
+        Try
+
+            newTag = Globals.getRepo.ApplyTag(tagName, tagSHA) 'Use the given SHA
+
+        Catch ex As LibGit2SharpException
+
+            If Not force Then
+                Logger.Dbg(ex.Message)
+                'Confirm move of tag
+                Dim result As Integer = MessageBox.Show("Update existing Tag " & tagName &
+                    Chr(10) & "The tag will be moved to the SHA " & tagSHA & ".", "Confirm Tag Update", MessageBoxButtons.OKCancel)
+                If result = DialogResult.Cancel Then
+                    Exit Sub
+                End If
+            End If
+
+            Globals.getRepo.Tags.Remove(tagName)
+
+            newTag = Globals.getRepo.ApplyTag(tagName, tagSHA) 'Use the given SHA
+            MessageBox.Show("Tag updated to SHA " & tagSHA)
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+
+        End Try
+
 
     End Sub
 
@@ -396,6 +456,7 @@ Public Class GitOp
                 GitBash.Pull(Globals.getRepoPath, "origin", ibranch_name)
                 'MsgBox(ToolName + " GitBash not currently implimented")
             Case "LGIT"
+                'LGIT pulls from current upstream
                 Try
                     'pull any branch
                     Dim options As PullOptions = New PullOptions()
@@ -430,6 +491,10 @@ Public Class GitOp
                 Catch e As Exception
                     MsgBox(e.Message)
                     'If GitOp.Merge fails try Tortoise.Pull instead.
+                    If Globals.currentBranchType = "feature" Then
+                        MsgBox("Looks like you are on a feature branch.  This pull may have failed because your feature does not exist on the remote.  If so, just ignore this error and cancel the following Pull Dialog.")
+                    End If
+
                     Tortoise.Pull(Globals.getRepoPath)
                 End Try
             Case "SGIT"

@@ -22,8 +22,10 @@ Partial Class PatchFromTags
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PatchFromTags))
         Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
+        Me.AppOnlyCheckBox = New System.Windows.Forms.CheckBox()
         Me.AlternateSchemasCheckBox = New System.Windows.Forms.CheckBox()
         Me.SYSDBACheckBox = New System.Windows.Forms.CheckBox()
         Me.ExportPatchButton = New System.Windows.Forms.Button()
@@ -62,16 +64,13 @@ Partial Class PatchFromTags
         Me.Label13 = New System.Windows.Forms.Label()
         Me.TabPageTags = New System.Windows.Forms.TabPage()
         Me.UseSHA1Button = New System.Windows.Forms.Button()
-        Me.Label28 = New System.Windows.Forms.Label()
-        Me.Label29 = New System.Windows.Forms.Label()
         Me.Label27 = New System.Windows.Forms.Label()
         Me.FindTagsButton = New System.Windows.Forms.Button()
         Me.TagsCheckedListBox = New System.Windows.Forms.CheckedListBox()
+        Me.TagsContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.MoveTagToHead = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MoveTagToSHA = New System.Windows.Forms.ToolStripMenuItem()
         Me.Label15 = New System.Windows.Forms.Label()
-        Me.Tag1TextBox = New System.Windows.Forms.TextBox()
-        Me.Tag2TextBox = New System.Windows.Forms.TextBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.PatchTabControl = New System.Windows.Forms.TabControl()
         Me.TabPageSHA1 = New System.Windows.Forms.TabPage()
         Me.FindsSHA1Button = New System.Windows.Forms.Button()
@@ -83,6 +82,12 @@ Partial Class PatchFromTags
         Me.Label33 = New System.Windows.Forms.Label()
         Me.Label34 = New System.Windows.Forms.Label()
         Me.TabPageChanges = New System.Windows.Forms.TabPage()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.Tag1TextBox = New System.Windows.Forms.TextBox()
+        Me.Tag2TextBox = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.TreeViewChanges = New TreeViewEnhanced.TreeViewEnhanced()
         Me.Label17 = New System.Windows.Forms.Label()
@@ -93,6 +98,7 @@ Partial Class PatchFromTags
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ViewButton = New System.Windows.Forms.Button()
         Me.TabPageExtras = New System.Windows.Forms.TabPage()
+        Me.RestrictExtraFilesToSchemaCheckBox = New System.Windows.Forms.CheckBox()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.TreeViewFiles = New TreeViewEnhanced.TreeViewEnhanced()
@@ -110,11 +116,10 @@ Partial Class PatchFromTags
         Me.Label14 = New System.Windows.Forms.Label()
         Me.PreReqPatchesTreeViewB = New TreeViewEnhanced.TreeViewEnhanced()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.RestrictExtraFilesToSchemaCheckBox = New System.Windows.Forms.CheckBox()
-        Me.AppOnlyCheckBox = New System.Windows.Forms.CheckBox()
         Me.TabPagePatchDefn.SuspendLayout()
         Me.TabPagePreReqsA.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
+        Me.TagsContextMenuStrip.SuspendLayout()
         Me.PatchTabControl.SuspendLayout()
         Me.TabPageSHA1.SuspendLayout()
         Me.TabPageChanges.SuspendLayout()
@@ -163,6 +168,17 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.TabIndex = 2
         Me.TabPagePatchDefn.Text = "Create Patch"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
+        '
+        'AppOnlyCheckBox
+        '
+        Me.AppOnlyCheckBox.AutoSize = True
+        Me.AppOnlyCheckBox.Enabled = False
+        Me.AppOnlyCheckBox.Location = New System.Drawing.Point(77, 13)
+        Me.AppOnlyCheckBox.Name = "AppOnlyCheckBox"
+        Me.AppOnlyCheckBox.Size = New System.Drawing.Size(101, 17)
+        Me.AppOnlyCheckBox.TabIndex = 52
+        Me.AppOnlyCheckBox.Text = "Apex-Apps-Only"
+        Me.AppOnlyCheckBox.UseVisualStyleBackColor = True
         '
         'AlternateSchemasCheckBox
         '
@@ -496,16 +512,10 @@ Partial Class PatchFromTags
         'TabPageTags
         '
         Me.TabPageTags.Controls.Add(Me.UseSHA1Button)
-        Me.TabPageTags.Controls.Add(Me.Label28)
-        Me.TabPageTags.Controls.Add(Me.Label29)
         Me.TabPageTags.Controls.Add(Me.Label27)
         Me.TabPageTags.Controls.Add(Me.FindTagsButton)
         Me.TabPageTags.Controls.Add(Me.TagsCheckedListBox)
         Me.TabPageTags.Controls.Add(Me.Label15)
-        Me.TabPageTags.Controls.Add(Me.Tag1TextBox)
-        Me.TabPageTags.Controls.Add(Me.Tag2TextBox)
-        Me.TabPageTags.Controls.Add(Me.Label1)
-        Me.TabPageTags.Controls.Add(Me.Label2)
         Me.TabPageTags.Location = New System.Drawing.Point(4, 22)
         Me.TabPageTags.Name = "TabPageTags"
         Me.TabPageTags.Padding = New System.Windows.Forms.Padding(3)
@@ -523,24 +533,6 @@ Partial Class PatchFromTags
         Me.UseSHA1Button.Text = "Use SHA-1"
         Me.UseSHA1Button.UseVisualStyleBackColor = True
         Me.UseSHA1Button.Visible = False
-        '
-        'Label28
-        '
-        Me.Label28.AutoSize = True
-        Me.Label28.Location = New System.Drawing.Point(222, 661)
-        Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(79, 13)
-        Me.Label28.TabIndex = 54
-        Me.Label28.Text = "AFTER this tag"
-        '
-        'Label29
-        '
-        Me.Label29.AutoSize = True
-        Me.Label29.Location = New System.Drawing.Point(222, 687)
-        Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(74, 13)
-        Me.Label29.TabIndex = 55
-        Me.Label29.Text = "UPTO this tag"
         '
         'Label27
         '
@@ -563,11 +555,31 @@ Partial Class PatchFromTags
         'TagsCheckedListBox
         '
         Me.TagsCheckedListBox.CheckOnClick = True
+        Me.TagsCheckedListBox.ContextMenuStrip = Me.TagsContextMenuStrip
         Me.TagsCheckedListBox.FormattingEnabled = True
         Me.TagsCheckedListBox.Location = New System.Drawing.Point(77, 93)
         Me.TagsCheckedListBox.Name = "TagsCheckedListBox"
         Me.TagsCheckedListBox.Size = New System.Drawing.Size(429, 559)
         Me.TagsCheckedListBox.TabIndex = 12
+        '
+        'TagsContextMenuStrip
+        '
+        Me.TagsContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MoveTagToHead, Me.MoveTagToSHA})
+        Me.TagsContextMenuStrip.Name = "TagsContextMenuStrip"
+        Me.TagsContextMenuStrip.Size = New System.Drawing.Size(181, 70)
+        '
+        'MoveTagToHead
+        '
+        Me.MoveTagToHead.Name = "MoveTagToHead"
+        Me.MoveTagToHead.Size = New System.Drawing.Size(180, 22)
+        Me.MoveTagToHead.Text = "Move Tag to Head"
+        Me.MoveTagToHead.ToolTipText = "Move this tag to the head of the current branch.  IE to the latest commit"
+        '
+        'MoveTagToSHA
+        '
+        Me.MoveTagToSHA.Name = "MoveTagToSHA"
+        Me.MoveTagToSHA.Size = New System.Drawing.Size(180, 22)
+        Me.MoveTagToSHA.Text = "Move Tag to SHA-1"
         '
         'Label15
         '
@@ -577,40 +589,6 @@ Partial Class PatchFromTags
         Me.Label15.Size = New System.Drawing.Size(31, 13)
         Me.Label15.TabIndex = 13
         Me.Label15.Text = "Tags"
-        '
-        'Tag1TextBox
-        '
-        Me.Tag1TextBox.Location = New System.Drawing.Point(77, 658)
-        Me.Tag1TextBox.Name = "Tag1TextBox"
-        Me.Tag1TextBox.ReadOnly = True
-        Me.Tag1TextBox.Size = New System.Drawing.Size(139, 20)
-        Me.Tag1TextBox.TabIndex = 0
-        '
-        'Tag2TextBox
-        '
-        Me.Tag2TextBox.Location = New System.Drawing.Point(77, 684)
-        Me.Tag2TextBox.Name = "Tag2TextBox"
-        Me.Tag2TextBox.ReadOnly = True
-        Me.Tag2TextBox.Size = New System.Drawing.Size(139, 20)
-        Me.Tag2TextBox.TabIndex = 2
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(20, 661)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(52, 13)
-        Me.Label1.TabIndex = 1
-        Me.Label1.Text = "From Tag"
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(20, 687)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(42, 13)
-        Me.Label2.TabIndex = 3
-        Me.Label2.Text = "To Tag"
         '
         'PatchTabControl
         '
@@ -715,6 +693,12 @@ Partial Class PatchFromTags
         '
         'TabPageChanges
         '
+        Me.TabPageChanges.Controls.Add(Me.Label28)
+        Me.TabPageChanges.Controls.Add(Me.Label29)
+        Me.TabPageChanges.Controls.Add(Me.Tag1TextBox)
+        Me.TabPageChanges.Controls.Add(Me.Tag2TextBox)
+        Me.TabPageChanges.Controls.Add(Me.Label1)
+        Me.TabPageChanges.Controls.Add(Me.Label2)
         Me.TabPageChanges.Controls.Add(Me.Label20)
         Me.TabPageChanges.Controls.Add(Me.TreeViewChanges)
         Me.TabPageChanges.Controls.Add(Me.Label17)
@@ -731,6 +715,58 @@ Partial Class PatchFromTags
         Me.TabPageChanges.TabIndex = 1
         Me.TabPageChanges.Text = "Changes"
         Me.TabPageChanges.UseVisualStyleBackColor = True
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.Location = New System.Drawing.Point(222, 13)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(79, 13)
+        Me.Label28.TabIndex = 60
+        Me.Label28.Text = "AFTER this tag"
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Location = New System.Drawing.Point(222, 39)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(74, 13)
+        Me.Label29.TabIndex = 61
+        Me.Label29.Text = "UPTO this tag"
+        '
+        'Tag1TextBox
+        '
+        Me.Tag1TextBox.Location = New System.Drawing.Point(77, 10)
+        Me.Tag1TextBox.Name = "Tag1TextBox"
+        Me.Tag1TextBox.ReadOnly = True
+        Me.Tag1TextBox.Size = New System.Drawing.Size(139, 20)
+        Me.Tag1TextBox.TabIndex = 56
+        '
+        'Tag2TextBox
+        '
+        Me.Tag2TextBox.Location = New System.Drawing.Point(77, 36)
+        Me.Tag2TextBox.Name = "Tag2TextBox"
+        Me.Tag2TextBox.ReadOnly = True
+        Me.Tag2TextBox.Size = New System.Drawing.Size(139, 20)
+        Me.Tag2TextBox.TabIndex = 58
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(20, 13)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(52, 13)
+        Me.Label1.TabIndex = 57
+        Me.Label1.Text = "From Tag"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(20, 39)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(42, 13)
+        Me.Label2.TabIndex = 59
+        Me.Label2.Text = "To Tag"
         '
         'Label20
         '
@@ -786,7 +822,7 @@ Partial Class PatchFromTags
         '
         'FindButton
         '
-        Me.FindButton.Location = New System.Drawing.Point(77, 36)
+        Me.FindButton.Location = New System.Drawing.Point(367, 64)
         Me.FindButton.Name = "FindButton"
         Me.FindButton.Size = New System.Drawing.Size(139, 23)
         Me.FindButton.TabIndex = 4
@@ -826,6 +862,16 @@ Partial Class PatchFromTags
         Me.TabPageExtras.TabIndex = 6
         Me.TabPageExtras.Text = "Extra Files"
         Me.TabPageExtras.UseVisualStyleBackColor = True
+        '
+        'RestrictExtraFilesToSchemaCheckBox
+        '
+        Me.RestrictExtraFilesToSchemaCheckBox.AutoSize = True
+        Me.RestrictExtraFilesToSchemaCheckBox.Location = New System.Drawing.Point(222, 39)
+        Me.RestrictExtraFilesToSchemaCheckBox.Name = "RestrictExtraFilesToSchemaCheckBox"
+        Me.RestrictExtraFilesToSchemaCheckBox.Size = New System.Drawing.Size(116, 17)
+        Me.RestrictExtraFilesToSchemaCheckBox.TabIndex = 62
+        Me.RestrictExtraFilesToSchemaCheckBox.Text = "Restrict to Schema"
+        Me.RestrictExtraFilesToSchemaCheckBox.UseVisualStyleBackColor = True
         '
         'Label24
         '
@@ -997,27 +1043,6 @@ Partial Class PatchFromTags
         Me.Label19.TabIndex = 54
         Me.Label19.Text = "Prereqs"
         '
-        'RestrictExtraFilesToSchemaCheckBox
-        '
-        Me.RestrictExtraFilesToSchemaCheckBox.AutoSize = True
-        Me.RestrictExtraFilesToSchemaCheckBox.Location = New System.Drawing.Point(222, 39)
-        Me.RestrictExtraFilesToSchemaCheckBox.Name = "RestrictExtraFilesToSchemaCheckBox"
-        Me.RestrictExtraFilesToSchemaCheckBox.Size = New System.Drawing.Size(116, 17)
-        Me.RestrictExtraFilesToSchemaCheckBox.TabIndex = 62
-        Me.RestrictExtraFilesToSchemaCheckBox.Text = "Restrict to Schema"
-        Me.RestrictExtraFilesToSchemaCheckBox.UseVisualStyleBackColor = True
-        '
-        'AppOnlyCheckBox
-        '
-        Me.AppOnlyCheckBox.AutoSize = True
-        Me.AppOnlyCheckBox.Enabled = False
-        Me.AppOnlyCheckBox.Location = New System.Drawing.Point(77, 13)
-        Me.AppOnlyCheckBox.Name = "AppOnlyCheckBox"
-        Me.AppOnlyCheckBox.Size = New System.Drawing.Size(101, 17)
-        Me.AppOnlyCheckBox.TabIndex = 52
-        Me.AppOnlyCheckBox.Text = "Apex-Apps-Only"
-        Me.AppOnlyCheckBox.UseVisualStyleBackColor = True
-        '
         'PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1033,6 +1058,7 @@ Partial Class PatchFromTags
         Me.TabPagePreReqsA.PerformLayout()
         Me.TabPageTags.ResumeLayout(False)
         Me.TabPageTags.PerformLayout()
+        Me.TagsContextMenuStrip.ResumeLayout(False)
         Me.PatchTabControl.ResumeLayout(False)
         Me.TabPageSHA1.ResumeLayout(False)
         Me.TabPageSHA1.PerformLayout()
@@ -1077,10 +1103,6 @@ Partial Class PatchFromTags
     Friend WithEvents FindTagsButton As System.Windows.Forms.Button
     Friend WithEvents TagsCheckedListBox As System.Windows.Forms.CheckedListBox
     Friend WithEvents Label15 As System.Windows.Forms.Label
-    Friend WithEvents Tag1TextBox As System.Windows.Forms.TextBox
-    Friend WithEvents Tag2TextBox As System.Windows.Forms.TextBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents PatchTabControl As System.Windows.Forms.TabControl
     Friend WithEvents TabPageExtras As System.Windows.Forms.TabPage
     Friend WithEvents ButtonFindFiles As System.Windows.Forms.Button
@@ -1105,8 +1127,6 @@ Partial Class PatchFromTags
     Friend WithEvents Label27 As System.Windows.Forms.Label
     Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents Label22 As System.Windows.Forms.Label
-    Friend WithEvents Label28 As System.Windows.Forms.Label
-    Friend WithEvents Label29 As System.Windows.Forms.Label
     Friend WithEvents ExportPatchButton As System.Windows.Forms.Button
     Friend WithEvents SYSDBACheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents AlternateSchemasCheckBox As System.Windows.Forms.CheckBox
@@ -1136,4 +1156,13 @@ Partial Class PatchFromTags
     Friend WithEvents FindAppsButton As Button
     Friend WithEvents RestrictExtraFilesToSchemaCheckBox As CheckBox
     Friend WithEvents AppOnlyCheckBox As CheckBox
+    Friend WithEvents TagsContextMenuStrip As ContextMenuStrip
+    Friend WithEvents MoveTagToHead As ToolStripMenuItem
+    Friend WithEvents Label28 As Label
+    Friend WithEvents Label29 As Label
+    Friend WithEvents Tag1TextBox As TextBox
+    Friend WithEvents Tag2TextBox As TextBox
+    Friend WithEvents Label1 As Label
+    Friend WithEvents Label2 As Label
+    Friend WithEvents MoveTagToSHA As ToolStripMenuItem
 End Class

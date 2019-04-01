@@ -706,8 +706,9 @@ Public Class CreateRelease
             l_install_file = "\install_lite.sql"
         End If
 
-        'Use patch runner to execute with a master script.
-        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & l_install_file)
+        'Use Host class to execute with a master script.
+        Host.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & l_install_file, Globals.RootPatchDir)
+
 
     End Sub
 

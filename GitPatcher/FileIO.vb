@@ -367,11 +367,28 @@
     End Sub
 
     Public Shared Sub CopyFileToDir(ifrompath As String, itodir As String)
- 
+
         Dim Filename As String = Common.getLastSegment(Common.dos_path(ifrompath), "\")
- 
+
         CopyFile(ifrompath, itodir & "\" & Filename)
 
     End Sub
+
+    Public Shared Sub RenameFile(ifrompath As String, itoname As String)
+        My.Computer.FileSystem.RenameFile(Common.dos_path(ifrompath), itoname)
+    End Sub
+
+    Public Shared Function getTextBetween(ByVal iFilename As String, ByVal iString1 As String, ByVal iString2 As String)
+        Dim fileText As String = readFile(iFilename)
+        Dim startPos As Integer = fileText.IndexOf(iString1) + iString1.Length
+        Dim endPos As Integer = fileText.IndexOf(iString2, startPos)
+
+        If startPos > 0 And endPos > startPos And endPos - startPos < 100 Then
+            Return fileText.Substring(startPos, endPos - startPos)
+        Else
+            Return "Unable to find Application Name!!"
+        End If
+
+    End Function
 
 End Class

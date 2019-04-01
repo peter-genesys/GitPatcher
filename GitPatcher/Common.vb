@@ -45,7 +45,7 @@
 
 
     Public Shared Function cleanString(iString) As String
-        Return Trim(iString).Replace(Chr(13), "")
+        Return Trim(iString).Replace(vbCr, "").Replace(vbLf, "")
 
     End Function
 
@@ -209,6 +209,25 @@
         Next
 
     End Sub
+
+    Public Shared Sub MsgBoxCollection(ByVal i_collection As Collection, iTitle As String)
+
+        Dim BigList As String = ""
+        For Each lcollectionRow In i_collection
+            BigList = BigList & lcollectionRow.ToString & Chr(10)
+        Next
+        MsgBox(BigList, MsgBoxStyle.Information, iTitle)
+    End Sub
+
+    Public Shared Function CollectionToText(ByVal i_collection As Collection) As String
+
+        Dim Text As String = ""
+        For Each lcollectionRow In i_collection
+            Text = Text & lcollectionRow.ToString & Chr(10)
+        Next
+        Return Text
+
+    End Function
 
 
 

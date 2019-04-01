@@ -136,7 +136,10 @@ Public Class PatchFromTags
                     MsgBox("No database changes found. But Apex Apps have been changed.  This Apex-Only patch will run as APEXRM.")
 
                 ElseIf SchemaComboBox.Items.Count = 0 Then
-                    MsgBox("No database or Apex App changes found.  Please check location of tags or SHA-1 (esp SHA-1 order)")
+                    'MsgBox("No database or Apex App changes found.  Please check location of tags or SHA-1 (esp SHA-1 order)")
+                    MsgBox("No Database or Apex App changes were found between the chosen tags." &
+                 Chr(10) & "Check the positions of tags " & Tag1TextBox.Text & " and " & Tag2TextBox.Text & " in the log.")
+                    Tortoise.Log(Globals.getRepoPath, True) 'wait.
 
                 ElseIf SchemaComboBox.Items.Count = 1 Then
                     SchemaComboBox.SelectedIndex = 0
@@ -317,9 +320,9 @@ Public Class PatchFromTags
                                NoteTextBox.Text,
                                False,
                                RerunCheckBox.Checked,
-                               ChosenApps,
                                filelist,
                                checkedFilelist,
+                               ChosenApps,
                                PreReqPatchesA,
                                PreReqPatchesB,
                                PatchDirTextBox.Text,
@@ -715,14 +718,22 @@ Public Class PatchFromTags
 
             For Each change In ChosenChanges
 
+                Dim l_ignore_errors As Boolean = False
                 Dim l_category As String = Nothing
                 Dim l_file_extension As String = Common.getLastSegment(change, ".")
+                If l_file_extension = "alt" Then
+                    'File ends in "alt" - for the purpose of categorizing, look at the next segment.
+                    'lets see if it was tab.alt or pop.alt 
+                    'So drop the alt and test the next segment.
+                    l_file_extension = Common.getLastSegment(Common.dropLastSegment(change, "."), ".")
+                End If
                 Dim l_label As String
                 Select Case l_file_extension
                     Case "user"
                         l_category = "Users"
                     Case "tab"
                         l_category = "Tables"
+                        l_ignore_errors = True
                     Case "seq"
                         l_category = "Sequences"
                     Case "tps"
@@ -777,7 +788,6 @@ Public Class PatchFromTags
                         l_category = "Finalise"
                     Case "post"
                         l_category = "Post Completion"
-
                     Case Else
                         l_category = "Do Not Execute"
                 End Select
@@ -792,7 +802,7 @@ Public Class PatchFromTags
                 End If
 
                 l_label = Common.getLastSegment(change, pathSeparator)
-                TreeViewPatchOrder.AddFileToCategory(l_category, l_label, change)
+                TreeViewPatchOrder.AddFileToCategory(l_category, l_label, change, l_ignore_errors)
 
             Next
 
@@ -1093,7 +1103,8 @@ Public Class PatchFromTags
             l_master_filename = "install_lite.sql"
         End If
 
-        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename)
+        'Use Host class to execute with a master script.
+        Host.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename, Globals.RootPatchDir)
 
     End Sub
 
@@ -1231,7 +1242,7 @@ Public Class PatchFromTags
             Dim LastPatch As String = PatchRunner.FindLastPatch(patch_component)
             If String.IsNullOrEmpty(LastPatch) Then
                 Logger.Dbg("No previous patch for Change: " & patch_component)
-            ElseIf LastPatch.StartsWith("ORA") Then
+            ElseIf LastPatch = "TIMEOUT" Then
                 Exit Sub
             Else
                 Logger.Dbg("Change: " & patch_component & " LastPatch: " & LastPatch)
@@ -1480,5 +1491,40 @@ Public Class PatchFromTags
 
     Private Sub FindAppsButton_Click(sender As Object, e As EventArgs) Handles FindAppsButton.Click
         FindApps()
+    End Sub
+
+    Private Sub MoveTagToHead_Click(sender As Object, e As EventArgs) Handles MoveTagToHead.Click
+        'Move this tag to the head of the current branch.
+        If TagsCheckedListBox.SelectedIndex = -1 Then
+
+            MsgBox("Please select a Tag first.", MsgBoxStyle.Information, "No Tag Selected")
+
+        Else
+            Logger.Dbg(TagsCheckedListBox.SelectedItem)
+
+            GitOp.createTagHead(TagsCheckedListBox.SelectedItem)
+
+        End If
+    End Sub
+
+    Private Sub MoveTagToSHA_Click(sender As Object, e As EventArgs) Handles MoveTagToSHA.Click
+        'Move this tag to an SHA-1
+        If TagsCheckedListBox.SelectedIndex = -1 Then
+
+            MsgBox("Please select a Tag first.", MsgBoxStyle.Information, "No Tag Selected")
+
+        Else
+            Logger.Dbg(TagsCheckedListBox.SelectedItem)
+
+
+            Tortoise.Log(Globals.getRepoPath, False) 'do not wait.
+            Dim toSHA As String = InputBox("Copy and Paste the SHA-1 of the new tag position from the log.", "New SHA-1 for Tag " & TagsCheckedListBox.SelectedItem)
+
+            If Not String.IsNullOrEmpty(toSHA) Then
+                'toSHA given so change to it.
+                GitOp.createTagSHA(TagsCheckedListBox.SelectedItem, toSHA)
+            End If
+        End If
+
     End Sub
 End Class

@@ -3,7 +3,7 @@
 Friend Class WF_rebase
     Shared Function rebaseBranch(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String) As String
 
-        Dim tag_no_padding As Integer = 2
+        Dim tag_num_padding As Integer = 2
         Common.checkBranch(iBranchType)
 
         Dim l_tag_prefix As String = Nothing
@@ -19,19 +19,26 @@ Friend Class WF_rebase
 
         Dim l_max_tag As Integer = 0
 
-        For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch)
 
-            Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_no_padding)
+        For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch)
             Try
-                If tag_no > l_max_tag Then
-                    l_max_tag = tag_no
-                End If
-            Catch
+                Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
+                Try
+                    If tag_no > l_max_tag Then
+                        l_max_tag = tag_no
+                    End If
+                Catch
+                End Try
+            Catch ex As Exception
+                MsgBox(ex.Message)
+                MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
             End Try
 
         Next
-        Dim l_tag_base As String = l_max_tag + 1
-        l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_no_padding, "0")
+
+
+            Dim l_tag_base As String = l_max_tag + 1
+        l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_num_padding, "0")
 
         rebasing.MdiParent = GitPatcher
         rebasing.addStep("Commit to Branch: " & currentBranchLong, False, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no staged changes.")
@@ -121,7 +128,7 @@ Friend Class WF_rebase
             l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please enter 2 digit numeric tag for next patch.", "Create Tag for next patch", l_tag_base)
             Dim l_tagA As String = currentBranchShort & "." & l_tag_base & "A"
             rebasing.updateStepDescription(4, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
-            GitOp.createTag(l_tagA)
+            GitOp.createTagHead(l_tagA)
 
         End If
 
@@ -140,7 +147,7 @@ Friend Class WF_rebase
             'Tag Branch
             Dim l_tagB As String = currentBranchShort & "." & l_tag_base & "B"
             rebasing.updateStepDescription(7, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
-            GitOp.createTag(l_tagB)
+            GitOp.createTagHead(l_tagB)
 
         End If
 
