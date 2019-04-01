@@ -160,17 +160,22 @@ Friend Class WF_rebase
 
         If rebasing.toDoNextStep() Then
             'Use PatchRunner to run Unapplied Patches
-            Dim newchildform As New PatchRunner("Unapplied")
+            Dim GitPatcherChild As PatchRunner = New PatchRunner("Unapplied")
+
+            'Dim newchildform As New PatchRunner("Unapplied")
             'newchildform.MdiParent = GitPatcher - cannot be attached to a parent when using newchildform.ShowDialog() 'ShowDialog - means wait.
-            newchildform.ShowDialog() 'NEED TO WAIT HERE!!
+            'newchildform.ShowDialog() 'NEED TO WAIT HERE!!
 
         End If
 
         If rebasing.toDoNextStep() Then
             'Install queued Apex Apps.
-            Dim newchildform As New ApexAppInstaller("Queued")
+            'Start the ApexAppInstaller and wait until it closes.
+            Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("Queued")
+
+            'Dim newchildform As New ApexAppInstaller("Queued")
             'newchildform.MdiParent = GitPatcher
-            newchildform.ShowDialog() 'ShowDialog - means wait.
+            'newchildform.ShowDialog() 'ShowDialog - means wait.
         End If
 
         'If rebasing.toDoNextStep() Then

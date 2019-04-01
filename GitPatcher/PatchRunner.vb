@@ -3,6 +3,8 @@
 
 Public Class PatchRunner
 
+    Private waiting As Boolean
+
     Dim hotFixTargetDBFilter As String = Nothing
 
     Public Sub New(Optional ByVal iInstallStatus As String = "All", Optional ByVal iBranchType As String = "")
@@ -46,9 +48,23 @@ Public Class PatchRunner
         doSearch()
 
 
+        Me.MdiParent = GitPatcher
+        Me.Show()
+        Wait()
+
     End Sub
 
+    Public Sub Wait()
+        'This wait routine will halt the caller until the form is closed.
+        waiting = True
+        Do Until Not waiting
+            Common.wait(1000)
+        Loop
+    End Sub
 
+    Private Sub PatchRunner_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+        waiting = False
+    End Sub
 
 
     Private Sub RecursiveSearch(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As ListBox)

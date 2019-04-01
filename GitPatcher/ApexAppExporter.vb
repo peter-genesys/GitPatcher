@@ -2,25 +2,29 @@
 
 Public Class ApexAppExporter
 
+    Private waiting As Boolean
+
     Public Sub New()
+
         InitializeComponent()
-
-        doSearch()
-
+        DoSearch()
+        Me.MdiParent = GitPatcher
+        Me.Show()
+        Wait()
 
     End Sub
 
-    Public Function NewAAE()
-        InitializeComponent()
+    Public Sub Wait()
+        'This wait routine will halt the caller until the form is closed.
+        waiting = True
+        Do Until Not waiting
+            Common.wait(1000)
+        Loop
+    End Sub
 
-        Me.MdiParent = GitPatcher
-        Me.Show()
-
-        doSearch()
-
-        Return True
-
-    End Function
+    Private Sub ApexAppExporter_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+        waiting = False
+    End Sub
 
 
     Public Sub FindApps(ByRef foundApps As Collection)
@@ -47,7 +51,7 @@ Public Class ApexAppExporter
 
     End Sub
 
-    Private Sub doSearch()
+    Private Sub DoSearch()
         Logger.Dbg("Searching")
 
         Dim AvailableApps As Collection = New Collection

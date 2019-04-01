@@ -89,7 +89,7 @@ Public Class GitPatcher
 
         Try
             Dim newchildform As New Main
-            newchildform.MdiParent = Me ' 
+            newchildform.MdiParent = Me
             newchildform.Show()
         Catch ex As Exception
             MsgBox("Failure to start Main Form: " & ex.Source & ex.Message)
@@ -107,7 +107,7 @@ Public Class GitPatcher
 
     Public Sub newConfigWindow()
         Dim newchildform As New Configuration
-        newchildform.MdiParent = Me '  
+        newchildform.MdiParent = Me
         newchildform.Show()
     End Sub
 

@@ -44,11 +44,18 @@
             'MsgBox("Using Apex2Git, export from the VM any apps you have changed. Apex2Git is in the tools dir.", MsgBoxStyle.Exclamation, "Apex2Git")
             'Export Apex Apps.
 
+            'Start the ApexAppExporter and wait until it closes.
+            Dim GitPatcherChild As ApexAppExporter = New ApexAppExporter
+
+            'ApexAppExport.MdiParent = GitPatcher
+            'ApexAppExport.Show()
+            'ApexAppExport.wait()
+
             'Dim newchildform As New ApexAppExporter
             'newchildform.MdiParent = GitPatcher
             'newchildform.Show() 'ShowDialog - means wait.
 
-            Dim exported As Boolean = ApexAppExporter.NewAAE()
+            'Dim exported As Boolean = ApexAppExporter.NewAAE()
 
         End If
 
@@ -73,9 +80,12 @@
 
         If createPatchProgress.toDoNextStep() Then
 
-            Dim Wizard As New PatchFromTags(iBranchType, iDBtarget, iRebaseBranchOn, l_tag_base)
+            'Start the PatchFromTags and wait until it closes.
+            Dim GitPatcherChild As PatchFromTags = New PatchFromTags(iBranchType, iDBtarget, iRebaseBranchOn, l_tag_base)
+
+            'Dim Wizard As New PatchFromTags(iBranchType, iDBtarget, iRebaseBranchOn, l_tag_base)
             'newchildform.MdiParent = GitPatcher
-            Wizard.ShowDialog() 'NEED TO WAIT HERE!!
+            'Wizard.ShowDialog() 'NEED TO WAIT HERE!!
 
 
         End If
@@ -109,9 +119,12 @@
 
         If createPatchProgress.toDoNextStep() Then
             'Run your app changes
-            Dim newchildform As New ApexAppInstaller("Queued")
+            'Start the ApexAppInstaller and wait until it closes.
+            Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("Queued")
+
+            'Dim newchildform As New ApexAppInstaller("Queued")
             'newchildform.MdiParent = GitPatcher
-            newchildform.ShowDialog() 'ShowDialog - means wait.
+            'newchildform.ShowDialog() 'ShowDialog - means wait.
         End If
 
 

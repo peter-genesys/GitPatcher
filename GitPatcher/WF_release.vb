@@ -67,17 +67,23 @@
 
         If releasing.toDoNextStep() Then
             'Use PatchRunner to run  Uninstalled Patches
-            Dim newchildform As New PatchRunner("Uninstalled", iBranchType)
+            Dim GitPatcherChild As PatchRunner = New PatchRunner("Uninstalled", iBranchType)
+
+            'Dim newchildform As New PatchRunner("Uninstalled", iBranchType)
             'newchildform.MdiParent = GitPatcher
-            newchildform.ShowDialog() 'NEED TO WAIT HERE!!
+            'newchildform.ShowDialog() 'NEED TO WAIT HERE!!
 
         End If
 
         If releasing.toDoNextStep() Then
             'Install queued Apex Apps.
-            Dim newchildform As New ApexAppInstaller("Queued")
+            'Start the ApexAppInstaller and wait until it closes.
+            Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("Queued")
+
+
+            'Dim newchildform As New ApexAppInstaller("Queued")
             'newchildform.MdiParent = GitPatcher
-            newchildform.ShowDialog() 'ShowDialog - means wait.
+            'newchildform.ShowDialog() 'ShowDialog - means wait.
         End If
 
         'If releasing.toDoNextStep() Then
