@@ -171,3 +171,4 @@ D:\GitRepos\GitPatcher-0.1\GitPatcher\obj\Release\GitPatcher.exe
 D:\GitRepos\GitPatcher-0.1\GitPatcher\obj\Release\GitPatcher.xml
 D:\GitRepos\GitPatcher-0.1\GitPatcher\obj\Release\GitPatcher.pdb
 D:\GitRepos\GitPatcher-0.1\GitPatcher\obj\Release\GitPatcher.ApexAppInstaller.resources
+D:\GitRepos\GitPatcher-0.1\GitPatcher\obj\Release\GitPatcher.ApexAppExporter.resources
