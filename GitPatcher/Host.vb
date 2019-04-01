@@ -263,7 +263,7 @@
     Public Shared Sub RunMasterScript(scriptData As String, ByVal scriptDir As String)
 
         'scriptDir is also used as workingDir
-        Dim masterScriptName As String = scriptDir & "temp_master_script.sql"
+        Dim masterScriptName As String = Common.dos_path_trailing_slash(scriptData) & "temp_master_script.sql"
 
         FileIO.writeFile(masterScriptName, scriptData, True)
 

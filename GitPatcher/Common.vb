@@ -45,7 +45,7 @@
 
 
     Public Shared Function cleanString(iString) As String
-        Return Trim(iString).Replace(Chr(13), "")
+        Return Trim(iString).Replace(vbCr, "").Replace(vbLf, "")
 
     End Function
 

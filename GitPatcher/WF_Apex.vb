@@ -16,9 +16,6 @@
 
 
 
-
-
-
     Public Shared Sub ApexExportCommit() 'Deprecated.  
         'This routine uses a hostout to oracle.apex.APEXExport And oracle.apex.APEXExportSplitter
         'This function has now been built into SQLcl.
@@ -203,8 +200,12 @@
         End If
 
         If ExportProgress.toDoNextStep() Then
+
+            'Find the application name in the init.sql file.
+            Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
+
             'Commit valid changes to GIT repository  
-            Tortoise.Commit(appDir, "App " & fapp_id & " exported and split - IF YOU DIDNT CHANGE IT PLEASE DONT COMMIT IT", True)
+            Tortoise.Commit(appDir, "Apex App " & lAppIdAndName & " (" & Globals.currentTNS & ") " & vbLf & vbLf & "GitPatcher Split-Export from " & Globals.currentTNS, True)
 
         End If
 
