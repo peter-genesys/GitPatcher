@@ -1103,7 +1103,8 @@ Public Class PatchFromTags
             l_master_filename = "install_lite.sql"
         End If
 
-        PatchRunner.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename)
+        'Use Host class to execute with a master script.
+        Host.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename, Globals.RootPatchDir)
 
     End Sub
 

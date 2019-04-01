@@ -367,11 +367,15 @@
     End Sub
 
     Public Shared Sub CopyFileToDir(ifrompath As String, itodir As String)
- 
+
         Dim Filename As String = Common.getLastSegment(Common.dos_path(ifrompath), "\")
- 
+
         CopyFile(ifrompath, itodir & "\" & Filename)
 
+    End Sub
+
+    Public Shared Sub RenameFile(ifrompath As String, itoname As String)
+        My.Computer.FileSystem.RenameFile(Common.dos_path(ifrompath), itoname)
     End Sub
 
 End Class

@@ -260,4 +260,20 @@
     End Sub
 
 
+    Public Shared Sub RunMasterScript(scriptData As String, ByVal scriptDir As String)
+
+        'scriptDir is also used as workingDir
+        Dim masterScriptName As String = scriptDir & "temp_master_script.sql"
+
+        FileIO.writeFile(masterScriptName, scriptData, True)
+
+        Host.executeSQLscriptInteractive(masterScriptName, scriptDir)
+
+        FileIO.deleteFileIfExists(masterScriptName)
+
+    End Sub
+
+
+
+
 End Class

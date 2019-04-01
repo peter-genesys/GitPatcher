@@ -418,20 +418,6 @@ Public Class PatchRunner
 
 
 
-
-    Public Shared Sub RunMasterScript(scriptData As String)
-
-        Dim masterScriptName As String = Globals.RootPatchDir & "temp_master_script.sql"
-
-        FileIO.writeFile(masterScriptName, scriptData, True)
-
-        Host.executeSQLscriptInteractive(masterScriptName, Globals.RootPatchDir)
-
-        FileIO.deleteFileIfExists(masterScriptName)
-
-    End Sub
-
-
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
 
         'Format as script
@@ -443,8 +429,8 @@ Public Class PatchRunner
 
         Next
 
-        RunMasterScript(masterList)
-
+        'Use Host class to execute with a master script.
+        Host.RunMasterScript(masterList, Globals.RootPatchDir)
 
     End Sub
 

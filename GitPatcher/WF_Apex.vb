@@ -167,7 +167,8 @@
 
         Dim app_id As String = fapp_id.Split("f")(1)
 
-        Dim appDir As String = apex_dir & iSchema & "/" & fapp_id
+        Dim parsingSchemaDir As String = apex_dir & iSchema
+        Dim appDir As String = parsingSchemaDir & "\" & fapp_id
 
         Dim fapp_sql As String = fapp_id & ".sql"
         Dim message As String = Nothing
@@ -175,56 +176,25 @@
         'PROGRESS 0
         If ExportProgress.toDoNextStep() Then
 
+            'Delete the appDir prior to the export.
             FileIO.deleteFolderIfExists(appDir)
 
-            'Dim password = Main.get_password(Globals.currentParsingSchema, Globals.currentTNS)
+            'Use Host class to execute with a master script.
+            Host.RunMasterScript("prompt Exporting Apex App " & app_id &
+                Environment.NewLine & "connect " & iSchema & "/&" & iSchema & "_password@" & Globals.getDATASOURCE &
+                Environment.NewLine & "Apex export -applicationid " & app_id & " -skipExportDate -split" &
+                Environment.NewLine & "exit;" _
+              , parsingSchemaDir)
 
-            Dim lMasterScript As String
-            lMasterScript = "connect smartgen/smartgen@" & Globals.getDATASOURCE &
-                   Environment.NewLine & "Apex export -applicationid 146 -skipExportDate -split" &
-                   Environment.NewLine & "Exit;"
+            Dim AppFilePath As String = parsingSchemaDir & "\" & fapp_id & ".sql"
+            Dim uncleanAppFilename As String = fapp_id & ".unclean.sql"
 
-            '#Pipe APP_ID To ApexSplitExport As param 
-            'echo "$APP_ID" | & $Config.sqlcl_path "$user/$pword@$connection" "@$SCRIPT_DIR\ApexSplitExport.sql" 
+            FileIO.deleteFileIfExists(parsingSchemaDir & "\" & uncleanAppFilename)
 
-
-
-            'MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.getDATASOURCE & "'")
-
-
-            Host.executeDynamicSQLScript(lMasterScript, apex_dir & iSchema, True)
-
-
-            'Export Apex as a single file
-            'NB Not exporting application comments
-            'Host.runInteractive("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
-            '                  , message, apex_dir)
-            'Host.check_StdErr("java oracle.apex.APEXExport -db " & connection & " -user " & username & " -password " & password & " -applicationid " & app_id & " -expPubReports -skipExportDate" _
-            '         , message, apex_dir)
-
-
-            'Logger.Dbg(message, "Apex Export Error")
-
-            'write-host "Remove the application directory apex_dir\fapp_id" 
-
+            FileIO.RenameFile(AppFilePath, uncleanAppFilename)
 
         End If
 
-
-        'If ExportProgress.toDoNextStep() Then
-
-        '    'Remove-Item -Recurse -Force -ErrorAction 0 @("apex_dir\fapp_id")
-        '    FileIO.deleteFolderIfExists(apex_dir & fapp_id)
-
-        '    'Splitting into components 
-
-        '    'write-host "Splitting $APP_SQL into its composite files"
-        '    'java oracle.apex.APEXExportSplitter $APP_SQL 
-        '    Host.check_StdErr("java oracle.apex.APEXExportSplitter " & fapp_sql, message, apex_dir)
-
-        '    Logger.Dbg(message, "Apex Export Splitter Error")
-
-        'End If
 
         If ExportProgress.toDoNextStep() Then
             'Add new files to GIT repository 
