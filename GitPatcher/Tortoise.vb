@@ -60,4 +60,9 @@
         client.StashSave(i_WorkingDir, i_msg)
     End Sub
 
+    Public Shared Sub StashPop(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
+        Dim client As New TortoiseFascade(i_wait)
+        client.StashPop(i_WorkingDir)
+    End Sub
+
 End Class

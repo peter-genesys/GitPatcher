@@ -513,6 +513,14 @@ Public Class GitOp
     End Sub
 
 
+    Shared Sub pullWhenMasterBranch()
+        'pull current branch - but only when it is master.
+        If CurrentBranch() = "master" Then
+            pullBranch(CurrentBranch())
+        End If
+
+    End Sub
+
     Shared Sub getIndexedChanges()
         'NOT CURRENTLY USED - LINKED TO HIDDEN MENU ITEM "ShowIndex"
         'I have not yet figured out what this is for

@@ -100,6 +100,13 @@
         Execute()
     End Sub
 
+    Public Sub StashPop(ByVal i_path)
+        'StashPop    Opens the stash pop dialog For the working tree located In /path. 
+        'Applies the latest stash and deletes the stash.
+        tortoiseSetup.Arguments = "/command:stashpop /path:""" & i_path & """ /closeonend:1"
+        Execute()
+    End Sub
+
 
 
 

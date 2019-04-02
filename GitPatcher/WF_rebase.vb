@@ -40,6 +40,13 @@ Friend Class WF_rebase
         l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_num_padding, "0")
 
         rebasing.MdiParent = GitPatcher
+        rebasing.addStep("Export Apex Apps to " & iBranchType & " branch: " & currentBranch(), True, "Using ApexAppExporter, export from the VM any apps you have changed.") ' or the Apex Export workflow")
+        rebasing.addStep("Use SmartGen to spool changed config data: " & currentBranch(), False,
+                                    "Did I change any config data?  " &
+                                    "Do I need to spool any table changes or generate related objects?  " &
+                                    "If so, logon to SmartGen, generate and/or spool code. " &
+                                    "Use db-spooler to spool the objects to the local filesystem. " &
+                                    "Then commit it too.")
         rebasing.addStep("Commit to Branch: " & currentBranchLong, False, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no staged changes.")
         rebasing.addStep("Stash Save: " & currentBranchLong, False, "Stash Save to ensure the current branch [" & currentBranchShort & "] contains no staged changes.")
         rebasing.addStep("Switch to " & iRebaseBranchOn & " branch", True, "If you get an error concerning uncommitted changes.  Please resolve the changes and then RESTART this process to ensure the switch to " & iRebaseBranchOn & " branch is successful.")
@@ -55,6 +62,7 @@ Friend Class WF_rebase
 
         'rebasing.addStep("Import Apex from HEAD of branch: " & currentBranchLong, True, "Using the Apex2Git.  Please inspect new commits on the master branch to determine which apps to import.")
         'rebasing.addStep("Import Apex from HEAD of branch: " & currentBranchLong, True, "Using the Apex Import workflow")
+        rebasing.addStep("Stash Pop: " & currentBranchLong, False, "Stash Pop if a Stash Save was used previously, and especially, if we are not also making a patch.")
         rebasing.addStep("Post-Rebase Snapshot", True, "Before creating new patches, snapshot the VM again.  Use this snapshot as a quick restore to point restest patches that have failed, on first execution.")
 
         rebasing.Show()
@@ -63,6 +71,20 @@ Friend Class WF_rebase
             Common.wait(1000)
         Loop
 
+
+        If rebasing.toDoNextStep() Then
+            'Export Apex to branch
+
+            'Start the ApexAppExporter and wait until it closes.
+            Dim GitPatcherChild As ApexAppExporter = New ApexAppExporter
+
+        End If
+
+        If rebasing.toDoNextStep() Then
+            'SMARTGEN
+            MsgBox("Please logon to SmartGen and generate/spool objects", MsgBoxStyle.Exclamation, "SmartGen")
+
+        End If
 
         If rebasing.toDoNextStep() Then
             'User chooses to commit, but don't bother unless the checkout is also dirty (meaning there is at least 1 staged or unstaged change)
@@ -184,6 +206,34 @@ Friend Class WF_rebase
         '    'WF_Apex.ApexImportFromTag()
 
         'End If
+
+
+        'SHOULD CONFIRM THIS STEP
+        If rebasing.toDoNextStep() Then
+            Tortoise.StashPop(Globals.getRepoPath, True)
+
+            '    'User chooses to StashSave, but don't bother unless the checkout is also dirty (meaning there is at least 1 staged or unstaged change)
+            '    If GitOp.IsDirty() Then
+            '        Logger.Dbg("User chose to commit and the checkout is also dirty")
+
+            '        'StashSave changes
+            '        'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
+            '        Tortoise.StashSave(Globals.getRepoPath, "Ensure the current branch [" & currentBranchShort & "] is free of uncommitted changes.", True)
+
+            '    End If
+            'Else
+            '    'User chooses to NOT to StashSave, but commit anyway if there is at least 1 staged change
+            '    'Committing changed files to GIT"
+            '    If GitOp.ChangedFiles() > 0 Then
+            '        Logger.Dbg("User chose NOT to commit but the checkout has staged changes")
+
+            '        MsgBox("Files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
+            '        Tortoise.StashSave(Globals.getRepoPath, "Stash Save to ensure the current branch [" & currentBranchShort & "] contains no staged changes.", True)
+
+            '    End If
+
+        End If
+
 
         If rebasing.toDoNextStep() Then
             'Post-Rebase Snapshot 
