@@ -6,6 +6,7 @@ Public Class PatchFromTags
     Dim gDBtarget As String
     Dim gRebaseBranchOn As String
     Dim gtag_base As String
+    Private waiting As Boolean
 
     Public Sub New(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String, itag_base As String)
         InitializeComponent()
@@ -26,6 +27,22 @@ Public Class PatchFromTags
 
         ExecuteButton.Text = "Execute Patch on " & Globals.currentTNS
 
+        Me.MdiParent = GitPatcher
+        Me.Show()
+        Wait()
+
+    End Sub
+
+    Public Sub Wait()
+        'This wait routine will halt the caller until the form is closed.
+        waiting = True
+        Do Until Not waiting
+            Common.wait(1000)
+        Loop
+    End Sub
+
+    Private Sub PatchFromTags_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+        waiting = False
     End Sub
 
     Private Sub UseTags()
@@ -79,13 +96,17 @@ Public Class PatchFromTags
 
         TagsCheckedListBox.Items.Clear()
         For Each thisTag As Tag In GitOp.getTagList()
+            Try
+                If Common.getFirstSegment(thisTag.FriendlyName, ".") = Globals.currentBranch Then
+                    'This is a tag worth listing
+                    Dim ticked As Boolean = (gtag_base = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)) 'This is a tag worth ticking
+                    TagsCheckedListBox.Items.Add(thisTag.FriendlyName, ticked)
 
-            If Common.getFirstSegment(thisTag.FriendlyName, ".") = Globals.currentBranch Then
-                'This is a tag worth listing
-                Dim ticked As Boolean = (gtag_base = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)) 'This is a tag worth ticking
-                TagsCheckedListBox.Items.Add(thisTag.FriendlyName, ticked)
-
-            End If
+                End If
+            Catch ex As Exception
+                MsgBox(ex.Message)
+                MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
+            End Try
         Next
 
         Cursor.Current = cursorRevert

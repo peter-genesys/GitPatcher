@@ -1,7 +1,7 @@
 ﻿Friend Class WF_newBranch
     Shared Sub createNewBranch(iBranchType As String, iBranchFrom As String)
 
-        Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new " & iBranchType & " branch", "Create a new " & iBranchType & " Branch with the standardised naming " & iBranchType & "/" & Globals.deriveFeatureCode() & "ISSUE_ID.")
+        Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new " & iBranchType & " branch", "Create a new " & iBranchType & " Branch with the standardised naming " & iBranchType & "/" & (Globals.deriveFeatureCode & "/").TrimStart("/") & "ISSUE_ID.")
         newFeature.MdiParent = GitPatcher
         newFeature.addStep("Switch to " & iBranchFrom & " branch")
         newFeature.addStep("Pull from Origin")
@@ -30,27 +30,37 @@
         If newFeature.toDoNextStep() Then
             'Create and Switch to new branch
             Dim branchName As String = InputBox("Enter the Issue Id.", "Issue Id for new " & iBranchType & " Branch", Globals.getJira)
-            Dim featureCode As String = InputBox("Feature Code", "Confirm Feature Code", Globals.deriveFeatureCode)
             Dim newBranch As String = iBranchType
-            If Globals.getAppInFeature() = "Y" Then
-                newBranch = newBranch & "/" & Globals.currentAppCode
-            End If
-            newBranch = newBranch & "/" & featureCode & branchName
 
+            'Derive the feature code from app and org codes.
+            Dim featureCode As String = Globals.deriveFeatureCode
+            If Not String.IsNullOrEmpty(featureCode) Then
+                'Confirm the feature code if not null
+                featureCode = InputBox("Feature Code", "Confirm Feature Code", featureCode)
+            End If
+
+
+            If String.IsNullOrEmpty(featureCode) Then
+                'No feature code needed.
+                newBranch = newBranch & "/" & branchName
+            Else
+                'Use the feature code if not null
+                newBranch = newBranch & "/" & featureCode & "/" & branchName
+            End If
 
 
             If Not String.IsNullOrEmpty(branchName) Then
 
-                newFeature.updateTitle("Create new " & iBranchType & " branch:  " & branchName)
-                newFeature.updateStepDescription(2, "Create and switch to " & iBranchType & " branch: " & newBranch)
+                    newFeature.updateTitle("Create new " & iBranchType & " branch:  " & branchName)
+                    newFeature.updateStepDescription(2, "Create and switch to " & iBranchType & " branch: " & newBranch)
 
-                GitOp.createAndSwitchBranch(newBranch)
+                    GitOp.createAndSwitchBranch(newBranch)
+
+                End If
+
+                newFeature.toDoNextStep()
 
             End If
-
-            newFeature.toDoNextStep()
-
-        End If
 
 
     End Sub

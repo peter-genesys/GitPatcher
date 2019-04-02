@@ -2,6 +2,7 @@
 
 Public Class ApexAppInstaller
 
+    Private waiting As Boolean
 
     Public Sub New(Optional ByVal ienqueuedStatus As String = "All", Optional ByVal queuedBy As String = "me")
         InitializeComponent()
@@ -40,7 +41,24 @@ Public Class ApexAppInstaller
         doSearch()
 
 
+        Me.MdiParent = GitPatcher
+        Me.Show()
+        Wait()
+
     End Sub
+
+    Public Sub Wait()
+        'This wait routine will halt the caller until the form is closed.
+        waiting = True
+        Do Until Not waiting
+            Common.wait(1000)
+        Loop
+    End Sub
+
+    Private Sub ApexAppInstaller_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+        waiting = False
+    End Sub
+
 
 
     Public Sub FindApps(ByRef foundApps As Collection, ByRef queuedOnly As Boolean)

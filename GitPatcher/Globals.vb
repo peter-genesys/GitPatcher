@@ -472,13 +472,13 @@ Module Globals
             Return ""
         End If
         If gAppInFeature = "Y" And gOrgInFeature = "Y" Then
-            Return gAppCode & "_" & gOrgCode & "/"
+            Return gAppCode & "_" & gOrgCode
         End If
 
         If gAppInFeature = "Y" Then
-            Return gAppCode & "/"
+            Return gAppCode
         Else
-            Return gOrgCode & "/"
+            Return gOrgCode
         End If
 
 

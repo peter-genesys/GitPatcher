@@ -23,12 +23,11 @@ Friend Class WF_rebase
         For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch)
             Try
                 Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
-                Try
-                    If tag_no > l_max_tag Then
-                        l_max_tag = tag_no
-                    End If
-                Catch
-                End Try
+
+                If tag_no > l_max_tag Then
+                    l_max_tag = tag_no
+                End If
+
             Catch ex As Exception
                 MsgBox(ex.Message)
                 MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
@@ -37,7 +36,7 @@ Friend Class WF_rebase
         Next
 
 
-            Dim l_tag_base As String = l_max_tag + 1
+        Dim l_tag_base As String = l_max_tag + 1
         l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_num_padding, "0")
 
         rebasing.MdiParent = GitPatcher
@@ -160,17 +159,22 @@ Friend Class WF_rebase
 
         If rebasing.toDoNextStep() Then
             'Use PatchRunner to run Unapplied Patches
-            Dim newchildform As New PatchRunner("Unapplied")
+            Dim GitPatcherChild As PatchRunner = New PatchRunner("Unapplied")
+
+            'Dim newchildform As New PatchRunner("Unapplied")
             'newchildform.MdiParent = GitPatcher - cannot be attached to a parent when using newchildform.ShowDialog() 'ShowDialog - means wait.
-            newchildform.ShowDialog() 'NEED TO WAIT HERE!!
+            'newchildform.ShowDialog() 'NEED TO WAIT HERE!!
 
         End If
 
         If rebasing.toDoNextStep() Then
             'Install queued Apex Apps.
-            Dim newchildform As New ApexAppInstaller("Queued")
+            'Start the ApexAppInstaller and wait until it closes.
+            Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("Queued")
+
+            'Dim newchildform As New ApexAppInstaller("Queued")
             'newchildform.MdiParent = GitPatcher
-            newchildform.ShowDialog() 'ShowDialog - means wait.
+            'newchildform.ShowDialog() 'ShowDialog - means wait.
         End If
 
         'If rebasing.toDoNextStep() Then
