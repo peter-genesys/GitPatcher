@@ -96,13 +96,17 @@ Public Class PatchFromTags
 
         TagsCheckedListBox.Items.Clear()
         For Each thisTag As Tag In GitOp.getTagList()
+            Try
+                If Common.getFirstSegment(thisTag.FriendlyName, ".") = Globals.currentBranch Then
+                    'This is a tag worth listing
+                    Dim ticked As Boolean = (gtag_base = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)) 'This is a tag worth ticking
+                    TagsCheckedListBox.Items.Add(thisTag.FriendlyName, ticked)
 
-            If Common.getFirstSegment(thisTag.FriendlyName, ".") = Globals.currentBranch Then
-                'This is a tag worth listing
-                Dim ticked As Boolean = (gtag_base = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)) 'This is a tag worth ticking
-                TagsCheckedListBox.Items.Add(thisTag.FriendlyName, ticked)
-
-            End If
+                End If
+            Catch ex As Exception
+                MsgBox(ex.Message)
+                MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
+            End Try
         Next
 
         Cursor.Current = cursorRevert

@@ -23,12 +23,11 @@ Friend Class WF_rebase
         For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch)
             Try
                 Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
-                Try
-                    If tag_no > l_max_tag Then
-                        l_max_tag = tag_no
-                    End If
-                Catch
-                End Try
+
+                If tag_no > l_max_tag Then
+                    l_max_tag = tag_no
+                End If
+
             Catch ex As Exception
                 MsgBox(ex.Message)
                 MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
