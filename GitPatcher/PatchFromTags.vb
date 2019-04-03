@@ -577,7 +577,7 @@ Public Class PatchFromTags
     & Chr(10) & " ,i_tracking_yn        => '" & track_promotion_yn & "' -" _
     & Chr(10) & " ,i_alt_schema_yn      => '" & alt_schema_yn & "' -" _
     & Chr(10) & " ,i_retired_yn         => 'N' -" _
-    & Chr(10) & " ,i_remove_prereqs     => 'N' );" _
+    & Chr(10) & " ,i_remove_prereqs     => 'Y' );" _
     & Chr(10)
 
 
@@ -654,8 +654,6 @@ Public Class PatchFromTags
             Else
                 l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed;")
             End If
-
-
 
 
 
