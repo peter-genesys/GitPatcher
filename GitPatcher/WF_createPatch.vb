@@ -34,7 +34,7 @@
 
         If createPatchProgress.toDoNextStep() Then
             'Rebase branch
-            l_tag_base = WF_rebase.rebaseBranch(iBranchType, iDBtarget, iRebaseBranchOn)
+            l_tag_base = WF_rebase.rebaseBranch(iBranchType, iDBtarget, iRebaseBranchOn, True, True, True)
 
         End If
 

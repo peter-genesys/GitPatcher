@@ -50,22 +50,61 @@
     End Function
 
 
-    Public Sub addStep(ByVal description As String, Optional ByVal checked As Boolean = True, Optional ByVal notes As String = "")
+    Public Sub addStep(ByVal description As String, Optional ByVal checked As Boolean = True, Optional ByVal notes As String = "", Optional ByVal enabled As Boolean = True, Optional ByVal code As String = "")
+        'ProgressCheckedListBox.Items will contain items 0-x 
+        'Corresponding to the enabled steps in storedProcessSteps
 
-        Dim aStep As ProcessStep = New ProcessStep(description, notes)
+        Dim index As Integer = -1
+        If enabled Then
+            'This step is enabled so add it to the checkboxlist
+            ProgressCheckedListBox.Items.Add(description)
+            index = ProgressCheckedListBox.Items.Count - 1
+            ProgressCheckedListBox.SetItemChecked(index, checked) 'set checked on latest item.
+        End If
 
+        'either way add it to the list of steps.  If enabled will also have an index > -1
         ReDim Preserve storedProcessSteps(nextStep)
+        Dim aStep As ProcessStep = New ProcessStep(description, notes, enabled, index)
         storedProcessSteps(nextStep) = aStep
-        Me.ProgressCheckedListBox.Items.Add(aStep.description)
-        ProgressCheckedListBox.SetItemChecked(nextStep, checked)
-        'ProgressCheckedListBox.SetSelected(0, True) 'Select first item - nah this hides the initial Notes.
-
         nextStep = nextStep + 1
 
     End Sub
 
+    Public Sub updateCheckListChecked(ByVal stepNo As Integer, ByVal checked As Boolean)
+
+        If storedProcessSteps(stepNo).enabled() Then
+            'look up the index from the stored steps
+            Dim index As Integer = storedProcessSteps(stepNo).index
+            Me.ProgressCheckedListBox.SetItemChecked(index, checked)
+        End If
+
+    End Sub
+
+    Private Sub updateCheckListdescription(ByVal stepNo As Integer, ByVal description As String)
+        'Update the description ,if the step is enabled.
+        If storedProcessSteps(stepNo).enabled Then
+            'look up the index from the stored steps
+            Dim index As Integer = storedProcessSteps(stepNo).index
+            Me.ProgressCheckedListBox.Items(index) = description
+        End If
+
+    End Sub
+
+    Private Sub updateCheckListSelected(ByVal stepNo As Integer, Optional ByVal selected As Boolean = True)
+        'Set the step to selected, if the step is enabled.
+        If storedProcessSteps(stepNo).enabled Then
+            'look up the index from the stored steps
+            Dim index As Integer = storedProcessSteps(stepNo).index
+            ProgressCheckedListBox.SetSelected(index, selected)
+        End If
+
+    End Sub
+
+
+
     Private Sub updateStepStatus(ByVal stepNo As Integer, ByVal status As String)
         Dim lstatus As String = status
+
         If stepNo > -1 And stepNo <= storedProcessSteps.GetUpperBound(0) Then
 
             If status = "Doing" Then
@@ -80,8 +119,7 @@
 
             If storedProcessSteps(stepNo).status <> "Skipped" Then
                 storedProcessSteps(stepNo).setStatus(lstatus)
-                Me.ProgressCheckedListBox.Items(stepNo) = storedProcessSteps(stepNo).description & " - " & storedProcessSteps(stepNo).status
-
+                updateCheckListdescription(stepNo, storedProcessSteps(stepNo).description & " - " & storedProcessSteps(stepNo).status)
             End If
 
             pauseToRefreshProgressBar()
@@ -93,17 +131,9 @@
     Public Sub updateStepDescription(ByVal stepNo As Integer, ByVal description As String)
 
         storedProcessSteps(stepNo).setDescription(description)
-        Me.ProgressCheckedListBox.Items(stepNo) = storedProcessSteps(stepNo).description & " - " & storedProcessSteps(stepNo).status
+        updateCheckListdescription(stepNo, storedProcessSteps(stepNo).description & " - " & storedProcessSteps(stepNo).status)
 
     End Sub
-
-    Public Sub updateStepChecked(ByVal stepNo As Integer, ByVal checked As Boolean)
-
-        Me.ProgressCheckedListBox.SetItemChecked(stepNo, checked)
-
-    End Sub
-
-
 
     ' Loops for a specificied period of time (milliseconds)
     Private Sub pauseToRefreshProgressBar()
@@ -122,40 +152,94 @@
 
     Public Function toDoStep(gotoStep As Integer) As Boolean
 
-        Dim last_active_step As Integer = activeStep
+        'Dim last_active_step As Integer = activeStep
         'updateStep(activeStep, "Done")
+
+        'Progress to the new step
         activeStep = gotoStep
 
         'Conclude preceding step
-        For i As Integer = last_active_step To activeStep - 1
-            updateStepStatus(i, "Done")
-        Next
- 
+        'For i As Integer = last_active_step To activeStep - 1
+        'updateStepStatus(i, "Done")
+        'Next
+
         'If gotoStep <= storedProcessSteps.GetUpperBound(0) - 1 Then
-        If activeStep <= storedProcessSteps.GetUpperBound(0) Then
-            'activeStep = gotoStep
-            If ProgressCheckedListBox.CheckedIndices.Contains(gotoStep) Then
-                ProgressCheckedListBox.SetSelected(activeStep, True)
-                updateStepStatus(activeStep, "Doing")
-                Return True
+        Try 'activeStep >= 0 And activeStep <= storedProcessSteps.GetUpperBound(0) 
+            If storedProcessSteps(activeStep).enabled Then
+
+                If ProgressCheckedListBox.CheckedIndices.Contains(storedProcessSteps(activeStep).index) Then
+                    updateCheckListSelected(activeStep)
+                    updateStepStatus(activeStep, "Doing")
+                    Return True
+                Else
+                    updateStepStatus(activeStep, "Skipped")
+                    Return False
+                End If
             Else
-                updateStepStatus(activeStep, "Skipped")
+                'Me.Close()
                 Return False
+
             End If
-        Else
-            'Me.Close()
+        Catch ex As System.IndexOutOfRangeException
+            Logger.Dbg("Steps completed.")
+            Logger.Note("activeStep", activeStep)
             Return False
 
+        End Try
+
+
+    End Function
+
+    Public Function toDoNextStep(Optional ByVal forceSkip As Boolean = False, Optional ByVal forceDo As Boolean = False) As Boolean
+        'Find the next enabled step
+        Dim l_gotoStep As Integer = activeStep 'Start with current step
+
+        ''Keep incrementing the step until we find an enabled step, or run out of steps.
+        'Try
+        '    Do
+        '        'Set this step to Done (whether or not it is enabled)
+        '        updateStepStatus(l_gotoStep, "Done")
+        '        'Progress to next step
+        '        l_gotoStep = l_gotoStep + 1
+        '        'Terminates if last step or enabled step
+        '    Loop Until l_gotoStep >= storedProcessSteps.GetUpperBound(0) Or storedProcessSteps(l_gotoStep).enabled
+        'Catch ex As Exception
+        '    MsgBox(ex.Message)
+        '    MsgBox("Attempt to address a workflow step, outside the the upperbound of the those stored.")
+        'End Try
+
+
+        'Process just one step in the list.
+        'Set this step to Done (whether or not it is enabled)
+        updateStepStatus(l_gotoStep, "Done")
+        'Progress to next step
+        l_gotoStep = l_gotoStep + 1
+
+
+
+        If forceSkip Then
+            updateCheckListChecked(l_gotoStep, False)
+        End If
+        If forceDo Then
+            updateCheckListChecked(l_gotoStep, True)
         End If
 
-    End Function
-
-    Public Function toDoNextStep() As Boolean
-        Dim l_gotoStep As Integer = activeStep + 1
         Return toDoStep(l_gotoStep)
+
     End Function
 
- 
+
+    Public Sub forceSkipNextStep()
+        'unckeck the step and skip over it.
+        Dim lSkipped As Boolean = toDoNextStep(True)
+
+    End Sub
+
+    Public Function forceDoNextStep()
+        'check the next step
+        Return toDoNextStep(False, True)
+
+    End Function
 
     Private Sub ProgressDialogue_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         If percentComplete < 100 Then
@@ -199,7 +283,7 @@
     End Sub
 
     Public Sub stopAndClose()
-        toDoStep(nextStep)
+        Me.toDoStep(nextStep)
     End Sub
 
 

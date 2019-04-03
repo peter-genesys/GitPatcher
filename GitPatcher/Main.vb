@@ -70,6 +70,7 @@
 
         CreateDBFeaturePatchToolStripMenuItem.Visible = showMenuItems
         RebaseFeatureToolStripMenuItem.Visible = showMenuItems
+        RebaseFeatureAdvancedToolStripMenuItem.Visible = showMenuItems
         MergeAndPushFeatureToolStripMenuItem.Visible = showMenuItems
 
     End Sub
@@ -276,10 +277,8 @@
         Apex.restoreCreateApplicationSQL()
     End Sub
 
-
-
     Private Sub RebaseFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureToolStripMenuItem.Click
-        WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"))
+        WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, True)
     End Sub
 
     Private Sub ReleaseToISDEVLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISDEVLToolStripMenuItem.Click
@@ -420,5 +419,15 @@
 
         Dim GitPatcherChild As ApexAppExporter = New ApexAppExporter
 
+    End Sub
+
+    Private Sub DBChangesOnlyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DBChangesOnlyToolStripMenuItem.Click
+
+        WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, False, True)
+
+    End Sub
+
+    Private Sub ApexChangesOnlyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ApexChangesOnlyToolStripMenuItem.Click
+        WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, False)
     End Sub
 End Class

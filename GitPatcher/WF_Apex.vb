@@ -253,7 +253,7 @@
             Common.wait(1000)
         Loop
 
-        If ImportProgress.toDoStep(0) Then
+        If ImportProgress.toDoNextStep Then
             'Choose a tag to import from
             Dim tagnames As Collection = New Collection
             tagnames.Add("HEAD")
@@ -284,10 +284,11 @@
                     Apex.modCreateApplicationSQL(l_label, "")
                 End If
             End If
-
+        Else
+            ImportProgress.forceSkipNextStep()
         End If
 
-        If ImportProgress.toDoStep(2) Then
+        If ImportProgress.toDoNextStep Then
             'set apex to RUN MODE
             Dim l_build_status As String = Nothing
 
@@ -377,7 +378,7 @@
         Try
 
 
-            If ImportProgress.toDoStep(0) Then
+            If ImportProgress.toDoNextStep Then
                 'Choose a tag to import from
                 Dim tagnames As Collection = New Collection
                 tagnames.Add("HEAD")

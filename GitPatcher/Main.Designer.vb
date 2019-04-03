@@ -111,6 +111,9 @@ Partial Class Main
         Me.MergeButton = New System.Windows.Forms.Button()
         Me.TextBoxReleaseId = New System.Windows.Forms.TextBox()
         Me.Label20 = New System.Windows.Forms.Label()
+        Me.RebaseFeatureAdvancedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DBChangesOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ApexChangesOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -125,7 +128,7 @@ Partial Class Main
         '
         'GITToolStripMenuItem1
         '
-        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.CreateDBFeaturePatchToolStripMenuItem, Me.ToolStripSeparator2, Me.RebaseFeatureToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem, Me.TestworkflowToolStripMenuItem, Me.TestrevertToolStripMenuItem, Me.TestCreatePatchSetToolStripMenuItem})
+        Me.GITToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.CreateDBFeaturePatchToolStripMenuItem, Me.ToolStripSeparator2, Me.RebaseFeatureToolStripMenuItem, Me.RebaseFeatureAdvancedToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem, Me.TestworkflowToolStripMenuItem, Me.TestrevertToolStripMenuItem, Me.TestCreatePatchSetToolStripMenuItem})
         Me.GITToolStripMenuItem1.Name = "GITToolStripMenuItem1"
         Me.GITToolStripMenuItem1.Size = New System.Drawing.Size(67, 20)
         Me.GITToolStripMenuItem1.Text = "FEATURE"
@@ -133,61 +136,60 @@ Partial Class Main
         'NewFeatureToolStripMenuItem
         '
         Me.NewFeatureToolStripMenuItem.Name = "NewFeatureToolStripMenuItem"
-        Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
         Me.NewFeatureToolStripMenuItem.Text = "New Feature"
         Me.NewFeatureToolStripMenuItem.ToolTipText = "Branch Feature from master branch"
         '
         'CreateDBFeaturePatchToolStripMenuItem
         '
         Me.CreateDBFeaturePatchToolStripMenuItem.Name = "CreateDBFeaturePatchToolStripMenuItem"
-        Me.CreateDBFeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.CreateDBFeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
         Me.CreateDBFeaturePatchToolStripMenuItem.Text = "Feature Patch"
         Me.CreateDBFeaturePatchToolStripMenuItem.ToolTipText = "Create patch includes Rebase, Merge and Push to master"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(199, 6)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(206, 6)
         '
         'RebaseFeatureToolStripMenuItem
         '
         Me.RebaseFeatureToolStripMenuItem.Name = "RebaseFeatureToolStripMenuItem"
-        Me.RebaseFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.RebaseFeatureToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
         Me.RebaseFeatureToolStripMenuItem.Text = "Rebase Feature"
         Me.RebaseFeatureToolStripMenuItem.ToolTipText = "Rebase Feature branch on master branch"
         '
         'MergeAndPushFeatureToolStripMenuItem
         '
         Me.MergeAndPushFeatureToolStripMenuItem.Name = "MergeAndPushFeatureToolStripMenuItem"
-        Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
         Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature"
         Me.MergeAndPushFeatureToolStripMenuItem.ToolTipText = "Merge Feature branch to master branch"
         '
         'ShowindexToolStripMenuItem
         '
         Me.ShowindexToolStripMenuItem.Name = "ShowindexToolStripMenuItem"
-        Me.ShowindexToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.ShowindexToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
         Me.ShowindexToolStripMenuItem.Text = "showindex"
         Me.ShowindexToolStripMenuItem.Visible = False
         '
         'TestworkflowToolStripMenuItem
         '
         Me.TestworkflowToolStripMenuItem.Name = "TestworkflowToolStripMenuItem"
-        Me.TestworkflowToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.TestworkflowToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
         Me.TestworkflowToolStripMenuItem.Text = "testworkflow"
-        Me.TestworkflowToolStripMenuItem.Visible = False
         '
         'TestrevertToolStripMenuItem
         '
         Me.TestrevertToolStripMenuItem.Name = "TestrevertToolStripMenuItem"
-        Me.TestrevertToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.TestrevertToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
         Me.TestrevertToolStripMenuItem.Text = "testrevert"
         Me.TestrevertToolStripMenuItem.Visible = False
         '
         'TestCreatePatchSetToolStripMenuItem
         '
         Me.TestCreatePatchSetToolStripMenuItem.Name = "TestCreatePatchSetToolStripMenuItem"
-        Me.TestCreatePatchSetToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.TestCreatePatchSetToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
         Me.TestCreatePatchSetToolStripMenuItem.Text = "testCreatePatchSet"
         Me.TestCreatePatchSetToolStripMenuItem.Visible = False
         '
@@ -790,6 +792,25 @@ Partial Class Main
         Me.Label20.TabIndex = 46
         Me.Label20.Text = "Release"
         '
+        'RebaseFeatureAdvancedToolStripMenuItem
+        '
+        Me.RebaseFeatureAdvancedToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DBChangesOnlyToolStripMenuItem, Me.ApexChangesOnlyToolStripMenuItem})
+        Me.RebaseFeatureAdvancedToolStripMenuItem.Name = "RebaseFeatureAdvancedToolStripMenuItem"
+        Me.RebaseFeatureAdvancedToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
+        Me.RebaseFeatureAdvancedToolStripMenuItem.Text = "Rebase Feature Advanced"
+        '
+        'DBChangesOnlyToolStripMenuItem
+        '
+        Me.DBChangesOnlyToolStripMenuItem.Name = "DBChangesOnlyToolStripMenuItem"
+        Me.DBChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.DBChangesOnlyToolStripMenuItem.Text = "DB changes only"
+        '
+        'ApexChangesOnlyToolStripMenuItem
+        '
+        Me.ApexChangesOnlyToolStripMenuItem.Name = "ApexChangesOnlyToolStripMenuItem"
+        Me.ApexChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ApexChangesOnlyToolStripMenuItem.Text = "Apex changes only"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -939,4 +960,7 @@ Partial Class Main
     Friend WithEvents QueuedToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AllApexAppsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ApexAppExporterToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents RebaseFeatureAdvancedToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DBChangesOnlyToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ApexChangesOnlyToolStripMenuItem As ToolStripMenuItem
 End Class
