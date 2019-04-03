@@ -110,6 +110,7 @@ Friend Class WF_rebase
 
         End If
 
+        Dim callStashPop As Boolean = False
         If rebasing.toDoNextStep() Then
             'User chooses to StashSave, but don't bother unless the checkout is also dirty (meaning there is at least 1 staged or unstaged change)
             If GitOp.IsDirty() Then
@@ -118,6 +119,8 @@ Friend Class WF_rebase
                 'StashSave changes
                 'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
                 Tortoise.StashSave(Globals.getRepoPath, "Ensure the current branch [" & currentBranchShort & "] is free of uncommitted changes.", True)
+
+                callStashPop = True
 
             End If
         Else
@@ -129,9 +132,14 @@ Friend Class WF_rebase
                 MsgBox("Files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
                 Tortoise.StashSave(Globals.getRepoPath, "Stash Save to ensure the current branch [" & currentBranchShort & "] contains no staged changes.", True)
 
+                callStashPop = True
+
             End If
 
         End If
+
+        'Update the Check of the Pop Stash step to match what happened at the Stash Save step.
+        rebasing.updateStepChecked(14, callStashPop)
 
 
         If rebasing.toDoNextStep() Then

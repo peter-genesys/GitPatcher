@@ -97,8 +97,14 @@
 
     End Sub
 
- 
- 
+    Public Sub updateStepChecked(ByVal stepNo As Integer, ByVal checked As Boolean)
+
+        Me.ProgressCheckedListBox.SetItemChecked(stepNo, checked)
+
+    End Sub
+
+
+
     ' Loops for a specificied period of time (milliseconds)
     Private Sub pauseToRefreshProgressBar()
         If percentComplete = 100 Then
