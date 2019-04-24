@@ -577,7 +577,7 @@ Public Class PatchFromTags
     & Chr(10) & " ,i_tracking_yn        => '" & track_promotion_yn & "' -" _
     & Chr(10) & " ,i_alt_schema_yn      => '" & alt_schema_yn & "' -" _
     & Chr(10) & " ,i_retired_yn         => 'N' -" _
-    & Chr(10) & " ,i_remove_prereqs     => 'N' );" _
+    & Chr(10) & " ,i_remove_prereqs     => 'Y' );" _
     & Chr(10)
 
 
@@ -654,8 +654,6 @@ Public Class PatchFromTags
             Else
                 l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed;")
             End If
-
-
 
 
 
@@ -1115,6 +1113,16 @@ Public Class PatchFromTags
 
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecuteButton.Click
+
+        'Confirm run against non-VM target
+        If Globals.getDB <> "VM" Then
+            Dim result As Integer = MessageBox.Show("Confirm target is " & Globals.getDB &
+      Chr(10) & "The patch will be installed in " & Globals.getDB & ".", "Confirm Target", MessageBoxButtons.OKCancel)
+            If result = DialogResult.Cancel Then
+                Exit Sub
+            End If
+        End If
+
         'Use patch runner to execute with a master script.
         Dim l_master_filename As String = Nothing
 
@@ -1125,7 +1133,9 @@ Public Class PatchFromTags
         End If
 
         'Use Host class to execute with a master script.
-        Host.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename, Globals.RootPatchDir)
+        Host.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" &
+                Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
+                Environment.NewLine & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename, Globals.RootPatchDir)
 
     End Sub
 

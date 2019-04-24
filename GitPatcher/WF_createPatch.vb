@@ -7,13 +7,7 @@
         Dim currentBranch As String = Globals.currentLongBranch()
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")
         createPatchProgress.MdiParent = GitPatcher
-        createPatchProgress.addStep("Export Apex Apps to " & iBranchType & " branch: " & currentBranch, True, "Using ApexAppExporter, export from the VM any apps you have changed.") ' or the Apex Export workflow")
-        createPatchProgress.addStep("Use SmartGen to spool changed config data: " & currentBranch, False,
-                                    "Did I change any config data?  " &
-                                    "Do I need to spool any table changes or generate related objects?  " &
-                                    "If so, logon to SmartGen, generate and/or spool code. " &
-                                    "Use db-spooler to spool the objects to the local filesystem. " &
-                                    "Then commit it too.")
+
         ' "Regenerate: Menu (new pages, menu changes), Security (new pages, security changes), Tapis (table or view column changes), Domains (new or changed tables or views, new domains or domain ussage changed)")
         createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow")
         createPatchProgress.addStep("Review tags on Branch: " & currentBranch)
@@ -39,35 +33,8 @@
         Loop
 
         If createPatchProgress.toDoNextStep() Then
-            'Export Apex to branch
-            'WF_Apex.ApexExportCommit()
-            'MsgBox("Using Apex2Git, export from the VM any apps you have changed. Apex2Git is in the tools dir.", MsgBoxStyle.Exclamation, "Apex2Git")
-            'Export Apex Apps.
-
-            'Start the ApexAppExporter and wait until it closes.
-            Dim GitPatcherChild As ApexAppExporter = New ApexAppExporter
-
-            'ApexAppExport.MdiParent = GitPatcher
-            'ApexAppExport.Show()
-            'ApexAppExport.wait()
-
-            'Dim newchildform As New ApexAppExporter
-            'newchildform.MdiParent = GitPatcher
-            'newchildform.Show() 'ShowDialog - means wait.
-
-            'Dim exported As Boolean = ApexAppExporter.NewAAE()
-
-        End If
-
-        If createPatchProgress.toDoNextStep() Then
-            'SMARTGEN
-            MsgBox("Please logon to SmartGen and generate/spool objects", MsgBoxStyle.Exclamation, "SmartGen")
-
-        End If
-
-        If createPatchProgress.toDoNextStep() Then
             'Rebase branch
-            l_tag_base = WF_rebase.rebaseBranch(iBranchType, iDBtarget, iRebaseBranchOn)
+            l_tag_base = WF_rebase.rebaseBranch(iBranchType, iDBtarget, iRebaseBranchOn, True, True, True)
 
         End If
 

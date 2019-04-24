@@ -66,6 +66,15 @@ Public Class ApexAppExporter
 
     Private Sub ExportSelectedApps()
 
+        'Confirm run against non-VM source
+        If Globals.getDB <> "VM" Then
+            Dim result As Integer = MessageBox.Show("Confirm source is " & Globals.getDB &
+      Chr(10) & "The Apps will be exported from " & Globals.getDB & ".", "Confirm Source", MessageBoxButtons.OKCancel)
+            If result = DialogResult.Cancel Then
+                Exit Sub
+            End If
+        End If
+
         'Apps to run
         'Retrieve checked node items from the AvailableAppsTreeView as a collection of files.
 

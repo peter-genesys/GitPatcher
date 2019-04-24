@@ -70,6 +70,7 @@
 
         CreateDBFeaturePatchToolStripMenuItem.Visible = showMenuItems
         RebaseFeatureToolStripMenuItem.Visible = showMenuItems
+        RebaseFeatureAdvancedToolStripMenuItem.Visible = showMenuItems
         MergeAndPushFeatureToolStripMenuItem.Visible = showMenuItems
 
     End Sub
@@ -276,10 +277,8 @@
         Apex.restoreCreateApplicationSQL()
     End Sub
 
-
-
     Private Sub RebaseFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureToolStripMenuItem.Click
-        WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"))
+        WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, True)
     End Sub
 
     Private Sub ReleaseToISDEVLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISDEVLToolStripMenuItem.Click
@@ -331,37 +330,28 @@
     Private Sub UnappliedToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UnappliedToolStripMenuItem.Click
 
         'Pull
-        GitOp.pullCurrentBranch()
+        GitOp.pullWhenMasterBranch()
 
         Dim GitPatcherChild As PatchRunner = New PatchRunner("Unapplied")
 
-        'Dim newchildform As New PatchRunner("Unapplied")
-        'newchildform.MdiParent = GitPatcher
-        'newchildform.Show()
     End Sub
 
     Private Sub UninstalledToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UninstalledToolStripMenuItem.Click
 
         'Pull
-        GitOp.pullCurrentBranch()
+        GitOp.pullWhenMasterBranch()
 
         Dim GitPatcherChild As PatchRunner = New PatchRunner("Uninstalled")
 
-        'Dim newchildform As New PatchRunner("Uninstalled")
-        'newchildform.MdiParent = GitPatcher
-        'newchildform.Show()
     End Sub
 
     Private Sub AllPatchesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllPatchesToolStripMenuItem.Click
 
         'Pull
-        GitOp.pullCurrentBranch()
+        GitOp.pullWhenMasterBranch()
 
         Dim GitPatcherChild As PatchRunner = New PatchRunner("All")
 
-        'Dim newchildform As New PatchRunner("All")
-        'newchildform.MdiParent = GitPatcher
-        'newchildform.Show()
     End Sub
 
     Private Sub Import1PageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Import1PageToolStripMenuItem.Click
@@ -410,33 +400,34 @@
     Private Sub QueuedToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles QueuedToolStripMenuItem.Click
 
         'Pull
-        GitOp.pullCurrentBranch()
+        GitOp.pullWhenMasterBranch()
 
         Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("Queued")
 
-        'Dim newchildform As New ApexAppInstaller("Queued")
-        'newchildform.MdiParent = GitPatcher
-        'newchildform.Show()
     End Sub
 
     Private Sub AllApexAppsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllApexAppsToolStripMenuItem.Click
 
         'Pull
-        GitOp.pullCurrentBranch()
+        GitOp.pullWhenMasterBranch()
 
         Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("All")
 
-        'Dim newchildform As New ApexAppInstaller("All")
-        'newchildform.MdiParent = GitPatcher
-        'newchildform.Show()
     End Sub
 
     Private Sub ApexAppExporterToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ApexAppExporterToolStripMenuItem.Click
 
         Dim GitPatcherChild As ApexAppExporter = New ApexAppExporter
-        'Dim newchildform As New ApexAppExporter
-        'newchildform.MdiParent = GitPatcher
-        'newchildform.Show()
 
+    End Sub
+
+    Private Sub DBChangesOnlyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DBChangesOnlyToolStripMenuItem.Click
+
+        WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, False, True)
+
+    End Sub
+
+    Private Sub ApexChangesOnlyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ApexChangesOnlyToolStripMenuItem.Click
+        WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, False)
     End Sub
 End Class
