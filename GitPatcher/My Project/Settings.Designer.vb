@@ -248,6 +248,18 @@ Namespace My
                 Return CType(Me("ReleaseId"),String)
             End Get
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("D:\GitRepos\config")>  _
+        Public Property RunConfigDir() As String
+            Get
+                Return CType(Me("RunConfigDir"),String)
+            End Get
+            Set
+                Me("RunConfigDir") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

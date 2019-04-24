@@ -29,6 +29,9 @@ Partial Class Main
         Me.CreateDBFeaturePatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.RebaseFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RebaseFeatureAdvancedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DBChangesOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ApexChangesOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowindexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TestworkflowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -111,9 +114,6 @@ Partial Class Main
         Me.MergeButton = New System.Windows.Forms.Button()
         Me.TextBoxReleaseId = New System.Windows.Forms.TextBox()
         Me.Label20 = New System.Windows.Forms.Label()
-        Me.RebaseFeatureAdvancedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DBChangesOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ApexChangesOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -159,6 +159,27 @@ Partial Class Main
         Me.RebaseFeatureToolStripMenuItem.Text = "Rebase Feature"
         Me.RebaseFeatureToolStripMenuItem.ToolTipText = "Rebase Feature branch on master branch"
         '
+        'RebaseFeatureAdvancedToolStripMenuItem
+        '
+        Me.RebaseFeatureAdvancedToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DBChangesOnlyToolStripMenuItem, Me.ApexChangesOnlyToolStripMenuItem})
+        Me.RebaseFeatureAdvancedToolStripMenuItem.Name = "RebaseFeatureAdvancedToolStripMenuItem"
+        Me.RebaseFeatureAdvancedToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
+        Me.RebaseFeatureAdvancedToolStripMenuItem.Text = "Rebase Feature Advanced"
+        '
+        'DBChangesOnlyToolStripMenuItem
+        '
+        Me.DBChangesOnlyToolStripMenuItem.Name = "DBChangesOnlyToolStripMenuItem"
+        Me.DBChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.DBChangesOnlyToolStripMenuItem.Text = "DB changes only"
+        Me.DBChangesOnlyToolStripMenuItem.ToolTipText = "I've made only DB changes since my last rebase."
+        '
+        'ApexChangesOnlyToolStripMenuItem
+        '
+        Me.ApexChangesOnlyToolStripMenuItem.Name = "ApexChangesOnlyToolStripMenuItem"
+        Me.ApexChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ApexChangesOnlyToolStripMenuItem.Text = "Apex changes only"
+        Me.ApexChangesOnlyToolStripMenuItem.ToolTipText = "I've made only Apex App changes since my last rebase."
+        '
         'MergeAndPushFeatureToolStripMenuItem
         '
         Me.MergeAndPushFeatureToolStripMenuItem.Name = "MergeAndPushFeatureToolStripMenuItem"
@@ -178,6 +199,8 @@ Partial Class Main
         Me.TestworkflowToolStripMenuItem.Name = "TestworkflowToolStripMenuItem"
         Me.TestworkflowToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
         Me.TestworkflowToolStripMenuItem.Text = "testworkflow"
+        Me.TestworkflowToolStripMenuItem.ToolTipText = "This is for testing the workflow engine."
+        Me.TestworkflowToolStripMenuItem.Visible = False
         '
         'TestrevertToolStripMenuItem
         '
@@ -791,25 +814,6 @@ Partial Class Main
         Me.Label20.Size = New System.Drawing.Size(53, 13)
         Me.Label20.TabIndex = 46
         Me.Label20.Text = "Release"
-        '
-        'RebaseFeatureAdvancedToolStripMenuItem
-        '
-        Me.RebaseFeatureAdvancedToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DBChangesOnlyToolStripMenuItem, Me.ApexChangesOnlyToolStripMenuItem})
-        Me.RebaseFeatureAdvancedToolStripMenuItem.Name = "RebaseFeatureAdvancedToolStripMenuItem"
-        Me.RebaseFeatureAdvancedToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
-        Me.RebaseFeatureAdvancedToolStripMenuItem.Text = "Rebase Feature Advanced"
-        '
-        'DBChangesOnlyToolStripMenuItem
-        '
-        Me.DBChangesOnlyToolStripMenuItem.Name = "DBChangesOnlyToolStripMenuItem"
-        Me.DBChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.DBChangesOnlyToolStripMenuItem.Text = "DB changes only"
-        '
-        'ApexChangesOnlyToolStripMenuItem
-        '
-        Me.ApexChangesOnlyToolStripMenuItem.Name = "ApexChangesOnlyToolStripMenuItem"
-        Me.ApexChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.ApexChangesOnlyToolStripMenuItem.Text = "Apex changes only"
         '
         'Main
         '

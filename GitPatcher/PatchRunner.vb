@@ -436,6 +436,16 @@ Public Class PatchRunner
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
 
+
+        'Confirm run against non-VM target
+        If Globals.getDB <> "VM" Then
+            Dim result As Integer = MessageBox.Show("Confirm target is " & Globals.getDB &
+      Chr(10) & "The Patches will be installed in " & Globals.getDB & ".", "Confirm Target", MessageBoxButtons.OKCancel)
+            If result = DialogResult.Cancel Then
+                Exit Sub
+            End If
+        End If
+
         'Format as script
         Dim masterList As String = Nothing
 
@@ -456,6 +466,7 @@ Public Class PatchRunner
         MasterScriptListBox.Items.Clear()
 
         MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.getDATASOURCE & "'")
+        MasterScriptListBox.Items.Add("@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql")
 
         Dim l_master_filename As String = Nothing
 

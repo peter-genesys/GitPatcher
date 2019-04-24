@@ -1113,6 +1113,16 @@ Public Class PatchFromTags
 
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecuteButton.Click
+
+        'Confirm run against non-VM target
+        If Globals.getDB <> "VM" Then
+            Dim result As Integer = MessageBox.Show("Confirm target is " & Globals.getDB &
+      Chr(10) & "The patch will be installed in " & Globals.getDB & ".", "Confirm Target", MessageBoxButtons.OKCancel)
+            If result = DialogResult.Cancel Then
+                Exit Sub
+            End If
+        End If
+
         'Use patch runner to execute with a master script.
         Dim l_master_filename As String = Nothing
 
@@ -1123,7 +1133,9 @@ Public Class PatchFromTags
         End If
 
         'Use Host class to execute with a master script.
-        Host.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename, Globals.RootPatchDir)
+        Host.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" &
+                Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
+                Environment.NewLine & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename, Globals.RootPatchDir)
 
     End Sub
 

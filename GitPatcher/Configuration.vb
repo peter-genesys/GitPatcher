@@ -19,6 +19,7 @@
         SQLpathTextBox.DataBindings.Add("Text", My.Settings, "SQLpath")
         GitExeTextBox.DataBindings.Add("Text", My.Settings, "GITpath")
         XMLRepoFilePathTextBox.DataBindings.Add("Text", My.Settings, "XMLRepoFilePath")
+        RunConfigDirTextBox.DataBindings.Add("Text", My.Settings, "RunConfigDir")
         'PatchExportPathTextBox.DataBindings.Add("Text", My.Settings, "PatchExportPath")
 
 

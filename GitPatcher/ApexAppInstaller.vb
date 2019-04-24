@@ -202,6 +202,17 @@ Public Class ApexAppInstaller
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles InstallApexAppsButton.Click
 
+
+        'Confirm run against non-VM target
+        If Globals.getDB <> "VM" Then
+            Dim result As Integer = MessageBox.Show("Confirm target is " & Globals.getDB &
+      Chr(10) & "The Apps will be installed in " & Globals.getDB & ", overwriting existing versions.", "Confirm Target", MessageBoxButtons.OKCancel)
+            If result = DialogResult.Cancel Then
+                Exit Sub
+            End If
+        End If
+
+
         'Format as script
         Dim masterList As String = Nothing
 
@@ -234,6 +245,8 @@ Public Class ApexAppInstaller
             MasterScriptListBox.Items.Add("WHENEVER OSERROR EXIT FAILURE ROLLBACK")
             MasterScriptListBox.Items.Add("WHENEVER SQLERROR EXIT FAILURE ROLLBACK")
             MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.getDATASOURCE & "'")
+
+            MasterScriptListBox.Items.Add("@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql")
 
             For Each App In ChosenApps
                 Dim lSchema = Common.getFirstSegment(App, "\")

@@ -699,6 +699,16 @@ Public Class CreateRelease
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
 
+
+        'Confirm run against non-VM target
+        If Globals.getDB <> "VM" Then
+            Dim result As Integer = MessageBox.Show("Confirm target is " & Globals.getDB &
+      Chr(10) & "The release will be installed in " & Globals.getDB & ".", "Confirm Target", MessageBoxButtons.OKCancel)
+            If result = DialogResult.Cancel Then
+                Exit Sub
+            End If
+        End If
+
         Dim l_install_file As String = Nothing
         If UsePatchAdminCheckBox.Checked Then
             l_install_file = "\install.sql"
@@ -707,7 +717,9 @@ Public Class CreateRelease
         End If
 
         'Use Host class to execute with a master script.
-        Host.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" & Chr(10) & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & l_install_file, Globals.RootPatchDir)
+        Host.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" &
+                Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
+                Environment.NewLine & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & l_install_file, Globals.RootPatchDir)
 
 
     End Sub

@@ -30,6 +30,7 @@ Partial Class Configuration
         Dim Label14 As System.Windows.Forms.Label
         Dim Label18 As System.Windows.Forms.Label
         Dim Label24 As System.Windows.Forms.Label
+        Dim Label1 As System.Windows.Forms.Label
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Configuration))
         Me.MailTabPage = New System.Windows.Forms.TabPage()
         Me.TestMailButton = New System.Windows.Forms.Button()
@@ -38,12 +39,13 @@ Partial Class Configuration
         Me.SMTPhostTextBox = New System.Windows.Forms.TextBox()
         Me.RecipientTextBox = New System.Windows.Forms.TextBox()
         Me.PatchTabPage = New System.Windows.Forms.TabPage()
+        Me.XMLButton = New System.Windows.Forms.Button()
         Me.XMLRepoFilePathTextBox = New System.Windows.Forms.TextBox()
         Me.GitExeTextBox = New System.Windows.Forms.TextBox()
         Me.SQLpathTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
-        Me.XMLButton = New System.Windows.Forms.Button()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.RunConfigDirTextBox = New System.Windows.Forms.TextBox()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -51,6 +53,7 @@ Partial Class Configuration
         Label14 = New System.Windows.Forms.Label()
         Label18 = New System.Windows.Forms.Label()
         Label24 = New System.Windows.Forms.Label()
+        Label1 = New System.Windows.Forms.Label()
         Me.MailTabPage.SuspendLayout()
         Me.PatchTabPage.SuspendLayout()
         Me.ConfigTabs.SuspendLayout()
@@ -178,6 +181,8 @@ Partial Class Configuration
         '
         'PatchTabPage
         '
+        Me.PatchTabPage.Controls.Add(Me.RunConfigDirTextBox)
+        Me.PatchTabPage.Controls.Add(Label1)
         Me.PatchTabPage.Controls.Add(Me.XMLButton)
         Me.PatchTabPage.Controls.Add(Me.XMLRepoFilePathTextBox)
         Me.PatchTabPage.Controls.Add(Label24)
@@ -192,6 +197,15 @@ Partial Class Configuration
         Me.PatchTabPage.TabIndex = 1
         Me.PatchTabPage.Text = "Paths"
         Me.PatchTabPage.UseVisualStyleBackColor = True
+        '
+        'XMLButton
+        '
+        Me.XMLButton.Location = New System.Drawing.Point(6, 203)
+        Me.XMLButton.Name = "XMLButton"
+        Me.XMLButton.Size = New System.Drawing.Size(102, 23)
+        Me.XMLButton.TabIndex = 53
+        Me.XMLButton.Text = "Edit XML Config"
+        Me.XMLButton.UseVisualStyleBackColor = True
         '
         'XMLRepoFilePathTextBox
         '
@@ -224,18 +238,25 @@ Partial Class Configuration
         Me.ConfigTabs.Size = New System.Drawing.Size(542, 351)
         Me.ConfigTabs.TabIndex = 0
         '
-        'XMLButton
-        '
-        Me.XMLButton.Location = New System.Drawing.Point(8, 157)
-        Me.XMLButton.Name = "XMLButton"
-        Me.XMLButton.Size = New System.Drawing.Size(102, 23)
-        Me.XMLButton.TabIndex = 53
-        Me.XMLButton.Text = "Edit XML Config"
-        Me.XMLButton.UseVisualStyleBackColor = True
-        '
         'MySettingsBindingSource
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
+        '
+        'RunConfigDirTextBox
+        '
+        Me.RunConfigDirTextBox.Location = New System.Drawing.Point(8, 167)
+        Me.RunConfigDirTextBox.Name = "RunConfigDirTextBox"
+        Me.RunConfigDirTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.RunConfigDirTextBox.TabIndex = 55
+        '
+        'Label1
+        '
+        Label1.AutoSize = True
+        Label1.Location = New System.Drawing.Point(5, 151)
+        Label1.Name = "Label1"
+        Label1.Size = New System.Drawing.Size(79, 13)
+        Label1.TabIndex = 54
+        Label1.Text = "Run Config Dir:"
         '
         'Configuration
         '
@@ -268,4 +289,5 @@ Partial Class Configuration
     Friend WithEvents GitExeTextBox As System.Windows.Forms.TextBox
     Friend WithEvents XMLRepoFilePathTextBox As System.Windows.Forms.TextBox
     Friend WithEvents XMLButton As System.Windows.Forms.Button
+    Friend WithEvents RunConfigDirTextBox As TextBox
 End Class

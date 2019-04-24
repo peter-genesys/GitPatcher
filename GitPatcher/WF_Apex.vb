@@ -154,6 +154,7 @@
         ExportProgress.addStep("Add new files to GIT repository")
         ExportProgress.addStep("Commit valid changes to GIT repository")
         ExportProgress.addStep("Revert invalid changes from your checkout")
+        ExportProgress.addStep("Commit unclean version", False, "As a temporary measure, for release via SVN, you may optionally choose to commit the unclean full export too.")
         ExportProgress.Show()
 
         Do Until ExportProgress.isStarted
@@ -178,6 +179,7 @@
 
             'Use Host class to execute with a master script.
             Host.RunMasterScript("prompt Exporting Apex App " & app_id &
+                Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
                 Environment.NewLine & "connect " & iSchema & "/&" & iSchema & "_password@" & Globals.getDATASOURCE &
                 Environment.NewLine & "Apex export -applicationid " & app_id & " -skipExportDate -split" &
                 Environment.NewLine & "exit;" _
@@ -212,6 +214,16 @@
         If ExportProgress.toDoNextStep() Then
             'Revert invalid changes from your checkout
             Tortoise.Revert(appDir)
+        End If
+
+        If ExportProgress.toDoNextStep() Then
+
+            'Find the application name in the init.sql file.
+            Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
+
+            'Commit valid changes to GIT repository  
+            Tortoise.Commit(parsingSchemaDir, "Apex App " & lAppIdAndName & " (" & Globals.currentTNS & ") " & vbLf & vbLf & "GitPatcher Full-Unclean-Export from " & Globals.currentTNS, True)
+
         End If
 
         ExportProgress.toDoNextStep()

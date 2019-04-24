@@ -16,6 +16,12 @@ Module Globals
     Private gCommit2 As Commit
     Private gRepo As Repository
 
+
+
+    Public Function getRunConfigDir() As String
+        Return Common.dos_path_trailing_slash(My.Settings.RunConfigDir)
+    End Function
+
     Public Sub setRepo(repoPath As String)
         Logger.Dbg("Globals.setRepo(" & repoPath & ")")
         gRepo = New Repository(repoPath)
