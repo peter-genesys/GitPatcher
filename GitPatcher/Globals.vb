@@ -208,6 +208,34 @@ Module Globals
     End Function
 
 
+    Private gARMuser As String
+
+    Public Sub setARMuser(ARMuser As String)
+        Logger.Dbg("Globals.setARMuser(" & ARMuser & ")")
+        gARMuser = ARMuser
+    End Sub
+
+    Public Function getARMuser() As String
+        Return gARMuser
+    End Function
+
+
+    Private gARMpword As String
+
+    Public Sub setARMpword(ARMpword As String)
+        Logger.Dbg("Globals.setARMpword(" & ARMpword & ")")
+        gARMpword = ARMpword
+    End Sub
+
+    Public Function getARMpword() As String
+        Return gARMpword
+    End Function
+
+
+    Public Function getARMconnection() As String
+        Return "Data Source=" & Globals.getDATASOURCE & ";User Id=" & Globals.getARMuser & ";Password=" & Globals.getARMpword & ";"
+    End Function
+
 
     Private gAppCode As String
 

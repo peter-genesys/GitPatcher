@@ -169,14 +169,14 @@ Partial Class Main
         'DBChangesOnlyToolStripMenuItem
         '
         Me.DBChangesOnlyToolStripMenuItem.Name = "DBChangesOnlyToolStripMenuItem"
-        Me.DBChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.DBChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.DBChangesOnlyToolStripMenuItem.Text = "DB changes only"
         Me.DBChangesOnlyToolStripMenuItem.ToolTipText = "I've made only DB changes since my last rebase."
         '
         'ApexChangesOnlyToolStripMenuItem
         '
         Me.ApexChangesOnlyToolStripMenuItem.Name = "ApexChangesOnlyToolStripMenuItem"
-        Me.ApexChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ApexChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.ApexChangesOnlyToolStripMenuItem.Text = "Apex changes only"
         Me.ApexChangesOnlyToolStripMenuItem.ToolTipText = "I've made only Apex App changes since my last rebase."
         '

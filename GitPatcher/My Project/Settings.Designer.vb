@@ -242,7 +242,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.1.11")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.1.12")>  _
         Public ReadOnly Property ReleaseId() As String
             Get
                 Return CType(Me("ReleaseId"),String)

@@ -98,10 +98,7 @@ Public Class PatchRunner
 
         Dim orderedPatches As Collection = New Collection
 
-        'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
-
-        Dim conn As New OracleConnection(oradb)
+        Dim conn As New OracleConnection(Globals.getARMconnection)
         Dim sql As String = Nothing
         Dim cmd As OracleCommand
         Dim dr As OracleDataReader
@@ -131,7 +128,7 @@ Public Class PatchRunner
 
                 For i As Integer = givenPatches.Count To 1 Step -1
 
-                    If givenPatches(i).ToString().Contains(l_patch_name) Then
+                    If Common.getLastSegment(givenPatches(i), "\") = l_patch_name Then
                         orderedPatches.Add(givenPatches(i))
                         givenPatches.Remove(i)
                     End If
@@ -197,16 +194,7 @@ Public Class PatchRunner
 
             Dim patchMatch As Boolean = False
 
-            'Simple but replies on TNSNAMES File
-            Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
-
-            'Harder to get working but no need for TNSNAMES File
-            'Dim oradb As String = "Data Source=(DESCRIPTION=" _
-            '   + "(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=" & Common.getHost & ")(PORT=" & Common.getPort & ")))" _
-            '   + "(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=" & Common.getSid & ")));" _
-            '   + "User Id=patch_admin;Password=patch_admin;"
-
-            Dim conn As New OracleConnection(oradb)
+            Dim conn As New OracleConnection(Globals.getARMconnection)
             Dim sql As String = Nothing
             Dim cmd As OracleCommand
             Dim dr As OracleDataReader
@@ -283,10 +271,7 @@ Public Class PatchRunner
 
         End If
 
-        'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
-
-        Dim conn As New OracleConnection(oradb)
+        Dim conn As New OracleConnection(Globals.getARMconnection)
         Dim sql As String = Nothing
         Dim cmd As OracleCommand
         Dim dr As OracleDataReader
@@ -313,7 +298,7 @@ Public Class PatchRunner
 
                 For i As Integer = 1 To availablePatches.Count
 
-                    If availablePatches(i).ToString().Contains(l_patch_name) Then
+                    If Common.getLastSegment(availablePatches(i), "\") = l_patch_name Then
                         foundPatches.Add(availablePatches(i))
                         l_patch_found = True
                     End If
@@ -575,9 +560,7 @@ Public Class PatchRunner
 
     '
     '       'Simple but relies on TNSNAMES File
-    '       Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
-    '
-    '       Dim conn As New OracleConnection(oradb)
+    '       Dim conn As New OracleConnection(Globals.getARMconnection)
     '       'Dim sql As String = Nothing
     '       Dim cmd As New OracleCommand
     '       'Dim dr As OracleDataReader
@@ -625,10 +608,8 @@ Public Class PatchRunner
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
 
-        'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
 
-        Dim conn As New OracleConnection(oradb)
+        Dim conn As New OracleConnection(Globals.getARMconnection)
         Dim sql As String = Nothing
         Dim cmd As OracleCommand
         Dim dr As OracleDataReader

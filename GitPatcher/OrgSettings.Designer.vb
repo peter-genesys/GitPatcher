@@ -37,6 +37,8 @@ Partial Class OrgSettings
         Dim Label10 As System.Windows.Forms.Label
         Dim Label6 As System.Windows.Forms.Label
         Dim Label11 As System.Windows.Forms.Label
+        Dim Label9 As System.Windows.Forms.Label
+        Dim Label13 As System.Windows.Forms.Label
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(OrgSettings))
         Me.PRODTNSTextBox = New System.Windows.Forms.TextBox()
         Me.ButtonUpdate = New System.Windows.Forms.Button()
@@ -56,6 +58,16 @@ Partial Class OrgSettings
         Me.OrgCodeTextBox = New System.Windows.Forms.TextBox()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.OrgInFeatureCheckBox = New System.Windows.Forms.CheckBox()
+        Me.VMARMuserTextBox = New System.Windows.Forms.TextBox()
+        Me.DevARMuserTextBox = New System.Windows.Forms.TextBox()
+        Me.TestARMuserTextBox = New System.Windows.Forms.TextBox()
+        Me.UatARMuserTextBox = New System.Windows.Forms.TextBox()
+        Me.ProdARMuserTextBox = New System.Windows.Forms.TextBox()
+        Me.VMARMpwordTextBox = New System.Windows.Forms.TextBox()
+        Me.DevARMpwordTextBox = New System.Windows.Forms.TextBox()
+        Me.TestARMpwordTextBox = New System.Windows.Forms.TextBox()
+        Me.UatARMpwordTextBox = New System.Windows.Forms.TextBox()
+        Me.ProdARMpwordTextBox = New System.Windows.Forms.TextBox()
         Label26 = New System.Windows.Forms.Label()
         Label27 = New System.Windows.Forms.Label()
         Label29 = New System.Windows.Forms.Label()
@@ -70,6 +82,8 @@ Partial Class OrgSettings
         Label10 = New System.Windows.Forms.Label()
         Label6 = New System.Windows.Forms.Label()
         Label11 = New System.Windows.Forms.Label()
+        Label9 = New System.Windows.Forms.Label()
+        Label13 = New System.Windows.Forms.Label()
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -211,6 +225,24 @@ Partial Class OrgSettings
         Label11.TabIndex = 64
         Label11.Text = "DEV"
         '
+        'Label9
+        '
+        Label9.AutoSize = True
+        Label9.Location = New System.Drawing.Point(565, 113)
+        Label9.Name = "Label9"
+        Label9.Size = New System.Drawing.Size(56, 13)
+        Label9.TabIndex = 68
+        Label9.Text = "ARM User"
+        '
+        'Label13
+        '
+        Label13.AutoSize = True
+        Label13.Location = New System.Drawing.Point(661, 113)
+        Label13.Name = "Label13"
+        Label13.Size = New System.Drawing.Size(80, 13)
+        Label13.TabIndex = 74
+        Label13.Text = "ARM Password"
+        '
         'PRODTNSTextBox
         '
         Me.PRODTNSTextBox.Location = New System.Drawing.Point(122, 129)
@@ -347,11 +379,93 @@ Partial Class OrgSettings
         Me.OrgInFeatureCheckBox.Text = "Use in Feature" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Path"
         Me.OrgInFeatureCheckBox.UseVisualStyleBackColor = True
         '
+        'VMARMuserTextBox
+        '
+        Me.VMARMuserTextBox.Location = New System.Drawing.Point(567, 293)
+        Me.VMARMuserTextBox.Name = "VMARMuserTextBox"
+        Me.VMARMuserTextBox.Size = New System.Drawing.Size(91, 20)
+        Me.VMARMuserTextBox.TabIndex = 72
+        '
+        'DevARMuserTextBox
+        '
+        Me.DevARMuserTextBox.Location = New System.Drawing.Point(567, 253)
+        Me.DevARMuserTextBox.Name = "DevARMuserTextBox"
+        Me.DevARMuserTextBox.Size = New System.Drawing.Size(91, 20)
+        Me.DevARMuserTextBox.TabIndex = 71
+        '
+        'TestARMuserTextBox
+        '
+        Me.TestARMuserTextBox.Location = New System.Drawing.Point(567, 212)
+        Me.TestARMuserTextBox.Name = "TestARMuserTextBox"
+        Me.TestARMuserTextBox.Size = New System.Drawing.Size(91, 20)
+        Me.TestARMuserTextBox.TabIndex = 70
+        '
+        'UatARMuserTextBox
+        '
+        Me.UatARMuserTextBox.Location = New System.Drawing.Point(567, 171)
+        Me.UatARMuserTextBox.Name = "UatARMuserTextBox"
+        Me.UatARMuserTextBox.Size = New System.Drawing.Size(91, 20)
+        Me.UatARMuserTextBox.TabIndex = 69
+        '
+        'ProdARMuserTextBox
+        '
+        Me.ProdARMuserTextBox.Location = New System.Drawing.Point(568, 129)
+        Me.ProdARMuserTextBox.Name = "ProdARMuserTextBox"
+        Me.ProdARMuserTextBox.Size = New System.Drawing.Size(90, 20)
+        Me.ProdARMuserTextBox.TabIndex = 67
+        '
+        'VMARMpwordTextBox
+        '
+        Me.VMARMpwordTextBox.Location = New System.Drawing.Point(663, 293)
+        Me.VMARMpwordTextBox.Name = "VMARMpwordTextBox"
+        Me.VMARMpwordTextBox.Size = New System.Drawing.Size(91, 20)
+        Me.VMARMpwordTextBox.TabIndex = 78
+        '
+        'DevARMpwordTextBox
+        '
+        Me.DevARMpwordTextBox.Location = New System.Drawing.Point(663, 253)
+        Me.DevARMpwordTextBox.Name = "DevARMpwordTextBox"
+        Me.DevARMpwordTextBox.Size = New System.Drawing.Size(91, 20)
+        Me.DevARMpwordTextBox.TabIndex = 77
+        '
+        'TestARMpwordTextBox
+        '
+        Me.TestARMpwordTextBox.Location = New System.Drawing.Point(663, 212)
+        Me.TestARMpwordTextBox.Name = "TestARMpwordTextBox"
+        Me.TestARMpwordTextBox.Size = New System.Drawing.Size(91, 20)
+        Me.TestARMpwordTextBox.TabIndex = 76
+        '
+        'UatARMpwordTextBox
+        '
+        Me.UatARMpwordTextBox.Location = New System.Drawing.Point(663, 171)
+        Me.UatARMpwordTextBox.Name = "UatARMpwordTextBox"
+        Me.UatARMpwordTextBox.Size = New System.Drawing.Size(91, 20)
+        Me.UatARMpwordTextBox.TabIndex = 75
+        '
+        'ProdARMpwordTextBox
+        '
+        Me.ProdARMpwordTextBox.Location = New System.Drawing.Point(664, 129)
+        Me.ProdARMpwordTextBox.Name = "ProdARMpwordTextBox"
+        Me.ProdARMpwordTextBox.Size = New System.Drawing.Size(90, 20)
+        Me.ProdARMpwordTextBox.TabIndex = 73
+        '
         'OrgSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(586, 351)
+        Me.ClientSize = New System.Drawing.Size(805, 351)
+        Me.Controls.Add(Me.VMARMpwordTextBox)
+        Me.Controls.Add(Me.DevARMpwordTextBox)
+        Me.Controls.Add(Me.TestARMpwordTextBox)
+        Me.Controls.Add(Me.UatARMpwordTextBox)
+        Me.Controls.Add(Label13)
+        Me.Controls.Add(Me.ProdARMpwordTextBox)
+        Me.Controls.Add(Me.VMARMuserTextBox)
+        Me.Controls.Add(Me.DevARMuserTextBox)
+        Me.Controls.Add(Me.TestARMuserTextBox)
+        Me.Controls.Add(Me.UatARMuserTextBox)
+        Me.Controls.Add(Label9)
+        Me.Controls.Add(Me.ProdARMuserTextBox)
         Me.Controls.Add(Me.OrgInFeatureCheckBox)
         Me.Controls.Add(Label6)
         Me.Controls.Add(Label11)
@@ -409,4 +523,14 @@ Partial Class OrgSettings
     Friend WithEvents VMTNSTextBox As System.Windows.Forms.TextBox
     Friend WithEvents OrgCodeTextBox As System.Windows.Forms.TextBox
     Friend WithEvents OrgInFeatureCheckBox As System.Windows.Forms.CheckBox
+    Friend WithEvents VMARMuserTextBox As TextBox
+    Friend WithEvents DevARMuserTextBox As TextBox
+    Friend WithEvents TestARMuserTextBox As TextBox
+    Friend WithEvents UatARMuserTextBox As TextBox
+    Friend WithEvents ProdARMuserTextBox As TextBox
+    Friend WithEvents VMARMpwordTextBox As TextBox
+    Friend WithEvents DevARMpwordTextBox As TextBox
+    Friend WithEvents TestARMpwordTextBox As TextBox
+    Friend WithEvents UatARMpwordTextBox As TextBox
+    Friend WithEvents ProdARMpwordTextBox As TextBox
 End Class
