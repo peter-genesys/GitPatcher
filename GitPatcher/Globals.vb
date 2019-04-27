@@ -22,6 +22,10 @@ Module Globals
         Return Common.dos_path_trailing_slash(My.Settings.RunConfigDir)
     End Function
 
+    Public Function getGPScriptsDir() As String
+        Return Common.dos_path_trailing_slash(My.Settings.GPScriptsDir)
+    End Function
+
     Public Sub setRepo(repoPath As String)
         Logger.Dbg("Globals.setRepo(" & repoPath & ")")
         gRepo = New Repository(repoPath)

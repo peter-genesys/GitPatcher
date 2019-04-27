@@ -451,6 +451,7 @@ Public Class PatchRunner
         MasterScriptListBox.Items.Clear()
 
         MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.getDATASOURCE & "'")
+        MasterScriptListBox.Items.Add("DEFINE load_log_file = '" & Globals.getGPScriptsDir & "loadlogfile.js'")
         MasterScriptListBox.Items.Add("@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql")
 
         Dim l_master_filename As String = Nothing
@@ -460,9 +461,6 @@ Public Class PatchRunner
         Else
             l_master_filename = "install_lite.sql"
         End If
-
-
-
 
 
         Dim ReorderedChanges As Collection = New Collection
@@ -623,7 +621,7 @@ Public Class PatchRunner
 
             sql = "select arm_installer.get_last_patch('" & patch_component & "') patch_name from dual"
 
-            cmd = New OracleCommand(sql, conn)
+        cmd = New OracleCommand(sql, conn)
             cmd.CommandType = CommandType.Text
             dr = cmd.ExecuteReader()
             'cmd.CommandTimeout = 10 'It does timeout, but takes about 15secs regardless of whether this line is here or not.

@@ -260,6 +260,18 @@ Namespace My
                 Me("RunConfigDir") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("D:\GitRepos\GitPatcher\scripts")>  _
+        Public Property GPScriptsDir() As String
+            Get
+                Return CType(Me("GPScriptsDir"),String)
+            End Get
+            Set
+                Me("GPScriptsDir") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

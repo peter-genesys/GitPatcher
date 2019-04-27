@@ -92,40 +92,46 @@ Public Class OrgSettings
 
                 OrgInFeatureCheckBox.Checked = l_OrgNode.Attributes.GetNamedItem("OrgInFeature").Value = "Y"
 
+                'CONNECTIONS
+
                 'Prod
                 PRODTNSTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODTNS").Value
                 PRODCONNECTTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODCONNECT").Value
-
-                ProdARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODARMUSER").Value
-                ProdARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODARMPWORD").Value
 
                 'Uat
                 UATTNSTextBox.Text = l_OrgNode.Attributes.GetNamedItem("UATTNS").Value
                 UATCONNECTTextBox.Text = l_OrgNode.Attributes.GetNamedItem("UATCONNECT").Value
 
-                UatARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("UATARMUSER").Value
-                UatARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("UATARMPWORD").Value
-
                 'Test
                 TESTTNSTextBox.Text = l_OrgNode.Attributes.GetNamedItem("TESTTNS").Value
                 TESTCONNECTTextBox.Text = l_OrgNode.Attributes.GetNamedItem("TESTCONNECT").Value
-
-                TestARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("TESTARMUSER").Value
-                TestARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("TESTARMPWORD").Value
 
                 'Dev
                 DEVTNSTextBox.Text = l_OrgNode.Attributes.GetNamedItem("DEVTNS").Value
                 DEVCONNECTTextBox.Text = l_OrgNode.Attributes.GetNamedItem("DEVCONNECT").Value
 
-                DevARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("DEVARMUSER").Value
-                DevARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("DEVARMPWORD").Value
-
                 'VM
                 VMTNSTextBox.Text = l_OrgNode.Attributes.GetNamedItem("VMTNS").Value
                 VMCONNECTTextBox.Text = l_OrgNode.Attributes.GetNamedItem("VMCONNECT").Value
 
-                VMARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("VMARMUSER").Value
-                VMARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("VMARMPWORD").Value
+                'APEXRM Usernames and Passwords.
+                Try
+                    ProdARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODARMUSER").Value
+                    ProdARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODARMPWORD").Value
+                    UatARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("UATARMUSER").Value
+                    UatARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("UATARMPWORD").Value
+                    TestARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("TESTARMUSER").Value
+                    TestARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("TESTARMPWORD").Value
+                    DevARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("DEVARMUSER").Value
+                    DevARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("DEVARMPWORD").Value
+                    VMARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("VMARMUSER").Value
+                    VMARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("VMARMPWORD").Value
+
+                Catch ex As Exception
+                    Logger.Dbg("New XML vars missing - these will be written when file is saved.")
+                End Try
+
+
 
                 hideUpdateButton()
 

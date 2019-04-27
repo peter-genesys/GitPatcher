@@ -59,5 +59,8 @@
     <Setting Name="RunConfigDir" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\GitRepos\config</Value>
     </Setting>
+    <Setting Name="GPScriptsDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\GitRepos\GitPatcher\scripts</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
