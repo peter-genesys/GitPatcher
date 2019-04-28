@@ -1141,6 +1141,7 @@ Public Class PatchFromTags
 
         'Use Host class to execute with a master script.
         Host.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" &
+                Environment.NewLine & "DEFINE load_log_file = '" & Globals.getGPScriptsDir & "loadlogfile.js " & Globals.getOrgCode & " " & Globals.getDB & "'" &
                 Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
                 Environment.NewLine & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename, Globals.RootPatchDir)
 

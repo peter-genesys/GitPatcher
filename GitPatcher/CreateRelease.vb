@@ -572,7 +572,10 @@ Public Class CreateRelease
                 ReorderedChanges = PatchRunner.ReorderByDependancy(ChosenChanges)
             Else
                 ReorderedChanges = ChosenChanges
-                MsgBox("WARNING: Unordered patches.  Dependancy order is only used when filter is 'Unapplied'")
+                If ChosenChanges.Count > 1 Then
+                    MsgBox("WARNING: Unordered patches.  Dependancy order can only be determined when using the 'Unapplied' filter. " & Chr(10) &
+                           "Please drag and drop to re-order the patches.")
+                End If
             End If
 
 

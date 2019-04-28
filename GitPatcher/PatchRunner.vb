@@ -456,19 +456,13 @@ Public Class PatchRunner
                 Dim l_log_filename As String = dr.Item("log_filename")
                 Dim l_log_found As Boolean = False
 
-                For i As Integer = 1 To availableLogs.Count
-
-                    If availableLogs(i) = l_log_filename Then
-                        foundLogs.Add(l_patch_name)
-                        l_log_found = True
-                    End If
-
-                Next
-
-                If Not l_log_found Then
+                If Not availableLogs.Contains(l_log_filename) Then
                     'MsgBox("WARNING: New Log File " & l_log_filename & " is not present in the log dir " & Globals.RootPatchDir)
                     missingLogs.Add(l_log_filename)
                 End If
+
+                'Include all log files, even if missing.
+                foundLogs.Add(l_patch_name)
 
             End While
 
@@ -488,17 +482,16 @@ Public Class PatchRunner
         If missingLogs.Count > 0 Then
 
             MsgBox("Log Dir: " & Globals.RootPatchDir & Chr(10) & Chr(10) _
-                 & Common.CollectionToText(missingLogs), MsgBoxStyle.Information, "These Log Files are not present")
+                 & Common.CollectionToText(missingLogs), MsgBoxStyle.Information, "These Log Files are missing and will not be loaded.")
 
         End If
 
-        If foundLogs.Count = 0 Then
-            MsgBox("No log files were found.", MsgBoxStyle.Information, "No Logs Found")
-        Else
-            MsgBox("Log Dir: " & Globals.RootPatchDir & Chr(10) & Chr(10) _
-                 & Common.CollectionToText(foundLogs), MsgBoxStyle.Information, "These Log Files were present")
-        End If
-
+        'If foundLogs.Count = 0 Then
+        '    MsgBox("Log files are already loaded.", MsgBoxStyle.Information, "No Logs to be loaded.")
+        'Else
+        '    MsgBox("Log Dir: " & Globals.RootPatchDir & Chr(10) & Chr(10) _
+        '        & Common.CollectionToText(foundLogs), MsgBoxStyle.Information, "These Log Files are to be loaded.")
+        'End If
 
         Cursor.Current = cursorRevert
 
@@ -542,7 +535,7 @@ Public Class PatchRunner
 
             masterLoadLogs = "DEFINE database = '" & Globals.getDATASOURCE & "'" &
                              Environment.NewLine &
-                             "DEFINE load_log_file = '" & Globals.getGPScriptsDir & "loadlogfile.js'" &
+                             "DEFINE load_log_file = '" & Globals.getGPScriptsDir & "loadlogfile.js " & Globals.getOrgCode & " " & Globals.getDB & "'" &
                              Environment.NewLine &
                              "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
                              Environment.NewLine &
@@ -554,7 +547,6 @@ Public Class PatchRunner
 
             Next
 
-            'masterLoadLogs = masterLoadLogs & Environment.NewLine
             masterLoadLogs = masterLoadLogs & Environment.NewLine & "commit;"
             masterLoadLogs = masterLoadLogs & Environment.NewLine & "exit;"
 
@@ -573,7 +565,7 @@ Public Class PatchRunner
         MasterScriptListBox.Items.Clear()
 
         MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.getDATASOURCE & "'")
-        MasterScriptListBox.Items.Add("DEFINE load_log_file = '" & Globals.getGPScriptsDir & "loadlogfile.js'")
+        MasterScriptListBox.Items.Add("DEFINE load_log_file = '" & Globals.getGPScriptsDir & "loadlogfile.js " & Globals.getOrgCode & " " & Globals.getDB & "'")
         MasterScriptListBox.Items.Add("@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql")
 
         Dim l_master_filename As String = Nothing
@@ -801,7 +793,10 @@ Public Class PatchRunner
                 ReorderedChanges = PatchRunner.ReorderByDependancy(ChosenChanges)
             Else
                 ReorderedChanges = ChosenChanges
-                MsgBox("WARNING: Unordered patches.  Dependancy order is only used when filter is 'Unapplied'")
+                If ChosenChanges.Count > 1 Then
+                    MsgBox("WARNING: Unordered patches.  Dependancy order can only be determined when using the 'Unapplied' filter. " & Chr(10) &
+                           "Please drag and drop to re-order the patches.")
+                End If
             End If
 
 
