@@ -47,6 +47,8 @@ Public Class PatchRunner
 
         doSearch()
 
+        'No longer supporting Patch Exports
+        PatchRunnerTabControl.TabPages.Remove(ExportTabPage)
 
         Me.MdiParent = GitPatcher
         Me.Show()
@@ -276,7 +278,7 @@ Public Class PatchRunner
         Dim cmd As OracleCommand
         Dim dr As OracleDataReader
 
-        Dim patchMatch As Boolean = False
+        'Dim patchMatch As Boolean = False
 
         Dim MissingPatchList As Collection = New Collection
 
@@ -418,6 +420,92 @@ Public Class PatchRunner
     End Sub
 
 
+    Public Shared Sub FindNewLogFiles(ByRef foundLogs As Collection)
+
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
+
+        foundLogs.Clear()
+
+        Dim availableLogs As Collection = New Collection
+
+        availableLogs = FileIO.FileList(Globals.RootPatchDir, "*.log", Globals.RootPatchDir, True)
+
+        Dim conn As New OracleConnection(Globals.getARMconnection)
+        Dim sql As String = Nothing
+        Dim cmd As OracleCommand
+        Dim dr As OracleDataReader
+
+        Dim missingLogs As Collection = New Collection
+
+        'Loop through arm_log records that were recently logged by the current OS_USER
+        Try
+
+            conn.Open()
+
+            sql = "select patch_name, log_filename from ARM_LOG_V where ready_to_load = 'Y' and logged_by_me = 'Y'"
+
+
+            cmd = New OracleCommand(sql, conn)
+            cmd.CommandType = CommandType.Text
+            dr = cmd.ExecuteReader()
+
+            While (dr.Read())
+                Dim l_patch_name As String = dr.Item("patch_name")
+                Dim l_log_filename As String = dr.Item("log_filename")
+                Dim l_log_found As Boolean = False
+
+                For i As Integer = 1 To availableLogs.Count
+
+                    If availableLogs(i) = l_log_filename Then
+                        foundLogs.Add(l_patch_name)
+                        l_log_found = True
+                    End If
+
+                Next
+
+                If Not l_log_found Then
+                    'MsgBox("WARNING: New Log File " & l_log_filename & " is not present in the log dir " & Globals.RootPatchDir)
+                    missingLogs.Add(l_log_filename)
+                End If
+
+            End While
+
+            dr.Close()
+
+            conn.Close()
+            conn.Dispose()
+
+
+        Catch ex As Exception ' catches any error
+            MessageBox.Show(ex.Message.ToString())
+        Finally
+            ' In a real application, put cleanup code here.
+
+        End Try
+
+        If missingLogs.Count > 0 Then
+
+            MsgBox("Log Dir: " & Globals.RootPatchDir & Chr(10) & Chr(10) _
+                 & Common.CollectionToText(missingLogs), MsgBoxStyle.Information, "These Log Files are not present")
+
+        End If
+
+        If foundLogs.Count = 0 Then
+            MsgBox("No log files were found.", MsgBoxStyle.Information, "No Logs Found")
+        Else
+            MsgBox("Log Dir: " & Globals.RootPatchDir & Chr(10) & Chr(10) _
+                 & Common.CollectionToText(foundLogs), MsgBoxStyle.Information, "These Log Files were present")
+        End If
+
+
+        Cursor.Current = cursorRevert
+
+    End Sub
+
+
+
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
 
@@ -442,6 +530,40 @@ Public Class PatchRunner
 
         'Use Host class to execute with a master script.
         Host.RunMasterScript(masterList, Globals.RootPatchDir)
+
+        'Find any log files that have not been loaded.
+        Dim newLogs As Collection = New Collection
+        FindNewLogFiles(newLogs)
+
+        If newLogs.Count > 0 Then
+
+            'Format as script
+            Dim masterLoadLogs As String = Nothing
+
+            masterLoadLogs = "DEFINE database = '" & Globals.getDATASOURCE & "'" &
+                             Environment.NewLine &
+                             "DEFINE load_log_file = '" & Globals.getGPScriptsDir & "loadlogfile.js'" &
+                             Environment.NewLine &
+                             "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
+                             Environment.NewLine &
+                             "CONNECT " & Globals.getARMuser & "/" & Globals.getARMpword & "@&&database"
+
+            For i As Integer = 1 To newLogs.Count
+
+                masterLoadLogs = masterLoadLogs & Environment.NewLine & "script &&load_log_file " & newLogs(i)
+
+            Next
+
+            'masterLoadLogs = masterLoadLogs & Environment.NewLine
+            masterLoadLogs = masterLoadLogs & Environment.NewLine & "commit;"
+            masterLoadLogs = masterLoadLogs & Environment.NewLine & "exit;"
+
+            Logger.Dbg(masterLoadLogs, "MasterLoadLogs script")
+
+            'Use Host class to execute with a master script.
+            Host.RunMasterScript(masterLoadLogs, Globals.RootPatchDir)
+
+        End If
 
     End Sub
 

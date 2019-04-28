@@ -1,8 +1,14 @@
 //loadlogfile.js
 
-//This script is called from the GP patch or directly from GP to load a log file into the database.
+function debug(message) {
+  ctx.write(message+ "\n");
+}
 
+//This script is called from the GP patch or directly from GP to load a log file into the database.
+//debug("loadlogfile.js")
 var patch_name  = args[1]; //patch_name, no path
+debug("")
+debug("Loading Log File for " + patch_name)
 
 var helpers = {} ;
 
@@ -24,7 +30,7 @@ helpers.getBlobFromFile=function (fileName){
 };
 
 var log_file = patch_name+".log"; //assume path is not needed, local dir
-
+ 
 /* load binds */
 binds = helpers.getBindMap();
 
@@ -37,5 +43,5 @@ binds.put("blob",blob);
 binds.put("patch_name",patch_name);
 
 /* exec the insert and pass binds */
-var ret = util.execute("update arm_log set log_text = :blob where patch_name = :patch_name",binds);
+var ret = util.execute("update arm_log set log_text = :blob , log_file_status = 'LOADED' where patch_name = :patch_name and log_file_status = 'NEW'",binds);
 

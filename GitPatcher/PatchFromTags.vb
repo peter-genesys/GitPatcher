@@ -668,8 +668,7 @@ Public Class PatchFromTags
 
         If use_arm Then
             'Call LoadLogFile.js to load the log file.
-            l_master_file.WriteLine("PROMPT ")
-            l_master_file.WriteLine("PROMPT Load Log File for &&patch_name")
+            'l_master_file.WriteLine("PROMPT ")
             l_master_file.WriteLine("script &&load_log_file &&patch_name")
 
         End If
