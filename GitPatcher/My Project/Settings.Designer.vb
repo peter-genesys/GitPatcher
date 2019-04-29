@@ -140,7 +140,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("ARM-01.05.APEXRM")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("SDEPLOY-30.01.APEXRM")>  _
         Public ReadOnly Property MinPatch() As String
             Get
                 Return CType(Me("MinPatch"),String)

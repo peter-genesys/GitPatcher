@@ -69,8 +69,15 @@ try {
   binds.put("blob",blob);
 
   /* exec the insert and pass binds */
-  var ret = util.execute("update arm_log set log_text = :blob , log_file_status = 'LOADED' where patch_name = :patch_name and log_file_status = 'NEW'",binds);
- 
+  // f_blob_to_clob is needed for 11g
+  var ret = util.execute("update arm_log set log_text = f_blob_to_clob(:blob) , log_file_status = 'LOADED' where patch_name = :patch_name and log_file_status = 'NEW'",binds);
+  //debug("ret: "+ ret + "\n")
+  
+  var l_count = util.executeReturnOneCol("select count(*) thecount from arm_log where patch_name = :patch_name and log_file_status = 'NEW'",binds);
+  //debug("Count: "+ l_count + "\n")
+  
+  if (l_count == 0) {
+	  debug("Loaded " + log_file)
   /* move log file to the dir */
 
   var sourcePath = java.nio.file.FileSystems.getDefault().getPath(log_file);
@@ -88,14 +95,26 @@ try {
     err.printStackTrace();
   }
  
-
+  
+  } else {
+    debug("Failed to load " + log_file)
+  }
+ 
 }
 catch(err) {
   
   debug("Log File " + log_file + " is missing.")
   //debug(err.message);
   var ret = util.execute("update arm_log set log_file_status = 'MISSING' where patch_name = :patch_name and log_file_status = 'NEW'",binds);
+  //debug("ret: "+ ret + "\n")
+  var l_count = util.executeReturnOneCol("select count(*) thecount from arm_log where patch_name = :patch_name and log_file_status = 'NEW'",binds);
+  //debug("Count: "+ l_count + "\n")
   
+  if (l_count == 0) {
+	  debug("Updated log file status to MISSING. " + log_file)  
+  } else {
+	  debug("Failed to update log file status to MISSING. " + log_file)
+  }
 
 }
 
