@@ -514,8 +514,9 @@ Public Class GitOp
 
 
     Shared Sub pullWhenMasterBranch()
-        'pull current branch - but only when it is master.
-        If CurrentBranch() = "master" Then
+        'pull current branch - but only when it is master, or at least does not contain feature
+        If CurrentBranch() = "master" Or Not CurrentBranch().Contains("feature") Then
+            Logger.Dbg("Pulling " & CurrentBranch())
             pullBranch(CurrentBranch())
         End If
 
