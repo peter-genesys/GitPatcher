@@ -666,17 +666,17 @@ Public Class PatchFromTags
 
         l_master_file.WriteLine("spool off;")
 
-        If use_arm Then
-            'Call LoadLogFile.js to load the log file.
-            'l_master_file.WriteLine("PROMPT ")
-            l_master_file.WriteLine("script &&load_log_file &&patch_name")
-
-        End If
-
         'Now we want to do the Post Completion node.
         l_master_file.WriteLine(l_post_install_list)
 
         l_master_file.WriteLine(Chr(10) & "COMMIT;")
+
+        If use_arm Then
+            'Connect as APEXRM and Call LoadLogFile.js to load the log file.
+            l_master_file.WriteLine("CONNECT &&APEXRM_user/&&APEXRM_password@&&database")
+            l_master_file.WriteLine("script &&load_log_file &&patch_name")
+            l_master_file.WriteLine("COMMIT;")
+        End If
 
         l_master_file.Close()
 
@@ -1144,6 +1144,8 @@ Public Class PatchFromTags
                 Environment.NewLine & "DEFINE load_log_file = '" & Globals.getGPScriptsDir & "loadlogfile.js " & Globals.getOrgCode & " " & Globals.getDB & "'" &
                 Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
                 Environment.NewLine & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename, Globals.RootPatchDir)
+
+        PatchRunner.LoadNewLogFiles()
 
     End Sub
 

@@ -497,33 +497,7 @@ Public Class PatchRunner
 
     End Sub
 
-
-
-
-    Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
-
-
-        'Confirm run against non-VM target
-        If Globals.getDB <> "VM" Then
-            Dim result As Integer = MessageBox.Show("Confirm target is " & Globals.getDB &
-      Chr(10) & "The Patches will be installed in " & Globals.getDB & ".", "Confirm Target", MessageBoxButtons.OKCancel)
-            If result = DialogResult.Cancel Then
-                Exit Sub
-            End If
-        End If
-
-        'Format as script
-        Dim masterList As String = Nothing
-
-        For i As Integer = 0 To MasterScriptListBox.Items.Count - 1
-
-            masterList = masterList & Chr(10) & MasterScriptListBox.Items(i).ToString()
-
-        Next
-
-        'Use Host class to execute with a master script.
-        Host.RunMasterScript(masterList, Globals.RootPatchDir)
-
+    Shared Sub LoadNewLogFiles()
         'Find any log files that have not been loaded.
         Dim newLogs As Collection = New Collection
         FindNewLogFiles(newLogs)
@@ -556,6 +530,34 @@ Public Class PatchRunner
             Host.RunMasterScript(masterLoadLogs, Globals.RootPatchDir)
 
         End If
+    End Sub
+
+
+    Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
+
+
+        'Confirm run against non-VM target
+        If Globals.getDB <> "VM" Then
+            Dim result As Integer = MessageBox.Show("Confirm target is " & Globals.getDB &
+      Chr(10) & "The Patches will be installed in " & Globals.getDB & ".", "Confirm Target", MessageBoxButtons.OKCancel)
+            If result = DialogResult.Cancel Then
+                Exit Sub
+            End If
+        End If
+
+        'Format as script
+        Dim masterList As String = Nothing
+
+        For i As Integer = 0 To MasterScriptListBox.Items.Count - 1
+
+            masterList = masterList & Chr(10) & MasterScriptListBox.Items(i).ToString()
+
+        Next
+
+        'Use Host class to execute with a master script.
+        Host.RunMasterScript(masterList, Globals.RootPatchDir)
+
+        LoadNewLogFiles()
 
     End Sub
 
