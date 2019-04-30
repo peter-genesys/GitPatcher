@@ -50,6 +50,8 @@ Public Class OrgSettings
                 Globals.setOrgInFeature(l_OrgNode.Attributes.GetNamedItem("OrgInFeature").Value)
                 Globals.setTNS(l_OrgNode.Attributes.GetNamedItem(ipromo & "TNS").Value)
                 Globals.setCONNECT(l_OrgNode.Attributes.GetNamedItem(ipromo & "CONNECT").Value)
+                Globals.setARMuser(l_OrgNode.Attributes.GetNamedItem(ipromo & "ARMUSER").Value)
+                Globals.setARMpword(l_OrgNode.Attributes.GetNamedItem(ipromo & "ARMPWORD").Value)
 
             End If
 
@@ -73,7 +75,6 @@ Public Class OrgSettings
         Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode(repoOrgSearch)
 
 
-
         'l_GitReposXML.SelectNodes("/repos/repo/" & RepoSettings.RepoComboBox.Text)
 
         Dim l_found As Boolean = False
@@ -90,6 +91,8 @@ Public Class OrgSettings
                 OrgCodeTextBox.Text = l_OrgNode.Attributes.GetNamedItem("OrgCode").Value
 
                 OrgInFeatureCheckBox.Checked = l_OrgNode.Attributes.GetNamedItem("OrgInFeature").Value = "Y"
+
+                'CONNECTIONS
 
                 'Prod
                 PRODTNSTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODTNS").Value
@@ -110,6 +113,25 @@ Public Class OrgSettings
                 'VM
                 VMTNSTextBox.Text = l_OrgNode.Attributes.GetNamedItem("VMTNS").Value
                 VMCONNECTTextBox.Text = l_OrgNode.Attributes.GetNamedItem("VMCONNECT").Value
+
+                'APEXRM Usernames and Passwords.
+                Try
+                    ProdARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODARMUSER").Value
+                    ProdARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("PRODARMPWORD").Value
+                    UatARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("UATARMUSER").Value
+                    UatARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("UATARMPWORD").Value
+                    TestARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("TESTARMUSER").Value
+                    TestARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("TESTARMPWORD").Value
+                    DevARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("DEVARMUSER").Value
+                    DevARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("DEVARMPWORD").Value
+                    VMARMuserTextBox.Text = l_OrgNode.Attributes.GetNamedItem("VMARMUSER").Value
+                    VMARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("VMARMPWORD").Value
+
+                Catch ex As Exception
+                    Logger.Dbg("New XML vars missing - these will be written when file is saved.")
+                End Try
+
+
 
                 hideUpdateButton()
 
@@ -237,25 +259,37 @@ Public Class OrgSettings
             .WriteAttributeString("PRODTNS", PRODTNSTextBox.Text)
             .WriteAttributeString("PRODCONNECT", PRODCONNECTTextBox.Text)
 
+            .WriteAttributeString("PRODARMUSER", ProdARMuserTextBox.Text)
+            .WriteAttributeString("PRODARMPWORD", ProdARMpwordTextBox.Text)
 
             'Uat
             .WriteAttributeString("UATTNS", UATTNSTextBox.Text)
             .WriteAttributeString("UATCONNECT", UATCONNECTTextBox.Text)
+
+            .WriteAttributeString("UATARMUSER", UatARMuserTextBox.Text)
+            .WriteAttributeString("UATARMPWORD", UatARMpwordTextBox.Text)
 
 
             'Test
             .WriteAttributeString("TESTTNS", TESTTNSTextBox.Text)
             .WriteAttributeString("TESTCONNECT", TESTCONNECTTextBox.Text)
 
+            .WriteAttributeString("TESTARMUSER", TestARMuserTextBox.Text)
+            .WriteAttributeString("TESTARMPWORD", TestARMpwordTextBox.Text)
 
             'Dev
             .WriteAttributeString("DEVTNS", DEVTNSTextBox.Text)
             .WriteAttributeString("DEVCONNECT", DEVCONNECTTextBox.Text)
 
+            .WriteAttributeString("DEVARMUSER", DevARMuserTextBox.Text)
+            .WriteAttributeString("DEVARMPWORD", DevARMpwordTextBox.Text)
+
             'VM
             .WriteAttributeString("VMTNS", VMTNSTextBox.Text)
             .WriteAttributeString("VMCONNECT", VMCONNECTTextBox.Text)
 
+            .WriteAttributeString("VMARMUSER", VMARMuserTextBox.Text)
+            .WriteAttributeString("VMARMPWORD", VMARMpwordTextBox.Text)
 
             .WriteEndElement()
             .Close()
@@ -392,6 +426,7 @@ Public Class OrgSettings
     Private Sub PRODCONNECTTextBox_TextChanged(sender As Object, e As EventArgs) Handles PRODCONNECTTextBox.TextChanged
         showUpdateButton()
     End Sub
+
     Private Sub UATTNSTextBox_TextChanged(sender As Object, e As EventArgs) Handles UATTNSTextBox.TextChanged
         showUpdateButton()
     End Sub
@@ -420,14 +455,53 @@ Public Class OrgSettings
     Private Sub VMCONNECTTextBox_TextChanged(sender As Object, e As EventArgs) Handles VMCONNECTTextBox.TextChanged
         showUpdateButton()
     End Sub
- 
- 
-  
-    Private Sub Label2_Click(sender As Object, e As EventArgs)
-
-    End Sub
 
     Private Sub OrgInFeatureCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles OrgInFeatureCheckBox.CheckedChanged
         showUpdateButton()
     End Sub
+
+    Private Sub ProdARMuserTextBox_TextChanged(sender As Object, e As EventArgs) Handles ProdARMuserTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+
+    Private Sub ProdARMpwordTextBox_TextChanged(sender As Object, e As EventArgs) Handles ProdARMpwordTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+
+    Private Sub UatARMuserTextBox_TextChanged(sender As Object, e As EventArgs) Handles UatARMuserTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+
+    Private Sub UatARMpwordTextBox_TextChanged(sender As Object, e As EventArgs) Handles UatARMpwordTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+
+    Private Sub TestARMuserTextBox_TextChanged(sender As Object, e As EventArgs) Handles TestARMuserTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+
+    Private Sub TestARMpwordTextBox_TextChanged(sender As Object, e As EventArgs) Handles TestARMpwordTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+
+    Private Sub DevARMuserTextBox_TextChanged(sender As Object, e As EventArgs) Handles DevARMuserTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+
+    Private Sub DevARMpwordTextBox_TextChanged(sender As Object, e As EventArgs) Handles DevARMpwordTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+
+    Private Sub VMARMuserTextBox_TextChanged(sender As Object, e As EventArgs) Handles VMARMuserTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+
+    Private Sub VMARMpwordTextBox_TextChanged(sender As Object, e As EventArgs) Handles VMARMpwordTextBox.TextChanged
+        showUpdateButton()
+    End Sub
+
+    Private Sub Label2_Click(sender As Object, e As EventArgs)
+
+    End Sub
+
 End Class

@@ -22,6 +22,10 @@ Module Globals
         Return Common.dos_path_trailing_slash(My.Settings.RunConfigDir)
     End Function
 
+    Public Function getGPScriptsDir() As String
+        Return Common.dos_path_trailing_slash(My.Settings.GPScriptsDir)
+    End Function
+
     Public Sub setRepo(repoPath As String)
         Logger.Dbg("Globals.setRepo(" & repoPath & ")")
         gRepo = New Repository(repoPath)
@@ -207,6 +211,34 @@ Module Globals
         Return If(gCONNECT, gTNS)
     End Function
 
+
+    Private gARMuser As String
+
+    Public Sub setARMuser(ARMuser As String)
+        Logger.Dbg("Globals.setARMuser(" & ARMuser & ")")
+        gARMuser = ARMuser
+    End Sub
+
+    Public Function getARMuser() As String
+        Return gARMuser
+    End Function
+
+
+    Private gARMpword As String
+
+    Public Sub setARMpword(ARMpword As String)
+        Logger.Dbg("Globals.setARMpword(" & ARMpword & ")")
+        gARMpword = ARMpword
+    End Sub
+
+    Public Function getARMpword() As String
+        Return gARMpword
+    End Function
+
+
+    Public Function getARMconnection() As String
+        Return "Data Source=" & Globals.getDATASOURCE & ";User Id=" & Globals.getARMuser & ";Password=" & Globals.getARMpword & ";"
+    End Function
 
 
     Private gAppCode As String

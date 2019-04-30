@@ -172,3 +172,6 @@ D:\GitRepos\GitPatcher-0.1\GitPatcher\obj\Release\GitPatcher.xml
 D:\GitRepos\GitPatcher-0.1\GitPatcher\obj\Release\GitPatcher.pdb
 D:\GitRepos\GitPatcher-0.1\GitPatcher\obj\Release\GitPatcher.ApexAppInstaller.resources
 D:\GitRepos\GitPatcher-0.1\GitPatcher\obj\Release\GitPatcher.ApexAppExporter.resources
+D:\GitRepos\GitPatcher\GitPatcher\bin\Release\TreeViewDraggableNodes2Levels.dll
+D:\GitRepos\GitPatcher\GitPatcher\obj\Release\GitPatcher.ApexAppInstaller.resources
+D:\GitRepos\GitPatcher\GitPatcher\obj\Release\GitPatcher.ApexAppExporter.resources

@@ -47,6 +47,8 @@ Public Class PatchRunner
 
         doSearch()
 
+        'No longer supporting Patch Exports
+        PatchRunnerTabControl.TabPages.Remove(ExportTabPage)
 
         Me.MdiParent = GitPatcher
         Me.Show()
@@ -98,10 +100,7 @@ Public Class PatchRunner
 
         Dim orderedPatches As Collection = New Collection
 
-        'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
-
-        Dim conn As New OracleConnection(oradb)
+        Dim conn As New OracleConnection(Globals.getARMconnection)
         Dim sql As String = Nothing
         Dim cmd As OracleCommand
         Dim dr As OracleDataReader
@@ -131,7 +130,7 @@ Public Class PatchRunner
 
                 For i As Integer = givenPatches.Count To 1 Step -1
 
-                    If givenPatches(i).ToString().Contains(l_patch_name) Then
+                    If Common.getLastSegment(givenPatches(i), "\") = l_patch_name Then
                         orderedPatches.Add(givenPatches(i))
                         givenPatches.Remove(i)
                     End If
@@ -197,16 +196,7 @@ Public Class PatchRunner
 
             Dim patchMatch As Boolean = False
 
-            'Simple but replies on TNSNAMES File
-            Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
-
-            'Harder to get working but no need for TNSNAMES File
-            'Dim oradb As String = "Data Source=(DESCRIPTION=" _
-            '   + "(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=" & Common.getHost & ")(PORT=" & Common.getPort & ")))" _
-            '   + "(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=" & Common.getSid & ")));" _
-            '   + "User Id=patch_admin;Password=patch_admin;"
-
-            Dim conn As New OracleConnection(oradb)
+            Dim conn As New OracleConnection(Globals.getARMconnection)
             Dim sql As String = Nothing
             Dim cmd As OracleCommand
             Dim dr As OracleDataReader
@@ -283,15 +273,12 @@ Public Class PatchRunner
 
         End If
 
-        'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
-
-        Dim conn As New OracleConnection(oradb)
+        Dim conn As New OracleConnection(Globals.getARMconnection)
         Dim sql As String = Nothing
         Dim cmd As OracleCommand
         Dim dr As OracleDataReader
 
-        Dim patchMatch As Boolean = False
+        'Dim patchMatch As Boolean = False
 
         Dim MissingPatchList As Collection = New Collection
 
@@ -313,7 +300,7 @@ Public Class PatchRunner
 
                 For i As Integer = 1 To availablePatches.Count
 
-                    If availablePatches(i).ToString().Contains(l_patch_name) Then
+                    If Common.getLastSegment(availablePatches(i), "\") = l_patch_name Then
                         foundPatches.Add(availablePatches(i))
                         l_patch_found = True
                     End If
@@ -433,6 +420,118 @@ Public Class PatchRunner
     End Sub
 
 
+    Public Shared Sub FindNewLogFiles(ByRef foundLogs As Collection)
+
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
+
+        foundLogs.Clear()
+
+        Dim availableLogs As Collection = New Collection
+
+        availableLogs = FileIO.FileList(Globals.RootPatchDir, "*.log", Globals.RootPatchDir, True)
+
+        Dim conn As New OracleConnection(Globals.getARMconnection)
+        Dim sql As String = Nothing
+        Dim cmd As OracleCommand
+        Dim dr As OracleDataReader
+
+        Dim missingLogs As Collection = New Collection
+
+        'Loop through arm_log records that were recently logged by the current OS_USER
+        Try
+
+            conn.Open()
+
+            sql = "select patch_name, log_filename from ARM_LOG_V where ready_to_load = 'Y' and logged_by_me = 'Y'"
+
+
+            cmd = New OracleCommand(sql, conn)
+            cmd.CommandType = CommandType.Text
+            dr = cmd.ExecuteReader()
+
+            While (dr.Read())
+                Dim l_patch_name As String = dr.Item("patch_name")
+                Dim l_log_filename As String = dr.Item("log_filename")
+                Dim l_log_found As Boolean = False
+
+                If Not availableLogs.Contains(l_log_filename) Then
+                    'MsgBox("WARNING: New Log File " & l_log_filename & " is not present in the log dir " & Globals.RootPatchDir)
+                    missingLogs.Add(l_log_filename)
+                End If
+
+                'Include all log files, even if missing.
+                foundLogs.Add(l_patch_name)
+
+            End While
+
+            dr.Close()
+
+            conn.Close()
+            conn.Dispose()
+
+
+        Catch ex As Exception ' catches any error
+            MessageBox.Show(ex.Message.ToString())
+        Finally
+            ' In a real application, put cleanup code here.
+
+        End Try
+
+        If missingLogs.Count > 0 Then
+
+            MsgBox("Log Dir: " & Globals.RootPatchDir & Chr(10) & Chr(10) _
+                 & Common.CollectionToText(missingLogs), MsgBoxStyle.Information, "These Log Files are missing and will not be loaded.")
+
+        End If
+
+        'If foundLogs.Count = 0 Then
+        '    MsgBox("Log files are already loaded.", MsgBoxStyle.Information, "No Logs to be loaded.")
+        'Else
+        '    MsgBox("Log Dir: " & Globals.RootPatchDir & Chr(10) & Chr(10) _
+        '        & Common.CollectionToText(foundLogs), MsgBoxStyle.Information, "These Log Files are to be loaded.")
+        'End If
+
+        Cursor.Current = cursorRevert
+
+    End Sub
+
+    Shared Sub LoadNewLogFiles()
+        'Find any log files that have not been loaded.
+        Dim newLogs As Collection = New Collection
+        FindNewLogFiles(newLogs)
+
+        If newLogs.Count > 0 Then
+
+            'Format as script
+            Dim masterLoadLogs As String = Nothing
+
+            masterLoadLogs = "DEFINE database = '" & Globals.getDATASOURCE & "'" &
+                             Environment.NewLine &
+                             "DEFINE load_log_file = '" & Globals.getGPScriptsDir & "loadlogfile.js " & Globals.getOrgCode & " " & Globals.getDB & "'" &
+                             Environment.NewLine &
+                             "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
+                             Environment.NewLine &
+                             "CONNECT " & Globals.getARMuser & "/" & Globals.getARMpword & "@&&database"
+
+            For i As Integer = 1 To newLogs.Count
+
+                masterLoadLogs = masterLoadLogs & Environment.NewLine & "script &&load_log_file " & newLogs(i)
+
+            Next
+
+            masterLoadLogs = masterLoadLogs & Environment.NewLine & "commit;"
+            masterLoadLogs = masterLoadLogs & Environment.NewLine & "exit;"
+
+            Logger.Dbg(masterLoadLogs, "MasterLoadLogs script")
+
+            'Use Host class to execute with a master script.
+            Host.RunMasterScript(masterLoadLogs, Globals.RootPatchDir)
+
+        End If
+    End Sub
+
 
     Private Sub ExecutePatchButton_Click(sender As Object, e As EventArgs) Handles ExecutePatchButton.Click
 
@@ -458,6 +557,8 @@ Public Class PatchRunner
         'Use Host class to execute with a master script.
         Host.RunMasterScript(masterList, Globals.RootPatchDir)
 
+        LoadNewLogFiles()
+
     End Sub
 
 
@@ -466,6 +567,7 @@ Public Class PatchRunner
         MasterScriptListBox.Items.Clear()
 
         MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.getDATASOURCE & "'")
+        MasterScriptListBox.Items.Add("DEFINE load_log_file = '" & Globals.getGPScriptsDir & "loadlogfile.js " & Globals.getOrgCode & " " & Globals.getDB & "'")
         MasterScriptListBox.Items.Add("@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql")
 
         Dim l_master_filename As String = Nothing
@@ -475,9 +577,6 @@ Public Class PatchRunner
         Else
             l_master_filename = "install_lite.sql"
         End If
-
-
-
 
 
         Dim ReorderedChanges As Collection = New Collection
@@ -575,9 +674,7 @@ Public Class PatchRunner
 
     '
     '       'Simple but relies on TNSNAMES File
-    '       Dim oradb As String = "Data Source=" & Globals.currentTNS & ";User Id=patch_admin;Password=patch_admin;"
-    '
-    '       Dim conn As New OracleConnection(oradb)
+    '       Dim conn As New OracleConnection(Globals.getARMconnection)
     '       'Dim sql As String = Nothing
     '       Dim cmd As New OracleCommand
     '       'Dim dr As OracleDataReader
@@ -625,10 +722,8 @@ Public Class PatchRunner
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
 
-        'Simple but replies on TNSNAMES File
-        Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
 
-        Dim conn As New OracleConnection(oradb)
+        Dim conn As New OracleConnection(Globals.getARMconnection)
         Dim sql As String = Nothing
         Dim cmd As OracleCommand
         Dim dr As OracleDataReader
@@ -642,7 +737,7 @@ Public Class PatchRunner
 
             sql = "select arm_installer.get_last_patch('" & patch_component & "') patch_name from dual"
 
-            cmd = New OracleCommand(sql, conn)
+        cmd = New OracleCommand(sql, conn)
             cmd.CommandType = CommandType.Text
             dr = cmd.ExecuteReader()
             'cmd.CommandTimeout = 10 'It does timeout, but takes about 15secs regardless of whether this line is here or not.
@@ -700,7 +795,10 @@ Public Class PatchRunner
                 ReorderedChanges = PatchRunner.ReorderByDependancy(ChosenChanges)
             Else
                 ReorderedChanges = ChosenChanges
-                MsgBox("WARNING: Unordered patches.  Dependancy order is only used when filter is 'Unapplied'")
+                If ChosenChanges.Count > 1 Then
+                    MsgBox("WARNING: Unordered patches.  Dependancy order can only be determined when using the 'Unapplied' filter. " & Chr(10) &
+                           "Please drag and drop to re-order the patches.")
+                End If
             End If
 
 

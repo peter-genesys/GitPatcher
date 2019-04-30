@@ -77,9 +77,7 @@ Public Class ApexAppInstaller
 
         If queuedOnly Then
 
-            Dim oradb As String = "Data Source=" & Globals.getDATASOURCE & ";User Id=apexrm;Password=apexrm;"
-
-            Dim conn As New OracleConnection(oradb)
+            Dim conn As New OracleConnection(Globals.getARMconnection)
             Dim sql As String = Nothing
             Dim cmd As OracleCommand
             Dim dr As OracleDataReader
@@ -252,9 +250,9 @@ Public Class ApexAppInstaller
                 Dim lSchema = Common.getFirstSegment(App, "\")
                 Dim lAppId = Common.getLastSegment(App, "\")
 
-                MasterScriptListBox.Items.Add("CONNECT " & lSchema & "/&&" & lSchema & "_password@&&database")
+                MasterScriptListBox.Items.Add("CONNECT &&" & lSchema & "_user/&&" & lSchema & "_password@&&database")
                 MasterScriptListBox.Items.Add("execute arm_installer.set_security_for_apex_import(-")
-                MasterScriptListBox.Items.Add("     i_schema => '" & lSchema & "'-")
+                MasterScriptListBox.Items.Add("     i_schema => '&&" & lSchema & "_USER'-")
                 MasterScriptListBox.Items.Add("   , i_workspace => '&&" & lAppId & "_WORKSPACE');")
                 MasterScriptListBox.Items.Add("cd " & App)
                 MasterScriptListBox.Items.Add("@install.sql")

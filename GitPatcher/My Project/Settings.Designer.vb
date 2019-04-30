@@ -140,7 +140,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("ARM-01.05.APEXRM")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("SDEPLOY-30.01.APEXRM")>  _
         Public ReadOnly Property MinPatch() As String
             Get
                 Return CType(Me("MinPatch"),String)
@@ -242,7 +242,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.1.11")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.1.12")>  _
         Public ReadOnly Property ReleaseId() As String
             Get
                 Return CType(Me("ReleaseId"),String)
@@ -258,6 +258,18 @@ Namespace My
             End Get
             Set
                 Me("RunConfigDir") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("D:\GitRepos\GitPatcher\scripts")>  _
+        Public Property GPScriptsDir() As String
+            Get
+                Return CType(Me("GPScriptsDir"),String)
+            End Get
+            Set
+                Me("GPScriptsDir") = value
             End Set
         End Property
     End Class

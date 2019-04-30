@@ -671,6 +671,13 @@ Public Class PatchFromTags
 
         l_master_file.WriteLine(Chr(10) & "COMMIT;")
 
+        If use_arm Then
+            'Connect as APEXRM and Call LoadLogFile.js to load the log file.
+            l_master_file.WriteLine("CONNECT &&APEXRM_user/&&APEXRM_password@&&database")
+            l_master_file.WriteLine("script &&load_log_file &&patch_name")
+            l_master_file.WriteLine("COMMIT;")
+        End If
+
         l_master_file.Close()
 
         'Convert the file to unix
@@ -1134,8 +1141,11 @@ Public Class PatchFromTags
 
         'Use Host class to execute with a master script.
         Host.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" &
+                Environment.NewLine & "DEFINE load_log_file = '" & Globals.getGPScriptsDir & "loadlogfile.js " & Globals.getOrgCode & " " & Globals.getDB & "'" &
                 Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
                 Environment.NewLine & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename, Globals.RootPatchDir)
+
+        PatchRunner.LoadNewLogFiles()
 
     End Sub
 
