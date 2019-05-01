@@ -333,6 +333,7 @@
         GitOp.pullWhenMasterBranch()
 
         Dim GitPatcherChild As PatchRunner = New PatchRunner("Unapplied")
+        Dim GitPatcherChild2 As ApexAppInstaller = New ApexAppInstaller("Queued")
 
     End Sub
 
@@ -342,6 +343,7 @@
         GitOp.pullWhenMasterBranch()
 
         Dim GitPatcherChild As PatchRunner = New PatchRunner("Uninstalled")
+        Dim GitPatcherChild2 As ApexAppInstaller = New ApexAppInstaller("Queued")
 
     End Sub
 
@@ -351,6 +353,7 @@
         GitOp.pullWhenMasterBranch()
 
         Dim GitPatcherChild As PatchRunner = New PatchRunner("All")
+        Dim GitPatcherChild2 As ApexAppInstaller = New ApexAppInstaller("Queued")
 
     End Sub
 

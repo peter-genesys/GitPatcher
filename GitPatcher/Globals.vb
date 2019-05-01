@@ -1,6 +1,5 @@
 ﻿Imports LibGit2Sharp
 
-
 Module Globals
 
     Private gFlow As String = My.Settings.Flow
@@ -15,7 +14,7 @@ Module Globals
     Private gCommit1 As Commit
     Private gCommit2 As Commit
     Private gRepo As Repository
-
+    Private gRepoConfig As IDictionary
 
 
     Public Function getRunConfigDir() As String
@@ -29,11 +28,27 @@ Module Globals
     Public Sub setRepo(repoPath As String)
         Logger.Dbg("Globals.setRepo(" & repoPath & ")")
         gRepo = New Repository(repoPath)
+        gRepoConfig = New Dictionary(Of String, String)
+
+        'Convert the gRepo.Config collection to a dictionary, for ease of searching later.
+        For i As Integer = 0 To gRepo.Config.Count - 1
+            Try
+                gRepoConfig.Add(gRepo.Config(i).Key, gRepo.Config(i).Value)
+            Catch ex As Exception
+                'Ignore duplicate entries
+                Logger.Dbg(ex.Message & gRepo.Config(i).Key)
+            End Try
+        Next
+
     End Sub
 
 
     Public Function getRepo() As Repository
         Return gRepo
+    End Function
+
+    Public Function getRepoConfig() As IDictionary
+        Return gRepoConfig
     End Function
 
     Public Sub setCommits(commit1 As Commit, commit2 As Commit)
