@@ -29,7 +29,7 @@
 
         If newFeature.toDoNextStep() Then
             'Create and Switch to new branch
-            Dim branchName As String = InputBox("Enter the Issue Id.", "Issue Id for new " & iBranchType & " Branch", Globals.getJira)
+            Dim branchName As String = InputBox("Enter the Issue Id.", "Issue Id for new " & iBranchType & " Branch", Globals.getJira).ToUpper 'Ensure UPPERCASE
             Dim newBranch As String = iBranchType
 
             'Derive the feature code from app and org codes.

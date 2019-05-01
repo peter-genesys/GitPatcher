@@ -38,11 +38,9 @@ Public Class ApexAppInstaller
 
         UsePatchAdminCheckBox.Checked = Globals.getUseARM
 
-        doSearch()
-
-
         Me.MdiParent = GitPatcher
         Me.Show()
+        doSearch()
         Wait()
 
     End Sub

@@ -292,8 +292,9 @@ Public Class GitOp
                     Dim options As MergeOptions = New MergeOptions()
                     options.FastForwardStrategy = FastForwardStrategy.NoFastForward
 
-                    Dim UserName As String = Globals.getRepo.Config(10).Value
-                    Dim UserEmail As String = Globals.getRepo.Config(11).Value
+                    Dim UserName As String = Globals.getRepoConfig("user.name")
+                    Dim UserEmail As String = Globals.getRepoConfig("user.email")
+
                     Logger.Note("UserName", UserName)
                     Logger.Note("UserEmail", UserEmail)
 

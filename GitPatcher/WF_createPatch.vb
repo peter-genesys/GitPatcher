@@ -4,7 +4,17 @@
         Common.checkBranch(iBranchType)
         Dim l_tag_base As String = Nothing
 
+        Dim shortBranch As String = Globals.currentBranch()
+        Dim shortBranchUpper As String = shortBranch.ToUpper
+
+        If Not shortBranch.Equals(shortBranchUpper) Then
+            MsgBox("Please rename " & iBranchType & " " & shortBranch & " in uppercase " & shortBranchUpper, MsgBoxStyle.Exclamation, "Non-standard feature name")
+            Exit Sub
+        End If
+
+
         Dim currentBranch As String = Globals.currentLongBranch()
+
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue("Create " & iBranchType & " Patch")
         createPatchProgress.MdiParent = GitPatcher
 
@@ -26,6 +36,7 @@
         createPatchProgress.addStep("Return to Branch: " & currentBranch, True)
         createPatchProgress.addStep("Snapshot VM", True, "Create a snapshot of your current VM state, to use as your next restore point.  I label mine with the patch_name of the last applied patch.")
         createPatchProgress.Show()
+
 
 
         Do Until createPatchProgress.isStarted

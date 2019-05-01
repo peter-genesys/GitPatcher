@@ -45,13 +45,12 @@ Public Class PatchRunner
 
         UsePatchAdminCheckBox.Checked = Globals.getUseARM
 
-        doSearch()
-
         'No longer supporting Patch Exports
         PatchRunnerTabControl.TabPages.Remove(ExportTabPage)
 
         Me.MdiParent = GitPatcher
         Me.Show()
+        doSearch()
         Wait()
 
     End Sub
@@ -130,7 +129,7 @@ Public Class PatchRunner
 
                 For i As Integer = givenPatches.Count To 1 Step -1
 
-                    If Common.getLastSegment(givenPatches(i), "\") = l_patch_name Then
+                    If Common.getLastSegment(givenPatches(i), "\").ToUpper() = l_patch_name Then
                         orderedPatches.Add(givenPatches(i))
                         givenPatches.Remove(i)
                     End If
@@ -209,9 +208,9 @@ Public Class PatchRunner
                 'process in reverse order, because removing items from the list, changes the indexes.  reverse order will not be affected.
                 For i As Integer = foundPatches.Count To 1 Step -1
 
-                    'Check whether the patch has been successfully installed.
+                    'Check whether the patch has been successfully installed. (convert to uppercase)
                     patchMatch = False
-                    Dim lPatchName As String = Common.getLastSegment(foundPatches(i), "\")
+                    Dim lPatchName As String = Common.getLastSegment(foundPatches(i).ToUpper(), "\")
 
                     sql = "select max(patch_name) patch_name from ARM_INSTALLED_PATCH_V where patch_name = '" & lPatchName & "'"
 
@@ -300,7 +299,7 @@ Public Class PatchRunner
 
                 For i As Integer = 1 To availablePatches.Count
 
-                    If Common.getLastSegment(availablePatches(i), "\") = l_patch_name Then
+                    If Common.getLastSegment(availablePatches(i), "\").ToUpper() = l_patch_name Then 'convert to uppercase
                         foundPatches.Add(availablePatches(i))
                         l_patch_found = True
                     End If
