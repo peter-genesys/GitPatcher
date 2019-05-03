@@ -190,6 +190,52 @@ Public Class OrgSettings
     End Sub
 
 
+    Shared Function retrieveOrgPromos(ByVal iOrgName As String, ByVal ipromos As String, ByVal repoName As String) As Collection
+
+        Dim promoList As Collection = New Collection()
+
+        Dim promoArr() As String
+        Dim promoIndex As Integer
+        promoArr = ipromos.Split("|")
+
+        Dim l_OrgNode As XmlNode
+
+        'Load the Xml file
+        Dim l_GitReposXML As XmlDocument = New XmlDocument()
+        l_GitReposXML.Load(Globals.XMLRepoFilePath())
+
+
+        Dim l_OrgsNode As XmlNode = l_GitReposXML.SelectSingleNode("/repos/repo[@RepoName='" & repoName & "']/orgs")
+
+
+        Dim l_foundOrg As Boolean = False
+        'Loop through the nodes
+
+        For Each l_OrgNode In l_OrgsNode.ChildNodes
+            'Get the RepoName Attribute Value
+
+            If l_OrgNode.Attributes.GetNamedItem("OrgName").Value = iOrgName Then
+
+                l_foundOrg = True
+
+                For promoIndex = 0 To promoArr.Length - 1
+                    If Not String.IsNullOrEmpty(l_OrgNode.Attributes.GetNamedItem(promoArr(promoIndex) & "TNS").Value) Then
+                        promoList.Add(promoArr(promoIndex), promoArr(promoIndex))
+
+                    End If
+
+
+                Next
+
+            End If
+
+        Next
+
+        Return promoList
+
+    End Function
+
+
     Private Sub RepoListTextBox_TextChanged(sender As Object, e As EventArgs)
         Main.loadRepos()
     End Sub

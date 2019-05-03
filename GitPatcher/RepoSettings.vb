@@ -63,7 +63,6 @@ Public Class RepoSettings
                 RepoPathTextBox.Text = l_RepoNode.Attributes.GetNamedItem("RepoPath").Value
 
                 ApexOffsetTextBox.Text = l_RepoNode.Attributes.GetNamedItem("ApexRelPath").Value
-                OJDBCjarFileTextBox.Text = l_RepoNode.Attributes.GetNamedItem("ODBCjavaRelPath").Value
 
                 DBOffsetTextBox.Text = l_RepoNode.Attributes.GetNamedItem("DatabaseRelPath").Value
                 ExtrasDirListTextBox.Text = l_RepoNode.Attributes.GetNamedItem("ExtrasRelPath").Value
@@ -220,7 +219,6 @@ Public Class RepoSettings
 
         iRepo.SetAttribute("RepoPath", RepoPathTextBox.Text)
         iRepo.SetAttribute("ApexRelPath", ApexOffsetTextBox.Text)
-        iRepo.SetAttribute("ODBCjavaRelPath", OJDBCjarFileTextBox.Text)
         iRepo.SetAttribute("DatabaseRelPath", DBOffsetTextBox.Text)
         iRepo.SetAttribute("ExtrasRelPath", ExtrasDirListTextBox.Text)
         iRepo.SetAttribute("PatchRelPath", PatchOffsetTextBox.Text)
@@ -357,10 +355,6 @@ Public Class RepoSettings
     End Sub
 
     Private Sub ApexOffsetTextBox_TextChanged(sender As Object, e As EventArgs) Handles ApexOffsetTextBox.TextChanged
-        showUpdateButton()
-    End Sub
-
-    Private Sub OJDBCjarFileTextBox_TextChanged(sender As Object, e As EventArgs) Handles OJDBCjarFileTextBox.TextChanged
         showUpdateButton()
     End Sub
 

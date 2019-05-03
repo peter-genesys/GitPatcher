@@ -10,11 +10,16 @@
         Dim releasing As ProgressDialogue = New ProgressDialogue("Release to " & iTargetDB)
 
         releasing.MdiParent = GitPatcher
-        releasing.addStep("Change current DB to : " & iTargetDB)
+        releasing.addStep("Change current DB to : " & iTargetDB, lcurrentDB <> iTargetDB)
         releasing.addStep("Switch to " & releaseFromBranch & " branch", False)
         releasing.addStep("Pull from Origin to " & releaseFromBranch & " branch", False)
 
         releasing.addStep("Choose a tag to release from and checkout the tag", False)
+
+        'REVERT-VM
+        releasing.addStep("Revert to a clean VM snapshot", True, "GitPatcher will revert your VM to a clean VM snapshot." &
+                         Environment.NewLine & "Before releasing patches to the VM, revert to a clean VM snapshot.", iTargetDB = "VM")
+        'PATCH-RUNNER
 
         releasing.addStep("Use PatchRunner to run Uninstalled Patches", True, "")
 
@@ -22,7 +27,11 @@
 
         'releasing.addStep("Import Apex", True, "Using the Apex2Git") '"Using the Apex Import workflow")
         releasing.addStep("Smoke Test", True, "Perform a quick test to verify the patched system is working in " & iTargetDB)
-        releasing.addStep("Revert current DB to : " & lcurrentDB)
+
+        releasing.addStep("Clean VM Snapshot", True, "Create a clean snapshot of your current VM state, to use as your next restore point.", iTargetDB = "VM")
+
+
+        releasing.addStep("Reset current DB to : " & lcurrentDB, lcurrentDB <> iTargetDB)
         releasing.Show()
 
 
@@ -64,6 +73,19 @@
 
         End If
 
+        'REVERT-VM
+        If releasing.toDoNextStep() Then
+            'Revert VM
+            If My.Settings.VBoxName = "No VM" Then
+                MsgBox("Please create a snapshot of your current VM state, and then revert to a clean VM snapshot.", MsgBoxStyle.Exclamation, "Revert VM")
+            Else
+                WF_virtual_box.revertVM("Reverting", True, "clean")
+            End If
+
+
+        End If
+
+
 
         If releasing.toDoNextStep() Then
             'Use PatchRunner to run  Uninstalled Patches
@@ -99,9 +121,21 @@
 
         End If
 
+        If releasing.toDoNextStep() Then
+            'Snapshot VM
+            If My.Settings.VBoxName = "No VM" Then
+                MsgBox("Create a clean snapshot of your current VM state, to use as your next restore point.", MsgBoxStyle.Exclamation, "Snapshot VM")
+            Else
+                WF_virtual_box.takeSnapshot(PatchRunner.GetlastSuccessfulPatch & "-clean")
+            End If
+
+
+
+        End If
+
 
         If releasing.toDoNextStep() Then
-            'Revert current DB  
+            'Reset current DB  
             Globals.setDB(lcurrentDB.ToUpper)
             OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
 

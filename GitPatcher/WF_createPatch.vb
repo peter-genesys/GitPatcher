@@ -34,7 +34,7 @@
                                  & "In this situation, it is safest to restart the Create Patch process to ensure you are patching the lastest merged files. ")
         createPatchProgress.addStep("Release to " & iDBtarget, True)
         createPatchProgress.addStep("Return to Branch: " & currentBranch, True)
-        createPatchProgress.addStep("Snapshot VM", True, "Create a snapshot of your current VM state, to use as your next restore point.  I label mine with the patch_name of the last applied patch.")
+        createPatchProgress.addStep("Clean VM Snapshot", True, "Create a clean snapshot of your current VM state, to use as your next restore point.")
         createPatchProgress.Show()
 
 
@@ -142,7 +142,13 @@
 
         If createPatchProgress.toDoNextStep() Then
             'Snapshot VM
-            MsgBox("Create a snapshot of your current VM state, to use as your next restore point.", MsgBoxStyle.Exclamation, "Snapshot VM")
+            If My.Settings.VBoxName = "No VM" Then
+                MsgBox("Create a clean snapshot of your current VM state, to use as your next restore point.", MsgBoxStyle.Exclamation, "Snapshot VM")
+            Else
+                WF_virtual_box.takeSnapshot(shortBranch & "." & l_tag_base & "-clean")
+            End If
+
+
 
         End If
 

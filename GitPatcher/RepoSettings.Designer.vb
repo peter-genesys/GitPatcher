@@ -27,7 +27,6 @@ Partial Class RepoSettings
         Dim Label22 As System.Windows.Forms.Label
         Dim Label24 As System.Windows.Forms.Label
         Dim Label21 As System.Windows.Forms.Label
-        Dim Label10 As System.Windows.Forms.Label
         Dim Label2 As System.Windows.Forms.Label
         Dim Label3 As System.Windows.Forms.Label
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(RepoSettings))
@@ -36,7 +35,6 @@ Partial Class RepoSettings
         Me.ExtrasDirListTextBox = New System.Windows.Forms.TextBox()
         Me.PatchExportPathTextBox = New System.Windows.Forms.TextBox()
         Me.DBOffsetTextBox = New System.Windows.Forms.TextBox()
-        Me.OJDBCjarFileTextBox = New System.Windows.Forms.TextBox()
         Me.ApexOffsetTextBox = New System.Windows.Forms.TextBox()
         Me.PatchOffsetTextBox = New System.Windows.Forms.TextBox()
         Me.ButtonRemove = New System.Windows.Forms.Button()
@@ -51,7 +49,6 @@ Partial Class RepoSettings
         Label22 = New System.Windows.Forms.Label()
         Label24 = New System.Windows.Forms.Label()
         Label21 = New System.Windows.Forms.Label()
-        Label10 = New System.Windows.Forms.Label()
         Label2 = New System.Windows.Forms.Label()
         Label3 = New System.Windows.Forms.Label()
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -69,7 +66,7 @@ Partial Class RepoSettings
         'Label22
         '
         Label22.AutoSize = True
-        Label22.Location = New System.Drawing.Point(65, 233)
+        Label22.Location = New System.Drawing.Point(65, 186)
         Label22.Name = "Label22"
         Label22.Size = New System.Drawing.Size(309, 13)
         Label22.TabIndex = 47
@@ -78,7 +75,7 @@ Partial Class RepoSettings
         'Label24
         '
         Label24.AutoSize = True
-        Label24.Location = New System.Drawing.Point(65, 277)
+        Label24.Location = New System.Drawing.Point(65, 230)
         Label24.Name = "Label24"
         Label24.Size = New System.Drawing.Size(115, 13)
         Label24.TabIndex = 45
@@ -87,20 +84,11 @@ Partial Class RepoSettings
         'Label21
         '
         Label21.AutoSize = True
-        Label21.Location = New System.Drawing.Point(65, 193)
+        Label21.Location = New System.Drawing.Point(65, 146)
         Label21.Name = "Label21"
         Label21.Size = New System.Drawing.Size(139, 13)
         Label21.TabIndex = 43
         Label21.Text = "Database Dir Relative Path:"
-        '
-        'Label10
-        '
-        Label10.AutoSize = True
-        Label10.Location = New System.Drawing.Point(65, 146)
-        Label10.Name = "Label10"
-        Label10.Size = New System.Drawing.Size(75, 13)
-        Label10.TabIndex = 41
-        Label10.Text = "OJDBC jar file:"
         '
         'Label2
         '
@@ -114,7 +102,7 @@ Partial Class RepoSettings
         'Label3
         '
         Label3.AutoSize = True
-        Label3.Location = New System.Drawing.Point(65, 321)
+        Label3.Location = New System.Drawing.Point(65, 274)
         Label3.Name = "Label3"
         Label3.Size = New System.Drawing.Size(121, 13)
         Label3.TabIndex = 37
@@ -138,7 +126,7 @@ Partial Class RepoSettings
         '
         'ExtrasDirListTextBox
         '
-        Me.ExtrasDirListTextBox.Location = New System.Drawing.Point(68, 249)
+        Me.ExtrasDirListTextBox.Location = New System.Drawing.Point(68, 202)
         Me.ExtrasDirListTextBox.Multiline = True
         Me.ExtrasDirListTextBox.Name = "ExtrasDirListTextBox"
         Me.ExtrasDirListTextBox.Size = New System.Drawing.Size(444, 22)
@@ -146,24 +134,17 @@ Partial Class RepoSettings
         '
         'PatchExportPathTextBox
         '
-        Me.PatchExportPathTextBox.Location = New System.Drawing.Point(68, 293)
+        Me.PatchExportPathTextBox.Location = New System.Drawing.Point(68, 246)
         Me.PatchExportPathTextBox.Name = "PatchExportPathTextBox"
         Me.PatchExportPathTextBox.Size = New System.Drawing.Size(444, 20)
         Me.PatchExportPathTextBox.TabIndex = 46
         '
         'DBOffsetTextBox
         '
-        Me.DBOffsetTextBox.Location = New System.Drawing.Point(68, 209)
+        Me.DBOffsetTextBox.Location = New System.Drawing.Point(68, 162)
         Me.DBOffsetTextBox.Name = "DBOffsetTextBox"
         Me.DBOffsetTextBox.Size = New System.Drawing.Size(444, 20)
         Me.DBOffsetTextBox.TabIndex = 44
-        '
-        'OJDBCjarFileTextBox
-        '
-        Me.OJDBCjarFileTextBox.Location = New System.Drawing.Point(68, 162)
-        Me.OJDBCjarFileTextBox.Name = "OJDBCjarFileTextBox"
-        Me.OJDBCjarFileTextBox.Size = New System.Drawing.Size(444, 20)
-        Me.OJDBCjarFileTextBox.TabIndex = 42
         '
         'ApexOffsetTextBox
         '
@@ -174,7 +155,7 @@ Partial Class RepoSettings
         '
         'PatchOffsetTextBox
         '
-        Me.PatchOffsetTextBox.Location = New System.Drawing.Point(68, 337)
+        Me.PatchOffsetTextBox.Location = New System.Drawing.Point(68, 290)
         Me.PatchOffsetTextBox.Name = "PatchOffsetTextBox"
         Me.PatchOffsetTextBox.Size = New System.Drawing.Size(444, 20)
         Me.PatchOffsetTextBox.TabIndex = 38
@@ -264,10 +245,8 @@ Partial Class RepoSettings
         Me.Controls.Add(Label24)
         Me.Controls.Add(Me.DBOffsetTextBox)
         Me.Controls.Add(Label21)
-        Me.Controls.Add(Me.OJDBCjarFileTextBox)
         Me.Controls.Add(Me.ApexOffsetTextBox)
         Me.Controls.Add(Me.PatchOffsetTextBox)
-        Me.Controls.Add(Label10)
         Me.Controls.Add(Label2)
         Me.Controls.Add(Label3)
         Me.Controls.Add(Me.ButtonRemove)
@@ -288,7 +267,6 @@ Partial Class RepoSettings
     Friend WithEvents ExtrasDirListTextBox As System.Windows.Forms.TextBox
     Friend WithEvents PatchExportPathTextBox As System.Windows.Forms.TextBox
     Friend WithEvents DBOffsetTextBox As System.Windows.Forms.TextBox
-    Friend WithEvents OJDBCjarFileTextBox As System.Windows.Forms.TextBox
     Friend WithEvents ApexOffsetTextBox As System.Windows.Forms.TextBox
     Friend WithEvents PatchOffsetTextBox As System.Windows.Forms.TextBox
     Friend WithEvents ButtonRemove As System.Windows.Forms.Button

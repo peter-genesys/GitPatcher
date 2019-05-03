@@ -28,6 +28,9 @@ Public Class PatchFromTags
         ExecuteButton.Text = "Execute Patch on " & Globals.currentTNS
 
         Me.MdiParent = GitPatcher
+
+        RevertVMButton.Visible = My.Settings.VBoxName <> "No VM"
+
         Me.Show()
         Wait()
 
@@ -1567,5 +1570,9 @@ Public Class PatchFromTags
             End If
         End If
 
+    End Sub
+
+    Private Sub RevertVMButton_Click(sender As Object, e As EventArgs) Handles RevertVMButton.Click
+        WF_virtual_box.revertVM("Reverting", False, "post-rebase")
     End Sub
 End Class

@@ -1,6 +1,30 @@
 ﻿Imports LibGit2Sharp
 
 Friend Class WF_rebase
+
+    Shared Sub exportData()
+
+        'Confirm run against non-VM target
+        If Globals.getDB <> "VM" Then
+            Dim result As Integer = MessageBox.Show("Confirm source is " & Globals.getDB & Environment.NewLine &
+                                                    "Data will be spooled from " & Globals.getDB & ".", "Confirm Source", MessageBoxButtons.OKCancel)
+            If result = DialogResult.Cancel Then
+                Exit Sub
+            End If
+        End If
+
+
+        'Use Host class to execute with a master script.
+        Host.RunMasterScript("prompt Exporting Data" &
+            Environment.NewLine & "DEFINE database = '" & Globals.getDATASOURCE & "'" &
+            Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
+            Environment.NewLine & "@exp_data.sql" &
+            Environment.NewLine & "exit;" _
+          , Globals.getRepoPath & "\tools\db-spooler\script")
+    End Sub
+
+
+
     Shared Function rebaseBranch(ByVal iBranchType As String _
                                , ByVal iDBtarget As String _
                                , ByVal iRebaseBranchOn As String _
@@ -66,7 +90,14 @@ Friend Class WF_rebase
                                     "Do I need to spool any table changes or generate related objects?  " &
                                     "If so, logon to SmartGen, generate and/or spool code. " &
                                     "Use db-spooler to spool the objects to the local filesystem. " &
-                                    "Then commit it too.", iAppChanges Or iDBChanges)
+                                    "Then commit it too.", False) 'iAppChanges Or iDBChanges
+        'DB-SPOOLER
+        rebasing.addStep("Use DB-SPOOLER to spool config data: " & currentBranch(), True,
+                         "DB-SPOOLER will spool data using the script tools\db-spooler\script\exp_data.sql  " & Environment.NewLine & Environment.NewLine &
+                         "If there are other objects that need to be generated and/or spooled please use SmartGen.  For example" & Environment.NewLine &
+                         "Tables should be spooled if they have been changed, along with any related generated objects, such as tapis and views.", iAppChanges Or iDBChanges)
+
+
         'COMMIT
         rebasing.addStep("Commit to Branch: " & currentBranchLong, False, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no staged changes.", iAppChanges Or iDBChanges)
         'STASH-SAVE
@@ -83,14 +114,15 @@ Friend Class WF_rebase
         rebasing.addStep("Rebase Branch: " & currentBranchLong & " From Upstream:" & iRebaseBranchOn, True, "Please select the Upstream Branch:" & iRebaseBranchOn & " from the Tortoise Rebase Dialogue", iAppChanges Or iDBChanges)
         'TAG-B-FEATURE
         rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & "." & l_tag_base & "B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.", iPatching)
-        'REVERT
-        rebasing.addStep("Revert your VM", True, "Before running patches, consider reverting to a VM snapshot prior to the development of your current work, or swapping to a unit test VM.", iDBChanges)
+        'REVERT-VM
+        rebasing.addStep("Restore to a clean VM snapshot", True, "GitPatcher will restore your VM to a clean VM snapshot." &
+                         Environment.NewLine & "Before running patches, restore to a clean VM snapshot created prior to the development of the current feature.", iDBChanges)
         'PATCH-RUNNER
         rebasing.addStep("Use PatchRunner to run Unapplied Patches", True, iAppChanges Or iDBChanges)
         'IMPORT-APPS-QUEUED
         rebasing.addStep("Import any queued apps: " & currentBranch(), True, "Any Apex Apps that were included in a patch, must be reinstalled now. ", iAppChanges Or iDBChanges)
         'IMPORT-APPS-MINE
-        rebasing.addStep("Re-Import my changed apps: " & currentBranch(), True, "Any Apex Apps that were changed and exported by me, must be reinstalled now, since the VM has been reverted. ", Not iPatching And iAppChanges)
+        rebasing.addStep("Re-Import my changed apps: " & currentBranch(), True, "Any Apex Apps that were changed and exported by me, must be reinstalled now, since the VM has been reverted. ", Not iPatching And iAppChanges And iDBChanges)
         'STASH-POP
         rebasing.addStep("Stash Pop: " & currentBranchLong, False, "Stash Pop if a Stash Save was used previously, and especially, if we are not also making a patch.", Not iPatching)
         'SNAPSHOT
@@ -112,12 +144,21 @@ Friend Class WF_rebase
 
         End If
 
-        'STASH-SAVE
+        'SMARTGEN
         If rebasing.toDoNextStep() Then
-            'SMARTGEN
+
             MsgBox("Please logon to SmartGen and generate/spool objects", MsgBoxStyle.Exclamation, "SmartGen")
 
         End If
+
+
+
+
+        'DB-SPOOLER
+        If rebasing.toDoNextStep() Then
+            exportData()
+        End If
+
 
         'COMMIT
         If rebasing.toDoNextStep() Then
@@ -219,7 +260,12 @@ Friend Class WF_rebase
         'REVERT-VM
         If rebasing.toDoNextStep() Then
             'Revert VM
-            MsgBox("Please create a snapshot of your current VM state, and then revert to a state prior the work about to be patched.", MsgBoxStyle.Exclamation, "Revert VM")
+            If My.Settings.VBoxName = "No VM" Then
+                MsgBox("Please create a snapshot of your current VM state, and then revert to a state prior the work about to be patched.", MsgBoxStyle.Exclamation, "Revert VM")
+            Else
+                WF_virtual_box.revertVM(currentBranchShort & "." & l_tag_base & "-wip", True, "clean")
+            End If
+
 
         End If
 
@@ -255,8 +301,12 @@ Friend Class WF_rebase
 
         'SNAPSHOT-POST-REBASE
         If rebasing.toDoNextStep() Then
-            'Post-Rebase Snapshot 
-            MsgBox("Before creating new patches, snapshot the VM again.", MsgBoxStyle.Exclamation, "Post-Rebase Snapshot")
+            'Snapshot VM - Post-Rebase
+            If My.Settings.VBoxName = "No VM" Then
+                MsgBox("Before creating new patches, snapshot the VM again.", MsgBoxStyle.Exclamation, "Post-Rebase Snapshot")
+            Else
+                WF_virtual_box.takeSnapshot(PatchRunner.GetlastSuccessfulPatch & "-post-rebase-" & currentBranchShort & "." & l_tag_base)
+            End If
 
         End If
 
