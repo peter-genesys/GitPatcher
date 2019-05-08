@@ -21,6 +21,7 @@
         XMLRepoFilePathTextBox.DataBindings.Add("Text", My.Settings, "XMLRepoFilePath")
         RunConfigDirTextBox.DataBindings.Add("Text", My.Settings, "RunConfigDir")
         GPScriptsDirTextBox.DataBindings.Add("Text", My.Settings, "GPScriptsDir")
+        VBoxDirTextBox.DataBindings.Add("Text", My.Settings, "VBoxDir")
 
 
         'PatchExportPathTextBox.DataBindings.Add("Text", My.Settings, "PatchExportPath")

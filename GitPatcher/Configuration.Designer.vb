@@ -32,6 +32,7 @@ Partial Class Configuration
         Dim Label24 As System.Windows.Forms.Label
         Dim Label1 As System.Windows.Forms.Label
         Dim Label2 As System.Windows.Forms.Label
+        Dim Label3 As System.Windows.Forms.Label
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Configuration))
         Me.MailTabPage = New System.Windows.Forms.TabPage()
         Me.TestMailButton = New System.Windows.Forms.Button()
@@ -40,6 +41,7 @@ Partial Class Configuration
         Me.SMTPhostTextBox = New System.Windows.Forms.TextBox()
         Me.RecipientTextBox = New System.Windows.Forms.TextBox()
         Me.PatchTabPage = New System.Windows.Forms.TabPage()
+        Me.GPScriptsDirTextBox = New System.Windows.Forms.TextBox()
         Me.RunConfigDirTextBox = New System.Windows.Forms.TextBox()
         Me.XMLButton = New System.Windows.Forms.Button()
         Me.XMLRepoFilePathTextBox = New System.Windows.Forms.TextBox()
@@ -47,7 +49,7 @@ Partial Class Configuration
         Me.SQLpathTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.GPScriptsDirTextBox = New System.Windows.Forms.TextBox()
+        Me.VBoxDirTextBox = New System.Windows.Forms.TextBox()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -57,6 +59,7 @@ Partial Class Configuration
         Label24 = New System.Windows.Forms.Label()
         Label1 = New System.Windows.Forms.Label()
         Label2 = New System.Windows.Forms.Label()
+        Label3 = New System.Windows.Forms.Label()
         Me.MailTabPage.SuspendLayout()
         Me.PatchTabPage.SuspendLayout()
         Me.ConfigTabs.SuspendLayout()
@@ -95,9 +98,9 @@ Partial Class Configuration
         Label4.AutoSize = True
         Label4.Location = New System.Drawing.Point(5, 14)
         Label4.Name = "Label4"
-        Label4.Size = New System.Drawing.Size(76, 13)
+        Label4.Size = New System.Drawing.Size(114, 13)
         Label4.TabIndex = 8
-        Label4.Text = "SQL exe Path:"
+        Label4.Text = "SQL.exe Path (SQLcl):"
         '
         'Label14
         '
@@ -111,29 +114,38 @@ Partial Class Configuration
         'Label18
         '
         Label18.AutoSize = True
-        Label18.Location = New System.Drawing.Point(5, 58)
+        Label18.Location = New System.Drawing.Point(6, 53)
         Label18.Name = "Label18"
         Label18.Size = New System.Drawing.Size(68, 13)
         Label18.TabIndex = 14
-        Label18.Text = "Git exe Path:"
+        Label18.Text = "Git.exe Path:"
         '
         'Label24
         '
         Label24.AutoSize = True
-        Label24.Location = New System.Drawing.Point(5, 105)
+        Label24.Location = New System.Drawing.Point(2, 230)
         Label24.Name = "Label24"
-        Label24.Size = New System.Drawing.Size(109, 13)
+        Label24.Size = New System.Drawing.Size(97, 13)
         Label24.TabIndex = 18
-        Label24.Text = "XML Config File Path:"
+        Label24.Text = "GitRepos.xml Path:"
         '
         'Label1
         '
         Label1.AutoSize = True
-        Label1.Location = New System.Drawing.Point(5, 151)
+        Label1.Location = New System.Drawing.Point(2, 191)
         Label1.Name = "Label1"
-        Label1.Size = New System.Drawing.Size(79, 13)
+        Label1.Size = New System.Drawing.Size(74, 13)
         Label1.TabIndex = 54
-        Label1.Text = "Run Config Dir:"
+        Label1.Text = "GP Config Dir:"
+        '
+        'Label2
+        '
+        Label2.AutoSize = True
+        Label2.Location = New System.Drawing.Point(3, 152)
+        Label2.Name = "Label2"
+        Label2.Size = New System.Drawing.Size(76, 13)
+        Label2.TabIndex = 56
+        Label2.Text = "GP Scripts Dir:"
         '
         'MailTabPage
         '
@@ -193,6 +205,8 @@ Partial Class Configuration
         '
         'PatchTabPage
         '
+        Me.PatchTabPage.Controls.Add(Me.VBoxDirTextBox)
+        Me.PatchTabPage.Controls.Add(Label3)
         Me.PatchTabPage.Controls.Add(Me.GPScriptsDirTextBox)
         Me.PatchTabPage.Controls.Add(Label2)
         Me.PatchTabPage.Controls.Add(Me.RunConfigDirTextBox)
@@ -212,16 +226,23 @@ Partial Class Configuration
         Me.PatchTabPage.Text = "Paths"
         Me.PatchTabPage.UseVisualStyleBackColor = True
         '
+        'GPScriptsDirTextBox
+        '
+        Me.GPScriptsDirTextBox.Location = New System.Drawing.Point(6, 168)
+        Me.GPScriptsDirTextBox.Name = "GPScriptsDirTextBox"
+        Me.GPScriptsDirTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.GPScriptsDirTextBox.TabIndex = 57
+        '
         'RunConfigDirTextBox
         '
-        Me.RunConfigDirTextBox.Location = New System.Drawing.Point(8, 167)
+        Me.RunConfigDirTextBox.Location = New System.Drawing.Point(5, 207)
         Me.RunConfigDirTextBox.Name = "RunConfigDirTextBox"
         Me.RunConfigDirTextBox.Size = New System.Drawing.Size(444, 20)
         Me.RunConfigDirTextBox.TabIndex = 55
         '
         'XMLButton
         '
-        Me.XMLButton.Location = New System.Drawing.Point(6, 237)
+        Me.XMLButton.Location = New System.Drawing.Point(6, 278)
         Me.XMLButton.Name = "XMLButton"
         Me.XMLButton.Size = New System.Drawing.Size(102, 23)
         Me.XMLButton.TabIndex = 53
@@ -230,14 +251,14 @@ Partial Class Configuration
         '
         'XMLRepoFilePathTextBox
         '
-        Me.XMLRepoFilePathTextBox.Location = New System.Drawing.Point(8, 121)
+        Me.XMLRepoFilePathTextBox.Location = New System.Drawing.Point(5, 246)
         Me.XMLRepoFilePathTextBox.Name = "XMLRepoFilePathTextBox"
         Me.XMLRepoFilePathTextBox.Size = New System.Drawing.Size(444, 20)
         Me.XMLRepoFilePathTextBox.TabIndex = 19
         '
         'GitExeTextBox
         '
-        Me.GitExeTextBox.Location = New System.Drawing.Point(8, 74)
+        Me.GitExeTextBox.Location = New System.Drawing.Point(9, 69)
         Me.GitExeTextBox.Name = "GitExeTextBox"
         Me.GitExeTextBox.Size = New System.Drawing.Size(444, 20)
         Me.GitExeTextBox.TabIndex = 15
@@ -263,21 +284,21 @@ Partial Class Configuration
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
         '
-        'GPScriptsDirTextBox
+        'VBoxDirTextBox
         '
-        Me.GPScriptsDirTextBox.Location = New System.Drawing.Point(8, 211)
-        Me.GPScriptsDirTextBox.Name = "GPScriptsDirTextBox"
-        Me.GPScriptsDirTextBox.Size = New System.Drawing.Size(444, 20)
-        Me.GPScriptsDirTextBox.TabIndex = 57
+        Me.VBoxDirTextBox.Location = New System.Drawing.Point(8, 108)
+        Me.VBoxDirTextBox.Name = "VBoxDirTextBox"
+        Me.VBoxDirTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.VBoxDirTextBox.TabIndex = 59
         '
-        'Label2
+        'Label3
         '
-        Label2.AutoSize = True
-        Label2.Location = New System.Drawing.Point(5, 195)
-        Label2.Name = "Label2"
-        Label2.Size = New System.Drawing.Size(76, 13)
-        Label2.TabIndex = 56
-        Label2.Text = "GP Scripts Dir:"
+        Label3.AutoSize = True
+        Label3.Location = New System.Drawing.Point(5, 92)
+        Label3.Name = "Label3"
+        Label3.Size = New System.Drawing.Size(73, 13)
+        Label3.TabIndex = 58
+        Label3.Text = "VirtualBox Dir:"
         '
         'Configuration
         '
@@ -312,4 +333,5 @@ Partial Class Configuration
     Friend WithEvents XMLButton As System.Windows.Forms.Button
     Friend WithEvents RunConfigDirTextBox As TextBox
     Friend WithEvents GPScriptsDirTextBox As TextBox
+    Friend WithEvents VBoxDirTextBox As TextBox
 End Class

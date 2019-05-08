@@ -15,6 +15,7 @@ Module Globals
     Private gCommit2 As Commit
     Private gRepo As Repository
     Private gRepoConfig As IDictionary
+    Private gPromoList As Collection
 
 
     Public Function getRunConfigDir() As String
@@ -24,6 +25,18 @@ Module Globals
     Public Function getGPScriptsDir() As String
         Return Common.dos_path_trailing_slash(My.Settings.GPScriptsDir)
     End Function
+
+    Public Function getVBoxDir() As String
+        Return Common.dos_path_trailing_slash(My.Settings.VBoxDir)
+    End Function
+
+    Public Function getPromoList(orgName) As Collection
+        'Derive promolevels
+        Dim promoList As Collection = New Collection()
+        'promoList = OrgSettings.retrieveOrgPromos(OrgComboBox.Text, "PROD|UAT|TEST|DEV|VM", Globals.getRepoName())
+        promoList = OrgSettings.retrieveOrgPromos(orgName, "PROD|UAT|TEST|DEV|VM", Globals.getRepoName())
+    End Function
+
 
     Public Sub setRepo(repoPath As String)
         Logger.Dbg("Globals.setRepo(" & repoPath & ")")
@@ -192,10 +205,21 @@ Module Globals
     Public Sub setOrgName(OrgName As String)
         Logger.Dbg("Globals.setOrgName(" & OrgName & ")")
         gOrgName = OrgName
+
+        If Not String.IsNullOrEmpty(OrgName) Then
+
+            gPromoList = OrgSettings.retrieveOrgPromos(OrgName, "PROD|UAT|TEST|DEV|VM", Globals.getRepoName())
+
+        End If
+
     End Sub
 
     Public Function getOrgName() As String
         Return gOrgName
+    End Function
+
+    Public Function getPromoList() As Collection
+        Return gPromoList
     End Function
 
 

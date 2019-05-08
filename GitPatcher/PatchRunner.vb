@@ -68,6 +68,71 @@ Public Class PatchRunner
     End Sub
 
 
+
+
+    Public Shared Function GetAnswer(ByRef apexrmQuery As String) As String
+
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
+
+
+
+        Dim conn As New OracleConnection(Globals.getARMconnection)
+            Dim sql As String = Nothing
+            Dim cmd As OracleCommand
+            Dim dr As OracleDataReader
+        Dim answer As String
+
+        Try
+
+                conn.Open()
+
+
+            cmd = New OracleCommand(apexrmQuery, conn)
+            cmd.CommandType = CommandType.Text
+            dr = cmd.ExecuteReader()
+            dr.Read()
+
+            answer = dr.Item("answer")
+
+
+            dr.Close()
+
+
+
+            conn.Close()
+                conn.Dispose()
+
+
+            Catch ex As Exception ' catches any error
+                MessageBox.Show(ex.Message.ToString())
+            Finally
+                ' In a real application, put cleanup code here.
+
+            End Try
+
+        Cursor.Current = cursorRevert
+
+        Return answer
+
+
+    End Function
+
+
+    Shared Function GetlastSuccessfulPatch() As String
+        Dim lastSuccessfulPatch As String = "Patched"
+
+        lastSuccessfulPatch = PatchRunner.GetAnswer("select patch_name answer from arm_patch where success_yn = 'Y' order by log_datetime desc")
+        Logger.Dbg(lastSuccessfulPatch)
+
+        Return lastSuccessfulPatch
+
+    End Function
+
+
+
+
     Private Sub RecursiveSearch(ByVal strPath As String, ByVal strPattern As String, ByRef lstTarget As ListBox)
 
         Dim strFolders() As String = System.IO.Directory.GetDirectories(strPath)

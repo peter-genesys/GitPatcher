@@ -12,14 +12,12 @@ Public Class ChoiceDialog
         Me.Close()
     End Sub
 
-    Shared Function Ask(ByVal i_question As String, ByVal i_Choices As Collection, ByVal i_default As String, ByVal i_title As String, Optional ByVal i_reorder As Boolean = True, Optional ByVal i_hideCancelButton As Boolean = False)
+    Shared Function Ask(ByVal i_question As String, ByVal i_Choices As Collection, ByVal i_default As String, ByVal i_title As String, Optional ByVal i_reorder As Boolean = True, Optional ByVal i_hideCancelButton As Boolean = False, Optional ByVal i_returnIndex As Boolean = False)
         Dim l_choice As String = Nothing
         Dim l_default_found As Boolean = False
         Dim l_reordered As New Collection
 
-        If i_hideCancelButton Then
-            ChoiceDialog.Cancel_Button.Visible = False
-        End If
+        ChoiceDialog.Cancel_Button.Visible = Not i_hideCancelButton
 
         ' Set the Window Title
         ChoiceDialog.Text = i_title
@@ -56,13 +54,20 @@ Public Class ChoiceDialog
         ' Show the dialog
         Dim result = ChoiceDialog.ShowDialog()
 
-        If result = System.Windows.Forms.DialogResult.Cancel Then
-            Throw (New Halt("User Cancelled Operation"))
+        If result = System.Windows.Forms.DialogResult.Cancel And Not i_hideCancelButton Then
+            Throw New System.Exception("User Cancelled Operation")
         End If
 
-        Ask = ChoiceDialog.ChoiceComboBox.SelectedItem
+        If i_returnIndex Then
+            Ask = ChoiceDialog.ChoiceComboBox.SelectedIndex + 1 'add 1 to match the index of i_Choices collection
+        Else
+            Ask = ChoiceDialog.ChoiceComboBox.SelectedItem
+        End If
+
+        Logger.Dbg("Ask")
+
     End Function
 
- 
+
 
 End Class

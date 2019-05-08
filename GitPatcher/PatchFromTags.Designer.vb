@@ -25,6 +25,7 @@ Partial Class PatchFromTags
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PatchFromTags))
         Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
+        Me.RevertVMButton = New System.Windows.Forms.Button()
         Me.AppOnlyCheckBox = New System.Windows.Forms.CheckBox()
         Me.AlternateSchemasCheckBox = New System.Windows.Forms.CheckBox()
         Me.SYSDBACheckBox = New System.Windows.Forms.CheckBox()
@@ -130,6 +131,7 @@ Partial Class PatchFromTags
         '
         'TabPagePatchDefn
         '
+        Me.TabPagePatchDefn.Controls.Add(Me.RevertVMButton)
         Me.TabPagePatchDefn.Controls.Add(Me.AppOnlyCheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.AlternateSchemasCheckBox)
         Me.TabPagePatchDefn.Controls.Add(Me.SYSDBACheckBox)
@@ -164,10 +166,19 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePatchDefn.Name = "TabPagePatchDefn"
         Me.TabPagePatchDefn.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePatchDefn.Size = New System.Drawing.Size(525, 757)
+        Me.TabPagePatchDefn.Size = New System.Drawing.Size(525, 732)
         Me.TabPagePatchDefn.TabIndex = 2
         Me.TabPagePatchDefn.Text = "Create Patch"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
+        '
+        'RevertVMButton
+        '
+        Me.RevertVMButton.Location = New System.Drawing.Point(318, 639)
+        Me.RevertVMButton.Name = "RevertVMButton"
+        Me.RevertVMButton.Size = New System.Drawing.Size(114, 23)
+        Me.RevertVMButton.TabIndex = 53
+        Me.RevertVMButton.Text = "Restore VM"
+        Me.RevertVMButton.UseVisualStyleBackColor = True
         '
         'AppOnlyCheckBox
         '
@@ -202,9 +213,9 @@ Partial Class PatchFromTags
         '
         'ExportPatchButton
         '
-        Me.ExportPatchButton.Location = New System.Drawing.Point(80, 726)
+        Me.ExportPatchButton.Location = New System.Drawing.Point(318, 697)
         Me.ExportPatchButton.Name = "ExportPatchButton"
-        Me.ExportPatchButton.Size = New System.Drawing.Size(230, 23)
+        Me.ExportPatchButton.Size = New System.Drawing.Size(114, 23)
         Me.ExportPatchButton.TabIndex = 49
         Me.ExportPatchButton.Text = "Export Patch"
         Me.ExportPatchButton.UseVisualStyleBackColor = True
@@ -385,7 +396,7 @@ Partial Class PatchFromTags
         'UseARMCheckBox
         '
         Me.UseARMCheckBox.AutoSize = True
-        Me.UseARMCheckBox.Location = New System.Drawing.Point(317, 668)
+        Me.UseARMCheckBox.Location = New System.Drawing.Point(317, 672)
         Me.UseARMCheckBox.Name = "UseARMCheckBox"
         Me.UseARMCheckBox.Size = New System.Drawing.Size(115, 17)
         Me.UseARMCheckBox.TabIndex = 19
@@ -457,7 +468,7 @@ Partial Class PatchFromTags
         Me.TabPagePreReqsA.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePreReqsA.Name = "TabPagePreReqsA"
         Me.TabPagePreReqsA.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePreReqsA.Size = New System.Drawing.Size(525, 757)
+        Me.TabPagePreReqsA.Size = New System.Drawing.Size(525, 732)
         Me.TabPagePreReqsA.TabIndex = 3
         Me.TabPagePreReqsA.Text = "Last Patches"
         Me.TabPagePreReqsA.UseVisualStyleBackColor = True
@@ -519,7 +530,7 @@ Partial Class PatchFromTags
         Me.TabPageTags.Location = New System.Drawing.Point(4, 22)
         Me.TabPageTags.Name = "TabPageTags"
         Me.TabPageTags.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageTags.Size = New System.Drawing.Size(525, 757)
+        Me.TabPageTags.Size = New System.Drawing.Size(525, 732)
         Me.TabPageTags.TabIndex = 0
         Me.TabPageTags.Text = "Tags"
         Me.TabPageTags.UseVisualStyleBackColor = True
@@ -566,19 +577,19 @@ Partial Class PatchFromTags
         '
         Me.TagsContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MoveTagToHead, Me.MoveTagToSHA})
         Me.TagsContextMenuStrip.Name = "TagsContextMenuStrip"
-        Me.TagsContextMenuStrip.Size = New System.Drawing.Size(181, 70)
+        Me.TagsContextMenuStrip.Size = New System.Drawing.Size(179, 48)
         '
         'MoveTagToHead
         '
         Me.MoveTagToHead.Name = "MoveTagToHead"
-        Me.MoveTagToHead.Size = New System.Drawing.Size(180, 22)
+        Me.MoveTagToHead.Size = New System.Drawing.Size(178, 22)
         Me.MoveTagToHead.Text = "Move Tag to Head"
         Me.MoveTagToHead.ToolTipText = "Move this tag to the head of the current branch.  IE to the latest commit"
         '
         'MoveTagToSHA
         '
         Me.MoveTagToSHA.Name = "MoveTagToSHA"
-        Me.MoveTagToSHA.Size = New System.Drawing.Size(180, 22)
+        Me.MoveTagToSHA.Size = New System.Drawing.Size(178, 22)
         Me.MoveTagToSHA.Text = "Move Tag to SHA-1"
         '
         'Label15
@@ -603,7 +614,7 @@ Partial Class PatchFromTags
         Me.PatchTabControl.Location = New System.Drawing.Point(12, 12)
         Me.PatchTabControl.Name = "PatchTabControl"
         Me.PatchTabControl.SelectedIndex = 0
-        Me.PatchTabControl.Size = New System.Drawing.Size(533, 783)
+        Me.PatchTabControl.Size = New System.Drawing.Size(533, 758)
         Me.PatchTabControl.TabIndex = 18
         '
         'TabPageSHA1
@@ -618,7 +629,7 @@ Partial Class PatchFromTags
         Me.TabPageSHA1.Controls.Add(Me.Label34)
         Me.TabPageSHA1.Location = New System.Drawing.Point(4, 22)
         Me.TabPageSHA1.Name = "TabPageSHA1"
-        Me.TabPageSHA1.Size = New System.Drawing.Size(525, 757)
+        Me.TabPageSHA1.Size = New System.Drawing.Size(525, 732)
         Me.TabPageSHA1.TabIndex = 8
         Me.TabPageSHA1.Text = "SHA-1"
         Me.TabPageSHA1.UseVisualStyleBackColor = True
@@ -711,7 +722,7 @@ Partial Class PatchFromTags
         Me.TabPageChanges.Location = New System.Drawing.Point(4, 22)
         Me.TabPageChanges.Name = "TabPageChanges"
         Me.TabPageChanges.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageChanges.Size = New System.Drawing.Size(525, 757)
+        Me.TabPageChanges.Size = New System.Drawing.Size(525, 732)
         Me.TabPageChanges.TabIndex = 1
         Me.TabPageChanges.Text = "Changes"
         Me.TabPageChanges.UseVisualStyleBackColor = True
@@ -858,7 +869,7 @@ Partial Class PatchFromTags
         Me.TabPageExtras.Location = New System.Drawing.Point(4, 22)
         Me.TabPageExtras.Name = "TabPageExtras"
         Me.TabPageExtras.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageExtras.Size = New System.Drawing.Size(525, 757)
+        Me.TabPageExtras.Size = New System.Drawing.Size(525, 732)
         Me.TabPageExtras.TabIndex = 6
         Me.TabPageExtras.Text = "Extra Files"
         Me.TabPageExtras.UseVisualStyleBackColor = True
@@ -928,7 +939,7 @@ Partial Class PatchFromTags
         Me.TabPageApexApps.Location = New System.Drawing.Point(4, 22)
         Me.TabPageApexApps.Name = "TabPageApexApps"
         Me.TabPageApexApps.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageApexApps.Size = New System.Drawing.Size(525, 757)
+        Me.TabPageApexApps.Size = New System.Drawing.Size(525, 732)
         Me.TabPageApexApps.TabIndex = 9
         Me.TabPageApexApps.Text = "Apex Apps"
         Me.TabPageApexApps.UseVisualStyleBackColor = True
@@ -980,7 +991,7 @@ Partial Class PatchFromTags
         Me.TabPagePreReqsB.Controls.Add(Me.Label19)
         Me.TabPagePreReqsB.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePreReqsB.Name = "TabPagePreReqsB"
-        Me.TabPagePreReqsB.Size = New System.Drawing.Size(525, 757)
+        Me.TabPagePreReqsB.Size = New System.Drawing.Size(525, 732)
         Me.TabPagePreReqsB.TabIndex = 7
         Me.TabPagePreReqsB.Text = "Best Order"
         Me.TabPagePreReqsB.UseVisualStyleBackColor = True
@@ -1047,7 +1058,7 @@ Partial Class PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(557, 796)
+        Me.ClientSize = New System.Drawing.Size(559, 778)
         Me.Controls.Add(Me.PatchTabControl)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "PatchFromTags"
@@ -1165,4 +1176,5 @@ Partial Class PatchFromTags
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents MoveTagToSHA As ToolStripMenuItem
+    Friend WithEvents RevertVMButton As Button
 End Class

@@ -118,6 +118,7 @@ Public Class GitPatcher
 
     Private Sub GitPatcher_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         MainToolStripMenuItem_Click(sender, e)
+        Me.ToolStrip.Visible = False
     End Sub
 
     Private Sub SQLplusToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SQLplusToolStripMenuItem.Click
@@ -130,4 +131,6 @@ Public Class GitPatcher
         'newchildform.MdiParent = Me
         newchildform.Show()
     End Sub
+
+
 End Class

@@ -1,5 +1,49 @@
 ﻿Public Class Main
 
+
+    Public Sub displayVBoxName()
+
+        'If VBoxNameToolStripMenuItem.Text = "No VM" Then
+        '    VBoxNameToolStripMenuItem.Font.Strikeout
+        'End If
+        VBoxNameToolStripMenuItem.Checked = My.Settings.VBoxName <> "No VM"
+        VBoxNameToolStripMenuItem.Enabled = My.Settings.VBoxName <> "No VM"
+
+        'Is the VM runnning
+        Dim runningVMs As String = Nothing
+        Host.check_StdOut("VBoxManage list runningvms", runningVMs, Globals.getVBoxDir, False)
+        'Dim vmList As Collection = New Collection
+
+        Dim isVMrunning As Boolean = False
+        Dim strArr() As String
+        Dim vmIndex As Integer
+        strArr = runningVMs.Split("""")
+
+        For vmIndex = 1 To strArr.Length Step 2
+            If vmIndex < strArr.Length Then
+                If strArr(vmIndex) = My.Settings.VBoxName Then
+                    isVMrunning = True
+                End If
+            End If
+        Next
+
+
+        If isVMrunning Then
+            VBoxNameToolStripMenuItem.Text = My.Settings.VBoxName & " (running)"
+            StartVMToolStripMenuItem.Visible = False
+            SaveVMToolStripMenuItem.Visible = True
+        Else
+            VBoxNameToolStripMenuItem.Text = My.Settings.VBoxName
+            StartVMToolStripMenuItem.Visible = True
+            SaveVMToolStripMenuItem.Visible = False
+        End If
+
+
+        StartVMToolStripMenuItem.Text = "Start VM (" & My.Settings.startvmType & ")"
+
+    End Sub
+
+
     Public Sub New()
 
         InitializeComponent()
@@ -23,6 +67,7 @@
         MinPatchTextBox.Text = My.Settings.MinPatch
         TextBoxReleaseId.Text = My.Settings.ReleaseId
 
+        displayVBoxName()
 
     End Sub
 
@@ -101,13 +146,12 @@
 
         Logger.Dbg("Main.loadRepos")
         RepoSettings.readGitRepos(RepoComboBox, My.Settings.CurrentRepo)
-        showRepoSettings()
+        'showRepoSettings()
 
     End Sub
 
 
     Private Sub showOrgSettings()
-
 
         OrgSettings.retrieveOrg(OrgComboBox.Text, DBComboBox.Text, RepoComboBox.Text)
 
@@ -125,9 +169,31 @@
         'OrgSettings.readOrgs(OrgComboBox, OrgComboBox.Text, RepoComboBox.Text)
         OrgSettings.readOrgs(OrgComboBox, Globals.getOrgName(), RepoComboBox.Text)
 
-        If String.IsNullOrEmpty(Globals.getDB) Then
-            Globals.setDB("VM")
-        End If
+        ''VERSION 1
+        ''Derive promolevels and display best promo-level (last chosen, or lowest available.)
+        'If String.IsNullOrEmpty(Globals.getDB) Then
+        'Globals.setDB("VM")
+        'End If
+        'Dim promoList As Collection = New Collection()
+        ''promoList = Globals.getPromoList()
+        'promoList = OrgSettings.retrieveOrgPromos(OrgComboBox.Text, "PROD|UAT|TEST|DEV|VM", Globals.getRepoName())
+        'Dim promoFound As Boolean = False
+        'Dim lowestPromo As String = Nothing
+        'DBComboBox.Items.Clear()
+        'For Each promo In promoList
+        '    'For Each promo In Globals.getPromoList(OrgComboBox.Text)
+        '    'For Each promo In Globals.getPromoDict()
+        '    DBComboBox.Items.Add(promo)
+        '    lowestPromo = promo
+        '    If promo = Globals.getDB Then
+        '        promoFound = True
+        '    End If
+        'Next
+        'If Not promoFound Then
+        '    Globals.setDB(lowestPromo)
+        'End If
+        'DBComboBox.Text = Globals.getDB
+
         showOrgSettings()
 
     End Sub
@@ -164,9 +230,7 @@
 
     End Sub
 
-    'Private Sub PatchFromTagsToolStripMenuItem_Click(sender As Object, e As EventArgs)
-    '    PatchFromTags.createPatchProcess("feature", "DEV", Globals.deriveHotfixBranch("DEV"))
-    'End Sub
+
 
     Private Sub DBListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles DBComboBox.SelectedIndexChanged
 
@@ -281,19 +345,19 @@
         WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, True)
     End Sub
 
-    Private Sub ReleaseToISDEVLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISDEVLToolStripMenuItem.Click
+    Private Sub ReleaseToISDEVLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToDEVMenuItem.Click
         WF_release.releaseTo("DEV")
     End Sub
 
-    Private Sub ReleaseToISTESTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISTESTToolStripMenuItem.Click
+    Private Sub ReleaseToISTESTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToTESTMenuItem.Click
         WF_release.releaseTo("TEST")
     End Sub
 
-    Private Sub ReleaseToISUATToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISUATToolStripMenuItem.Click
+    Private Sub ReleaseToISUATToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToUATMenuItem.Click
         WF_release.releaseTo("UAT")
     End Sub
 
-    Private Sub ReleaseToISPRODToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToISPRODToolStripMenuItem.Click
+    Private Sub ReleaseToISPRODToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToPRODMenuItem.Click
         WF_release.releaseTo("PROD")
     End Sub
 
@@ -361,7 +425,7 @@
         WF_Apex.ApexImport1PageFromTag()
     End Sub
 
-    Private Sub GITToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GITToolStripMenuItem.Click
+    Private Sub GITToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PATCHToolStripMenuItem.Click
 
     End Sub
 
@@ -392,7 +456,44 @@
 
     Private Sub OrgComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles OrgComboBox.SelectedIndexChanged
         'setOrgCode(OrgComboBox.SelectedItem)
-        setOrgName(OrgComboBox.SelectedText)
+        Globals.setOrgName(OrgComboBox.SelectedItem)
+
+        If Not String.IsNullOrEmpty(OrgComboBox.SelectedItem) Then
+
+            'VERSION 1
+            'Derive promolevels and display best promo-level (last chosen, or lowest available.)
+            If String.IsNullOrEmpty(Globals.getDB) Then
+                Globals.setDB("VM")
+            End If
+            'Dim promoList As Collection = New Collection()
+            'promoList = Globals.getPromoList()
+            ' promoList = OrgSettings.retrieveOrgPromos(OrgComboBox.Text, "PROD|UAT|TEST|DEV|VM", Globals.getRepoName())
+            Dim promoFound As Boolean = False
+            Dim lowestPromo As String = Nothing
+            DBComboBox.Items.Clear()
+            'For Each promo In promoList
+            'For Each promo In Globals.getPromoList(OrgComboBox.Text)
+            For Each promo In Globals.getPromoList
+                DBComboBox.Items.Add(promo)
+                lowestPromo = promo
+                If Globals.getDB = promo Then
+                    promoFound = True
+                End If
+            Next
+            If Not promoFound Then
+                Globals.setDB(lowestPromo)
+            End If
+            DBComboBox.Text = Globals.getDB
+
+            ReleaseToVMMenuItem.Visible = Globals.getPromoList.Contains("VM")
+            ReleaseToDEVMenuItem.Visible = Globals.getPromoList.Contains("DEV")
+            ReleaseToTESTMenuItem.Visible = Globals.getPromoList.Contains("TEST")
+            ReleaseToUATMenuItem.Visible = Globals.getPromoList.Contains("UAT")
+            ReleaseToPRODMenuItem.Visible = Globals.getPromoList.Contains("PROD")
+
+        End If
+
+        'showOrgSettings()
     End Sub
 
     Private Sub MainActivated(sender As Object, e As EventArgs) Handles Me.Activated
@@ -433,4 +534,84 @@
     Private Sub ApexChangesOnlyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ApexChangesOnlyToolStripMenuItem.Click
         WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, False)
     End Sub
+
+    Private Sub ChooseVMToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ChooseVMToolStripMenuItem.Click
+        Dim vmChoice As String = Nothing
+
+        Dim allVMs As String = Nothing
+
+        Host.check_StdOut("VBoxManage list vms", allVMs, Globals.getVBoxDir, False)
+
+        Dim vmList As Collection = New Collection
+
+        Dim strArr() As String
+        Dim vmIndex As Integer
+        strArr = allVMs.Split("""")
+
+        vmList.Add("No VM")
+        For vmIndex = 1 To strArr.Length Step 2
+
+            If vmIndex < strArr.Length Then
+                'MsgBox(strArr(vmIndex))
+                vmList.Add(strArr(vmIndex))
+            End If
+        Next
+
+        vmChoice = ChoiceDialog.Ask("Please choose a new Virtual Machine from those available." &
+                                    Environment.NewLine &
+                                    Environment.NewLine & "GitPatcher will create and restore snaphots on the chosen Virtual Machine." &
+                                    Environment.NewLine & "The current Virtual Machine is " & My.Settings.VBoxName, vmList, My.Settings.VBoxName, "Choose Virtual Machine", False, True)
+        My.Settings.VBoxName = vmChoice
+
+        VBoxNameToolStripMenuItem.Text = My.Settings.VBoxName
+
+        displayVBoxName()
+
+
+    End Sub
+
+    Private Sub VBoxNameToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VBoxNameToolStripMenuItem.Click
+        If VBoxNameToolStripMenuItem.Checked Then
+            My.Settings.VBoxName = "No VM"
+
+            displayVBoxName()
+
+        End If
+    End Sub
+
+    Private Sub RestoreStateVMToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RestoreStateVMToolStripMenuItem.Click
+        WF_virtual_box.revertVM("Reverting", True, "clean")
+    End Sub
+
+    Private Sub SaveVMToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveVMToolStripMenuItem.Click
+        WF_virtual_box.controlVM("savestate")
+        displayVBoxName()
+    End Sub
+
+    Private Sub StartVMNormalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StartVMNormalToolStripMenuItem.Click
+        My.Settings.startvmType = "gui"
+        WF_virtual_box.startVM(My.Settings.startvmType)
+        displayVBoxName()
+    End Sub
+
+    Private Sub StartVMHeadleassToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StartVMHeadleassToolStripMenuItem.Click
+        My.Settings.startvmType = "headless"
+        WF_virtual_box.startVM(My.Settings.startvmType)
+        displayVBoxName()
+    End Sub
+
+    Private Sub StartVMToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StartVMToolStripMenuItem.Click
+        WF_virtual_box.startVM(My.Settings.startvmType)
+        displayVBoxName()
+    End Sub
+
+    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ReleaseToVMMenuItem.Click
+        WF_release.releaseTo("VM")
+    End Sub
+
+    Private Sub ExportDataMenuItem_Click(sender As Object, e As EventArgs) Handles ExportDataMenuItem.Click
+        WF_rebase.exportData()
+    End Sub
+
+
 End Class

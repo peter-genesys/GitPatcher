@@ -173,7 +173,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("..\..\..\GitRepos.xml")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("D:\GitRepos\GitPatcher\config\GitRepos.xml")>  _
         Public Property XMLRepoFilePath() As String
             Get
                 Return CType(Me("XMLRepoFilePath"),String)
@@ -242,7 +242,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.1.13")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.1.14")>  _
         Public ReadOnly Property ReleaseId() As String
             Get
                 Return CType(Me("ReleaseId"),String)
@@ -251,7 +251,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("D:\GitRepos\config")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("D:\GitRepos\GitPatcher\config")>  _
         Public Property RunConfigDir() As String
             Get
                 Return CType(Me("RunConfigDir"),String)
@@ -270,6 +270,42 @@ Namespace My
             End Get
             Set
                 Me("GPScriptsDir") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\Program Files\Oracle\VirtualBox")>  _
+        Public Property VBoxDir() As String
+            Get
+                Return CType(Me("VBoxDir"),String)
+            End Get
+            Set
+                Me("VBoxDir") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("No VM")>  _
+        Public Property VBoxName() As String
+            Get
+                Return CType(Me("VBoxName"),String)
+            End Get
+            Set
+                Me("VBoxName") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("gui")>  _
+        Public Property startvmType() As String
+            Get
+                Return CType(Me("startvmType"),String)
+            End Get
+            Set
+                Me("startvmType") = value
             End Set
         End Property
     End Class
