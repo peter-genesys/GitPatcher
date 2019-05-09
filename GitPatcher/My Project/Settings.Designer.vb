@@ -197,7 +197,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("GitHubFLow")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("GitHubFlow")>  _
         Public ReadOnly Property Flow() As String
             Get
                 Return CType(Me("Flow"),String)
@@ -242,7 +242,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.1.14")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.1.15")>  _
         Public ReadOnly Property ReleaseId() As String
             Get
                 Return CType(Me("ReleaseId"),String)

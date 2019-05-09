@@ -580,7 +580,7 @@
     End Sub
 
     Private Sub RestoreStateVMToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RestoreStateVMToolStripMenuItem.Click
-        WF_virtual_box.revertVM("Reverting", True, "clean")
+        WF_virtual_box.revertVM("Reverting", True, "desired")
     End Sub
 
     Private Sub SaveVMToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveVMToolStripMenuItem.Click

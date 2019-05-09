@@ -1,148 +1,142 @@
 ﻿Friend Class WF_release
     Shared Sub releaseTo(iTargetDB As String, Optional ByVal iBranchType As String = "")
 
+        Dim InstallStatus As String = Nothing
+        If iTargetDB = "DEV" Then
+            InstallStatus = "Uninstalled"
+        Else
+            InstallStatus = "Unapplied"
+        End If
+
+
+
         Dim lcurrentDB As String = Globals.getDB()
 
-        Dim currentBranch As String = GitOp.CurrentBranch()
+            Dim currentBranch As String = GitOp.CurrentBranch()
 
-        Dim releaseFromBranch As String = Globals.deriveHotfixBranch(iTargetDB)
+            Dim releaseFromBranch As String = Globals.deriveHotfixBranch(iTargetDB)
 
-        Dim releasing As ProgressDialogue = New ProgressDialogue("Release to " & iTargetDB)
+            Dim releasing As ProgressDialogue = New ProgressDialogue("Release to " & iTargetDB)
 
-        releasing.MdiParent = GitPatcher
-        releasing.addStep("Change current DB to : " & iTargetDB, lcurrentDB <> iTargetDB)
-        releasing.addStep("Switch to " & releaseFromBranch & " branch", False)
-        releasing.addStep("Pull from Origin to " & releaseFromBranch & " branch", False)
+            releasing.MdiParent = GitPatcher
+            releasing.addStep("Change current DB to : " & iTargetDB, lcurrentDB <> iTargetDB)
+        releasing.addStep("Switch to " & releaseFromBranch & " branch", currentBranch <> releaseFromBranch)
+        releasing.addStep("Pull from Origin to " & releaseFromBranch & " branch", True)
 
         releasing.addStep("Choose a tag to release from and checkout the tag", False)
 
         'REVERT-VM
-        releasing.addStep("Revert to a clean VM snapshot", True, "GitPatcher will revert your VM to a clean VM snapshot." &
-                         Environment.NewLine & "Before releasing patches to the VM, revert to a clean VM snapshot.", iTargetDB = "VM")
+        releasing.addStep("Restore to a clean VM snapshot", True, "GitPatcher will restore your VM to a clean VM snapshot." &
+                         Environment.NewLine & "Before releasing patches to the VM, restore to a clean VM snapshot.", iTargetDB = "VM")
         'PATCH-RUNNER
 
-        releasing.addStep("Use PatchRunner to run Uninstalled Patches", True, "")
+        releasing.addStep("Use PatchRunner to run " & InstallStatus & " Patches", True, "")
 
         releasing.addStep("Import any queued apps: " & releaseFromBranch, True, "Any Apex Apps that were included in a patch, must be reinstalled now. ")
 
-        'releasing.addStep("Import Apex", True, "Using the Apex2Git") '"Using the Apex Import workflow")
-        releasing.addStep("Smoke Test", True, "Perform a quick test to verify the patched system is working in " & iTargetDB)
+            'releasing.addStep("Import Apex", True, "Using the Apex2Git") '"Using the Apex Import workflow")
+            releasing.addStep("Smoke Test", True, "Perform a quick test to verify the patched system is working in " & iTargetDB)
 
-        releasing.addStep("Clean VM Snapshot", True, "Create a clean snapshot of your current VM state, to use as your next restore point.", iTargetDB = "VM")
-
-
-        releasing.addStep("Reset current DB to : " & lcurrentDB, lcurrentDB <> iTargetDB)
-        releasing.Show()
+            releasing.addStep("Clean VM Snapshot", True, "Create a clean snapshot of your current VM state, to use as your next restore point.", iTargetDB = "VM")
 
 
-
-        Do Until releasing.isStarted
-            Common.wait(1000)
-        Loop
-
-        If releasing.toDoNextStep() Then
-            'Change current DB to release DB
-            Globals.setDB(iTargetDB.ToUpper)
-            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
-
-        End If
-
-        If releasing.toDoNextStep() Then
-            'Switch to develop branch
-            GitOp.SwitchBranch(releaseFromBranch)
-
-        End If
-        If releasing.toDoNextStep() Then
-            'Pull from origin/develop
-            GitOp.pullBranch(releaseFromBranch)
-
-        End If
-
-        If releasing.toDoNextStep() Then
-            'Choose a tag to import from
-            Dim tagnames As Collection = New Collection
-            tagnames.Add("HEAD")
-            tagnames = GitOp.getTagNameList(tagnames, Globals.currentBranch)
-            tagnames = GitOp.getTagNameList(tagnames, Globals.getAppCode)
+            releasing.addStep("Reset current DB to : " & lcurrentDB, lcurrentDB <> iTargetDB)
+            releasing.Show()
 
 
-            Dim PatchTag As String = Nothing
-            PatchTag = ChoiceDialog.Ask("Please choose a tag for patch installs", tagnames, "HEAD", "Choose tag")
 
-            GitOp.SwitchTagName(PatchTag)
+            Do Until releasing.isStarted
+                Common.wait(1000)
+            Loop
 
-        End If
+            If releasing.toDoNextStep() Then
+                'Change current DB to release DB
+                Globals.setDB(iTargetDB.ToUpper)
+                OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
 
-        'REVERT-VM
-        If releasing.toDoNextStep() Then
-            'Revert VM
-            If My.Settings.VBoxName = "No VM" Then
-                MsgBox("Please create a snapshot of your current VM state, and then revert to a clean VM snapshot.", MsgBoxStyle.Exclamation, "Revert VM")
-            Else
-                WF_virtual_box.revertVM("Reverting", True, "clean")
             End If
 
+            If releasing.toDoNextStep() Then
+                'Switch to develop branch
+                GitOp.SwitchBranch(releaseFromBranch)
 
-        End If
+            End If
+            If releasing.toDoNextStep() Then
+                'Pull from origin/develop
+                GitOp.pullBranch(releaseFromBranch)
 
+            End If
 
-
-        If releasing.toDoNextStep() Then
-            'Use PatchRunner to run  Uninstalled Patches
-            Dim GitPatcherChild As PatchRunner = New PatchRunner("Uninstalled", iBranchType)
-
-            'Dim newchildform As New PatchRunner("Uninstalled", iBranchType)
-            'newchildform.MdiParent = GitPatcher
-            'newchildform.ShowDialog() 'NEED TO WAIT HERE!!
-
-        End If
-
-        If releasing.toDoNextStep() Then
-            'Install queued Apex Apps.
-            'Start the ApexAppInstaller and wait until it closes.
-            Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("Queued")
+            If releasing.toDoNextStep() Then
+                'Choose a tag to import from
+                Dim tagnames As Collection = New Collection
+                tagnames.Add("HEAD")
+                tagnames = GitOp.getTagNameList(tagnames, Globals.currentBranch)
+                tagnames = GitOp.getTagNameList(tagnames, Globals.getAppCode)
 
 
-            'Dim newchildform As New ApexAppInstaller("Queued")
-            'newchildform.MdiParent = GitPatcher
-            'newchildform.ShowDialog() 'ShowDialog - means wait.
-        End If
+                Dim PatchTag As String = Nothing
+                PatchTag = ChoiceDialog.Ask("Please choose a tag for patch installs", tagnames, "HEAD", "Choose tag")
 
-        'If releasing.toDoNextStep() Then
-        '    'Import Apex 
-        '    MsgBox("Import the changed Apex apps into " & iTargetDB & " using Apex2Git", MsgBoxStyle.Information, "Apex2Git")
-        '    'WF_Apex.ApexImportFromTag()
+                GitOp.SwitchTagName(PatchTag)
 
-        'End If
+            End If
 
-        If releasing.toDoNextStep() Then
-            'Smoke Test 
-            MsgBox("Perform a quick test to verify the patched system is working in " & iTargetDB, MsgBoxStyle.Information, "Smoke Test")
-
-        End If
-
-        If releasing.toDoNextStep() Then
-            'Snapshot VM
-            If My.Settings.VBoxName = "No VM" Then
-                MsgBox("Create a clean snapshot of your current VM state, to use as your next restore point.", MsgBoxStyle.Exclamation, "Snapshot VM")
+            'REVERT-VM
+            If releasing.toDoNextStep() Then
+                'Revert VM
+                If My.Settings.VBoxName = "No VM" Then
+                MsgBox("Please create a snapshot of your current VM state, and then restore to a clean VM snapshot.", MsgBoxStyle.Exclamation, "Revert VM")
             Else
-                WF_virtual_box.takeSnapshot(PatchRunner.GetlastSuccessfulPatch & "-clean")
+                    WF_virtual_box.revertVM("Reverting", True, "clean")
+                End If
+
+
             End If
 
 
 
+            If releasing.toDoNextStep() Then
+            'Use PatchRunner to run  Uninstalled/Unapplied Patches
+            Dim GitPatcherChild As PatchRunner = New PatchRunner(InstallStatus, iBranchType)
+
         End If
 
+            If releasing.toDoNextStep() Then
+                'Install queued Apex Apps.
+                'Start the ApexAppInstaller and wait until it closes.
+                Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("Queued")
+
+        End If
 
         If releasing.toDoNextStep() Then
-            'Reset current DB  
-            Globals.setDB(lcurrentDB.ToUpper)
-            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+                'Smoke Test 
+                MsgBox("Perform a quick test to verify the patched system is working in " & iTargetDB, MsgBoxStyle.Information, "Smoke Test")
 
-        End If
+            End If
 
-        'Finish
-        releasing.toDoNextStep()
+            If releasing.toDoNextStep() Then
+                'Snapshot VM
+                If My.Settings.VBoxName = "No VM" Then
+                    MsgBox("Create a clean snapshot of your current VM state, to use as your next restore point.", MsgBoxStyle.Exclamation, "Snapshot VM")
+                Else
+                    WF_virtual_box.takeSnapshot(PatchRunner.GetlastSuccessfulPatch & "-clean")
+                End If
+
+
+
+            End If
+
+
+            If releasing.toDoNextStep() Then
+                'Reset current DB  
+                Globals.setDB(lcurrentDB.ToUpper)
+                OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+
+            End If
+
+            'Finish
+            releasing.toDoNextStep()
     End Sub
 
 
