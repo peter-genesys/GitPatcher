@@ -20,7 +20,7 @@ Friend Class WF_rebase
             Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
             Environment.NewLine & "@exp_data.sql" &
             Environment.NewLine & "exit;" _
-          , Globals.getRepoPath & "\tools\db-spooler\script")
+          , Globals.getRepoPath & "tools\db-spooler\script")
     End Sub
 
 
@@ -91,9 +91,10 @@ Friend Class WF_rebase
                                     "If so, logon to SmartGen, generate and/or spool code. " &
                                     "Use db-spooler to spool the objects to the local filesystem. " &
                                     "Then commit it too.", False) 'iAppChanges Or iDBChanges
-        'DB-SPOOLER
-        rebasing.addStep("Use DB-SPOOLER to spool config data: " & currentBranch(), True,
-                         "DB-SPOOLER will spool data using the script tools\db-spooler\script\exp_data.sql  " & Environment.NewLine & Environment.NewLine &
+        'EXPORT-DATA
+        rebasing.addStep("Export data: " & currentBranch(), True,
+                         "Export data using the db-spooler script " & Environment.NewLine &
+                         Globals.getRepoPath & "tools\db-spooler\script\exp_data.sql  " & Environment.NewLine & Environment.NewLine &
                          "If there are other objects that need to be generated and/or spooled please use SmartGen.  For example" & Environment.NewLine &
                          "Tables should be spooled if they have been changed, along with any related generated objects, such as tapis and views.", iAppChanges Or iDBChanges)
 
@@ -154,7 +155,7 @@ Friend Class WF_rebase
 
 
 
-        'DB-SPOOLER
+        'EXPORT-DATA
         If rebasing.toDoNextStep() Then
             exportData()
         End If

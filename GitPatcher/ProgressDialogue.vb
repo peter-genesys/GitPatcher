@@ -275,9 +275,20 @@
         Next
     End Sub
 
+    Function getProcessStep(ByRef iCheckedListBoxIndex As Integer) As Integer
+
+        For i As Integer = 0 To storedProcessSteps.Count - 1
+            If storedProcessSteps(i).index = iCheckedListBoxIndex Then
+                Return i
+            End If
+        Next
+
+    End Function
+
+
     Private Sub ProgressCheckedListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ProgressCheckedListBox.SelectedIndexChanged
         If ProgressCheckedListBox.SelectedIndex > -1 Then
-            NotesTextBox.Text = storedProcessSteps(ProgressCheckedListBox.SelectedIndex).notes
+            NotesTextBox.Text = storedProcessSteps(getProcessStep(ProgressCheckedListBox.SelectedIndex)).notes
         End If
 
     End Sub
