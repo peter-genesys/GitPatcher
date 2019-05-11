@@ -276,6 +276,7 @@ Module Globals
 
 
     Public Function getARMconnection() As String
+        Logger.Dbg("Data Source=" & Globals.getDATASOURCE & ";User Id=" & Globals.getARMuser & ";Password=" & Globals.getARMpword & ";")
         Return "Data Source=" & Globals.getDATASOURCE & ";User Id=" & Globals.getARMuser & ";Password=" & Globals.getARMpword & ";"
     End Function
 

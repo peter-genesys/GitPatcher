@@ -50,8 +50,13 @@ Public Class OrgSettings
                 Globals.setOrgInFeature(l_OrgNode.Attributes.GetNamedItem("OrgInFeature").Value)
                 Globals.setTNS(l_OrgNode.Attributes.GetNamedItem(ipromo & "TNS").Value)
                 Globals.setCONNECT(l_OrgNode.Attributes.GetNamedItem(ipromo & "CONNECT").Value)
-                Globals.setARMuser(l_OrgNode.Attributes.GetNamedItem(ipromo & "ARMUSER").Value)
-                Globals.setARMpword(l_OrgNode.Attributes.GetNamedItem(ipromo & "ARMPWORD").Value)
+                Try
+                    Globals.setARMuser(l_OrgNode.Attributes.GetNamedItem(ipromo & "ARMUSER").Value)
+                    Globals.setARMpword(l_OrgNode.Attributes.GetNamedItem(ipromo & "ARMPWORD").Value)
+                Catch ex As Exception
+                    MsgBox("XML file, Repo " & repoName & ", Org " & iOrgName & " is missing " & ipromo & "ARMUSER or " & ipromo & "ARMPWORD" &
+                           Chr(10) & "Please use Config page to edit XML file.")
+                End Try
 
             End If
 
@@ -159,8 +164,8 @@ Public Class OrgSettings
 
 
 
-        'Dim l_current_value As String = OrgComboBox.Text
-        Dim l_found As Boolean = False
+                    'Dim l_current_value As String = OrgComboBox.Text
+                    Dim l_found As Boolean = False
 
         Logger.Note("repoName", repoName)
         'Loop through the nodes

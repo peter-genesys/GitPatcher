@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Configuration
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class Configuration
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim Label11 As System.Windows.Forms.Label
@@ -41,6 +41,7 @@ Partial Class Configuration
         Me.SMTPhostTextBox = New System.Windows.Forms.TextBox()
         Me.RecipientTextBox = New System.Windows.Forms.TextBox()
         Me.PatchTabPage = New System.Windows.Forms.TabPage()
+        Me.VBoxDirTextBox = New System.Windows.Forms.TextBox()
         Me.GPScriptsDirTextBox = New System.Windows.Forms.TextBox()
         Me.RunConfigDirTextBox = New System.Windows.Forms.TextBox()
         Me.XMLButton = New System.Windows.Forms.Button()
@@ -49,7 +50,6 @@ Partial Class Configuration
         Me.SQLpathTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.VBoxDirTextBox = New System.Windows.Forms.TextBox()
         Label11 = New System.Windows.Forms.Label()
         Label13 = New System.Windows.Forms.Label()
         Label12 = New System.Windows.Forms.Label()
@@ -147,6 +147,15 @@ Partial Class Configuration
         Label2.TabIndex = 56
         Label2.Text = "GP Scripts Dir:"
         '
+        'Label3
+        '
+        Label3.AutoSize = True
+        Label3.Location = New System.Drawing.Point(5, 92)
+        Label3.Name = "Label3"
+        Label3.Size = New System.Drawing.Size(73, 13)
+        Label3.TabIndex = 58
+        Label3.Text = "VirtualBox Dir:"
+        '
         'MailTabPage
         '
         Me.MailTabPage.Controls.Add(Me.TestMailButton)
@@ -226,6 +235,13 @@ Partial Class Configuration
         Me.PatchTabPage.Text = "Paths"
         Me.PatchTabPage.UseVisualStyleBackColor = True
         '
+        'VBoxDirTextBox
+        '
+        Me.VBoxDirTextBox.Location = New System.Drawing.Point(8, 108)
+        Me.VBoxDirTextBox.Name = "VBoxDirTextBox"
+        Me.VBoxDirTextBox.Size = New System.Drawing.Size(444, 20)
+        Me.VBoxDirTextBox.TabIndex = 59
+        '
         'GPScriptsDirTextBox
         '
         Me.GPScriptsDirTextBox.Location = New System.Drawing.Point(6, 168)
@@ -283,22 +299,6 @@ Partial Class Configuration
         'MySettingsBindingSource
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
-        '
-        'VBoxDirTextBox
-        '
-        Me.VBoxDirTextBox.Location = New System.Drawing.Point(8, 108)
-        Me.VBoxDirTextBox.Name = "VBoxDirTextBox"
-        Me.VBoxDirTextBox.Size = New System.Drawing.Size(444, 20)
-        Me.VBoxDirTextBox.TabIndex = 59
-        '
-        'Label3
-        '
-        Label3.AutoSize = True
-        Label3.Location = New System.Drawing.Point(5, 92)
-        Label3.Name = "Label3"
-        Label3.Size = New System.Drawing.Size(73, 13)
-        Label3.TabIndex = 58
-        Label3.Text = "VirtualBox Dir:"
         '
         'Configuration
         '
