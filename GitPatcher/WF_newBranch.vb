@@ -3,8 +3,9 @@
 
         Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new " & iBranchType & " branch", "Create a new " & iBranchType & " Branch with the standardised naming " & iBranchType & "/" & (Globals.deriveFeatureCode & "/").TrimStart("/") & "ISSUE_ID.")
         newFeature.MdiParent = GitPatcher
-        newFeature.addStep("Switch to " & iBranchFrom & " branch")
-        newFeature.addStep("Pull from Origin")
+        newFeature.addStep("Switch to " & iBranchFrom & " branch", Globals.currentBranch <> iBranchFrom)
+        'newFeature.addStep("Pull from Origin")
+        newFeature.addStep("Release patches to VM")
         newFeature.addStep("Create and switch to " & iBranchType & " branch")
 
 
@@ -21,9 +22,14 @@
 
         End If
 
+        'If newFeature.toDoNextStep() Then
+        '    'Pull from origin/develop
+        '    GitOp.pullBranch(iBranchFrom)
+        'End If
+
         If newFeature.toDoNextStep() Then
-            'Pull from origin/develop
-            GitOp.pullBranch(iBranchFrom)
+            'Release to VM
+            WF_release.releaseTo("VM")
 
         End If
 

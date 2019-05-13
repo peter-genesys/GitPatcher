@@ -6,40 +6,52 @@
         'If VBoxNameToolStripMenuItem.Text = "No VM" Then
         '    VBoxNameToolStripMenuItem.Font.Strikeout
         'End If
-        VBoxNameToolStripMenuItem.Checked = My.Settings.VBoxName <> "No VM"
-        VBoxNameToolStripMenuItem.Enabled = My.Settings.VBoxName <> "No VM"
 
-        'Is the VM runnning
-        Dim runningVMs As String = Nothing
-        Host.check_StdOut("VBoxManage list runningvms", runningVMs, Globals.getVBoxDir, False)
-        'Dim vmList As Collection = New Collection
-
-        Dim isVMrunning As Boolean = False
-        Dim strArr() As String
-        Dim vmIndex As Integer
-        strArr = runningVMs.Split("""")
-
-        For vmIndex = 1 To strArr.Length Step 2
-            If vmIndex < strArr.Length Then
-                If strArr(vmIndex) = My.Settings.VBoxName Then
-                    isVMrunning = True
-                End If
-            End If
-        Next
-
-
-        If isVMrunning Then
-            VBoxNameToolStripMenuItem.Text = My.Settings.VBoxName & " (running)"
+        If String.IsNullOrEmpty(My.Settings.VBoxDir) Then
+            VBoxNameToolStripMenuItem.Text = "Virtual Box path not set"
             StartVMToolStripMenuItem.Visible = False
-            SaveVMToolStripMenuItem.Visible = True
-        Else
-            VBoxNameToolStripMenuItem.Text = My.Settings.VBoxName
-            StartVMToolStripMenuItem.Visible = True
             SaveVMToolStripMenuItem.Visible = False
+            ChooseVMToolStripMenuItem.Visible = False
+            SaveVMToolStripMenuItem.Visible = False
+            RestoreStateVMToolStripMenuItem.Visible = False
+        Else
+
+            VBoxNameToolStripMenuItem.Checked = My.Settings.VBoxName <> "No VM"
+            VBoxNameToolStripMenuItem.Enabled = My.Settings.VBoxName <> "No VM"
+
+            'Is the VM runnning
+            Dim runningVMs As String = Nothing
+            Host.check_StdOut("VBoxManage list runningvms", runningVMs, Globals.getVBoxDir, False)
+            'Dim vmList As Collection = New Collection
+
+            Dim isVMrunning As Boolean = False
+            Dim strArr() As String
+            Dim vmIndex As Integer
+            strArr = runningVMs.Split("""")
+
+            For vmIndex = 1 To strArr.Length Step 2
+                If vmIndex < strArr.Length Then
+                    If strArr(vmIndex) = My.Settings.VBoxName Then
+                        isVMrunning = True
+                    End If
+                End If
+            Next
+
+
+            If isVMrunning Then
+                VBoxNameToolStripMenuItem.Text = My.Settings.VBoxName & " (running)"
+                StartVMToolStripMenuItem.Visible = False
+                SaveVMToolStripMenuItem.Visible = True
+            Else
+                VBoxNameToolStripMenuItem.Text = My.Settings.VBoxName
+                StartVMToolStripMenuItem.Visible = True
+                SaveVMToolStripMenuItem.Visible = False
+            End If
+
+
+            StartVMToolStripMenuItem.Text = "Start VM (" & My.Settings.startvmType & ")"
         End If
 
-
-        StartVMToolStripMenuItem.Text = "Start VM (" & My.Settings.startvmType & ")"
 
     End Sub
 
@@ -54,6 +66,8 @@
             If DB = Globals.getDB Then
                 DBComboBox.SelectedIndex = DB_count
             End If
+
+
 
         Next
 
@@ -256,6 +270,11 @@
 
     Shared Function get_password(ByVal schema As String, ByVal database As String) As String
         Dim password As String = InputBox("Schema: " & schema & Chr(10) & "Database: " & database & Chr(10) & Chr(10) & "Enter password", "Password")
+        'raise an exception if password is null.  Trap it downstream in the calling routines.
+        If String.IsNullOrEmpty(password) Then
+            Throw New System.Exception("User Cancelled Operation")
+        End If
+
         Return password
     End Function
 
@@ -580,7 +599,7 @@
     End Sub
 
     Private Sub RestoreStateVMToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RestoreStateVMToolStripMenuItem.Click
-        WF_virtual_box.revertVM("Reverting", True, "clean")
+        WF_virtual_box.revertVM("Reverting", True, "desired")
     End Sub
 
     Private Sub SaveVMToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveVMToolStripMenuItem.Click
