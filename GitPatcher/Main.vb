@@ -270,6 +270,11 @@
 
     Shared Function get_password(ByVal schema As String, ByVal database As String) As String
         Dim password As String = InputBox("Schema: " & schema & Chr(10) & "Database: " & database & Chr(10) & Chr(10) & "Enter password", "Password")
+        'raise an exception if password is null.  Trap it downstream in the calling routines.
+        If String.IsNullOrEmpty(password) Then
+            Throw New System.Exception("User Cancelled Operation")
+        End If
+
         Return password
     End Function
 
