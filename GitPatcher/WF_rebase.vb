@@ -18,7 +18,7 @@ Friend Class WF_rebase
         Host.RunMasterScript("prompt Exporting Data" &
             Environment.NewLine & "DEFINE database = '" & Globals.getDATASOURCE & "'" &
             Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
-            Environment.NewLine & "@exp_data.sql" &
+            Environment.NewLine & "@exp_data_" & Globals.getOrgCode & ".sql" &
             Environment.NewLine & "exit;" _
           , Globals.getRepoPath & "tools\db-spooler\script")
     End Sub

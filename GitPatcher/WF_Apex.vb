@@ -180,7 +180,7 @@
             'Use Host class to execute with a master script.
             Host.RunMasterScript("prompt Exporting Apex App " & app_id &
                 Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
-                Environment.NewLine & "connect " & iSchema & "/&" & iSchema & "_password@" & Globals.getDATASOURCE &
+                Environment.NewLine & "CONNECT &&" & iSchema & "_user/&&" & iSchema & "_password@" & Globals.getDATASOURCE &
                 Environment.NewLine & "Apex export -applicationid " & app_id & " -skipExportDate -split" &
                 Environment.NewLine & "exit;" _
               , parsingSchemaDir)
