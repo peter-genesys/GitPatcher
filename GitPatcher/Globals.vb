@@ -565,24 +565,24 @@ Module Globals
 
     Public Function deriveHotfixBranch(Optional ByVal iDb As String = "") As String
 
-        If gFlow = "GitHubFlow" Then
-            Return "master"
-        End If
+        'If gFlow = "GitHubFlow" Then
+        'Return "master"
+        'End If
 
         If String.IsNullOrEmpty(iDb) Then
             iDb = gDB
         End If
 
         If iDb = "PROD" Then
-            Return "master"
+            Return "release"
         ElseIf iDb = "UAT" Then
-            Return "uat"
+            Return "release"
         ElseIf iDb = "TEST" Then
-            Return "test"
+            Return "master"
         ElseIf iDb = "DEV" Then
-            Return "develop"
+            Return "master"
         ElseIf iDb = "VM" Then
-            Return ""
+            Return "master"
         End If
 
         Return ""
