@@ -147,14 +147,14 @@
 
         'TODO add code to read tags on the release branch to determine last semantic release id
 
-        Dim l_app_version = InputBox("Please confirm new semantic release id for " & Globals.currentAppCode & "", "New " & Globals.getAppName & " Version", "1.1.0")
+        Dim l_app_version = InputBox("Please confirm new semantic release id for " & Globals.currentAppCode & "", "New " & Globals.getAppName & " Version", "1.0.0")
         If String.IsNullOrEmpty(l_app_version) Then
             MsgBox("User Cancelled Operation")
             Return
         End If
 
 
-        'l_app_version = Globals.currentAppCode & "-" & l_app_version
+        l_app_version = Globals.currentAppCode & "-" & l_app_version
 
         'Dim newBranch As String = "release/" & iCreatePatchType & "/" & Globals.currentAppCode & "/" & l_app_version
 
@@ -168,31 +168,57 @@
 
         Dim currentBranch As String = GitOp.CurrentBranch()
 
-        Dim createPatchSetProgress As ProgressDialogue = New ProgressDialogue("Create DB " & iCreatePatchType)
+        Dim createPatchSetProgress As ProgressDialogue = New ProgressDialogue("Create Patch Release", "Create formal release of patches.") '("Create DB " & iCreatePatchType)
         createPatchSetProgress.MdiParent = GitPatcher
 
-        createPatchSetProgress.addStep("Switch to develop branch")
-        createPatchSetProgress.addStep("Pull from origin/develop")
-        createPatchSetProgress.addStep("Create and Switch to release Branch: " & newBranch)
+        'SET DB TARGET
+        createPatchSetProgress.addStep("Change current DB to : " & iTargetDB, lcurrentDB <> iTargetDB)
 
-        createPatchSetProgress.addStep("Change current DB to : " & iTargetDB)
+        'SWITCH TO RELEASE BASE
+        'I could list the potential release branches in the notes.
+        createPatchSetProgress.addStep("Switch to last release branch", True,
+                                       "TGIT - Let user choose any branch. Or could create a dialog with a list of release/ branches.")
+        'PULL RELEASE BASE
+        createPatchSetProgress.addStep("Pull the release branch", True,
+                                       "LGIT - automatic.")
+        'CREATE NEW RELEASE
+        createPatchSetProgress.addStep("Create and Switch to new release Branch: " & newBranch, True,
+                                       "LGIT - automatic.")
+        'Could also use the TGIT Create Branch dialog - but this is more like a power user interface.
 
+        'MERGE PATCHES FROM MASTER
+        createPatchSetProgress.addStep("Merge some commit from the master branch history", True,
+                                       "TGIT - Let user choose any commit, but should be a commit from the master branch, and usually a merge commit of a feature branch.")
+
+        'CREATE RELEASE PATCH
         createPatchSetProgress.addStep("Create, edit and test " & iCreatePatchType)
-        createPatchSetProgress.addStep("Bump Apex version to " & l_app_version)
-        createPatchSetProgress.addStep("Commit Apex version " & l_app_version)
-        createPatchSetProgress.addStep("Tag this release as " & l_app_version)
+
+        'PUSH NEW RELEASE
         createPatchSetProgress.addStep("Push to origin/" & newBranch)
 
-        createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to develop", False)
-        createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to test", True)
-        createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to uat", False)
-        createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to master", False)
+        'RELEASE UAT
+        createPatchSetProgress.addStep("Release to UAT", False)
 
-        createPatchSetProgress.addStep("Release to ISDEVL", False)
-        createPatchSetProgress.addStep("Release to ISTEST", True)
-        createPatchSetProgress.addStep("Release to ISUAT", False)
-        createPatchSetProgress.addStep("Release to ISPROD", False)
-        createPatchSetProgress.addStep("Revert current DB to : " & lcurrentDB)
+        'RELEASE PROD
+        createPatchSetProgress.addStep("Release to PROD", False)
+
+        'RESET CURRENT DB
+        createPatchSetProgress.addStep("Reset current DB to : " & lcurrentDB, True)
+
+
+        'createPatchSetProgress.addStep("Bump Apex version to " & l_app_version)
+        'createPatchSetProgress.addStep("Commit Apex version " & l_app_version)
+        'createPatchSetProgress.addStep("Tag this release as " & l_app_version)
+
+
+        'createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to develop", False)
+        'createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to test", True)
+        'createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to uat", False)
+        'createPatchSetProgress.addStep("Merge Patchset " & l_app_version & " to master", False)
+
+        'createPatchSetProgress.addStep("Release to ISDEVL", False)
+        'createPatchSetProgress.addStep("Release to ISTEST", True)
+
         'createPatchSetProgress.addStep("Export Patchset")
         'Import
 
@@ -202,32 +228,42 @@
             Common.wait(1000)
         Loop
 
-        If createPatchSetProgress.toDoNextStep() Then
-            'Switch to develop branch
-            GitOp.SwitchBranch("develop")
 
-
-        End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Pull from origin/develop
-            GitOp.pullBranch("develop")
-  
-
-        End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Create and Switch to new collection branch
-            GitOp.createAndSwitchBranch(newBranch)
-
-
-
-        End If
-
+        'SET DB TARGET
         If createPatchSetProgress.toDoNextStep() Then
             'Change current DB to release DB
             Globals.setDB(iTargetDB.ToUpper)
 
         End If
 
+
+        'SWITCH TO RELEASE BASE
+        If createPatchSetProgress.toDoNextStep() Then
+            'Switch to last release branch
+            Tortoise.Switch(Globals.getRepoPath)
+        End If
+
+
+        'PULL RELEASE BASE
+        If createPatchSetProgress.toDoNextStep() Then
+            'Pull 
+            GitOp.pullBranch(Globals.currentLongBranch()) 'LGIT does not use the branch param. BGIT does.
+        End If
+
+        'CREATE NEW RELEASE
+        If createPatchSetProgress.toDoNextStep() Then
+            'Create and Switch to new release branch
+            GitOp.createAndSwitchBranch(newBranch)
+
+        End If
+
+        'MERGE PATCHES FROM MASTER
+        If createPatchSetProgress.toDoNextStep() Then
+            'Merge from master branch
+            Tortoise.Merge(Globals.getRepoPath)
+        End If
+
+        'CREATE RELEASE PATCH
         If createPatchSetProgress.toDoNextStep() Then
 
             'Create, edit And test collection
@@ -236,74 +272,30 @@
 
 
         End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Bump Apex version 
-            CreateRelease.bumpApexVersion(l_app_version)
-
-        End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Commit Apex version 
-            Tortoise.Commit(Globals.getRepoPath, "Bump Apex " & Globals.currentApex & " to " & l_app_version)
 
 
-        End If
-        If createPatchSetProgress.toDoNextStep() Then
-            'Tag this commit
-            GitBash.TagSimple(Globals.getRepoPath, l_app_version)
-
-        End If
+        'PUSH NEW RELEASE
         If createPatchSetProgress.toDoNextStep() Then
             'Push release to origin with tags
-            GitOp.pushBranch(newBranch) 'previous call to GitBash.Push sent tags and it waited (synchronously)
-            'GitBash.Push(Globals.getRepoPath, "origin", newBranch, True)
+            GitOp.pushBranch(newBranch)
 
         End If
 
+        'RELEASE UAT
         If createPatchSetProgress.toDoNextStep() Then
-            'Merge Patchset to develop 
-            WF_mergeAndPush.mergeAndPushBranch("patchset", "develop")
-
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Merge Patchset to test 
-            WF_mergeAndPush.mergeAndPushBranch("patchset", "test")
-
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Merge Patchset to uat 
-            WF_mergeAndPush.mergeAndPushBranch("patchset", "uat")
-
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Merge Patchset to master 
-            WF_mergeAndPush.mergeAndPushBranch("patchset", "master")
-
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Release to ISDEVL
-            WF_release.releaseTo("DEV")
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Release to ISTEST
-            WF_release.releaseTo("TEST")
-        End If
-
-        If createPatchSetProgress.toDoNextStep() Then
-            'Release to ISTEST
+            'Release to UAT
             WF_release.releaseTo("UAT")
         End If
 
+        'RELEASE PROD
         If createPatchSetProgress.toDoNextStep() Then
-            'Release to ISTEST
+            'Release to PROD
             WF_release.releaseTo("PROD")
         End If
 
 
+
+        'RESET CURRENT DB
         If createPatchSetProgress.toDoNextStep() Then
             'Revert current DB  
             Globals.setDB(lcurrentDB.ToUpper)
@@ -312,6 +304,61 @@
 
         'Done
         createPatchSetProgress.toDoNextStep()
+
+
+        'If createPatchSetProgress.toDoNextStep() Then
+        '    'Bump Apex version 
+        '    CreateRelease.bumpApexVersion(l_app_version)
+
+        'End If
+        'If createPatchSetProgress.toDoNextStep() Then
+        '    'Commit Apex version 
+        '    Tortoise.Commit(Globals.getRepoPath, "Bump Apex " & Globals.currentApex & " to " & l_app_version)
+
+
+        'End If
+        'If createPatchSetProgress.toDoNextStep() Then
+        '    'Tag this commit
+        '    GitBash.TagSimple(Globals.getRepoPath, l_app_version)
+
+        'End If
+
+
+        'If createPatchSetProgress.toDoNextStep() Then
+        '    'Merge Patchset to develop 
+        '    WF_mergeAndPush.mergeAndPushBranch("patchset", "develop")
+
+        'End If
+
+        'If createPatchSetProgress.toDoNextStep() Then
+        '    'Merge Patchset to test 
+        '    WF_mergeAndPush.mergeAndPushBranch("patchset", "test")
+
+        'End If
+
+        'If createPatchSetProgress.toDoNextStep() Then
+        '    'Merge Patchset to uat 
+        '    WF_mergeAndPush.mergeAndPushBranch("patchset", "uat")
+
+        'End If
+
+        'If createPatchSetProgress.toDoNextStep() Then
+        '    'Merge Patchset to master 
+        '    WF_mergeAndPush.mergeAndPushBranch("patchset", "master")
+
+        'End If
+
+        'If createPatchSetProgress.toDoNextStep() Then
+        '    'Release to ISDEVL
+        '    WF_release.releaseTo("DEV")
+        'End If
+
+        'If createPatchSetProgress.toDoNextStep() Then
+        '    'Release to ISTEST
+        '    WF_release.releaseTo("TEST")
+        'End If
+
+
 
     End Sub
 
