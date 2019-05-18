@@ -391,4 +391,16 @@
 
     End Function
 
+    Public Shared Function FindRepoPatches() As Collection
+
+        Dim repoPatches As Collection = New Collection
+
+        If IO.Directory.Exists(Globals.RootPatchDir) Then
+            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", repoPatches, Globals.RootPatchDir)
+        End If
+
+        Return repoPatches
+
+    End Function
+
 End Class

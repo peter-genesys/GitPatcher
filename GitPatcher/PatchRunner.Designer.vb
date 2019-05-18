@@ -97,7 +97,7 @@ Partial Class PatchRunner
         'ComboBoxPatchesFilter
         '
         Me.ComboBoxPatchesFilter.FormattingEnabled = True
-        Me.ComboBoxPatchesFilter.Items.AddRange(New Object() {"Unapplied", "Uninstalled", "All"})
+        Me.ComboBoxPatchesFilter.Items.AddRange(New Object() {"Unapplied", "Unpromoted", "Uninstalled", "All"})
         Me.ComboBoxPatchesFilter.Location = New System.Drawing.Point(8, 6)
         Me.ComboBoxPatchesFilter.Name = "ComboBoxPatchesFilter"
         Me.ComboBoxPatchesFilter.Size = New System.Drawing.Size(139, 21)

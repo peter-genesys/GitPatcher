@@ -69,61 +69,11 @@ Public Class PatchRunner
 
 
 
-
-    Public Shared Function GetAnswer(ByRef apexrmQuery As String) As String
-
-        Application.DoEvents()
-        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
-        Cursor.Current = Cursors.WaitCursor
-
-
-
-        Dim conn As New OracleConnection(Globals.getARMconnection)
-            Dim sql As String = Nothing
-            Dim cmd As OracleCommand
-            Dim dr As OracleDataReader
-        Dim answer As String
-
-        Try
-
-                conn.Open()
-
-
-            cmd = New OracleCommand(apexrmQuery, conn)
-            cmd.CommandType = CommandType.Text
-            dr = cmd.ExecuteReader()
-            dr.Read()
-
-            answer = dr.Item("answer")
-
-
-            dr.Close()
-
-
-
-            conn.Close()
-                conn.Dispose()
-
-
-            Catch ex As Exception ' catches any error
-                MessageBox.Show(ex.Message.ToString())
-            Finally
-                ' In a real application, put cleanup code here.
-
-            End Try
-
-        Cursor.Current = cursorRevert
-
-        Return answer
-
-
-    End Function
-
-
     Shared Function GetlastSuccessfulPatch() As String
         Dim lastSuccessfulPatch As String = "Patched"
 
-        lastSuccessfulPatch = PatchRunner.GetAnswer("select patch_name answer from arm_patch where success_yn = 'Y' order by log_datetime desc")
+        lastSuccessfulPatch = OracleSQL.QueryToString("select patch_name from arm_patch where success_yn = 'Y' order by log_datetime desc", "patch_name")
+
         Logger.Dbg(lastSuccessfulPatch)
 
         Return lastSuccessfulPatch
@@ -157,7 +107,7 @@ Public Class PatchRunner
 
 
     Public Shared Function ReorderByDependancy(ByRef givenPatches As Collection) As Collection
-
+        'OLDER STYLE
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
@@ -186,11 +136,6 @@ Public Class PatchRunner
             While (dr.Read())
                 Dim l_patch_name As String = dr.Item("patch_name")
 
-                'For Each givenPatch In givenPatches
-                '    If givenPatch.Contains(l_patch_name) Then
-                '        orderedPatches.Add(givenPatch)
-                '    End If
-                'Next
 
                 For i As Integer = givenPatches.Count To 1 Step -1
 
@@ -235,16 +180,17 @@ Public Class PatchRunner
 
     End Function
 
- 
+
 
 
 
     Public Shared Sub FindPatches(ByRef foundPatches As Collection, ByVal iHideInstalled As Boolean)
+        'OLDER STYLE
 
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
- 
+
         foundPatches.Clear()
         If IO.Directory.Exists(Globals.RootPatchDir) Then
 
@@ -324,78 +270,41 @@ Public Class PatchRunner
 
 
     Public Shared Sub FindUnappliedPatches(ByRef foundPatches As Collection)
+        'THIS IS THE NEWER STYLE
 
-        Application.DoEvents()
-        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
-        Cursor.Current = Cursors.WaitCursor
-
-        foundPatches.Clear()
-        Dim availablePatches As Collection = New Collection
-        If IO.Directory.Exists(Globals.RootPatchDir) Then
-
-            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", availablePatches, Globals.RootPatchDir)
-
-        End If
-
-        Dim conn As New OracleConnection(Globals.getARMconnection)
-        Dim sql As String = Nothing
-        Dim cmd As OracleCommand
-        Dim dr As OracleDataReader
-
-        'Dim patchMatch As Boolean = False
+        'Get a list of unapplied patches
+        Dim unappliedPatches As Collection = OracleSQL.GetUnappliedPatches()
+        'Get a list of patches in the repository checkout
+        Dim repoPatches As Collection = FileIO.FindRepoPatches()
 
         Dim MissingPatchList As Collection = New Collection
 
+        foundPatches.Clear()
+
         'This time loop through unapplied patches first and show in list if available in dir.
-        Try
+        For Each unappliedPatch In unappliedPatches
 
-            conn.Open()
+            Dim l_patch_name As String = unappliedPatch.ToString
+            Dim l_patch_found As Boolean = False
 
-            sql = "select patch_name from ARM_UNAPPLIED_V"
-            'sql = "select 'test1' patch_name from dual union all select 'test2' patch_name from dual"
+            For i As Integer = 1 To repoPatches.Count
 
-            cmd = New OracleCommand(sql, conn)
-            cmd.CommandType = CommandType.Text
-            dr = cmd.ExecuteReader()
-
-            While (dr.Read())
-                Dim l_patch_name As String = dr.Item("patch_name")
-                Dim l_patch_found As Boolean = False
-
-                For i As Integer = 1 To availablePatches.Count
-
-                    If Common.getLastSegment(availablePatches(i), "\").ToUpper() = l_patch_name Then 'convert to uppercase
-                        foundPatches.Add(availablePatches(i))
-                        l_patch_found = True
-                    End If
-
-                Next
-
-                If Not l_patch_found Then
-                    'MsgBox("WARNING: Unapplied patch " & l_patch_name & " is not present in the local checkout.")
-                    MissingPatchList.Add(l_patch_name)
+                If Common.getLastSegment(repoPatches(i), "\").ToUpper() = l_patch_name Then 'convert to uppercase
+                    foundPatches.Add(repoPatches(i))
+                    l_patch_found = True
                 End If
 
-            End While
+            Next
 
-            dr.Close()
+            If Not l_patch_found Then
+                MissingPatchList.Add(l_patch_name)
+            End If
 
-            conn.Close()
-            conn.Dispose()
-
-
-        Catch ex As Exception ' catches any error
-            MessageBox.Show(ex.Message.ToString())
-        Finally
-            ' In a real application, put cleanup code here.
-
-        End Try
+        Next
 
         If MissingPatchList.Count > 0 Then
-
             MsgBox("Repo: " & Globals.getRepoName & "     Branch: " & Globals.currentBranch & Chr(10) & Chr(10) _
                  & Common.CollectionToText(MissingPatchList), MsgBoxStyle.Information, "These Unapplied Patches are not present")
-
         End If
 
         If foundPatches.Count = 0 Then
@@ -403,7 +312,50 @@ Public Class PatchRunner
         End If
 
 
-        Cursor.Current = cursorRevert
+    End Sub
+
+    Public Shared Sub FindUnpromotedPatches(ByRef foundPatches As Collection)
+        'THIS IS THE NEWER STYLE - same as above - could be substitute with just one routine with viewname as a param
+
+        'Get a list of unpromoted patches
+        Dim unpromotedPatches As Collection = OracleSQL.GetUnpromotedPatches()
+        'Get a list of patches in the repository checkout
+        Dim repoPatches As Collection = FileIO.FindRepoPatches()
+
+        Dim MissingPatchList As Collection = New Collection
+
+        foundPatches.Clear()
+
+        'This time loop through unpromoted patches first and show in list if available in dir.
+        For Each unpromotedPatch In unpromotedPatches
+
+            Dim l_patch_name As String = unpromotedPatch.ToString
+            Dim l_patch_found As Boolean = False
+
+            For i As Integer = 1 To repoPatches.Count
+
+                If Common.getLastSegment(repoPatches(i), "\").ToUpper() = l_patch_name Then 'convert to uppercase
+                    foundPatches.Add(repoPatches(i))
+                    l_patch_found = True
+                End If
+
+            Next
+
+            If Not l_patch_found Then
+                MissingPatchList.Add(l_patch_name)
+            End If
+
+        Next
+
+        If MissingPatchList.Count > 0 Then
+            MsgBox("Repo: " & Globals.getRepoName & "     Branch: " & Globals.currentBranch & Chr(10) & Chr(10) _
+                 & Common.CollectionToText(MissingPatchList), MsgBoxStyle.Information, "These Unpromoted Patches are not present")
+        End If
+
+        If foundPatches.Count = 0 Then
+            MsgBox("No patches were found, that matched the search criteria.", MsgBoxStyle.Information, "No Patches Found")
+        End If
+
 
     End Sub
 
@@ -456,6 +408,8 @@ Public Class PatchRunner
 
         If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
             FindUnappliedPatches(AvailablePatches)
+        ElseIf ComboBoxPatchesFilter.SelectedItem = "Unpromoted" Then
+            FindUnpromotedPatches(AvailablePatches)
         ElseIf ComboBoxPatchesFilter.SelectedItem = "Uninstalled" Then
             FindPatches(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Uninstalled")
         ElseIf ComboBoxPatchesFilter.SelectedItem = "All" Then
@@ -469,8 +423,9 @@ Public Class PatchRunner
 
         Logger.Dbg("Populate Tree")
 
-        'Populate the treeview, tick unapplied by default
-        AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Unapplied")
+        'Populate the treeview, tick unapplied or unpromoted by default
+        AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches _
+            , ComboBoxPatchesFilter.SelectedItem = "Unapplied" Or ComboBoxPatchesFilter.SelectedItem = "Unpromoted")
 
 
     End Sub
@@ -485,7 +440,7 @@ Public Class PatchRunner
 
 
     Public Shared Sub FindNewLogFiles(ByRef foundLogs As Collection)
-
+        'OLDER STYLE
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor
@@ -732,56 +687,8 @@ Public Class PatchRunner
 
 
 
-    '
-    '   Public Shared Function FindLastPatch(ByVal patch_component As String) As String
-    '
-
-    '
-    '       'Simple but relies on TNSNAMES File
-    '       Dim conn As New OracleConnection(Globals.getARMconnection)
-    '       'Dim sql As String = Nothing
-    '       Dim cmd As New OracleCommand
-    '       'Dim dr As OracleDataReader
-    '
-    '       Dim patch_name As String = Nothing
-    '
-    '       'This time loop through unapplied patches first and show in list if available in dir.
-    '       Try
-    '
-    '           conn.Open()
-    '           cmd.CommandText = "arm_installer.get_last_patch"
-    '           cmd.CommandType = CommandType.StoredProcedure
-    '           cmd.Parameters.Add("i_patch_component", OracleDbType.Varchar2, 50)
-    '           cmd.Parameters.Item("i_patch_component").Value = patch_component
-    '           cmd.Parameters.Add("patch_name", OracleDbType.Varchar2, 100)
-    '           cmd.Parameters.Item("patch_name").Direction = ParameterDirection.ReturnValue
-    '           cmd.Connection = conn
-    '
-    '           Dim obj As Object = cmd.ExecuteScalar()
-    '
-    '
-    '           patch_name = CType(cmd.Parameters.Item("patch_name").Value, String)
-    '
-    '           conn.Close()
-    '           conn.Dispose()
-    '
-    '
-    '       Catch ex As Exception ' catches any error
-    '           MessageBox.Show(ex.Message.ToString())
-    '       Finally
-    '           ' In a real application, put cleanup code here.
-    '
-    '       End Try
-    '
-    '       Return patch_name
-    '
-    '
-    'End Function
-
-
-
     Public Shared Function FindLastPatch(ByVal patch_component As String) As String
-
+        'OLDER STYLE
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
         Cursor.Current = Cursors.WaitCursor

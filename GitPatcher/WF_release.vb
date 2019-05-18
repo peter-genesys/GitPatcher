@@ -3,7 +3,7 @@
 
         Dim InstallStatus As String = Nothing
         If iTargetDB = "DEV" Then
-            InstallStatus = "Uninstalled"
+            InstallStatus = "Unpromoted"
         Else
             InstallStatus = "Unapplied"
         End If
