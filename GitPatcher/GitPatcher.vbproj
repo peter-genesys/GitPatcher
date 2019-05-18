@@ -172,6 +172,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GitOp.vb" />
+    <Compile Include="OracleSQL.vb" />
     <Compile Include="OrgSettings.Designer.vb">
       <DependentUpon>OrgSettings.vb</DependentUpon>
     </Compile>

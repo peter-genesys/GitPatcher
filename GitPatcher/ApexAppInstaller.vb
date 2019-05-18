@@ -236,6 +236,10 @@ Public Class ApexAppInstaller
         Else
             'Common.listCollection(ChosenApps, "Chosen Apps")
 
+
+            'Get a list of modified apps
+            Dim modifiedApps As Collection = OracleSQL.GetModifiedApps()
+
             MasterScriptListBox.Items.Clear()
             MasterScriptListBox.Items.Add("SET SERVEROUTPUT ON")
             MasterScriptListBox.Items.Add("WHENEVER OSERROR EXIT FAILURE ROLLBACK")
@@ -245,8 +249,14 @@ Public Class ApexAppInstaller
             MasterScriptListBox.Items.Add("@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql")
 
             For Each App In ChosenApps
+
                 Dim lSchema = Common.getFirstSegment(App, "\")
                 Dim lAppId = Common.getLastSegment(App, "\")
+
+                If modifiedApps.Contains(lAppId) Then
+                    MsgBox("App " & lAppId & " has been modified since the last time it was installed.  " & Environment.NewLine &
+                               "Please check.  You may be about to overwrite unexported changes.", MsgBoxStyle.Exclamation, "Modified App")
+                End If
 
                 MasterScriptListBox.Items.Add("CONNECT &&" & lSchema & "_user/&&" & lSchema & "_password@&&database")
                 MasterScriptListBox.Items.Add("execute arm_installer.set_security_for_apex_import(-")

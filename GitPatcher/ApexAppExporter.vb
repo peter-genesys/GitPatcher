@@ -59,6 +59,14 @@ Public Class ApexAppExporter
         FindApps(AvailableApps) 'check for any apps
         KnownAppsTreeView.populateTreeFromCollection(AvailableApps, False)
 
+        'Get a list of modified apps
+        Dim modifiedApps As Collection = OracleSQL.GetModifiedApps()
+
+        'Tick the modified apps in the treeview
+        KnownAppsTreeView.TickNodes(modifiedApps)
+
+        KnownAppsTreeView.ExpandAll()
+
         Logger.Dbg("Populate Tree")
 
 
