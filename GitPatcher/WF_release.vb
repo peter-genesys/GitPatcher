@@ -5,14 +5,14 @@
 
         Dim lcurrentDB As String = Globals.getDB()
 
-            Dim currentBranch As String = GitOp.CurrentBranch()
+        Dim currentBranch As String = GitOp.CurrentBranch()
 
-            Dim releaseFromBranch As String = Globals.deriveHotfixBranch(iTargetDB)
+        Dim releaseFromBranch As String = Globals.deriveHotfixBranch(iTargetDB)
 
-            Dim releasing As ProgressDialogue = New ProgressDialogue("Release to " & iTargetDB)
+        Dim releasing As ProgressDialogue = New ProgressDialogue("Release to " & iTargetDB)
 
-            releasing.MdiParent = GitPatcher
-            releasing.addStep("Change current DB to : " & iTargetDB, lcurrentDB <> iTargetDB)
+        releasing.MdiParent = GitPatcher
+        releasing.addStep("Change current DB to : " & iTargetDB, lcurrentDB <> iTargetDB)
         releasing.addStep("Switch to " & releaseFromBranch & " branch", currentBranch <> releaseFromBranch)
         releasing.addStep("Pull from Origin to " & releaseFromBranch & " branch", True)
 
@@ -167,6 +167,12 @@
         'SET DB TARGET
         createPatchSetProgress.addStep("Change current DB to : " & iTargetDB, lcurrentDB <> iTargetDB)
 
+        'SWITCH TO MASTER
+        createPatchSetProgress.addStep("Switch to master branch", True, currentBranch <> "master")
+
+        'PULL MASTER
+        createPatchSetProgress.addStep("Pull master branch", True, "Ensure master branch is upto date.")
+
         'SWITCH TO RELEASE BASE
         'I could list the potential release branches in the notes.
         createPatchSetProgress.addStep("Switch to last release branch", True,
@@ -229,6 +235,19 @@
 
         End If
 
+        'SWITCH TO MASTER
+        If createPatchSetProgress.toDoNextStep() Then
+            'Switch to master branch
+            GitOp.SwitchBranch("master")
+
+        End If
+
+        'PULL MASTER
+        If createPatchSetProgress.toDoNextStep() Then
+            'Pull from origin/master
+            GitOp.pullBranch("master")
+
+        End If
 
         'SWITCH TO RELEASE BASE
         If createPatchSetProgress.toDoNextStep() Then
@@ -240,7 +259,7 @@
         'PULL RELEASE BASE
         If createPatchSetProgress.toDoNextStep() Then
             'Pull 
-            GitOp.pullBranch(Globals.currentLongBranch()) 'LGIT does not use the branch param. BGIT does.
+            GitOp.pullBranch("") 'LGIT does not use the branch param. BGIT does.
         End If
 
         'CREATE NEW RELEASE
@@ -261,8 +280,6 @@
 
             'Create, edit And test collection
             Dim Wizard As New CreateRelease(l_app_version, iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes, iSupPatchTypes)
-            Wizard.ShowDialog() 'WAITING HERE!!
-
 
         End If
 

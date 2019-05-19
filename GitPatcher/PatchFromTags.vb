@@ -27,10 +27,9 @@ Public Class PatchFromTags
 
         ExecuteButton.Text = "Execute Patch on " & Globals.currentTNS
 
-        Me.MdiParent = GitPatcher
-
         RevertVMButton.Visible = My.Settings.VBoxName <> "No VM"
 
+        Me.MdiParent = GitPatcher
         Me.Show()
         Wait()
 

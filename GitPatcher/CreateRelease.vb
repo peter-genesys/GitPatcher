@@ -7,6 +7,8 @@ Public Class CreateRelease
     Private pPrereqPatchTypes As String = Nothing
     Private pSupPatchTypes As String = Nothing
 
+    Private waiting As Boolean
+
     Public Sub New(ByVal iPatchName As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
 
         If String.IsNullOrEmpty(iPatchName) Then
@@ -50,8 +52,23 @@ Public Class CreateRelease
 
         AvailablePatchesLabel.Text = "Available" & Chr(10) & iFindPatchTypes & Chr(10) & "Patches"
 
+        Me.MdiParent = GitPatcher
+        Me.Show()
+        Wait()
+
     End Sub
 
+    Public Sub Wait()
+        'This wait routine will halt the caller until the form is closed.
+        waiting = True
+        Do Until Not waiting
+            Common.wait(1000)
+        Loop
+    End Sub
+
+    Private Sub CreateRelease_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+        waiting = False
+    End Sub
 
     Private Sub Findtags()
 
