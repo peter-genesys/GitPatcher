@@ -1,14 +1,7 @@
 ﻿Friend Class WF_release
     Shared Sub releaseTo(iTargetDB As String, Optional ByVal iBranchType As String = "")
 
-        Dim InstallStatus As String = Nothing
-        If iTargetDB = "DEV" Then
-            InstallStatus = "Unpromoted"
-        Else
-            InstallStatus = "Unapplied"
-        End If
-
-
+        Dim InstallStatus As String = "Unapplied"
 
         Dim lcurrentDB As String = Globals.getDB()
 

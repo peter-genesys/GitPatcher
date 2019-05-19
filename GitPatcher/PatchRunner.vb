@@ -272,8 +272,29 @@ Public Class PatchRunner
     Public Shared Sub FindUnappliedPatches(ByRef foundPatches As Collection)
         'THIS IS THE NEWER STYLE
 
-        'Get a list of unapplied patches
-        Dim unappliedPatches As Collection = OracleSQL.GetUnappliedPatches()
+        Dim unappliedPatches As Collection = New Collection()
+
+        If Globals.getDB = "DEV" Then
+
+            'Get patch list from the VM
+            'Change to VM to query the Unpromoted view of the VM db
+
+            'Change to VM
+            Globals.setDB("VM")
+            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+
+            'Get a list of unpromoted patches
+            unappliedPatches = OracleSQL.GetUnpromotedPatches()
+
+            'Change back to DEV
+            Globals.setDB("DEV")
+            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+
+        Else
+            'Get a list of unapplied patches from the target DB
+            unappliedPatches = OracleSQL.GetUnappliedPatches()
+        End If
+
         'Get a list of patches in the repository checkout
         Dim repoPatches As Collection = FileIO.FindRepoPatches()
 
@@ -314,50 +335,6 @@ Public Class PatchRunner
 
     End Sub
 
-    Public Shared Sub FindUnpromotedPatches(ByRef foundPatches As Collection)
-        'THIS IS THE NEWER STYLE - same as above - could be substitute with just one routine with viewname as a param
-
-        'Get a list of unpromoted patches
-        Dim unpromotedPatches As Collection = OracleSQL.GetUnpromotedPatches()
-        'Get a list of patches in the repository checkout
-        Dim repoPatches As Collection = FileIO.FindRepoPatches()
-
-        Dim MissingPatchList As Collection = New Collection
-
-        foundPatches.Clear()
-
-        'This time loop through unpromoted patches first and show in list if available in dir.
-        For Each unpromotedPatch In unpromotedPatches
-
-            Dim l_patch_name As String = unpromotedPatch.ToString
-            Dim l_patch_found As Boolean = False
-
-            For i As Integer = 1 To repoPatches.Count
-
-                If Common.getLastSegment(repoPatches(i), "\").ToUpper() = l_patch_name Then 'convert to uppercase
-                    foundPatches.Add(repoPatches(i))
-                    l_patch_found = True
-                End If
-
-            Next
-
-            If Not l_patch_found Then
-                MissingPatchList.Add(l_patch_name)
-            End If
-
-        Next
-
-        If MissingPatchList.Count > 0 Then
-            MsgBox("Repo: " & Globals.getRepoName & "     Branch: " & Globals.currentBranch & Chr(10) & Chr(10) _
-                 & Common.CollectionToText(MissingPatchList), MsgBoxStyle.Information, "These Unpromoted Patches are not present")
-        End If
-
-        If foundPatches.Count = 0 Then
-            MsgBox("No patches were found, that matched the search criteria.", MsgBoxStyle.Information, "No Patches Found")
-        End If
-
-
-    End Sub
 
 
     Private Sub filterPatchType(ByRef foundPatches As Collection)
@@ -408,8 +385,6 @@ Public Class PatchRunner
 
         If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
             FindUnappliedPatches(AvailablePatches)
-        ElseIf ComboBoxPatchesFilter.SelectedItem = "Unpromoted" Then
-            FindUnpromotedPatches(AvailablePatches)
         ElseIf ComboBoxPatchesFilter.SelectedItem = "Uninstalled" Then
             FindPatches(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Uninstalled")
         ElseIf ComboBoxPatchesFilter.SelectedItem = "All" Then
@@ -423,9 +398,9 @@ Public Class PatchRunner
 
         Logger.Dbg("Populate Tree")
 
-        'Populate the treeview, tick unapplied or unpromoted by default
+        'Populate the treeview, tick unapplied by default
         AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches _
-            , ComboBoxPatchesFilter.SelectedItem = "Unapplied" Or ComboBoxPatchesFilter.SelectedItem = "Unpromoted")
+            , ComboBoxPatchesFilter.SelectedItem = "Unapplied")
 
 
     End Sub
