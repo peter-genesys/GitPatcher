@@ -13,14 +13,25 @@ Friend Class WF_rebase
             End If
         End If
 
+        'Check existance of exp_data file.
+        Dim exportFilename As String = Nothing
+
+        'Look for exp_data_<org>.sql or exp_data.sql
+        exportFilename = "exp_data_" & Globals.getOrgCode & ".sql"
+        If Not FileIO.fileExists(Globals.getRepoScriptsDir & exportFilename) Then
+            exportFilename = "exp_data.sql"
+            If Not FileIO.fileExists(Globals.getRepoScriptsDir & exportFilename) Then
+                Throw New System.Exception("exp_data file not found in dir: " & Globals.getRepoScriptsDir)
+            End If
+        End If
 
         'Use Host class to execute with a master script.
         Host.RunMasterScript("prompt Exporting Data" &
             Environment.NewLine & "DEFINE database = '" & Globals.getDATASOURCE & "'" &
             Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
-            Environment.NewLine & "@exp_data_" & Globals.getOrgCode & ".sql" &
+            Environment.NewLine & "@" & exportFilename &
             Environment.NewLine & "exit;" _
-          , Globals.getRepoPath & "tools\db-spooler\script")
+          , Globals.getRepoScriptsDir)
     End Sub
 
 

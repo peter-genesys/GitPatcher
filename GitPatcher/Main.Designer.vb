@@ -178,14 +178,14 @@ Partial Class Main
         'DBChangesOnlyToolStripMenuItem
         '
         Me.DBChangesOnlyToolStripMenuItem.Name = "DBChangesOnlyToolStripMenuItem"
-        Me.DBChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.DBChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.DBChangesOnlyToolStripMenuItem.Text = "DB changes only"
         Me.DBChangesOnlyToolStripMenuItem.ToolTipText = "I've made only DB changes since my last rebase."
         '
         'ApexChangesOnlyToolStripMenuItem
         '
         Me.ApexChangesOnlyToolStripMenuItem.Name = "ApexChangesOnlyToolStripMenuItem"
-        Me.ApexChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ApexChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.ApexChangesOnlyToolStripMenuItem.Text = "Apex changes only"
         Me.ApexChangesOnlyToolStripMenuItem.ToolTipText = "I've made only Apex App changes since my last rebase."
         '
@@ -407,31 +407,31 @@ Partial Class Main
         'ReleaseToPRODMenuItem
         '
         Me.ReleaseToPRODMenuItem.Name = "ReleaseToPRODMenuItem"
-        Me.ReleaseToPRODMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToPRODMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToPRODMenuItem.Text = "Release to PROD"
         '
         'ReleaseToUATMenuItem
         '
         Me.ReleaseToUATMenuItem.Name = "ReleaseToUATMenuItem"
-        Me.ReleaseToUATMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToUATMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToUATMenuItem.Text = "Release to UAT"
         '
         'ReleaseToTESTMenuItem
         '
         Me.ReleaseToTESTMenuItem.Name = "ReleaseToTESTMenuItem"
-        Me.ReleaseToTESTMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToTESTMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToTESTMenuItem.Text = "Release to TEST"
         '
         'ReleaseToDEVMenuItem
         '
         Me.ReleaseToDEVMenuItem.Name = "ReleaseToDEVMenuItem"
-        Me.ReleaseToDEVMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToDEVMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToDEVMenuItem.Text = "Release to DEV"
         '
         'ReleaseToVMMenuItem
         '
         Me.ReleaseToVMMenuItem.Name = "ReleaseToVMMenuItem"
-        Me.ReleaseToVMMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToVMMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToVMMenuItem.Text = "Release to VM"
         '
         'VirtualBoxToolStripMenuItem
@@ -655,9 +655,9 @@ Partial Class Main
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label10.Location = New System.Drawing.Point(12, 510)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(64, 13)
+        Me.Label10.Size = New System.Drawing.Size(71, 13)
         Me.Label10.TabIndex = 19
-        Me.Label10.Text = "Min Patch"
+        Me.Label10.Text = "ARM Patch"
         '
         'JiraTextBox
         '
@@ -875,9 +875,9 @@ Partial Class Main
         Me.Label20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label20.Location = New System.Drawing.Point(12, 536)
         Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(53, 13)
+        Me.Label20.Size = New System.Drawing.Size(74, 13)
         Me.Label20.TabIndex = 46
-        Me.Label20.Text = "Release"
+        Me.Label20.Text = "GP Release"
         '
         'Main
         '

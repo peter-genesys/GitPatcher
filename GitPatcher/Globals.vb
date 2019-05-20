@@ -26,6 +26,10 @@ Module Globals
         Return Common.dos_path_trailing_slash(My.Settings.GPScriptsDir)
     End Function
 
+    Public Function getRepoScriptsDir() As String
+        Return Globals.getRepoPath & "tools\db-spooler\script\"
+    End Function
+ 
     Public Function getVBoxDir() As String
         Return Common.dos_path_trailing_slash(My.Settings.VBoxDir)
     End Function

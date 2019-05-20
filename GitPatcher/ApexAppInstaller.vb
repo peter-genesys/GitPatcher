@@ -168,6 +168,8 @@ Public Class ApexAppInstaller
         FindApps(AvailableApps, ComboBoxAppsFilter.SelectedItem = "Queued") 'check for queued apps only
         AvailableAppsTreeView.populateTreeFromCollection(AvailableApps, ComboBoxAppsFilter.SelectedItem = "Queued") 'check the queued apps, by default.
 
+        AvailableAppsTreeView.ExpandAll()
+
 
         'Logger.Dbg("Filtering")
         'filterQueuedBy(AvailableApps)
