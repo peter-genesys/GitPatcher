@@ -5,6 +5,9 @@ Public Class PatchRunner
 
     Private waiting As Boolean
 
+    'Dim unappliedPatches As Collection = New Collection()
+    Dim AvailablePatches As Collection = New Collection
+
     Dim hotFixTargetDBFilter As String = Nothing
 
     Public Sub New(Optional ByVal iInstallStatus As String = "All", Optional ByVal iBranchType As String = "")
@@ -45,8 +48,14 @@ Public Class PatchRunner
 
         UsePatchAdminCheckBox.Checked = Globals.getUseARM
 
+        'Hide Order and Run tabs
+        PatchRunnerTabControl.TabPages.Remove(OrderTabPage)
+        PatchRunnerTabControl.TabPages.Remove(RunTabPage)
+
         'No longer supporting Patch Exports
         PatchRunnerTabControl.TabPages.Remove(ExportTabPage)
+
+
 
         Me.MdiParent = GitPatcher
         Me.Show()
@@ -106,75 +115,45 @@ Public Class PatchRunner
 
 
 
-    Public Shared Function ReorderByDependancy(ByRef givenPatches As Collection) As Collection
-        'OLDER STYLE
-        Application.DoEvents()
-        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
-        Cursor.Current = Cursors.WaitCursor
+    Public Shared Function ReorderByDependancy(ByRef chosenPatches As Collection, ByRef availablePatches As Collection) As Collection
+
 
         Dim orderedPatches As Collection = New Collection
 
-        Dim conn As New OracleConnection(Globals.getARMconnection)
-        Dim sql As String = Nothing
-        Dim cmd As OracleCommand
-        Dim dr As OracleDataReader
-
         Dim patchMatch As Boolean = False
 
-        'This time loop through unapplied patches first and show in list if available in dir.
-        Try
+        'loop through availablePatches and add to the orderedPatches if present in the chosenPatches set.
+        For Each availablePatch In availablePatches
 
-            conn.Open()
+            If chosenPatches.Contains(availablePatch) Then
+                orderedPatches.Add(availablePatch)
+            End If
 
-            sql = "select patch_name from ARM_UNAPPLIED_V"
+            'For i As Integer = chosenPatches.Count To 1 Step -1
 
+            '    If chosenPatches(i) = availablePatch Then
+            '        orderedPatches.Add(availablePatch)
+            '        chosenPatches.Remove(i)
+            '    End If
 
-            cmd = New OracleCommand(sql, conn)
-            cmd.CommandType = CommandType.Text
-            dr = cmd.ExecuteReader()
+            'Next
 
-            While (dr.Read())
-                Dim l_patch_name As String = dr.Item("patch_name")
+        Next
 
+        If chosenPatches.Count > 0 Then
+            Dim l_unordered_patches As String = Nothing
+            For Each givenPatch In chosenPatches
 
-                For i As Integer = givenPatches.Count To 1 Step -1
+                orderedPatches.Add(givenPatch)
+                l_unordered_patches = l_unordered_patches & Chr(10) & givenPatch
 
-                    If Common.getLastSegment(givenPatches(i), "\").ToUpper() = l_patch_name Then
-                        orderedPatches.Add(givenPatches(i))
-                        givenPatches.Remove(i)
-                    End If
+            Next
 
-                Next
-
-            End While
-            dr.Close()
-
-            conn.Close()
-            conn.Dispose()
-
-            If givenPatches.Count > 0 Then
-                Dim l_unordered_patches As String = Nothing
-                For Each givenPatch In givenPatches
-
-                    orderedPatches.Add(givenPatch)
-                    l_unordered_patches = l_unordered_patches & Chr(10) & givenPatch
-
-                Next
-
-                MsgBox("WARNING: Could not determine install order for these patches on " & Globals.getDB & " . Added to the end of the release." _
+            MsgBox("WARNING: Could not determine install order for these patches on " & Globals.getDB & " . Added to the end of the release." _
                        & Chr(10) & "They may not yet have been applied to the reference database, or perhaps already applied to the target database." _
                        & Chr(10) & l_unordered_patches)
             End If
 
-
-        Catch ex As Exception ' catches any error
-            MessageBox.Show(ex.Message.ToString())
-        Finally
-            ' In a real application, put cleanup code here.
-
-        End Try
-
-        Cursor.Current = cursorRevert
 
         Return orderedPatches
 
@@ -381,10 +360,12 @@ Public Class PatchRunner
     Private Sub doSearch()
         Logger.Dbg("Searching")
 
-        Dim AvailablePatches As Collection = New Collection
+        'Dim AvailablePatches As Collection = New Collection
+
+        'AvailablePatches is a private class variable 
 
         If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
-            FindUnappliedPatches(AvailablePatches)
+            FindUnappliedPatches(AvailablePatches) 'AvailablePatches will be ordered
         ElseIf ComboBoxPatchesFilter.SelectedItem = "Uninstalled" Then
             FindPatches(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Uninstalled")
         ElseIf ComboBoxPatchesFilter.SelectedItem = "All" Then
@@ -399,6 +380,7 @@ Public Class PatchRunner
         Logger.Dbg("Populate Tree")
 
         'Populate the treeview, tick unapplied by default
+        'Once in the tree view patches are no longer ordered, because they are grouped in paths.
         AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches _
             , ComboBoxPatchesFilter.SelectedItem = "Unapplied")
 
@@ -410,6 +392,9 @@ Public Class PatchRunner
 
     Private Sub SearchPatchesButton_Click(sender As Object, e As EventArgs) Handles SearchPatchesButton.Click
         doSearch()
+        'Show Order tab, Keep Run tab hidden
+        PatchRunnerTabControl.TabPages.Insert(1, OrderTabPage)
+        PatchRunnerTabControl.TabPages.Remove(RunTabPage)
 
     End Sub
 
@@ -738,7 +723,7 @@ Public Class PatchRunner
 
             If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
 
-                ReorderedChanges = PatchRunner.ReorderByDependancy(ChosenChanges)
+                ReorderedChanges = PatchRunner.ReorderByDependancy(ChosenChanges, AvailablePatches)
             Else
                 ReorderedChanges = ChosenChanges
                 If ChosenChanges.Count > 1 Then
@@ -761,6 +746,10 @@ Public Class PatchRunner
             TreeViewPatchOrder.ExpandAll()
         End If
 
+        'Show Run tab hidden
+        PatchRunnerTabControl.TabPages.Remove(RunTabPage)
+        PatchRunnerTabControl.TabPages.Insert(2, RunTabPage)
+
 
 
     End Sub
@@ -773,5 +762,11 @@ Public Class PatchRunner
   
     Private Sub ExportPatchesButton_Click(sender As Object, e As EventArgs) Handles ExportPatchesButton.Click
         exportPatchList()
+    End Sub
+
+    Private Sub ComboBoxPatchesFilter_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBoxPatchesFilter.SelectedIndexChanged
+        'Hide Order and Run tabs
+        PatchRunnerTabControl.TabPages.Remove(OrderTabPage)
+        PatchRunnerTabControl.TabPages.Remove(RunTabPage)
     End Sub
 End Class

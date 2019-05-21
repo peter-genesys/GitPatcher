@@ -7,6 +7,8 @@ Public Class CreateRelease
     Private pPrereqPatchTypes As String = Nothing
     Private pSupPatchTypes As String = Nothing
 
+    Dim AvailablePatches As Collection = New Collection
+
     Private waiting As Boolean
 
     Public Sub New(ByVal iPatchName As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
@@ -114,7 +116,7 @@ Public Class CreateRelease
 
     Private Sub FindPatches()
 
-        Dim AvailablePatches As Collection = New Collection
+        'Dim AvailablePatches As Collection = New Collection
         Dim taggedPatches As Collection = New Collection
 
         'First use the Filter box to find available patches from the file system and with reference to the current DB.
@@ -586,7 +588,7 @@ Public Class CreateRelease
 
             If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
 
-                ReorderedChanges = PatchRunner.ReorderByDependancy(ChosenChanges)
+                ReorderedChanges = PatchRunner.ReorderByDependancy(ChosenChanges, AvailablePatches)
             Else
                 ReorderedChanges = ChosenChanges
                 If ChosenChanges.Count > 1 Then
