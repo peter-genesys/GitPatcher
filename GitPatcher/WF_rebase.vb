@@ -43,6 +43,9 @@ Friend Class WF_rebase
                                , Optional ByVal iAppChanges As Boolean = True _
                                , Optional ByVal iDBChanges As Boolean = True) As String
 
+        Dim l_tagA As String = Nothing
+        Dim l_tagB As String = Nothing
+
         Dim tag_num_padding As Integer = 2
         Common.checkBranch(iBranchType)
 
@@ -90,7 +93,11 @@ Friend Class WF_rebase
 
 
         Dim l_tag_base As String = l_max_tag + 1
-        l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_num_padding, "0")
+        If iPatching Then
+            l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_num_padding, "0")
+        Else
+            l_tag_base = "00"
+        End If
 
         rebasing.MdiParent = GitPatcher
         'EXPORT-APPS-MINE
@@ -118,14 +125,19 @@ Friend Class WF_rebase
         rebasing.addStep("Switch to " & iRebaseBranchOn & " branch", True, "If you get an error concerning uncommitted changes.  Please resolve the changes and then RESTART this process to ensure the switch to " & iRebaseBranchOn & " branch is successful.", iAppChanges Or iDBChanges)
         'PULL-MASTER
         rebasing.addStep("Pull from Origin", True, "Pull from the master branch.", iAppChanges Or iDBChanges)
-        'TAG-A-MASTER
+
+        'TAG-A-MASTER-PATCHING
         rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & "." & l_tag_base & "A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & currentBranchShort & ".99A", iPatching)
+        'TAG-A-MASTER-REBASE-APPS
+        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & "." & l_tag_base & "A", True, "Will Tag the " & iRebaseBranchOn & " head commit for apex app comparisons.", Not iPatching And iAppChanges)
+
+
         'RETURN-FEATURE
         rebasing.addStep("Return to branch: " & currentBranchLong, True, "Return to the feature branch", iAppChanges Or iDBChanges)
         'REBASE-FEATURE
         rebasing.addStep("Rebase Branch: " & currentBranchLong & " From Upstream:" & iRebaseBranchOn, True, "Please select the Upstream Branch:" & iRebaseBranchOn & " from the Tortoise Rebase Dialogue", iAppChanges Or iDBChanges)
         'TAG-B-FEATURE
-        rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & "." & l_tag_base & "B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.", iPatching)
+        rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & "." & l_tag_base & "B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.", iPatching Or iAppChanges)
         'REVERT-VM
         rebasing.addStep("Restore to a clean VM snapshot", True, "GitPatcher will restore your VM to a clean VM snapshot." &
                          Environment.NewLine & "Before running patches, restore to a clean VM snapshot created prior to the development of the current feature.", iDBChanges)
@@ -135,6 +147,10 @@ Friend Class WF_rebase
         rebasing.addStep("Import any queued apps: " & currentBranch(), True, "Any Apex Apps that were included in a patch, must be reinstalled now. ", iAppChanges Or iDBChanges)
         'IMPORT-APPS-MINE
         rebasing.addStep("Re-Import my changed apps: " & currentBranch(), True, "Any Apex Apps that were changed and exported by me, must be reinstalled now, since the VM has been reverted. ", Not iPatching And iAppChanges And iDBChanges)
+        'DELETE-TAGS-REBASE-APPS
+        rebasing.addStep("Delete Tags " & currentBranchShort & "." & l_tag_base & "A" & " and " & currentBranchShort & "." & l_tag_base & "B", True, "Will delete the temporary tags.", Not iPatching And iAppChanges)
+
+
         'STASH-POP
         rebasing.addStep("Stash Pop: " & currentBranchLong, False, "Stash Pop if a Stash Save was used previously, and especially, if we are not also making a patch.", Not iPatching)
         'SNAPSHOT
@@ -238,15 +254,25 @@ Friend Class WF_rebase
             GitOp.pullCurrentBranch()
         End If
 
-        'TAG-A-MASTER
+        'TAG-A-MASTER-PATCHING
         If rebasing.toDoNextStep() Then
             'Tag the head
             l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please enter 2 digit numeric tag for next patch.", "Create Tag for next patch", l_tag_base)
-            Dim l_tagA As String = currentBranchShort & "." & l_tag_base & "A"
+            l_tagA = currentBranchShort & "." & l_tag_base & "A"
             rebasing.updateStepDescription(4, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
             GitOp.createTagHead(l_tagA)
 
         End If
+
+        'TAG-A-MASTER-REBASE-APPS
+        If rebasing.toDoNextStep() Then
+            'Tag the head
+            l_tagA = currentBranchShort & "." & l_tag_base & "A"
+            rebasing.updateStepDescription(4, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
+            GitOp.createTagHead(l_tagA)
+
+        End If
+
 
         'RETURN-FEATURE
         If rebasing.toDoNextStep() Then
@@ -263,7 +289,7 @@ Friend Class WF_rebase
         'TAG-B-FEATURE
         If rebasing.toDoNextStep() Then
             'Tag Branch
-            Dim l_tagB As String = currentBranchShort & "." & l_tag_base & "B"
+            l_tagB = currentBranchShort & "." & l_tag_base & "B"
             rebasing.updateStepDescription(7, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
             GitOp.createTagHead(l_tagB)
 
@@ -300,8 +326,14 @@ Friend Class WF_rebase
         If rebasing.toDoNextStep() Then
             'Install my Apex Apps.
             'Start the ApexAppInstaller and wait until it closes.
-            Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("All")
+            Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("All", l_tagA, l_tagB)
 
+        End If
+
+        'DELETE-TAGS-REBASE-APPS
+        If rebasing.toDoNextStep() Then
+            GitOp.deleteTag(l_tagA)
+            GitOp.deleteTag(l_tagB)
         End If
 
         'STASH-POP

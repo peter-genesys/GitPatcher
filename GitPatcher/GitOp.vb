@@ -320,7 +320,21 @@ Public Class GitOp
     End Sub
 
 
+    Shared Sub deleteTag(ByVal tagName As String)
+        'delete a tag
 
+        Try
+
+            Globals.getRepo.Tags.Remove(tagName)
+            Logger.Dbg("Tag " & tagName & " deleted.")
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+
+        End Try
+
+
+    End Sub
 
 
 
@@ -390,6 +404,10 @@ Public Class GitOp
 
 
     End Sub
+
+
+
+
 
 
     Shared Sub pushBranch(ByVal ibranch_name As String)

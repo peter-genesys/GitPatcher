@@ -2,10 +2,16 @@
 
 Public Class ApexAppInstaller
 
+    Private tagA As String = Nothing
+    Private tagB As String = Nothing
+
     Private waiting As Boolean
 
-    Public Sub New(Optional ByVal ienqueuedStatus As String = "All", Optional ByVal queuedBy As String = "me")
+    Public Sub New(Optional ByVal ienqueuedStatus As String = "All", Optional ByVal itagA As String = "", Optional ByVal itagB As String = "", Optional ByVal queuedBy As String = "me")
         InitializeComponent()
+
+        Me.tagA = itagA
+        Me.tagB = itagB
 
         'Other legal values Unapplied and Uninstalled
         ComboBoxAppsFilter.SelectedItem = ienqueuedStatus
@@ -168,8 +174,26 @@ Public Class ApexAppInstaller
         FindApps(AvailableApps, ComboBoxAppsFilter.SelectedItem = "Queued") 'check for queued apps only
         AvailableAppsTreeView.populateTreeFromCollection(AvailableApps, ComboBoxAppsFilter.SelectedItem = "Queued") 'check the queued apps, by default.
 
-        AvailableAppsTreeView.ExpandAll()
 
+        'Search for modified apps to flag for reinstall.
+        If Not String.IsNullOrEmpty(Me.tagA) And Not String.IsNullOrEmpty(Me.tagB) Then
+            'Set the commits for the search
+            GitOp.setCommitsFromTags(Me.tagA, Me.tagB)
+
+            Dim ModifiedApps As Collection = New Collection()
+            For Each change In GitOp.getChanges(Globals.getApexRelPath, False)
+
+                Dim appId As String = Common.getNthSegment(change, "/", 4)
+
+                ModifiedApps.Add(appId, appId)
+
+            Next
+
+            AvailableAppsTreeView.TickNodes(ModifiedApps)
+
+        End If
+
+        AvailableAppsTreeView.ExpandAll()
 
         'Logger.Dbg("Filtering")
         'filterQueuedBy(AvailableApps)
@@ -291,13 +315,13 @@ Public Class ApexAppInstaller
         '    End If
         'Else
         If (AppInstallerTabControl.SelectedTab.Name.ToString) = "RunTabPage" Then
-                CopySelectedApps()
-                'PopMasterScriptListBox()
+            CopySelectedApps()
+            'PopMasterScriptListBox()
 
-                'ElseIf (AppInstallerTabControl.SelectedTab.Name.ToString) = "ExportTabPage" Then
-                '   PopPatchListBox()
+            'ElseIf (AppInstallerTabControl.SelectedTab.Name.ToString) = "ExportTabPage" Then
+            '   PopPatchListBox()
 
-            End If
+        End If
 
     End Sub
 

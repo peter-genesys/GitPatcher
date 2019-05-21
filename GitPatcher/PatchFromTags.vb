@@ -1489,10 +1489,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub FindApps()
-        Try
-            'If SchemaComboBox.Text = "" Then
-            '   Throw (New Halt("Schema not selected"))
-            'End If
+ 
 
             TreeViewApps.PathSeparator = "/"
             TreeViewApps.Nodes.Clear()
@@ -1503,32 +1500,11 @@ Public Class PatchFromTags
 
                 TreeViewApps.AddNode(appNameNode, "/", True)
 
-                ''Common.getNthSegment(App, "/", 3)
-
-                'Dim l_pos As Integer = 0
-                'Dim l_count As Integer = 0
-                'While l_pos < appNameNode.Length And l_count < 4 And appNameNode.IndexOf("/", l_pos + 1) > 0
-                '    l_pos = appNameNode.IndexOf("/", l_pos + 1)
-                '    l_count = l_count + 1
-                'End While
-
-                'appNameNode = appNameNode.Substring(0, l_pos)
-
-                ''find or create each node for item
-                ''TreeViewApps.AddNode(change, "/", True)
-                'TreeViewApps.AddNode(appNameNode, "/", True)
-
+ 
             Next
 
             TreeViewApps.ExpandAll()
-
-            'HideTabs()
-            'ShowTabs()
-            'ResetForNewPatch()
-
-        Catch schema_not_selected As Halt
-            MsgBox("Please select a schema")
-        End Try
+ 
     End Sub
 
 
