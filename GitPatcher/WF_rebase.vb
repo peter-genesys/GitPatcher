@@ -97,6 +97,8 @@ Friend Class WF_rebase
             l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_num_padding, "0")
         Else
             l_tag_base = "00"
+            l_tagA = currentBranchShort & "." & l_tag_base & "A"
+            l_tagB = currentBranchShort & "." & l_tag_base & "B"
         End If
 
         rebasing.MdiParent = GitPatcher
@@ -146,7 +148,10 @@ Friend Class WF_rebase
         'IMPORT-APPS-QUEUED
         rebasing.addStep("Import any queued apps: " & currentBranch(), True, "Any Apex Apps that were included in a patch, must be reinstalled now. ", iAppChanges Or iDBChanges)
         'IMPORT-APPS-MINE
-        rebasing.addStep("Re-Import my changed apps: " & currentBranch(), True, "Any Apex Apps that were changed and exported by me, must be reinstalled now, since the VM has been reverted. ", Not iPatching And iAppChanges And iDBChanges)
+        'Only needed When doing a Full Rebase, because 
+        ' + If Not For Apps Then Nothing To import  
+        ' + If Not for DB Then there Is no VM revert
+        rebasing.addStep("Re-Import my changed apps: " & currentBranch(), True, "Any Apex Apps that were changed and exported by me, must be reinstalled now, since the VM has been reverted. ", Not iPatching And iAppChanges And iDBChanges) 
         'DELETE-TAGS-REBASE-APPS
         rebasing.addStep("Delete Tags " & currentBranchShort & "." & l_tag_base & "A" & " and " & currentBranchShort & "." & l_tag_base & "B", True, "Will delete the temporary tags.", Not iPatching And iAppChanges)
 
@@ -159,7 +164,7 @@ Friend Class WF_rebase
         rebasing.Show()
 
         Do Until rebasing.isStarted
-            Common.wait(1000)
+            Common.wait(300)
         Loop
 
 

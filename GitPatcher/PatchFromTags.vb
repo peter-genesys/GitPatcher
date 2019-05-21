@@ -1496,12 +1496,13 @@ Public Class PatchFromTags
 
             For Each change In GitOp.getChanges(Globals.getApexRelPath, False)
 
-                Dim appNameNode As String = Common.getNthSegment(change, "/", 3) & "/" & Common.getNthSegment(change, "/", 4)
+            'Search for change to any file, but should ignore duplicates.
+            Dim appNameNode As String = Common.getNthSegment(change, "/", 3) & "/" & Common.getNthSegment(change, "/", 4)
 
-                TreeViewApps.AddNode(appNameNode, "/", True)
+            TreeViewApps.AddNode(appNameNode, "/", True)
 
- 
-            Next
+
+        Next
 
             TreeViewApps.ExpandAll()
  

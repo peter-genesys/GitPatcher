@@ -183,9 +183,13 @@ Public Class ApexAppInstaller
             Dim ModifiedApps As Collection = New Collection()
             For Each change In GitOp.getChanges(Globals.getApexRelPath, False)
 
+                'Search for change to any file, but should ignore duplicates.
                 Dim appId As String = Common.getNthSegment(change, "/", 4)
 
-                ModifiedApps.Add(appId, appId)
+
+                If Not ModifiedApps.Contains(appId) Then
+                    ModifiedApps.Add(appId, appId)
+                End If
 
             Next
 
