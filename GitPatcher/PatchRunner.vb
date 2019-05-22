@@ -58,9 +58,13 @@ Public Class PatchRunner
 
 
         Me.MdiParent = GitPatcher
-        Me.Show()
-        doSearch()
-        Wait()
+        If doSearch() > 0 Then
+            Me.Show()
+            Wait()
+        Else
+            Me.Close()
+        End If
+
 
     End Sub
 
@@ -299,9 +303,9 @@ Public Class PatchRunner
                  & Common.CollectionToText(MissingPatchList), MsgBoxStyle.Information, "These Unapplied Patches are not present")
         End If
 
-        If foundPatches.Count = 0 Then
-            MsgBox("No patches were found, that matched the search criteria.", MsgBoxStyle.Information, "No Patches Found")
-        End If
+        'If foundPatches.Count = 0 Then
+        ' MsgBox("No patches were found, that matched the search criteria.", MsgBoxStyle.Information, "No Patches Found")
+        ' End If
 
 
     End Sub
@@ -349,7 +353,7 @@ Public Class PatchRunner
 
 
 
-    Private Sub doSearch()
+    Private Function doSearch() As Integer
         Logger.Dbg("Searching")
 
         'Dim AvailablePatches As Collection = New Collection
@@ -392,7 +396,9 @@ Public Class PatchRunner
 
         End If
 
-    End Sub
+        Return AvailablePatches.Count
+
+    End Function
 
 
 
