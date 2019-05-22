@@ -143,7 +143,7 @@
         Dim apex_dir As String = Globals.RootApexDir
 
         Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Export APEX application " & fapp_id & " from DB " & Globals.currentTNS & " " & connection,
-            "Exporting APEX application " & Globals.currentApex & " from parsing schema " & username & " in DB " & Globals.currentTNS & Environment.NewLine &
+            "Exporting APEX application " & fapp_id & " from parsing schema " & username & " in DB " & Globals.currentTNS & Environment.NewLine &
             "This writes individual apex files to the GIT Repo checkout, and then prompt to add and commit the changes." & Environment.NewLine &
             Environment.NewLine &
             "Consider which branch you are exporting to." & Environment.NewLine &
@@ -217,6 +217,13 @@
         End If
 
         If ExportProgress.toDoNextStep() Then
+
+            Dim uncleanAppFilePath As String = parsingSchemaDir & "\" & fapp_id & ".unclean.sql"
+            Dim fullAppFilename As String = fapp_id & ".full.sql"
+
+            FileIO.deleteFileIfExists(parsingSchemaDir & "\" & fullAppFilename)
+
+            FileIO.RenameFile(uncleanAppFilePath, fullAppFilename)
 
             'Find the application name in the init.sql file.
             Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))

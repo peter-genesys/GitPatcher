@@ -1494,17 +1494,19 @@ Public Class PatchFromTags
             TreeViewApps.PathSeparator = "/"
             TreeViewApps.Nodes.Clear()
 
-            For Each change In GitOp.getChanges(Globals.getApexRelPath, False)
+        For Each change In GitOp.getChanges(Globals.getApexRelPath, False)
 
-            'Search for change to any file, but should ignore duplicates.
-            Dim appNameNode As String = Common.getNthSegment(change, "/", 3) & "/" & Common.getNthSegment(change, "/", 4)
+            If Not change.contains(".unclean.sql") and Not change.contains(".full.sql") Then 'Do not include any full app exports in the list.
 
-            TreeViewApps.AddNode(appNameNode, "/", True)
+                'Search for change to any file, but should ignore duplicates.
+                Dim appNameNode As String = Common.getNthSegment(change, "/", 3) & "/" & Common.getNthSegment(change, "/", 4)
 
+                TreeViewApps.AddNode(appNameNode, "/", True)
+            End If
 
         Next
 
-            TreeViewApps.ExpandAll()
+        TreeViewApps.ExpandAll()
  
     End Sub
 
