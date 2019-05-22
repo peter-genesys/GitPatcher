@@ -120,39 +120,31 @@ Public Class PatchRunner
 
         Dim orderedPatches As Collection = New Collection
 
-        Dim patchMatch As Boolean = False
-
         'loop through availablePatches and add to the orderedPatches if present in the chosenPatches set.
         For Each availablePatch In availablePatches
 
             If chosenPatches.Contains(availablePatch) Then
-                orderedPatches.Add(availablePatch)
+                orderedPatches.Add(availablePatch, availablePatch)  'Add patches that are found
+                chosenPatches.Remove(availablePatch)                'Remove patches that are found
+
             End If
-
-            'For i As Integer = chosenPatches.Count To 1 Step -1
-
-            '    If chosenPatches(i) = availablePatch Then
-            '        orderedPatches.Add(availablePatch)
-            '        chosenPatches.Remove(i)
-            '    End If
-
-            'Next
 
         Next
 
         If chosenPatches.Count > 0 Then
-            Dim l_unordered_patches As String = Nothing
-            For Each givenPatch In chosenPatches
+            'but there should never be any
+            Common.MsgBoxCollection(chosenPatches, "Unorderable Patches!",
+                      "Could not determine install order for these patches on " & Globals.getDB & " . Added to the end of the release." & Chr(10) &
+                      "They may not yet have been applied to the reference database, or perhaps already applied to the target database.")
 
-                orderedPatches.Add(givenPatch)
-                l_unordered_patches = l_unordered_patches & Chr(10) & givenPatch
+        End If
 
-            Next
+        For Each unorderPatch In chosenPatches
 
-            MsgBox("WARNING: Could not determine install order for these patches on " & Globals.getDB & " . Added to the end of the release." _
-                       & Chr(10) & "They may not yet have been applied to the reference database, or perhaps already applied to the target database." _
-                       & Chr(10) & l_unordered_patches)
-            End If
+            orderedPatches.Add(unorderPatch, unorderPatch)  'Add patches that are found
+            chosenPatches.Remove(unorderPatch)              'Remove patches that are found
+
+        Next
 
 
         Return orderedPatches
@@ -290,14 +282,14 @@ Public Class PatchRunner
             For i As Integer = 1 To repoPatches.Count
 
                 If Common.getLastSegment(repoPatches(i), "\").ToUpper() = l_patch_name Then 'convert to uppercase
-                    foundPatches.Add(repoPatches(i))
+                    foundPatches.Add(repoPatches(i), repoPatches(i))
                     l_patch_found = True
                 End If
 
             Next
 
             If Not l_patch_found Then
-                MissingPatchList.Add(l_patch_name)
+                MissingPatchList.Add(l_patch_name, l_patch_name)
             End If
 
         Next
@@ -364,6 +356,10 @@ Public Class PatchRunner
 
         'AvailablePatches is a private class variable 
 
+        AvailablePatchesTreeView.Nodes.Clear()
+        PatchRunnerTabControl.TabPages.Remove(OrderTabPage)
+        PatchRunnerTabControl.TabPages.Remove(RunTabPage)
+
         If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
             FindUnappliedPatches(AvailablePatches) 'AvailablePatches will be ordered
         ElseIf ComboBoxPatchesFilter.SelectedItem = "Uninstalled" Then
@@ -374,16 +370,27 @@ Public Class PatchRunner
             MsgBox("Choose type of patch to search for.", MsgBoxStyle.Exclamation, "Choose Search criteria")
         End If
 
-        Logger.Dbg("Filtering")
-        filterPatchType(AvailablePatches)
+        If AvailablePatches.Count = 0 Then
+            MsgBox("No " & ComboBoxPatchesFilter.SelectedItem & " patches were found.", MsgBoxStyle.Information, "No Patches Found")
+        Else
+            Logger.Dbg("Filtering")
+            filterPatchType(AvailablePatches)
+            If AvailablePatches.Count > 0 Then
 
-        Logger.Dbg("Populate Tree")
+                Logger.Dbg("Populate Tree")
 
-        'Populate the treeview, tick unapplied by default
-        'Once in the tree view patches are no longer ordered, because they are grouped in paths.
-        AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches _
-            , ComboBoxPatchesFilter.SelectedItem = "Unapplied")
+                'Populate the treeview, tick unapplied by default
+                'Once in the tree view patches are no longer ordered, because they are grouped in paths.
+                AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches _
+                    , ComboBoxPatchesFilter.SelectedItem = "Unapplied")
 
+                'Show Order tab, Keep Run tab hidden
+                PatchRunnerTabControl.TabPages.Insert(1, OrderTabPage)
+
+
+            End If
+
+        End If
 
     End Sub
 
@@ -392,10 +399,6 @@ Public Class PatchRunner
 
     Private Sub SearchPatchesButton_Click(sender As Object, e As EventArgs) Handles SearchPatchesButton.Click
         doSearch()
-        'Show Order tab, Keep Run tab hidden
-        PatchRunnerTabControl.TabPages.Insert(1, OrderTabPage)
-        PatchRunnerTabControl.TabPages.Remove(RunTabPage)
-
     End Sub
 
 
@@ -437,11 +440,11 @@ Public Class PatchRunner
 
                 If Not availableLogs.Contains(l_log_filename) Then
                     'MsgBox("WARNING: New Log File " & l_log_filename & " is not present in the log dir " & Globals.RootPatchDir)
-                    missingLogs.Add(l_log_filename)
+                    missingLogs.Add(l_log_filename, l_log_filename)
                 End If
 
                 'Include all log files, even if missing.
-                foundLogs.Add(l_patch_name)
+                foundLogs.Add(l_patch_name, l_patch_name)
 
             End While
 
@@ -631,9 +634,9 @@ Public Class PatchRunner
 
 
         If (PatchRunnerTabControl.SelectedTab.Name.ToString) = "OrderTabPage" Then
-            If TreeViewPatchOrder.Nodes.Count = 0 Then
-                CopySelectedChanges()
-            End If
+            'If TreeViewPatchOrder.Nodes.Count = 0 Then
+            CopySelectedChanges()
+            'End If
         ElseIf (PatchRunnerTabControl.SelectedTab.Name.ToString) = "RunTabPage" Then
             PopMasterScriptListBox()
 
@@ -716,7 +719,11 @@ Public Class PatchRunner
         AvailablePatchesTreeView.ReadCheckedLeafNodes(ChosenChanges)
 
         If ChosenChanges.Count = 0 Then
+            'Show Run tab hidden
+            PatchRunnerTabControl.TabPages.Remove(RunTabPage)
+
             MsgBox("No patches selected.")
+
         Else
             Dim ReorderedChanges As Collection = New Collection
 
@@ -744,11 +751,13 @@ Public Class PatchRunner
 
 
             TreeViewPatchOrder.ExpandAll()
+            'Show Run tab 
+            PatchRunnerTabControl.TabPages.Remove(RunTabPage)
+            PatchRunnerTabControl.TabPages.Insert(2, RunTabPage)
+
         End If
 
-        'Show Run tab hidden
-        PatchRunnerTabControl.TabPages.Remove(RunTabPage)
-        PatchRunnerTabControl.TabPages.Insert(2, RunTabPage)
+
 
 
 

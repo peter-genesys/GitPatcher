@@ -1,4 +1,5 @@
 ﻿Imports LibGit2Sharp
+Imports System.Text.RegularExpressions
 
 Module Globals
 
@@ -598,10 +599,9 @@ Module Globals
 
         Dim extrasDirCol As New Collection
         Dim l_Index As Integer = -1
-        Dim l_extras As String = getExtrasRelPath()
-        For Each dirname In l_extras.Split(";")
+        Dim l_extras As String = Regex.Replace(getExtrasRelPath(), "[;:|,]", ",") 'Use any of these delimiters
+        For Each dirname In l_extras.Split(",")
             l_Index = l_Index + 1
-            'dirname = Trim(dirname).Replace(Chr(13), "")
             extrasDirCol.Add(dirname)
         Next
         Return extrasDirCol

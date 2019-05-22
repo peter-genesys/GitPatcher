@@ -1255,7 +1255,7 @@ Public Class PatchFromTags
         TreeViewFiles.PathSeparator = "\"
         TreeViewFiles.Nodes.Clear()
 
-        Dim extrasDirCol As Collection = extrasDirCollection()
+        Dim extrasDirCol As Collection = Globals.extrasDirCollection()
 
         For Each relDir In extrasDirCol
             Dim aRootDir As String = Globals.getRepoPath() & relDir

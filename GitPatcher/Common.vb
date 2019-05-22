@@ -210,9 +210,9 @@
 
     End Sub
 
-    Public Shared Sub MsgBoxCollection(ByVal i_collection As Collection, iTitle As String)
+    Public Shared Sub MsgBoxCollection(ByVal i_collection As Collection, ByVal iTitle As String, Optional ByVal iMessage As String = Nothing)
 
-        Dim BigList As String = ""
+        Dim BigList As String = iMessage & Chr(10)
         For Each lcollectionRow In i_collection
             BigList = BigList & lcollectionRow.ToString & Chr(10)
         Next
