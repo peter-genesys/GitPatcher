@@ -49,7 +49,7 @@ Public Class PatchRunner
         UsePatchAdminCheckBox.Checked = Globals.getUseARM
 
         'Hide Order and Run tabs
-        PatchRunnerTabControl.TabPages.Remove(OrderTabPage)
+        'PatchRunnerTabControl.TabPages.Remove(OrderTabPage)
         PatchRunnerTabControl.TabPages.Remove(RunTabPage)
 
         'No longer supporting Patch Exports
@@ -361,7 +361,7 @@ Public Class PatchRunner
         'AvailablePatches is a private class variable 
 
         AvailablePatchesTreeView.Nodes.Clear()
-        PatchRunnerTabControl.TabPages.Remove(OrderTabPage)
+        'PatchRunnerTabControl.TabPages.Remove(OrderTabPage)
         PatchRunnerTabControl.TabPages.Remove(RunTabPage)
 
         If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
@@ -389,7 +389,7 @@ Public Class PatchRunner
                     , ComboBoxPatchesFilter.SelectedItem = "Unapplied")
 
                 'Show Order tab, Keep Run tab hidden
-                PatchRunnerTabControl.TabPages.Insert(1, OrderTabPage)
+                'PatchRunnerTabControl.TabPages.Insert(1, OrderTabPage)
 
 
             End If
@@ -781,7 +781,7 @@ Public Class PatchRunner
 
     Private Sub ComboBoxPatchesFilter_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBoxPatchesFilter.SelectedIndexChanged
         'Hide Order and Run tabs
-        PatchRunnerTabControl.TabPages.Remove(OrderTabPage)
+        'PatchRunnerTabControl.TabPages.Remove(OrderTabPage)
         PatchRunnerTabControl.TabPages.Remove(RunTabPage)
     End Sub
 End Class

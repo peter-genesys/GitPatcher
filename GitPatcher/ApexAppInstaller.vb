@@ -44,10 +44,16 @@ Public Class ApexAppInstaller
 
         UsePatchAdminCheckBox.Checked = Globals.getUseARM
 
+
         Me.MdiParent = GitPatcher
-        Me.Show()
-        doSearch()
-        Wait()
+        If doSearch() > 0 Then
+            Me.Show()
+            Wait()
+        Else
+            Me.Close()
+        End If
+
+
 
     End Sub
 
@@ -145,9 +151,9 @@ Public Class ApexAppInstaller
 
         End If
 
-        If foundApps.Count = 0 Then
-            MsgBox("No Apex Apps matched the search criteria.", MsgBoxStyle.Information, "No Apps found")
-        End If
+        'If foundApps.Count = 0 Then
+        ' MsgBox("No Apex Apps matched the search criteria.", MsgBoxStyle.Information, "No Apps found")
+        ' End If
 
 
         Cursor.Current = cursorRevert
@@ -155,7 +161,7 @@ Public Class ApexAppInstaller
     End Sub
 
 
-    Private Sub doSearch()
+    Private Function doSearch() As Integer
         Logger.Dbg("Searching")
 
         Dim AvailableApps As Collection = New Collection
@@ -195,6 +201,10 @@ Public Class ApexAppInstaller
 
             AvailableAppsTreeView.TickNodes(ModifiedApps)
 
+            If ModifiedApps.Count > 0 Then
+                MsgBox(ModifiedApps.Count & " apps have been modified.", MsgBoxStyle.Information, "Apex Apps Modifed")
+            End If
+
         End If
 
         AvailableAppsTreeView.ExpandAll()
@@ -204,10 +214,15 @@ Public Class ApexAppInstaller
 
         Logger.Dbg("Populate Tree")
 
+        If AvailableApps.Count = 0 Then
+            MsgBox("No " & ComboBoxAppsFilter.SelectedItem & " apps were found.", MsgBoxStyle.Information, "No Apps Found")
+        End If
 
 
+        Return AvailableApps.Count
 
-    End Sub
+
+    End Function
 
     Private Sub SearchApexAppsButton_Click(sender As Object, e As EventArgs) Handles SearchApexAppsButton.Click
         doSearch()
