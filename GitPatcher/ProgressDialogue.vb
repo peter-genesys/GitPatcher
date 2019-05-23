@@ -1,5 +1,5 @@
 ﻿Public Class ProgressDialogue
-    Private waitTime As Integer = 500
+    Private waitTime As Integer = 200
     Private storedProcessSteps As ProcessStep()
     Private nextStep As Integer = 0
     Private activeStep As Integer = -1
@@ -191,6 +191,12 @@
     End Function
 
     Public Function toDoNextStep(Optional ByVal forceSkip As Boolean = False, Optional ByVal forceDo As Boolean = False) As Boolean
+
+        'skip this step if the form is already closed.
+        If Me.IsDisposed Then
+            Return False
+        End If
+
         'Find the next enabled step
         Dim l_gotoStep As Integer = activeStep 'Start with current step
 
@@ -216,7 +222,7 @@
         l_gotoStep = l_gotoStep + 1
 
 
-
+        'If forceSkip Or Me.IsDisposed Then 'attempted to use a flag for all instead of unticking all.
         If forceSkip Then
             updateCheckListChecked(l_gotoStep, False)
         End If
@@ -246,9 +252,10 @@
             'If activeStep <= ProgressCheckedListBox.Items.Count - 1 Then
             If MessageBox.Show("Skip remaining items?", "Close", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
 
-                For i As Integer = 0 To ProgressCheckedListBox.Items.Count - 1
-                    ProgressCheckedListBox.SetItemChecked(i, False)
-                Next
+                'Untick all items
+                'For i As Integer = 0 To ProgressCheckedListBox.Items.Count - 1
+                'ProgressCheckedListBox.SetItemChecked(i, False)
+                'Next
                 waitTime = 0 'Run thru steps without any delay since the dialogue will be closed.
                 started = True 'Have to start the dialogue so that processes that are waiting will continue, and then skip all steps.
             Else
