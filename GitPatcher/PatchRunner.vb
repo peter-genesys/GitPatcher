@@ -256,14 +256,14 @@ Public Class PatchRunner
 
             'Change to VM
             Globals.setDB("VM")
-            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+            'OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
 
             'Get a list of unpromoted patches
             unappliedPatches = OracleSQL.GetUnpromotedPatches()
 
             'Change back to DEV
             Globals.setDB("DEV")
-            OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+            'OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
 
         Else
             'Get a list of unapplied patches from the target DB

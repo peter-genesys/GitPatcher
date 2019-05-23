@@ -45,9 +45,9 @@
             If releasing.toDoNextStep() Then
                 'Change current DB to release DB
                 Globals.setDB(iTargetDB.ToUpper)
-                OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+            'OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
 
-            End If
+        End If
 
             If releasing.toDoNextStep() Then
                 'Switch to develop branch
@@ -124,9 +124,9 @@
             If releasing.toDoNextStep() Then
                 'Reset current DB  
                 Globals.setDB(lcurrentDB.ToUpper)
-                OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+            'OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
 
-            End If
+        End If
 
             'Finish
             releasing.toDoNextStep()

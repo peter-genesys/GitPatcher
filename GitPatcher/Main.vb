@@ -75,9 +75,8 @@
         'SelectedIndex = 4 'Default to VM
 
         loadRepos()
-        'loadDBs()
-        'loadApexApps()
-        loadHotFixDBs()
+
+        loadHotFixComboBoxDBs()
         MinPatchTextBox.Text = My.Settings.MinPatch
         TextBoxReleaseId.Text = My.Settings.ReleaseId
 
@@ -94,8 +93,8 @@
         MultiDBHotFixPatchToolStripMenuItem.Text = "Multi DB Hotfix Patch: " & HotFixToolStripComboBox.SelectedItem & " and Downwards"
     End Sub
 
-    Public Sub loadHotFixDBs()
-        Logger.Dbg("Main.loadHotFixDBs")
+    Public Sub loadHotFixComboBoxDBs()
+        Logger.Dbg("Main.loadHotFixComboBoxDBs")
         HotFixToolStripComboBox.Items.Clear()
 
         HotFixToolStripComboBox.Items.Add("PROD")
@@ -138,7 +137,7 @@
 
     Private Sub showRepoSettings()
         Logger.Dbg("Main.showRepoSettings")
-        RepoSettings.checkRepo(RepoComboBox.Text)
+        RepoSettings.checkRepo(Globals.getRepoName)
         RepoPathTextBox.Text = Globals.getRepoPath()
 
         BranchPathTextBox.Text = Globals.currentLongBranch()
@@ -167,7 +166,7 @@
 
     Private Sub showOrgSettings()
 
-        OrgSettings.retrieveOrg(OrgComboBox.Text, DBComboBox.Text, RepoComboBox.Text)
+        OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
 
         OrgCodeTextBox.Text = Globals.getOrgCode()
         OrgInFeatureCheckBox.Checked = Globals.getOrgInFeature = "Y"
@@ -180,8 +179,12 @@
 
     Public Sub loadOrgs()
 
+        OrgSettings.readOrgs(OrgComboBox, Globals.getOrgName(), Globals.getRepoName)
+        showOrgSettings()
+
+
         'OrgSettings.readOrgs(OrgComboBox, OrgComboBox.Text, RepoComboBox.Text)
-        OrgSettings.readOrgs(OrgComboBox, Globals.getOrgName(), RepoComboBox.Text)
+
 
         ''VERSION 1
         ''Derive promolevels and display best promo-level (last chosen, or lowest available.)
@@ -208,7 +211,9 @@
         'End If
         'DBComboBox.Text = Globals.getDB
 
-        showOrgSettings()
+
+        'OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+        'showOrgSettings()
 
     End Sub
 
@@ -476,6 +481,7 @@
         'setOrgCode(OrgComboBox.SelectedItem)
         Globals.setOrgName(OrgComboBox.SelectedItem)
 
+        'Reset the DB
         If Not String.IsNullOrEmpty(OrgComboBox.SelectedItem) Then
 
             'VERSION 1

@@ -476,6 +476,15 @@ Module Globals
         My.Settings.CurrentDB = gDB
         My.Settings.Save()
 
+        'Read the org settings again whenever DB is changed.
+        'This will refresh these values :
+        '  TNS 
+        '  CONNECT
+        '  ARMUSER
+        '  ARMPWORD
+
+        OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+
     End Sub
 
 
