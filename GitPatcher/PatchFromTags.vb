@@ -243,7 +243,7 @@ Public Class PatchFromTags
         'Create Patch Dir
         Try
             FileIO.confirmDeleteFolder(PatchDirTextBox.Text)
-        Catch cancelled_delete As Halt
+        Catch ex As Exception
             MsgBox("Warning: Now overwriting existing patch")
         End Try
 
@@ -1428,7 +1428,9 @@ Public Class PatchFromTags
         'Remove previous patch 
         Try
             FileIO.confirmDeleteFolder(l_repo_patch_export_dir)
-        Catch cancelled_delete As Halt
+
+
+        Catch ex As Exception
             MsgBox("Warning: Now overwriting previously exported patch")
         End Try
 

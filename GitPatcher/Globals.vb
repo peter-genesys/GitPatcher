@@ -198,6 +198,7 @@ Module Globals
     Public Sub setOrgCode(OrgCode As String)
         Logger.Dbg("Globals.setOrgCode(" & OrgCode & ")")
         gOrgCode = OrgCode
+
     End Sub
 
     Public Function getOrgCode() As String
@@ -205,7 +206,7 @@ Module Globals
     End Function
 
 
-    Private gOrgName As String
+    Private gOrgName As String = My.Settings.CurrentOrg
 
     Public Sub setOrgName(OrgName As String)
         Logger.Dbg("Globals.setOrgName(" & OrgName & ")")
@@ -213,7 +214,12 @@ Module Globals
 
         If Not String.IsNullOrEmpty(OrgName) Then
 
+
+            My.Settings.CurrentOrg = OrgName
+            My.Settings.Save()
             gPromoList = OrgSettings.retrieveOrgPromos(OrgName, "PROD|UAT|TEST|DEV|VM", Globals.getRepoName())
+
+
 
         End If
 

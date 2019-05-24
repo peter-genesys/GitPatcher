@@ -305,4 +305,8 @@
     End Sub
 
 
+    Public Sub setToCompleted()
+        Me.percentComplete = 100
+    End Sub
+
 End Class

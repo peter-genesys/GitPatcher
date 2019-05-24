@@ -202,7 +202,7 @@ Public Class CreateRelease
         'Create Patch Dir
         Try
             FileIO.confirmDeleteFolder(PatchDirTextBox.Text)
-        Catch cancelled_delete As Halt
+        Catch ex As Exception
             MsgBox("Warning: Now overwriting existing patch")
         End Try
 
@@ -803,7 +803,7 @@ Public Class CreateRelease
         'Remove previous patch set
         Try
             FileIO.confirmDeleteFolder(l_repo_patch_export_dir)
-        Catch cancelled_delete As Halt
+        Catch ex As Exception
             MsgBox("Warning: Now overwriting previously exported patchset")
         End Try
 

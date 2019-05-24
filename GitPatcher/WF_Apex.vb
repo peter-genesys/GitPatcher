@@ -171,69 +171,80 @@
         Dim fapp_sql As String = fapp_id & ".sql"
         Dim message As String = Nothing
 
-        'PROGRESS 0
-        If ExportProgress.toDoNextStep() Then
 
-            'Delete the appDir prior to the export.
-            FileIO.deleteFolderIfExists(appDir)
+        Try 'Finish workflow if an error occurs
 
-            'Use Host class to execute with a master script.
-            Host.RunMasterScript("prompt Exporting Apex App " & app_id &
-                Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
-                Environment.NewLine & "CONNECT &&" & iSchema & "_user/&&" & iSchema & "_password@" & Globals.getDATASOURCE &
-                Environment.NewLine & "Apex export -applicationid " & app_id & " -skipExportDate -split" &
-                Environment.NewLine & "exit;" _
-              , parsingSchemaDir)
+            'PROGRESS 0
+            If ExportProgress.toDoNextStep() Then
 
-            Dim AppFilePath As String = parsingSchemaDir & "\" & fapp_id & ".sql"
-            Dim uncleanAppFilename As String = fapp_id & ".unclean.sql"
+                'Delete the appDir prior to the export.
+                FileIO.deleteFolderIfExists(appDir)
 
-            FileIO.deleteFileIfExists(parsingSchemaDir & "\" & uncleanAppFilename)
+                'Use Host class to execute with a master script.
+                Host.RunMasterScript("prompt Exporting Apex App " & app_id &
+                    Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
+                    Environment.NewLine & "CONNECT &&" & iSchema & "_user/&&" & iSchema & "_password@" & Globals.getDATASOURCE &
+                    Environment.NewLine & "Apex export -applicationid " & app_id & " -skipExportDate -split" &
+                    Environment.NewLine & "exit;" _
+                  , parsingSchemaDir)
 
-            FileIO.RenameFile(AppFilePath, uncleanAppFilename)
+                Dim AppFilePath As String = parsingSchemaDir & "\" & fapp_id & ".sql"
+                Dim uncleanAppFilename As String = fapp_id & ".unclean.sql"
 
-        End If
+                FileIO.deleteFileIfExists(parsingSchemaDir & "\" & uncleanAppFilename)
+
+                FileIO.RenameFile(AppFilePath, uncleanAppFilename)
+
+            End If
 
 
-        If ExportProgress.toDoNextStep() Then
-            'Add new files to GIT repository 
-            Tortoise.Add(appDir, True)
+            If ExportProgress.toDoNextStep() Then
+                'Add new files to GIT repository 
+                Tortoise.Add(appDir, True)
 
-        End If
+            End If
 
-        If ExportProgress.toDoNextStep() Then
+            If ExportProgress.toDoNextStep() Then
 
-            'Find the application name in the init.sql file.
-            Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
+                'Find the application name in the init.sql file.
+                Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
 
-            'Commit valid changes to GIT repository  
-            Tortoise.Commit(appDir, "Apex App " & lAppIdAndName & " (" & Globals.currentTNS & ") " & vbLf & vbLf & "GitPatcher Split-Export from " & Globals.currentTNS, True)
+                'Commit valid changes to GIT repository  
+                Tortoise.Commit(appDir, "Apex App " & lAppIdAndName & " (" & Globals.currentTNS & ") " & vbLf & vbLf & "GitPatcher Split-Export from " & Globals.currentTNS, True)
 
-        End If
+            End If
 
-        If ExportProgress.toDoNextStep() Then
-            'Revert invalid changes from your checkout
-            Tortoise.Revert(appDir)
-        End If
+            If ExportProgress.toDoNextStep() Then
+                'Revert invalid changes from your checkout
+                Tortoise.Revert(appDir)
+            End If
 
-        If ExportProgress.toDoNextStep() Then
+            If ExportProgress.toDoNextStep() Then
 
-            Dim uncleanAppFilePath As String = parsingSchemaDir & "\" & fapp_id & ".unclean.sql"
-            Dim fullAppFilename As String = fapp_id & ".full.sql"
+                Dim uncleanAppFilePath As String = parsingSchemaDir & "\" & fapp_id & ".unclean.sql"
+                Dim fullAppFilename As String = fapp_id & ".full.sql"
 
-            FileIO.deleteFileIfExists(parsingSchemaDir & "\" & fullAppFilename)
+                FileIO.deleteFileIfExists(parsingSchemaDir & "\" & fullAppFilename)
 
-            FileIO.RenameFile(uncleanAppFilePath, fullAppFilename)
+                FileIO.RenameFile(uncleanAppFilePath, fullAppFilename)
 
-            'Find the application name in the init.sql file.
-            Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
+                'Find the application name in the init.sql file.
+                Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
 
-            'Commit valid changes to GIT repository  
-            Tortoise.Commit(parsingSchemaDir, "Apex App " & lAppIdAndName & " (" & Globals.currentTNS & ") " & vbLf & vbLf & "GitPatcher Full-Unclean-Export from " & Globals.currentTNS, True)
+                'Commit valid changes to GIT repository  
+                Tortoise.Commit(parsingSchemaDir, "Apex App " & lAppIdAndName & " (" & Globals.currentTNS & ") " & vbLf & vbLf & "GitPatcher Full-Unclean-Export from " & Globals.currentTNS, True)
 
-        End If
+            End If
 
-        ExportProgress.toDoNextStep()
+            ExportProgress.toDoNextStep()
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            ExportProgress.setToCompleted()
+            ExportProgress.Close()
+        End Try
+
+
 
 
     End Sub

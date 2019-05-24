@@ -242,7 +242,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.1.16")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.1.17")>  _
         Public ReadOnly Property ReleaseId() As String
             Get
                 Return CType(Me("ReleaseId"),String)
@@ -306,6 +306,18 @@ Namespace My
             End Get
             Set
                 Me("startvmType") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property CurrentOrg() As String
+            Get
+                Return CType(Me("CurrentOrg"),String)
+            End Get
+            Set
+                Me("CurrentOrg") = value
             End Set
         End Property
     End Class
