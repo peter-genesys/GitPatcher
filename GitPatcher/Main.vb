@@ -637,7 +637,7 @@
         WF_rebase.exportData()
     End Sub
 
-    Private Sub RebaseFeatureFullToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureFullToolStripMenuItem.Click
+    Private Sub FullRebaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FullRebaseToolStripMenuItem.Click
         WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, True)
     End Sub
 End Class

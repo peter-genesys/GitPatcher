@@ -320,6 +320,18 @@ Namespace My
                 Me("CurrentOrg") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("500")>  _
+        Public Property WaitTime() As Integer
+            Get
+                Return CType(Me("WaitTime"),Integer)
+            End Get
+            Set
+                Me("WaitTime") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

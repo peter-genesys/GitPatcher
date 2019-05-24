@@ -68,11 +68,11 @@ Public Class PatchRunner
 
     End Sub
 
-    Public Sub Wait()
-        'This wait routine will halt the caller until the form is closed.
+    Private Sub Wait()
+        'Wait until the form is closed.
         waiting = True
         Do Until Not waiting
-            Common.wait(1000)
+            Common.Wait()
         Loop
     End Sub
 

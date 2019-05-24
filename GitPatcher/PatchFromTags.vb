@@ -35,11 +35,11 @@ Public Class PatchFromTags
 
     End Sub
 
-    Public Sub Wait()
-        'This wait routine will halt the caller until the form is closed.
+    Private Sub Wait()
+        'Wait until the form is closed.
         waiting = True
         Do Until Not waiting
-            Common.wait(1000)
+            Common.Wait()
         Loop
     End Sub
 
@@ -186,7 +186,7 @@ Public Class PatchFromTags
     Private Sub FindChanges()
         Try
             If SchemaComboBox.Text = "" Then
-                Throw (New Halt("Schema not selected"))
+                Throw New System.Exception("Please select a schema")
             End If
 
             TreeViewChanges.PathSeparator = "/"
@@ -205,8 +205,8 @@ Public Class PatchFromTags
             ShowTabs()
             ResetForNewPatch()
 
-        Catch schema_not_selected As Halt
-            MsgBox("Please select a schema")
+        Catch ex As Exception
+            MsgBox(ex.Message)
         End Try
     End Sub
 
@@ -988,7 +988,8 @@ Public Class PatchFromTags
 
             target.Text = ChoiceDialog.Ask("You may choose a log message for the " & targetControlName, log, "", "Choose log message", False)
 
-        Catch noneChosen As Halt
+        Catch ex As Exception
+            MsgBox(ex.Message)
             target.Text = l_old_text
         End Try
 

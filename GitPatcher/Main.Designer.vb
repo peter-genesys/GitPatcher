@@ -123,6 +123,7 @@ Partial Class Main
         Me.MergeButton = New System.Windows.Forms.Button()
         Me.TextBoxReleaseId = New System.Windows.Forms.TextBox()
         Me.Label20 = New System.Windows.Forms.Label()
+        Me.FullRebaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MainMenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -169,23 +170,23 @@ Partial Class Main
         '
         'RebaseFeatureFullToolStripMenuItem
         '
-        Me.RebaseFeatureFullToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DBChangesOnlyToolStripMenuItem, Me.ApexChangesOnlyToolStripMenuItem})
+        Me.RebaseFeatureFullToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FullRebaseToolStripMenuItem, Me.DBChangesOnlyToolStripMenuItem, Me.ApexChangesOnlyToolStripMenuItem})
         Me.RebaseFeatureFullToolStripMenuItem.Name = "RebaseFeatureFullToolStripMenuItem"
         Me.RebaseFeatureFullToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.RebaseFeatureFullToolStripMenuItem.Text = "Full Rebase Feature"
+        Me.RebaseFeatureFullToolStripMenuItem.Text = "Rebase Feature"
         Me.RebaseFeatureFullToolStripMenuItem.ToolTipText = "Full rebase of the feature for DB and Apex changes"
         '
         'DBChangesOnlyToolStripMenuItem
         '
         Me.DBChangesOnlyToolStripMenuItem.Name = "DBChangesOnlyToolStripMenuItem"
-        Me.DBChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.DBChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.DBChangesOnlyToolStripMenuItem.Text = "DB changes only"
         Me.DBChangesOnlyToolStripMenuItem.ToolTipText = "I've made only DB changes since my last rebase."
         '
         'ApexChangesOnlyToolStripMenuItem
         '
         Me.ApexChangesOnlyToolStripMenuItem.Name = "ApexChangesOnlyToolStripMenuItem"
-        Me.ApexChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.ApexChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ApexChangesOnlyToolStripMenuItem.Text = "Apex changes only"
         Me.ApexChangesOnlyToolStripMenuItem.ToolTipText = "I've made only Apex App changes since my last rebase."
         '
@@ -879,6 +880,12 @@ Partial Class Main
         Me.Label20.TabIndex = 46
         Me.Label20.Text = "GP Release"
         '
+        'FullRebaseToolStripMenuItem
+        '
+        Me.FullRebaseToolStripMenuItem.Name = "FullRebaseToolStripMenuItem"
+        Me.FullRebaseToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.FullRebaseToolStripMenuItem.Text = "Full Rebase"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1039,4 +1046,5 @@ Partial Class Main
     Friend WithEvents StartVMHeadleassToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ReleaseToVMMenuItem As ToolStripMenuItem
     Friend WithEvents ExportDataMenuItem As ToolStripMenuItem
+    Friend WithEvents FullRebaseToolStripMenuItem As ToolStripMenuItem
 End Class

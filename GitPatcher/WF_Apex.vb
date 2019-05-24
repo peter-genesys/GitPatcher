@@ -450,10 +450,10 @@
 
             ImportProgress.toDoNextStep()
 
-
-        Catch page_not_selected As Halt
-            MsgBox("No page selected")
-            ImportProgress.stopAndClose()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            ImportProgress.setToCompleted()
+            ImportProgress.Close()
         End Try
 
 

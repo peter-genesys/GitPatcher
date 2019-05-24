@@ -51,7 +51,7 @@
 
 
 
-    Public Shared Sub wait(ByVal interval As Integer)
+    Public Shared Sub Wait(ByVal interval As Integer)
         Dim sw As New Stopwatch
         sw.Start()
         Do While sw.ElapsedMilliseconds < interval
@@ -59,6 +59,10 @@
             Application.DoEvents()
         Loop
         sw.Stop()
+    End Sub
+
+    Public Shared Sub Wait()
+        Wait(Globals.waitTime)
     End Sub
 
 

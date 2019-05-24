@@ -3,8 +3,14 @@ Imports System.Text.RegularExpressions
 
 Module Globals
 
+    Private gWaitTime As Integer = My.Settings.WaitTime
+    Function waitTime() As Integer
+        Return gWaitTime
+    End Function
+
     Private gFlow As String = My.Settings.Flow
     Private gDB As String = My.Settings.CurrentDB
+
 
     Private gRepoName As String
 
@@ -30,7 +36,7 @@ Module Globals
     Public Function getRepoScriptsDir() As String
         Return Globals.getRepoPath & "tools\db-spooler\script\"
     End Function
- 
+
     Public Function getVBoxDir() As String
         Return Common.dos_path_trailing_slash(My.Settings.VBoxDir)
     End Function

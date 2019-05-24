@@ -24,13 +24,13 @@ Public Class GitOp
     Shared Function GetCommitFromSHA(ByVal SHA As String, Optional ByVal shaAlias As String = Nothing) As Commit
 
         If SHA = "" Then
-            Throw New System.Exception(shaAlias & "SHA is required")
+            Throw New Exception(shaAlias & "SHA is required")
         End If
 
         Dim theTag As Tag = Globals.getRepo.Tags(SHA)
 
         If theTag Is Nothing Then
-            Throw New System.Exception(shaAlias & "SHA (" & shaAlias & ") is unrecognised.")
+            Throw New Exception(shaAlias & "SHA (" & shaAlias & ") is unrecognised.")
         End If
 
         Dim theCommit As Commit = Globals.getRepo().Lookup(Of Commit)(SHA)
