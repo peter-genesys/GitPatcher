@@ -86,7 +86,7 @@ Public Class GitPatcher
     Private m_ChildFormNumber As Integer
 
     Public Sub newMainWindow()
-
+        '@TODO - perhaps could start Main like we start Log Viewer and then only have 1 of them.
         Try
             Dim newchildform As New Main
             newchildform.MdiParent = Me
@@ -130,11 +130,7 @@ Public Class GitPatcher
 
     End Sub
 
-    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs)
-        Dim newchildform As New RepoSettings
-        'newchildform.MdiParent = Me
-        newchildform.Show()
+    Private Sub LogViewerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LogViewerToolStripMenuItem.Click
+        LogViewer.Show()
     End Sub
-
-
 End Class

@@ -171,6 +171,12 @@
     <Compile Include="ApexAppExporter.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="LogViewer.Designer.vb">
+      <DependentUpon>LogViewer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="LogViewer.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GitOp.vb" />
     <Compile Include="OracleSQL.vb" />
     <Compile Include="OrgSettings.Designer.vb">
@@ -246,6 +252,7 @@
     <Compile Include="ProgressDialogue.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="TextBoxWriter.vb" />
     <Compile Include="Tortoise.vb" />
     <Compile Include="TortoiseFascade.vb" />
     <Compile Include="WF_Apex.vb" />
@@ -274,6 +281,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ApexAppExporter.resx">
       <DependentUpon>ApexAppExporter.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogViewer.resx">
+      <DependentUpon>LogViewer.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OrgSettings.resx">
       <DependentUpon>OrgSettings.vb</DependentUpon>
