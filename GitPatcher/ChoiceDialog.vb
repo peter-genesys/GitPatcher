@@ -13,6 +13,9 @@ Public Class ChoiceDialog
     End Sub
 
     Shared Function Ask(ByVal i_question As String, ByVal i_Choices As Collection, ByVal i_default As String, ByVal i_title As String, Optional ByVal i_reorder As Boolean = True, Optional ByVal i_hideCancelButton As Boolean = False, Optional ByVal i_returnIndex As Boolean = False)
+
+        Logger.Dbg("Ask(" & i_question & "," & i_default & "," & i_title & ")")
+
         Dim l_choice As String = Nothing
         Dim l_default_found As Boolean = False
         Dim l_reordered As New Collection
@@ -63,8 +66,6 @@ Public Class ChoiceDialog
         Else
             Ask = ChoiceDialog.ChoiceComboBox.SelectedItem
         End If
-
-        Logger.Dbg("Ask")
 
     End Function
 

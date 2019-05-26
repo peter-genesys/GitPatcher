@@ -130,32 +130,26 @@
 
 
 
-    Public Shared Sub Install1Page(ApexPageName As String)
+    Public Shared Sub Install1Page(ApexPageName As String, applicationDir As String, iSchema As String)
 
-        Dim applicationDir As String = Globals.RootApexDir & Globals.currentApex & "\application\"
         Dim l_page_num As String = ApexPageName.Substring(5, 5)
-        Dim script As String = _
-            "@init.sql" _
-& Chr(10) & "@set_environment" _
-& Chr(10) & "PROMPT ...Remove page " & l_page_num & "" _
-& Chr(10) & "begin" _
-& Chr(10) & " wwv_flow_api.remove_page (p_flow_id=>wwv_flow.g_flow_id, p_page_id=>" & l_page_num & ");" _
-& Chr(10) & "end;" _
-& Chr(10) & "/" _
-& Chr(10) & "@pages/" & ApexPageName & "" _
-& Chr(10) & "@end_environment.sql" _
-& Chr(10)
 
-        Dim pageInstallScriptName As String = applicationDir & "temp_install_page_" & l_page_num & "_script.sql"
+        'Use Host class to execute with a master script.
+        Host.RunMasterScript("prompt Installing " & ApexPageName & " from " & applicationDir &
+Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
+Environment.NewLine & "CONNECT &&" & iSchema & "_user/&&" & iSchema & "_password@" & Globals.getDATASOURCE &
+Environment.NewLine & "@init.sql" &
+Environment.NewLine & "@set_environment" &
+Environment.NewLine & "PROMPT ...Remove page " & l_page_num &
+Environment.NewLine & "begin" &
+Environment.NewLine & " wwv_flow_api.remove_page (p_flow_id=>wwv_flow.g_flow_id, p_page_id=>" & l_page_num & ");" &
+Environment.NewLine & "end;" &
+Environment.NewLine & "/" &
+Environment.NewLine & "@pages/" & ApexPageName &
+Environment.NewLine & "@end_environment.sql" &
+Environment.NewLine & "exit;" _
+                  , applicationDir)
 
-        FileIO.writeFile(pageInstallScriptName, script, True)
-
-        'Import Apex
-        Host.executeSQLscriptInteractive(pageInstallScriptName _
-                                       , applicationDir _
-                                       , Main.get_connect_string(Globals.currentParsingSchema, Globals.currentTNS, Globals.getDATASOURCE))
-        'Remove the temp file again
-        FileIO.deleteFileIfExists(pageInstallScriptName)
 
     End Sub
 

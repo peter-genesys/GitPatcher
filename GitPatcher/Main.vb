@@ -444,10 +444,6 @@
 
     End Sub
 
-    Private Sub Import1PageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Import1PageToolStripMenuItem.Click
-        WF_Apex.ApexImport1PageFromTag()
-    End Sub
-
     Private Sub GITToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PATCHToolStripMenuItem.Click
 
     End Sub
@@ -639,5 +635,10 @@
 
     Private Sub FullRebaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FullRebaseToolStripMenuItem.Click
         WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, True)
+    End Sub
+
+    Private Sub SinglePageImportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SinglePageImportToolStripMenuItem.Click
+
+        WF_Apex.ApexRevertSinglePage()
     End Sub
 End Class
