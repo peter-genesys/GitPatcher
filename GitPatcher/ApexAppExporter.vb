@@ -7,7 +7,7 @@ Public Class ApexAppExporter
     Public Sub New()
 
         InitializeComponent()
-        DoSearch()
+        DoSearch(RestrictAppsToRepoCheckBox.Checked)
         Me.MdiParent = GitPatcher
         Me.Show()
         Wait()
@@ -27,7 +27,8 @@ Public Class ApexAppExporter
     End Sub
 
 
-    Public Sub FindApps(ByRef foundApps As Collection)
+    Public Shared Sub FindApps(ByRef foundApps As Collection) 
+
 
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
@@ -51,12 +52,19 @@ Public Class ApexAppExporter
 
     End Sub
 
-    Private Sub DoSearch()
+
+
+    Private Sub DoSearch(iRestrict As Boolean)
         Logger.Dbg("Searching")
 
         Dim AvailableApps As Collection = New Collection
 
-        FindApps(AvailableApps) 'check for any apps
+        If iRestrict Then
+            FindApps(AvailableApps)             'check for apps in checkout - limited to this repo
+        Else
+            AvailableApps = OracleSQL.GetApps() 'check for apps in DB       - any apps from any repo
+        End If
+
         KnownAppsTreeView.populateTreeFromCollection(AvailableApps, False)
 
         'Get a list of modified apps
@@ -124,5 +132,9 @@ Public Class ApexAppExporter
 
     Private Sub ExportApexAppsButton_Click(sender As Object, e As EventArgs) Handles ExportApexAppsButton.Click
         ExportSelectedApps()
+    End Sub
+
+    Private Sub RestrictAppsToRepoCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles RestrictAppsToRepoCheckBox.CheckedChanged
+        DoSearch(RestrictAppsToRepoCheckBox.Checked)
     End Sub
 End Class

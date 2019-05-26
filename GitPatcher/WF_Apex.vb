@@ -121,6 +121,10 @@
 
     Public Shared Sub FindApps(ByRef foundApps As Collection)
 
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
+
         foundApps.Clear()
 
         If IO.Directory.Exists(Globals.RootApexDir) Then
@@ -133,7 +137,7 @@
             Throw New Exception("No Apps found")
         End If
 
-
+        Cursor.Current = cursorRevert
 
     End Sub
 
@@ -154,14 +158,14 @@
     Public Shared Sub ApexRevertSinglePage() 'Current
 
         Dim currentBranch As String = GitOp.CurrentBranch()
-            Dim lSchema As String = Nothing
-            Dim lAppId As String = Nothing
-            Dim applicationDir As String = Nothing
-            Dim pagesDir As String = Nothing
-            Dim page_file As String = Nothing
+        Dim lSchema As String = Nothing
+        Dim lAppId As String = Nothing
+        Dim applicationDir As String = Nothing
+        Dim pagesDir As String = Nothing
+        Dim page_file As String = Nothing
 
 
-            Dim RevertProgress As ProgressDialogue = New ProgressDialogue("Import 1 APEX page into " & Globals.getDB & " DB.",
+        Dim RevertProgress As ProgressDialogue = New ProgressDialogue("Import 1 APEX page into " & Globals.getDB & " DB.",
         "Import 1 APEX page into " & Globals.getDB & " DB." & Environment.NewLine &
         "This will overwrite only 1 page of the APEX application." & Environment.NewLine & Environment.NewLine &
         "To backup the current state of the Apex App consider :" & Environment.NewLine &
@@ -169,11 +173,11 @@
         " + Snapshoting the VM")
 
 
-            RevertProgress.MdiParent = GitPatcher
-            'CHOOSE-APP
-            RevertProgress.addStep("Choose the Apex App", True, "Choose the Apex App that will have a page reverted.")
-            'EXPORT-APP
-            RevertProgress.addStep("Export the Apex App", False, "Export the Apex App to the current branch.")
+        RevertProgress.MdiParent = GitPatcher
+        'CHOOSE-APP
+        RevertProgress.addStep("Choose the Apex App", True, "Choose the Apex App that will have a page reverted.")
+        'EXPORT-APP
+        RevertProgress.addStep("Export the Apex App", False, "Export the Apex App to the current branch.")
         'SWITCH-CHECKOUT
         RevertProgress.addStep("Switch the checkout", False, "Switch to a branch, tag or commit that has the correct version of the Apex Page." &
                                                                 Chr(10) & "Otherwise use the version currently in the checkout.")
@@ -182,14 +186,14 @@
         RevertProgress.addStep("Choose the Page", True, "Choose the Apex Page from list of pages")
         'CREATE-SNAPSHOT
         RevertProgress.addStep("Create a pre-page-revert VM snapshot", Globals.getDB = "VM", "Use this restore point to to undo this page revert.")
-            'IMPORT-PAGE
-            RevertProgress.addStep("Import the Page", True, "Import the page to current DB.")
-            'RETURN-TO-BRANCH
-            RevertProgress.addStep("Return to branch: " & currentBranch, True, "Return to the original branch.")
-            RevertProgress.Show()
+        'IMPORT-PAGE
+        RevertProgress.addStep("Import the Page", True, "Import the page to current DB.")
+        'RETURN-TO-BRANCH
+        RevertProgress.addStep("Return to branch: " & currentBranch, True, "Return to the original branch.")
+        RevertProgress.Show()
 
 
-            Do Until RevertProgress.isStarted
+        Do Until RevertProgress.isStarted
                 Common.Wait(1000)
             Loop
 
@@ -309,7 +313,8 @@
 
 
 
-    Public Shared Sub ApexExportCommit() 'Deprecated.  
+    Public Shared Sub ApexExportCommit() 'Deprecated, keep code examples
+
         'This routine uses a hostout to oracle.apex.APEXExport And oracle.apex.APEXExportSplitter
         'This function has now been built into SQLcl.
 
@@ -337,7 +342,7 @@
         ExportProgress.Show()
 
         Do Until ExportProgress.isStarted
-            Common.wait(1000)
+            Common.Wait(1000)
         Loop
 
         ''write-host "APEX file export and commit - uses oracle.apex.APEXExport.class and java oracle.apex.APEXExportSplitter.class"
@@ -427,7 +432,7 @@
 
 
 
-    Public Shared Sub ApexImportFromTag() 'Deprecated
+    Public Shared Sub ApexImportFromTag() 'Deprecated, keep code examples
 
         confirmApp()
 
@@ -551,7 +556,7 @@
     End Sub
 
 
-    Shared Sub ApexImport1PageFromTag() 'Deprecated
+    Shared Sub ApexImport1PageFromTag() 'Deprecated, keep code examples
 
         confirmApp()
 

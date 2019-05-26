@@ -1,6 +1,6 @@
 ﻿Public Class Apex
- 
-    Public Shared Sub modCreateApplicationSQL(ByVal i_label As String, ByVal i_buildStatus As String)
+
+    Public Shared Sub modCreateApplicationSQL(ByVal i_label As String, ByVal i_buildStatus As String) 'Deprecated, keep code examples
 
 
         'Relabel Apex 
@@ -55,7 +55,7 @@
 
 
 
-    Public Shared Sub restoreCreateApplicationSQL()
+    Public Shared Sub restoreCreateApplicationSQL() 'Deprecated, keep code examples
 
         Dim l_create_application_new As String = Globals.RootApexDir & Globals.currentApex & "\application\create_application.sql"
         Dim l_create_application_orig As String = Globals.RootApexDir & Globals.currentApex & "\application\create_application.sql.orig"
@@ -69,12 +69,12 @@
     End Sub
 
 
-    Public Shared Sub modInstallSQL()
+    Public Shared Sub modInstallSQL() 'Deprecated, keep code examples
 
 
         'Change the install.sql
         'For install into ISDEVL we want to skip the reports queries and layouts, to speed up the import.
- 
+
         Dim l_install_new As String = Globals.RootApexDir & Globals.currentApex & "\install.sql"
         Dim l_install_old As String = Globals.RootApexDir & Globals.currentApex & "\install.sql.old"
         Dim l_install_orig As String = Globals.RootApexDir & Globals.currentApex & "\install.orig"
@@ -99,7 +99,7 @@
             If l_line.Contains("@application/shared_components/reports/") Then
                 l_line = Replace(l_line, "@application/shared_components/reports/", "PROMPT Skipping: ")
             End If
-  
+
             l_new_file.WriteLine(l_line)
 
         Loop
@@ -114,7 +114,7 @@
     End Sub
 
 
-    Public Shared Sub restoreInstallSQL()
+    Public Shared Sub restoreInstallSQL() 'Deprecated, keep code examples
 
         Dim l_install_new As String = Globals.RootApexDir & Globals.currentApex & "\install.sql"
         Dim l_install_orig As String = Globals.RootApexDir & Globals.currentApex & "\install.orig"
@@ -130,7 +130,7 @@
 
 
 
-    Public Shared Sub Install1Page(ApexPageName As String, applicationDir As String, iSchema As String)
+    Public Shared Sub Install1Page(ApexPageName As String, applicationDir As String, iSchema As String) 'Current
 
         Dim l_page_num As String = ApexPageName.Substring(5, 5)
 

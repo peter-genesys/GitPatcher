@@ -780,7 +780,7 @@ Public Class CreateRelease
     End Sub
 
 
-    Public Shared Sub bumpApexVersion(ByVal i_app_version As String)
+    Public Shared Sub bumpApexVersion(ByVal i_app_version As String)  'Deprecated, keep code examples
         Apex.modCreateApplicationSQL(i_app_version & " " & Today.ToString("dd-MMM-yyyy"), "")
     End Sub
 

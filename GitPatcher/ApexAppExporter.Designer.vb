@@ -26,6 +26,7 @@ Partial Class ApexAppExporter
         Me.Label1 = New System.Windows.Forms.Label()
         Me.KnownAppsTreeView = New TreeViewEnhanced.TreeViewEnhanced()
         Me.ExportApexAppsButton = New System.Windows.Forms.Button()
+        Me.RestrictAppsToRepoCheckBox = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
         '
         'Label1
@@ -55,11 +56,24 @@ Partial Class ApexAppExporter
         Me.ExportApexAppsButton.Text = "Export Apex Apps"
         Me.ExportApexAppsButton.UseVisualStyleBackColor = True
         '
+        'RestrictAppsToRepoCheckBox
+        '
+        Me.RestrictAppsToRepoCheckBox.AutoSize = True
+        Me.RestrictAppsToRepoCheckBox.Checked = True
+        Me.RestrictAppsToRepoCheckBox.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.RestrictAppsToRepoCheckBox.Location = New System.Drawing.Point(169, 39)
+        Me.RestrictAppsToRepoCheckBox.Name = "RestrictAppsToRepoCheckBox"
+        Me.RestrictAppsToRepoCheckBox.Size = New System.Drawing.Size(103, 17)
+        Me.RestrictAppsToRepoCheckBox.TabIndex = 65
+        Me.RestrictAppsToRepoCheckBox.Text = "Restrict to Repo"
+        Me.RestrictAppsToRepoCheckBox.UseVisualStyleBackColor = True
+        '
         'ApexAppExporter
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(476, 756)
+        Me.Controls.Add(Me.RestrictAppsToRepoCheckBox)
         Me.Controls.Add(Me.ExportApexAppsButton)
         Me.Controls.Add(Me.KnownAppsTreeView)
         Me.Controls.Add(Me.Label1)
@@ -73,4 +87,5 @@ Partial Class ApexAppExporter
     Friend WithEvents Label1 As Label
     Friend WithEvents KnownAppsTreeView As TreeViewEnhanced.TreeViewEnhanced
     Friend WithEvents ExportApexAppsButton As Button
+    Friend WithEvents RestrictAppsToRepoCheckBox As CheckBox
 End Class

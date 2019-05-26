@@ -97,6 +97,15 @@ Public Class OracleSQL
 
     End Function
 
+    Public Shared Function GetApps() As Collection
+        'List of apps that apexrm can access in apex_applications
+        Dim results As Collection = New Collection
+        results = OracleSQL.QueryToCollection(
+            "select owner||'\f'||a.application_id owner_app " &
+            "from apex_applications a ", "owner_app")
+        Return results
+    End Function
+
     Public Shared Function GetModifiedApps() As Collection
         'Get a list of modified apps
         Dim results As Collection = New Collection
