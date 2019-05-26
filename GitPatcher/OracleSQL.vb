@@ -86,10 +86,7 @@ Public Class OracleSQL
 
         End Try
 
-        If result.Count = 0 Then
-            Logger.Dbg("No records found.")
-        End If
-
+        Logger.Dbg(result.Count & " records found.")
 
         Cursor.Current = cursorRevert
 
@@ -103,6 +100,7 @@ Public Class OracleSQL
         results = OracleSQL.QueryToCollection(
             "select owner||'\f'||a.application_id owner_app " &
             "from apex_applications a ", "owner_app")
+
         Return results
     End Function
 
@@ -116,6 +114,7 @@ Public Class OracleSQL
             "where q.app_id = a.application_id " &
             "group by app_id " &
             "having max(a.last_updated_on) > max(q.installed_on)", "app_id")
+
         Return results
     End Function
 
@@ -124,6 +123,7 @@ Public Class OracleSQL
         Dim results As Collection = New Collection
         results = OracleSQL.QueryToCollection(
             "select patch_name from ARM_UNAPPLIED_V", "patch_name")
+
         Return results
     End Function
 
@@ -132,6 +132,7 @@ Public Class OracleSQL
         Dim results As Collection = New Collection
         results = OracleSQL.QueryToCollection(
             "select patch_name from ARM_UNPROMOTED_V", "patch_name")
+
         Return results
     End Function
 

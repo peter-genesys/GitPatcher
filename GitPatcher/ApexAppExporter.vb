@@ -7,7 +7,7 @@ Public Class ApexAppExporter
     Public Sub New()
 
         InitializeComponent()
-        DoSearch(RestrictAppsToRepoCheckBox.Checked)
+        'DoSearch(RestrictAppsToRepoCheckBox.Checked) 'Fired from checkbox instead.
         Me.MdiParent = GitPatcher
         Me.Show()
         Wait()
@@ -43,6 +43,7 @@ Public Class ApexAppExporter
         End If
 
         foundApps = availableApps
+        Logger.Dbg(foundApps.Count & " Apps found.")
 
         If foundApps.Count = 0 Then
             MsgBox("No Apex Apps found in Apex Dir " & Globals.RootApexDir, MsgBoxStyle.Information, "No Apps found")
@@ -60,14 +61,18 @@ Public Class ApexAppExporter
         Dim AvailableApps As Collection = New Collection
 
         If iRestrict Then
-            FindApps(AvailableApps)             'check for apps in checkout - limited to this repo
+            Logger.Dbg("look for apps in checkout")
+            FindApps(AvailableApps)             'look for apps in checkout - limited to this repo
         Else
-            AvailableApps = OracleSQL.GetApps() 'check for apps in DB       - any apps from any repo
+            Logger.Dbg("look for apps in workspaces")
+            AvailableApps = OracleSQL.GetApps() 'look for apps in DB       - any apps from any repo
         End If
 
+        Logger.Dbg("Populate Tree")
         KnownAppsTreeView.populateTreeFromCollection(AvailableApps, False)
 
         'Get a list of modified apps
+        Logger.Dbg("look for modified apps in workspaces")
         Dim modifiedApps As Collection = OracleSQL.GetModifiedApps()
 
         'Tick the modified apps in the treeview
@@ -75,7 +80,7 @@ Public Class ApexAppExporter
 
         KnownAppsTreeView.ExpandAll()
 
-        Logger.Dbg("Populate Tree")
+
 
 
     End Sub
