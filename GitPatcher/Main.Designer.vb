@@ -59,12 +59,12 @@ Partial Class Main
         Me.APEXToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Import1PageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.ApexAppInstallerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.QueuedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AllApexAppsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SinglePageImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Import1PageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.ApexAppExporterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RELEASEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReleaseToPRODMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -331,20 +331,23 @@ Partial Class Main
         'UnappliedToolStripMenuItem
         '
         Me.UnappliedToolStripMenuItem.Name = "UnappliedToolStripMenuItem"
-        Me.UnappliedToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.UnappliedToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.UnappliedToolStripMenuItem.Text = "Unapplied Patches"
+        Me.UnappliedToolStripMenuItem.ToolTipText = "Ordered set to be applied."
         '
         'UninstalledToolStripMenuItem
         '
         Me.UninstalledToolStripMenuItem.Name = "UninstalledToolStripMenuItem"
-        Me.UninstalledToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.UninstalledToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.UninstalledToolStripMenuItem.Text = "Uninstalled Patches"
+        Me.UninstalledToolStripMenuItem.ToolTipText = "Not installed, but may not need to be."
         '
         'AllPatchesToolStripMenuItem
         '
         Me.AllPatchesToolStripMenuItem.Name = "AllPatchesToolStripMenuItem"
-        Me.AllPatchesToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.AllPatchesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.AllPatchesToolStripMenuItem.Text = "All Patches"
+        Me.AllPatchesToolStripMenuItem.ToolTipText = "Installed or otherwise."
         '
         'APEXToolStripMenuItem
         '
@@ -366,6 +369,18 @@ Partial Class Main
         Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ExportToolStripMenuItem.Text = "Export Full"
         Me.ExportToolStripMenuItem.Visible = False
+        '
+        'Import1PageToolStripMenuItem
+        '
+        Me.Import1PageToolStripMenuItem.Name = "Import1PageToolStripMenuItem"
+        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.Import1PageToolStripMenuItem.Text = "Import 1 page"
+        Me.Import1PageToolStripMenuItem.Visible = False
+        '
+        'ToolStripSeparator3
+        '
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(177, 6)
         '
         'ApexAppInstallerToolStripMenuItem
         '
@@ -392,18 +407,6 @@ Partial Class Main
         Me.SinglePageImportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.SinglePageImportToolStripMenuItem.Text = "Revert Single Page"
         '
-        'Import1PageToolStripMenuItem
-        '
-        Me.Import1PageToolStripMenuItem.Name = "Import1PageToolStripMenuItem"
-        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.Import1PageToolStripMenuItem.Text = "Import 1 page"
-        Me.Import1PageToolStripMenuItem.Visible = False
-        '
-        'ToolStripSeparator3
-        '
-        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(177, 6)
-        '
         'ApexAppExporterToolStripMenuItem
         '
         Me.ApexAppExporterToolStripMenuItem.Name = "ApexAppExporterToolStripMenuItem"
@@ -420,31 +423,31 @@ Partial Class Main
         'ReleaseToPRODMenuItem
         '
         Me.ReleaseToPRODMenuItem.Name = "ReleaseToPRODMenuItem"
-        Me.ReleaseToPRODMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.ReleaseToPRODMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ReleaseToPRODMenuItem.Text = "Release to PROD"
         '
         'ReleaseToUATMenuItem
         '
         Me.ReleaseToUATMenuItem.Name = "ReleaseToUATMenuItem"
-        Me.ReleaseToUATMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.ReleaseToUATMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ReleaseToUATMenuItem.Text = "Release to UAT"
         '
         'ReleaseToTESTMenuItem
         '
         Me.ReleaseToTESTMenuItem.Name = "ReleaseToTESTMenuItem"
-        Me.ReleaseToTESTMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.ReleaseToTESTMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ReleaseToTESTMenuItem.Text = "Release to TEST"
         '
         'ReleaseToDEVMenuItem
         '
         Me.ReleaseToDEVMenuItem.Name = "ReleaseToDEVMenuItem"
-        Me.ReleaseToDEVMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.ReleaseToDEVMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ReleaseToDEVMenuItem.Text = "Release to DEV"
         '
         'ReleaseToVMMenuItem
         '
         Me.ReleaseToVMMenuItem.Name = "ReleaseToVMMenuItem"
-        Me.ReleaseToVMMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.ReleaseToVMMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ReleaseToVMMenuItem.Text = "Release to VM"
         '
         'VirtualBoxToolStripMenuItem
