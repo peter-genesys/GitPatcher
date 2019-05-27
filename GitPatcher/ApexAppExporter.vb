@@ -7,7 +7,7 @@ Public Class ApexAppExporter
     Public Sub New()
 
         InitializeComponent()
-        'DoSearch(RestrictAppsToRepoCheckBox.Checked) 'Fired from checkbox instead.
+        'DoSearch(RepoRadioButton.Checked) 'See repoRadioButton_CheckedChanged
         Me.MdiParent = GitPatcher
         Me.Show()
         Wait()
@@ -139,7 +139,7 @@ Public Class ApexAppExporter
         ExportSelectedApps()
     End Sub
 
-    Private Sub RestrictAppsToRepoCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles RestrictAppsToRepoCheckBox.CheckedChanged
-        DoSearch(RestrictAppsToRepoCheckBox.Checked)
+    Private Sub RepoRadioButton_CheckedChanged(sender As Object, e As EventArgs) Handles RepoRadioButton.CheckedChanged
+        DoSearch(RepoRadioButton.Checked)
     End Sub
 End Class

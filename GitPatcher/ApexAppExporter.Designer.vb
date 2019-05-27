@@ -26,60 +26,86 @@ Partial Class ApexAppExporter
         Me.Label1 = New System.Windows.Forms.Label()
         Me.KnownAppsTreeView = New TreeViewEnhanced.TreeViewEnhanced()
         Me.ExportApexAppsButton = New System.Windows.Forms.Button()
-        Me.RestrictAppsToRepoCheckBox = New System.Windows.Forms.CheckBox()
+        Me.SearchTypeGroupBox = New System.Windows.Forms.GroupBox()
+        Me.DBRadioButton = New System.Windows.Forms.RadioButton()
+        Me.RepoRadioButton = New System.Windows.Forms.RadioButton()
+        Me.SearchTypeGroupBox.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(5, 71)
+        Me.Label1.Location = New System.Drawing.Point(19, 110)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(94, 13)
+        Me.Label1.Size = New System.Drawing.Size(221, 13)
         Me.Label1.TabIndex = 3
-        Me.Label1.Text = "Known Apex Apps"
+        Me.Label1.Text = "Found Apex Apps - Auto ticks changed apps."
         '
         'KnownAppsTreeView
         '
         Me.KnownAppsTreeView.BackColor = System.Drawing.Color.Wheat
         Me.KnownAppsTreeView.CheckBoxes = True
-        Me.KnownAppsTreeView.Location = New System.Drawing.Point(7, 87)
+        Me.KnownAppsTreeView.Location = New System.Drawing.Point(21, 126)
         Me.KnownAppsTreeView.Name = "KnownAppsTreeView"
         Me.KnownAppsTreeView.Size = New System.Drawing.Size(429, 595)
         Me.KnownAppsTreeView.TabIndex = 63
         '
         'ExportApexAppsButton
         '
-        Me.ExportApexAppsButton.Location = New System.Drawing.Point(8, 33)
+        Me.ExportApexAppsButton.Location = New System.Drawing.Point(311, 48)
         Me.ExportApexAppsButton.Name = "ExportApexAppsButton"
         Me.ExportApexAppsButton.Size = New System.Drawing.Size(139, 23)
         Me.ExportApexAppsButton.TabIndex = 64
         Me.ExportApexAppsButton.Text = "Export Apex Apps"
         Me.ExportApexAppsButton.UseVisualStyleBackColor = True
         '
-        'RestrictAppsToRepoCheckBox
+        'SearchTypeGroupBox
         '
-        Me.RestrictAppsToRepoCheckBox.AutoSize = True
-        Me.RestrictAppsToRepoCheckBox.Checked = True
-        Me.RestrictAppsToRepoCheckBox.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.RestrictAppsToRepoCheckBox.Location = New System.Drawing.Point(169, 39)
-        Me.RestrictAppsToRepoCheckBox.Name = "RestrictAppsToRepoCheckBox"
-        Me.RestrictAppsToRepoCheckBox.Size = New System.Drawing.Size(103, 17)
-        Me.RestrictAppsToRepoCheckBox.TabIndex = 65
-        Me.RestrictAppsToRepoCheckBox.Text = "Restrict to Repo"
-        Me.RestrictAppsToRepoCheckBox.UseVisualStyleBackColor = True
+        Me.SearchTypeGroupBox.Controls.Add(Me.DBRadioButton)
+        Me.SearchTypeGroupBox.Controls.Add(Me.RepoRadioButton)
+        Me.SearchTypeGroupBox.Location = New System.Drawing.Point(22, 12)
+        Me.SearchTypeGroupBox.Name = "SearchTypeGroupBox"
+        Me.SearchTypeGroupBox.Size = New System.Drawing.Size(273, 75)
+        Me.SearchTypeGroupBox.TabIndex = 68
+        Me.SearchTypeGroupBox.TabStop = False
+        Me.SearchTypeGroupBox.Text = "Search Type"
+        '
+        'DBRadioButton
+        '
+        Me.DBRadioButton.AutoSize = True
+        Me.DBRadioButton.Location = New System.Drawing.Point(20, 42)
+        Me.DBRadioButton.Name = "DBRadioButton"
+        Me.DBRadioButton.Size = New System.Drawing.Size(230, 17)
+        Me.DBRadioButton.TabIndex = 1
+        Me.DBRadioButton.Text = "Database - Apps in all granted Workspaces"
+        Me.DBRadioButton.UseVisualStyleBackColor = True
+        '
+        'RepoRadioButton
+        '
+        Me.RepoRadioButton.AutoSize = True
+        Me.RepoRadioButton.Checked = True
+        Me.RepoRadioButton.Location = New System.Drawing.Point(20, 19)
+        Me.RepoRadioButton.Name = "RepoRadioButton"
+        Me.RepoRadioButton.Size = New System.Drawing.Size(193, 17)
+        Me.RepoRadioButton.TabIndex = 0
+        Me.RepoRadioButton.TabStop = True
+        Me.RepoRadioButton.Text = "Repo - App folders in the Filesystem"
+        Me.RepoRadioButton.UseVisualStyleBackColor = True
         '
         'ApexAppExporter
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(476, 756)
-        Me.Controls.Add(Me.RestrictAppsToRepoCheckBox)
+        Me.Controls.Add(Me.SearchTypeGroupBox)
         Me.Controls.Add(Me.ExportApexAppsButton)
         Me.Controls.Add(Me.KnownAppsTreeView)
         Me.Controls.Add(Me.Label1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "ApexAppExporter"
         Me.Text = "ApexAppExporter"
+        Me.SearchTypeGroupBox.ResumeLayout(False)
+        Me.SearchTypeGroupBox.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -87,5 +113,7 @@ Partial Class ApexAppExporter
     Friend WithEvents Label1 As Label
     Friend WithEvents KnownAppsTreeView As TreeViewEnhanced.TreeViewEnhanced
     Friend WithEvents ExportApexAppsButton As Button
-    Friend WithEvents RestrictAppsToRepoCheckBox As CheckBox
+    Friend WithEvents SearchTypeGroupBox As GroupBox
+    Friend WithEvents DBRadioButton As RadioButton
+    Friend WithEvents RepoRadioButton As RadioButton
 End Class
