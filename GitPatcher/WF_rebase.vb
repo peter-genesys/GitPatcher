@@ -144,14 +144,12 @@ Friend Class WF_rebase
         rebasing.addStep("Restore to a clean VM snapshot", True, "GitPatcher will restore your VM to a clean VM snapshot." &
                          Environment.NewLine & "Before running patches, restore to a clean VM snapshot created prior to the development of the current feature.", iDBChanges)
         'PATCH-RUNNER
-        rebasing.addStep("Use PatchRunner to run Unapplied Patches", True, iAppChanges Or iDBChanges)
+        rebasing.addStep("Use PatchRunner to run Unapplied Patches", True, "Use PatchRunner to run Unapplied Patches", iAppChanges Or iDBChanges)
         'IMPORT-APPS-QUEUED
         rebasing.addStep("Import any queued apps: " & currentBranch(), True, "Any Apex Apps that were included in a patch, must be reinstalled now. ", iAppChanges Or iDBChanges)
         'IMPORT-APPS-MINE
-        'Only needed When doing a Full Rebase, because 
-        ' + If Not For Apps Then Nothing To import  
-        ' + If Not for DB Then there Is no VM revert
-        rebasing.addStep("Re-Import my changed apps: " & currentBranch(), True, "Any Apex Apps that were changed and exported by me, must be reinstalled now, since the VM has been reverted. ", Not iPatching And iAppChanges And iDBChanges) 
+        'Needed for any Standalone rebase that includes app changes
+        rebasing.addStep("Re-Import my changed apps: " & currentBranch(), True, "Any Apex Apps that were changed and exported by me, must be reinstalled now, since the VM has been reverted. ", Not iPatching And iAppChanges)
         'DELETE-TAGS-REBASE-APPS
         rebasing.addStep("Delete Tags " & currentBranchShort & "." & l_tag_base & "A" & " and " & currentBranchShort & "." & l_tag_base & "B", True, "Will delete the temporary tags.", Not iPatching And iAppChanges)
 
