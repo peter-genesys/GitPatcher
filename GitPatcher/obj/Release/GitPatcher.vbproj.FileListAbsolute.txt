@@ -77,13 +77,6 @@ D:\GitRepos\GitPatcher\GitPatcher\bin\Release\LibGit2Sharp.dll
 D:\GitRepos\GitPatcher\GitPatcher\bin\Release\Newtonsoft.Json.dll
 D:\GitRepos\GitPatcher\GitPatcher\bin\Release\Oracle.ManagedDataAccess.dll
 D:\GitRepos\GitPatcher\GitPatcher\bin\Release\TreeViewEnhanced.dll
-D:\GitRepos\GitPatcher\GitPatcher\bin\Release\Tamir.SharpSSH.dll
-D:\GitRepos\GitPatcher\GitPatcher\bin\Release\ICSharpCode.SharpZipLib.dll
-D:\GitRepos\GitPatcher\GitPatcher\bin\Release\Winterdom.IO.FileMap.dll
-D:\GitRepos\GitPatcher\GitPatcher\bin\Release\GitSharp.pdb
-D:\GitRepos\GitPatcher\GitPatcher\bin\Release\GitSharp.xml
-D:\GitRepos\GitPatcher\GitPatcher\bin\Release\GitSharp.Core.pdb
-D:\GitRepos\GitPatcher\GitPatcher\bin\Release\GitSharp.Core.xml
 D:\GitRepos\GitPatcher\GitPatcher\bin\Release\LibGit2Sharp.pdb
 D:\GitRepos\GitPatcher\GitPatcher\bin\Release\LibGit2Sharp.xml
 D:\GitRepos\GitPatcher\GitPatcher\bin\Release\Newtonsoft.Json.pdb
@@ -92,7 +85,6 @@ D:\GitRepos\GitPatcher\GitPatcher\bin\Release\TreeViewDraggableNodes2Levels.pdb
 D:\GitRepos\GitPatcher\GitPatcher\bin\Release\TreeViewDraggableNodes2Levels.xml
 D:\GitRepos\GitPatcher\GitPatcher\bin\Release\TreeViewEnhanced.pdb
 D:\GitRepos\GitPatcher\GitPatcher\bin\Release\TreeViewEnhanced.xml
-D:\GitRepos\GitPatcher\GitPatcher\obj\Release\GitPatcher.vbprojAssemblyReference.cache
 D:\GitRepos\GitPatcher\GitPatcher\obj\Release\Interop.Shell32.dll
 D:\GitRepos\GitPatcher\GitPatcher\obj\Release\GitPatcher.vbproj.ResolveComReference.cache
 D:\GitRepos\GitPatcher\GitPatcher\obj\Release\GitPatcher.ChoiceDialog.resources
@@ -175,3 +167,4 @@ D:\GitRepos\GitPatcher-0.1\GitPatcher\obj\Release\GitPatcher.ApexAppExporter.res
 D:\GitRepos\GitPatcher\GitPatcher\bin\Release\TreeViewDraggableNodes2Levels.dll
 D:\GitRepos\GitPatcher\GitPatcher\obj\Release\GitPatcher.ApexAppInstaller.resources
 D:\GitRepos\GitPatcher\GitPatcher\obj\Release\GitPatcher.ApexAppExporter.resources
+D:\GitRepos\GitPatcher\GitPatcher\obj\Release\GitPatcher.LogViewer.resources
