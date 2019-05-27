@@ -24,13 +24,13 @@ Public Class GitOp
     Shared Function GetCommitFromSHA(ByVal SHA As String, Optional ByVal shaAlias As String = Nothing) As Commit
 
         If SHA = "" Then
-            Throw New System.Exception(shaAlias & "SHA is required")
+            Throw New Exception(shaAlias & "SHA is required")
         End If
 
         Dim theTag As Tag = Globals.getRepo.Tags(SHA)
 
         If theTag Is Nothing Then
-            Throw New System.Exception(shaAlias & "SHA (" & shaAlias & ") is unrecognised.")
+            Throw New Exception(shaAlias & "SHA (" & shaAlias & ") is unrecognised.")
         End If
 
         Dim theCommit As Commit = Globals.getRepo().Lookup(Of Commit)(SHA)
@@ -320,7 +320,21 @@ Public Class GitOp
     End Sub
 
 
+    Shared Sub deleteTag(ByVal tagName As String)
+        'delete a tag
 
+        Try
+
+            Globals.getRepo.Tags.Remove(tagName)
+            Logger.Dbg("Tag " & tagName & " deleted.")
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+
+        End Try
+
+
+    End Sub
 
 
 
@@ -390,6 +404,10 @@ Public Class GitOp
 
 
     End Sub
+
+
+
+
 
 
     Shared Sub pushBranch(ByVal ibranch_name As String)

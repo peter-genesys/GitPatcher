@@ -37,7 +37,6 @@ Partial Class PatchRunner
         Me.OrderTabPage = New System.Windows.Forms.TabPage()
         Me.UsePatchAdminCheckBox = New System.Windows.Forms.CheckBox()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.TreeViewPatchOrder = New TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels()
         Me.CopyChangesButton = New System.Windows.Forms.Button()
         Me.RunTabPage = New System.Windows.Forms.TabPage()
@@ -180,7 +179,6 @@ Partial Class PatchRunner
         '
         Me.OrderTabPage.Controls.Add(Me.UsePatchAdminCheckBox)
         Me.OrderTabPage.Controls.Add(Me.Label4)
-        Me.OrderTabPage.Controls.Add(Me.Label2)
         Me.OrderTabPage.Controls.Add(Me.TreeViewPatchOrder)
         Me.OrderTabPage.Controls.Add(Me.CopyChangesButton)
         Me.OrderTabPage.Location = New System.Drawing.Point(4, 22)
@@ -194,7 +192,7 @@ Partial Class PatchRunner
         'UsePatchAdminCheckBox
         '
         Me.UsePatchAdminCheckBox.AutoSize = True
-        Me.UsePatchAdminCheckBox.Location = New System.Drawing.Point(156, 18)
+        Me.UsePatchAdminCheckBox.Location = New System.Drawing.Point(321, 64)
         Me.UsePatchAdminCheckBox.Name = "UsePatchAdminCheckBox"
         Me.UsePatchAdminCheckBox.Size = New System.Drawing.Size(115, 17)
         Me.UsePatchAdminCheckBox.TabIndex = 53
@@ -209,15 +207,6 @@ Partial Class PatchRunner
         Me.Label4.Size = New System.Drawing.Size(210, 13)
         Me.Label4.TabIndex = 52
         Me.Label4.Text = "Order of Execution - Drag n' drop to reorder"
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(153, 38)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(217, 13)
-        Me.Label2.TabIndex = 51
-        Me.Label2.Text = "(Rechecks dependancy order, can be slow.)"
         '
         'TreeViewPatchOrder
         '
@@ -235,6 +224,7 @@ Partial Class PatchRunner
         Me.CopyChangesButton.TabIndex = 49
         Me.CopyChangesButton.Text = "Copy Patches"
         Me.CopyChangesButton.UseVisualStyleBackColor = True
+        Me.CopyChangesButton.Visible = False
         '
         'RunTabPage
         '
@@ -362,7 +352,6 @@ Partial Class PatchRunner
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents SearchPatchesButton As System.Windows.Forms.Button
     Friend WithEvents OrderTabPage As System.Windows.Forms.TabPage
-    Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents TreeViewPatchOrder As TreeViewDraggableNodes2Levels.TreeViewDraggableNodes2Levels
     Friend WithEvents CopyChangesButton As System.Windows.Forms.Button
     Friend WithEvents ComboBoxPatchesFilter As System.Windows.Forms.ComboBox

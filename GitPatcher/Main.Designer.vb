@@ -24,24 +24,16 @@ Partial Class Main
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Me.MainMenuStrip = New System.Windows.Forms.MenuStrip()
-        Me.VirtualBoxToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.VBoxNameToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ChooseVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.StartVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.StartVMNormalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.StartVMHeadleassToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SaveVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RestoreStateVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.FEATUREToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NewFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportDataMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBFeaturePatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.RebaseFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RebaseFeatureAdvancedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RebaseFeatureFullToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FullRebaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DBChangesOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ApexChangesOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExportDataMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowindexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TestworkflowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TestrevertToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -67,11 +59,12 @@ Partial Class Main
         Me.APEXToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
-        Me.Import1PageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ApexAppInstallerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.QueuedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AllApexAppsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SinglePageImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Import1PageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.ApexAppExporterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RELEASEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReleaseToPRODMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -79,6 +72,14 @@ Partial Class Main
         Me.ReleaseToTESTMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReleaseToDEVMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReleaseToVMMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.VirtualBoxToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.VBoxNameToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ChooseVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.StartVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.StartVMNormalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.StartVMHeadleassToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RestoreStateVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RepoComboBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -136,60 +137,9 @@ Partial Class Main
         Me.MainMenuStrip.TabIndex = 0
         Me.MainMenuStrip.Text = "MenuStrip1"
         '
-        'VirtualBoxToolStripMenuItem
-        '
-        Me.VirtualBoxToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.VBoxNameToolStripMenuItem, Me.ChooseVMToolStripMenuItem, Me.StartVMToolStripMenuItem, Me.SaveVMToolStripMenuItem, Me.RestoreStateVMToolStripMenuItem})
-        Me.VirtualBoxToolStripMenuItem.Name = "VirtualBoxToolStripMenuItem"
-        Me.VirtualBoxToolStripMenuItem.Size = New System.Drawing.Size(75, 20)
-        Me.VirtualBoxToolStripMenuItem.Text = "Virtual Box"
-        '
-        'VBoxNameToolStripMenuItem
-        '
-        Me.VBoxNameToolStripMenuItem.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.VBoxNameToolStripMenuItem.Name = "VBoxNameToolStripMenuItem"
-        Me.VBoxNameToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.VBoxNameToolStripMenuItem.Text = "No VM"
-        '
-        'ChooseVMToolStripMenuItem
-        '
-        Me.ChooseVMToolStripMenuItem.Name = "ChooseVMToolStripMenuItem"
-        Me.ChooseVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.ChooseVMToolStripMenuItem.Text = "Choose VM"
-        '
-        'StartVMToolStripMenuItem
-        '
-        Me.StartVMToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartVMNormalToolStripMenuItem, Me.StartVMHeadleassToolStripMenuItem})
-        Me.StartVMToolStripMenuItem.Name = "StartVMToolStripMenuItem"
-        Me.StartVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.StartVMToolStripMenuItem.Text = "Start VM"
-        '
-        'StartVMNormalToolStripMenuItem
-        '
-        Me.StartVMNormalToolStripMenuItem.Name = "StartVMNormalToolStripMenuItem"
-        Me.StartVMNormalToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
-        Me.StartVMNormalToolStripMenuItem.Text = "Normal (gui)"
-        '
-        'StartVMHeadleassToolStripMenuItem
-        '
-        Me.StartVMHeadleassToolStripMenuItem.Name = "StartVMHeadleassToolStripMenuItem"
-        Me.StartVMHeadleassToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
-        Me.StartVMHeadleassToolStripMenuItem.Text = "Headless"
-        '
-        'SaveVMToolStripMenuItem
-        '
-        Me.SaveVMToolStripMenuItem.Name = "SaveVMToolStripMenuItem"
-        Me.SaveVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.SaveVMToolStripMenuItem.Text = "Stop VM (Save State)"
-        '
-        'RestoreStateVMToolStripMenuItem
-        '
-        Me.RestoreStateVMToolStripMenuItem.Name = "RestoreStateVMToolStripMenuItem"
-        Me.RestoreStateVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.RestoreStateVMToolStripMenuItem.Text = "Restore State VM"
-        '
         'FEATUREToolStripMenuItem
         '
-        Me.FEATUREToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.ExportDataMenuItem, Me.CreateDBFeaturePatchToolStripMenuItem, Me.ToolStripSeparator2, Me.RebaseFeatureToolStripMenuItem, Me.RebaseFeatureAdvancedToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem, Me.TestworkflowToolStripMenuItem, Me.TestrevertToolStripMenuItem, Me.TestCreatePatchSetToolStripMenuItem})
+        Me.FEATUREToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.ExportDataMenuItem, Me.CreateDBFeaturePatchToolStripMenuItem, Me.ToolStripSeparator2, Me.RebaseFeatureFullToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem, Me.TestworkflowToolStripMenuItem, Me.TestrevertToolStripMenuItem, Me.TestCreatePatchSetToolStripMenuItem})
         Me.FEATUREToolStripMenuItem.Name = "FEATUREToolStripMenuItem"
         Me.FEATUREToolStripMenuItem.Size = New System.Drawing.Size(58, 20)
         Me.FEATUREToolStripMenuItem.Text = "Feature"
@@ -197,35 +147,41 @@ Partial Class Main
         'NewFeatureToolStripMenuItem
         '
         Me.NewFeatureToolStripMenuItem.Name = "NewFeatureToolStripMenuItem"
-        Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
+        Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.NewFeatureToolStripMenuItem.Text = "New Feature"
         Me.NewFeatureToolStripMenuItem.ToolTipText = "Branch Feature from master branch"
+        '
+        'ExportDataMenuItem
+        '
+        Me.ExportDataMenuItem.Name = "ExportDataMenuItem"
+        Me.ExportDataMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.ExportDataMenuItem.Text = "Export Data"
         '
         'CreateDBFeaturePatchToolStripMenuItem
         '
         Me.CreateDBFeaturePatchToolStripMenuItem.Name = "CreateDBFeaturePatchToolStripMenuItem"
-        Me.CreateDBFeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
+        Me.CreateDBFeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.CreateDBFeaturePatchToolStripMenuItem.Text = "Feature Patch"
         Me.CreateDBFeaturePatchToolStripMenuItem.ToolTipText = "Create patch includes Rebase, Merge and Push to master"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(206, 6)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(199, 6)
         '
-        'RebaseFeatureToolStripMenuItem
+        'RebaseFeatureFullToolStripMenuItem
         '
-        Me.RebaseFeatureToolStripMenuItem.Name = "RebaseFeatureToolStripMenuItem"
-        Me.RebaseFeatureToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
-        Me.RebaseFeatureToolStripMenuItem.Text = "Rebase Feature"
-        Me.RebaseFeatureToolStripMenuItem.ToolTipText = "Rebase Feature branch on master branch"
+        Me.RebaseFeatureFullToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FullRebaseToolStripMenuItem, Me.DBChangesOnlyToolStripMenuItem, Me.ApexChangesOnlyToolStripMenuItem})
+        Me.RebaseFeatureFullToolStripMenuItem.Name = "RebaseFeatureFullToolStripMenuItem"
+        Me.RebaseFeatureFullToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.RebaseFeatureFullToolStripMenuItem.Text = "Rebase Feature"
+        Me.RebaseFeatureFullToolStripMenuItem.ToolTipText = "Full rebase of the feature for DB and Apex changes"
         '
-        'RebaseFeatureAdvancedToolStripMenuItem
+        'FullRebaseToolStripMenuItem
         '
-        Me.RebaseFeatureAdvancedToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DBChangesOnlyToolStripMenuItem, Me.ApexChangesOnlyToolStripMenuItem})
-        Me.RebaseFeatureAdvancedToolStripMenuItem.Name = "RebaseFeatureAdvancedToolStripMenuItem"
-        Me.RebaseFeatureAdvancedToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
-        Me.RebaseFeatureAdvancedToolStripMenuItem.Text = "Rebase Feature Advanced"
+        Me.FullRebaseToolStripMenuItem.Name = "FullRebaseToolStripMenuItem"
+        Me.FullRebaseToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.FullRebaseToolStripMenuItem.Text = "Full Rebase"
         '
         'DBChangesOnlyToolStripMenuItem
         '
@@ -244,27 +200,21 @@ Partial Class Main
         'MergeAndPushFeatureToolStripMenuItem
         '
         Me.MergeAndPushFeatureToolStripMenuItem.Name = "MergeAndPushFeatureToolStripMenuItem"
-        Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
+        Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature"
         Me.MergeAndPushFeatureToolStripMenuItem.ToolTipText = "Merge Feature branch to master branch"
-        '
-        'ExportDataMenuItem
-        '
-        Me.ExportDataMenuItem.Name = "ExportDataMenuItem"
-        Me.ExportDataMenuItem.Size = New System.Drawing.Size(209, 22)
-        Me.ExportDataMenuItem.Text = "Export Data"
         '
         'ShowindexToolStripMenuItem
         '
         Me.ShowindexToolStripMenuItem.Name = "ShowindexToolStripMenuItem"
-        Me.ShowindexToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
+        Me.ShowindexToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.ShowindexToolStripMenuItem.Text = "showindex"
         Me.ShowindexToolStripMenuItem.Visible = False
         '
         'TestworkflowToolStripMenuItem
         '
         Me.TestworkflowToolStripMenuItem.Name = "TestworkflowToolStripMenuItem"
-        Me.TestworkflowToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
+        Me.TestworkflowToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.TestworkflowToolStripMenuItem.Text = "testworkflow"
         Me.TestworkflowToolStripMenuItem.ToolTipText = "This is for testing the workflow engine."
         Me.TestworkflowToolStripMenuItem.Visible = False
@@ -272,14 +222,14 @@ Partial Class Main
         'TestrevertToolStripMenuItem
         '
         Me.TestrevertToolStripMenuItem.Name = "TestrevertToolStripMenuItem"
-        Me.TestrevertToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
+        Me.TestrevertToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.TestrevertToolStripMenuItem.Text = "testrevert"
         Me.TestrevertToolStripMenuItem.Visible = False
         '
         'TestCreatePatchSetToolStripMenuItem
         '
         Me.TestCreatePatchSetToolStripMenuItem.Name = "TestCreatePatchSetToolStripMenuItem"
-        Me.TestCreatePatchSetToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
+        Me.TestCreatePatchSetToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.TestCreatePatchSetToolStripMenuItem.Text = "testCreatePatchSet"
         Me.TestCreatePatchSetToolStripMenuItem.Visible = False
         '
@@ -398,7 +348,7 @@ Partial Class Main
         '
         'APEXToolStripMenuItem
         '
-        Me.APEXToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportToolStripMenuItem, Me.ExportToolStripMenuItem, Me.ToolStripSeparator3, Me.Import1PageToolStripMenuItem, Me.ApexAppInstallerToolStripMenuItem, Me.ApexAppExporterToolStripMenuItem})
+        Me.APEXToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportToolStripMenuItem, Me.ExportToolStripMenuItem, Me.Import1PageToolStripMenuItem, Me.ToolStripSeparator3, Me.ApexAppInstallerToolStripMenuItem, Me.ApexAppExporterToolStripMenuItem})
         Me.APEXToolStripMenuItem.Name = "APEXToolStripMenuItem"
         Me.APEXToolStripMenuItem.Size = New System.Drawing.Size(45, 20)
         Me.APEXToolStripMenuItem.Text = "Apex"
@@ -406,53 +356,58 @@ Partial Class Main
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ImportToolStripMenuItem.Text = "Import Full"
         Me.ImportToolStripMenuItem.Visible = False
         '
         'ExportToolStripMenuItem
         '
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ExportToolStripMenuItem.Text = "Export Full"
         Me.ExportToolStripMenuItem.Visible = False
         '
-        'ToolStripSeparator3
-        '
-        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(168, 6)
-        Me.ToolStripSeparator3.Visible = False
-        '
-        'Import1PageToolStripMenuItem
-        '
-        Me.Import1PageToolStripMenuItem.Name = "Import1PageToolStripMenuItem"
-        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
-        Me.Import1PageToolStripMenuItem.Text = "Import 1 page"
-        Me.Import1PageToolStripMenuItem.Visible = False
-        '
         'ApexAppInstallerToolStripMenuItem
         '
-        Me.ApexAppInstallerToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.QueuedToolStripMenuItem, Me.AllApexAppsToolStripMenuItem})
+        Me.ApexAppInstallerToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.QueuedToolStripMenuItem, Me.AllApexAppsToolStripMenuItem, Me.SinglePageImportToolStripMenuItem})
         Me.ApexAppInstallerToolStripMenuItem.Name = "ApexAppInstallerToolStripMenuItem"
-        Me.ApexAppInstallerToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.ApexAppInstallerToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ApexAppInstallerToolStripMenuItem.Text = "Apex App Installer"
         '
         'QueuedToolStripMenuItem
         '
         Me.QueuedToolStripMenuItem.Name = "QueuedToolStripMenuItem"
-        Me.QueuedToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
+        Me.QueuedToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.QueuedToolStripMenuItem.Text = "Queued Apex Apps"
         '
         'AllApexAppsToolStripMenuItem
         '
         Me.AllApexAppsToolStripMenuItem.Name = "AllApexAppsToolStripMenuItem"
-        Me.AllApexAppsToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
+        Me.AllApexAppsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.AllApexAppsToolStripMenuItem.Text = "All Apex Apps"
+        '
+        'SinglePageImportToolStripMenuItem
+        '
+        Me.SinglePageImportToolStripMenuItem.Name = "SinglePageImportToolStripMenuItem"
+        Me.SinglePageImportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.SinglePageImportToolStripMenuItem.Text = "Revert Single Page"
+        '
+        'Import1PageToolStripMenuItem
+        '
+        Me.Import1PageToolStripMenuItem.Name = "Import1PageToolStripMenuItem"
+        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.Import1PageToolStripMenuItem.Text = "Import 1 page"
+        Me.Import1PageToolStripMenuItem.Visible = False
+        '
+        'ToolStripSeparator3
+        '
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(177, 6)
         '
         'ApexAppExporterToolStripMenuItem
         '
         Me.ApexAppExporterToolStripMenuItem.Name = "ApexAppExporterToolStripMenuItem"
-        Me.ApexAppExporterToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.ApexAppExporterToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ApexAppExporterToolStripMenuItem.Text = "Apex App Exporter"
         '
         'RELEASEToolStripMenuItem
@@ -491,6 +446,57 @@ Partial Class Main
         Me.ReleaseToVMMenuItem.Name = "ReleaseToVMMenuItem"
         Me.ReleaseToVMMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToVMMenuItem.Text = "Release to VM"
+        '
+        'VirtualBoxToolStripMenuItem
+        '
+        Me.VirtualBoxToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.VBoxNameToolStripMenuItem, Me.ChooseVMToolStripMenuItem, Me.StartVMToolStripMenuItem, Me.SaveVMToolStripMenuItem, Me.RestoreStateVMToolStripMenuItem})
+        Me.VirtualBoxToolStripMenuItem.Name = "VirtualBoxToolStripMenuItem"
+        Me.VirtualBoxToolStripMenuItem.Size = New System.Drawing.Size(75, 20)
+        Me.VirtualBoxToolStripMenuItem.Text = "Virtual Box"
+        '
+        'VBoxNameToolStripMenuItem
+        '
+        Me.VBoxNameToolStripMenuItem.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.VBoxNameToolStripMenuItem.Name = "VBoxNameToolStripMenuItem"
+        Me.VBoxNameToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.VBoxNameToolStripMenuItem.Text = "No VM"
+        '
+        'ChooseVMToolStripMenuItem
+        '
+        Me.ChooseVMToolStripMenuItem.Name = "ChooseVMToolStripMenuItem"
+        Me.ChooseVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.ChooseVMToolStripMenuItem.Text = "Choose VM"
+        '
+        'StartVMToolStripMenuItem
+        '
+        Me.StartVMToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartVMNormalToolStripMenuItem, Me.StartVMHeadleassToolStripMenuItem})
+        Me.StartVMToolStripMenuItem.Name = "StartVMToolStripMenuItem"
+        Me.StartVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.StartVMToolStripMenuItem.Text = "Start VM"
+        '
+        'StartVMNormalToolStripMenuItem
+        '
+        Me.StartVMNormalToolStripMenuItem.Name = "StartVMNormalToolStripMenuItem"
+        Me.StartVMNormalToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
+        Me.StartVMNormalToolStripMenuItem.Text = "Normal (gui)"
+        '
+        'StartVMHeadleassToolStripMenuItem
+        '
+        Me.StartVMHeadleassToolStripMenuItem.Name = "StartVMHeadleassToolStripMenuItem"
+        Me.StartVMHeadleassToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
+        Me.StartVMHeadleassToolStripMenuItem.Text = "Headless"
+        '
+        'SaveVMToolStripMenuItem
+        '
+        Me.SaveVMToolStripMenuItem.Name = "SaveVMToolStripMenuItem"
+        Me.SaveVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.SaveVMToolStripMenuItem.Text = "Stop VM (Save State)"
+        '
+        'RestoreStateVMToolStripMenuItem
+        '
+        Me.RestoreStateVMToolStripMenuItem.Name = "RestoreStateVMToolStripMenuItem"
+        Me.RestoreStateVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.RestoreStateVMToolStripMenuItem.Text = "Restore State VM"
         '
         'RepoComboBox
         '
@@ -662,9 +668,9 @@ Partial Class Main
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label10.Location = New System.Drawing.Point(12, 510)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(64, 13)
+        Me.Label10.Size = New System.Drawing.Size(71, 13)
         Me.Label10.TabIndex = 19
-        Me.Label10.Text = "Min Patch"
+        Me.Label10.Text = "ARM Patch"
         '
         'JiraTextBox
         '
@@ -882,9 +888,9 @@ Partial Class Main
         Me.Label20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label20.Location = New System.Drawing.Point(12, 536)
         Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(53, 13)
+        Me.Label20.Size = New System.Drawing.Size(74, 13)
         Me.Label20.TabIndex = 46
-        Me.Label20.Text = "Release"
+        Me.Label20.Text = "GP Release"
         '
         'Main
         '
@@ -984,7 +990,6 @@ Partial Class Main
     Friend WithEvents ShowindexToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestworkflowToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestrevertToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents RebaseFeatureToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents RELEASEToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ReleaseToDEVMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ReleaseToTESTMenuItem As System.Windows.Forms.ToolStripMenuItem
@@ -1034,7 +1039,7 @@ Partial Class Main
     Friend WithEvents QueuedToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AllApexAppsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ApexAppExporterToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents RebaseFeatureAdvancedToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents RebaseFeatureFullToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents DBChangesOnlyToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ApexChangesOnlyToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents VirtualBoxToolStripMenuItem As ToolStripMenuItem
@@ -1047,4 +1052,6 @@ Partial Class Main
     Friend WithEvents StartVMHeadleassToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ReleaseToVMMenuItem As ToolStripMenuItem
     Friend WithEvents ExportDataMenuItem As ToolStripMenuItem
+    Friend WithEvents FullRebaseToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SinglePageImportToolStripMenuItem As ToolStripMenuItem
 End Class

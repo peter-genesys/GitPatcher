@@ -7,8 +7,10 @@
 
     Shared Sub Dbg(ByVal iString As String, Optional ByVal iTitle As String = "Debug")
         If Not String.IsNullOrEmpty(iString) Then
-            Debug.WriteLine(iString)
-            If Logger.DbgOn() Then
+            'Debug.WriteLine(iString)
+            Console.WriteLine(iString)  'Write logging to console - which may be redirected to the LogViewer.
+
+            If Logger.DbgOn() Then 'Tools/Logging ticked - currently set to invisible - not used.
                 MsgBox(iString, MsgBoxStyle.Information, iTitle)
             End If
         End If
@@ -22,5 +24,5 @@
         Dbg(iString, iTitle)
     End Sub
 
-   
+
 End Class

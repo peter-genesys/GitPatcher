@@ -1,7 +1,304 @@
 ﻿Friend Class WF_Apex
 
 
-    Public Shared Sub confirmApp()
+
+    Public Shared Sub ApexSplitExportCommit(ByVal iSchema As String, ByVal iAppId As String) 'Current
+
+        Dim connection As String = Globals.currentConnection
+        Dim username As String = iSchema
+
+        Dim fapp_id As String = iAppId
+        Dim apex_dir As String = Globals.RootApexDir
+
+        Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Export APEX application " & fapp_id & " from DB " & Globals.currentTNS & " " & connection,
+            "Exporting APEX application " & fapp_id & " from parsing schema " & username & " in DB " & Globals.currentTNS & Environment.NewLine &
+            "This writes individual apex files to the GIT Repo checkout, and then prompt to add and commit the changes." & Environment.NewLine &
+            Environment.NewLine &
+            "Consider which branch you are exporting to." & Environment.NewLine &
+            "To commit any existing changes, close this workflow and perform a GIT COMMIT.")
+
+        ExportProgress.MdiParent = GitPatcher
+        ExportProgress.addStep("Export Apex App " & fapp_id & ", split into components")
+        ExportProgress.addStep("Add new files to GIT repository")
+        ExportProgress.addStep("Commit valid changes to GIT repository")
+        ExportProgress.addStep("Revert invalid changes from your checkout")
+        ExportProgress.addStep("Commit unclean version", False, "As a temporary measure, for release via SVN, you may optionally choose to commit the unclean full export too.")
+        ExportProgress.Show()
+
+        Do Until ExportProgress.isStarted
+            Common.Wait(1000)
+        Loop
+
+        Logger.Dbg("Apex app_id " + fapp_id, "Check app id")
+
+        Dim app_id As String = fapp_id.Split("f")(1)
+
+        Dim parsingSchemaDir As String = apex_dir & iSchema
+        Dim appDir As String = parsingSchemaDir & "\" & fapp_id
+
+        Dim fapp_sql As String = fapp_id & ".sql"
+        Dim message As String = Nothing
+
+
+        Try 'Finish workflow if an error occurs
+
+            'PROGRESS 0
+            If ExportProgress.toDoNextStep() Then
+
+                'Delete the appDir prior to the export.
+                FileIO.deleteFolderIfExists(appDir)
+
+                'Use Host class to execute with a master script.
+                Host.RunMasterScript("prompt Exporting Apex App " & app_id &
+                    Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
+                    Environment.NewLine & "CONNECT &&" & iSchema & "_user/&&" & iSchema & "_password@" & Globals.getDATASOURCE &
+                    Environment.NewLine & "Apex export -applicationid " & app_id & " -skipExportDate -split" &
+                    Environment.NewLine & "exit;" _
+                  , parsingSchemaDir)
+
+                Dim AppFilePath As String = parsingSchemaDir & "\" & fapp_id & ".sql"
+                Dim uncleanAppFilename As String = fapp_id & ".unclean.sql"
+
+                FileIO.deleteFileIfExists(parsingSchemaDir & "\" & uncleanAppFilename)
+
+                FileIO.RenameFile(AppFilePath, uncleanAppFilename)
+
+            End If
+
+
+            If ExportProgress.toDoNextStep() Then
+                'Add new files to GIT repository 
+                Tortoise.Add(appDir, True)
+
+            End If
+
+            If ExportProgress.toDoNextStep() Then
+
+                'Find the application name in the init.sql file.
+                Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
+
+                'Commit valid changes to GIT repository  
+                Tortoise.Commit(appDir, "Apex App " & lAppIdAndName & " (" & Globals.currentTNS & ") " & vbLf & vbLf & "GitPatcher Split-Export from " & Globals.currentTNS, True)
+
+            End If
+
+            If ExportProgress.toDoNextStep() Then
+                'Revert invalid changes from your checkout
+                Tortoise.Revert(appDir)
+            End If
+
+            If ExportProgress.toDoNextStep() Then
+
+                Dim uncleanAppFilePath As String = parsingSchemaDir & "\" & fapp_id & ".unclean.sql"
+                Dim fullAppFilename As String = fapp_id & ".full.sql"
+
+                FileIO.deleteFileIfExists(parsingSchemaDir & "\" & fullAppFilename)
+
+                FileIO.RenameFile(uncleanAppFilePath, fullAppFilename)
+
+                'Find the application name in the init.sql file.
+                Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
+
+                'Commit valid changes to GIT repository  
+                Tortoise.Commit(parsingSchemaDir, "Apex App " & lAppIdAndName & " (" & Globals.currentTNS & ") " & vbLf & vbLf & "GitPatcher Full-Unclean-Export from " & Globals.currentTNS, True)
+
+            End If
+
+            ExportProgress.toDoNextStep()
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            ExportProgress.setToCompleted()
+            ExportProgress.Close()
+        End Try
+
+
+
+
+    End Sub
+
+
+
+    Public Shared Sub FindApps(ByRef foundApps As Collection)
+
+        Application.DoEvents()
+        Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
+        Cursor.Current = Cursors.WaitCursor
+
+        foundApps.Clear()
+
+        If IO.Directory.Exists(Globals.RootApexDir) Then
+
+            FileIO.RecursiveSearchContainingFolder(Globals.RootApexDir, "install.sql", foundApps, Globals.RootApexDir)
+
+        End If
+
+        If foundApps.Count = 0 Then
+            Throw New Exception("No Apps found")
+        End If
+
+        Cursor.Current = cursorRevert
+
+    End Sub
+
+    Public Shared Sub ChooseApp(ByRef iSchema As String, ByRef iAppId As String)
+        Dim AvailableApps As Collection = New Collection()
+        FindApps(AvailableApps) 'look for all apps
+        Dim appChoice As String = Nothing
+
+        appChoice = ChoiceDialog.Ask("Please choose an Apex App", AvailableApps, "", "Choose App", False, False)
+
+        iSchema = Common.getFirstSegment(appChoice, "\")
+        iAppId = Common.getLastSegment(appChoice, "\")
+
+    End Sub
+
+
+
+    Public Shared Sub ApexRevertSinglePage() 'Current
+
+        Dim currentBranch As String = GitOp.CurrentBranch()
+        Dim lSchema As String = Nothing
+        Dim lAppId As String = Nothing
+        Dim applicationDir As String = Nothing
+        Dim pagesDir As String = Nothing
+        Dim page_file As String = Nothing
+
+
+        Dim RevertProgress As ProgressDialogue = New ProgressDialogue("Import 1 APEX page into " & Globals.getDB & " DB.",
+        "Import 1 APEX page into " & Globals.getDB & " DB." & Environment.NewLine &
+        "This will overwrite only 1 page of the APEX application." & Environment.NewLine & Environment.NewLine &
+        "To backup the current state of the Apex App consider :" & Environment.NewLine &
+        " + Exporting the Apex App " & Environment.NewLine &
+        " + Snapshoting the VM")
+
+
+        RevertProgress.MdiParent = GitPatcher
+        'CHOOSE-APP
+        RevertProgress.addStep("Choose the Apex App", True, "Choose the Apex App that will have a page reverted.")
+        'EXPORT-APP
+        RevertProgress.addStep("Export the Apex App", False, "Export the Apex App to the current branch.")
+        'SWITCH-CHECKOUT
+        RevertProgress.addStep("Switch the checkout", False, "Switch to a branch, tag or commit that has the correct version of the Apex Page." &
+                                                                Chr(10) & "Otherwise use the version currently in the checkout.")
+
+        'CHOOSE-PAGE
+        RevertProgress.addStep("Choose the Page", True, "Choose the Apex Page from list of pages")
+        'CREATE-SNAPSHOT
+        RevertProgress.addStep("Create a pre-page-revert VM snapshot", Globals.getDB = "VM", "Use this restore point to to undo this page revert.")
+        'IMPORT-PAGE
+        RevertProgress.addStep("Import the Page", True, "Import the page to current DB.")
+        'RETURN-TO-BRANCH
+        RevertProgress.addStep("Return to branch: " & currentBranch, True, "Return to the original branch.")
+        RevertProgress.Show()
+
+
+        Do Until RevertProgress.isStarted
+                Common.Wait(1000)
+            Loop
+
+            'Logger.Dbg("Apex app_id " + fapp_id, "Check app id")
+
+            'Dim app_id As String = fapp_id.Split("f")(1)
+
+            'Dim parsingSchemaDir As String = apex_dir & lSchema
+            'Dim appDir As String = parsingSchemaDir & "\" & fapp_id
+
+            'Dim fapp_sql As String = fapp_id & ".sql"
+            'Dim message As String = Nothing
+
+
+            Try 'Finish workflow if an error occurs
+
+                'CHOOSE-APP
+                If RevertProgress.toDoNextStep Then
+                    ChooseApp(lSchema, lAppId)
+                    applicationDir = Globals.RootApexDir & lSchema & "\" & lAppId & "\application\"
+                    pagesDir = applicationDir & "pages\"
+                End If
+
+                'EXPORT-APP
+                If RevertProgress.toDoNextStep Then
+                    WF_Apex.ApexSplitExportCommit(lSchema, lAppId)
+                End If
+
+                'SWITCH-CHECKOUT
+                If RevertProgress.toDoNextStep Then
+                ''Choose a tag to import from
+                'Dim tagnames As Collection = New Collection
+                'tagnames.Add("HEAD")
+                'tagnames = GitOp.getTagNameList(tagnames, Globals.currentBranch)
+                'tagnames = GitOp.getTagNameList(tagnames, Globals.currentAppCode)
+
+
+                'Dim tagApexVersion As String = Nothing
+                'tagApexVersion = ChoiceDialog.Ask("Please choose a tag for apex install", tagnames, "HEAD", "Choose tag")
+
+                ''Checkout the tag
+                'GitOp.SwitchTagName(tagApexVersion)
+
+                'USE TORTOISE TO PICK A COMMIT
+                Tortoise.Switch(Globals.getRepoPath)
+
+            End If
+
+                'CHOOSE-PAGE
+                If RevertProgress.toDoNextStep Then
+
+
+                    Dim pages As Collection = New Collection
+
+                    'C:\Dev\apex_apps\apex\f101\application\pages
+
+                    pages = FileIO.FileList(pagesDir, "page_?????.sql", pagesDir)
+
+                    page_file = ChoiceDialog.Ask("Please choose a page to be installed", pages, "", "Choose Page")
+
+                End If
+
+                'CREATE-SNAPSHOT
+                If RevertProgress.toDoNextStep() Then
+                    'Snapshot VM
+                    If My.Settings.VBoxName = "No VM" Then
+                        MsgBox("Create a pre-page-revert VM snapshot.  " & Chr(10) & "Restore for undo of this page revert.", MsgBoxStyle.Exclamation, "Snapshot VM")
+                    Else
+                        WF_virtual_box.takeSnapshot(lAppId & "-pre-page-revert")
+                    End If
+
+                End If
+
+
+                'IMPORT-PAGE
+                If RevertProgress.toDoNextStep() Then
+                'RevertProgress.updateStepDescription(1, "Import Apex Page Filename: " & page_file)
+
+                'write a lauch page
+                Apex.Install1Page(page_file, applicationDir, lSchema)
+            End If
+
+                'RETURN-TO-BRANCH
+                If RevertProgress.toDoNextStep Then
+                    'Return to branch
+                    GitOp.SwitchBranch(currentBranch)
+                End If
+
+                RevertProgress.toDoNextStep()
+
+            Catch ex As Exception
+                MsgBox(ex.Message)
+                RevertProgress.setToCompleted()
+                RevertProgress.Close()
+            End Try
+
+
+
+
+    End Sub
+
+
+
+
+    Public Shared Sub confirmApp() 'Deprecated
 
 
         Dim appChoice As String = Nothing
@@ -16,7 +313,8 @@
 
 
 
-    Public Shared Sub ApexExportCommit() 'Deprecated.  
+    Public Shared Sub ApexExportCommit() 'Deprecated, keep code examples
+
         'This routine uses a hostout to oracle.apex.APEXExport And oracle.apex.APEXExportSplitter
         'This function has now been built into SQLcl.
 
@@ -44,7 +342,7 @@
         ExportProgress.Show()
 
         Do Until ExportProgress.isStarted
-            Common.wait(1000)
+            Common.Wait(1000)
         Loop
 
         ''write-host "APEX file export and commit - uses oracle.apex.APEXExport.class and java oracle.apex.APEXExportSplitter.class"
@@ -132,108 +430,9 @@
     End Sub
 
 
-    Public Shared Sub ApexSplitExportCommit(ByVal iSchema As String, ByVal iAppId As String)
-
-        'confirmApp()
-
-        Dim connection As String = Globals.currentConnection
-        Dim username As String = iSchema
-
-        Dim fapp_id As String = iAppId
-        Dim apex_dir As String = Globals.RootApexDir
-
-        Dim ExportProgress As ProgressDialogue = New ProgressDialogue("Export APEX application " & fapp_id & " from DB " & Globals.currentTNS & " " & connection,
-            "Exporting APEX application " & Globals.currentApex & " from parsing schema " & username & " in DB " & Globals.currentTNS & Environment.NewLine &
-            "This writes individual apex files to the GIT Repo checkout, and then prompt to add and commit the changes." & Environment.NewLine &
-            Environment.NewLine &
-            "Consider which branch you are exporting to." & Environment.NewLine &
-            "To commit any existing changes, close this workflow and perform a GIT COMMIT.")
-
-        ExportProgress.MdiParent = GitPatcher
-        ExportProgress.addStep("Export Apex App " & fapp_id & ", split into components")
-        ExportProgress.addStep("Add new files to GIT repository")
-        ExportProgress.addStep("Commit valid changes to GIT repository")
-        ExportProgress.addStep("Revert invalid changes from your checkout")
-        ExportProgress.addStep("Commit unclean version", False, "As a temporary measure, for release via SVN, you may optionally choose to commit the unclean full export too.")
-        ExportProgress.Show()
-
-        Do Until ExportProgress.isStarted
-            Common.wait(1000)
-        Loop
-
-        Logger.Dbg("Apex app_id " + fapp_id, "Check app id")
-
-        Dim app_id As String = fapp_id.Split("f")(1)
-
-        Dim parsingSchemaDir As String = apex_dir & iSchema
-        Dim appDir As String = parsingSchemaDir & "\" & fapp_id
-
-        Dim fapp_sql As String = fapp_id & ".sql"
-        Dim message As String = Nothing
-
-        'PROGRESS 0
-        If ExportProgress.toDoNextStep() Then
-
-            'Delete the appDir prior to the export.
-            FileIO.deleteFolderIfExists(appDir)
-
-            'Use Host class to execute with a master script.
-            Host.RunMasterScript("prompt Exporting Apex App " & app_id &
-                Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
-                Environment.NewLine & "CONNECT &&" & iSchema & "_user/&&" & iSchema & "_password@" & Globals.getDATASOURCE &
-                Environment.NewLine & "Apex export -applicationid " & app_id & " -skipExportDate -split" &
-                Environment.NewLine & "exit;" _
-              , parsingSchemaDir)
-
-            Dim AppFilePath As String = parsingSchemaDir & "\" & fapp_id & ".sql"
-            Dim uncleanAppFilename As String = fapp_id & ".unclean.sql"
-
-            FileIO.deleteFileIfExists(parsingSchemaDir & "\" & uncleanAppFilename)
-
-            FileIO.RenameFile(AppFilePath, uncleanAppFilename)
-
-        End If
 
 
-        If ExportProgress.toDoNextStep() Then
-            'Add new files to GIT repository 
-            Tortoise.Add(appDir, True)
-
-        End If
-
-        If ExportProgress.toDoNextStep() Then
-
-            'Find the application name in the init.sql file.
-            Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
-
-            'Commit valid changes to GIT repository  
-            Tortoise.Commit(appDir, "Apex App " & lAppIdAndName & " (" & Globals.currentTNS & ") " & vbLf & vbLf & "GitPatcher Split-Export from " & Globals.currentTNS, True)
-
-        End If
-
-        If ExportProgress.toDoNextStep() Then
-            'Revert invalid changes from your checkout
-            Tortoise.Revert(appDir)
-        End If
-
-        If ExportProgress.toDoNextStep() Then
-
-            'Find the application name in the init.sql file.
-            Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
-
-            'Commit valid changes to GIT repository  
-            Tortoise.Commit(parsingSchemaDir, "Apex App " & lAppIdAndName & " (" & Globals.currentTNS & ") " & vbLf & vbLf & "GitPatcher Full-Unclean-Export from " & Globals.currentTNS, True)
-
-        End If
-
-        ExportProgress.toDoNextStep()
-
-
-    End Sub
-
-
-
-    Public Shared Sub ApexImportFromTag()
+    Public Shared Sub ApexImportFromTag() 'Deprecated, keep code examples
 
         confirmApp()
 
@@ -262,7 +461,7 @@
         ImportProgress.Show()
 
         Do Until ImportProgress.isStarted
-            Common.wait(1000)
+            Common.Wait(1000)
         Loop
 
         If ImportProgress.toDoNextStep Then
@@ -357,7 +556,7 @@
     End Sub
 
 
-    Shared Sub ApexImport1PageFromTag()
+    Shared Sub ApexImport1PageFromTag() 'Deprecated, keep code examples
 
         confirmApp()
 
@@ -384,7 +583,7 @@
         ImportProgress.Show()
 
         Do Until ImportProgress.isStarted
-            Common.wait(1000)
+            Common.Wait(1000)
         Loop
 
         Try
@@ -413,7 +612,7 @@
 
                 'C:\Dev\apex_apps\apex\f101\application\pages
 
-                pages = FileIO.FileList(pagesDir, "page_*.sql", pagesDir)
+                pages = FileIO.FileList(pagesDir, "page_?????.sql", pagesDir)
 
                 Dim page_file As String = Nothing
                 page_file = ChoiceDialog.Ask("Please choose a page to be installed", pages, "", "Choose Page")
@@ -421,7 +620,7 @@
                 ImportProgress.updateStepDescription(1, "Import Apex Page Filename: " & page_file)
 
                 'write a lauch page
-                Apex.Install1Page(page_file)
+                Apex.Install1Page(page_file, "dummy", "dummy")
 
             End If
 
@@ -432,10 +631,10 @@
 
             ImportProgress.toDoNextStep()
 
-
-        Catch page_not_selected As Halt
-            MsgBox("No page selected")
-            ImportProgress.stopAndClose()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            ImportProgress.setToCompleted()
+            ImportProgress.Close()
         End Try
 
 

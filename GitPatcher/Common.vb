@@ -51,7 +51,7 @@
 
 
 
-    Public Shared Sub wait(ByVal interval As Integer)
+    Public Shared Sub Wait(ByVal interval As Integer)
         Dim sw As New Stopwatch
         sw.Start()
         Do While sw.ElapsedMilliseconds < interval
@@ -59,6 +59,10 @@
             Application.DoEvents()
         Loop
         sw.Stop()
+    End Sub
+
+    Public Shared Sub Wait()
+        Wait(Globals.waitTime)
     End Sub
 
 
@@ -210,9 +214,9 @@
 
     End Sub
 
-    Public Shared Sub MsgBoxCollection(ByVal i_collection As Collection, iTitle As String)
+    Public Shared Sub MsgBoxCollection(ByVal i_collection As Collection, ByVal iTitle As String, Optional ByVal iMessage As String = Nothing)
 
-        Dim BigList As String = ""
+        Dim BigList As String = iMessage & Chr(10)
         For Each lcollectionRow In i_collection
             BigList = BigList & lcollectionRow.ToString & Chr(10)
         Next
@@ -234,16 +238,21 @@
     Shared Sub zip7_dir(ByVal i_zip_file As String,
                        ByVal i_zip_dir As String)
 
-        FileIO.confirmDeleteFile(i_zip_file)
-        FileIO.deleteFileIfExists(i_zip_file)
+        Try
+            FileIO.confirmDeleteFolder(i_zip_dir)
 
-        Dim l_command_filename As String = "C:\PROGRA~1\7-Zip\7z.exe"
-        Dim l_path As String = Nothing
-        Dim l_arguments As String = " a " & i_zip_file & " " & i_zip_dir
-        Logger.Dbg(l_arguments)
-        Dim l_workingDir As String = Nothing
+            Dim l_command_filename As String = "C:\PROGRA~1\7-Zip\7z.exe"
+            Dim l_path As String = Nothing
+            Dim l_arguments As String = " a " & i_zip_file & " " & i_zip_dir
+            Logger.Dbg(l_arguments)
+            Dim l_workingDir As String = Nothing
 
-        Host.run_shell(l_command_filename, l_path, l_arguments, l_workingDir)
+            Host.run_shell(l_command_filename, l_path, l_arguments, l_workingDir)
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
 
     End Sub
 
@@ -251,16 +260,23 @@
                             ByVal i_zip_dir As String,
                             ByVal i_tag_dir As String)
 
-        FileIO.confirmDeleteFolder(i_zip_dir)
-        FileIO.deleteFolderIfExists(i_zip_dir)
 
-        Dim l_command_filename As String = "C:\PROGRA~1\7-Zip\7z.exe"
-        Dim l_path As String = Nothing
-        Dim l_arguments As String = " x " & i_zip_file & " -o" & i_tag_dir
-        Logger.Dbg(l_arguments)
-        Dim l_workingDir As String = Nothing
 
-        Host.run_shell(l_command_filename, l_path, l_arguments, l_workingDir)
+        Try
+            FileIO.confirmDeleteFolder(i_zip_dir)
+
+            Dim l_command_filename As String = "C:\PROGRA~1\7-Zip\7z.exe"
+            Dim l_path As String = Nothing
+            Dim l_arguments As String = " x " & i_zip_file & " -o" & i_tag_dir
+            Logger.Dbg(l_arguments)
+            Dim l_workingDir As String = Nothing
+
+            Host.run_shell(l_command_filename, l_path, l_arguments, l_workingDir)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+
 
     End Sub
 

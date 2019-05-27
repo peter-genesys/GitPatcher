@@ -6,7 +6,7 @@
         Dim button As MsgBoxResult
         button = MsgBox(Message, MsgBoxStyle.OkCancel, Title)
         If button = MsgBoxResult.Cancel Then
-            Throw (New Halt("User Cancelled Operation"))
+            Throw New System.Exception("User Cancelled Operation")
         End If
 
     End Sub
@@ -94,9 +94,20 @@
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
 
         ' Check that the patch_dir folder exists
-        If objFSO.FolderExists(Common.dos_path(i_path)) Then
-            objFSO.DeleteFolder(Common.dos_path(i_path))
-        End If
+        While objFSO.FolderExists(Common.dos_path(i_path))
+            Try
+                objFSO.DeleteFolder(Common.dos_path(i_path))
+            Catch ex As Exception
+                MsgBox(ex.Message)
+                Confirm("Folder Delete Failed: " & i_path & Environment.NewLine & Environment.NewLine &
+                        "To retry, please close programs that may be using this folder. Eg" & Environment.NewLine &
+                        "+ Text editors: Sublime, Notepad++, WinMerge" & Environment.NewLine &
+                        "+ Executables : SQL, Powershell" & Environment.NewLine &
+                        "then press Ok retry." & Environment.NewLine & Environment.NewLine &
+                        "To abort process, press Cancel", "Retry Folder Delete")
+            End Try
+
+        End While
 
 
     End Sub
@@ -104,13 +115,10 @@
     Shared Sub confirmDeleteFolder(ByVal i_path As String)
         Dim l_path As String = Common.dos_path(i_path).Trim("\")
 
-        ' Create the File System Object
-        Dim objFSO = CreateObject("Scripting.FileSystemObject")
-
         ' Check that the patch_dir folder exists
-        If objFSO.FolderExists(l_path) Then
+        If folderExists(l_path) Then
             Confirm("Delete this folder: " & l_path, "Confirm Folder Delete")
-            objFSO.DeleteFolder(l_path)
+            deleteFolderIfExists(l_path)
         End If
 
 
@@ -388,6 +396,18 @@
         Else
             Return "Unable to find Application Name!!"
         End If
+
+    End Function
+
+    Public Shared Function FindRepoPatches() As Collection
+
+        Dim repoPatches As Collection = New Collection
+
+        If IO.Directory.Exists(Globals.RootPatchDir) Then
+            FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir, "install.sql", repoPatches, Globals.RootPatchDir)
+        End If
+
+        Return repoPatches
 
     End Function
 

@@ -7,18 +7,18 @@ Public Class ApexAppExporter
     Public Sub New()
 
         InitializeComponent()
-        DoSearch()
+        'DoSearch(RepoRadioButton.Checked) 'See repoRadioButton_CheckedChanged
         Me.MdiParent = GitPatcher
         Me.Show()
         Wait()
 
     End Sub
 
-    Public Sub Wait()
-        'This wait routine will halt the caller until the form is closed.
+    Private Sub Wait()
+        'Wait until the form is closed.
         waiting = True
         Do Until Not waiting
-            Common.wait(1000)
+            Common.Wait()
         Loop
     End Sub
 
@@ -27,7 +27,8 @@ Public Class ApexAppExporter
     End Sub
 
 
-    Public Sub FindApps(ByRef foundApps As Collection)
+    Public Shared Sub FindApps(ByRef foundApps As Collection) 
+
 
         Application.DoEvents()
         Dim cursorRevert As System.Windows.Forms.Cursor = Cursor.Current
@@ -42,6 +43,7 @@ Public Class ApexAppExporter
         End If
 
         foundApps = availableApps
+        Logger.Dbg(foundApps.Count & " Apps found.")
 
         If foundApps.Count = 0 Then
             MsgBox("No Apex Apps found in Apex Dir " & Globals.RootApexDir, MsgBoxStyle.Information, "No Apps found")
@@ -51,15 +53,34 @@ Public Class ApexAppExporter
 
     End Sub
 
-    Private Sub DoSearch()
+
+
+    Private Sub DoSearch(iRestrict As Boolean)
         Logger.Dbg("Searching")
 
         Dim AvailableApps As Collection = New Collection
 
-        FindApps(AvailableApps) 'check for any apps
-        KnownAppsTreeView.populateTreeFromCollection(AvailableApps, False)
+        If iRestrict Then
+            Logger.Dbg("look for apps in checkout")
+            FindApps(AvailableApps)             'look for apps in checkout - limited to this repo
+        Else
+            Logger.Dbg("look for apps in workspaces")
+            AvailableApps = OracleSQL.GetApps() 'look for apps in DB       - any apps from any repo
+        End If
 
         Logger.Dbg("Populate Tree")
+        KnownAppsTreeView.populateTreeFromCollection(AvailableApps, False)
+
+        'Get a list of modified apps
+        Logger.Dbg("look for modified apps in workspaces")
+        Dim modifiedApps As Collection = OracleSQL.GetModifiedApps()
+
+        'Tick the modified apps in the treeview
+        KnownAppsTreeView.TickNodes(modifiedApps)
+
+        KnownAppsTreeView.ExpandAll()
+
+
 
 
     End Sub
@@ -116,5 +137,9 @@ Public Class ApexAppExporter
 
     Private Sub ExportApexAppsButton_Click(sender As Object, e As EventArgs) Handles ExportApexAppsButton.Click
         ExportSelectedApps()
+    End Sub
+
+    Private Sub RepoRadioButton_CheckedChanged(sender As Object, e As EventArgs) Handles RepoRadioButton.CheckedChanged
+        DoSearch(RepoRadioButton.Checked)
     End Sub
 End Class

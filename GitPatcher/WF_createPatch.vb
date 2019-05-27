@@ -80,7 +80,7 @@
                 'Tortoise.Commit(Globals.getRepoPath, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes.", True)
 
             End If
-        Else
+        ElseIf Not createPatchProgress.IsDisposed Then 'ignore if form has been closed.
             'User chooses to NOT to commit, but commit anyway if there is at least 1 staged change
             'Committing changed files to GIT"
             If GitOp.ChangedFiles() > 0 Then

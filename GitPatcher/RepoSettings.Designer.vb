@@ -68,9 +68,9 @@ Partial Class RepoSettings
         Label22.AutoSize = True
         Label22.Location = New System.Drawing.Point(65, 186)
         Label22.Name = "Label22"
-        Label22.Size = New System.Drawing.Size(309, 13)
+        Label22.Size = New System.Drawing.Size(236, 13)
         Label22.TabIndex = 47
-        Label22.Text = "Extra Files Search Dirs Relative Path (separated by semi-colon) :"
+        Label22.Text = "Extra Files Search Dirs Relative Path (delimited) :"
         '
         'Label24
         '

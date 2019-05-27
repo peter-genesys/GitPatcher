@@ -27,20 +27,19 @@ Public Class PatchFromTags
 
         ExecuteButton.Text = "Execute Patch on " & Globals.currentTNS
 
-        Me.MdiParent = GitPatcher
-
         RevertVMButton.Visible = My.Settings.VBoxName <> "No VM"
 
+        Me.MdiParent = GitPatcher
         Me.Show()
         Wait()
 
     End Sub
 
-    Public Sub Wait()
-        'This wait routine will halt the caller until the form is closed.
+    Private Sub Wait()
+        'Wait until the form is closed.
         waiting = True
         Do Until Not waiting
-            Common.wait(1000)
+            Common.Wait()
         Loop
     End Sub
 
@@ -187,7 +186,7 @@ Public Class PatchFromTags
     Private Sub FindChanges()
         Try
             If SchemaComboBox.Text = "" Then
-                Throw (New Halt("Schema not selected"))
+                Throw New System.Exception("Please select a schema")
             End If
 
             TreeViewChanges.PathSeparator = "/"
@@ -206,8 +205,8 @@ Public Class PatchFromTags
             ShowTabs()
             ResetForNewPatch()
 
-        Catch schema_not_selected As Halt
-            MsgBox("Please select a schema")
+        Catch ex As Exception
+            MsgBox(ex.Message)
         End Try
     End Sub
 
@@ -244,7 +243,7 @@ Public Class PatchFromTags
         'Create Patch Dir
         Try
             FileIO.confirmDeleteFolder(PatchDirTextBox.Text)
-        Catch cancelled_delete As Halt
+        Catch ex As Exception
             MsgBox("Warning: Now overwriting existing patch")
         End Try
 
@@ -989,7 +988,8 @@ Public Class PatchFromTags
 
             target.Text = ChoiceDialog.Ask("You may choose a log message for the " & targetControlName, log, "", "Choose log message", False)
 
-        Catch noneChosen As Halt
+        Catch ex As Exception
+            MsgBox(ex.Message)
             target.Text = l_old_text
         End Try
 
@@ -1256,7 +1256,7 @@ Public Class PatchFromTags
         TreeViewFiles.PathSeparator = "\"
         TreeViewFiles.Nodes.Clear()
 
-        Dim extrasDirCol As Collection = extrasDirCollection()
+        Dim extrasDirCol As Collection = Globals.extrasDirCollection()
 
         For Each relDir In extrasDirCol
             Dim aRootDir As String = Globals.getRepoPath() & relDir
@@ -1429,7 +1429,9 @@ Public Class PatchFromTags
         'Remove previous patch 
         Try
             FileIO.confirmDeleteFolder(l_repo_patch_export_dir)
-        Catch cancelled_delete As Halt
+
+
+        Catch ex As Exception
             MsgBox("Warning: Now overwriting previously exported patch")
         End Try
 
@@ -1490,46 +1492,25 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub FindApps()
-        Try
-            'If SchemaComboBox.Text = "" Then
-            '   Throw (New Halt("Schema not selected"))
-            'End If
+ 
 
             TreeViewApps.PathSeparator = "/"
             TreeViewApps.Nodes.Clear()
 
-            For Each change In GitOp.getChanges(Globals.getApexRelPath, False)
+        For Each change In GitOp.getChanges(Globals.getApexRelPath, False)
 
+            If Not change.contains(".unclean.sql") and Not change.contains(".full.sql") Then 'Do not include any full app exports in the list.
+
+                'Search for change to any file, but should ignore duplicates.
                 Dim appNameNode As String = Common.getNthSegment(change, "/", 3) & "/" & Common.getNthSegment(change, "/", 4)
 
                 TreeViewApps.AddNode(appNameNode, "/", True)
+            End If
 
-                ''Common.getNthSegment(App, "/", 3)
+        Next
 
-                'Dim l_pos As Integer = 0
-                'Dim l_count As Integer = 0
-                'While l_pos < appNameNode.Length And l_count < 4 And appNameNode.IndexOf("/", l_pos + 1) > 0
-                '    l_pos = appNameNode.IndexOf("/", l_pos + 1)
-                '    l_count = l_count + 1
-                'End While
-
-                'appNameNode = appNameNode.Substring(0, l_pos)
-
-                ''find or create each node for item
-                ''TreeViewApps.AddNode(change, "/", True)
-                'TreeViewApps.AddNode(appNameNode, "/", True)
-
-            Next
-
-            TreeViewApps.ExpandAll()
-
-            'HideTabs()
-            'ShowTabs()
-            'ResetForNewPatch()
-
-        Catch schema_not_selected As Halt
-            MsgBox("Please select a schema")
-        End Try
+        TreeViewApps.ExpandAll()
+ 
     End Sub
 
 

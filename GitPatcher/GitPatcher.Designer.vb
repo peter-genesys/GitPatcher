@@ -53,6 +53,7 @@ Partial Class GitPatcher
         Me.ToolsMenu = New System.Windows.Forms.ToolStripMenuItem()
         Me.ConfigToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MainToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LogViewerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoggingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SQLplusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.WindowsMenu = New System.Windows.Forms.ToolStripMenuItem()
@@ -194,7 +195,7 @@ Partial Class GitPatcher
         Me.UndoToolStripMenuItem.Image = CType(resources.GetObject("UndoToolStripMenuItem.Image"), System.Drawing.Image)
         Me.UndoToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
         Me.UndoToolStripMenuItem.Name = "UndoToolStripMenuItem"
-        Me.UndoToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.UndoToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
         Me.UndoToolStripMenuItem.Text = "&Undo"
         '
         'RedoToolStripMenuItem
@@ -202,20 +203,20 @@ Partial Class GitPatcher
         Me.RedoToolStripMenuItem.Image = CType(resources.GetObject("RedoToolStripMenuItem.Image"), System.Drawing.Image)
         Me.RedoToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
         Me.RedoToolStripMenuItem.Name = "RedoToolStripMenuItem"
-        Me.RedoToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.RedoToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
         Me.RedoToolStripMenuItem.Text = "&Redo"
         '
         'ToolStripSeparator6
         '
         Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-        Me.ToolStripSeparator6.Size = New System.Drawing.Size(177, 6)
+        Me.ToolStripSeparator6.Size = New System.Drawing.Size(119, 6)
         '
         'CutToolStripMenuItem
         '
         Me.CutToolStripMenuItem.Image = CType(resources.GetObject("CutToolStripMenuItem.Image"), System.Drawing.Image)
         Me.CutToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
         Me.CutToolStripMenuItem.Name = "CutToolStripMenuItem"
-        Me.CutToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CutToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
         Me.CutToolStripMenuItem.Text = "Cu&t"
         '
         'CopyToolStripMenuItem
@@ -223,7 +224,7 @@ Partial Class GitPatcher
         Me.CopyToolStripMenuItem.Image = CType(resources.GetObject("CopyToolStripMenuItem.Image"), System.Drawing.Image)
         Me.CopyToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
         Me.CopyToolStripMenuItem.Name = "CopyToolStripMenuItem"
-        Me.CopyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CopyToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
         Me.CopyToolStripMenuItem.Text = "&Copy"
         '
         'PasteToolStripMenuItem
@@ -231,18 +232,18 @@ Partial Class GitPatcher
         Me.PasteToolStripMenuItem.Image = CType(resources.GetObject("PasteToolStripMenuItem.Image"), System.Drawing.Image)
         Me.PasteToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
         Me.PasteToolStripMenuItem.Name = "PasteToolStripMenuItem"
-        Me.PasteToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PasteToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
         Me.PasteToolStripMenuItem.Text = "&Paste"
         '
         'ToolStripSeparator7
         '
         Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
-        Me.ToolStripSeparator7.Size = New System.Drawing.Size(177, 6)
+        Me.ToolStripSeparator7.Size = New System.Drawing.Size(119, 6)
         '
         'SelectAllToolStripMenuItem
         '
         Me.SelectAllToolStripMenuItem.Name = "SelectAllToolStripMenuItem"
-        Me.SelectAllToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.SelectAllToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
         Me.SelectAllToolStripMenuItem.Text = "Select &All"
         '
         'ViewMenu
@@ -273,7 +274,7 @@ Partial Class GitPatcher
         '
         'ToolsMenu
         '
-        Me.ToolsMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ConfigToolStripMenuItem, Me.MainToolStripMenuItem, Me.LoggingToolStripMenuItem, Me.SQLplusToolStripMenuItem})
+        Me.ToolsMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ConfigToolStripMenuItem, Me.MainToolStripMenuItem, Me.LogViewerToolStripMenuItem, Me.LoggingToolStripMenuItem, Me.SQLplusToolStripMenuItem})
         Me.ToolsMenu.Name = "ToolsMenu"
         Me.ToolsMenu.Size = New System.Drawing.Size(48, 20)
         Me.ToolsMenu.Text = "&Tools"
@@ -281,26 +282,33 @@ Partial Class GitPatcher
         'ConfigToolStripMenuItem
         '
         Me.ConfigToolStripMenuItem.Name = "ConfigToolStripMenuItem"
-        Me.ConfigToolStripMenuItem.Size = New System.Drawing.Size(118, 22)
+        Me.ConfigToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ConfigToolStripMenuItem.Text = "Config"
         '
         'MainToolStripMenuItem
         '
         Me.MainToolStripMenuItem.Name = "MainToolStripMenuItem"
-        Me.MainToolStripMenuItem.Size = New System.Drawing.Size(118, 22)
+        Me.MainToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.MainToolStripMenuItem.Text = "Main"
+        '
+        'LogViewerToolStripMenuItem
+        '
+        Me.LogViewerToolStripMenuItem.Name = "LogViewerToolStripMenuItem"
+        Me.LogViewerToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.LogViewerToolStripMenuItem.Text = "Log Viewer"
         '
         'LoggingToolStripMenuItem
         '
         Me.LoggingToolStripMenuItem.CheckOnClick = True
         Me.LoggingToolStripMenuItem.Name = "LoggingToolStripMenuItem"
-        Me.LoggingToolStripMenuItem.Size = New System.Drawing.Size(118, 22)
+        Me.LoggingToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.LoggingToolStripMenuItem.Text = "Logging"
+        Me.LoggingToolStripMenuItem.Visible = False
         '
         'SQLplusToolStripMenuItem
         '
         Me.SQLplusToolStripMenuItem.Name = "SQLplusToolStripMenuItem"
-        Me.SQLplusToolStripMenuItem.Size = New System.Drawing.Size(118, 22)
+        Me.SQLplusToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.SQLplusToolStripMenuItem.Text = "SQLplus"
         '
         'WindowsMenu
@@ -555,4 +563,5 @@ Partial Class GitPatcher
     Friend WithEvents ConfigToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents LoggingToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SQLplusToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents LogViewerToolStripMenuItem As ToolStripMenuItem
 End Class

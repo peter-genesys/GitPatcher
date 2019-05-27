@@ -75,9 +75,8 @@
         'SelectedIndex = 4 'Default to VM
 
         loadRepos()
-        'loadDBs()
-        'loadApexApps()
-        loadHotFixDBs()
+
+        loadHotFixComboBoxDBs()
         MinPatchTextBox.Text = My.Settings.MinPatch
         TextBoxReleaseId.Text = My.Settings.ReleaseId
 
@@ -94,8 +93,8 @@
         MultiDBHotFixPatchToolStripMenuItem.Text = "Multi DB Hotfix Patch: " & HotFixToolStripComboBox.SelectedItem & " and Downwards"
     End Sub
 
-    Public Sub loadHotFixDBs()
-        Logger.Dbg("Main.loadHotFixDBs")
+    Public Sub loadHotFixComboBoxDBs()
+        Logger.Dbg("Main.loadHotFixComboBoxDBs")
         HotFixToolStripComboBox.Items.Clear()
 
         HotFixToolStripComboBox.Items.Add("PROD")
@@ -128,8 +127,8 @@
         Dim showMenuItems As Boolean = Globals.currentLongBranch.Contains("feature")
 
         CreateDBFeaturePatchToolStripMenuItem.Visible = showMenuItems
-        RebaseFeatureToolStripMenuItem.Visible = showMenuItems
-        RebaseFeatureAdvancedToolStripMenuItem.Visible = showMenuItems
+        'RebaseFeatureToolStripMenuItem.Visible = showMenuItems
+        RebaseFeatureFullToolStripMenuItem.Visible = showMenuItems
         MergeAndPushFeatureToolStripMenuItem.Visible = showMenuItems
 
     End Sub
@@ -138,7 +137,7 @@
 
     Private Sub showRepoSettings()
         Logger.Dbg("Main.showRepoSettings")
-        RepoSettings.checkRepo(RepoComboBox.Text)
+        RepoSettings.checkRepo(Globals.getRepoName)
         RepoPathTextBox.Text = Globals.getRepoPath()
 
         BranchPathTextBox.Text = Globals.currentLongBranch()
@@ -167,7 +166,7 @@
 
     Private Sub showOrgSettings()
 
-        OrgSettings.retrieveOrg(OrgComboBox.Text, DBComboBox.Text, RepoComboBox.Text)
+        OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
 
         OrgCodeTextBox.Text = Globals.getOrgCode()
         OrgInFeatureCheckBox.Checked = Globals.getOrgInFeature = "Y"
@@ -180,8 +179,12 @@
 
     Public Sub loadOrgs()
 
+        OrgSettings.readOrgs(OrgComboBox, Globals.getOrgName(), Globals.getRepoName)
+        showOrgSettings()
+
+
         'OrgSettings.readOrgs(OrgComboBox, OrgComboBox.Text, RepoComboBox.Text)
-        OrgSettings.readOrgs(OrgComboBox, Globals.getOrgName(), RepoComboBox.Text)
+
 
         ''VERSION 1
         ''Derive promolevels and display best promo-level (last chosen, or lowest available.)
@@ -208,7 +211,9 @@
         'End If
         'DBComboBox.Text = Globals.getDB
 
-        showOrgSettings()
+
+        'OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+        'showOrgSettings()
 
     End Sub
 
@@ -360,10 +365,9 @@
         Apex.restoreCreateApplicationSQL()
     End Sub
 
-    Private Sub RebaseFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureToolStripMenuItem.Click
-        WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, True)
-    End Sub
-
+    'Private Sub RebaseFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureToolStripMenuItem.Click
+    '    WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, True)
+    'End Sub
     Private Sub ReleaseToISDEVLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToDEVMenuItem.Click
         WF_release.releaseTo("DEV")
     End Sub
@@ -440,10 +444,6 @@
 
     End Sub
 
-    Private Sub Import1PageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Import1PageToolStripMenuItem.Click
-        WF_Apex.ApexImport1PageFromTag()
-    End Sub
-
     Private Sub GITToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PATCHToolStripMenuItem.Click
 
     End Sub
@@ -477,6 +477,7 @@
         'setOrgCode(OrgComboBox.SelectedItem)
         Globals.setOrgName(OrgComboBox.SelectedItem)
 
+        'Reset the DB
         If Not String.IsNullOrEmpty(OrgComboBox.SelectedItem) Then
 
             'VERSION 1
@@ -632,5 +633,12 @@
         WF_rebase.exportData()
     End Sub
 
+    Private Sub FullRebaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FullRebaseToolStripMenuItem.Click
+        WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, True)
+    End Sub
 
+    Private Sub SinglePageImportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SinglePageImportToolStripMenuItem.Click
+
+        WF_Apex.ApexRevertSinglePage()
+    End Sub
 End Class

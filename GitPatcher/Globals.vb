@@ -1,9 +1,16 @@
 ﻿Imports LibGit2Sharp
+Imports System.Text.RegularExpressions
 
 Module Globals
 
+    Private gWaitTime As Integer = My.Settings.WaitTime
+    Function waitTime() As Integer
+        Return gWaitTime
+    End Function
+
     Private gFlow As String = My.Settings.Flow
     Private gDB As String = My.Settings.CurrentDB
+
 
     Private gRepoName As String
 
@@ -24,6 +31,10 @@ Module Globals
 
     Public Function getGPScriptsDir() As String
         Return Common.dos_path_trailing_slash(My.Settings.GPScriptsDir)
+    End Function
+
+    Public Function getRepoScriptsDir() As String
+        Return Globals.getRepoPath & "tools\db-spooler\script\"
     End Function
 
     Public Function getVBoxDir() As String
@@ -193,6 +204,7 @@ Module Globals
     Public Sub setOrgCode(OrgCode As String)
         Logger.Dbg("Globals.setOrgCode(" & OrgCode & ")")
         gOrgCode = OrgCode
+
     End Sub
 
     Public Function getOrgCode() As String
@@ -200,7 +212,7 @@ Module Globals
     End Function
 
 
-    Private gOrgName As String
+    Private gOrgName As String = My.Settings.CurrentOrg
 
     Public Sub setOrgName(OrgName As String)
         Logger.Dbg("Globals.setOrgName(" & OrgName & ")")
@@ -208,7 +220,12 @@ Module Globals
 
         If Not String.IsNullOrEmpty(OrgName) Then
 
+
+            My.Settings.CurrentOrg = OrgName
+            My.Settings.Save()
             gPromoList = OrgSettings.retrieveOrgPromos(OrgName, "PROD|UAT|TEST|DEV|VM", Globals.getRepoName())
+
+
 
         End If
 
@@ -471,6 +488,15 @@ Module Globals
         My.Settings.CurrentDB = gDB
         My.Settings.Save()
 
+        'Read the org settings again whenever DB is changed.
+        'This will refresh these values :
+        '  TNS 
+        '  CONNECT
+        '  ARMUSER
+        '  ARMPWORD
+
+        OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+
     End Sub
 
 
@@ -565,24 +591,24 @@ Module Globals
 
     Public Function deriveHotfixBranch(Optional ByVal iDb As String = "") As String
 
-        If gFlow = "GitHubFlow" Then
-            Return "master"
-        End If
+        'If gFlow = "GitHubFlow" Then
+        'Return "master"
+        'End If
 
         If String.IsNullOrEmpty(iDb) Then
             iDb = gDB
         End If
 
         If iDb = "PROD" Then
-            Return "master"
+            Return "release"
         ElseIf iDb = "UAT" Then
-            Return "uat"
+            Return "release"
         ElseIf iDb = "TEST" Then
-            Return "test"
+            Return "master"
         ElseIf iDb = "DEV" Then
-            Return "develop"
+            Return "master"
         ElseIf iDb = "VM" Then
-            Return ""
+            Return "master"
         End If
 
         Return ""
@@ -594,10 +620,9 @@ Module Globals
 
         Dim extrasDirCol As New Collection
         Dim l_Index As Integer = -1
-        Dim l_extras As String = getExtrasRelPath()
-        For Each dirname In l_extras.Split(";")
+        Dim l_extras As String = Regex.Replace(getExtrasRelPath(), "[;:|,]", ",") 'Use any of these delimiters
+        For Each dirname In l_extras.Split(",")
             l_Index = l_Index + 1
-            'dirname = Trim(dirname).Replace(Chr(13), "")
             extrasDirCol.Add(dirname)
         Next
         Return extrasDirCol

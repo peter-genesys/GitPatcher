@@ -241,11 +241,9 @@ Public Class OrgSettings
     End Function
 
 
-    Private Sub RepoListTextBox_TextChanged(sender As Object, e As EventArgs)
-        Main.loadRepos()
-    End Sub
-
-
+    'Private Sub RepoListTextBox_TextChanged(sender As Object, e As EventArgs)
+    '    Main.loadRepos()
+    'End Sub
 
 
 

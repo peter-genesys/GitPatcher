@@ -159,9 +159,9 @@ Public Class AppSettings
     End Sub
 
 
-    Private Sub RepoListTextBox_TextChanged(sender As Object, e As EventArgs)
-        Main.loadRepos()
-    End Sub
+    'Private Sub RepoListTextBox_TextChanged(sender As Object, e As EventArgs)
+    '    Main.loadRepos()
+    'End Sub
 
 
 

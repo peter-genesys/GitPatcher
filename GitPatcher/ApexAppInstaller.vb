@@ -2,10 +2,16 @@
 
 Public Class ApexAppInstaller
 
+    Private tagA As String = Nothing
+    Private tagB As String = Nothing
+
     Private waiting As Boolean
 
-    Public Sub New(Optional ByVal ienqueuedStatus As String = "All", Optional ByVal queuedBy As String = "me")
+    Public Sub New(Optional ByVal ienqueuedStatus As String = "All", Optional ByVal itagA As String = "", Optional ByVal itagB As String = "", Optional ByVal queuedBy As String = "me")
         InitializeComponent()
+
+        Me.tagA = itagA
+        Me.tagB = itagB
 
         'Other legal values Unapplied and Uninstalled
         ComboBoxAppsFilter.SelectedItem = ienqueuedStatus
@@ -38,18 +44,24 @@ Public Class ApexAppInstaller
 
         UsePatchAdminCheckBox.Checked = Globals.getUseARM
 
+
         Me.MdiParent = GitPatcher
-        Me.Show()
-        doSearch()
-        Wait()
+        If doSearch() > 0 Then
+            Me.Show()
+            Wait()
+        Else
+            Me.Close()
+        End If
+
+
 
     End Sub
 
-    Public Sub Wait()
-        'This wait routine will halt the caller until the form is closed.
+    Private Sub Wait()
+        'Wait until the form is closed.
         waiting = True
         Do Until Not waiting
-            Common.wait(1000)
+            Common.Wait()
         Loop
     End Sub
 
@@ -139,9 +151,9 @@ Public Class ApexAppInstaller
 
         End If
 
-        If foundApps.Count = 0 Then
-            MsgBox("No Apex Apps matched the search criteria.", MsgBoxStyle.Information, "No Apps found")
-        End If
+        'If foundApps.Count = 0 Then
+        ' MsgBox("No Apex Apps matched the search criteria.", MsgBoxStyle.Information, "No Apps found")
+        ' End If
 
 
         Cursor.Current = cursorRevert
@@ -149,7 +161,7 @@ Public Class ApexAppInstaller
     End Sub
 
 
-    Private Sub doSearch()
+    Private Function doSearch() As Integer
         Logger.Dbg("Searching")
 
         Dim AvailableApps As Collection = New Collection
@@ -169,15 +181,48 @@ Public Class ApexAppInstaller
         AvailableAppsTreeView.populateTreeFromCollection(AvailableApps, ComboBoxAppsFilter.SelectedItem = "Queued") 'check the queued apps, by default.
 
 
+        'Search for modified apps to flag for reinstall.
+        If Not String.IsNullOrEmpty(Me.tagA) And Not String.IsNullOrEmpty(Me.tagB) Then
+            'Set the commits for the search
+            GitOp.setCommitsFromTags(Me.tagA, Me.tagB)
+
+            Dim ModifiedApps As Collection = New Collection()
+            For Each change In GitOp.getChanges(Globals.getApexRelPath, False)
+
+                'Search for change to any file, but should ignore duplicates.
+                Dim appId As String = Common.getNthSegment(change, "/", 4)
+
+
+                If Not ModifiedApps.Contains(appId) Then
+                    ModifiedApps.Add(appId, appId)
+                End If
+
+            Next
+
+            AvailableAppsTreeView.TickNodes(ModifiedApps)
+
+            If ModifiedApps.Count > 0 Then
+                MsgBox(ModifiedApps.Count & " apps have been modified.", MsgBoxStyle.Information, "Apex Apps Modifed")
+            End If
+
+        End If
+
+        AvailableAppsTreeView.ExpandAll()
+
         'Logger.Dbg("Filtering")
         'filterQueuedBy(AvailableApps)
 
         Logger.Dbg("Populate Tree")
 
+        If AvailableApps.Count = 0 Then
+            MsgBox("No " & ComboBoxAppsFilter.SelectedItem & " apps were found.", MsgBoxStyle.Information, "No Apps Found")
+        End If
 
 
+        Return AvailableApps.Count
 
-    End Sub
+
+    End Function
 
     Private Sub SearchApexAppsButton_Click(sender As Object, e As EventArgs) Handles SearchApexAppsButton.Click
         doSearch()
@@ -236,6 +281,10 @@ Public Class ApexAppInstaller
         Else
             'Common.listCollection(ChosenApps, "Chosen Apps")
 
+
+            'Get a list of modified apps
+            Dim modifiedApps As Collection = OracleSQL.GetModifiedApps()
+
             MasterScriptListBox.Items.Clear()
             MasterScriptListBox.Items.Add("SET SERVEROUTPUT ON")
             MasterScriptListBox.Items.Add("WHENEVER OSERROR EXIT FAILURE ROLLBACK")
@@ -245,8 +294,14 @@ Public Class ApexAppInstaller
             MasterScriptListBox.Items.Add("@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql")
 
             For Each App In ChosenApps
+
                 Dim lSchema = Common.getFirstSegment(App, "\")
                 Dim lAppId = Common.getLastSegment(App, "\")
+
+                If modifiedApps.Contains(lAppId) Then
+                    MsgBox("App " & lAppId & " has been modified since the last time it was installed.  " & Environment.NewLine &
+                               "Please check.  You may be about to overwrite unexported changes.", MsgBoxStyle.Exclamation, "Modified App")
+                End If
 
                 MasterScriptListBox.Items.Add("CONNECT &&" & lSchema & "_user/&&" & lSchema & "_password@&&database")
                 MasterScriptListBox.Items.Add("execute arm_installer.set_security_for_apex_import(-")
@@ -279,13 +334,13 @@ Public Class ApexAppInstaller
         '    End If
         'Else
         If (AppInstallerTabControl.SelectedTab.Name.ToString) = "RunTabPage" Then
-                CopySelectedApps()
-                'PopMasterScriptListBox()
+            CopySelectedApps()
+            'PopMasterScriptListBox()
 
-                'ElseIf (AppInstallerTabControl.SelectedTab.Name.ToString) = "ExportTabPage" Then
-                '   PopPatchListBox()
+            'ElseIf (AppInstallerTabControl.SelectedTab.Name.ToString) = "ExportTabPage" Then
+            '   PopPatchListBox()
 
-            End If
+        End If
 
     End Sub
 
