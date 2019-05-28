@@ -107,7 +107,13 @@ Public Class PatchFromTags
                 End If
             Catch ex As Exception
                 MsgBox(ex.Message)
-                MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
+
+                Dim result As Integer = MessageBox.Show("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted." & Chr(10) & Chr(10) &
+                                                        "Confirm delete of tag " & thisTag.FriendlyName, "Confirm Target", MessageBoxButtons.OKCancel)
+                If result = DialogResult.OK Then
+                    GitOp.deleteTag(thisTag.FriendlyName)
+                End If
+
             End Try
         Next
 
