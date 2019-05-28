@@ -87,18 +87,19 @@
 
             End If
 
-
-
-            If releasing.toDoNextStep() Then
+        Dim l_no_patches As Boolean = True
+        If releasing.toDoNextStep() Then
             'Use PatchRunner to run  Uninstalled/Unapplied Patches
-            Dim GitPatcherChild As PatchRunner = New PatchRunner(InstallStatus, iBranchType)
+
+            Dim GitPatcherChild As PatchRunner = New PatchRunner(l_no_patches, InstallStatus, iBranchType)
 
         End If
 
-            If releasing.toDoNextStep() Then
-                'Install queued Apex Apps.
-                'Start the ApexAppInstaller and wait until it closes.
-                Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("Queued")
+        Dim l_no_queued_apps As Boolean = True
+        If releasing.toDoNextStep() Then
+            'Install queued Apex Apps.
+            'Start the ApexAppInstaller and wait until it closes.
+            Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller(l_no_queued_apps, "Queued")
 
         End If
 

@@ -188,7 +188,12 @@ Friend Class WF_rebase
 
             'EXPORT-DATA
             If rebasing.toDoNextStep() Then
-                exportData()
+                Try
+                    exportData()
+                Catch ex As Exception
+                    'Continue after data export error. Prob missing exp_data.sql
+                    MsgBox(ex.Message)
+                End Try
             End If
 
 
@@ -336,28 +341,34 @@ Friend Class WF_rebase
 
             End If
 
-
+            Dim l_no_unapplied_patches As Boolean = True
 
             'PATCHRUNNER-UNAPPLIED
             If rebasing.toDoNextStep() Then
                 'Use PatchRunner to run Unapplied Patches
-                Dim GitPatcherChild As PatchRunner = New PatchRunner("Unapplied")
+                Dim GitPatcherChild As PatchRunner = New PatchRunner(l_no_unapplied_patches, "Unapplied")
 
             End If
+
+            Dim l_no_queued_apps As Boolean = True
 
             'IMPORT-APPS-QUEUED
             If rebasing.toDoNextStep() Then
                 'Install queued Apex Apps.
                 'Start the ApexAppInstaller and wait until it closes.
-                Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("Queued")
+                Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller(l_no_queued_apps, "Queued")
+
 
             End If
+
+            Dim l_no_my_apps As Boolean = True
 
             'IMPORT-APPS-MINE
             If rebasing.toDoNextStep() Then
                 'Install my Apex Apps.
                 'Start the ApexAppInstaller and wait until it closes.
-                Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("All", l_tagA, l_tagB)
+                Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller(l_no_my_apps, "All", l_tagA, l_tagB)
+
 
             End If
 
@@ -374,8 +385,11 @@ Friend Class WF_rebase
 
             End If
 
+            rebasing.updateStepDescription(11, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
+
             'SNAPSHOT-POST-REBASE
-            If rebasing.toDoNextStep() Then
+            'Skip if found no patches and no apps
+            If rebasing.toDoNextStep(l_no_unapplied_patches And l_no_queued_apps And l_no_my_apps) Then
                 'Snapshot VM - Post-Rebase
                 If My.Settings.VBoxName = "No VM" Then
                     MsgBox("Before creating new patches, snapshot the VM again.", MsgBoxStyle.Exclamation, "Post-Rebase Snapshot")

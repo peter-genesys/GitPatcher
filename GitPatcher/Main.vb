@@ -418,9 +418,13 @@
 
         'Pull
         GitOp.pullWhenMasterBranch()
+        Dim l_no_unapplied_patches As Boolean = True
+        Dim GitPatcherChild As PatchRunner = New PatchRunner(l_no_unapplied_patches, "Unapplied")
+        If Not l_no_unapplied_patches Then
+            Dim l_no_queued_apps As Boolean = True
+            Dim GitPatcherChild2 As ApexAppInstaller = New ApexAppInstaller(l_no_queued_apps, "Queued")
+        End If
 
-        Dim GitPatcherChild As PatchRunner = New PatchRunner("Unapplied")
-        Dim GitPatcherChild2 As ApexAppInstaller = New ApexAppInstaller("Queued")
 
     End Sub
 
@@ -428,9 +432,12 @@
 
         'Pull
         GitOp.pullWhenMasterBranch()
-
-        Dim GitPatcherChild As PatchRunner = New PatchRunner("Uninstalled")
-        Dim GitPatcherChild2 As ApexAppInstaller = New ApexAppInstaller("Queued")
+        Dim l_no_uninstalled_patches As Boolean = True
+        Dim GitPatcherChild As PatchRunner = New PatchRunner(l_no_uninstalled_patches, "Uninstalled")
+        If Not l_no_uninstalled_patches Then
+            Dim l_no_queued_apps As Boolean = True
+            Dim GitPatcherChild2 As ApexAppInstaller = New ApexAppInstaller(l_no_queued_apps, "Queued")
+        End If
 
     End Sub
 
@@ -439,8 +446,13 @@
         'Pull
         GitOp.pullWhenMasterBranch()
 
-        Dim GitPatcherChild As PatchRunner = New PatchRunner("All")
-        Dim GitPatcherChild2 As ApexAppInstaller = New ApexAppInstaller("Queued")
+        Dim l_no_patches As Boolean = True
+        Dim GitPatcherChild As PatchRunner = New PatchRunner(l_no_patches, "All")
+        If Not l_no_patches Then
+            Dim l_no_queued_apps As Boolean = True
+            Dim GitPatcherChild2 As ApexAppInstaller = New ApexAppInstaller(l_no_queued_apps, "Queued")
+        End If
+
 
     End Sub
 
@@ -525,8 +537,8 @@
 
         'Pull
         GitOp.pullWhenMasterBranch()
-
-        Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("Queued")
+        Dim l_no_queued_apps As Boolean = True
+        Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller(l_no_queued_apps, "Queued")
 
     End Sub
 
@@ -534,8 +546,8 @@
 
         'Pull
         GitOp.pullWhenMasterBranch()
-
-        Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("All")
+        Dim l_no_apps As Boolean = True
+        Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller(l_no_apps, "All")
 
     End Sub
 

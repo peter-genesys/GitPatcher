@@ -100,10 +100,11 @@
 
             End If
 
+            Dim l_no_queued_apps As Boolean = True
             If createPatchProgress.toDoNextStep() Then
                 'Run your app changes
                 'Start the ApexAppInstaller and wait until it closes.
-                Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller("Queued")
+                Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller(l_no_queued_apps, "Queued")
 
                 'Dim newchildform As New ApexAppInstaller("Queued")
                 'newchildform.MdiParent = GitPatcher
