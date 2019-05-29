@@ -651,6 +651,6 @@
 
     Private Sub SinglePageImportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SinglePageImportToolStripMenuItem.Click
 
-        WF_Apex.ApexRevertSinglePage()
+        WF_Apex.ApexRestoreSinglePage()
     End Sub
 End Class

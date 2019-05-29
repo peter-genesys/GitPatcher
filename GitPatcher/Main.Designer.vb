@@ -331,21 +331,21 @@ Partial Class Main
         'UnappliedToolStripMenuItem
         '
         Me.UnappliedToolStripMenuItem.Name = "UnappliedToolStripMenuItem"
-        Me.UnappliedToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.UnappliedToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.UnappliedToolStripMenuItem.Text = "Unapplied Patches"
         Me.UnappliedToolStripMenuItem.ToolTipText = "Ordered set to be applied."
         '
         'UninstalledToolStripMenuItem
         '
         Me.UninstalledToolStripMenuItem.Name = "UninstalledToolStripMenuItem"
-        Me.UninstalledToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.UninstalledToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.UninstalledToolStripMenuItem.Text = "Uninstalled Patches"
         Me.UninstalledToolStripMenuItem.ToolTipText = "Not installed, but may not need to be."
         '
         'AllPatchesToolStripMenuItem
         '
         Me.AllPatchesToolStripMenuItem.Name = "AllPatchesToolStripMenuItem"
-        Me.AllPatchesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AllPatchesToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.AllPatchesToolStripMenuItem.Text = "All Patches"
         Me.AllPatchesToolStripMenuItem.ToolTipText = "Installed or otherwise."
         '
@@ -405,7 +405,7 @@ Partial Class Main
         '
         Me.SinglePageImportToolStripMenuItem.Name = "SinglePageImportToolStripMenuItem"
         Me.SinglePageImportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.SinglePageImportToolStripMenuItem.Text = "Revert Single Page"
+        Me.SinglePageImportToolStripMenuItem.Text = "Restore Single Page"
         '
         'ApexAppExporterToolStripMenuItem
         '

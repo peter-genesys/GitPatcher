@@ -232,7 +232,7 @@
 
 
 
-    Public Shared Sub ApexRevertSinglePage() 'Current
+    Public Shared Sub ApexRestoreSinglePage() 'Current
 
         Dim currentBranch As String = GitOp.CurrentBranch()
         Dim lSchema As String = Nothing
@@ -242,7 +242,7 @@
         Dim page_file As String = Nothing
 
 
-        Dim RevertProgress As ProgressDialogue = New ProgressDialogue("Import 1 APEX page into " & Globals.getDB & " DB.",
+        Dim RestoreProgress As ProgressDialogue = New ProgressDialogue("Import 1 APEX page into " & Globals.getDB & " DB.",
         "Import 1 APEX page into " & Globals.getDB & " DB." & Environment.NewLine &
         "This will overwrite only 1 page of the APEX application." & Environment.NewLine & Environment.NewLine &
         "To backup the current state of the Apex App consider :" & Environment.NewLine &
@@ -250,122 +250,97 @@
         " + Snapshoting the VM")
 
 
-        RevertProgress.MdiParent = GitPatcher
+        RestoreProgress.MdiParent = GitPatcher
         'CHOOSE-APP
-        RevertProgress.addStep("Choose the Apex App", True, "Choose the Apex App that will have a page reverted.")
+        RestoreProgress.addStep("Choose the Apex App", True, "Choose the Apex App that will have a page restored.")
         'EXPORT-APP
-        RevertProgress.addStep("Export the Apex App", False, "Export the Apex App to the current branch.")
+        RestoreProgress.addStep("Export the Apex App", False, "Export the Apex App to the current branch.")
         'SWITCH-CHECKOUT
-        RevertProgress.addStep("Switch the checkout", False, "Switch to a branch, tag or commit that has the correct version of the Apex Page." &
+        RestoreProgress.addStep("Switch the checkout", False, "Switch to a branch, tag or commit that has the correct version of the Apex Page." &
                                                                 Chr(10) & "Otherwise use the version currently in the checkout.")
 
         'CHOOSE-PAGE
-        RevertProgress.addStep("Choose the Page", True, "Choose the Apex Page from list of pages")
+        RestoreProgress.addStep("Choose the Page", True, "Choose the Apex Page from list of pages")
         'CREATE-SNAPSHOT
-        RevertProgress.addStep("Create a pre-page-revert VM snapshot", Globals.getDB = "VM", "Use this restore point to to undo this page revert.")
+        RestoreProgress.addStep("Create a pre-page-restore VM snapshot", Globals.getDB = "VM", "Use this restore point to to undo this page restore.")
         'IMPORT-PAGE
-        RevertProgress.addStep("Import the Page", True, "Import the page to current DB.")
+        RestoreProgress.addStep("Import the Page", True, "Import the page to current DB.")
         'RETURN-TO-BRANCH
-        RevertProgress.addStep("Return to branch: " & currentBranch, True, "Return to the original branch.")
-        RevertProgress.Show()
+        RestoreProgress.addStep("Return to branch: " & currentBranch, True, "Return to the original branch.")
+        RestoreProgress.Show()
 
 
-        Do Until RevertProgress.isStarted
-                Common.Wait(1000)
-            Loop
-
-            'Logger.Dbg("Apex app_id " + fapp_id, "Check app id")
-
-            'Dim app_id As String = fapp_id.Split("f")(1)
-
-            'Dim parsingSchemaDir As String = apex_dir & lSchema
-            'Dim appDir As String = parsingSchemaDir & "\" & fapp_id
-
-            'Dim fapp_sql As String = fapp_id & ".sql"
-            'Dim message As String = Nothing
+        Do Until RestoreProgress.isStarted
+            Common.Wait(1000)
+        Loop
 
 
-            Try 'Finish workflow if an error occurs
+        Try 'Finish workflow if an error occurs
 
-                'CHOOSE-APP
-                If RevertProgress.toDoNextStep Then
-                    ChooseApp(lSchema, lAppId)
-                    applicationDir = Globals.RootApexDir & lSchema & "\" & lAppId & "\application\"
-                    pagesDir = applicationDir & "pages\"
-                End If
+            'CHOOSE-APP
+            If RestoreProgress.toDoNextStep Then
+                ChooseApp(lSchema, lAppId)
+                applicationDir = Globals.RootApexDir & lSchema & "\" & lAppId & "\application\"
+                pagesDir = applicationDir & "pages\"
+            End If
 
-                'EXPORT-APP
-                If RevertProgress.toDoNextStep Then
-                    WF_Apex.ApexSplitExportCommit(lSchema, lAppId)
-                End If
+            'EXPORT-APP
+            If RestoreProgress.toDoNextStep Then
+                WF_Apex.ApexSplitExportCommit(lSchema, lAppId)
+            End If
 
-                'SWITCH-CHECKOUT
-                If RevertProgress.toDoNextStep Then
-                ''Choose a tag to import from
-                'Dim tagnames As Collection = New Collection
-                'tagnames.Add("HEAD")
-                'tagnames = GitOp.getTagNameList(tagnames, Globals.currentBranch)
-                'tagnames = GitOp.getTagNameList(tagnames, Globals.currentAppCode)
-
-
-                'Dim tagApexVersion As String = Nothing
-                'tagApexVersion = ChoiceDialog.Ask("Please choose a tag for apex install", tagnames, "HEAD", "Choose tag")
-
-                ''Checkout the tag
-                'GitOp.SwitchTagName(tagApexVersion)
+            'SWITCH-CHECKOUT
+            If RestoreProgress.toDoNextStep Then
 
                 'USE TORTOISE TO PICK A COMMIT
                 Tortoise.Switch(Globals.getRepoPath)
 
             End If
 
-                'CHOOSE-PAGE
-                If RevertProgress.toDoNextStep Then
+            'CHOOSE-PAGE
+            If RestoreProgress.toDoNextStep Then
 
 
-                    Dim pages As Collection = New Collection
+                Dim pages As Collection = New Collection
 
-                    'C:\Dev\apex_apps\apex\f101\application\pages
+                pages = FileIO.FileList(pagesDir, "page_?????.sql", pagesDir)
 
-                    pages = FileIO.FileList(pagesDir, "page_?????.sql", pagesDir)
+                page_file = ChoiceDialog.Ask("Please choose a page to be installed", pages, "", "Choose Page")
 
-                    page_file = ChoiceDialog.Ask("Please choose a page to be installed", pages, "", "Choose Page")
+            End If
 
+            'CREATE-SNAPSHOT
+            If RestoreProgress.toDoNextStep() Then
+                'Snapshot VM
+                If My.Settings.VBoxName = "No VM" Then
+                    MsgBox("Create a pre-page-restore VM snapshot.  " & Chr(10) & "Restore for undo of this page restore.", MsgBoxStyle.Exclamation, "Snapshot VM")
+                Else
+                    WF_virtual_box.takeSnapshot(lAppId & "-pre-page-restore")
                 End If
 
-                'CREATE-SNAPSHOT
-                If RevertProgress.toDoNextStep() Then
-                    'Snapshot VM
-                    If My.Settings.VBoxName = "No VM" Then
-                        MsgBox("Create a pre-page-revert VM snapshot.  " & Chr(10) & "Restore for undo of this page revert.", MsgBoxStyle.Exclamation, "Snapshot VM")
-                    Else
-                        WF_virtual_box.takeSnapshot(lAppId & "-pre-page-revert")
-                    End If
-
-                End If
+            End If
 
 
-                'IMPORT-PAGE
-                If RevertProgress.toDoNextStep() Then
-                'RevertProgress.updateStepDescription(1, "Import Apex Page Filename: " & page_file)
+            'IMPORT-PAGE
+            If RestoreProgress.toDoNextStep() Then
 
                 'write a lauch page
                 Apex.Install1Page(page_file, applicationDir, lSchema)
             End If
 
-                'RETURN-TO-BRANCH
-                If RevertProgress.toDoNextStep Then
-                    'Return to branch
-                    GitOp.SwitchBranch(currentBranch)
-                End If
+            'RETURN-TO-BRANCH
+            If RestoreProgress.toDoNextStep Then
+                'Return to branch
+                GitOp.SwitchBranch(currentBranch)
+            End If
 
-                RevertProgress.toDoNextStep()
+            RestoreProgress.toDoNextStep()
 
-            Catch ex As Exception
-                MsgBox(ex.Message)
-                RevertProgress.setToCompleted()
-                RevertProgress.Close()
-            End Try
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            RestoreProgress.setToCompleted()
+            RestoreProgress.Close()
+        End Try
 
 
 
