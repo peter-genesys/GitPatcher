@@ -3,10 +3,12 @@
 Public Class ApexAppExporter
 
     Private waiting As Boolean
+    Private Reimport As Boolean
 
-    Public Sub New()
+    Public Sub New(Optional ByVal iReimport As Boolean = False)
 
         InitializeComponent()
+        Me.Reimport = iReimport
         'DoSearch(RepoRadioButton.Checked) 'See repoRadioButton_CheckedChanged
         Me.MdiParent = GitPatcher
         Me.Show()
@@ -110,7 +112,7 @@ Public Class ApexAppExporter
                 Dim lSchema = Common.getFirstSegment(App, "\")
                 Dim lAppId = Common.getLastSegment(App, "\")
 
-                WF_Apex.ApexSplitExportCommit(lSchema, lAppId, True) '@TODO replace this with a boolean variable passed from the menu-item 
+                WF_Apex.ApexSplitExportCommit(lSchema, lAppId, Me.Reimport)
 
             Next
 

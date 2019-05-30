@@ -553,7 +553,7 @@
 
     Private Sub ApexAppExporterToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ApexAppExporterToolStripMenuItem.Click
 
-        Dim GitPatcherChild As ApexAppExporter = New ApexAppExporter
+        Dim GitPatcherChild As ApexAppExporter = New ApexAppExporter(True)
 
     End Sub
 

@@ -286,7 +286,7 @@
 
             'EXPORT-APP
             If RestoreProgress.toDoNextStep Then
-                WF_Apex.ApexSplitExportCommit(lSchema, lAppId)
+                WF_Apex.ApexSplitExportCommit(lSchema, lAppId, True)
             End If
 
             'SWITCH-CHECKOUT
