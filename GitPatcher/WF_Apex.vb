@@ -1,8 +1,32 @@
 ﻿Friend Class WF_Apex
 
+    Public Shared Sub ReimportApp(ByVal iSchema As String, ByVal iAppId As String)
+
+        'Confirm reimport of app
+        Dim result As Integer = MessageBox.Show("Please confirm Re-Install of cleaned version of the App " & iAppId & " into " & Globals.getDB & Environment.NewLine &
+                                                "Any changes made to files, during the commit or revert stages, will be reloaded into the DB.", "Confirm Re-Install of Clean App", MessageBoxButtons.OKCancel)
+        If result = DialogResult.Cancel Then
+            Exit Sub
+        End If
+
+        'Format as script
+        Dim masterList As String = "SET SERVEROUTPUT ON" &
+             Environment.NewLine & "WHENEVER OSERROR EXIT FAILURE ROLLBACK" &
+             Environment.NewLine & "WHENEVER SQLERROR EXIT FAILURE ROLLBACK" &
+             Environment.NewLine & "DEFINE database = '" & Globals.getDATASOURCE & "'" &
+             Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
+             Environment.NewLine & "CONNECT &&" & iSchema & "_user/&&" & iSchema & "_password@&&database" &
+             Environment.NewLine & "execute arm_installer.set_security_for_apex_import(-" &
+             Environment.NewLine & "     i_schema => '&&" & iSchema & "_USER'-" &
+             Environment.NewLine & "   , i_workspace => '&&" & iAppId & "_WORKSPACE');" &
+             Environment.NewLine & "cd " & iSchema & "\" & iAppId &
+             Environment.NewLine & "@install.sql"
+
+        ApexAppInstaller.RunMasterScript(masterList)
+    End Sub
 
 
-    Public Shared Sub ApexSplitExportCommit(ByVal iSchema As String, ByVal iAppId As String) 'Current
+    Public Shared Sub ApexSplitExportCommit(ByVal iSchema As String, ByVal iAppId As String, Optional ByVal iReimport As Boolean = False) 'Current
 
         Dim connection As String = Globals.currentConnection
         Dim username As String = iSchema
@@ -18,10 +42,24 @@
             "To commit any existing changes, close this workflow and perform a GIT COMMIT.")
 
         ExportProgress.MdiParent = GitPatcher
+        'EXPORT-APP
         ExportProgress.addStep("Export Apex App " & fapp_id & ", split into components")
-        ExportProgress.addStep("Add new files to GIT repository")
-        ExportProgress.addStep("Commit valid changes to GIT repository")
+        'ADD-NEW-FILES  
+        'DEPRECATED. Now handled automatically in COMMIT-CHANGES
+        ExportProgress.addStep("Add new files to GIT repository", True, "Add new files", False)
+        'COMMIT-CHANGES
+        ExportProgress.addStep("Commit new and changed files to GIT repository", True,
+                               "New files are automatically added before the commit dialogue is shown." & Chr(10) &
+                               "Please inspect every changed file and commit only intended changes." & Chr(10) &
+                               "NB APEX makes changes too.  You will see no audit user and time for these changes." & Chr(10) &
+                               "Eg Changes are often made to parameters within the scripts." & Chr(10) &
+                               "   You SHOULD commit these changes too.")
+
+        'REVERT-CHANGES
         ExportProgress.addStep("Revert invalid changes from your checkout")
+        'REIMPORT-CLEAN-APP
+        ExportProgress.addStep("Reimport the clean version", False, "If changes have been reverted, then it may be useful to reimport the entire clean app into the DB.", iReimport)
+        'COMMIT-UNCLEAN-APP
         ExportProgress.addStep("Commit unclean version", False, "As a temporary measure, for release via SVN, you may optionally choose to commit the unclean full export too.")
         ExportProgress.Show()
 
@@ -42,7 +80,7 @@
 
         Try 'Finish workflow if an error occurs
 
-            'PROGRESS 0
+            'EXPORT-APP
             If ExportProgress.toDoNextStep() Then
 
                 'Delete the appDir prior to the export.
@@ -65,28 +103,67 @@
 
             End If
 
-
+            'ADD-NEW-FILES
             If ExportProgress.toDoNextStep() Then
-                'Add new files to GIT repository 
-                Tortoise.Add(appDir, True)
+                If GitOp.IsDirty() Then
+                    Logger.Dbg("User chose to add And the checkout Is also dirty")
+                    'Add new files to GIT repository 
+                    Tortoise.Add(appDir, True)
+                End If
+            End If
+
+            'COMMIT-CHANGES
+            If ExportProgress.toDoNextStep() Then
+
+                'Use GitBash to silently add files prior to calling commit dialog.
+                Try
+                    GitBash.Add(Globals.getRepoPath, appDir & "\*", True)
+                Catch ex As Exception
+                    MsgBox(ex.Message)
+                    MsgBox("Unable to Add Files with GitBash. Check GitBash configuration.")
+                    'If GitBash.Push fails just let the process continue.
+                    'User will add files via the commit dialog
+                End Try
+
+                'User chose to commit, but don't bother unless the checkout has staged changes (added, modified or deleted files)
+                'Committing changed files to GIT"
+                If GitOp.ChangedFiles() > 0 Then
+                    Logger.Dbg("User chose to commit and the checkout has staged changes")
+
+                    'Find the application name in the init.sql file.
+                    Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
+
+                    'Commit valid changes to GIT repository  
+                    Tortoise.Commit(appDir, "Apex App " & lAppIdAndName & " (" & Globals.currentTNS & ") " & vbLf & vbLf & "GitPatcher Split-Export from " & Globals.currentTNS, True)
+
+                End If
 
             End If
 
+            'REVERT-CHANGES
+            Dim raisedRevertDialog As Boolean = False
+            'User chose to revert, but don't bother unless the checkout has staged changes (added, modified or deleted files)
             If ExportProgress.toDoNextStep() Then
+                If GitOp.ChangedFiles() > 0 Then
+                    Logger.Dbg("User chose to revert and the checkout has staged changes")
+                    raisedRevertDialog = True
+                    'Revert invalid changes from your checkout
+                    Tortoise.Revert(appDir)
+                End If
+            End If
 
-                'Find the application name in the init.sql file.
-                Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
-
-                'Commit valid changes to GIT repository  
-                Tortoise.Commit(appDir, "Apex App " & lAppIdAndName & " (" & Globals.currentTNS & ") " & vbLf & vbLf & "GitPatcher Split-Export from " & Globals.currentTNS, True)
+            'REIMPORT-CLEAN-APP
+            If ExportProgress.toDoNextStep() Then
+                ReimportApp(iSchema, iAppId)
+            ElseIf Not ExportProgress.IsDisposed Then 'ignore if form has been closed.
+                If raisedRevertDialog Then
+                    'User chose NOT to REIMPORT, but the revert dialog was used, so it is likely that they reverted some changes, so start the import.  
+                    ReimportApp(iSchema, iAppId)
+                End If
 
             End If
 
-            If ExportProgress.toDoNextStep() Then
-                'Revert invalid changes from your checkout
-                Tortoise.Revert(appDir)
-            End If
-
+            'COMMIT-UNCLEAN-APP
             If ExportProgress.toDoNextStep() Then
 
                 Dim uncleanAppFilePath As String = parsingSchemaDir & "\" & fapp_id & ".unclean.sql"

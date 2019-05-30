@@ -105,26 +105,12 @@ Public Class ApexAppExporter
         If ChosenApps.Count = 0 Then
             MsgBox("No apex apps selected.")
         Else
-            'Common.listCollection(ChosenApps, "Chosen Apps")
-
-            'MasterScriptListBox.Items.Clear()
-            'MasterScriptListBox.Items.Add("SET SERVEROUTPUT ON")
-            'MasterScriptListBox.Items.Add("WHENEVER OSERROR EXIT FAILURE ROLLBACK")
-            'MasterScriptListBox.Items.Add("WHENEVER SQLERROR EXIT FAILURE ROLLBACK")
-            'MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.getDATASOURCE & "'")
 
             For Each App In ChosenApps
                 Dim lSchema = Common.getFirstSegment(App, "\")
                 Dim lAppId = Common.getLastSegment(App, "\")
 
-                WF_Apex.ApexSplitExportCommit(lSchema, lAppId)
-
-                'MasterScriptListBox.Items.Add("CONNECT " & lSchema & "/&&" & lSchema & "_password@&&database")
-
-                'MasterScriptListBox.Items.Add("cd " & App)
-                'MasterScriptListBox.Items.Add("@install.sql")
-
-                'MasterScriptListBox.Items.Add("cd ..\..")
+                WF_Apex.ApexSplitExportCommit(lSchema, lAppId, True) '@TODO replace this with a boolean variable passed from the menu-item 
 
             Next
 

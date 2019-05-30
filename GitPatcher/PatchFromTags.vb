@@ -657,7 +657,8 @@ Public Class PatchFromTags
 
 
             If db_schema = "APEXRM" Then
-                l_master_file.WriteLine("--APEXRM Patch - Recompile arm_installer as this is not recompiled by arm_invoker.compile_post_patch.")
+                'APEXRM Patch - Recompile arm_installer as this is not recompiled by arm_invoker.compile_post_patch.
+                l_master_file.WriteLine("PROMPT APEXRM Patch - Recompile arm_installer")
                 l_master_file.WriteLine("ALTER PACKAGE ARM_INSTALLER COMPILE;")
                 l_master_file.WriteLine("ALTER PACKAGE ARM_INSTALLER COMPILE BODY;")
                 l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
