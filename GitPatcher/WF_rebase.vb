@@ -76,7 +76,7 @@ Friend Class WF_rebase
         Dim l_max_tag As Integer = 0
 
 
-        For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch)
+        For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch & ".")
             Try
                 Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
 
@@ -137,7 +137,24 @@ Friend Class WF_rebase
         'RETURN-FEATURE
         rebasing.addStep("Return to branch: " & currentBranchLong, True, "Return to the feature branch", iAppChanges Or iDBChanges)
         'REBASE-FEATURE
-        rebasing.addStep("Rebase Branch: " & currentBranchLong & " From Upstream:" & iRebaseBranchOn, True, "Please select the Upstream Branch:" & iRebaseBranchOn & " from the Tortoise Rebase Dialogue", iAppChanges Or iDBChanges)
+        rebasing.addStep("Rebase Branch: " & currentBranchLong & " From Upstream:" & iRebaseBranchOn, True,
+                         "Please select the Upstream Branch:" & iRebaseBranchOn & " from the Tortoise Rebase Dialogue" & Environment.NewLine & Environment.NewLine &
+                         "Resolving Conflicts in APEX Files:" & Environment.NewLine &
+                         "Rebasing involves merging your changes onto the master version.  The interactive rebase will pause when a rebasing a commit that produces a conflict. " & Environment.NewLine &
+                         "Conflicts will ofter occur when another developer has modified a file since you started your feature, or last rebased." & Environment.NewLine &
+                         "The usual suspect is the last_updated fields." & Environment.NewLine &
+                         "Inspect all conflicts with the TortoiseGIT conflict resolution tool, by double-clicking on the red filename." & Environment.NewLine &
+                         "The tool will display conflicts and changes.  Only conflicts need to be resolved.  Do not attempt to resolve changes.  Make sure you know the difference." & Environment.NewLine &
+                         "Some conflicts can simply be resolved in favour of the feature branch by Right-Click on the file, but please inspect first. EG:" & Environment.NewLine &
+                         " + create_application.sql - usually only differs on the last_updated fields." & Environment.NewLine &
+                         "     but may have other application level changes - please inspect when resolving." & Environment.NewLine &
+                         " + init.sql - changes are usually in the comments only" & Environment.NewLine &
+                         "     resolve in favour of feature branch." & Environment.NewLine &
+                         " + page_XXXXX.sql - pages often conflict on the last_updated fields." & Environment.NewLine &
+                         "   use the TortoiseGIT conflict tool to 'choose my block' for conflicts only.  " & Environment.NewLine &
+                         "   Once all conflicts are resolved, save the file, and mark as resolved." & Environment.NewLine & Environment.NewLine &
+                         "When all conflicted files are resolved, press Commit to continue with the interactive rebase.",
+                         iAppChanges Or iDBChanges)
         'TAG-B-FEATURE
         rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & "." & l_tag_base & "B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.", iPatching Or iAppChanges)
         'REVERT-VM
