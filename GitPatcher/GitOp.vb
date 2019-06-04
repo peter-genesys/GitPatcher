@@ -533,11 +533,12 @@ Public Class GitOp
 
 
     Shared Sub pullWhenMasterBranch()
+        Logger.Dbg("pullWhenMasterBranch is disabled")
         'pull current branch - but only when it is master, or at least does not contain feature
-        If CurrentBranch() = "master" Or Not CurrentBranch().Contains("feature") Then
-            Logger.Dbg("Pulling " & CurrentBranch())
-            pullBranch(CurrentBranch())
-        End If
+        ' If CurrentBranch() = "master" Or Not CurrentBranch().Contains("feature") Then
+        ' Logger.Dbg("Pulling " & CurrentBranch())
+        ' pullBranch(CurrentBranch())
+        ' End If
 
     End Sub
 
@@ -827,6 +828,8 @@ Public Class GitOp
 
         Dim repoStatus As RepositoryStatus = Globals.getRepo.RetrieveStatus()
 
+        Logger.Dbg("repoStatus.IsDirty " & repoStatus.IsDirty.ToString)
+
         Return repoStatus.IsDirty
 
     End Function
@@ -839,8 +842,14 @@ Public Class GitOp
 
     Public Shared Function ChangedFiles() As Integer
 
+        Logger.Dbg("Globals.getRepoPath " & Globals.getRepoPath)
         Dim repoStatus As RepositoryStatus = Globals.getRepo.RetrieveStatus()
-        Dim changedFilesCount As Integer = repoStatus.Missing.Count + repoStatus.Modified.Count + repoStatus.Removed.Count + repoStatus.Added.Count
+        Logger.Dbg("repoStatus.Missing.Count " & repoStatus.Missing.Count)
+        Logger.Dbg("repoStatus.Removed.Count " & repoStatus.Removed.Count)
+        Logger.Dbg("repoStatus.Modified.Count " & repoStatus.Modified.Count)
+        Logger.Dbg("repoStatus.Added.Count " & repoStatus.Added.Count)
+        Logger.Dbg("repoStatus.Staged.Count " & repoStatus.Staged.Count)
+        Dim changedFilesCount As Integer = repoStatus.Missing.Count + repoStatus.Modified.Count + repoStatus.Removed.Count + repoStatus.Added.Count + repoStatus.Staged.Count
 
         Return changedFilesCount
 

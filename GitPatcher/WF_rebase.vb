@@ -112,7 +112,7 @@ Friend Class WF_rebase
                                     "Use db-spooler to spool the objects to the local filesystem. " &
                                     "Then commit it too.", False) 'iAppChanges Or iDBChanges
         'EXPORT-DATA
-        rebasing.addStep("Export data: " & currentBranch(), True,
+        rebasing.addStep("Export data: " & currentBranch(), False,
                          "Export data using the db-spooler script " & Environment.NewLine &
                          Globals.getRepoPath & "tools\db-spooler\script\exp_data.sql  " & Environment.NewLine & Environment.NewLine &
                          "If there are other objects that need to be generated and/or spooled please use SmartGen.  For example" & Environment.NewLine &

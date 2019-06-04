@@ -335,8 +335,10 @@ Public Class PatchRunner
                   , "Current Repo: " & Globals.getRepoName & "    Current Branch: " & Globals.currentBranch & Environment.NewLine & Environment.NewLine &
                     "These Unapplied Patches are ALSO ready to be applied." & Environment.NewLine &
                     "They are not present in the current branch." & Environment.NewLine & Environment.NewLine &
-                    "These patches may be from another repo or another branch." & Environment.NewLine &
-                    "You do not have to install these patches first, but please consider installing them afterwards." & Environment.NewLine
+                    "These patches may be from another repo, or another branch, or may indeed be missing from this repo-branch." & Environment.NewLine &
+                    "You do not have to install these patches first, but please consider installing them afterwards." & Environment.NewLine & Environment.NewLine &
+                    "If the patches should be in this repo, they may have been installed in the reference database, " & Environment.NewLine &
+                    "but either not committed to the feature branch, merged to the master branch, or pushed to the origin repo." & Environment.NewLine
                    )
 
         End If
