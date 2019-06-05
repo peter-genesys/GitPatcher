@@ -168,3 +168,11 @@ D:\GitRepos\GitPatcher\GitPatcher\bin\Release\TreeViewDraggableNodes2Levels.dll
 D:\GitRepos\GitPatcher\GitPatcher\obj\Release\GitPatcher.ApexAppInstaller.resources
 D:\GitRepos\GitPatcher\GitPatcher\obj\Release\GitPatcher.ApexAppExporter.resources
 D:\GitRepos\GitPatcher\GitPatcher\obj\Release\GitPatcher.LogViewer.resources
+D:\GitRepos\GitPatcher\GitPatcher\bin\Release\Tamir.SharpSSH.dll
+D:\GitRepos\GitPatcher\GitPatcher\bin\Release\ICSharpCode.SharpZipLib.dll
+D:\GitRepos\GitPatcher\GitPatcher\bin\Release\Winterdom.IO.FileMap.dll
+D:\GitRepos\GitPatcher\GitPatcher\bin\Release\GitSharp.pdb
+D:\GitRepos\GitPatcher\GitPatcher\bin\Release\GitSharp.xml
+D:\GitRepos\GitPatcher\GitPatcher\bin\Release\GitSharp.Core.pdb
+D:\GitRepos\GitPatcher\GitPatcher\bin\Release\GitSharp.Core.xml
+D:\GitRepos\GitPatcher\GitPatcher\obj\Release\GitPatcher.vbprojAssemblyReference.cache
