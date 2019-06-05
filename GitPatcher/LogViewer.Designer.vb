@@ -32,14 +32,15 @@ Partial Class LogViewer
         Me.LogTextBox.Multiline = True
         Me.LogTextBox.Name = "LogTextBox"
         Me.LogTextBox.ReadOnly = True
-        Me.LogTextBox.Size = New System.Drawing.Size(409, 397)
+        Me.LogTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.LogTextBox.Size = New System.Drawing.Size(541, 548)
         Me.LogTextBox.TabIndex = 0
         '
         'LogViewer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(436, 450)
+        Me.ClientSize = New System.Drawing.Size(565, 582)
         Me.Controls.Add(Me.LogTextBox)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "LogViewer"

@@ -99,12 +99,12 @@ Public Class PatchFromTags
         TagsCheckedListBox.Items.Clear()
         For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch & ".")
             Try
-                'If Common.getFirstSegment(thisTag.FriendlyName, ".") = Globals.currentBranch Then
+
                 'This is a tag worth listing
                 Dim ticked As Boolean = (gtag_base = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)) 'This is a tag worth ticking
                     TagsCheckedListBox.Items.Add(thisTag.FriendlyName, ticked)
 
-                'End If
+
             Catch ex As Exception
                 MsgBox(ex.Message)
 

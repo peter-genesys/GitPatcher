@@ -27,15 +27,20 @@ Public Class GitOp
             Throw New Exception(shaAlias & "SHA is required")
         End If
 
-        Dim theTag As Tag = Globals.getRepo.Tags(SHA)
+        'Dim theTag As Tag = Globals.getRepo.Tags(SHA)
 
-        If theTag Is Nothing Then
-            Throw New Exception(shaAlias & "SHA (" & shaAlias & ") is unrecognised.")
-        End If
+        'If theTag Is Nothing Then
+        '    Throw New Exception(shaAlias & "SHA (" & SHA & ") is unrecognised.")
+        'End If
 
-        Dim theCommit As Commit = Globals.getRepo().Lookup(Of Commit)(SHA)
+        Try
+            Dim theCommit As Commit = Globals.getRepo().Lookup(Of Commit)(SHA)
+            Return theCommit
+        Catch ex As Exception
+            Throw New Exception(shaAlias & "SHA (" & SHA & ") is unrecognised.")
+        End Try
 
-        Return theCommit
+
 
     End Function
 
@@ -67,6 +72,16 @@ Public Class GitOp
         Return theCommit
 
     End Function
+
+
+    Shared Function getTipSHA() As String
+
+        Dim theBranch As Branch = Globals.getRepo().Head
+        Return theBranch.Tip.Sha
+
+    End Function
+
+
 
     Shared Function getTagNameList(ByVal inTagNames As Collection, Optional ByVal tagNameFilter As String = Nothing) As Collection
         'Input inTagNames         - a collection of tagNames
