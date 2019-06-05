@@ -16,6 +16,13 @@ Public Class ChoiceDialog
 
         Logger.Dbg("Ask(" & i_question & "," & i_default & "," & i_title & ")")
 
+        '!Cannot attach to GitPatcher as MdiParent! 
+        '  Form that is not a Top-Level form cannot be displayed as a modal dialog box.
+        '  Remove the form from any parent form before calling showDialog.
+        'ChoiceDialog.MdiParent = GitPatcher 
+
+        ChoiceDialog.Location = New Point(0, 0)
+
         Dim l_choice As String = Nothing
         Dim l_default_found As Boolean = False
         Dim l_reordered As New Collection
