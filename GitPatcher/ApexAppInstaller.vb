@@ -7,8 +7,9 @@ Public Class ApexAppInstaller
 
     Private waiting As Boolean
 
-    Public Sub New(Optional ByVal ienqueuedStatus As String = "All", Optional ByVal itagA As String = "", Optional ByVal itagB As String = "", Optional ByVal queuedBy As String = "me")
+    Public Sub New(ByRef foundNone As Boolean, Optional ByVal ienqueuedStatus As String = "All", Optional ByVal itagA As String = "", Optional ByVal itagB As String = "", Optional ByVal queuedBy As String = "me")
         InitializeComponent()
+        foundNone = False
 
         Me.tagA = itagA
         Me.tagB = itagB
@@ -50,6 +51,7 @@ Public Class ApexAppInstaller
             Me.Show()
             Wait()
         Else
+            foundNone = True
             Me.Close()
         End If
 

@@ -97,17 +97,23 @@ Public Class PatchFromTags
         Dim tag_num_padding As Integer = 2
 
         TagsCheckedListBox.Items.Clear()
-        For Each thisTag As Tag In GitOp.getTagList()
+        For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch & ".")
             Try
-                If Common.getFirstSegment(thisTag.FriendlyName, ".") = Globals.currentBranch Then
-                    'This is a tag worth listing
-                    Dim ticked As Boolean = (gtag_base = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)) 'This is a tag worth ticking
+                'If Common.getFirstSegment(thisTag.FriendlyName, ".") = Globals.currentBranch Then
+                'This is a tag worth listing
+                Dim ticked As Boolean = (gtag_base = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)) 'This is a tag worth ticking
                     TagsCheckedListBox.Items.Add(thisTag.FriendlyName, ticked)
 
-                End If
+                'End If
             Catch ex As Exception
                 MsgBox(ex.Message)
-                MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
+
+                Dim result As Integer = MessageBox.Show("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted." & Chr(10) & Chr(10) &
+                                                        "Confirm delete of tag " & thisTag.FriendlyName, "Confirm Target", MessageBoxButtons.OKCancel)
+                If result = DialogResult.OK Then
+                    GitOp.deleteTag(thisTag.FriendlyName)
+                End If
+
             End Try
         Next
 
@@ -651,7 +657,10 @@ Public Class PatchFromTags
 
 
             If db_schema = "APEXRM" Then
-                l_master_file.WriteLine("--APEXRM patches are likely to loose the session state of arm_installer, so complete using the patch_name parm.")
+                'APEXRM Patch - Recompile arm_installer as this is not recompiled by arm_invoker.compile_post_patch.
+                l_master_file.WriteLine("PROMPT APEXRM Patch - Recompile arm_installer")
+                l_master_file.WriteLine("ALTER PACKAGE ARM_INSTALLER COMPILE;")
+                l_master_file.WriteLine("ALTER PACKAGE ARM_INSTALLER COMPILE BODY;")
                 l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
             Else
                 l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed;")

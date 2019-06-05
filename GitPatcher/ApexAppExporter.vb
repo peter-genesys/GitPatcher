@@ -3,10 +3,12 @@
 Public Class ApexAppExporter
 
     Private waiting As Boolean
+    Private Reimport As Boolean
 
-    Public Sub New()
+    Public Sub New(Optional ByVal iReimport As Boolean = False)
 
         InitializeComponent()
+        Me.Reimport = iReimport
         'DoSearch(RepoRadioButton.Checked) 'See repoRadioButton_CheckedChanged
         Me.MdiParent = GitPatcher
         Me.Show()
@@ -105,26 +107,12 @@ Public Class ApexAppExporter
         If ChosenApps.Count = 0 Then
             MsgBox("No apex apps selected.")
         Else
-            'Common.listCollection(ChosenApps, "Chosen Apps")
-
-            'MasterScriptListBox.Items.Clear()
-            'MasterScriptListBox.Items.Add("SET SERVEROUTPUT ON")
-            'MasterScriptListBox.Items.Add("WHENEVER OSERROR EXIT FAILURE ROLLBACK")
-            'MasterScriptListBox.Items.Add("WHENEVER SQLERROR EXIT FAILURE ROLLBACK")
-            'MasterScriptListBox.Items.Add("DEFINE database = '" & Globals.getDATASOURCE & "'")
 
             For Each App In ChosenApps
                 Dim lSchema = Common.getFirstSegment(App, "\")
                 Dim lAppId = Common.getLastSegment(App, "\")
 
-                WF_Apex.ApexSplitExportCommit(lSchema, lAppId)
-
-                'MasterScriptListBox.Items.Add("CONNECT " & lSchema & "/&&" & lSchema & "_password@&&database")
-
-                'MasterScriptListBox.Items.Add("cd " & App)
-                'MasterScriptListBox.Items.Add("@install.sql")
-
-                'MasterScriptListBox.Items.Add("cd ..\..")
+                WF_Apex.ApexSplitExportCommit(lSchema, lAppId, Me.Reimport)
 
             Next
 

@@ -10,8 +10,9 @@ Public Class PatchRunner
 
     Dim hotFixTargetDBFilter As String = Nothing
 
-    Public Sub New(Optional ByVal iInstallStatus As String = "All", Optional ByVal iBranchType As String = "")
+    Public Sub New(ByRef foundNone As Boolean, Optional ByVal iInstallStatus As String = "All", Optional ByVal iBranchType As String = "")
         InitializeComponent()
+        foundNone = False
 
         'Other legal values Unapplied and Uninstalled
         ComboBoxPatchesFilter.SelectedItem = iInstallStatus
@@ -62,6 +63,7 @@ Public Class PatchRunner
             Me.Show()
             Wait()
         Else
+            foundNone = True
             Me.Close()
         End If
 
@@ -93,6 +95,34 @@ Public Class PatchRunner
 
     End Function
 
+
+
+    Shared Function GetUnappliedAppCode(ByVal iPatchName As String) As String
+    'get the app_code from the relevant Unapplied/Unpromoted view
+        Logger.Dbg("GetUnappliedAppCode(" & iPatchName & ")")
+
+        Dim lAppCode As String = Nothing
+
+        If Globals.getDB = "DEV" Then
+
+            'Change to VM
+            Globals.setDB("VM")
+
+            'Get AppCode from unpromoted patches
+            lAppCode = OracleSQL.QueryToString("select app_code from ARM_PROMOTED_V where patch_name = '" & iPatchName & "'", "app_code")
+
+            'Change back to DEV
+            Globals.setDB("DEV")
+
+        Else
+            'Get AppCode from unapplied patches from the target DB
+            lAppCode = OracleSQL.QueryToString("select app_code from ARM_UNAPPLIED_V where patch_name = '" & iPatchName & "'", "app_code")
+        End If
+
+        Logger.Dbg("lAppCode=" & lAppCode)
+        Return lAppCode
+
+    End Function
 
 
 
@@ -293,14 +323,24 @@ Public Class PatchRunner
             Next
 
             If Not l_patch_found Then
-                MissingPatchList.Add(l_patch_name, l_patch_name)
+                Dim l_app_code As String = GetUnappliedAppCode(l_patch_name)
+                MissingPatchList.Add("App Code: " & l_app_code & "  Patch: " & l_patch_name, l_patch_name)
             End If
 
         Next
 
         If MissingPatchList.Count > 0 Then
-            MsgBox("Repo: " & Globals.getRepoName & "     Branch: " & Globals.currentBranch & Chr(10) & Chr(10) _
-                 & Common.CollectionToText(MissingPatchList), MsgBoxStyle.Information, "These Unapplied Patches are not present")
+            Common.MsgBoxCollection(MissingPatchList _
+                  , "More Patches to be applied" _
+                  , "Current Repo: " & Globals.getRepoName & "    Current Branch: " & Globals.currentBranch & Environment.NewLine & Environment.NewLine &
+                    "These Unapplied Patches are ALSO ready to be applied." & Environment.NewLine &
+                    "They are not present in the current branch." & Environment.NewLine & Environment.NewLine &
+                    "These patches may be from another repo, or another branch, or may indeed be missing from this repo-branch." & Environment.NewLine &
+                    "You do not have to install these patches first, but please consider installing them afterwards." & Environment.NewLine & Environment.NewLine &
+                    "If the patches should be in this repo, they may have been installed in the reference database, " & Environment.NewLine &
+                    "but either not committed to the feature branch, merged to the master branch, or pushed to the origin repo." & Environment.NewLine
+                   )
+
         End If
 
         'If foundPatches.Count = 0 Then

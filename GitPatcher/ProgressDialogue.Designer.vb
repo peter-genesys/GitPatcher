@@ -82,6 +82,7 @@ Partial Class ProgressDialogue
         Me.NotesTextBox.Multiline = True
         Me.NotesTextBox.Name = "NotesTextBox"
         Me.NotesTextBox.ReadOnly = True
+        Me.NotesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.NotesTextBox.Size = New System.Drawing.Size(375, 319)
         Me.NotesTextBox.TabIndex = 11
         '
