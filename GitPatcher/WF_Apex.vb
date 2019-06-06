@@ -4,7 +4,8 @@
 
         'Confirm reimport of app
         Dim result As Integer = MessageBox.Show("Please confirm Re-Install of cleaned version of the App " & iAppId & " into " & Globals.getDB & Environment.NewLine &
-                                                "Any changes made to files, during the commit or revert stages, will be reloaded into the DB.", "Confirm Re-Install of Clean App", MessageBoxButtons.OKCancel)
+                                                "Any changes made to files, during the commit or revert stages, will be reloaded into the DB.",
+                                                "Confirm Re-Install of Clean App", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2)
         If result = DialogResult.Cancel Then
             Exit Sub
         End If
@@ -67,7 +68,7 @@
             Common.Wait(1000)
         Loop
 
-        Logger.Dbg("Apex app_id " + fapp_id, "Check app id")
+        Logger.Dbg("Apex app_id " & fapp_id, "Check app id")
 
         Dim app_id As String = fapp_id.Split("f")(1)
 

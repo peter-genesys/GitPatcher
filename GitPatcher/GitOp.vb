@@ -675,7 +675,7 @@ Public Class GitOp
 
                 Console.WriteLine(change.Status & ": " & change.Path)
                 result = result & Chr(10) & change.Status & ": " & change.Path
-                changePaths.Add(change.Path)
+                changePaths.Add(change.Path, change.Path)
 
                 If viewFiles Then
                     Dim file_string_data As String = Globals.getRepo.Lookup(Of Blob)(change.Oid).ToString

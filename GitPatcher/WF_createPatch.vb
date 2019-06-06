@@ -62,7 +62,6 @@
 
         Try
             'REBASE-FEATURE
-
             If createPatchProgress.toDoNextStep() Then
                 'Rebase branch
                 l_tag_base = WF_rebase.rebaseBranch(iBranchType, iDBtarget, iRebaseBranchOn, True, True, True)
@@ -73,14 +72,12 @@
             End If
 
             'REVIEW-TAGS
-
             If createPatchProgress.toDoNextStep() Then
                 'Review tags on the branch
                 Tortoise.Log(Globals.getRepoPath)
             End If
 
             'CREATE-PATCH
-
             If createPatchProgress.toDoNextStep() Then
 
                 'Start the PatchFromTags and wait until it closes.
@@ -94,7 +91,6 @@
             End If
 
             'EXTRA-COMMIT
-
             If createPatchProgress.toDoNextStep() Then
                 'User chooses to commit, but don't bother unless the checkout is also dirty (meaning there is at least 1 staged or unstaged change)
                 If GitOp.IsDirty() Then
@@ -122,7 +118,6 @@
             End If
 
             'IMPORT-QUEUED-APPS
-
             Dim l_no_queued_apps As Boolean = True
             If createPatchProgress.toDoNextStep() Then
                 'Run your app changes
@@ -141,7 +136,6 @@
             Logger.Note("FeatureTipSHA", FeatureTipSHA)
 
             'SWITCH-TO-MASTER
-
             If createPatchProgress.toDoNextStep() Then
                 'switch
                 GitOp.SwitchBranch(iRebaseBranchOn)
@@ -168,6 +162,7 @@
                 End If
 
             End If
+
             'REBASE-OR-REDO
             If createPatchProgress.toDoNextStep(False, preMasterSHA <> postMasterSHA) Then
                 'If SHAs different then need a rebase - of some sort.
@@ -191,11 +186,18 @@
                 Dim featureChanges As Collection = GitOp.getChanges(Globals.DBRepoPathMask, False)
                 Common.MsgBoxCollection(featureChanges, "featureChanges")
 
+                'Find common changed files on feature and master branches
+                Dim commonChanges As Collection = New Collection()
+                For Each change In featureChanges
+                    If masterChanges.Contains(change) Then
+                        commonChanges.Add(change, change)
+                    End If
+                Next
+                Common.MsgBoxCollection(commonChanges, "commonChanges")
 
             End If
 
             'MERGE-FEATURE
-
             If createPatchProgress.toDoNextStep() Then
                 'Merge from Feature branch
 
@@ -205,32 +207,30 @@
             End If
 
             'PUSH-MASTER
-
             If createPatchProgress.toDoNextStep() Then
                 'Push to origin/develop 
                 GitOp.pushBranch(iRebaseBranchOn)
             End If
 
             'SYNCH
-
             If createPatchProgress.toDoNextStep() Then
                 'Synch command to verfiy that Push was successful.
                 Tortoise.Sync(Globals.getRepoPath)
             End If
-            'RELEASE-DEV
 
+            'RELEASE-DEV
             If createPatchProgress.toDoNextStep() Then
                 'Release to DB Target
                 WF_release.releaseTo(iDBtarget, iBranchType)
             End If
-            'RETURN-FEATURE
 
+            'RETURN-FEATURE
             If createPatchProgress.toDoNextStep() Then
                 'GitSharpFascade.switchBranch(Globals.currentRepo, currentBranch)
                 GitOp.SwitchBranch(currentBranch)
             End If
-            'SNAPSHOT-CLEAN
 
+            'SNAPSHOT-CLEAN
             If createPatchProgress.toDoNextStep() Then
                 'Snapshot VM
                 If My.Settings.VBoxName = "No VM" Then
@@ -238,8 +238,6 @@
                 Else
                     WF_virtual_box.takeSnapshot(shortBranch & "." & l_tag_base & "-clean")
                 End If
-
-
 
             End If
 
