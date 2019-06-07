@@ -4,7 +4,8 @@
 
         'Confirm reimport of app
         Dim result As Integer = MessageBox.Show("Please confirm Re-Install of cleaned version of the App " & iAppId & " into " & Globals.getDB & Environment.NewLine &
-                                                "Any changes made to files, during the commit or revert stages, will be reloaded into the DB.", "Confirm Re-Install of Clean App", MessageBoxButtons.OKCancel)
+                                                "Any changes made to files, during the commit or revert stages, will be reloaded into the DB.",
+                                                "Confirm Re-Install of Clean App", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2)
         If result = DialogResult.Cancel Then
             Exit Sub
         End If
@@ -315,7 +316,8 @@
                 If My.Settings.VBoxName = "No VM" Then
                     MsgBox("Create a pre-page-restore VM snapshot.  " & Chr(10) & "Restore for undo of this page restore.", MsgBoxStyle.Exclamation, "Snapshot VM")
                 Else
-                    WF_virtual_box.takeSnapshot(lAppId & "-pre-page-restore")
+                    Dim lpage As String = Common.dropLastSegment(page_file, ".")
+                    WF_virtual_box.takeSnapshot(lAppId & "-pre-restore-" & lpage)
                 End If
 
             End If
