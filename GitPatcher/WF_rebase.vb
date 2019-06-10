@@ -222,7 +222,8 @@ Friend Class WF_rebase
 
                     'Committing changed files to GIT
                     'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
-                    Tortoise.Commit(Globals.getRepoPath, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes.", True)
+                    '"Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes."
+                    Tortoise.Commit(Globals.getRepoPath, currentBranchShort, True)
 
                 End If
             ElseIf Not rebasing.IsDisposed Then 'ignore if form has been closed.
@@ -232,7 +233,8 @@ Friend Class WF_rebase
                     Logger.Dbg("User chose NOT to commit but the checkout has staged changes")
 
                     MsgBox("Files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
-                    Tortoise.Commit(Globals.getRepoPath, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes.", True)
+                    '"Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes."
+                    Tortoise.Commit(Globals.getRepoPath, currentBranchShort, True)
 
                 End If
 
