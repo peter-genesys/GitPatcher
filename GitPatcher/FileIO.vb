@@ -371,11 +371,12 @@
 
 
     Public Shared Sub CopyFile(ifrompath As String, itopath As String)
+        Logger.Dbg("CopyFile frompath " & Common.dos_path(ifrompath) & " topath " & Common.dos_path(itopath))
         My.Computer.FileSystem.CopyFile(Common.dos_path(ifrompath), Common.dos_path(itopath), True)
     End Sub
 
     Public Shared Sub CopyFileToDir(ifrompath As String, itodir As String)
-
+        Logger.Dbg("CopyFileToDir frompath " & Common.dos_path(ifrompath) & " todir " & itodir)
         Dim Filename As String = Common.getLastSegment(Common.dos_path(ifrompath), "\")
 
         CopyFile(ifrompath, itodir & "\" & Filename)

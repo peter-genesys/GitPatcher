@@ -392,19 +392,19 @@ Partial Class Main
         'QueuedToolStripMenuItem
         '
         Me.QueuedToolStripMenuItem.Name = "QueuedToolStripMenuItem"
-        Me.QueuedToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.QueuedToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.QueuedToolStripMenuItem.Text = "Queued Apex Apps"
         '
         'AllApexAppsToolStripMenuItem
         '
         Me.AllApexAppsToolStripMenuItem.Name = "AllApexAppsToolStripMenuItem"
-        Me.AllApexAppsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AllApexAppsToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.AllApexAppsToolStripMenuItem.Text = "All Apex Apps"
         '
         'SinglePageImportToolStripMenuItem
         '
         Me.SinglePageImportToolStripMenuItem.Name = "SinglePageImportToolStripMenuItem"
-        Me.SinglePageImportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.SinglePageImportToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.SinglePageImportToolStripMenuItem.Text = "Restore Single Page"
         '
         'ApexAppExporterToolStripMenuItem
