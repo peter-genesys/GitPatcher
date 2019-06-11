@@ -38,6 +38,7 @@
                     Dim VMexists As Boolean = VMsList.Contains(My.Settings.VBoxName)
 
                     If Not VMexists Then
+                        'VM no longer exists, so set VBoxName to NO VM
                         My.Settings.VBoxName = NO_VM
                     End If
 

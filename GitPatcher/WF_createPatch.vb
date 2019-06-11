@@ -51,6 +51,10 @@
                 If String.IsNullOrEmpty(l_tag_base) Then
                     Throw New Exception("Invalid tag - cancelling patch.")
                 End If
+                If l_tag_base = "CANCEL" Then
+                    Throw New Exception("Rebase cancelled - cancelling patch.")
+                End If
+
 
             End If
 

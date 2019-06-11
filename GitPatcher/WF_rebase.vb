@@ -183,6 +183,16 @@ Friend Class WF_rebase
         Loop
 
         Try
+            'Confirm run against non-VM target
+            If Globals.getDB <> "VM" Then
+                Dim result As Integer = MessageBox.Show("Confirm target is " & Globals.getDB &
+      Chr(10) & "The current database is " & Globals.getDB & ".", "Confirm Target", MessageBoxButtons.OKCancel)
+                If result = DialogResult.Cancel Then
+                    l_tag_base = "CANCEL"
+                    Throw New Exception("User cancelled - cancelling rebase.")
+                End If
+            End If
+
 
             'EXPORT-APPS-MINE
             If rebasing.toDoNextStep() Then
