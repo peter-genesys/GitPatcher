@@ -2,6 +2,26 @@
 
 Public Class WF_virtual_box
 
+    Shared Sub getVMs(ByRef iVMList As Collection, ByVal itype As String)
+
+        Dim allVMs As String = Nothing
+
+        Host.check_StdOut("VBoxManage list " & itype, allVMs, Globals.getVBoxDir, False)
+
+        Dim strArr() As String
+        Dim vmIndex As Integer
+        strArr = allVMs.Split("""")
+
+        For vmIndex = 1 To strArr.Length Step 2
+
+            If vmIndex < strArr.Length Then
+                'MsgBox(strArr(vmIndex))
+                iVMList.Add(strArr(vmIndex), strArr(vmIndex))
+            End If
+        Next
+
+    End Sub
+
     Shared Sub takeSnapshot(ByRef newSnapshotName As String)
         Dim result As String = Nothing
         Host.check_StdOut("VBoxManage snapshot """ & My.Settings.VBoxName & """ take """ &
@@ -51,7 +71,7 @@ Public Class WF_virtual_box
         reverting.Show()
 
         Do Until reverting.isStarted
-            Common.wait(200)
+            Common.Wait(200)
         Loop
 
         Dim snapshotResult As String = Nothing

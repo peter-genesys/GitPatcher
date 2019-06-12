@@ -316,7 +316,8 @@
                 If My.Settings.VBoxName = "No VM" Then
                     MsgBox("Create a pre-page-restore VM snapshot.  " & Chr(10) & "Restore for undo of this page restore.", MsgBoxStyle.Exclamation, "Snapshot VM")
                 Else
-                    WF_virtual_box.takeSnapshot(lAppId & "-pre-page-restore")
+                    Dim lpage As String = Common.dropLastSegment(page_file, ".")
+                    WF_virtual_box.takeSnapshot(lAppId & "-pre-restore-" & lpage)
                 End If
 
             End If

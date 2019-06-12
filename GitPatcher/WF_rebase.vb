@@ -192,6 +192,16 @@ Friend Class WF_rebase
         Loop
 
         Try
+            'Confirm run against non-VM target
+            If Globals.getDB <> "VM" Then
+                Dim result As Integer = MessageBox.Show("Confirm target is " & Globals.getDB &
+      Chr(10) & "The current database is " & Globals.getDB & ".", "Confirm Target", MessageBoxButtons.OKCancel)
+                If result = DialogResult.Cancel Then
+                    l_tag_base = "CANCEL"
+                    Throw New Exception("User cancelled - cancelling rebase.")
+                End If
+            End If
+
 
             'EXPORT-APPS-MINE
             If rebasing.toDoNextStep() Then
@@ -231,7 +241,8 @@ Friend Class WF_rebase
 
                     'Committing changed files to GIT
                     'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
-                    Tortoise.Commit(Globals.getRepoPath, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes.", True)
+                    '"Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes."
+                    Tortoise.Commit(Globals.getRepoPath, currentBranchShort, True)
 
                 End If
             ElseIf Not rebasing.IsDisposed Then 'ignore if form has been closed.
@@ -241,7 +252,8 @@ Friend Class WF_rebase
                     Logger.Dbg("User chose NOT to commit but the checkout has staged changes")
 
                     MsgBox("Files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
-                    Tortoise.Commit(Globals.getRepoPath, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes.", True)
+                    '"Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes."
+                    Tortoise.Commit(Globals.getRepoPath, currentBranchShort, True)
 
                 End If
 
@@ -438,4 +450,190 @@ Friend Class WF_rebase
         Return l_tag_base
 
     End Function
+
+
+
+
+    Shared Function tagBranch(ByVal iBranchType As String _
+                               , ByVal iDBtarget As String _
+                               , ByVal iRebaseBranchOn As String) As String
+
+        Dim l_tagA As String = Nothing
+        Dim l_tagB As String = Nothing
+
+        Dim tag_num_padding As Integer = 2
+        Common.checkBranch(iBranchType)
+
+        Dim l_tag_prefix As String = Nothing
+        If iBranchType = "hotfix" Then
+            l_tag_prefix = iDBtarget.Substring(0, 1)
+        End If
+
+
+        Dim currentBranchLong As String = GitOp.CurrentBranch()
+        Dim currentBranchShort As String = Globals.currentBranch
+        Dim callStashPop As Boolean = False
+
+        Dim title As String = "Tagging the version"
+        'If iPatching Then
+        '    title = "Slave Rebase - DB and Apex"
+        'ElseIf iAppChanges And iDBChanges Then
+        '    title = "Standalone Rebase - DB and Apex"
+        'ElseIf iDBChanges Then
+        '    title = "Standalone Rebase - DB changes only"
+        'ElseIf iAppChanges Then
+        '    title = "Standalone Rebase - Apex changes only"
+        'End If
+
+
+        Dim rebasing As ProgressDialogue = New ProgressDialogue(title & " - branch " & currentBranchLong)
+
+        Dim l_max_tag As Integer = 0
+
+
+        For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch & ".")
+            Try
+                Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
+
+                If tag_no > l_max_tag Then
+                    l_max_tag = tag_no
+                End If
+
+            Catch ex As Exception
+                MsgBox(ex.Message)
+                MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
+            End Try
+
+        Next
+
+
+        Dim l_tag_base As String = l_max_tag + 1
+        If True Then
+            l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_num_padding, "0")
+        Else
+            l_tag_base = "00"
+            l_tagA = currentBranchShort & "." & l_tag_base & "A"
+            l_tagB = currentBranchShort & "." & l_tag_base & "B"
+        End If
+
+        rebasing.MdiParent = GitPatcher
+
+        'SWITCH-MASTER
+        rebasing.addStep("Switch to " & iRebaseBranchOn & " branch", True, "If you get an error concerning uncommitted changes.  Please resolve the changes and then RESTART this process to ensure the switch to " & iRebaseBranchOn & " branch is successful.", True)
+
+        'TAG-A-MASTER-PATCHING
+        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & "." & l_tag_base & "A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & currentBranchShort & ".99A", True)
+
+        'RETURN-FEATURE
+        rebasing.addStep("Return to branch: " & currentBranchLong, True, "Return to the " & iBranchType & " branch", True)
+
+        'TAG-B-FEATURE
+        rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & "." & l_tag_base & "B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.", True)
+
+        rebasing.Show()
+
+        Do Until rebasing.isStarted
+            Common.Wait(1000)
+        Loop
+
+        Try
+            'Confirm run against non-VM target
+            If Globals.getDB <> "VM" Then
+                Dim result As Integer = MessageBox.Show("Confirm target is " & Globals.getDB &
+      Chr(10) & "The current database is " & Globals.getDB & ".", "Confirm Target", MessageBoxButtons.OKCancel)
+                If result = DialogResult.Cancel Then
+                    l_tag_base = "CANCEL"
+                    Throw New Exception("User cancelled - cancelling rebase.")
+                End If
+            End If
+
+
+            'SWITCH-MASTER
+            If rebasing.toDoNextStep() Then
+                'Switch to develop branch
+                'GitBash.Switch(Globals.getRepoPath, iRebaseBranchOn)
+                GitOp.SwitchBranch(iRebaseBranchOn)
+            End If
+
+            ''PULL-MASTER
+            'If rebasing.toDoNextStep() Then
+            '    'Pull from origin/develop
+            '    GitOp.pullCurrentBranch()
+            'End If
+
+            'TAG-A-MASTER-PATCHING
+            If rebasing.toDoNextStep() Then
+                'Tag the head
+                'Confirm Sequence
+                l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please confirm 2 digit sequence for this patch.", "Create Tag for this patch", l_tag_base)
+                l_tag_base = l_tag_base.Trim
+
+                'Check seq is not null
+                If String.IsNullOrEmpty(l_tag_base) Then
+                    Throw New Exception("No sequence given - cancelling rebase.")
+                End If
+
+                'Check seq is numeric
+                Dim l_tag_seq As Integer
+                Try
+                    l_tag_seq = l_tag_base
+                Catch ex As Exception
+                    MsgBox(ex.Message)
+                    l_tag_base = ""
+                    Throw New Exception("Numeric conversion error - cancelling rebase.")
+                End Try
+
+                'Check seq is in range 1-99
+                If l_tag_seq < 1 Or l_tag_seq > 99 Then
+                    l_tag_base = ""
+                    Throw New Exception("Sequence outside of range 1-99 - cancelling rebase.")
+                End If
+
+                'Write the A Tag
+                l_tagA = currentBranchShort & "." & l_tag_base & "A"
+                rebasing.updateStepDescription(1, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
+                GitOp.createTagHead(l_tagA)
+
+            End If
+
+
+
+            'RETURN-FEATURE
+            If rebasing.toDoNextStep() Then
+                'Return to branch
+                GitOp.SwitchBranch(currentBranchLong)
+            End If
+
+            ''REBASE-FEATURE
+            'If rebasing.toDoNextStep() Then
+            '    'Rebase branch
+            '    Tortoise.Rebase(Globals.getRepoPath)
+            'End If
+
+            'TAG-B-FEATURE
+            If rebasing.toDoNextStep() Then
+                'Tag Branch
+                l_tagB = currentBranchShort & "." & l_tag_base & "B"
+                rebasing.updateStepDescription(3, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
+                GitOp.createTagHead(l_tagB)
+
+            End If
+
+
+            'Finish
+            rebasing.toDoNextStep()
+
+        Catch ex As Exception
+            'Finish workflow if an error occurs
+            MsgBox(ex.Message)
+            rebasing.setToCompleted()
+            rebasing.Close()
+        End Try
+
+        Return l_tag_base
+
+    End Function
+
+
+
 End Class

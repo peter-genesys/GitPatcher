@@ -1,9 +1,9 @@
 ﻿Public Class Main
-
+    Private NO_VM As String = "No VM"
 
     Public Sub displayVBoxName()
 
-        'If VBoxNameToolStripMenuItem.Text = "No VM" Then
+        'If VBoxNameToolStripMenuItem.Text = NO_VM Then
         '    VBoxNameToolStripMenuItem.Font.Strikeout
         'End If
 
@@ -12,47 +12,62 @@
             StartVMToolStripMenuItem.Visible = False
             SaveVMToolStripMenuItem.Visible = False
             ChooseVMToolStripMenuItem.Visible = False
-            SaveVMToolStripMenuItem.Visible = False
             RestoreStateVMToolStripMenuItem.Visible = False
         Else
 
-            VBoxNameToolStripMenuItem.Checked = My.Settings.VBoxName <> "No VM"
-            VBoxNameToolStripMenuItem.Enabled = My.Settings.VBoxName <> "No VM"
+            If My.Settings.VBoxName <> NO_VM Then
 
-            'Is the VM runnning
-            Dim runningVMs As String = Nothing
-            Host.check_StdOut("VBoxManage list runningvms", runningVMs, Globals.getVBoxDir, False)
-            'Dim vmList As Collection = New Collection
+                'Is the VM runnning
+                Dim RunningVMsList As Collection = New Collection
+                WF_virtual_box.getVMs(RunningVMsList, "runningvms")
 
-            Dim isVMrunning As Boolean = False
-            Dim strArr() As String
-            Dim vmIndex As Integer
-            strArr = runningVMs.Split("""")
+                Dim isVMrunning As Boolean = RunningVMsList.Contains(My.Settings.VBoxName)
 
-            For vmIndex = 1 To strArr.Length Step 2
-                If vmIndex < strArr.Length Then
-                    If strArr(vmIndex) = My.Settings.VBoxName Then
-                        isVMrunning = True
+                If isVMrunning Then
+                    VBoxNameToolStripMenuItem.Text = My.Settings.VBoxName & " (running)"
+                    StartVMToolStripMenuItem.Visible = False
+                    SaveVMToolStripMenuItem.Visible = True
+                Else
+
+                    StartVMToolStripMenuItem.Text = "Start VM (" & My.Settings.startvmType & ")"
+
+                    'Does VM exist
+                    Dim VMsList As Collection = New Collection
+                    WF_virtual_box.getVMs(VMsList, "vms")
+
+                    Dim VMexists As Boolean = VMsList.Contains(My.Settings.VBoxName)
+
+                    If Not VMexists Then
+                        'VM no longer exists, so set VBoxName to NO VM
+                        My.Settings.VBoxName = NO_VM
                     End If
+
+                    VBoxNameToolStripMenuItem.Text = My.Settings.VBoxName
+                    StartVMToolStripMenuItem.Visible = True
+                    SaveVMToolStripMenuItem.Visible = False
                 End If
-            Next
 
-
-            If isVMrunning Then
-                VBoxNameToolStripMenuItem.Text = My.Settings.VBoxName & " (running)"
-                StartVMToolStripMenuItem.Visible = False
-                SaveVMToolStripMenuItem.Visible = True
-            Else
-                VBoxNameToolStripMenuItem.Text = My.Settings.VBoxName
-                StartVMToolStripMenuItem.Visible = True
-                SaveVMToolStripMenuItem.Visible = False
             End If
 
 
-            StartVMToolStripMenuItem.Text = "Start VM (" & My.Settings.startvmType & ")"
+            If My.Settings.VBoxName = NO_VM Then
+
+
+                StartVMToolStripMenuItem.Visible = False
+                SaveVMToolStripMenuItem.Visible = False
+
+                RestoreStateVMToolStripMenuItem.Visible = False
+                VBoxNameToolStripMenuItem.Checked = False
+                VBoxNameToolStripMenuItem.Enabled = False
+
+            Else
+                RestoreStateVMToolStripMenuItem.Visible = True
+                VBoxNameToolStripMenuItem.Checked = True
+                VBoxNameToolStripMenuItem.Enabled = True
+
+            End If
+
         End If
-
-
     End Sub
 
 
@@ -127,9 +142,12 @@
         Dim showMenuItems As Boolean = Globals.currentLongBranch.Contains("feature")
 
         CreateDBFeaturePatchToolStripMenuItem.Visible = showMenuItems
-        'RebaseFeatureToolStripMenuItem.Visible = showMenuItems
+        FeaturePatchToolStripMenuItem.Visible = showMenuItems
         RebaseFeatureFullToolStripMenuItem.Visible = showMenuItems
         MergeAndPushFeatureToolStripMenuItem.Visible = showMenuItems
+
+
+        VersionPatchToolStripMenuItem.Visible = Globals.currentLongBranch.Contains("version")
 
     End Sub
 
@@ -570,24 +588,10 @@
     Private Sub ChooseVMToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ChooseVMToolStripMenuItem.Click
         Dim vmChoice As String = Nothing
 
-        Dim allVMs As String = Nothing
-
-        Host.check_StdOut("VBoxManage list vms", allVMs, Globals.getVBoxDir, False)
-
         Dim vmList As Collection = New Collection
+        vmList.Add(NO_VM, NO_VM) 'Initialise the list
+        WF_virtual_box.getVMs(vmList, "vms")
 
-        Dim strArr() As String
-        Dim vmIndex As Integer
-        strArr = allVMs.Split("""")
-
-        vmList.Add("No VM")
-        For vmIndex = 1 To strArr.Length Step 2
-
-            If vmIndex < strArr.Length Then
-                'MsgBox(strArr(vmIndex))
-                vmList.Add(strArr(vmIndex))
-            End If
-        Next
 
         vmChoice = ChoiceDialog.Ask("Please choose a new Virtual Machine from those available." &
                                     Environment.NewLine &
@@ -604,7 +608,7 @@
 
     Private Sub VBoxNameToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VBoxNameToolStripMenuItem.Click
         If VBoxNameToolStripMenuItem.Checked Then
-            My.Settings.VBoxName = "No VM"
+            My.Settings.VBoxName = NO_VM
 
             displayVBoxName()
 
@@ -652,5 +656,13 @@
     Private Sub SinglePageImportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SinglePageImportToolStripMenuItem.Click
 
         WF_Apex.ApexRestoreSinglePage()
+    End Sub
+
+    Private Sub FeaturePatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FeaturePatchToolStripMenuItem.Click
+        WF_createPatch.createPatchProcess("feature", "DEV", Globals.deriveHotfixBranch("DEV"))
+    End Sub
+
+    Private Sub VersionPatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VersionPatchToolStripMenuItem.Click
+        WF_createPatch.createVersionPatch("version", "DEV", Globals.deriveHotfixBranch("DEV"))
     End Sub
 End Class
