@@ -142,9 +142,12 @@
         Dim showMenuItems As Boolean = Globals.currentLongBranch.Contains("feature")
 
         CreateDBFeaturePatchToolStripMenuItem.Visible = showMenuItems
-        'RebaseFeatureToolStripMenuItem.Visible = showMenuItems
+        FeaturePatchToolStripMenuItem.Visible = showMenuItems
         RebaseFeatureFullToolStripMenuItem.Visible = showMenuItems
         MergeAndPushFeatureToolStripMenuItem.Visible = showMenuItems
+
+
+        VersionPatchToolStripMenuItem.Visible = Globals.currentLongBranch.Contains("version")
 
     End Sub
 
@@ -653,5 +656,13 @@
     Private Sub SinglePageImportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SinglePageImportToolStripMenuItem.Click
 
         WF_Apex.ApexRestoreSinglePage()
+    End Sub
+
+    Private Sub FeaturePatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FeaturePatchToolStripMenuItem.Click
+        WF_createPatch.createPatchProcess("feature", "DEV", Globals.deriveHotfixBranch("DEV"))
+    End Sub
+
+    Private Sub VersionPatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VersionPatchToolStripMenuItem.Click
+        WF_createPatch.createVersionPatch("version", "DEV", Globals.deriveHotfixBranch("DEV"))
     End Sub
 End Class
