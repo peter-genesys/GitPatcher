@@ -97,6 +97,15 @@
 
         displayVBoxName()
 
+        GitPatcher.MainToolStripMenu.Visible = False
+        GitPatcher.ConfigToolStripMenu.Visible = False
+
+    End Sub
+
+
+    Private Sub Main_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+        GitPatcher.MainToolStripMenu.Visible = True
+        GitPatcher.ConfigToolStripMenu.Visible = True
     End Sub
 
 
@@ -645,7 +654,7 @@
         WF_release.releaseTo("VM")
     End Sub
 
-    Private Sub ExportDataMenuItem_Click(sender As Object, e As EventArgs) Handles ExportDataMenuItem.Click
+    Private Sub ExportDataMenuItem_Click(sender As Object, e As EventArgs)
         WF_rebase.exportData()
     End Sub
 
@@ -664,5 +673,21 @@
 
     Private Sub VersionPatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VersionPatchToolStripMenuItem.Click
         WF_createPatch.createVersionPatch("version", "DEV", Globals.deriveHotfixBranch("DEV"))
+    End Sub
+
+    Private Sub LogViewerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LogViewerToolStripMenuItem.Click
+        LogViewer.Show()
+    End Sub
+
+    Private Sub TestSQLclToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestSQLclToolStripMenuItem.Click
+        Try
+            Host.executeSQLplus(Globals.getRepoPath, Main.get_connect_string(Globals.getSchema, Globals.getTNS, Globals.getDATASOURCE), False)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub ExportDataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportDataToolStripMenuItem.Click
+        WF_rebase.exportData()
     End Sub
 End Class

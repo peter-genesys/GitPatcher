@@ -23,6 +23,12 @@
         GPScriptsDirTextBox.DataBindings.Add("Text", My.Settings, "GPScriptsDir")
         VBoxDirTextBox.DataBindings.Add("Text", My.Settings, "VBoxDir")
 
+        CheckBoxDeveloper.DataBindings.Add("Checked", My.Settings, "Developer")
+        CheckBoxReleaser.DataBindings.Add("Checked", My.Settings, "Releaser")
+        CheckBoxAdmin.DataBindings.Add("Checked", My.Settings, "Admin")
+        CheckBoxMailer.DataBindings.Add("Checked", My.Settings, "Mailer")
+        CheckBoxVirtualBoxer.DataBindings.Add("Checked", My.Settings, "VirtualBoxer")
+
 
         'PatchExportPathTextBox.DataBindings.Add("Text", My.Settings, "PatchExportPath")
 
@@ -41,8 +47,16 @@
         RecipientDomainTextBox.DataBindings.Add("Text", My.Settings, "RecipientDomain")
         RecipientTextBox.DataBindings.Add("Text", My.Settings, "RecipientList")
 
+        GitPatcher.MainToolStripMenu.Visible = False
+        GitPatcher.ConfigToolStripMenu.Visible = False
 
+        ConfigTabs.TabPages.Remove(MailTabPage)
 
+    End Sub
+
+    Private Sub Config_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+        GitPatcher.MainToolStripMenu.Visible = True
+        GitPatcher.ConfigToolStripMenu.Visible = True
     End Sub
 
 
@@ -69,4 +83,5 @@
         'theDatabaseSettings.MdiParent = Me
         theRepoSettings.Show()
     End Sub
+
 End Class

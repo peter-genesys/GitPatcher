@@ -101,7 +101,7 @@ Public Class GitPatcher
 
     End Sub
 
-    Private Sub MainToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MainToolStripMenuItem.Click
+    Private Sub MainToolStripMenuItem_Click(sender As Object, e As EventArgs)
         newMainWindow()
     End Sub
 
@@ -111,9 +111,9 @@ Public Class GitPatcher
         newchildform.Show()
     End Sub
 
- 
-    Private Sub ConfigToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ConfigToolStripMenuItem.Click
-        newConfigWindow
+
+    Private Sub ConfigToolStripMenuItem_Click(sender As Object, e As EventArgs)
+        newConfigWindow()
     End Sub
 
     Private Sub GitPatcher_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -132,5 +132,13 @@ Public Class GitPatcher
 
     Private Sub LogViewerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LogViewerToolStripMenuItem.Click
         LogViewer.Show()
+    End Sub
+
+    Private Sub MainToolStripMenu_Click(sender As Object, e As EventArgs) Handles MainToolStripMenu.Click
+        newMainWindow()
+    End Sub
+
+    Private Sub ConfigToolStripMenu_Click(sender As Object, e As EventArgs) Handles ConfigToolStripMenu.Click
+        newConfigWindow()
     End Sub
 End Class
