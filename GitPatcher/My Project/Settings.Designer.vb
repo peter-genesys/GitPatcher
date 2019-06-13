@@ -242,7 +242,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.17.2")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.18.0")>  _
         Public ReadOnly Property ReleaseId() As String
             Get
                 Return CType(Me("ReleaseId"),String)
@@ -330,6 +330,66 @@ Namespace My
             End Get
             Set
                 Me("WaitTime") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property Developer() As Boolean
+            Get
+                Return CType(Me("Developer"),Boolean)
+            End Get
+            Set
+                Me("Developer") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property Releaser() As Boolean
+            Get
+                Return CType(Me("Releaser"),Boolean)
+            End Get
+            Set
+                Me("Releaser") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property Admin() As Boolean
+            Get
+                Return CType(Me("Admin"),Boolean)
+            End Get
+            Set
+                Me("Admin") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property Mailer() As Boolean
+            Get
+                Return CType(Me("Mailer"),Boolean)
+            End Get
+            Set
+                Me("Mailer") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property VirtualBoxer() As Boolean
+            Get
+                Return CType(Me("VirtualBoxer"),Boolean)
+            End Get
+            Set
+                Me("VirtualBoxer") = value
             End Set
         End Property
     End Class

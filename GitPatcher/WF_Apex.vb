@@ -68,7 +68,7 @@
             Common.Wait(1000)
         Loop
 
-        Logger.Dbg("Apex app_id " + fapp_id, "Check app id")
+        Logger.Dbg("Apex app_id " & fapp_id, "Check app id")
 
         Dim app_id As String = fapp_id.Split("f")(1)
 

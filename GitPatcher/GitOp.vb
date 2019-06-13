@@ -27,15 +27,20 @@ Public Class GitOp
             Throw New Exception(shaAlias & "SHA is required")
         End If
 
-        Dim theTag As Tag = Globals.getRepo.Tags(SHA)
+        'Dim theTag As Tag = Globals.getRepo.Tags(SHA)
 
-        If theTag Is Nothing Then
-            Throw New Exception(shaAlias & "SHA (" & shaAlias & ") is unrecognised.")
-        End If
+        'If theTag Is Nothing Then
+        '    Throw New Exception(shaAlias & "SHA (" & SHA & ") is unrecognised.")
+        'End If
 
-        Dim theCommit As Commit = Globals.getRepo().Lookup(Of Commit)(SHA)
+        Try
+            Dim theCommit As Commit = Globals.getRepo().Lookup(Of Commit)(SHA)
+            Return theCommit
+        Catch ex As Exception
+            Throw New Exception(shaAlias & "SHA (" & SHA & ") is unrecognised.")
+        End Try
 
-        Return theCommit
+
 
     End Function
 
@@ -67,6 +72,16 @@ Public Class GitOp
         Return theCommit
 
     End Function
+
+
+    Shared Function getTipSHA() As String
+
+        Dim theBranch As Branch = Globals.getRepo().Head
+        Return theBranch.Tip.Sha
+
+    End Function
+
+
 
     Shared Function getTagNameList(ByVal inTagNames As Collection, Optional ByVal tagNameFilter As String = Nothing) As Collection
         'Input inTagNames         - a collection of tagNames
@@ -641,8 +656,11 @@ Public Class GitOp
     End Function
 
 
-    Shared Function getChanges(ByVal pathmask As String, ByVal viewFiles As Boolean) As Collection
+    Shared Function getChanges(ByVal pathmask As String, ByVal viewFiles As Boolean,
+                               Optional ByVal pathAsValue As Boolean = True,
+                               Optional ByVal pathAsIndex As Boolean = True) As Collection
         'Get a list of changes found in the paths of files modified between the stored commits in Globals module
+        'pathAsValue and pathAsIndex are used to specify whether to use fullpath or filename for the value and index of each added item
 
         Dim pathmask_UNIX As String = Common.unix_path(pathmask)
 
@@ -660,7 +678,25 @@ Public Class GitOp
 
                 Console.WriteLine(change.Status & ": " & change.Path)
                 result = result & Chr(10) & change.Status & ": " & change.Path
-                changePaths.Add(change.Path)
+
+                Dim filename As String = Common.getLastSegment(change.Path, "/")
+
+                Dim lvalue As String = Nothing
+                If pathAsValue Then
+                    lvalue = change.Path
+                Else
+                    lvalue = filename
+                End If
+
+                Dim lindex As String = Nothing
+                If pathAsIndex Then
+                    lindex = change.Path
+                Else
+                    lindex = filename
+                End If
+
+
+                changePaths.Add(lvalue, lindex)
 
                 If viewFiles Then
                     Dim file_string_data As String = Globals.getRepo.Lookup(Of Blob)(change.Oid).ToString

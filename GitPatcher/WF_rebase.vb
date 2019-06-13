@@ -41,7 +41,8 @@ Friend Class WF_rebase
                                , ByVal iRebaseBranchOn As String _
                                , Optional ByVal iPatching As Boolean = True _
                                , Optional ByVal iAppChanges As Boolean = True _
-                               , Optional ByVal iDBChanges As Boolean = True) As String
+                               , Optional ByVal iDBChanges As Boolean = True _
+                               , Optional ByVal iRebasePatch As Boolean = False) As String
 
         Dim l_tagA As String = Nothing
         Dim l_tagB As String = Nothing
@@ -60,7 +61,10 @@ Friend Class WF_rebase
         Dim callStashPop As Boolean = False
 
         Dim title As String
-        If iPatching Then
+
+        If iRebasePatch Then
+            title = "Quick Rebase - DB and Apex"
+        ElseIf iPatching Then
             title = "Slave Rebase - DB and Apex"
         ElseIf iAppChanges And iDBChanges Then
             title = "Standalone Rebase - DB and Apex"
@@ -101,9 +105,14 @@ Friend Class WF_rebase
             l_tagB = currentBranchShort & "." & l_tag_base & "B"
         End If
 
+
+        If iRebasePatch Then
+            l_tag_base = l_max_tag 'just return the current tag base.
+        End If
+
         rebasing.MdiParent = GitPatcher
         'EXPORT-APPS-MINE
-        rebasing.addStep("Export Apex Apps to " & iBranchType & " branch: " & currentBranch(), True, "Using ApexAppExporter, export from the VM any apps you have changed.", iAppChanges) ' or the Apex Export workflow")
+        rebasing.addStep("Export Apex Apps to " & iBranchType & " branch: " & currentBranch(), True, "Using ApexAppExporter, export from the VM any apps you have changed.", iAppChanges And Not iRebasePatch) ' or the Apex Export workflow")
         'SMARTGEN
         rebasing.addStep("Use SmartGen to spool changed config data: " & currentBranch(), True,
                                     "Did I change any config data?  " &
@@ -116,26 +125,26 @@ Friend Class WF_rebase
                          "Export data using the db-spooler script " & Environment.NewLine &
                          Globals.getRepoPath & "tools\db-spooler\script\exp_data.sql  " & Environment.NewLine & Environment.NewLine &
                          "If there are other objects that need to be generated and/or spooled please use SmartGen.  For example" & Environment.NewLine &
-                         "Tables should be spooled if they have been changed, along with any related generated objects, such as tapis and views.", iAppChanges Or iDBChanges)
+                         "Tables should be spooled if they have been changed, along with any related generated objects, such as tapis and views.", (iAppChanges Or iDBChanges) And Not iRebasePatch)
 
 
         'COMMIT
-        rebasing.addStep("Commit to Branch: " & currentBranchLong, False, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no staged changes.", iAppChanges Or iDBChanges)
+        rebasing.addStep("Commit to Branch: " & currentBranchLong, False, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no staged changes.", (iAppChanges Or iDBChanges))
         'STASH-SAVE
-        rebasing.addStep("Stash Save: " & currentBranchLong, False, "Stash Save to ensure the current branch [" & currentBranchShort & "] contains no staged changes.", iAppChanges Or iDBChanges)
+        rebasing.addStep("Stash Save: " & currentBranchLong, False, "Stash Save to ensure the current branch [" & currentBranchShort & "] contains no staged changes.", (iAppChanges Or iDBChanges))
         'SWITCH-MASTER
-        rebasing.addStep("Switch to " & iRebaseBranchOn & " branch", True, "If you get an error concerning uncommitted changes.  Please resolve the changes and then RESTART this process to ensure the switch to " & iRebaseBranchOn & " branch is successful.", iAppChanges Or iDBChanges)
+        rebasing.addStep("Switch to " & iRebaseBranchOn & " branch", True, "If you get an error concerning uncommitted changes.  Please resolve the changes and then RESTART this process to ensure the switch to " & iRebaseBranchOn & " branch is successful.", (iAppChanges Or iDBChanges) And Not iRebasePatch)
         'PULL-MASTER
-        rebasing.addStep("Pull from Origin", True, "Pull from the master branch.", iAppChanges Or iDBChanges)
+        rebasing.addStep("Pull from Origin", True, "Pull from the master branch.", (iAppChanges Or iDBChanges) And Not iRebasePatch)
 
         'TAG-A-MASTER-PATCHING
-        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & "." & l_tag_base & "A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & currentBranchShort & ".99A", iPatching)
+        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & "." & l_tag_base & "A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & currentBranchShort & ".99A", iPatching And Not iRebasePatch)
         'TAG-A-MASTER-REBASE-APPS
-        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & "." & l_tag_base & "A", True, "Will Tag the " & iRebaseBranchOn & " head commit for apex app comparisons.", Not iPatching And iAppChanges)
+        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & "." & l_tag_base & "A", True, "Will Tag the " & iRebaseBranchOn & " head commit for apex app comparisons.", Not iPatching And iAppChanges And Not iRebasePatch)
 
 
         'RETURN-FEATURE
-        rebasing.addStep("Return to branch: " & currentBranchLong, True, "Return to the feature branch", iAppChanges Or iDBChanges)
+        rebasing.addStep("Return to branch: " & currentBranchLong, True, "Return to the feature branch", (iAppChanges Or iDBChanges) And Not iRebasePatch)
         'REBASE-FEATURE
         rebasing.addStep("Rebase Branch: " & currentBranchLong & " From Upstream:" & iRebaseBranchOn, True,
                          "Please select the Upstream Branch:" & iRebaseBranchOn & " from the Tortoise Rebase Dialogue" & Environment.NewLine & Environment.NewLine &
@@ -156,7 +165,7 @@ Friend Class WF_rebase
                          "When all conflicted files are resolved, press Commit to continue with the interactive rebase.",
                          iAppChanges Or iDBChanges)
         'TAG-B-FEATURE
-        rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & "." & l_tag_base & "B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.", iPatching Or iAppChanges)
+        rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & "." & l_tag_base & "B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.", (iPatching Or iAppChanges) And Not iRebasePatch)
         'REVERT-VM
         rebasing.addStep("Restore to a clean VM snapshot", True, "GitPatcher will restore your VM to a clean VM snapshot." &
                          Environment.NewLine & "Before running patches, restore to a clean VM snapshot created prior to the development of the current feature.", iDBChanges)
@@ -166,23 +175,33 @@ Friend Class WF_rebase
         rebasing.addStep("Import any queued apps: " & currentBranch(), True, "Any Apex Apps that were included in a patch, must be reinstalled now. ", iAppChanges Or iDBChanges)
         'IMPORT-APPS-MINE
         'Needed for any Standalone rebase that includes app changes
-        rebasing.addStep("Re-Import my changed apps: " & currentBranch(), True, "Any Apex Apps that were changed and exported by me, must be reinstalled now, since the VM has been reverted. ", Not iPatching And iAppChanges)
+        rebasing.addStep("Re-Import my changed apps: " & currentBranch(), True, "Any Apex Apps that were changed and exported by me, must be reinstalled now, since the VM has been reverted. ", Not iPatching And iAppChanges And Not iRebasePatch)
         'DELETE-TAGS-REBASE-APPS
-        rebasing.addStep("Delete Tags " & currentBranchShort & "." & l_tag_base & "A" & " and " & currentBranchShort & "." & l_tag_base & "B", True, "Will delete the temporary tags.", Not iPatching And iAppChanges)
+        rebasing.addStep("Delete Tags " & currentBranchShort & "." & l_tag_base & "A" & " and " & currentBranchShort & "." & l_tag_base & "B", True, "Will delete the temporary tags.", Not iPatching And iAppChanges And Not iRebasePatch)
 
 
         'STASH-POP
-        rebasing.addStep("Stash Pop: " & currentBranchLong, False, "Stash Pop if a Stash Save was used previously, and especially, if we are not also making a patch.", Not iPatching)
+        rebasing.addStep("Stash Pop: " & currentBranchLong, False, "Stash Pop if a Stash Save was used previously, and especially, if we are not also making a patch.", Not iPatching And Not iRebasePatch)
         'SNAPSHOT
         rebasing.addStep("Post-Rebase Snapshot", True, "Before creating new patches, snapshot the VM again.  Use this snapshot as a quick restore to point restest patches that have failed, on first execution.", iAppChanges Or iDBChanges)
 
         rebasing.Show()
 
         Do Until rebasing.isStarted
-            Common.wait(1000)
+            Common.Wait(1000)
         Loop
 
         Try
+            'Confirm run against non-VM target
+            If Globals.getDB <> "VM" Then
+                Dim result As Integer = MessageBox.Show("Confirm target is " & Globals.getDB &
+      Chr(10) & "The current database is " & Globals.getDB & ".", "Confirm Target", MessageBoxButtons.OKCancel)
+                If result = DialogResult.Cancel Then
+                    l_tag_base = "CANCEL"
+                    Throw New Exception("User cancelled - cancelling rebase.")
+                End If
+            End If
+
 
             'EXPORT-APPS-MINE
             If rebasing.toDoNextStep() Then
@@ -222,7 +241,8 @@ Friend Class WF_rebase
 
                     'Committing changed files to GIT
                     'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
-                    Tortoise.Commit(Globals.getRepoPath, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes.", True)
+                    '"Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes."
+                    Tortoise.Commit(Globals.getRepoPath, currentBranchShort, True)
 
                 End If
             ElseIf Not rebasing.IsDisposed Then 'ignore if form has been closed.
@@ -232,7 +252,8 @@ Friend Class WF_rebase
                     Logger.Dbg("User chose NOT to commit but the checkout has staged changes")
 
                     MsgBox("Files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
-                    Tortoise.Commit(Globals.getRepoPath, "Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes.", True)
+                    '"Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes."
+                    Tortoise.Commit(Globals.getRepoPath, currentBranchShort, True)
 
                 End If
 
@@ -429,4 +450,190 @@ Friend Class WF_rebase
         Return l_tag_base
 
     End Function
+
+
+
+
+    Shared Function tagBranch(ByVal iBranchType As String _
+                               , ByVal iDBtarget As String _
+                               , ByVal iRebaseBranchOn As String) As String
+
+        Dim l_tagA As String = Nothing
+        Dim l_tagB As String = Nothing
+
+        Dim tag_num_padding As Integer = 2
+        Common.checkBranch(iBranchType)
+
+        Dim l_tag_prefix As String = Nothing
+        If iBranchType = "hotfix" Then
+            l_tag_prefix = iDBtarget.Substring(0, 1)
+        End If
+
+
+        Dim currentBranchLong As String = GitOp.CurrentBranch()
+        Dim currentBranchShort As String = Globals.currentBranch
+        Dim callStashPop As Boolean = False
+
+        Dim title As String = "Tagging the version"
+        'If iPatching Then
+        '    title = "Slave Rebase - DB and Apex"
+        'ElseIf iAppChanges And iDBChanges Then
+        '    title = "Standalone Rebase - DB and Apex"
+        'ElseIf iDBChanges Then
+        '    title = "Standalone Rebase - DB changes only"
+        'ElseIf iAppChanges Then
+        '    title = "Standalone Rebase - Apex changes only"
+        'End If
+
+
+        Dim rebasing As ProgressDialogue = New ProgressDialogue(title & " - branch " & currentBranchLong)
+
+        Dim l_max_tag As Integer = 0
+
+
+        For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch & ".")
+            Try
+                Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
+
+                If tag_no > l_max_tag Then
+                    l_max_tag = tag_no
+                End If
+
+            Catch ex As Exception
+                MsgBox(ex.Message)
+                MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
+            End Try
+
+        Next
+
+
+        Dim l_tag_base As String = l_max_tag + 1
+        If True Then
+            l_tag_base = l_tag_prefix & l_tag_base.PadLeft(tag_num_padding, "0")
+        Else
+            l_tag_base = "00"
+            l_tagA = currentBranchShort & "." & l_tag_base & "A"
+            l_tagB = currentBranchShort & "." & l_tag_base & "B"
+        End If
+
+        rebasing.MdiParent = GitPatcher
+
+        'SWITCH-MASTER
+        rebasing.addStep("Switch to " & iRebaseBranchOn & " branch", True, "If you get an error concerning uncommitted changes.  Please resolve the changes and then RESTART this process to ensure the switch to " & iRebaseBranchOn & " branch is successful.", True)
+
+        'TAG-A-MASTER-PATCHING
+        rebasing.addStep("Tag " & iRebaseBranchOn & " HEAD with " & currentBranchShort & "." & l_tag_base & "A", True, "Will Tag the " & iRebaseBranchOn & " head commit for patch comparisons. Asks for the tag value in format 99, but creates tag " & currentBranchShort & ".99A", True)
+
+        'RETURN-FEATURE
+        rebasing.addStep("Return to branch: " & currentBranchLong, True, "Return to the " & iBranchType & " branch", True)
+
+        'TAG-B-FEATURE
+        rebasing.addStep("Tag Branch: " & currentBranchLong & " HEAD with " & currentBranchShort & "." & l_tag_base & "B", True, "Will Tag the " & iBranchType & " head commit for patch comparisons. Creates tag " & currentBranchShort & ".99B.", True)
+
+        rebasing.Show()
+
+        Do Until rebasing.isStarted
+            Common.Wait(1000)
+        Loop
+
+        Try
+            'Confirm run against non-VM target
+            If Globals.getDB <> "VM" Then
+                Dim result As Integer = MessageBox.Show("Confirm target is " & Globals.getDB &
+      Chr(10) & "The current database is " & Globals.getDB & ".", "Confirm Target", MessageBoxButtons.OKCancel)
+                If result = DialogResult.Cancel Then
+                    l_tag_base = "CANCEL"
+                    Throw New Exception("User cancelled - cancelling rebase.")
+                End If
+            End If
+
+
+            'SWITCH-MASTER
+            If rebasing.toDoNextStep() Then
+                'Switch to develop branch
+                'GitBash.Switch(Globals.getRepoPath, iRebaseBranchOn)
+                GitOp.SwitchBranch(iRebaseBranchOn)
+            End If
+
+            ''PULL-MASTER
+            'If rebasing.toDoNextStep() Then
+            '    'Pull from origin/develop
+            '    GitOp.pullCurrentBranch()
+            'End If
+
+            'TAG-A-MASTER-PATCHING
+            If rebasing.toDoNextStep() Then
+                'Tag the head
+                'Confirm Sequence
+                l_tag_base = InputBox("Tagging current HEAD of " & iRebaseBranchOn & ".  Please confirm 2 digit sequence for this patch.", "Create Tag for this patch", l_tag_base)
+                l_tag_base = l_tag_base.Trim
+
+                'Check seq is not null
+                If String.IsNullOrEmpty(l_tag_base) Then
+                    Throw New Exception("No sequence given - cancelling rebase.")
+                End If
+
+                'Check seq is numeric
+                Dim l_tag_seq As Integer
+                Try
+                    l_tag_seq = l_tag_base
+                Catch ex As Exception
+                    MsgBox(ex.Message)
+                    l_tag_base = ""
+                    Throw New Exception("Numeric conversion error - cancelling rebase.")
+                End Try
+
+                'Check seq is in range 1-99
+                If l_tag_seq < 1 Or l_tag_seq > 99 Then
+                    l_tag_base = ""
+                    Throw New Exception("Sequence outside of range 1-99 - cancelling rebase.")
+                End If
+
+                'Write the A Tag
+                l_tagA = currentBranchShort & "." & l_tag_base & "A"
+                rebasing.updateStepDescription(1, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
+                GitOp.createTagHead(l_tagA)
+
+            End If
+
+
+
+            'RETURN-FEATURE
+            If rebasing.toDoNextStep() Then
+                'Return to branch
+                GitOp.SwitchBranch(currentBranchLong)
+            End If
+
+            ''REBASE-FEATURE
+            'If rebasing.toDoNextStep() Then
+            '    'Rebase branch
+            '    Tortoise.Rebase(Globals.getRepoPath)
+            'End If
+
+            'TAG-B-FEATURE
+            If rebasing.toDoNextStep() Then
+                'Tag Branch
+                l_tagB = currentBranchShort & "." & l_tag_base & "B"
+                rebasing.updateStepDescription(3, "Tag Branch: " & currentBranchLong & " HEAD with " & l_tagB)
+                GitOp.createTagHead(l_tagB)
+
+            End If
+
+
+            'Finish
+            rebasing.toDoNextStep()
+
+        Catch ex As Exception
+            'Finish workflow if an error occurs
+            MsgBox(ex.Message)
+            rebasing.setToCompleted()
+            rebasing.Close()
+        End Try
+
+        Return l_tag_base
+
+    End Function
+
+
+
 End Class

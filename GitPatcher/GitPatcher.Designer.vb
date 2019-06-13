@@ -51,8 +51,6 @@ Partial Class GitPatcher
         Me.ToolBarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusBarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolsMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ConfigToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MainToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LogViewerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoggingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SQLplusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -69,6 +67,7 @@ Partial Class GitPatcher
         Me.SearchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MainToolStripMenu = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStrip = New System.Windows.Forms.ToolStrip()
         Me.NewToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.OpenToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -81,6 +80,7 @@ Partial Class GitPatcher
         Me.StatusStrip = New System.Windows.Forms.StatusStrip()
         Me.ToolStripStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ConfigToolStripMenu = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip.SuspendLayout()
         Me.ToolStrip.SuspendLayout()
         Me.StatusStrip.SuspendLayout()
@@ -88,7 +88,7 @@ Partial Class GitPatcher
         '
         'MenuStrip
         '
-        Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileMenu, Me.EditMenu, Me.ViewMenu, Me.ToolsMenu, Me.WindowsMenu, Me.HelpMenu})
+        Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileMenu, Me.EditMenu, Me.ViewMenu, Me.MainToolStripMenu, Me.ConfigToolStripMenu, Me.WindowsMenu, Me.HelpMenu, Me.ToolsMenu})
         Me.MenuStrip.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip.MdiWindowListItem = Me.WindowsMenu
         Me.MenuStrip.Name = "MenuStrip"
@@ -274,22 +274,11 @@ Partial Class GitPatcher
         '
         'ToolsMenu
         '
-        Me.ToolsMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ConfigToolStripMenuItem, Me.MainToolStripMenuItem, Me.LogViewerToolStripMenuItem, Me.LoggingToolStripMenuItem, Me.SQLplusToolStripMenuItem})
+        Me.ToolsMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LogViewerToolStripMenuItem, Me.LoggingToolStripMenuItem, Me.SQLplusToolStripMenuItem})
         Me.ToolsMenu.Name = "ToolsMenu"
-        Me.ToolsMenu.Size = New System.Drawing.Size(48, 20)
-        Me.ToolsMenu.Text = "&Tools"
-        '
-        'ConfigToolStripMenuItem
-        '
-        Me.ConfigToolStripMenuItem.Name = "ConfigToolStripMenuItem"
-        Me.ConfigToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.ConfigToolStripMenuItem.Text = "Config"
-        '
-        'MainToolStripMenuItem
-        '
-        Me.MainToolStripMenuItem.Name = "MainToolStripMenuItem"
-        Me.MainToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.MainToolStripMenuItem.Text = "Main"
+        Me.ToolsMenu.Size = New System.Drawing.Size(88, 20)
+        Me.ToolsMenu.Text = "&ToolsUnused"
+        Me.ToolsMenu.Visible = False
         '
         'LogViewerToolStripMenuItem
         '
@@ -309,7 +298,7 @@ Partial Class GitPatcher
         '
         Me.SQLplusToolStripMenuItem.Name = "SQLplusToolStripMenuItem"
         Me.SQLplusToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.SQLplusToolStripMenuItem.Text = "SQLplus"
+        Me.SQLplusToolStripMenuItem.Text = "Test SQLcl"
         '
         'WindowsMenu
         '
@@ -322,37 +311,37 @@ Partial Class GitPatcher
         'NewWindowToolStripMenuItem
         '
         Me.NewWindowToolStripMenuItem.Name = "NewWindowToolStripMenuItem"
-        Me.NewWindowToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
+        Me.NewWindowToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.NewWindowToolStripMenuItem.Text = "&New Window"
         '
         'CascadeToolStripMenuItem
         '
         Me.CascadeToolStripMenuItem.Name = "CascadeToolStripMenuItem"
-        Me.CascadeToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
+        Me.CascadeToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.CascadeToolStripMenuItem.Text = "&Cascade"
         '
         'TileVerticalToolStripMenuItem
         '
         Me.TileVerticalToolStripMenuItem.Name = "TileVerticalToolStripMenuItem"
-        Me.TileVerticalToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
+        Me.TileVerticalToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.TileVerticalToolStripMenuItem.Text = "Tile &Vertical"
         '
         'TileHorizontalToolStripMenuItem
         '
         Me.TileHorizontalToolStripMenuItem.Name = "TileHorizontalToolStripMenuItem"
-        Me.TileHorizontalToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
+        Me.TileHorizontalToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.TileHorizontalToolStripMenuItem.Text = "Tile &Horizontal"
         '
         'CloseAllToolStripMenuItem
         '
         Me.CloseAllToolStripMenuItem.Name = "CloseAllToolStripMenuItem"
-        Me.CloseAllToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
+        Me.CloseAllToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.CloseAllToolStripMenuItem.Text = "C&lose All"
         '
         'ArrangeIconsToolStripMenuItem
         '
         Me.ArrangeIconsToolStripMenuItem.Name = "ArrangeIconsToolStripMenuItem"
-        Me.ArrangeIconsToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
+        Me.ArrangeIconsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ArrangeIconsToolStripMenuItem.Text = "&Arrange Icons"
         '
         'HelpMenu
@@ -396,6 +385,12 @@ Partial Class GitPatcher
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
         Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
         Me.AboutToolStripMenuItem.Text = "&About ..."
+        '
+        'MainToolStripMenu
+        '
+        Me.MainToolStripMenu.Name = "MainToolStripMenu"
+        Me.MainToolStripMenu.Size = New System.Drawing.Size(46, 20)
+        Me.MainToolStripMenu.Text = "Main"
         '
         'ToolStrip
         '
@@ -485,6 +480,12 @@ Partial Class GitPatcher
         Me.ToolStripStatusLabel.Size = New System.Drawing.Size(39, 17)
         Me.ToolStripStatusLabel.Text = "Status"
         '
+        'ConfigToolStripMenu
+        '
+        Me.ConfigToolStripMenu.Name = "ConfigToolStripMenu"
+        Me.ConfigToolStripMenu.Size = New System.Drawing.Size(55, 20)
+        Me.ConfigToolStripMenu.Text = "Config"
+        '
         'GitPatcher
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -559,9 +560,9 @@ Partial Class GitPatcher
     Friend WithEvents ToolBarToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents StatusBarToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolsMenu As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents MainToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ConfigToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents LoggingToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SQLplusToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents LogViewerToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MainToolStripMenu As ToolStripMenuItem
+    Friend WithEvents ConfigToolStripMenu As ToolStripMenuItem
 End Class

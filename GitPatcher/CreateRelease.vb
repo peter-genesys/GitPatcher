@@ -307,6 +307,7 @@ Public Class CreateRelease
                                   ByVal alt_schema As Boolean,
                                   ByVal retired As Boolean)
 
+        Dim l_log_filename As String = patch_name & ".log"
 
         Dim l_master_filename As String = Nothing
 
@@ -354,11 +355,15 @@ Public Class CreateRelease
             'Dim l_dos_path As String = Replace(l_path, "/", "\")
 
             If iSkipFiles.Contains(l_path) Then
-                l_install_file_line = Chr(10) & "PROMPT SKIPPED FOR TESTING " & l_filename & " " &
+                l_install_file_line = Chr(10) & "SPOOL " & l_log_filename & " APPEND" &
+                                      Chr(10) & "PROMPT SKIPPED FOR TESTING " & l_filename & " " &
+                                      Chr(10) & "spool off;" &
                                       Chr(10) & "--@" & l_path & "\" & l_master_filename & ";"
 
             Else
-                l_install_file_line = Chr(10) & "PROMPT " & l_filename & " " &
+                l_install_file_line = Chr(10) & "SPOOL " & l_log_filename & " APPEND" &
+                                      Chr(10) & "PROMPT " & l_filename & " " &
+                                      Chr(10) & "spool off;" &
                                       Chr(10) & "@" & l_path & "\" & l_master_filename & ";"
 
             End If
@@ -376,8 +381,6 @@ Public Class CreateRelease
         Next
 
         If targetFiles.Count > 0 Then
-
-            Dim l_log_filename As String = patch_name & ".log"
 
 
 
@@ -459,17 +462,19 @@ Public Class CreateRelease
 
             End If
 
-            l_master_file.WriteLine("Prompt installing PATCHES" & Chr(10) & l_patches)
+            l_master_file.WriteLine("Prompt installing PATCHES" & Chr(10) &
+                                    "spool off;" & Chr(10) &
+                                    l_patches)
 
             If use_arm Then
-
+                l_master_file.WriteLine("SPOOL " & l_log_filename & " APPEND")
                 l_master_file.WriteLine("execute &&APEXRM_user..arm_installer.patch_completed(i_patch_name  => '" & patch_name & "');")
-
                 l_master_file.WriteLine("COMMIT;")
+                l_master_file.WriteLine("spool off;")
             End If
 
 
-
+            l_master_file.WriteLine("SPOOL " & l_log_filename & " APPEND")
             l_master_file.WriteLine("PROMPT ")
             l_master_file.WriteLine("PROMPT " & l_master_filename & " - COMPLETED.")
 
@@ -731,18 +736,22 @@ Public Class CreateRelease
             End If
         End If
 
-        Dim l_install_file As String = Nothing
+        'Use patch runner to execute with a master script.
+        Dim l_master_filename As String = Nothing
+
         If UsePatchAdminCheckBox.Checked Then
-            l_install_file = "\install.sql"
+            l_master_filename = "install.sql"
         Else
-            l_install_file = "\install_lite.sql"
+            l_master_filename = "install_lite.sql"
         End If
 
         'Use Host class to execute with a master script.
         Host.RunMasterScript("DEFINE database = '" & Globals.getDATASOURCE & "'" &
+                Environment.NewLine & "DEFINE load_log_file = '" & Globals.getGPScriptsDir & "loadlogfile.js " & Globals.getOrgCode & " " & Globals.getDB & "'" &
                 Environment.NewLine & "@" & Globals.getRunConfigDir & Globals.getOrgCode & "_" & Globals.getDB & ".sql" &
-                Environment.NewLine & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & l_install_file, Globals.RootPatchDir)
+                Environment.NewLine & "@" & PatchPathTextBox.Text & PatchNameTextBox.Text & "/" & l_master_filename, Globals.RootPatchDir)
 
+        PatchRunner.LoadNewLogFiles()
 
     End Sub
 

@@ -141,14 +141,14 @@
 
         'TODO add code to read tags on the release branch to determine last semantic release id
 
-        Dim l_app_version = InputBox("Please confirm new semantic release id for " & Globals.currentAppCode & "", "New " & Globals.getAppName & " Version", "1.0.0")
+        Dim l_app_version = InputBox("Please confirm new semantic release id for " & Globals.currentAppCode & "", "New " & Globals.getAppName & " Version", Globals.currentAppCode & "-1.0.0")
         If String.IsNullOrEmpty(l_app_version) Then
             MsgBox("User Cancelled Operation")
             Return
         End If
 
 
-        l_app_version = Globals.currentAppCode & "-" & l_app_version
+        'l_app_version = Globals.currentAppCode & "-" & l_app_version
 
         'Dim newBranch As String = "release/" & iCreatePatchType & "/" & Globals.currentAppCode & "/" & l_app_version
 

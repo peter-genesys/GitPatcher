@@ -99,12 +99,12 @@ Public Class PatchFromTags
         TagsCheckedListBox.Items.Clear()
         For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch & ".")
             Try
-                'If Common.getFirstSegment(thisTag.FriendlyName, ".") = Globals.currentBranch Then
+
                 'This is a tag worth listing
                 Dim ticked As Boolean = (gtag_base = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)) 'This is a tag worth ticking
                     TagsCheckedListBox.Items.Add(thisTag.FriendlyName, ticked)
 
-                'End If
+
             Catch ex As Exception
                 MsgBox(ex.Message)
 
@@ -728,6 +728,7 @@ Public Class PatchFromTags
             TreeViewPatchOrder.AddCategory("Sequences")
             TreeViewPatchOrder.AddCategory("Type Specs")
             TreeViewPatchOrder.AddCategory("Roles")
+            TreeViewPatchOrder.AddCategory("Database Directories")
             TreeViewPatchOrder.AddCategory("Database Links")
             TreeViewPatchOrder.AddCategory("Functions")
             TreeViewPatchOrder.AddCategory("Procedures")
@@ -747,7 +748,9 @@ Public Class PatchFromTags
             TreeViewPatchOrder.AddCategory("Foreign Keys")
             TreeViewPatchOrder.AddCategory("Constraints")
             TreeViewPatchOrder.AddCategory("Configuration")
-            TreeViewPatchOrder.AddCategory("Jobs")
+            TreeViewPatchOrder.AddCategory("Scheduler")
+            TreeViewPatchOrder.AddCategory("Java")
+            TreeViewPatchOrder.AddCategory("XML Schema")
             TreeViewPatchOrder.AddCategory("Miscellaneous")
             TreeViewPatchOrder.AddCategory("Finalise")
             TreeViewPatchOrder.AddCategory("Post Completion")
@@ -809,12 +812,18 @@ Public Class PatchFromTags
                         l_category = "Loader Scripts"
                     Case "rg", "rol"
                         l_category = "Roles"
-                    Case "job"
-                        l_category = "Jobs"
                     Case "dat", "pop"
                         l_category = "Data"
                     Case "dblink"
                         l_category = "Database Links"
+                    Case "dir"
+                        l_category = "Database Directories"
+                    Case "job", "sched", "rule", "rlset", "evcon", "cred", "chain", "prog", "queue"
+                        l_category = "Scheduler"
+                    Case "class", "jtyp", "jsrc"
+                        l_category = "Java"
+                    Case "xsch"
+                        l_category = "XML Schema"
                     Case "mv"
                         l_category = "Materialised Views"
                     Case "sql"
