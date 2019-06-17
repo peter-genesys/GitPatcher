@@ -690,4 +690,8 @@
     Private Sub ExportDataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportDataToolStripMenuItem.Click
         WF_rebase.exportData()
     End Sub
+
+    Private Sub CreateVersionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateVersionToolStripMenuItem.Click
+
+    End Sub
 End Class
