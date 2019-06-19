@@ -1207,7 +1207,7 @@ Public Class PatchFromTags
 
         'Use GitBash to silently add files prior to calling commit dialog.
         Try
-            GitBash.Add(Globals.getRepoPath, PatchDirTextBox.Text & "/*", True)
+            GitBash.Add(Globals.getRepoPath, PatchDirTextBox.Text & "*", True)
         Catch ex As Exception
             MsgBox(ex.Message)
             MsgBox("Unable to Add Files with GitBash. Check GitBash configuration.")
@@ -1321,8 +1321,12 @@ Public Class PatchFromTags
 
         Next
 
-        'Set Prereq tree to Collapsed view.
+        'Set Prereq tree to Expanded view and remove unckecked nodes.
         PreReqPatchesTreeViewA.showCheckedNodes()
+        PreReqPatchesTreeViewA.RemoveNodes(False) 'remove unckecked nodes
+        'PreReqPatchesTreeViewA.ExpandAll()
+
+
     End Sub
 
 

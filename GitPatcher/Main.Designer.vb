@@ -524,19 +524,19 @@ Partial Class Main
         'LogViewerToolStripMenuItem
         '
         Me.LogViewerToolStripMenuItem.Name = "LogViewerToolStripMenuItem"
-        Me.LogViewerToolStripMenuItem.Size = New System.Drawing.Size(134, 22)
+        Me.LogViewerToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.LogViewerToolStripMenuItem.Text = "Log Viewer"
         '
         'TestSQLclToolStripMenuItem
         '
         Me.TestSQLclToolStripMenuItem.Name = "TestSQLclToolStripMenuItem"
-        Me.TestSQLclToolStripMenuItem.Size = New System.Drawing.Size(134, 22)
+        Me.TestSQLclToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.TestSQLclToolStripMenuItem.Text = "Test SQLcl"
         '
         'ExportDataToolStripMenuItem
         '
         Me.ExportDataToolStripMenuItem.Name = "ExportDataToolStripMenuItem"
-        Me.ExportDataToolStripMenuItem.Size = New System.Drawing.Size(134, 22)
+        Me.ExportDataToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ExportDataToolStripMenuItem.Text = "Export Data"
         '
         'VirtualBoxToolStripMenuItem
@@ -570,12 +570,14 @@ Partial Class Main
         '
         'StartVMNormalToolStripMenuItem
         '
+        Me.StartVMNormalToolStripMenuItem.BackColor = System.Drawing.Color.PaleGreen
         Me.StartVMNormalToolStripMenuItem.Name = "StartVMNormalToolStripMenuItem"
         Me.StartVMNormalToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
         Me.StartVMNormalToolStripMenuItem.Text = "Normal (gui)"
         '
         'StartVMHeadleassToolStripMenuItem
         '
+        Me.StartVMHeadleassToolStripMenuItem.BackColor = System.Drawing.Color.PaleGreen
         Me.StartVMHeadleassToolStripMenuItem.Name = "StartVMHeadleassToolStripMenuItem"
         Me.StartVMHeadleassToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
         Me.StartVMHeadleassToolStripMenuItem.Text = "Headless"
@@ -992,6 +994,7 @@ Partial Class Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.SystemColors.Control
         Me.ClientSize = New System.Drawing.Size(486, 561)
         Me.Controls.Add(Me.TextBoxReleaseId)
         Me.Controls.Add(Me.Label20)

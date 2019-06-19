@@ -177,7 +177,7 @@ Partial Class PatchFromTags
         Me.RevertVMButton.Name = "RevertVMButton"
         Me.RevertVMButton.Size = New System.Drawing.Size(114, 23)
         Me.RevertVMButton.TabIndex = 53
-        Me.RevertVMButton.Text = "Restore VM"
+        Me.RevertVMButton.Text = "&Restore VM"
         Me.RevertVMButton.UseVisualStyleBackColor = True
         '
         'AppOnlyCheckBox
@@ -217,7 +217,7 @@ Partial Class PatchFromTags
         Me.ExportPatchButton.Name = "ExportPatchButton"
         Me.ExportPatchButton.Size = New System.Drawing.Size(114, 23)
         Me.ExportPatchButton.TabIndex = 49
-        Me.ExportPatchButton.Text = "Export Patch"
+        Me.ExportPatchButton.Text = "&Export Patch"
         Me.ExportPatchButton.UseVisualStyleBackColor = True
         Me.ExportPatchButton.Visible = False
         '
@@ -264,7 +264,7 @@ Partial Class PatchFromTags
         Me.CommitButton.Name = "CommitButton"
         Me.CommitButton.Size = New System.Drawing.Size(230, 23)
         Me.CommitButton.TabIndex = 1
-        Me.CommitButton.Text = "Commit Patch"
+        Me.CommitButton.Text = "&Commit Patch"
         Me.CommitButton.UseVisualStyleBackColor = True
         '
         'TrackPromoCheckBox
@@ -327,7 +327,7 @@ Partial Class PatchFromTags
         Me.ExecuteButton.Name = "ExecuteButton"
         Me.ExecuteButton.Size = New System.Drawing.Size(230, 23)
         Me.ExecuteButton.TabIndex = 0
-        Me.ExecuteButton.Text = "Execute Patch"
+        Me.ExecuteButton.Text = "&Run Patch"
         Me.ExecuteButton.UseVisualStyleBackColor = True
         '
         'Label18
@@ -345,7 +345,7 @@ Partial Class PatchFromTags
         Me.CopyChangesButton.Name = "CopyChangesButton"
         Me.CopyChangesButton.Size = New System.Drawing.Size(139, 23)
         Me.CopyChangesButton.TabIndex = 32
-        Me.CopyChangesButton.Text = "Copy Files"
+        Me.CopyChangesButton.Text = "Copy &Files"
         Me.CopyChangesButton.UseVisualStyleBackColor = True
         '
         'Label16
@@ -446,7 +446,7 @@ Partial Class PatchFromTags
         Me.PatchButton.Name = "PatchButton"
         Me.PatchButton.Size = New System.Drawing.Size(230, 23)
         Me.PatchButton.TabIndex = 7
-        Me.PatchButton.Text = "Create Patch"
+        Me.PatchButton.Text = "&Build Patch"
         Me.PatchButton.UseVisualStyleBackColor = True
         '
         'Label6
@@ -508,7 +508,7 @@ Partial Class PatchFromTags
         Me.ButtonLastPatch.Name = "ButtonLastPatch"
         Me.ButtonLastPatch.Size = New System.Drawing.Size(139, 23)
         Me.ButtonLastPatch.TabIndex = 45
-        Me.ButtonLastPatch.Text = "Find Last Patches"
+        Me.ButtonLastPatch.Text = "&Find Last Patches"
         Me.ButtonLastPatch.UseVisualStyleBackColor = True
         '
         'Label13
@@ -560,7 +560,7 @@ Partial Class PatchFromTags
         Me.FindTagsButton.Name = "FindTagsButton"
         Me.FindTagsButton.Size = New System.Drawing.Size(139, 23)
         Me.FindTagsButton.TabIndex = 14
-        Me.FindTagsButton.Text = "Find Tags"
+        Me.FindTagsButton.Text = "&Find Tags"
         Me.FindTagsButton.UseVisualStyleBackColor = True
         '
         'TagsCheckedListBox
@@ -837,7 +837,7 @@ Partial Class PatchFromTags
         Me.FindButton.Name = "FindButton"
         Me.FindButton.Size = New System.Drawing.Size(139, 23)
         Me.FindButton.TabIndex = 4
-        Me.FindButton.Text = "Find Changes"
+        Me.FindButton.Text = "&Find Changes"
         Me.FindButton.UseVisualStyleBackColor = True
         '
         'Label3
@@ -855,7 +855,7 @@ Partial Class PatchFromTags
         Me.ViewButton.Name = "ViewButton"
         Me.ViewButton.Size = New System.Drawing.Size(230, 23)
         Me.ViewButton.TabIndex = 12
-        Me.ViewButton.Text = "View Ticked Files"
+        Me.ViewButton.Text = "&View Ticked Files"
         Me.ViewButton.UseVisualStyleBackColor = True
         '
         'TabPageExtras
@@ -927,7 +927,7 @@ Partial Class PatchFromTags
         Me.ButtonFindFiles.Name = "ButtonFindFiles"
         Me.ButtonFindFiles.Size = New System.Drawing.Size(139, 23)
         Me.ButtonFindFiles.TabIndex = 5
-        Me.ButtonFindFiles.Text = "Find Files"
+        Me.ButtonFindFiles.Text = "&Find Files"
         Me.ButtonFindFiles.UseVisualStyleBackColor = True
         '
         'TabPageApexApps
@@ -978,7 +978,7 @@ Partial Class PatchFromTags
         Me.FindAppsButton.Name = "FindAppsButton"
         Me.FindAppsButton.Size = New System.Drawing.Size(139, 23)
         Me.FindAppsButton.TabIndex = 5
-        Me.FindAppsButton.Text = "Find Apex Apps"
+        Me.FindAppsButton.Text = "&Find Apex Apps"
         Me.FindAppsButton.UseVisualStyleBackColor = True
         '
         'TabPagePreReqsB
@@ -1022,7 +1022,7 @@ Partial Class PatchFromTags
         Me.PreReqButton.Name = "PreReqButton"
         Me.PreReqButton.Size = New System.Drawing.Size(139, 23)
         Me.PreReqButton.TabIndex = 60
-        Me.PreReqButton.Text = "Search"
+        Me.PreReqButton.Text = "&Search"
         Me.PreReqButton.UseVisualStyleBackColor = True
         '
         'Label14
@@ -1058,7 +1058,7 @@ Partial Class PatchFromTags
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(559, 778)
+        Me.ClientSize = New System.Drawing.Size(559, 718)
         Me.Controls.Add(Me.PatchTabControl)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "PatchFromTags"
