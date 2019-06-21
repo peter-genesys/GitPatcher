@@ -139,7 +139,7 @@
 
         Dim lcurrentDB As String = Globals.getDB
 
-        'TODO add code to read tags on the release branch to determine last semantic release id
+        'TODO add code to read tags or releases ? on the release branch to determine last semantic release id
 
         Dim l_app_version = InputBox("Please confirm new semantic release id for " & Globals.currentAppCode & "", "New " & Globals.getAppName & " Version", Globals.currentAppCode & "-1.0.0")
         If String.IsNullOrEmpty(l_app_version) Then
@@ -169,7 +169,7 @@
         createPatchSetProgress.addStep("Change current DB to : " & iTargetDB, lcurrentDB <> iTargetDB)
 
         'SWITCH TO MASTER
-        createPatchSetProgress.addStep("Switch to master branch", True, currentBranch <> "master")
+        createPatchSetProgress.addStep("Switch to master branch", currentBranch <> "master")
 
         'PULL MASTER
         createPatchSetProgress.addStep("Pull master branch", True, "Ensure master branch is upto date.")

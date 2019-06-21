@@ -264,6 +264,7 @@
     <Compile Include="WF_test.vb" />
     <Compile Include="WF_createPatch.vb" />
     <Compile Include="WF_virtual_box.vb" />
+    <Compile Include="WH_versions.vb" />
     <Compile Include="zip.vb" />
   </ItemGroup>
   <ItemGroup>

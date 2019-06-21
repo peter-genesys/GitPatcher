@@ -39,7 +39,7 @@
       <Value Profile="(Default)">..\..\..\GitRepos.json</Value>
     </Setting>
     <Setting Name="Flow" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">GitHubFlow</Value>
+      <Value Profile="(Default)">OneFlow</Value>
     </Setting>
     <Setting Name="PushTool" Type="System.String" Scope="Application">
       <Value Profile="(Default)">BGIT</Value>
@@ -91,6 +91,15 @@
     </Setting>
     <Setting Name="VirtualBoxer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="CreateVersion" Type="System.String" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RunRelease" Type="System.String" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DefaultVersionType" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Minor Version</Value>
     </Setting>
   </Settings>
 </SettingsFile>

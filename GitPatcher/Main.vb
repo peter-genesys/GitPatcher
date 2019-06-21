@@ -100,6 +100,8 @@
         GitPatcher.MainToolStripMenu.Visible = False
         GitPatcher.ConfigToolStripMenu.Visible = False
 
+        setNewVersionReleaseToolStripMenuItem()
+
     End Sub
 
 
@@ -691,7 +693,16 @@
         WF_rebase.exportData()
     End Sub
 
-    Private Sub CreateVersionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateVersionToolStripMenuItem.Click
+    Private Sub setNewVersionReleaseToolStripMenuItem()
+        NewVersionReleaseToolStripMenuItem.Text = "New " & ToolStripComboBox.SelectedItem & " Version Release"
+    End Sub
 
+    Private Sub ToolStripComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ToolStripComboBox.SelectedIndexChanged
+        setNewVersionReleaseToolStripMenuItem()
+
+    End Sub
+
+    Private Sub NewVersionReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewVersionReleaseToolStripMenuItem.Click
+        WH_versions.newVersionRelease(ToolStripComboBox.SelectedItem, "VM")
     End Sub
 End Class

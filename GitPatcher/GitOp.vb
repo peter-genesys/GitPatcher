@@ -203,6 +203,7 @@ Public Class GitOp
 
     Shared Sub createBranch(ByVal branchName As String)
         'Create a new local branch
+        Logger.Note("createBranch(branchName)", branchName)
 
         Dim newBranch As Branch = Globals.getRepo.CreateBranch(branchName)
 
@@ -234,6 +235,8 @@ Public Class GitOp
 
     Shared Sub SwitchBranch(ByVal branchName As String)
         'Switch to an existing local branch
+
+        Logger.Note("SwitchBranch(branchName)", branchName)
 
         Dim theSetting As String = My.Settings.SwitchTool
         Dim ToolName As String = "SwitchTool"
@@ -321,9 +324,10 @@ Public Class GitOp
     Shared Sub createAndSwitchBranch(ByVal branchName As String)
         'Create then switch to a local branch
         'GitBash.createBranch(Globals.getRepoPath, newBranch)
-
+        Logger.Note("createAndSwitchBranch(branchName)", branchName)
 
         createBranch(branchName)
+
         SwitchBranch(branchName)
 
     End Sub

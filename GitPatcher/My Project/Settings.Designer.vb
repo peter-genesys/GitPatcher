@@ -197,7 +197,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("GitHubFlow")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("OneFlow")>  _
         Public ReadOnly Property Flow() As String
             Get
                 Return CType(Me("Flow"),String)
@@ -391,6 +391,39 @@ Namespace My
             Set
                 Me("VirtualBoxer") = value
             End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property CreateVersion() As String
+            Get
+                Return CType(Me("CreateVersion"),String)
+            End Get
+            Set
+                Me("CreateVersion") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property RunRelease() As String
+            Get
+                Return CType(Me("RunRelease"),String)
+            End Get
+            Set
+                Me("RunRelease") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Minor Version")>  _
+        Public ReadOnly Property DefaultVersionType() As String
+            Get
+                Return CType(Me("DefaultVersionType"),String)
+            End Get
         End Property
     End Class
 End Namespace
