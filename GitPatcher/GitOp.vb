@@ -333,7 +333,7 @@ Public Class GitOp
     End Sub
 
 
-    Shared Sub Merge(ByVal targetBranch As String)
+    Shared Sub Merge(ByVal targetBranch As String, Optional ByVal iFastForward As Boolean = False)
         'Merge the targetBranch into the current branch 
         'NB NoFastForward
 
@@ -353,7 +353,11 @@ Public Class GitOp
                     Case "LGIT"
 
                         Dim options As MergeOptions = New MergeOptions()
-                        options.FastForwardStrategy = FastForwardStrategy.NoFastForward
+                        If iFastForward Then
+                            options.FastForwardStrategy = FastForwardStrategy.FastForwardOnly
+                        Else
+                            options.FastForwardStrategy = FastForwardStrategy.NoFastForward
+                        End If
 
                         Dim UserName As String = Globals.getRepoConfig("user.name")
                         Dim UserEmail As String = Globals.getRepoConfig("user.email")
