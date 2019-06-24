@@ -278,9 +278,9 @@
 
         'CREATE RELEASE PATCH
         If createPatchSetProgress.toDoNextStep() Then
-
+            Dim l_tag_seq As Integer
             'Create, edit And test collection
-            Dim Wizard As New CreateRelease(l_app_version, iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes, iSupPatchTypes)
+            Dim Wizard As New CreateRelease(l_app_version, l_tag_seq, "Minor", iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes, iSupPatchTypes)
 
         End If
 

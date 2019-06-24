@@ -1,7 +1,9 @@
 ﻿Imports LibGit2Sharp
 Public Class CreateRelease
+    Private pAppVersion As String = Nothing
     Private pPatchName As String = Nothing
     Private pCreatePatchType As String = Nothing
+    Private pVersionType As String = Nothing
     Private pFindPatchTypes As String = Nothing
     Private pFindPatchFilters As String = Nothing
     Private pPrereqPatchTypes As String = Nothing
@@ -11,18 +13,21 @@ Public Class CreateRelease
 
     Private waiting As Boolean
 
-    Public Sub New(ByVal iPatchName As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
+    Public Sub New(ByVal iAppMajorMinorVersion As String, ByVal iPatchVersion As String, ByVal iVersionType As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
 
-        If String.IsNullOrEmpty(iPatchName) Then
-            Dim l_app_version = InputBox("Please enter a new version for " & Globals.currentAppCode & " in the format: 2.17.01", "New " & Globals.getAppName & " Version")
+        'If String.IsNullOrEmpty(iAppMajorMinorVersion) Then
+        '    Dim l_app_version = InputBox("Please enter a new version for " & Globals.currentAppCode & " in the format: 2.17.01", "New " & Globals.getAppName & " Version")
 
-            pPatchName = Globals.currentAppCode & "-" & l_app_version
-        Else
-            pPatchName = iPatchName
-        End If
+        '    pPatchName = Globals.currentAppCode & "-" & l_app_version
+        'Else
+        '    pPatchName = iPatchName
+        'End If
 
+        pPatchName = iAppMajorMinorVersion & "." & iPatchVersion
 
+        pAppVersion = iAppMajorMinorVersion
         pCreatePatchType = iCreatePatchType
+        pVersionType = iVersionType
         pFindPatchTypes = iFindPatchTypes
         pFindPatchFilters = iFindPatchFilters
         pPrereqPatchTypes = iPrereqPatchTypes
@@ -43,14 +48,14 @@ Public Class CreateRelease
 
 
 
-        FindTagsButton.Text = "Find Tags like " & Globals.currentAppCode & "-X.XX.XX"
+        FindTagsButton.Text = "Find Tags like " & pAppVersion
 
         Findtags()
 
         TagFilterCheckBox.Checked = True
         ComboBoxPatchesFilter.SelectedItem = "All" '"Unapplied"
 
-        Me.Text = "CreatePatchSet - Creating a " & iCreatePatchType & " for " & Globals.currentTNS
+        Me.Text = "CreateRelease - Creating a " & iVersionType & " Version Release for " & Globals.currentTNS
 
         AvailablePatchesLabel.Text = "Available" & Chr(10) & iFindPatchTypes & Chr(10) & "Patches"
 
@@ -74,23 +79,26 @@ Public Class CreateRelease
 
     Private Sub Findtags()
 
-        Dim tagsearch As String = Replace(RTrim(Globals.currentAppCode), Chr(13), "")
+        Dim tagsearch As String = Replace(RTrim(pAppVersion), Chr(13), "")
         Dim tagseg As String = Nothing
 
         TagsCheckedListBox.Items.Clear()
-        For Each thisTag As Tag In GitOp.getTagList()
-            tagseg = Common.getFirstSegment(thisTag.FriendlyName, "-")
+        For Each thisTag As Tag In GitOp.getTagList(tagsearch)
+            'tagseg = Common.getFirstSegment(thisTag.FriendlyName, "-")
             'Looks like this used to search for tags by appCode, but not doing this ATM.
             'If tagseg = tagsearch Then
             TagsCheckedListBox.Items.Add(thisTag.FriendlyName)
             'End If
         Next
 
+        'Tick last 2 tags
+        TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 2, True)
         TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
 
-        TagsCheckedListBox.Items.Add("HEAD")
 
-        TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
+        'TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
+        'TagsCheckedListBox.Items.Add("HEAD")
+        'TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
     End Sub
 
 
@@ -574,15 +582,12 @@ Public Class CreateRelease
 
 
         'Prepopulate Tree with default category nodes.
-        'This should become a method on TreeViewDraggableNodes2Levels
         Dim l_patches_category As String = "Patches"
-        'GPTrees.AddCategory(TreeViewPatchOrder.Nodes, l_patches_category)
         TreeViewPatchOrder.AddCategory(l_patches_category)
 
         Dim ChosenChanges As Collection = New Collection
         'Repo changes
         'Retrieve checked node items from the TreeViewChanges as a collection of files.
-        'GPTrees.ReadCheckedLeafNodes(AvailablePatchesTreeView.Nodes, ChosenChanges)
         AvailablePatchesTreeView.ReadCheckedLeafNodes(ChosenChanges)
 
         If ChosenChanges.Count = 0 Then
@@ -823,7 +828,7 @@ Public Class CreateRelease
         TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
         'Add the PatchSet itself to the list.
-        patchableFiles.Add(PatchPathTextBox.Text & PatchNameTextBox.Text, _
+        patchableFiles.Add(PatchPathTextBox.Text & PatchNameTextBox.Text,
                            PatchPathTextBox.Text & PatchNameTextBox.Text)
 
 
@@ -856,13 +861,24 @@ Public Class CreateRelease
 
     End Sub
 
-   
-  
+
+
     Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles ComitButton.Click
+
+        'Use GitBash to silently add files prior to calling commit dialog.
+        Try
+            GitBash.Add(Globals.getRepoPath, PatchDirTextBox.Text & "/*", True)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            MsgBox("Unable to Add Files with GitBash. Check GitBash configuration.")
+            'If GitBash.Push fails just let the process continue.
+            'User will add files via the commit dialog
+        End Try
+
 
         Tortoise.Commit(PatchDirTextBox.Text, "NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
 
-        Mail.SendNotification("NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, pCreatePatchType & " created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
+        'Mail.SendNotification("NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, pCreatePatchType & " created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
 
         'user
         'branch
@@ -873,5 +889,7 @@ Public Class CreateRelease
 
     End Sub
 
-  
+    Private Sub RevertVMButton_Click(sender As Object, e As EventArgs) Handles RevertVMButton.Click
+        WF_virtual_box.revertVM("Reverting", False, "post-rebase")
+    End Sub
 End Class
