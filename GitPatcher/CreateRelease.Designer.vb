@@ -23,7 +23,8 @@ Partial Class CreateRelease
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(CreateRelease))
-        Me.TabPagePatchDefn = New System.Windows.Forms.TabPage()
+        Me.TabPageBuildPatch = New System.Windows.Forms.TabPage()
+        Me.RevertVMButton = New System.Windows.Forms.Button()
         Me.ExportButton = New System.Windows.Forms.Button()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ComitButton = New System.Windows.Forms.Button()
@@ -58,7 +59,7 @@ Partial Class CreateRelease
         Me.Label13 = New System.Windows.Forms.Label()
         Me.TabPagePatches = New System.Windows.Forms.TabPage()
         Me.AppFilterCheckBox = New System.Windows.Forms.CheckBox()
-        Me.AvailablePatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
+        Me.TreeViewTaggedPatches = New TreeViewEnhanced.TreeViewEnhanced()
         Me.ComboBoxPatchesFilter = New System.Windows.Forms.ComboBox()
         Me.AvailablePatchesLabel = New System.Windows.Forms.Label()
         Me.TagFilterCheckBox = New System.Windows.Forms.CheckBox()
@@ -72,50 +73,59 @@ Partial Class CreateRelease
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.PatchTabControl = New System.Windows.Forms.TabControl()
-        Me.RevertVMButton = New System.Windows.Forms.Button()
-        Me.TabPagePatchDefn.SuspendLayout()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.TabPageBuildPatch.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
         Me.TabPagePatches.SuspendLayout()
         Me.TabPageTags.SuspendLayout()
         Me.PatchTabControl.SuspendLayout()
         Me.SuspendLayout()
         '
-        'TabPagePatchDefn
+        'TabPageBuildPatch
         '
-        Me.TabPagePatchDefn.Controls.Add(Me.RevertVMButton)
-        Me.TabPagePatchDefn.Controls.Add(Me.ExportButton)
-        Me.TabPagePatchDefn.Controls.Add(Me.Label3)
-        Me.TabPagePatchDefn.Controls.Add(Me.ComitButton)
-        Me.TabPagePatchDefn.Controls.Add(Me.ExecutePatchButton)
-        Me.TabPagePatchDefn.Controls.Add(Me.TreeViewPatchOrder)
-        Me.TabPagePatchDefn.Controls.Add(Me.TrackPromoCheckBox)
-        Me.TabPagePatchDefn.Controls.Add(Me.PatchPathTextBox)
-        Me.TabPagePatchDefn.Controls.Add(Me.NoteTextBox)
-        Me.TabPagePatchDefn.Controls.Add(Me.PatchNameTextBox)
-        Me.TabPagePatchDefn.Controls.Add(Me.PatchDirTextBox)
-        Me.TabPagePatchDefn.Controls.Add(Me.SupIdTextBox)
-        Me.TabPagePatchDefn.Controls.Add(Me.PatchDescTextBox)
-        Me.TabPagePatchDefn.Controls.Add(Me.Label18)
-        Me.TabPagePatchDefn.Controls.Add(Me.CopyChangesButton)
-        Me.TabPagePatchDefn.Controls.Add(Me.Label16)
-        Me.TabPagePatchDefn.Controls.Add(Me.Label12)
-        Me.TabPagePatchDefn.Controls.Add(Me.Label11)
-        Me.TabPagePatchDefn.Controls.Add(Me.Label8)
-        Me.TabPagePatchDefn.Controls.Add(Me.Label10)
-        Me.TabPagePatchDefn.Controls.Add(Me.UsePatchAdminCheckBox)
-        Me.TabPagePatchDefn.Controls.Add(Me.Label9)
-        Me.TabPagePatchDefn.Controls.Add(Me.RerunCheckBox)
-        Me.TabPagePatchDefn.Controls.Add(Me.Label5)
-        Me.TabPagePatchDefn.Controls.Add(Me.Label7)
-        Me.TabPagePatchDefn.Controls.Add(Me.PatchButton)
-        Me.TabPagePatchDefn.Controls.Add(Me.Label6)
-        Me.TabPagePatchDefn.Location = New System.Drawing.Point(4, 22)
-        Me.TabPagePatchDefn.Name = "TabPagePatchDefn"
-        Me.TabPagePatchDefn.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPagePatchDefn.Size = New System.Drawing.Size(521, 728)
-        Me.TabPagePatchDefn.TabIndex = 2
-        Me.TabPagePatchDefn.Text = "Patch Defn"
-        Me.TabPagePatchDefn.UseVisualStyleBackColor = True
+        Me.TabPageBuildPatch.Controls.Add(Me.RevertVMButton)
+        Me.TabPageBuildPatch.Controls.Add(Me.ExportButton)
+        Me.TabPageBuildPatch.Controls.Add(Me.Label3)
+        Me.TabPageBuildPatch.Controls.Add(Me.ComitButton)
+        Me.TabPageBuildPatch.Controls.Add(Me.ExecutePatchButton)
+        Me.TabPageBuildPatch.Controls.Add(Me.TreeViewPatchOrder)
+        Me.TabPageBuildPatch.Controls.Add(Me.TrackPromoCheckBox)
+        Me.TabPageBuildPatch.Controls.Add(Me.PatchPathTextBox)
+        Me.TabPageBuildPatch.Controls.Add(Me.NoteTextBox)
+        Me.TabPageBuildPatch.Controls.Add(Me.PatchNameTextBox)
+        Me.TabPageBuildPatch.Controls.Add(Me.PatchDirTextBox)
+        Me.TabPageBuildPatch.Controls.Add(Me.SupIdTextBox)
+        Me.TabPageBuildPatch.Controls.Add(Me.PatchDescTextBox)
+        Me.TabPageBuildPatch.Controls.Add(Me.Label18)
+        Me.TabPageBuildPatch.Controls.Add(Me.CopyChangesButton)
+        Me.TabPageBuildPatch.Controls.Add(Me.Label16)
+        Me.TabPageBuildPatch.Controls.Add(Me.Label12)
+        Me.TabPageBuildPatch.Controls.Add(Me.Label11)
+        Me.TabPageBuildPatch.Controls.Add(Me.Label8)
+        Me.TabPageBuildPatch.Controls.Add(Me.Label10)
+        Me.TabPageBuildPatch.Controls.Add(Me.UsePatchAdminCheckBox)
+        Me.TabPageBuildPatch.Controls.Add(Me.Label9)
+        Me.TabPageBuildPatch.Controls.Add(Me.RerunCheckBox)
+        Me.TabPageBuildPatch.Controls.Add(Me.Label5)
+        Me.TabPageBuildPatch.Controls.Add(Me.Label7)
+        Me.TabPageBuildPatch.Controls.Add(Me.PatchButton)
+        Me.TabPageBuildPatch.Controls.Add(Me.Label6)
+        Me.TabPageBuildPatch.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageBuildPatch.Name = "TabPageBuildPatch"
+        Me.TabPageBuildPatch.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPageBuildPatch.Size = New System.Drawing.Size(521, 728)
+        Me.TabPageBuildPatch.TabIndex = 2
+        Me.TabPageBuildPatch.Text = "Build Patch"
+        Me.TabPageBuildPatch.UseVisualStyleBackColor = True
+        '
+        'RevertVMButton
+        '
+        Me.RevertVMButton.Location = New System.Drawing.Point(317, 608)
+        Me.RevertVMButton.Name = "RevertVMButton"
+        Me.RevertVMButton.Size = New System.Drawing.Size(114, 23)
+        Me.RevertVMButton.TabIndex = 56
+        Me.RevertVMButton.Text = "Restore VM"
+        Me.RevertVMButton.UseVisualStyleBackColor = True
         '
         'ExportButton
         '
@@ -288,9 +298,9 @@ Partial Class CreateRelease
         Me.UsePatchAdminCheckBox.AutoSize = True
         Me.UsePatchAdminCheckBox.Location = New System.Drawing.Point(317, 641)
         Me.UsePatchAdminCheckBox.Name = "UsePatchAdminCheckBox"
-        Me.UsePatchAdminCheckBox.Size = New System.Drawing.Size(108, 17)
+        Me.UsePatchAdminCheckBox.Size = New System.Drawing.Size(115, 17)
         Me.UsePatchAdminCheckBox.TabIndex = 19
-        Me.UsePatchAdminCheckBox.Text = "Use Patch Admin"
+        Me.UsePatchAdminCheckBox.Text = "Use Apex-Rel-Man"
         Me.UsePatchAdminCheckBox.UseVisualStyleBackColor = True
         '
         'Label9
@@ -336,7 +346,7 @@ Partial Class CreateRelease
         Me.PatchButton.Name = "PatchButton"
         Me.PatchButton.Size = New System.Drawing.Size(230, 23)
         Me.PatchButton.TabIndex = 7
-        Me.PatchButton.Text = "Create Patch"
+        Me.PatchButton.Text = "Build Patch"
         Me.PatchButton.UseVisualStyleBackColor = True
         '
         'Label6
@@ -401,7 +411,7 @@ Partial Class CreateRelease
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(28, 76)
+        Me.Label13.Location = New System.Drawing.Point(10, 76)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(43, 13)
         Me.Label13.TabIndex = 32
@@ -409,8 +419,9 @@ Partial Class CreateRelease
         '
         'TabPagePatches
         '
+        Me.TabPagePatches.Controls.Add(Me.Label4)
         Me.TabPagePatches.Controls.Add(Me.AppFilterCheckBox)
-        Me.TabPagePatches.Controls.Add(Me.AvailablePatchesTreeView)
+        Me.TabPagePatches.Controls.Add(Me.TreeViewTaggedPatches)
         Me.TabPagePatches.Controls.Add(Me.ComboBoxPatchesFilter)
         Me.TabPagePatches.Controls.Add(Me.AvailablePatchesLabel)
         Me.TabPagePatches.Controls.Add(Me.TagFilterCheckBox)
@@ -426,21 +437,22 @@ Partial Class CreateRelease
         'AppFilterCheckBox
         '
         Me.AppFilterCheckBox.AutoSize = True
-        Me.AppFilterCheckBox.Location = New System.Drawing.Point(222, 46)
+        Me.AppFilterCheckBox.Location = New System.Drawing.Point(232, 40)
         Me.AppFilterCheckBox.Name = "AppFilterCheckBox"
         Me.AppFilterCheckBox.Size = New System.Drawing.Size(84, 17)
         Me.AppFilterCheckBox.TabIndex = 62
         Me.AppFilterCheckBox.Text = "Filter by App"
         Me.AppFilterCheckBox.UseVisualStyleBackColor = True
+        Me.AppFilterCheckBox.Visible = False
         '
-        'AvailablePatchesTreeView
+        'TreeViewTaggedPatches
         '
-        Me.AvailablePatchesTreeView.BackColor = System.Drawing.Color.Wheat
-        Me.AvailablePatchesTreeView.CheckBoxes = True
-        Me.AvailablePatchesTreeView.Location = New System.Drawing.Point(77, 76)
-        Me.AvailablePatchesTreeView.Name = "AvailablePatchesTreeView"
-        Me.AvailablePatchesTreeView.Size = New System.Drawing.Size(429, 619)
-        Me.AvailablePatchesTreeView.TabIndex = 61
+        Me.TreeViewTaggedPatches.BackColor = System.Drawing.Color.Wheat
+        Me.TreeViewTaggedPatches.CheckBoxes = True
+        Me.TreeViewTaggedPatches.Location = New System.Drawing.Point(77, 76)
+        Me.TreeViewTaggedPatches.Name = "TreeViewTaggedPatches"
+        Me.TreeViewTaggedPatches.Size = New System.Drawing.Size(429, 619)
+        Me.TreeViewTaggedPatches.TabIndex = 61
         '
         'ComboBoxPatchesFilter
         '
@@ -450,25 +462,27 @@ Partial Class CreateRelease
         Me.ComboBoxPatchesFilter.Name = "ComboBoxPatchesFilter"
         Me.ComboBoxPatchesFilter.Size = New System.Drawing.Size(139, 21)
         Me.ComboBoxPatchesFilter.TabIndex = 60
+        Me.ComboBoxPatchesFilter.Visible = False
         '
         'AvailablePatchesLabel
         '
         Me.AvailablePatchesLabel.AutoSize = True
-        Me.AvailablePatchesLabel.Location = New System.Drawing.Point(21, 76)
+        Me.AvailablePatchesLabel.Location = New System.Drawing.Point(10, 76)
         Me.AvailablePatchesLabel.Name = "AvailablePatchesLabel"
-        Me.AvailablePatchesLabel.Size = New System.Drawing.Size(50, 26)
+        Me.AvailablePatchesLabel.Size = New System.Drawing.Size(47, 26)
         Me.AvailablePatchesLabel.TabIndex = 41
-        Me.AvailablePatchesLabel.Text = "Available" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Patches"
+        Me.AvailablePatchesLabel.Text = "Tagged " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Patches"
         '
         'TagFilterCheckBox
         '
         Me.TagFilterCheckBox.AutoSize = True
-        Me.TagFilterCheckBox.Location = New System.Drawing.Point(222, 23)
+        Me.TagFilterCheckBox.Location = New System.Drawing.Point(232, 17)
         Me.TagFilterCheckBox.Name = "TagFilterCheckBox"
         Me.TagFilterCheckBox.Size = New System.Drawing.Size(89, 17)
         Me.TagFilterCheckBox.TabIndex = 40
         Me.TagFilterCheckBox.Text = "Filter by Tags"
         Me.TagFilterCheckBox.UseVisualStyleBackColor = True
+        Me.TagFilterCheckBox.Visible = False
         '
         'FindButton
         '
@@ -517,7 +531,7 @@ Partial Class CreateRelease
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(40, 76)
+        Me.Label15.Location = New System.Drawing.Point(10, 76)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(31, 13)
         Me.Label15.TabIndex = 13
@@ -562,21 +576,22 @@ Partial Class CreateRelease
         Me.PatchTabControl.Controls.Add(Me.TabPageTags)
         Me.PatchTabControl.Controls.Add(Me.TabPagePatches)
         Me.PatchTabControl.Controls.Add(Me.TabPagePreReqs)
-        Me.PatchTabControl.Controls.Add(Me.TabPagePatchDefn)
+        Me.PatchTabControl.Controls.Add(Me.TabPageBuildPatch)
         Me.PatchTabControl.Location = New System.Drawing.Point(12, 12)
         Me.PatchTabControl.Name = "PatchTabControl"
         Me.PatchTabControl.SelectedIndex = 0
         Me.PatchTabControl.Size = New System.Drawing.Size(529, 754)
         Me.PatchTabControl.TabIndex = 18
         '
-        'RevertVMButton
+        'Label4
         '
-        Me.RevertVMButton.Location = New System.Drawing.Point(317, 608)
-        Me.RevertVMButton.Name = "RevertVMButton"
-        Me.RevertVMButton.Size = New System.Drawing.Size(114, 23)
-        Me.RevertVMButton.TabIndex = 56
-        Me.RevertVMButton.Text = "Restore VM"
-        Me.RevertVMButton.UseVisualStyleBackColor = True
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(74, 60)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(422, 13)
+        Me.Label4.TabIndex = 63
+        Me.Label4.Text = "Unapplied patches are ticked by default.  Ticked patches will be included in the " &
+    "release."
         '
         'CreateRelease
         '
@@ -586,9 +601,9 @@ Partial Class CreateRelease
         Me.Controls.Add(Me.PatchTabControl)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "CreateRelease"
-        Me.Text = "CreatePatchCollection"
-        Me.TabPagePatchDefn.ResumeLayout(False)
-        Me.TabPagePatchDefn.PerformLayout()
+        Me.Text = "CreateRelease"
+        Me.TabPageBuildPatch.ResumeLayout(False)
+        Me.TabPageBuildPatch.PerformLayout()
         Me.TabPagePreReqs.ResumeLayout(False)
         Me.TabPagePreReqs.PerformLayout()
         Me.TabPagePatches.ResumeLayout(False)
@@ -600,7 +615,7 @@ Partial Class CreateRelease
 
     End Sub
 
-    Friend WithEvents TabPagePatchDefn As TabPage
+    Friend WithEvents TabPageBuildPatch As TabPage
     Friend WithEvents ExportButton As Button
     Friend WithEvents Label3 As Label
     Friend WithEvents ComitButton As Button
@@ -635,7 +650,7 @@ Partial Class CreateRelease
     Friend WithEvents Label13 As Label
     Friend WithEvents TabPagePatches As TabPage
     Friend WithEvents AppFilterCheckBox As CheckBox
-    Friend WithEvents AvailablePatchesTreeView As TreeViewEnhanced.TreeViewEnhanced
+    Friend WithEvents TreeViewTaggedPatches As TreeViewEnhanced.TreeViewEnhanced
     Friend WithEvents ComboBoxPatchesFilter As ComboBox
     Friend WithEvents AvailablePatchesLabel As Label
     Friend WithEvents TagFilterCheckBox As CheckBox
@@ -650,4 +665,5 @@ Partial Class CreateRelease
     Friend WithEvents Label2 As Label
     Friend WithEvents PatchTabControl As TabControl
     Friend WithEvents RevertVMButton As Button
+    Friend WithEvents Label4 As Label
 End Class

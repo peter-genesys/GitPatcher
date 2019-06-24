@@ -168,7 +168,7 @@ Partial Class PatchFromTags
         Me.TabPagePatchDefn.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPagePatchDefn.Size = New System.Drawing.Size(525, 732)
         Me.TabPagePatchDefn.TabIndex = 2
-        Me.TabPagePatchDefn.Text = "Create Patch"
+        Me.TabPagePatchDefn.Text = "Build Patch"
         Me.TabPagePatchDefn.UseVisualStyleBackColor = True
         '
         'RevertVMButton
@@ -782,7 +782,7 @@ Partial Class PatchFromTags
         'Label20
         '
         Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(74, 77)
+        Me.Label20.Location = New System.Drawing.Point(163, 74)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(198, 13)
         Me.Label20.TabIndex = 52
@@ -843,11 +843,11 @@ Partial Class PatchFromTags
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(22, 93)
+        Me.Label3.Location = New System.Drawing.Point(20, 74)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(49, 13)
+        Me.Label3.Size = New System.Drawing.Size(89, 13)
         Me.Label3.TabIndex = 6
-        Me.Label3.Text = "Changes"
+        Me.Label3.Text = "Tagged Changes"
         '
         'ViewButton
         '

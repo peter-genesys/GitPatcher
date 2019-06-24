@@ -1574,4 +1574,5 @@ Public Class PatchFromTags
     Private Sub RevertVMButton_Click(sender As Object, e As EventArgs) Handles RevertVMButton.Click
         WF_virtual_box.revertVM("Reverting", False, "post-rebase")
     End Sub
+
 End Class
