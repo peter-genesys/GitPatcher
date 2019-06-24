@@ -180,6 +180,7 @@
                 Return False
 
             End If
+
         Catch ex As System.IndexOutOfRangeException
             Logger.Dbg("Steps completed.")
             Logger.Note("activeStep", activeStep)

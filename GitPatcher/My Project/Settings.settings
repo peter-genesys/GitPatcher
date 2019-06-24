@@ -92,14 +92,17 @@
     <Setting Name="VirtualBoxer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="CreateVersion" Type="System.String" Scope="User">
+    <Setting Name="CreateVersion" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="RunRelease" Type="System.String" Scope="User">
+    <Setting Name="RunRelease" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="DefaultVersionType" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Minor Version</Value>
+      <Value Profile="(Default)">Minor</Value>
+    </Setting>
+    <Setting Name="LogViewerShow" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

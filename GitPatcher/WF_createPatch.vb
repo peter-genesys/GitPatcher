@@ -59,11 +59,12 @@
         'MERGE-FEATURE
         createPatchProgress.addStep("Merge from Branch: " & currentBranch, True, "Please select the Branch:" & currentBranch & " from the Tortoise Merge Dialogue")
         'PUSH-MASTER
-        createPatchProgress.addStep("Push to Origin", True, "If at this stage there is an error because your " & iRebaseBranchOn & " branch is out of date, then you must restart the process to ensure you are patching the lastest merged files.")
-        'SYNCH
-        createPatchProgress.addStep("Synch to Verify Push", True, "Should say '0 commits ahead orgin/" & iRebaseBranchOn & "'.  " _
-                                 & "If NOT, then the push FAILED. Your " & iRebaseBranchOn & " branch is now out of date, so is your rebase from it, and any patches COULD BE stale. " _
-                                 & "In this situation, it is safest to restart the Create Patch process to ensure you are patching the lastest merged files. ")
+        createPatchProgress.addStep("Push to Origin", True,
+                                    "If the push is not successful, the TortoiseGIT Synchronisation dialog will be raised." & Chr(10) &
+                                    "Should say '0 commits ahead orgin/" & iRebaseBranchOn & "'." & Chr(10) &
+                                    "If NOT, then your " & iRebaseBranchOn & " branch may now out of date, and also your rebase from it.  So any patches you created COULD BE stale. " &
+                                    "In this situation, it is safest to restart the Create Patch process to ensure you are patching the lastest merged files. ")
+
         'RELEASE-DEV
         createPatchProgress.addStep("Release to " & iDBtarget, True)
         'RETURN-FEATURE
@@ -261,12 +262,6 @@
             If createPatchProgress.toDoNextStep() Then
                 'Push to origin/develop 
                 GitOp.pushBranch(iRebaseBranchOn)
-            End If
-
-            'SYNCH
-            If createPatchProgress.toDoNextStep() Then
-                'Synch command to verfiy that Push was successful.
-                Tortoise.Sync(Globals.getRepoPath)
             End If
 
             'RELEASE-DEV

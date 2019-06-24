@@ -396,9 +396,9 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
-        Public Property CreateVersion() As String
+        Public Property CreateVersion() As Boolean
             Get
-                Return CType(Me("CreateVersion"),String)
+                Return CType(Me("CreateVersion"),Boolean)
             End Get
             Set
                 Me("CreateVersion") = value
@@ -408,9 +408,9 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
-        Public Property RunRelease() As String
+        Public Property RunRelease() As Boolean
             Get
-                Return CType(Me("RunRelease"),String)
+                Return CType(Me("RunRelease"),Boolean)
             End Get
             Set
                 Me("RunRelease") = value
@@ -419,11 +419,23 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Minor Version")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Minor")>  _
         Public ReadOnly Property DefaultVersionType() As String
             Get
                 Return CType(Me("DefaultVersionType"),String)
             End Get
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property LogViewerShow() As Boolean
+            Get
+                Return CType(Me("LogViewerShow"),Boolean)
+            End Get
+            Set
+                Me("LogViewerShow") = value
+            End Set
         End Property
     End Class
 End Namespace

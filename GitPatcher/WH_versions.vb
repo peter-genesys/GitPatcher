@@ -30,11 +30,9 @@
         mergeBranchProgess.addStep("Merge " & mergeBranch & " branch - No-FastForward", True, "Merge " & mergeBranch & " branch, to " & baseBranch & " branch, no-fastforward.  Always create a new commit on " & baseBranch & ".", Not iFastForward)
 
         'PUSH-BASE-BRANCH
-        mergeBranchProgess.addStep("Push " & baseBranch & " branch", True, "Push the " & baseBranch & " branch.  This effectively publishes " & mergeBranch & " branch to " & baseBranch & " branch.")
-
-        'SYNCH-BASE-BRANCH
-        mergeBranchProgess.addStep("Synch to Verify Push", True, "Should say '0 commits ahead orgin/" & baseBranch)
-
+        mergeBranchProgess.addStep("Push " & baseBranch & " branch", True,
+                                   "Push the " & baseBranch & " branch.  This effectively publishes " & mergeBranch & " branch to " & baseBranch & " branch." & Chr(10) &
+                                   "If the push is not successful, the TortoiseGIT Synchronisation dialog will be raised.")
 
         mergeBranchProgess.Show()
 
@@ -73,11 +71,6 @@
                 GitOp.pushBranch(baseBranch)
             End If
 
-            'SYNCH-BASE-BRANCH
-            If mergeBranchProgess.toDoNextStep() Then
-                Tortoise.Sync(Globals.getRepoPath)
-            End If
-
             'Done
             mergeBranchProgess.toDoNextStep()
 
@@ -95,91 +88,6 @@
     End Sub
 
 
-
-    Shared Sub mergeReleaseToMaster(ByVal iVersionType As String, newBranch As String)
-
-
-        Dim currentBranch As String = GitOp.CurrentBranch()
-        'Dim lcurrentDB As String = Globals.getDB
-        'Dim l_app_version As String = Nothing
-        'Dim newBranch As String = "release"
-
-
-        'l_app_version = Globals.currentAppCode & "-" & l_app_version
-
-        'Dim newBranch As String = "release/" & iCreatePatchType & "/" & Globals.currentAppCode & "/" & l_app_version
-
-
-        Dim mergeRelease As ProgressDialogue = New ProgressDialogue("Merge " & iVersionType & " Version Release to master", "Merge " & iVersionType & " Version Release to master.")
-        mergeRelease.MdiParent = GitPatcher
-
-        'SWITCH-TO-MASTER
-        mergeRelease.addStep("Switch to master branch", currentBranch <> "master")
-
-        'PULL
-        mergeRelease.addStep("Pull master branch", True, "Ensure master branch is upto date.")
-
-        'MERGE(NOFF)-NEW-RELEASE
-        mergeRelease.addStep("Merge new release", True, "Merge new Release to master, no-fastforward.")
-
-        'PUSH
-        mergeRelease.addStep("Push master branch", True, "Push the master branch.  This effectively publishes the Release to master branch.")
-
-        'SYNCH
-        mergeRelease.addStep("Synch to Verify Push", True, "Should say '0 commits ahead orgin/master")
-
-
-        mergeRelease.Show()
-
-        Do Until mergeRelease.isStarted
-            Common.Wait(1000)
-        Loop
-        Try
-
-
-            'SWITCH-TO-MASTER
-            If mergeRelease.toDoNextStep() Then
-                'Switch to master branch
-                GitOp.SwitchBranch("master")
-            End If
-
-            'PULL
-            If mergeRelease.toDoNextStep() Then
-                'Pull from origin/master
-                GitOp.pullBranch("master")
-            End If
-
-            'MERGE(NOFF)-NEW-RELEASE
-            If mergeRelease.toDoNextStep() Then
-                'Merge from new release branch
-                GitOp.Merge(newBranch)
-            End If
-
-            'PUSH MASTER
-            If mergeRelease.toDoNextStep() Then
-                GitOp.pushBranch("master")
-            End If
-
-            'SYNCH MASTER
-            If mergeRelease.toDoNextStep() Then
-                Tortoise.Sync(Globals.getRepoPath)
-            End If
-
-            'Done
-            mergeRelease.toDoNextStep()
-
-
-
-        Catch ex As Exception
-            'Finish workflow if an error occurs
-            MsgBox(ex.Message)
-            mergeRelease.setToCompleted()
-            mergeRelease.Close()
-        End Try
-
-
-
-    End Sub
 
 
 
@@ -202,7 +110,7 @@
         MajorMinorVersion.MdiParent = GitPatcher
 
         '-------------------
-        'PREPARE BRANCH
+        'PREPARE BRANCH - 10 steps
         '-------------------
 
 
@@ -246,7 +154,7 @@
 
 
         '-------------------
-        'CREATE PATCH 
+        'CREATE PATCH  - 3 steps
         '-------------------
 
         'SET DB TARGET
@@ -263,7 +171,7 @@
 
 
         '-------------------
-        'MERGE NEW-RELEASE BRANCH INTO RELEASES
+        'MERGE NEW-RELEASE BRANCH INTO RELEASES - sub-workflow
         '-------------------
         MajorMinorVersion.addStep("Fast-forward releases branch to head of new release branch", True, "Merge new release to releases branch, fastforward-only", useReleasesBranch)
 
@@ -281,7 +189,7 @@
         'MajorMinorVersion.addStep("Push releases branch", True, "Push the releases branch.  Move the releases pointer to the head of the new release.", useReleasesBranch)
 
         '-------------------
-        'MERGE NEW-RELEASE BRANCH INTO INTO MASTER
+        'MERGE NEW-RELEASE BRANCH INTO INTO MASTER - sub-workflow
         '-------------------
         MajorMinorVersion.addStep("Merge new release branch to master", True, "Merge new release to master branch, no-fastforward-only")
 
@@ -309,7 +217,7 @@
         Try
 
             '-------------------
-            'PREPARE BRANCH
+            'PREPARE BRANCH - 10 steps
             '-------------------
 
             'SWITCH-TO-MASTER
@@ -325,10 +233,15 @@
             End If
 
             'SWITCH-TO_RELEASES 
-            MajorMinorVersion.addStep("Switch to releases branch", True, "", useReleasesBranch)
+            If MajorMinorVersion.toDoNextStep() Then
+                GitOp.SwitchBranch("releases")
+            End If
 
             'PULL-RELEASES
-            MajorMinorVersion.addStep("Pull releases branch", True, "Ensure releases branch is upto date.", useReleasesBranch)
+            If MajorMinorVersion.toDoNextStep() Then
+                'Pull from origin/master
+                GitOp.pullBranch("releases")
+            End If
 
             'SWITCH-TO-LAST-RELEASE
             If MajorMinorVersion.toDoNextStep() Then
@@ -372,11 +285,12 @@
             'PUSH-NEW-RELEASE
             If MajorMinorVersion.toDoNextStep() Then
                 'Push release to origin with tags
-                GitOp.pushBranch(newReleaseBranch)
+                'GitOp.pushBranch(newReleaseBranch)
+                GitOp.pushCurrentBranch()
             End If
 
             '-------------------
-            'CREATE PATCH 
+            'CREATE PATCH  - 3 steps
             '-------------------
 
             'SET DB TARGET
@@ -394,11 +308,14 @@
             End If
 
             'PUSH-NEW-RELEASE
-            MajorMinorVersion.addStep("Push the new release Branch", True, "Ensure other developers can see the new release patch.")
+            If MajorMinorVersion.toDoNextStep() Then
+                'Push release to origin with tags
+                GitOp.pushCurrentBranch()
+            End If
 
 
             '-------------------
-            'MERGE NEW-RELEASE BRANCH INTO RELEASES
+            'MERGE NEW-RELEASE BRANCH INTO RELEASES - sub-workflow
             '-------------------
             If MajorMinorVersion.toDoNextStep() Then
                 mergeBranchAndPush(iVersionType, "releases", newReleaseBranch, True)
@@ -418,7 +335,7 @@
             'MajorMinorVersion.addStep("Push releases branch", True, "Push the releases branch.  Move the releases pointer to the head of the new release.", useReleasesBranch)
 
             '-------------------
-            'MERGE NEW-RELEASE BRANCH INTO INTO MASTER
+            'MERGE NEW-RELEASE BRANCH INTO INTO MASTER - sub-workflow
             '-------------------
 
             'Either Need to call sub workflow or compress these steps so there are not so many.
@@ -480,7 +397,7 @@
         Dim currentBranch As String = GitOp.CurrentBranch()
         Dim lcurrentDB As String = Globals.getDB
         Dim l_app_version As String = Nothing
-        Dim newBranch As String = "release"
+        Dim newReleaseBranch As String = "release"
 
 
         'l_app_version = Globals.currentAppCode & "-" & l_app_version
@@ -593,17 +510,17 @@
                 End If
 
                 If Globals.getAppInFeature() = "Y" Then
-                    newBranch = newBranch & "/" & Globals.currentAppCode
+                    newReleaseBranch = newReleaseBranch & "/" & Globals.currentAppCode
                 End If
 
-                newBranch = newBranch & "/" & l_app_version
+                newReleaseBranch = newReleaseBranch & "/" & l_app_version
 
             End If
 
             'BRANCH-TO-NEW-RELEASE
             If PatchVersion.toDoNextStep() Then
                 'Create and Switch to new release branch
-                GitOp.createAndSwitchBranch(newBranch)
+                GitOp.createAndSwitchBranch(newReleaseBranch)
             End If
 
             'MERGE(NOFF)-FROM-MASTER-CHOOSE-SHA
@@ -615,7 +532,7 @@
             'PUSH-NEW-RELEASE
             If PatchVersion.toDoNextStep() Then
                 'Push release to origin with tags
-                GitOp.pushBranch(newBranch)
+                GitOp.pushBranch(newReleaseBranch)
             End If
 
             '-------------------
@@ -636,10 +553,21 @@
 
             End If
 
+
+            '-------------------
+            'MERGE NEW-RELEASE BRANCH INTO RELEASES - sub-workflow
+            '-------------------
+            If PatchVersion.toDoNextStep() Then
+                mergeBranchAndPush(iVersionType, "releases", newReleaseBranch, True)
+            End If
+
+            '-------------------
+            'MERGE NEW-RELEASE BRANCH INTO INTO MASTER - sub-workflow
+            '-------------------
+
             'MERGE-RELEASE
             If PatchVersion.toDoNextStep() Then
-                'Switch to master branch
-                mergeReleaseToMaster(iVersionType, newBranch)
+                mergeBranchAndPush(iVersionType, "master", newReleaseBranch, False)
             End If
 
 

@@ -679,6 +679,9 @@
 
     Private Sub LogViewerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LogViewerToolStripMenuItem.Click
         LogViewer.Show()
+        My.Settings.LogViewerShow = True
+        My.Settings.Save()
+
     End Sub
 
     Private Sub TestSQLclToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestSQLclToolStripMenuItem.Click

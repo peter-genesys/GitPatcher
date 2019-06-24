@@ -483,10 +483,8 @@ Public Class GitOp
 
 
 
-
-
-
     Shared Sub pushBranch(ByVal ibranch_name As String, Optional ByVal iremote_name As String = "origin")
+        Logger.Dbg("GitOp.pushBranch(" & ibranch_name & "," & iremote_name & ")")
 
         Dim theSetting As String = My.Settings.PushTool
         Dim ToolName As String = "PushTool"
@@ -500,7 +498,11 @@ Public Class GitOp
                 'MsgBox(ToolName + " TortoiseGit not currently implimented")
                     Case "BGIT"
                         Try
-                            GitBash.Push(Globals.getRepoPath, iremote_name, ibranch_name, True)
+                            If Not GitBash.PushSuccess(Globals.getRepoPath, iremote_name, ibranch_name, True) Then
+                                MsgBox("Push has failed.  The Synchronisation screen may help you resolve the issue.")
+                                'If push fails show the synch screen.
+                                Tortoise.Sync(Globals.getRepoPath)
+                            End If
                         Catch ex As Exception
                             MsgBox(ex.Message)
                             Throw New System.Exception("Check GitBash configuration.")
@@ -548,7 +550,7 @@ Public Class GitOp
 
     Shared Sub pushCurrentBranch()
         'push current branch
-
+        Logger.Dbg("GitOp.pushCurrentBranch")
         pushBranch(CurrentBranch)
 
     End Sub
