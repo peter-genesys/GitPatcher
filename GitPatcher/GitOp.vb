@@ -112,7 +112,7 @@ Public Class GitOp
         'Output outNames       - a collection of Names, initialised with inNames
         '  If nameFilter is null - then all branches found in the repo are appended to outNames.
         '  If nameFilter is NOT null then only branches with branches name that contain the filter will be appended to outNames.
-
+        Logger.Note("getBranchNameList(nameFilter)", nameFilter)
 
         Dim outNames As Collection = inNames
 

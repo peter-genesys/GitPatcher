@@ -113,6 +113,32 @@
         'PREPARE BRANCH - 12 steps
         '-------------------
 
+        'IDENTIFY-LAST-RELEASE-BRANCH
+        MajorMinorVersion.addStep("Identify the Last Release branch", True, "Identify the release branch.", True)
+
+        'PULL-LAST-RELEASE-BRANCH
+        MajorMinorVersion.addStep("Pull the Last Release branch", True, "Switch to the Last Release branch and Pull", False)
+
+        'PULL-RELEASES-BRANCH
+        MajorMinorVersion.addStep("Pull the releases branch", True, "Switch to the releases branch and Pull", useReleasesBranch)
+
+        'PULL-MASTER-BRANCH
+        MajorMinorVersion.addStep("Pull the master branch", True, "Switch to the master branch and Pull", False)
+
+        'SWITCH-TO-MASTER-CANDIDATE-COMMIT
+        MajorMinorVersion.addStep("Switch to the master candidate commit", True,
+                                  "Choose a commit on the master branch to create the new release from." &
+                                  "Patches and Apex Apps will be released as per this commit.", True)
+
+        'BRANCH-TO-NEW-RELEASE    'LGIT - automatic.
+        MajorMinorVersion.addStep("Branch to new release Branch", True,
+                                  "Branch from the candidate commit to the new release.", True)
+
+
+
+
+
+
 
         'SWITCH-TO-MASTER
         MajorMinorVersion.addStep("Switch to master branch", currentBranch <> "master")
@@ -199,28 +225,73 @@
             'PREPARE BRANCH - 12 steps
             '-------------------
 
-            'SWITCH-TO-MASTER
+            Dim lastReleaseBranch2 As String = Nothing
+
+            'IDENTIFY-LAST-RELEASE-BRANCH
+            If MajorMinorVersion.toDoNextStep() Then
+
+                Dim releaseBranches As Collection = New Collection()
+                releaseBranches = GitOp.getBranchNameList(releaseBranches, "release/" & Globals.currentAppCode & "/")
+
+                lastReleaseBranch2 = ChoiceDialog.Ask("Please identify the last release branch for this app: " & Globals.currentAppCode, releaseBranches, "", "Identify last release branch", False, False, False)
+
+            End If
+
+            'PULL-LAST-RELEASE-BRANCH
+            If MajorMinorVersion.toDoNextStep() Then
+                'Switch to master branch
+                GitOp.SwitchBranch(lastReleaseBranch2)
+                'Pull from origin/master
+                GitOp.pullBranch(lastReleaseBranch2)
+            End If
+
+
+            'PULL-RELEASES-BRANCH
+            If MajorMinorVersion.toDoNextStep() Then
+                'Switch to master branch
+                GitOp.SwitchBranch("releases")
+                'Pull from origin/master
+                GitOp.pullBranch("releases")
+            End If
+
+            'PULL-MASTER-BRANCH
             If MajorMinorVersion.toDoNextStep() Then
                 'Switch to master branch
                 GitOp.SwitchBranch("master")
-            End If
-
-            'PULL-MASTER
-            If MajorMinorVersion.toDoNextStep() Then
                 'Pull from origin/master
                 GitOp.pullBranch("master")
             End If
 
-            'SWITCH-TO_RELEASES 
+
+            'SWITCH-TO-MASTER-CANDIDATE-COMMIT
             If MajorMinorVersion.toDoNextStep() Then
-                GitOp.SwitchBranch("releases")
+                'Switch to candidate commit
+                Tortoise.Switch(Globals.getRepoPath)
             End If
 
-            'PULL-RELEASES
+            'BRANCH-TO-NEW-RELEASE
             If MajorMinorVersion.toDoNextStep() Then
-                'Pull from origin/master
-                GitOp.pullBranch("releases")
+
+
+
+
+                'Create and Switch to new release branch
+                GitOp.createAndSwitchBranch(newReleaseBranch)
             End If
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             'SWITCH-TO-LAST-RELEASE
             If MajorMinorVersion.toDoNextStep() Then
