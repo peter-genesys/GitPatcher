@@ -1,5 +1,5 @@
 ﻿Friend Class WF_release
-    Shared Sub releaseTo(iTargetDB As String, Optional ByVal iBranchType As String = "")
+    Shared Sub releaseTo(ByVal iTargetDB As String, ByVal ireleaseFromBranch As String, ByVal iBranchType As String, ByVal iPull As Boolean)
 
         Dim InstallStatus As String = "Unapplied"
 
@@ -7,59 +7,69 @@
 
         Dim currentBranch As String = GitOp.CurrentBranch()
 
-        Dim releaseFromBranch As String = Globals.deriveHotfixBranch(iTargetDB)
+        'Dim releaseFromBranch As String = Globals.deriveHotfixBranch(iTargetDB)
 
         Dim releasing As ProgressDialogue = New ProgressDialogue("Release to " & iTargetDB)
 
         releasing.MdiParent = GitPatcher
-        releasing.addStep("Change current DB to : " & iTargetDB, lcurrentDB <> iTargetDB)
-        releasing.addStep("Switch to " & releaseFromBranch & " branch", currentBranch <> releaseFromBranch)
-        releasing.addStep("Pull from Origin to " & releaseFromBranch & " branch", True)
 
+        'CHANGE-DB-TARGET
+        releasing.addStep("Change current DB to : " & iTargetDB, lcurrentDB <> iTargetDB)
+        'SWITCH-BRANCH
+        releasing.addStep("Switch to " & ireleaseFromBranch & " branch", currentBranch <> ireleaseFromBranch)
+        'PULL-BRANCH
+        releasing.addStep("Pull from Origin to " & ireleaseFromBranch & " branch", iPull)
+        'CHECK-OUT-TAG
         releasing.addStep("Choose a tag to release from and checkout the tag", False)
 
-        'REVERT-VM
+        'RESTORE-VM
         releasing.addStep("Restore to a clean VM snapshot", True, "GitPatcher will restore your VM to a clean VM snapshot." &
                          Environment.NewLine & "Before releasing patches to the VM, restore to a clean VM snapshot.", iTargetDB = "VM")
         'PATCH-RUNNER
+        releasing.addStep("Use PatchRunner to run " & InstallStatus & " " & iBranchType & " Patches", True, "")
 
-        releasing.addStep("Use PatchRunner to run " & InstallStatus & " Patches", True, "")
+        'IMPORT-APPS
+        releasing.addStep("Import any queued apps from branch " & ireleaseFromBranch, True, "Any Apex Apps that were included in a patch, must be reinstalled now. ")
 
-        releasing.addStep("Import any queued apps: " & releaseFromBranch, True, "Any Apex Apps that were included in a patch, must be reinstalled now. ")
+        'SMOKE-TEST
+        releasing.addStep("Smoke Test", True, "Perform a quick test to verify the patched system is working in " & iTargetDB)
 
-            'releasing.addStep("Import Apex", True, "Using the Apex2Git") '"Using the Apex Import workflow")
-            releasing.addStep("Smoke Test", True, "Perform a quick test to verify the patched system is working in " & iTargetDB)
+        'CLEAN-VM-SNAPSHOT
+        releasing.addStep("Clean VM Snapshot", True, "Create a clean snapshot of your current VM state, to use as your next restore point.", iTargetDB = "VM")
 
-            releasing.addStep("Clean VM Snapshot", True, "Create a clean snapshot of your current VM state, to use as your next restore point.", iTargetDB = "VM")
-
-
-            releasing.addStep("Reset current DB to : " & lcurrentDB, lcurrentDB <> iTargetDB)
-            releasing.Show()
-
+        'RESET-DB-TARGET
+        releasing.addStep("Reset current DB to : " & lcurrentDB, lcurrentDB <> iTargetDB)
+        releasing.Show()
 
 
-            Do Until releasing.isStarted
-                Common.wait(1000)
-            Loop
 
+        Do Until releasing.isStarted
+            Common.Wait(1000)
+        Loop
+        Try
+            'CHANGE-DB-TARGET
             If releasing.toDoNextStep() Then
                 'Change current DB to release DB
                 Globals.setDB(iTargetDB.ToUpper)
-            'OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+                'OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
 
-        End If
+            End If
 
+            'SWITCH-BRANCH
             If releasing.toDoNextStep() Then
                 'Switch to develop branch
-                GitOp.SwitchBranch(releaseFromBranch)
+                GitOp.SwitchBranch(ireleaseFromBranch)
 
             End If
+
+            'PULL-BRANCH
             If releasing.toDoNextStep() Then
                 'Pull from origin/develop
-                GitOp.pullBranch(releaseFromBranch)
+                GitOp.pullBranch(ireleaseFromBranch)
 
             End If
 
+            'CHECK-OUT-TAG
             If releasing.toDoNextStep() Then
                 'Choose a tag to import from
                 Dim tagnames As Collection = New Collection
@@ -75,40 +85,45 @@
 
             End If
 
-            'REVERT-VM
+            'RESTORE-VM
             If releasing.toDoNextStep() Then
                 'Revert VM
                 If My.Settings.VBoxName = "No VM" Then
-                MsgBox("Please create a snapshot of your current VM state, and then restore to a clean VM snapshot.", MsgBoxStyle.Exclamation, "Revert VM")
-            Else
+                    MsgBox("Please create a snapshot of your current VM state, and then restore to a clean VM snapshot.", MsgBoxStyle.Exclamation, "Revert VM")
+                Else
                     WF_virtual_box.revertVM("Reverting", True, "clean")
                 End If
 
 
             End If
 
-        Dim l_no_patches As Boolean = True
-        If releasing.toDoNextStep() Then
-            'Use PatchRunner to run  Uninstalled/Unapplied Patches
 
-            Dim GitPatcherChild As PatchRunner = New PatchRunner(l_no_patches, InstallStatus, iBranchType)
+            'PATCH-RUNNER
+            Dim l_no_patches As Boolean = True
+            If releasing.toDoNextStep() Then
+                'Use PatchRunner to run  Uninstalled/Unapplied Patches
 
-        End If
+                Dim GitPatcherChild As PatchRunner = New PatchRunner(l_no_patches, InstallStatus, iBranchType)
 
-        Dim l_no_queued_apps As Boolean = True
-        If releasing.toDoNextStep() Then
-            'Install queued Apex Apps.
-            'Start the ApexAppInstaller and wait until it closes.
-            Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller(l_no_queued_apps, "Queued")
+            End If
 
-        End If
+            'IMPORT-APPS
+            Dim l_no_queued_apps As Boolean = True
+            If releasing.toDoNextStep() Then
+                'Install queued Apex Apps.
+                'Start the ApexAppInstaller and wait until it closes.
+                Dim GitPatcherChild As ApexAppInstaller = New ApexAppInstaller(l_no_queued_apps, "Queued")
 
-        If releasing.toDoNextStep() Then
+            End If
+
+            'SMOKE-TEST
+            If releasing.toDoNextStep() Then
                 'Smoke Test 
                 MsgBox("Perform a quick test to verify the patched system is working in " & iTargetDB, MsgBoxStyle.Information, "Smoke Test")
 
             End If
 
+            'CLEAN-VM-SNAPSHOT
             If releasing.toDoNextStep() Then
                 'Snapshot VM
                 If My.Settings.VBoxName = "No VM" Then
@@ -117,20 +132,26 @@
                     WF_virtual_box.takeSnapshot(PatchRunner.GetlastSuccessfulPatch & "-clean")
                 End If
 
-
-
             End If
 
-
+            'RESET-DB-TARGET
             If releasing.toDoNextStep() Then
                 'Reset current DB  
                 Globals.setDB(lcurrentDB.ToUpper)
-            'OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
+                'OrgSettings.retrieveOrg(Globals.getOrgName, Globals.getDB, Globals.getRepoName)
 
-        End If
+            End If
 
-            'Finish
+            'Done
             releasing.toDoNextStep()
+
+        Catch ex As Exception
+            'Finish workflow if an error occurs
+            MsgBox(ex.Message)
+            releasing.setToCompleted()
+            releasing.Close()
+        End Try
+
     End Sub
 
 
@@ -228,148 +249,153 @@
             Common.wait(1000)
         Loop
 
+        Try
 
-        'SET DB TARGET
-        If createPatchSetProgress.toDoNextStep() Then
-            'Change current DB to release DB
-            Globals.setDB(iTargetDB.ToUpper)
+            'SET DB TARGET
+            If createPatchSetProgress.toDoNextStep() Then
+                'Change current DB to release DB
+                Globals.setDB(iTargetDB.ToUpper)
 
-        End If
+            End If
 
-        'SWITCH TO MASTER
-        If createPatchSetProgress.toDoNextStep() Then
-            'Switch to master branch
-            GitOp.SwitchBranch("master")
+            'SWITCH TO MASTER
+            If createPatchSetProgress.toDoNextStep() Then
+                'Switch to master branch
+                GitOp.SwitchBranch("master")
 
-        End If
+            End If
 
-        'PULL MASTER
-        If createPatchSetProgress.toDoNextStep() Then
-            'Pull from origin/master
-            GitOp.pullBranch("master")
+            'PULL MASTER
+            If createPatchSetProgress.toDoNextStep() Then
+                'Pull from origin/master
+                GitOp.pullBranch("master")
 
-        End If
+            End If
 
-        'SWITCH TO RELEASE BASE
-        If createPatchSetProgress.toDoNextStep() Then
-            'Switch to last release branch
-            Tortoise.Switch(Globals.getRepoPath)
-        End If
-
-
-        'PULL RELEASE BASE
-        If createPatchSetProgress.toDoNextStep() Then
-            'Pull 
-            GitOp.pullBranch("") 'LGIT does not use the branch param. BGIT does.
-        End If
-
-        'CREATE NEW RELEASE
-        If createPatchSetProgress.toDoNextStep() Then
-            'Create and Switch to new release branch
-            GitOp.createAndSwitchBranch(newBranch)
-
-        End If
-
-        'MERGE PATCHES FROM MASTER
-        If createPatchSetProgress.toDoNextStep() Then
-            'Merge from master branch
-            Tortoise.Merge(Globals.getRepoPath)
-        End If
-
-        'CREATE RELEASE PATCH
-        If createPatchSetProgress.toDoNextStep() Then
-            Dim l_tag_seq As Integer
-            'Create, edit And test collection
-            Dim Wizard As New CreateRelease(l_app_version, l_tag_seq, "Minor", iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes, iSupPatchTypes)
-
-        End If
+            'SWITCH TO RELEASE BASE
+            If createPatchSetProgress.toDoNextStep() Then
+                'Switch to last release branch
+                Tortoise.Switch(Globals.getRepoPath)
+            End If
 
 
-        'PUSH NEW RELEASE
-        If createPatchSetProgress.toDoNextStep() Then
-            'Push release to origin with tags
-            GitOp.pushBranch(newBranch)
+            'PULL RELEASE BASE
+            If createPatchSetProgress.toDoNextStep() Then
+                'Pull 
+                GitOp.pullBranch("") 'LGIT does not use the branch param. BGIT does.
+            End If
 
-        End If
+            'CREATE NEW RELEASE
+            If createPatchSetProgress.toDoNextStep() Then
+                'Create and Switch to new release branch
+                GitOp.createAndSwitchBranch(newBranch)
 
-        'RELEASE UAT
-        If createPatchSetProgress.toDoNextStep() Then
-            'Release to UAT
-            WF_release.releaseTo("UAT")
-        End If
+            End If
 
-        'RELEASE PROD
-        If createPatchSetProgress.toDoNextStep() Then
-            'Release to PROD
-            WF_release.releaseTo("PROD")
-        End If
+            'MERGE PATCHES FROM MASTER
+            If createPatchSetProgress.toDoNextStep() Then
+                'Merge from master branch
+                Tortoise.Merge(Globals.getRepoPath)
+            End If
 
+            'CREATE RELEASE PATCH
+            If createPatchSetProgress.toDoNextStep() Then
+                Dim l_tag_seq As Integer
+                'Create, edit And test collection
+                Dim Wizard As New CreateRelease(l_app_version, l_tag_seq, "Minor", iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes, iSupPatchTypes)
 
-
-        'RESET CURRENT DB
-        If createPatchSetProgress.toDoNextStep() Then
-            'Revert current DB  
-            Globals.setDB(lcurrentDB.ToUpper)
-
-        End If
-
-        'Done
-        createPatchSetProgress.toDoNextStep()
+            End If
 
 
-        'If createPatchSetProgress.toDoNextStep() Then
-        '    'Bump Apex version 
-        '    CreateRelease.bumpApexVersion(l_app_version)
+            'PUSH NEW RELEASE
+            If createPatchSetProgress.toDoNextStep() Then
+                'Push release to origin with tags
+                GitOp.pushBranch(newBranch)
 
-        'End If
-        'If createPatchSetProgress.toDoNextStep() Then
-        '    'Commit Apex version 
-        '    Tortoise.Commit(Globals.getRepoPath, "Bump Apex " & Globals.currentApex & " to " & l_app_version)
+            End If
 
+            'RELEASE UAT
+            If createPatchSetProgress.toDoNextStep() Then
+                'Release to UAT
+                WF_release.releaseTo("UAT", "release", "", True)
+            End If
 
-        'End If
-        'If createPatchSetProgress.toDoNextStep() Then
-        '    'Tag this commit
-        '    GitBash.TagSimple(Globals.getRepoPath, l_app_version)
-
-        'End If
-
-
-        'If createPatchSetProgress.toDoNextStep() Then
-        '    'Merge Patchset to develop 
-        '    WF_mergeAndPush.mergeAndPushBranch("patchset", "develop")
-
-        'End If
-
-        'If createPatchSetProgress.toDoNextStep() Then
-        '    'Merge Patchset to test 
-        '    WF_mergeAndPush.mergeAndPushBranch("patchset", "test")
-
-        'End If
-
-        'If createPatchSetProgress.toDoNextStep() Then
-        '    'Merge Patchset to uat 
-        '    WF_mergeAndPush.mergeAndPushBranch("patchset", "uat")
-
-        'End If
-
-        'If createPatchSetProgress.toDoNextStep() Then
-        '    'Merge Patchset to master 
-        '    WF_mergeAndPush.mergeAndPushBranch("patchset", "master")
-
-        'End If
-
-        'If createPatchSetProgress.toDoNextStep() Then
-        '    'Release to ISDEVL
-        '    WF_release.releaseTo("DEV")
-        'End If
-
-        'If createPatchSetProgress.toDoNextStep() Then
-        '    'Release to ISTEST
-        '    WF_release.releaseTo("TEST")
-        'End If
+            'RELEASE PROD
+            If createPatchSetProgress.toDoNextStep() Then
+                'Release to PROD
+                WF_release.releaseTo("PROD", "release", "", True)
+            End If
 
 
+
+            'RESET CURRENT DB
+            If createPatchSetProgress.toDoNextStep() Then
+                'Revert current DB  
+                Globals.setDB(lcurrentDB.ToUpper)
+
+            End If
+
+            'Done
+            createPatchSetProgress.toDoNextStep()
+
+
+            'If createPatchSetProgress.toDoNextStep() Then
+            '    'Bump Apex version 
+            '    CreateRelease.bumpApexVersion(l_app_version)
+
+            'End If
+            'If createPatchSetProgress.toDoNextStep() Then
+            '    'Commit Apex version 
+            '    Tortoise.Commit(Globals.getRepoPath, "Bump Apex " & Globals.currentApex & " to " & l_app_version)
+
+
+            'End If
+            'If createPatchSetProgress.toDoNextStep() Then
+            '    'Tag this commit
+            '    GitBash.TagSimple(Globals.getRepoPath, l_app_version)
+
+            'End If
+
+
+            'If createPatchSetProgress.toDoNextStep() Then
+            '    'Merge Patchset to develop 
+            '    WF_mergeAndPush.mergeAndPushBranch("patchset", "develop")
+
+            'End If
+
+            'If createPatchSetProgress.toDoNextStep() Then
+            '    'Merge Patchset to test 
+            '    WF_mergeAndPush.mergeAndPushBranch("patchset", "test")
+
+            'End If
+
+            'If createPatchSetProgress.toDoNextStep() Then
+            '    'Merge Patchset to uat 
+            '    WF_mergeAndPush.mergeAndPushBranch("patchset", "uat")
+
+            'End If
+
+            'If createPatchSetProgress.toDoNextStep() Then
+            '    'Merge Patchset to master 
+            '    WF_mergeAndPush.mergeAndPushBranch("patchset", "master")
+
+            'End If
+
+            'If createPatchSetProgress.toDoNextStep() Then
+            '    'Release to ISDEVL
+            '    WF_release.releaseTo("DEV")
+            'End If
+
+            'If createPatchSetProgress.toDoNextStep() Then
+            '    'Release to ISTEST
+            '    WF_release.releaseTo("TEST")
+            'End If
+        Catch ex As Exception
+            'Finish workflow if an error occurs
+            MsgBox(ex.Message)
+            createPatchSetProgress.setToCompleted()
+            createPatchSetProgress.Close()
+        End Try
 
     End Sub
 

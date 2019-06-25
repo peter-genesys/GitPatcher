@@ -329,9 +329,6 @@
                 End If
 
 
-
-
-
                 'If Globals.getAppInFeature() = "Y" Then
                 newReleaseBranch = newReleaseBranch & "/" & lAppCode
                 'End If
@@ -430,7 +427,6 @@
             'MERGE NEW-RELEASE BRANCH INTO INTO MASTER - sub-workflow
             '-------------------
 
-            'Either Need to call sub workflow or compress these steps so there are not so many.
             'MERGE-RELEASE
             If MajorMinorVersion.toDoNextStep() Then
                 mergeBranchAndPush(iVersionType, "master", newReleaseBranch, False)
@@ -676,7 +672,8 @@
         If iVersionType = "Major" Or iVersionType = "Minor" Then
             newMajorMinorVersionRelease(iVersionType, iTargetDB, False)
         ElseIf iVersionType = "Patch" Then
-            newPatchVersionRelease(iVersionType, iTargetDB)
+            newMajorMinorVersionRelease(iVersionType, iTargetDB, False)
+            'newPatchVersionRelease(iVersionType, iTargetDB)
         ElseIf iVersionType = "Full" Then
             newFullVersionRelease(iVersionType, iTargetDB)
         Else
@@ -916,13 +913,13 @@
         'RELEASE UAT
         If createPatchSetProgress.toDoNextStep() Then
             'Release to UAT
-            WF_release.releaseTo("UAT")
+            'WF_release.releaseTo("UAT")
         End If
 
         'RELEASE PROD
         If createPatchSetProgress.toDoNextStep() Then
             'Release to PROD
-            WF_release.releaseTo("PROD")
+            'WF_release.releaseTo("PROD")
         End If
 
 

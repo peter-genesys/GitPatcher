@@ -106,6 +106,30 @@ Public Class GitOp
     End Function
 
 
+    Shared Function getBranchNameList(ByVal inNames As Collection, Optional ByVal nameFilter As String = Nothing) As Collection
+        'Input inNames         - a collection of Names
+        'Input nameFilter      - search for matching names
+        'Output outNames       - a collection of Names, initialised with inNames
+        '  If nameFilter is null - then all branches found in the repo are appended to outNames.
+        '  If nameFilter is NOT null then only branches with branches name that contain the filter will be appended to outNames.
+
+
+        Dim outNames As Collection = inNames
+
+        For Each branch In Globals.getRepo.Branches
+            If String.IsNullOrEmpty(nameFilter) Then
+                outNames.Add(branch.FriendlyName)
+            ElseIf branch.FriendlyName.Contains(nameFilter) Then
+                outNames.Add(branch.FriendlyName)
+            End If
+
+        Next
+
+        Return outNames
+
+    End Function
+
+
 
     Shared Function getTagNameList(ByVal inTagNames As Collection, Optional ByVal tagNameFilter As String = Nothing) As Collection
         'Input inTagNames         - a collection of tagNames

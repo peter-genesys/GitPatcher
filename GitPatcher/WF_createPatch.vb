@@ -5,6 +5,7 @@
                                   Optional ByVal ipreMasterSHA As String = "",
                                   Optional ByVal ipostMasterSHA As String = "")
 
+        Dim rebaseBranchOn As String = iRebaseBranchOn
 
         Common.checkBranch(iBranchType)
 
@@ -30,6 +31,10 @@
         createPatchProgress.MdiParent = GitPatcher
 
         ' "Regenerate: Menu (new pages, menu changes), Security (new pages, security changes), Tapis (table or view column changes), Domains (new or changed tables or views, new domains or domain ussage changed)")
+        'CHOOSE-RELEASE-BRANCH
+        createPatchProgress.addStep("Choose Release Branch", True, "Choose the release branch that this hotfix is currently based on.", iRebaseBranchOn = "release")
+
+
         'REBASE-FEATURE
         createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow")
         'REVIEW-TAGS
@@ -80,10 +85,39 @@
         Loop
 
         Try
+
+            'CHOOSE-RELEASE-BRANCH
+            If createPatchProgress.toDoNextStep() Then
+                'Choose the release branch that this hotfix is currently based on
+
+                'Switch to current release branch
+                ' Tortoise.Switch(Globals.getRepoPath)
+                Dim releaseBranches As Collection = New Collection()
+                releaseBranches = GitOp.getBranchNameList(releaseBranches, "release/" & Globals.currentAppCode & "/")
+
+                rebaseBranchOn = ChoiceDialog.Ask("Please choose the base release branch for this hotfix", releaseBranches, "", "Choose the base release branch", False, False, False)
+
+                'Dim currentReleaseBranch As String = GitOp.CurrentBranch()
+
+                'Dim lrelease As String = Common.getFirstSegment(currentReleaseBranch, "/")
+                'If lrelease <> "release" Then
+                '    Throw New System.Exception("Current branch is NOT a release branch: " & currentReleaseBranch & "  Aborting Operation.")
+                'End If
+
+                ''This validates against the current app.  Alternatively i could use this to change the current app.
+                'Dim lAppCode As String = Common.getNthSegment(currentReleaseBranch, "/", 2)
+                'If lAppCode <> Globals.currentAppCode Then
+                '    Throw New System.Exception("Current release branch is NOT for the current app " & Globals.currentAppCode & ": " & currentReleaseBranch & "  Aborting Operation.")
+                'End If
+
+                'rebaseBranchOn = currentReleaseBranch
+
+            End If
+
             'REBASE-FEATURE
             If createPatchProgress.toDoNextStep() Then
                 'Rebase branch
-                l_tag_base = WF_rebase.rebaseBranch(iBranchType, iDBtarget, iRebaseBranchOn, True, True, True, iRebasePatch)
+                l_tag_base = WF_rebase.rebaseBranch(iBranchType, iDBtarget, rebaseBranchOn, True, True, True, iRebasePatch)
                 If String.IsNullOrEmpty(l_tag_base) Then
                     Throw New Exception("Invalid tag - cancelling patch.")
                 End If
@@ -104,7 +138,7 @@
             If createPatchProgress.toDoNextStep() Then
 
                 'Start the PatchFromTags and wait until it closes.
-                Dim GitPatcherChild As PatchFromTags = New PatchFromTags(iBranchType, iDBtarget, iRebaseBranchOn, l_tag_base)
+                Dim GitPatcherChild As PatchFromTags = New PatchFromTags(iBranchType, iDBtarget, rebaseBranchOn, l_tag_base)
 
                 'Dim Wizard As New PatchFromTags(iBranchType, iDBtarget, iRebaseBranchOn, l_tag_base)
                 'newchildform.MdiParent = GitPatcher
@@ -159,7 +193,7 @@
             End If
 
             'EXTRA-COMMIT
-            Dim lCommitComment as string = nothing
+            Dim lCommitComment As String = Nothing
             If iRebasePatch Then
                 lCommitComment = "Rebased Patch: " & shortBranch & "." & l_tag_base
             End If
@@ -203,14 +237,14 @@
             FeatureTipSHA = GitOp.getTipSHA()
             Logger.Note("FeatureTipSHA", FeatureTipSHA)
 
-            'SWITCH-TO-MASTER
+            'SWITCH-TO-BASE
             If createPatchProgress.toDoNextStep() Then
                 'switch
-                GitOp.SwitchBranch(iRebaseBranchOn)
+                GitOp.SwitchBranch(rebaseBranchOn)
 
             End If
 
-            'PULL-MASTER-AGAIN
+            'PULL-BASE-AGAIN
             Dim preMasterSHA As String = "XX"
             Dim postMasterSHA As String = "XX"
             If createPatchProgress.toDoNextStep() Then
@@ -230,7 +264,7 @@
                 'If SHAs different then need a rebase - of some sort.
                 If preMasterSHA <> postMasterSHA Then
 
-                    MsgBox("A Pull on " & iRebaseBranchOn & " has retrieved extra commits. " & Environment.NewLine &
+                    MsgBox("A Pull on " & rebaseBranchOn & " has retrieved extra commits. " & Environment.NewLine &
                            "The feature must be rebased again, before it can be pushed." & Environment.NewLine & Environment.NewLine &
                            "A new workflow will now open to handle the rebase. " & Environment.NewLine &
                            "This process will compare files modified in the master and feature branches, and " & Environment.NewLine &
@@ -242,7 +276,7 @@
                     'switch back to the feature
                     GitOp.SwitchBranch(currentBranch)
                     'restart the createPatchProcess in rebase patch mode.
-                    WF_createPatch.createPatchProcess(iBranchType, iDBtarget, iRebaseBranchOn, True, FeatureTipSHA, preMasterSHA, postMasterSHA)
+                    WF_createPatch.createPatchProcess(iBranchType, iDBtarget, rebaseBranchOn, True, FeatureTipSHA, preMasterSHA, postMasterSHA)
 
                 End If
 
@@ -261,13 +295,13 @@
             'PUSH-MASTER
             If createPatchProgress.toDoNextStep() Then
                 'Push to origin/develop 
-                GitOp.pushBranch(iRebaseBranchOn)
+                GitOp.pushBranch(rebaseBranchOn)
             End If
 
             'RELEASE-DEV
             If createPatchProgress.toDoNextStep() Then
                 'Release to DB Target
-                WF_release.releaseTo(iDBtarget, iBranchType)
+                WF_release.releaseTo(iDBtarget, rebaseBranchOn, iBranchType, False)
             End If
 
             'RETURN-FEATURE

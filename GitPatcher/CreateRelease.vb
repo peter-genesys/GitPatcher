@@ -204,6 +204,8 @@ Public Class CreateRelease
 
         End If
 
+        AvailablePatches = UnappliedPatches
+
         'Done
 
         ''OLD CODE

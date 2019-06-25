@@ -141,7 +141,7 @@ Partial Class Main
         '
         'MainMenuStrip
         '
-        Me.MainMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FEATUREToolStripMenuItem, Me.VersionMenu, Me.VersionsMenu, Me.HOTFIXToolStripMenuItem, Me.PATCHToolStripMenuItem, Me.APEXToolStripMenuItem, Me.RELEASEToolStripMenuItem, Me.ToolsToolStripMenuItem, Me.VirtualBoxToolStripMenuItem})
+        Me.MainMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FEATUREToolStripMenuItem, Me.HOTFIXToolStripMenuItem, Me.VersionMenu, Me.VersionsMenu, Me.PATCHToolStripMenuItem, Me.APEXToolStripMenuItem, Me.RELEASEToolStripMenuItem, Me.ToolsToolStripMenuItem, Me.VirtualBoxToolStripMenuItem})
         Me.MainMenuStrip.Location = New System.Drawing.Point(0, 0)
         Me.MainMenuStrip.Name = "MainMenuStrip"
         Me.MainMenuStrip.Size = New System.Drawing.Size(486, 24)
@@ -186,20 +186,20 @@ Partial Class Main
         'FullRebaseToolStripMenuItem
         '
         Me.FullRebaseToolStripMenuItem.Name = "FullRebaseToolStripMenuItem"
-        Me.FullRebaseToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.FullRebaseToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.FullRebaseToolStripMenuItem.Text = "Full Rebase"
         '
         'DBChangesOnlyToolStripMenuItem
         '
         Me.DBChangesOnlyToolStripMenuItem.Name = "DBChangesOnlyToolStripMenuItem"
-        Me.DBChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.DBChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.DBChangesOnlyToolStripMenuItem.Text = "DB changes only"
         Me.DBChangesOnlyToolStripMenuItem.ToolTipText = "I've made only DB changes since my last rebase."
         '
         'ApexChangesOnlyToolStripMenuItem
         '
         Me.ApexChangesOnlyToolStripMenuItem.Name = "ApexChangesOnlyToolStripMenuItem"
-        Me.ApexChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.ApexChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ApexChangesOnlyToolStripMenuItem.Text = "Apex changes only"
         Me.ApexChangesOnlyToolStripMenuItem.ToolTipText = "I've made only Apex App changes since my last rebase."
         '
@@ -209,6 +209,7 @@ Partial Class Main
         Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature"
         Me.MergeAndPushFeatureToolStripMenuItem.ToolTipText = "Merge Feature branch to master branch"
+        Me.MergeAndPushFeatureToolStripMenuItem.Visible = False
         '
         'ShowindexToolStripMenuItem
         '
@@ -283,7 +284,7 @@ Partial Class Main
         '
         'HOTFIXToolStripMenuItem
         '
-        Me.HOTFIXToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HotFixToolStripComboBox, Me.NewHotFixToolStripMenuItem1, Me.CreateDBHotFixPatchToolStripMenuItem1, Me.MultiDBHotFixPatchToolStripMenuItem, Me.ToolStripSeparator1, Me.RebaseHotFixToolStripMenuItem, Me.MergeAndPushHotfixToolStripMenuItem})
+        Me.HOTFIXToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewHotFixToolStripMenuItem1, Me.CreateDBHotFixPatchToolStripMenuItem1, Me.ToolStripSeparator1, Me.RebaseHotFixToolStripMenuItem, Me.HotFixToolStripComboBox, Me.MultiDBHotFixPatchToolStripMenuItem, Me.MergeAndPushHotfixToolStripMenuItem})
         Me.HOTFIXToolStripMenuItem.Name = "HOTFIXToolStripMenuItem"
         Me.HOTFIXToolStripMenuItem.Size = New System.Drawing.Size(51, 20)
         Me.HOTFIXToolStripMenuItem.Text = "Hotfix"
@@ -294,41 +295,44 @@ Partial Class Main
         Me.HotFixToolStripComboBox.Name = "HotFixToolStripComboBox"
         Me.HotFixToolStripComboBox.Size = New System.Drawing.Size(121, 23)
         Me.HotFixToolStripComboBox.Tag = ""
+        Me.HotFixToolStripComboBox.Visible = False
         '
         'NewHotFixToolStripMenuItem1
         '
         Me.NewHotFixToolStripMenuItem1.Name = "NewHotFixToolStripMenuItem1"
-        Me.NewHotFixToolStripMenuItem1.Size = New System.Drawing.Size(196, 22)
-        Me.NewHotFixToolStripMenuItem1.Text = "New HotFix"
+        Me.NewHotFixToolStripMenuItem1.Size = New System.Drawing.Size(195, 22)
+        Me.NewHotFixToolStripMenuItem1.Text = "Start New HotFix"
         '
         'CreateDBHotFixPatchToolStripMenuItem1
         '
         Me.CreateDBHotFixPatchToolStripMenuItem1.Name = "CreateDBHotFixPatchToolStripMenuItem1"
-        Me.CreateDBHotFixPatchToolStripMenuItem1.Size = New System.Drawing.Size(196, 22)
-        Me.CreateDBHotFixPatchToolStripMenuItem1.Text = "Create DB HotFix Patch"
+        Me.CreateDBHotFixPatchToolStripMenuItem1.Size = New System.Drawing.Size(195, 22)
+        Me.CreateDBHotFixPatchToolStripMenuItem1.Text = "Create HotFix Patch"
         '
         'MultiDBHotFixPatchToolStripMenuItem
         '
         Me.MultiDBHotFixPatchToolStripMenuItem.Name = "MultiDBHotFixPatchToolStripMenuItem"
-        Me.MultiDBHotFixPatchToolStripMenuItem.Size = New System.Drawing.Size(196, 22)
+        Me.MultiDBHotFixPatchToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
         Me.MultiDBHotFixPatchToolStripMenuItem.Text = "Multi DB HotFix Patch"
+        Me.MultiDBHotFixPatchToolStripMenuItem.Visible = False
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(193, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(192, 6)
         '
         'RebaseHotFixToolStripMenuItem
         '
         Me.RebaseHotFixToolStripMenuItem.Name = "RebaseHotFixToolStripMenuItem"
-        Me.RebaseHotFixToolStripMenuItem.Size = New System.Drawing.Size(196, 22)
+        Me.RebaseHotFixToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
         Me.RebaseHotFixToolStripMenuItem.Text = "Rebase HotFix"
         '
         'MergeAndPushHotfixToolStripMenuItem
         '
         Me.MergeAndPushHotfixToolStripMenuItem.Name = "MergeAndPushHotfixToolStripMenuItem"
-        Me.MergeAndPushHotfixToolStripMenuItem.Size = New System.Drawing.Size(196, 22)
+        Me.MergeAndPushHotfixToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
         Me.MergeAndPushHotfixToolStripMenuItem.Text = "Merge and Push Hotfix"
+        Me.MergeAndPushHotfixToolStripMenuItem.Visible = False
         '
         'PATCHToolStripMenuItem
         '
@@ -524,19 +528,19 @@ Partial Class Main
         'LogViewerToolStripMenuItem
         '
         Me.LogViewerToolStripMenuItem.Name = "LogViewerToolStripMenuItem"
-        Me.LogViewerToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.LogViewerToolStripMenuItem.Size = New System.Drawing.Size(134, 22)
         Me.LogViewerToolStripMenuItem.Text = "Log Viewer"
         '
         'TestSQLclToolStripMenuItem
         '
         Me.TestSQLclToolStripMenuItem.Name = "TestSQLclToolStripMenuItem"
-        Me.TestSQLclToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.TestSQLclToolStripMenuItem.Size = New System.Drawing.Size(134, 22)
         Me.TestSQLclToolStripMenuItem.Text = "Test SQLcl"
         '
         'ExportDataToolStripMenuItem
         '
         Me.ExportDataToolStripMenuItem.Name = "ExportDataToolStripMenuItem"
-        Me.ExportDataToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExportDataToolStripMenuItem.Size = New System.Drawing.Size(134, 22)
         Me.ExportDataToolStripMenuItem.Text = "Export Data"
         '
         'VirtualBoxToolStripMenuItem

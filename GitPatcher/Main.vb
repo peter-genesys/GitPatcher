@@ -338,7 +338,7 @@
 
     Private Sub MergeAndPushFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MergeAndPushFeatureToolStripMenuItem.Click
 
-        WF_mergeAndPush.mergeAndPushBranch("feature", Globals.deriveHotfixBranch("DEV"))
+        WF_mergeAndPush.mergeAndPushBranch("feature", "master")
 
     End Sub
 
@@ -347,7 +347,7 @@
     Private Sub NewFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewFeatureToolStripMenuItem.Click
 
         'Call worksflow
-        WF_newBranch.createNewBranch("feature", Globals.deriveHotfixBranch("DEV"))
+        WF_newBranch.createNewBranch("feature", "master")
 
         'Close and Open Main window to refresh it.
         Me.Close()
@@ -398,23 +398,23 @@
     '    WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, True)
     'End Sub
     Private Sub ReleaseToISDEVLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToDEVMenuItem.Click
-        WF_release.releaseTo("DEV")
+        'WF_release.releaseTo("DEV")
     End Sub
 
     Private Sub ReleaseToISTESTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToTESTMenuItem.Click
-        WF_release.releaseTo("TEST")
+        'WF_release.releaseTo("TEST")
     End Sub
 
     Private Sub ReleaseToISUATToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToUATMenuItem.Click
-        WF_release.releaseTo("UAT")
+        'WF_release.releaseTo("UAT")
     End Sub
 
     Private Sub ReleaseToISPRODToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToPRODMenuItem.Click
-        WF_release.releaseTo("PROD")
+        'WF_release.releaseTo("PROD")
     End Sub
 
     Private Sub NewHotfixToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles NewHotFixToolStripMenuItem1.Click
-        WF_newBranch.createNewBranch("hotfix", Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
+        WF_newBranch.createNewBranch("hotfix", "release")
     End Sub
 
     Private Sub MergeAndPushHotfixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MergeAndPushHotfixToolStripMenuItem.Click
@@ -426,11 +426,11 @@
     End Sub
 
     Private Sub CreateDBHotFixPatchToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CreateDBHotFixPatchToolStripMenuItem1.Click
-        WF_createPatch.createPatchProcess("hotfix", HotFixToolStripComboBox.SelectedItem, Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
+        WF_createPatch.createPatchProcess("hotfix", "UAT", "release")
     End Sub
 
     Private Sub CreateDBFeaturePatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBFeaturePatchToolStripMenuItem.Click
-        WF_createPatch.createPatchProcess("feature", "DEV", Globals.deriveHotfixBranch("DEV"))
+        WF_createPatch.createPatchProcess("feature", "DEV", "master")
     End Sub
 
     Private Sub TestCreatePatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestCreatePatchSetToolStripMenuItem.Click
@@ -653,7 +653,7 @@
     End Sub
 
     Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ReleaseToVMMenuItem.Click
-        WF_release.releaseTo("VM")
+        'WF_release.releaseTo("VM")
     End Sub
 
     Private Sub ExportDataMenuItem_Click(sender As Object, e As EventArgs)
