@@ -435,7 +435,7 @@
 
     Private Sub TestCreatePatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestCreatePatchSetToolStripMenuItem.Click
         'Create, edit And test collection
-        Dim Wizard As New CreateRelease("prism-2.17.04", "", "", "patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
+        Dim Wizard As New CreateRelease("prism", "prism-2.17.04", "", "", "patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL")
         Wizard.ShowDialog() 'WAITING HERE!!
     End Sub
 

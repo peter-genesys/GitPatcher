@@ -1,5 +1,6 @@
 ﻿Imports LibGit2Sharp
 Public Class CreateRelease
+    Private pAppCode As String = Nothing
     Private pAppVersion As String = Nothing
     Private pPatchName As String = Nothing
     Private pCreatePatchType As String = Nothing
@@ -7,13 +8,13 @@ Public Class CreateRelease
     Private pFindPatchTypes As String = Nothing
     Private pFindPatchFilters As String = Nothing
     Private pPrereqPatchTypes As String = Nothing
-    Private pSupPatchTypes As String = Nothing
+
 
     Dim AvailablePatches As Collection = New Collection
 
     Private waiting As Boolean
 
-    Public Sub New(ByVal iAppMajorMinorVersion As String, ByVal iPatchVersion As String, ByVal iVersionType As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
+    Public Sub New(ByVal iAppCode As String, ByVal iAppMajorMinorVersion As String, ByVal iPatchVersion As String, ByVal iVersionType As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String)
 
         'If String.IsNullOrEmpty(iAppMajorMinorVersion) Then
         '    Dim l_app_version = InputBox("Please enter a new version for " & Globals.currentAppCode & " in the format: 2.17.01", "New " & Globals.getAppName & " Version")
@@ -25,13 +26,14 @@ Public Class CreateRelease
 
         pPatchName = iAppMajorMinorVersion & "." & iPatchVersion
 
+        pAppCode = iAppCode
         pAppVersion = iAppMajorMinorVersion
         pCreatePatchType = iCreatePatchType
         pVersionType = iVersionType
         pFindPatchTypes = iFindPatchTypes
         pFindPatchFilters = iFindPatchFilters
         pPrereqPatchTypes = iPrereqPatchTypes
-        pSupPatchTypes = iSupPatchTypes
+
 
         InitializeComponent()
 

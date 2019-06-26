@@ -129,6 +129,28 @@ Public Class GitOp
 
     End Function
 
+    Shared Function getReleaseAppCodeList(Optional ByVal nameFilter As String = Nothing) As Collection
+        Logger.Note("getReleaseAppCodeList(nameFilter)", nameFilter)
+
+        Dim releaseBranches As Collection = New Collection
+        releaseBranches = getBranchNameList(releaseBranches, "release/" & nameFilter)
+
+        Dim appCodeList As Collection = New Collection
+
+        For Each branch In releaseBranches
+            Dim lAppCode As String = Common.getNthSegment(branch, "/", 2)
+
+            If Not appCodeList.Contains(lAppCode) Then
+                appCodeList.Add(lAppCode, lAppCode)
+            End If
+
+        Next
+
+        Return appCodeList
+
+    End Function
+
+
 
 
     Shared Function getTagNameList(ByVal inTagNames As Collection, Optional ByVal tagNameFilter As String = Nothing) As Collection

@@ -301,6 +301,13 @@
 
     End Sub
 
+    Private Sub ProgressCheckedListBox_ItemCheck(sender As Object, e As EventArgs) Handles ProgressCheckedListBox.ItemCheck
+        If ProgressCheckedListBox.SelectedIndex > -1 Then
+            Logger.Note("Checked", ProgressCheckedListBox.SelectedIndex)
+        End If
+
+    End Sub
+
     Public Sub stopAndClose()
         Me.toDoStep(nextStep)
     End Sub
