@@ -58,26 +58,26 @@ Partial Class CreateRelease
         Me.PreReqButton = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.TabPagePatches = New System.Windows.Forms.TabPage()
+        Me.Label4 = New System.Windows.Forms.Label()
         Me.AppFilterCheckBox = New System.Windows.Forms.CheckBox()
         Me.TreeViewTaggedPatches = New TreeViewEnhanced.TreeViewEnhanced()
         Me.ComboBoxPatchesFilter = New System.Windows.Forms.ComboBox()
         Me.AvailablePatchesLabel = New System.Windows.Forms.Label()
         Me.TagFilterCheckBox = New System.Windows.Forms.CheckBox()
         Me.FindButton = New System.Windows.Forms.Button()
-        Me.TabPageTags = New System.Windows.Forms.TabPage()
-        Me.FindTagsButton = New System.Windows.Forms.Button()
-        Me.TagsCheckedListBox = New System.Windows.Forms.CheckedListBox()
+        Me.TabPageReleases = New System.Windows.Forms.TabPage()
+        Me.FindReleasesButton = New System.Windows.Forms.Button()
+        Me.BranchesCheckedListBox = New System.Windows.Forms.CheckedListBox()
         Me.Label15 = New System.Windows.Forms.Label()
-        Me.Tag1TextBox = New System.Windows.Forms.TextBox()
-        Me.Tag2TextBox = New System.Windows.Forms.TextBox()
+        Me.Branch1TextBox = New System.Windows.Forms.TextBox()
+        Me.Branch2TextBox = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.PatchTabControl = New System.Windows.Forms.TabControl()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.TabPageBuildPatch.SuspendLayout()
         Me.TabPagePreReqs.SuspendLayout()
         Me.TabPagePatches.SuspendLayout()
-        Me.TabPageTags.SuspendLayout()
+        Me.TabPageReleases.SuspendLayout()
         Me.PatchTabControl.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -434,6 +434,16 @@ Partial Class CreateRelease
         Me.TabPagePatches.Text = "Patches"
         Me.TabPagePatches.UseVisualStyleBackColor = True
         '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(74, 60)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(422, 13)
+        Me.Label4.TabIndex = 63
+        Me.Label4.Text = "Unapplied patches are ticked by default.  Ticked patches will be included in the " &
+    "release."
+        '
         'AppFilterCheckBox
         '
         Me.AppFilterCheckBox.AutoSize = True
@@ -469,9 +479,9 @@ Partial Class CreateRelease
         Me.AvailablePatchesLabel.AutoSize = True
         Me.AvailablePatchesLabel.Location = New System.Drawing.Point(10, 76)
         Me.AvailablePatchesLabel.Name = "AvailablePatchesLabel"
-        Me.AvailablePatchesLabel.Size = New System.Drawing.Size(47, 26)
+        Me.AvailablePatchesLabel.Size = New System.Drawing.Size(46, 13)
         Me.AvailablePatchesLabel.TabIndex = 41
-        Me.AvailablePatchesLabel.Text = "Tagged " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Patches"
+        Me.AvailablePatchesLabel.Text = "Patches"
         '
         'TagFilterCheckBox
         '
@@ -493,87 +503,87 @@ Partial Class CreateRelease
         Me.FindButton.Text = "Find Patches"
         Me.FindButton.UseVisualStyleBackColor = True
         '
-        'TabPageTags
+        'TabPageReleases
         '
-        Me.TabPageTags.Controls.Add(Me.FindTagsButton)
-        Me.TabPageTags.Controls.Add(Me.TagsCheckedListBox)
-        Me.TabPageTags.Controls.Add(Me.Label15)
-        Me.TabPageTags.Controls.Add(Me.Tag1TextBox)
-        Me.TabPageTags.Controls.Add(Me.Tag2TextBox)
-        Me.TabPageTags.Controls.Add(Me.Label1)
-        Me.TabPageTags.Controls.Add(Me.Label2)
-        Me.TabPageTags.Location = New System.Drawing.Point(4, 22)
-        Me.TabPageTags.Name = "TabPageTags"
-        Me.TabPageTags.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageTags.Size = New System.Drawing.Size(521, 728)
-        Me.TabPageTags.TabIndex = 0
-        Me.TabPageTags.Text = "Tags"
-        Me.TabPageTags.UseVisualStyleBackColor = True
+        Me.TabPageReleases.Controls.Add(Me.FindReleasesButton)
+        Me.TabPageReleases.Controls.Add(Me.BranchesCheckedListBox)
+        Me.TabPageReleases.Controls.Add(Me.Label15)
+        Me.TabPageReleases.Controls.Add(Me.Branch1TextBox)
+        Me.TabPageReleases.Controls.Add(Me.Branch2TextBox)
+        Me.TabPageReleases.Controls.Add(Me.Label1)
+        Me.TabPageReleases.Controls.Add(Me.Label2)
+        Me.TabPageReleases.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageReleases.Name = "TabPageReleases"
+        Me.TabPageReleases.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPageReleases.Size = New System.Drawing.Size(521, 728)
+        Me.TabPageReleases.TabIndex = 0
+        Me.TabPageReleases.Text = "Releases"
+        Me.TabPageReleases.UseVisualStyleBackColor = True
         '
-        'FindTagsButton
+        'FindReleasesButton
         '
-        Me.FindTagsButton.Location = New System.Drawing.Point(77, 17)
-        Me.FindTagsButton.Name = "FindTagsButton"
-        Me.FindTagsButton.Size = New System.Drawing.Size(139, 23)
-        Me.FindTagsButton.TabIndex = 14
-        Me.FindTagsButton.Text = "Find Tags"
-        Me.FindTagsButton.UseVisualStyleBackColor = True
+        Me.FindReleasesButton.Location = New System.Drawing.Point(77, 17)
+        Me.FindReleasesButton.Name = "FindReleasesButton"
+        Me.FindReleasesButton.Size = New System.Drawing.Size(139, 23)
+        Me.FindReleasesButton.TabIndex = 14
+        Me.FindReleasesButton.Text = "Find Releases"
+        Me.FindReleasesButton.UseVisualStyleBackColor = True
         '
-        'TagsCheckedListBox
+        'BranchesCheckedListBox
         '
-        Me.TagsCheckedListBox.CheckOnClick = True
-        Me.TagsCheckedListBox.FormattingEnabled = True
-        Me.TagsCheckedListBox.Location = New System.Drawing.Point(77, 76)
-        Me.TagsCheckedListBox.Name = "TagsCheckedListBox"
-        Me.TagsCheckedListBox.Size = New System.Drawing.Size(429, 619)
-        Me.TagsCheckedListBox.TabIndex = 12
+        Me.BranchesCheckedListBox.CheckOnClick = True
+        Me.BranchesCheckedListBox.FormattingEnabled = True
+        Me.BranchesCheckedListBox.Location = New System.Drawing.Point(77, 121)
+        Me.BranchesCheckedListBox.Name = "BranchesCheckedListBox"
+        Me.BranchesCheckedListBox.Size = New System.Drawing.Size(429, 574)
+        Me.BranchesCheckedListBox.TabIndex = 12
         '
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(10, 76)
+        Me.Label15.Location = New System.Drawing.Point(6, 121)
         Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(31, 13)
+        Me.Label15.Size = New System.Drawing.Size(51, 13)
         Me.Label15.TabIndex = 13
-        Me.Label15.Text = "Tags"
+        Me.Label15.Text = "Releases"
         '
         'Tag1TextBox
         '
-        Me.Tag1TextBox.Location = New System.Drawing.Point(367, 20)
-        Me.Tag1TextBox.Name = "Tag1TextBox"
-        Me.Tag1TextBox.ReadOnly = True
-        Me.Tag1TextBox.Size = New System.Drawing.Size(139, 20)
-        Me.Tag1TextBox.TabIndex = 0
+        Me.Branch1TextBox.Location = New System.Drawing.Point(269, 54)
+        Me.Branch1TextBox.Name = "Tag1TextBox"
+        Me.Branch1TextBox.ReadOnly = True
+        Me.Branch1TextBox.Size = New System.Drawing.Size(237, 20)
+        Me.Branch1TextBox.TabIndex = 0
         '
         'Tag2TextBox
         '
-        Me.Tag2TextBox.Location = New System.Drawing.Point(367, 46)
-        Me.Tag2TextBox.Name = "Tag2TextBox"
-        Me.Tag2TextBox.ReadOnly = True
-        Me.Tag2TextBox.Size = New System.Drawing.Size(139, 20)
-        Me.Tag2TextBox.TabIndex = 2
+        Me.Branch2TextBox.Location = New System.Drawing.Point(269, 80)
+        Me.Branch2TextBox.Name = "Tag2TextBox"
+        Me.Branch2TextBox.ReadOnly = True
+        Me.Branch2TextBox.Size = New System.Drawing.Size(237, 20)
+        Me.Branch2TextBox.TabIndex = 2
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(228, 20)
+        Me.Label1.Location = New System.Drawing.Point(78, 54)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(133, 13)
+        Me.Label1.Size = New System.Drawing.Size(162, 13)
         Me.Label1.TabIndex = 1
-        Me.Label1.Text = "From Tag - AFTER this tag"
+        Me.Label1.Text = "From Release tip - AFTER the tip"
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(228, 46)
+        Me.Label2.Location = New System.Drawing.Point(78, 80)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(118, 13)
+        Me.Label2.Size = New System.Drawing.Size(147, 13)
         Me.Label2.TabIndex = 3
-        Me.Label2.Text = "To Tag - UPTO this tag"
+        Me.Label2.Text = "To Release tip - UPTO the tip"
         '
         'PatchTabControl
         '
-        Me.PatchTabControl.Controls.Add(Me.TabPageTags)
+        Me.PatchTabControl.Controls.Add(Me.TabPageReleases)
         Me.PatchTabControl.Controls.Add(Me.TabPagePatches)
         Me.PatchTabControl.Controls.Add(Me.TabPagePreReqs)
         Me.PatchTabControl.Controls.Add(Me.TabPageBuildPatch)
@@ -582,16 +592,6 @@ Partial Class CreateRelease
         Me.PatchTabControl.SelectedIndex = 0
         Me.PatchTabControl.Size = New System.Drawing.Size(529, 754)
         Me.PatchTabControl.TabIndex = 18
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(74, 60)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(422, 13)
-        Me.Label4.TabIndex = 63
-        Me.Label4.Text = "Unapplied patches are ticked by default.  Ticked patches will be included in the " &
-    "release."
         '
         'CreateRelease
         '
@@ -608,8 +608,8 @@ Partial Class CreateRelease
         Me.TabPagePreReqs.PerformLayout()
         Me.TabPagePatches.ResumeLayout(False)
         Me.TabPagePatches.PerformLayout()
-        Me.TabPageTags.ResumeLayout(False)
-        Me.TabPageTags.PerformLayout()
+        Me.TabPageReleases.ResumeLayout(False)
+        Me.TabPageReleases.PerformLayout()
         Me.PatchTabControl.ResumeLayout(False)
         Me.ResumeLayout(False)
 
@@ -655,12 +655,12 @@ Partial Class CreateRelease
     Friend WithEvents AvailablePatchesLabel As Label
     Friend WithEvents TagFilterCheckBox As CheckBox
     Friend WithEvents FindButton As Button
-    Friend WithEvents TabPageTags As TabPage
-    Friend WithEvents FindTagsButton As Button
-    Friend WithEvents TagsCheckedListBox As CheckedListBox
+    Friend WithEvents TabPageReleases As TabPage
+    Friend WithEvents FindReleasesButton As Button
+    Friend WithEvents BranchesCheckedListBox As CheckedListBox
     Friend WithEvents Label15 As Label
-    Friend WithEvents Tag1TextBox As TextBox
-    Friend WithEvents Tag2TextBox As TextBox
+    Friend WithEvents Branch1TextBox As TextBox
+    Friend WithEvents Branch2TextBox As TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents PatchTabControl As TabControl

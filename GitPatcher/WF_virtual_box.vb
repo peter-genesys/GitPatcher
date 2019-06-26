@@ -95,6 +95,7 @@ Public Class WF_virtual_box
 
             Dim snapshotNames As Collection = New Collection
             Dim snapshotUUIDs As Collection = New Collection
+            Dim lCurrentSnapshotName As String = Nothing
 
 
             Dim strArr() As String
@@ -149,7 +150,8 @@ Public Class WF_virtual_box
 
                     snapshotUUIDs.Add(uuid)
                     If uuid = currentUUID Then
-                        snapshotNames.Add(indent & name & " (current)")
+                        lCurrentSnapshotName = indent & name & " (current)"
+                        snapshotNames.Add(lCurrentSnapshotName)
                     Else
                         snapshotNames.Add(indent & name)
                     End If
@@ -162,7 +164,7 @@ Public Class WF_virtual_box
             'Dim cleanSnapshotUUID As String
             Try
                 Dim SnapshotIndex As Integer
-                SnapshotIndex = ChoiceDialog.Ask("Please choose a " & revertType & " snapshot from the list of available snapshots for " & My.Settings.VBoxName, snapshotNames, "", "Choose a " & revertType & " snapshot", False, False, True)
+                SnapshotIndex = ChoiceDialog.Ask("Please choose a " & revertType & " snapshot from the list of available snapshots for " & My.Settings.VBoxName, snapshotNames, lCurrentSnapshotName, "Choose a " & revertType & " snapshot", False, False, True)
 
                 Logger.Dbg("Chosen: " & snapshotNames(SnapshotIndex) & "=" & snapshotUUIDs(SnapshotIndex))
 

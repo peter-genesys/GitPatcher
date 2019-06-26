@@ -98,6 +98,35 @@ Public Class GitOp
     End Function
 
 
+    Shared Function GetCommitFromBranchName(ByVal branchName As String, Optional ByVal branchAlias As String = Nothing) As Commit
+
+        Dim theBranch As Branch
+        Dim theCommit As Commit
+
+        If branchName = "" Then
+            Throw New System.Exception(branchAlias & "Branch is required")
+        End If
+
+        If branchName = "HEAD" Then
+            'If branch is HEAD, find the tip commit of the HEAD branch 
+            theBranch = Globals.getRepo().Head
+
+        Else
+            theBranch = Globals.getRepo.Branches(branchName)
+
+            If theBranch Is Nothing Then
+                Throw New System.Exception(branchAlias & "Branch (" & branchName & ") is unrecognised.")
+            End If
+
+        End If
+
+        theCommit = theBranch.Tip
+
+        Return theCommit
+
+    End Function
+
+
     Shared Function getTipSHA() As String
 
         Dim theBranch As Branch = Globals.getRepo().Head
@@ -112,7 +141,7 @@ Public Class GitOp
         'Output outNames       - a collection of Names, initialised with inNames
         '  If nameFilter is null - then all branches found in the repo are appended to outNames.
         '  If nameFilter is NOT null then only branches with branches name that contain the filter will be appended to outNames.
-        Logger.Note("getBranchNameList(nameFilter)", nameFilter)
+        Logger.Note("getBranchNameList(inNames,nameFilter)", nameFilter)
 
         Dim outNames As Collection = inNames
 
@@ -129,11 +158,24 @@ Public Class GitOp
 
     End Function
 
+    Shared Function getBranchNameList(Optional ByVal nameFilter As String = Nothing) As Collection
+        'Overloaded
+        'Input nameFilter      - search for matching names
+        'Output outNames       - a collection of Names, initialised with inNames
+        '  If nameFilter is null - then all branches found in the repo are appended to outNames.
+        '  If nameFilter is NOT null then only branches with branches name that contain the filter will be appended to outNames.
+        Logger.Note("getBranchNameList(nameFilter)", nameFilter)
+
+        Dim outNames As Collection = New Collection
+
+        Return getBranchNameList(outNames, nameFilter)
+
+    End Function
+
     Shared Function getReleaseAppCodeList(Optional ByVal nameFilter As String = Nothing) As Collection
         Logger.Note("getReleaseAppCodeList(nameFilter)", nameFilter)
 
-        Dim releaseBranches As Collection = New Collection
-        releaseBranches = getBranchNameList(releaseBranches, "release/" & nameFilter)
+        Dim releaseBranches As Collection = getBranchNameList("release/" & nameFilter)
 
         Dim appCodeList As Collection = New Collection
 
@@ -178,7 +220,7 @@ Public Class GitOp
 
 
     Shared Function getTagNameList(Optional ByVal tagNameFilter As String = Nothing) As Collection
-
+        'Overloaded
         'Input tagNameFilter  - search for matching tag names
         'Output outTagNames       - a collection of tagNames, initialised with an empty set of tagNames
         '  If tagNameFilter is null then all tags found in the repo are appended to outTagNames.
@@ -767,6 +809,18 @@ Public Class GitOp
 
         Dim commit1 As Commit = GetCommitFromTagName(tag1_name, "1st ")
         Dim commit2 As Commit = GetCommitFromTagName(tag2_name, "2nd ")
+
+        Globals.setCommits(commit1, commit2)
+
+    End Sub
+
+
+    Shared Sub setCommitsFromBranches(ByVal branch1_name As String, ByVal branch2_name As String)
+
+        'Find the commits referred to by tip of Branch 1 and tip of Branch 2 and store them in persistent variables in the Globals module
+
+        Dim commit1 As Commit = GetCommitFromBranchName(branch1_name, "1st ")
+        Dim commit2 As Commit = GetCommitFromBranchName(branch2_name, "2nd ")
 
         Globals.setCommits(commit1, commit2)
 

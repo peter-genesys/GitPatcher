@@ -92,8 +92,7 @@
 
                 'Switch to current release branch
                 ' Tortoise.Switch(Globals.getRepoPath)
-                Dim releaseBranches As Collection = New Collection()
-                releaseBranches = GitOp.getBranchNameList(releaseBranches, "release/" & Globals.currentAppCode & "/")
+                Dim releaseBranches As Collection = GitOp.getBranchNameList("release/" & Globals.currentAppCode & "/")
 
                 rebaseBranchOn = ChoiceDialog.Ask("Please choose the base release branch for this hotfix", releaseBranches, "", "Choose the base release branch", False, False, False)
 

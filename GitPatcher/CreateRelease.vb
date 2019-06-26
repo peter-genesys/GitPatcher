@@ -49,20 +49,19 @@ Public Class CreateRelease
         Next
 
 
+        'HidePatchesTab()
+        HideTabs()
 
-        FindTagsButton.Text = "Find Tags like " & pAppVersion
-
-        Findtags()
+        FindReleasesButton.Text = "Find Releases for " & pAppCode
+        FindReleaseBranches(pAppCode)
 
         TagFilterCheckBox.Checked = True
         ComboBoxPatchesFilter.SelectedItem = "Unapplied" '"Unapplied"
 
         Me.Text = "CreateRelease - Creating a " & iVersionType & " Version Release for " & Globals.currentTNS
 
-        AvailablePatchesLabel.Text = "Tagged" & Chr(10) & iFindPatchTypes & Chr(10) & "Patches"
+        AvailablePatchesLabel.Text = "Available" & Chr(10) & iFindPatchTypes & Chr(10) & "Patches"
 
-        HidePatchesTab()
-        HideTabs()
 
         ExecutePatchButton.Text = "Execute Patch on " & Globals.currentTNS
 
@@ -71,6 +70,9 @@ Public Class CreateRelease
 
         Me.MdiParent = GitPatcher
         Me.Show()
+
+        ShowHidePatchesTab()
+
         Wait()
 
     End Sub
@@ -97,6 +99,15 @@ Public Class CreateRelease
         PatchTabControl.TabPages.Insert(1, TabPagePatches)
     End Sub
 
+    Private Sub ShowHidePatchesTab()
+        If BranchesCheckedListBox.CheckedItems.Count > 1 Then
+            ShowPatchesTab()
+        Else
+            HidePatchesTab()
+            HideTabs()
+        End If
+    End Sub
+
     Private Sub HideTabs()
         PatchTabControl.TabPages.Remove(TabPagePreReqs)
         PatchTabControl.TabPages.Remove(TabPageBuildPatch)
@@ -112,18 +123,53 @@ Public Class CreateRelease
 
 
 
+    Private Sub FindReleaseBranches(ByVal appCode As String)
+
+        Dim branchSearch As String = "release/" & appCode & "/"
+
+        BranchesCheckedListBox.Items.Clear()
+        For Each branchName In GitOp.getBranchNameList(branchSearch)
+
+            BranchesCheckedListBox.Items.Add(branchName)
+            If branchName = "release/" & appCode & "/" & pAppVersion Then
+                Try
+                    'Tick branches
+                    BranchesCheckedListBox.SetItemChecked(BranchesCheckedListBox.Items.Count - 2, True)
+                Catch ex As Exception
+                    MsgBox(ex.Message & Chr(10) &
+                           "Unable to tick last release")
+                End Try
+                Try
+                    'Tick branches
+                    BranchesCheckedListBox.SetItemChecked(BranchesCheckedListBox.Items.Count - 1, True)
+                Catch ex As Exception
+                    MsgBox(ex.Message & Chr(10) &
+                           "Unable to tick this release")
+                End Try
+            End If
+
+        Next
+
+        ShowHidePatchesTab()
+
+        'Tick last 2 tags
+        'TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 2, True)
+        'TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
+
+    End Sub
+
 
     Private Sub Findtags()
 
         Dim tagsearch As String = Replace(RTrim(pAppVersion), Chr(13), "")
         Dim tagseg As String = Nothing
 
-        TagsCheckedListBox.Items.Clear()
+        BranchesCheckedListBox.Items.Clear()
         For Each thisTag As Tag In GitOp.getTagList(tagsearch)
             'tagseg = Common.getFirstSegment(thisTag.FriendlyName, "-")
             'Looks like this used to search for tags by appCode, but not doing this ATM.
             'If tagseg = tagsearch Then
-            TagsCheckedListBox.Items.Add(thisTag.FriendlyName)
+            BranchesCheckedListBox.Items.Add(thisTag.FriendlyName)
             'End If
         Next
 
@@ -174,7 +220,7 @@ Public Class CreateRelease
 
         Cursor.Current = Cursors.WaitCursor
 
-        GitOp.setCommitsFromTags(Tag1TextBox.Text, Tag2TextBox.Text)
+        GitOp.setCommitsFromBranches(Branch1TextBox.Text, Branch2TextBox.Text)
 
         'Get list of tagged patches
         Dim taggedPatches As Collection = New Collection
@@ -333,8 +379,8 @@ Public Class CreateRelease
                            pCreatePatchType,
                            "APEXRM",
                            Globals.currentLongBranch,
-                           Tag1TextBox.Text,
-                           Tag2TextBox.Text,
+                           Branch1TextBox.Text,
+                           Branch2TextBox.Text,
                            SupIdTextBox.Text,
                            PatchDescTextBox.Text,
                            NoteTextBox.Text,
@@ -354,8 +400,8 @@ Public Class CreateRelease
                            pCreatePatchType,
                            "APEXRM",
                            Globals.currentLongBranch,
-                           Tag1TextBox.Text,
-                           Tag2TextBox.Text,
+                           Branch1TextBox.Text,
+                           Branch2TextBox.Text,
                            SupIdTextBox.Text,
                            PatchDescTextBox.Text,
                            NoteTextBox.Text,
@@ -716,7 +762,7 @@ Public Class CreateRelease
     Private Sub PatchTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles PatchTabControl.SelectedIndexChanged
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageTags" Then
-            If TagsCheckedListBox.Items.Count = 0 Then
+            If BranchesCheckedListBox.Items.Count = 0 Then
                 Findtags()
             End If
 
@@ -852,31 +898,31 @@ Public Class CreateRelease
         CopySelectedChanges()
     End Sub
 
-    Private Sub FindTagsButton_Click(sender As Object, e As EventArgs) Handles FindTagsButton.Click
-        Findtags()
+    Private Sub FindTagsButton_Click(sender As Object, e As EventArgs) Handles FindReleasesButton.Click
+        FindReleaseBranches(pAppCode)
     End Sub
 
     Private Sub deriveTags()
 
 
-        If TagsCheckedListBox.CheckedItems.Count = 0 Then
+        If BranchesCheckedListBox.CheckedItems.Count = 0 Then
             'Nothing checked so select no tags
-            Tag1TextBox.Text = ""
-            Tag2TextBox.Text = ""
-            If TagsCheckedListBox.Items.Count > 0 Then
+            Branch1TextBox.Text = ""
+            Branch2TextBox.Text = ""
+            If BranchesCheckedListBox.Items.Count > 0 Then
                 'But select the last available tag as the tag2, to be used as patch_name
-                Tag2TextBox.Text = TagsCheckedListBox.Items(TagsCheckedListBox.Items.Count - 1)
+                Branch2TextBox.Text = BranchesCheckedListBox.Items(BranchesCheckedListBox.Items.Count - 1)
             End If
 
-        ElseIf TagsCheckedListBox.CheckedItems.Count = 1 Then
+        ElseIf BranchesCheckedListBox.CheckedItems.Count = 1 Then
             'Only 1 tag selected set as the tag2, to be used as patch_name
-            Tag1TextBox.Text = ""
-            Tag2TextBox.Text = TagsCheckedListBox.CheckedItems.Item(0)
+            Branch1TextBox.Text = ""
+            Branch2TextBox.Text = BranchesCheckedListBox.CheckedItems.Item(0)
 
-        ElseIf TagsCheckedListBox.CheckedItems.Count > 1 Then
+        ElseIf BranchesCheckedListBox.CheckedItems.Count > 1 Then
             'Select 1st and 2nd checked tags as tag1 and tag2
-            Tag1TextBox.Text = TagsCheckedListBox.CheckedItems.Item(0)
-            Tag2TextBox.Text = TagsCheckedListBox.CheckedItems.Item(1)
+            Branch1TextBox.Text = BranchesCheckedListBox.CheckedItems.Item(0)
+            Branch2TextBox.Text = BranchesCheckedListBox.CheckedItems.Item(1)
         End If
 
     End Sub
@@ -926,8 +972,8 @@ Public Class CreateRelease
                            pCreatePatchType,
                            "APEXRM",
                            Globals.currentLongBranch,
-                           Tag1TextBox.Text,
-                           Tag2TextBox.Text,
+                           Branch1TextBox.Text,
+                           Branch2TextBox.Text,
                            SupIdTextBox.Text,
                            PatchDescTextBox.Text,
                            NoteTextBox.Text,
@@ -981,19 +1027,13 @@ Public Class CreateRelease
         WF_virtual_box.revertVM("Reverting", False, "post-rebase")
     End Sub
 
-    Private Sub TagsCheckedListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TagsCheckedListBox.SelectedIndexChanged
+    Private Sub TagsCheckedListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles BranchesCheckedListBox.SelectedIndexChanged
         'If tags are changed then we will clear the selected patches
         'SchemaCountTextBox.Text = "0"
         'SchemaComboBox.Text = ""
         TreeViewTaggedPatches.Nodes.Clear()
         HideTabs()
-        If TagsCheckedListBox.CheckedItems.Count > 1 Then
-            ShowPatchesTab()
-        Else
-            HidePatchesTab()
-            HideTabs()
-        End If
-
+        ShowHidePatchesTab()
 
     End Sub
 

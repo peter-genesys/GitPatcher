@@ -301,8 +301,7 @@
 
                 lAppCode = ChoiceDialog.Ask("Please choose the app to be released (from previously released apps)", appCodeList, lAppCode, "Identify the app", True, False, False)
 
-                Dim releaseBranches As Collection = New Collection()
-                releaseBranches = GitOp.getBranchNameList(releaseBranches, "release/" & lAppCode & "/")
+                Dim releaseBranches As Collection = GitOp.getBranchNameList("release/" & lAppCode & "/")
 
                 lastReleaseBranch = ChoiceDialog.Ask("Please identify the last release branch for the app: " & lAppCode, releaseBranches, "", "Identify last release branch", False, False, False)
 
