@@ -29,25 +29,34 @@
             GitOp.SwitchBranch(iBranchFrom)
         End If
 
-        'SWITCH-TO-CURRENT-RELEASE   
+        'SUB-FLOW:FIND-PATCH-VERSION-RELEASE
         If newFeature.toDoNextStep() Then
-            'Switch to current release branch
-            Tortoise.Switch(Globals.getRepoPath)
-
-            Dim currentReleaseBranch As String = GitOp.CurrentBranch()
-
-            Dim lrelease As String = Common.getFirstSegment(currentReleaseBranch, "/")
-            If lrelease <> "release" Then
-                Throw New System.Exception("Current branch is NOT a release branch: " & currentReleaseBranch & "  Aborting Operation.")
-            End If
-
-            'This validates against the current app.  Alternatively i could use this to change the current app.
-            Dim lAppCode As String = Common.getNthSegment(currentReleaseBranch, "/", 2)
-            If lAppCode <> Globals.currentAppCode Then
-                Throw New System.Exception("Current release branch is NOT for the current app " & Globals.currentAppCode & ": " & currentReleaseBranch & "  Aborting Operation.")
-            End If
+            'Find existing or create a new patch verion release branch
+            WH_versions.findPatchVersion("patch", "VM", False)
+            'Release to VM
+            WF_release.releaseTo("VM", GitOp.CurrentBranch(), iBranchType, False)
 
         End If
+
+        ''SWITCH-TO-CURRENT-RELEASE   
+        'If newFeature.toDoNextStep() Then
+        '    'Switch to current release branch
+        '    Tortoise.Switch(Globals.getRepoPath)
+
+        '    Dim currentReleaseBranch As String = GitOp.CurrentBranch()
+
+        '    Dim lrelease As String = Common.getFirstSegment(currentReleaseBranch, "/")
+        '    If lrelease <> "release" Then
+        '        Throw New System.Exception("Current branch is NOT a release branch: " & currentReleaseBranch & "  Aborting Operation.")
+        '    End If
+
+        '    'This validates against the current app.  Alternatively i could use this to change the current app.
+        '    Dim lAppCode As String = Common.getNthSegment(currentReleaseBranch, "/", 2)
+        '    If lAppCode <> Globals.currentAppCode Then
+        '        Throw New System.Exception("Current release branch is NOT for the current app " & Globals.currentAppCode & ": " & currentReleaseBranch & "  Aborting Operation.")
+        '    End If
+
+        'End If
 
         'PULL-CURRENT-BRANCH - LGIT - automatic
         If newFeature.toDoNextStep() Then
@@ -66,6 +75,10 @@
         If newFeature.toDoNextStep() Then
             'Create and Switch to new branch
             Dim branchName As String = InputBox("Enter the Issue Id.", "Issue Id for new " & iBranchType & " Branch", Globals.getJira).ToUpper 'Ensure UPPERCASE
+            If iBranchType = "hotfix" Then
+                branchName = branchName & "-HF" 'hotfix branches will have the suffix HF added to the JiraId
+            End If
+
             Dim newBranch As String = iBranchType
 
             'Derive the feature code from app and org codes.

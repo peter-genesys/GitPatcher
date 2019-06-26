@@ -45,6 +45,8 @@
 
     Shared Function fileExists(ByVal i_path) As Boolean
 
+        Logger.Dbg("fileExists(" & i_path & ")")
+
         ' Create the File System Object
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
 
@@ -55,6 +57,7 @@
     End Function
 
     Shared Function folderExists(ByVal i_path) As Boolean
+        Logger.Dbg("folderExists(" & i_path & ")")
 
         ' Create the File System Object
         Dim objFSO = CreateObject("Scripting.FileSystemObject")

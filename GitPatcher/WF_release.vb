@@ -302,7 +302,7 @@
             If createPatchSetProgress.toDoNextStep() Then
                 Dim l_tag_seq As Integer
                 'Create, edit And test collection
-                Dim Wizard As New CreateRelease("QHIDS", l_app_version, l_tag_seq, "Minor", iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes)
+                Dim Wizard As New CreateRelease("QHIDS", l_app_version, "Minor", iCreatePatchType, iFindPatchTypes, iFindPatchFilters, iPrereqPatchTypes)
 
             End If
 

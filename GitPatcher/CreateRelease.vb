@@ -14,7 +14,7 @@ Public Class CreateRelease
 
     Private waiting As Boolean
 
-    Public Sub New(ByVal iAppCode As String, ByVal iAppMajorMinorVersion As String, ByVal iPatchVersion As String, ByVal iVersionType As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String)
+    Public Sub New(ByVal iAppCode As String, ByVal iAppMajorMinorVersion As String, ByVal iVersionType As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String)
 
         'If String.IsNullOrEmpty(iAppMajorMinorVersion) Then
         '    Dim l_app_version = InputBox("Please enter a new version for " & Globals.currentAppCode & " in the format: 2.17.01", "New " & Globals.getAppName & " Version")
@@ -24,7 +24,7 @@ Public Class CreateRelease
         '    pPatchName = iPatchName
         'End If
 
-        pPatchName = iAppMajorMinorVersion & "." & iPatchVersion
+        pPatchName = iAppMajorMinorVersion
 
         pAppCode = iAppCode
         pAppVersion = iAppMajorMinorVersion

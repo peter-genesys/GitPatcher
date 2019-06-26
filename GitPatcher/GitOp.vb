@@ -181,6 +181,9 @@ Public Class GitOp
 
         For Each branch In releaseBranches
             Dim lAppCode As String = Common.getNthSegment(branch, "/", 2)
+            If lAppCode = "release" Then
+                lAppCode = Common.getNthSegment(branch, "/", 3)
+            End If
 
             If Not appCodeList.Contains(lAppCode) Then
                 appCodeList.Add(lAppCode, lAppCode)

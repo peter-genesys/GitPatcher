@@ -435,7 +435,7 @@
 
     Private Sub TestCreatePatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestCreatePatchSetToolStripMenuItem.Click
         'Create, edit And test collection
-        Dim Wizard As New CreateRelease("prism", "prism-2.17.04", "", "", "patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL")
+        Dim Wizard As New CreateRelease("prism", "prism-2.17.04", "", "patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL")
         Wizard.ShowDialog() 'WAITING HERE!!
     End Sub
 
@@ -707,5 +707,25 @@
 
     Private Sub NewVersionReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewVersionReleaseToolStripMenuItem.Click
         WH_versions.newVersionRelease(ToolStripComboBox.SelectedItem, "VM")
+    End Sub
+
+    Private Sub NewMajorVersionReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewMajorVersionReleaseToolStripMenuItem.Click
+        WH_versions.newVersionRelease("Major", "VM")
+    End Sub
+
+    Private Sub NewMinorVersionReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewMinorVersionReleaseToolStripMenuItem.Click
+        WH_versions.newVersionRelease("Minor", "VM")
+    End Sub
+
+    Private Sub NewPatchVersionReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewPatchVersionReleaseToolStripMenuItem.Click
+        WH_versions.newVersionRelease("Patch", "VM")
+    End Sub
+
+    Private Sub CleanToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CleanToolStripMenuItem.Click
+        WF_virtual_box.takeSnapshot(PatchRunner.GetlastSuccessfulPatch & "-clean")
+    End Sub
+
+    Private Sub WipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles WipToolStripMenuItem.Click
+        WF_virtual_box.takeSnapshot(PatchRunner.GetlastSuccessfulPatch & "-wip")
     End Sub
 End Class
