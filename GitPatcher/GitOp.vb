@@ -172,6 +172,41 @@ Public Class GitOp
 
     End Function
 
+
+
+
+    Shared Function getReleaseList(ByVal appCode As String) As Collection
+
+        Return getBranchNameList("release/" & appCode & "/")
+
+    End Function
+
+
+    Shared Function getPatchVersionReleaseList(ByVal appCode As String) As Collection
+
+        Dim PatchVersionReleaseList As Collection = New Collection
+        For Each release In getBranchNameList("release/" & appCode & "/")
+
+            Dim PatchId As Integer
+            Try
+                PatchId = Common.getLastSegment(release, ".")
+            Catch ex As Exception
+                MsgBox(ex.Message)
+                Throw New System.Exception("Unable to read patch version id")
+            End Try
+
+            If PatchId > 0 Then
+                'Patch version release branch
+                PatchVersionReleaseList.Add(release, release)
+            End If
+
+        Next
+    End Function
+
+
+
+
+
     Shared Function getReleaseAppCodeList(Optional ByVal nameFilter As String = Nothing) As Collection
         Logger.Note("getReleaseAppCodeList(nameFilter)", nameFilter)
 

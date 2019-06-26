@@ -1,4 +1,4 @@
-﻿Public Class WH_versions
+﻿Public Class WF_versions
 
 
     Shared Sub checkAppVersion(ByVal appVersion As String, ByVal appcode As String, ByRef MajorId As Integer, ByRef MinorId As Integer, ByRef PatchId As Integer)
@@ -334,7 +334,7 @@
 
                 lAppCode = ChoiceDialog.Ask("Please choose the app to be released (from previously released apps)", appCodeList, lAppCode, "Identify the app", True, False, False)
 
-                Dim releaseBranches As Collection = GitOp.getBranchNameList("release/" & lAppCode & "/")
+                Dim releaseBranches As Collection = GitOp.getReleaseList(lAppCode)
 
                 lastReleaseBranch = ChoiceDialog.Ask("Please identify the last release branch for the app: " & lAppCode, releaseBranches, "", "Identify last release branch", False, False, False)
 
@@ -736,7 +736,7 @@
 
                 lAppCode = ChoiceDialog.Ask("Please choose the app (from previously released apps)", appCodeList, lAppCode, "Identify the app", True, False, False)
 
-                Dim releaseBranches As Collection = GitOp.getBranchNameList("release/" & lAppCode & "/")
+                Dim releaseBranches As Collection = GitOp.getReleaseList(lAppCode)
 
                 lastReleaseBranch = ChoiceDialog.Ask("Please identify the current release branch for the app: " & lAppCode, releaseBranches, "", "Identify current release branch", False, False, False)
 

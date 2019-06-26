@@ -34,7 +34,6 @@
         'CHOOSE-RELEASE-BRANCH
         createPatchProgress.addStep("Choose Release Branch", True, "Choose the release branch that this hotfix is currently based on.", iRebaseBranchOn = "release")
 
-
         'REBASE-FEATURE
         createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow")
         'REVIEW-TAGS
@@ -57,10 +56,6 @@
         'PULL-MASTER-AGAIN
         createPatchProgress.addStep("Pull " & iRebaseBranchOn & " branch", True, "Double-check that the " & iRebaseBranchOn & " is still on the latest commit.")
 
-        'REBASE-OR-REDO
-        'createPatchProgress.addStep("Quick Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, False,
-        '                            "Using the Quick Rebase workflow.  Determine whether to restart this workflow.", True)
-
         'MERGE-FEATURE
         createPatchProgress.addStep("Merge from Branch: " & currentBranch, True, "Please select the Branch:" & currentBranch & " from the Tortoise Merge Dialogue")
         'PUSH-MASTER
@@ -70,12 +65,41 @@
                                     "If NOT, then your " & iRebaseBranchOn & " branch may now out of date, and also your rebase from it.  So any patches you created COULD BE stale. " &
                                     "In this situation, it is safest to restart the Create Patch process to ensure you are patching the lastest merged files. ")
 
-        'RELEASE-DEV
+        'RELEASE-TO-TARGET
         createPatchProgress.addStep("Release to " & iDBtarget, True)
         'RETURN-FEATURE
         createPatchProgress.addStep("Return to Branch: " & currentBranch, True)
         'SNAPSHOT-CLEAN
         createPatchProgress.addStep("Clean VM Snapshot", True, "Create a clean snapshot of your current VM state, to use as your next restore point.")
+
+        'STEPS FOR HOTFIX ONLY
+        '---------------------
+
+        'Need to create a new feature 
+        'Eg if we just did hotfix/QHIDS-1234-HF then need to now create feature/QHIDS-1234-RB
+
+        'Need to use the Create New Branch workflow
+        ' passing - new feature name feature/QHIDS-1234-RB
+        '         - name of the Patch Version Release to be merged in.  (or may come back here to do that?)
+        ' must also change VM's to the DEV VM
+        ' shutdown the HOTFIX VM and start the DEV VM - need to remember 2 VM's now.
+        ' then need to identify and copy each patch, and update the install script and files.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         createPatchProgress.Show()
 
 
@@ -92,9 +116,11 @@
 
                 'Switch to current release branch
                 ' Tortoise.Switch(Globals.getRepoPath)
-                Dim releaseBranches As Collection = GitOp.getBranchNameList("release/" & Globals.currentAppCode & "/")
+                Dim releaseBranches As Collection = GitOp.getPatchVersionReleaseList(Globals.currentAppCode)
 
-                rebaseBranchOn = ChoiceDialog.Ask("Please choose the base release branch for this hotfix", releaseBranches, "", "Choose the base release branch", False, False, False)
+                rebaseBranchOn = ChoiceDialog.Ask("This hotfix was branched from a patch version release branch." & Chr(10) &
+                                                  "Please identify the original patch version release branch to rebase this hotfix",
+                                                  releaseBranches, "", "Choose original patch version release branch", False, False, False)
 
                 'Dim currentReleaseBranch As String = GitOp.CurrentBranch()
 
@@ -264,9 +290,9 @@
                 If preMasterSHA <> postMasterSHA Then
 
                     MsgBox("A Pull on " & rebaseBranchOn & " has retrieved extra commits. " & Environment.NewLine &
-                           "The feature must be rebased again, before it can be pushed." & Environment.NewLine & Environment.NewLine &
+                           "The " & iBranchType & " must be rebased again, before it can be pushed." & Environment.NewLine & Environment.NewLine &
                            "A new workflow will now open to handle the rebase. " & Environment.NewLine &
-                           "This process will compare files modified in the master and feature branches, and " & Environment.NewLine &
+                           "This process will compare files modified in the " & rebaseBranchOn & " and " & iBranchType & " branches, and " & Environment.NewLine &
                            "automatically update patched files with New versions as needed.")
 
                     createPatchProgress.setToCompleted()
@@ -297,7 +323,7 @@
                 GitOp.pushBranch(rebaseBranchOn)
             End If
 
-            'RELEASE-DEV
+            'RELEASE-TO-TARGET
             If createPatchProgress.toDoNextStep() Then
                 'Release to DB Target
                 WF_release.releaseTo(iDBtarget, rebaseBranchOn, iBranchType, False)

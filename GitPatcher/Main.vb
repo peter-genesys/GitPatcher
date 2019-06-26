@@ -706,19 +706,19 @@
     End Sub
 
     Private Sub NewVersionReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewVersionReleaseToolStripMenuItem.Click
-        WH_versions.newVersionRelease(ToolStripComboBox.SelectedItem, "VM")
+        WF_versions.newVersionRelease(ToolStripComboBox.SelectedItem, "VM")
     End Sub
 
     Private Sub NewMajorVersionReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewMajorVersionReleaseToolStripMenuItem.Click
-        WH_versions.newVersionRelease("Major", "VM")
+        WF_versions.newVersionRelease("Major", "VM")
     End Sub
 
     Private Sub NewMinorVersionReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewMinorVersionReleaseToolStripMenuItem.Click
-        WH_versions.newVersionRelease("Minor", "VM")
+        WF_versions.newVersionRelease("Minor", "VM")
     End Sub
 
     Private Sub NewPatchVersionReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewPatchVersionReleaseToolStripMenuItem.Click
-        WH_versions.newVersionRelease("Patch", "VM")
+        WF_versions.newVersionRelease("Patch", "VM")
     End Sub
 
     Private Sub CleanToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CleanToolStripMenuItem.Click

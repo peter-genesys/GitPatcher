@@ -5,10 +5,8 @@
         newFeature.MdiParent = GitPatcher
         'SWITCH-TO-MASTER
         newFeature.addStep("Switch to " & iBranchFrom & " branch", Globals.currentBranch <> iBranchFrom, "Switch automatically to " & iBranchFrom, iBranchFrom = "master")
-        'SWITCH-TO-CURRENT-RELEASE   'TGIT - Let user choose any branch. Or could create a dialog with a list of release/ branches.
-        newFeature.addStep("Switch to current " & iBranchFrom & " branch", Globals.currentBranch <> iBranchFrom,
-                           "Switch manually to " & iBranchFrom &
-                           "Please choose the latest " & Globals.currentAppCode & " release branch", iBranchType = "hotfix")
+        'SUB-FLOW:FIND-PATCH-VERSION-RELEASE
+        newFeature.addStep("Switch to release branch", Globals.currentBranch <> iBranchFrom, "Find existing, or create a new Patch Version release branch", iBranchFrom = "release")
         'PULL-CURRENT-BRANCH - LGIT - automatic
         newFeature.addStep("Pull " & iBranchFrom & " branch from Origin", True, "Ensure" & iBranchFrom & " branch is upto date.")
         'SUB-FLOW:RESYNCH-VM
@@ -31,8 +29,8 @@
 
         'SUB-FLOW:FIND-PATCH-VERSION-RELEASE
         If newFeature.toDoNextStep() Then
-            'Find existing or create a new patch verion release branch
-            WH_versions.findPatchVersion("patch", "VM", False)
+            'Find existing or create a new patch version release branch
+            WF_versions.findPatchVersion("patch", "VM", False)
             'Release to VM
             WF_release.releaseTo("VM", GitOp.CurrentBranch(), iBranchType, False)
 
