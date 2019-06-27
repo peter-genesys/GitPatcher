@@ -104,5 +104,8 @@
     <Setting Name="LogViewerShow" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="VBoxNameHF" Type="System.String" Scope="User">
+      <Value Profile="(Default)">No VM</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

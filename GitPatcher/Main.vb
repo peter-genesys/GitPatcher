@@ -645,7 +645,7 @@
     End Sub
 
     Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ReleaseToVMMenuItem.Click
-        'WF_release.releaseTo("VM")
+        WF_release.releaseTo("VM", "master", "feature", True)
     End Sub
 
     Private Sub ExportDataMenuItem_Click(sender As Object, e As EventArgs)
@@ -722,10 +722,31 @@
     End Sub
 
     Private Sub HotfixToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles HotfixToolStripMenuItem1.Click
+        'Call worksflow
         WF_newBranch.createHotFixBranch()
+        'Close and Open Main window to refresh it.
+        Me.Close()
+        GitPatcher.newMainWindow()
     End Sub
 
     Private Sub HotfixToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles HotfixToolStripMenuItem2.Click
         WF_createPatch.createPatchProcess("hotfix", "UAT", "release")
+    End Sub
+
+    Private Sub TestJdbcToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestJdbcToolStripMenuItem.Click
+        MsgBox("Last succesful patch is " & PatchRunner.GetlastSuccessfulPatch)
+    End Sub
+
+    Private Sub FeatureToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles FeatureToolStripMenuItem1.Click
+        'Call worksflow
+        WF_newBranch.createNewBranch("feature", "master")
+
+        'Close and Open Main window to refresh it.
+        Me.Close()
+        GitPatcher.newMainWindow()
+    End Sub
+
+    Private Sub FeatureToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles FeatureToolStripMenuItem2.Click
+        WF_createPatch.createPatchProcess("feature", "DEV", "master")
     End Sub
 End Class

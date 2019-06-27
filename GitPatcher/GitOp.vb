@@ -201,6 +201,13 @@ Public Class GitOp
             End If
 
         Next
+
+        If PatchVersionReleaseList.Count = 0 Then
+            Throw New System.Exception("No release branches found!")
+        End If
+
+        Return PatchVersionReleaseList
+
     End Function
 
 

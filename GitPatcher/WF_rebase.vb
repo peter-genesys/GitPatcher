@@ -51,9 +51,9 @@ Friend Class WF_rebase
         Common.checkBranch(iBranchType)
 
         Dim l_tag_prefix As String = Nothing
-        If iBranchType = "hotfix" Then
-            l_tag_prefix = iDBtarget.Substring(0, 1)
-        End If
+        'If iBranchType = "hotfix" Then
+        ' l_tag_prefix = iDBtarget.Substring(0, 1)
+        ' End If
 
 
         Dim currentBranchLong As String = GitOp.CurrentFriendlyBranch()

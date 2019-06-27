@@ -32,7 +32,7 @@
 
         ' "Regenerate: Menu (new pages, menu changes), Security (new pages, security changes), Tapis (table or view column changes), Domains (new or changed tables or views, new domains or domain ussage changed)")
         'CHOOSE-RELEASE-BRANCH
-        createPatchProgress.addStep("Choose Release Branch", True, "Choose the release branch that this hotfix is currently based on.", iRebaseBranchOn = "release")
+        createPatchProgress.addStep("Choose Release Branch", True, "Choose the Patch Version Release branch that this hotfix was branched from.", iRebaseBranchOn = "release")
 
         'REBASE-FEATURE
         createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow")
@@ -118,9 +118,9 @@
                 ' Tortoise.Switch(Globals.getRepoPath)
                 Dim releaseBranches As Collection = GitOp.getPatchVersionReleaseList(Globals.currentAppCode)
 
-                rebaseBranchOn = ChoiceDialog.Ask("This hotfix was branched from a patch version release branch." & Chr(10) &
-                                                  "Please identify the original patch version release branch to rebase this hotfix",
-                                                  releaseBranches, "", "Choose original patch version release branch", False, False, False)
+                rebaseBranchOn = ChoiceDialog.Ask("This hotfix was branched from a Patch Version Release branch." & Chr(10) &
+                                                  "Please identify the original Patch Version Release branch on which to rebase this hotfix",
+                                                  releaseBranches, "", "Choose original Patch Version Release branch", False, False, False)
 
                 'Dim currentReleaseBranch As String = GitOp.CurrentBranch()
 

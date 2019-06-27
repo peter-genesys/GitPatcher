@@ -437,6 +437,18 @@ Namespace My
                 Me("LogViewerShow") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("No VM")>  _
+        Public Property VBoxNameHF() As String
+            Get
+                Return CType(Me("VBoxNameHF"),String)
+            End Get
+            Set
+                Me("VBoxNameHF") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
