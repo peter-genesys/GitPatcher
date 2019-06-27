@@ -235,7 +235,7 @@
 
     Public Shared Sub ApexRestoreSinglePage() 'Current
 
-        Dim currentBranch As String = GitOp.CurrentBranch()
+        Dim currentBranch As String = GitOp.CurrentFriendlyBranch()
         Dim lSchema As String = Nothing
         Dim lAppId As String = Nothing
         Dim applicationDir As String = Nothing
@@ -493,7 +493,7 @@
         Dim l_skip_reports_DBs As String = "DEV"
         Dim fapp_id As String = Globals.currentApex
 
-        Dim currentBranch As String = GitOp.CurrentBranch()
+        Dim currentBranch As String = GitOp.CurrentFriendlyBranch()
         Dim runOnlyDBs As String = "DEV,TEST,UAT,PROD"
 
         Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import APEX application " & fapp_id & " into DB " & Globals.currentTNS,
@@ -620,7 +620,7 @@
 
         Dim fapp_id As String = Globals.currentApex
 
-        Dim currentBranch As String = GitOp.CurrentBranch()
+        Dim currentBranch As String = GitOp.CurrentFriendlyBranch()
 
         Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import 1 APEX page " & fapp_id & " into DB " & Globals.currentTNS,
         "Importing 1 APEX page of Application " & Globals.currentApex & " into parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentTNS & Environment.NewLine &

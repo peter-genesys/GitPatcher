@@ -79,20 +79,26 @@ Public Class GitBashFascade
         execute()
     End Sub
 
-    Public Function PushSuccess(ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False)
+    Public Function PushSuccess(ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal iSetUpstream As Boolean = False)
         Logger.Dbg("GitBashFascade.PushSuccess( " & iRemote & "," & iBranch & "," & iTags.ToString & ")")
+        Dim ltags As String = Nothing
+        Dim lsetupstream As String = Nothing
+
         If iTags Then
-            GitBashSetup.Arguments = "push " & iRemote & " " & iBranch & " --tags " 'git push origin master --tags
-        Else
-            GitBashSetup.Arguments = "push " & iRemote & " " & iBranch ' 'git push origin master
+            ltags = " --tags "
         End If
+        If iSetUpstream Then
+            lsetupstream = "--set-upstream " '-u 
+        End If
+
+        GitBashSetup.Arguments = "push " & lsetupstream & iRemote & " " & iBranch & ltags 'git push --set-upstream origin master --tags
 
         Return executeSuccess()
 
     End Function
 
 
-    Public Sub Push(ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False)
+    Public Sub Push(ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal iSetUpstream As Boolean = False)
         Logger.Dbg("GitBashFascade.Push( " & iRemote & "," & iBranch & "," & iTags.ToString & ")")
         Dim success As Boolean = PushSuccess(iRemote, iBranch, iTags)
 

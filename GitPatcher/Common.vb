@@ -196,7 +196,7 @@
 
 
     Public Shared Sub checkBranch(i_searchString)
-        Dim currentBranch As String = GitOp.CurrentBranch()
+        Dim currentBranch As String = GitOp.CurrentFriendlyBranch()
 
         If Not currentBranch.Contains(i_searchString) Then
             MsgBox("Current Branch: " & currentBranch & " is not of type " & i_searchString & Environment.NewLine & Environment.NewLine & "Please change branch manually NOW, or CANCEL this workflow.")

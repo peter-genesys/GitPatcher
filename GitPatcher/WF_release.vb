@@ -5,8 +5,6 @@
 
         Dim lcurrentDB As String = Globals.getDB()
 
-        Dim currentBranch As String = GitOp.CurrentBranch()
-
         'Dim releaseFromBranch As String = Globals.deriveHotfixBranch(iTargetDB)
 
         Dim releasing As ProgressDialogue = New ProgressDialogue("Release to " & iTargetDB)
@@ -16,7 +14,7 @@
         'CHANGE-DB-TARGET
         releasing.addStep("Change current DB to : " & iTargetDB, lcurrentDB <> iTargetDB)
         'SWITCH-BRANCH
-        releasing.addStep("Switch to " & ireleaseFromBranch & " branch", currentBranch <> ireleaseFromBranch)
+        releasing.addStep("Switch to " & ireleaseFromBranch & " branch", Globals.currentLongBranch() <> ireleaseFromBranch)
         'PULL-BRANCH
         releasing.addStep("Pull from Origin to " & ireleaseFromBranch & " branch", iPull)
         'CHECK-OUT-TAG
@@ -181,7 +179,7 @@
 
         newBranch = newBranch & "/" & l_app_version
 
-        Dim currentBranch As String = GitOp.CurrentBranch()
+        Dim currentBranch As String = GitOp.CurrentFriendlyBranch()
 
         Dim createPatchSetProgress As ProgressDialogue = New ProgressDialogue("Create Patch Release", "Create formal release of patches.") '("Create DB " & iCreatePatchType)
         createPatchSetProgress.MdiParent = GitPatcher

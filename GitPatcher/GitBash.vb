@@ -20,12 +20,12 @@
         client.Pull(iRemote, Common.unix_path(iBranch))
     End Sub
 
-    Public Shared Function PushSuccess(ByVal i_WorkingDir As String, ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal i_wait As Boolean = True) As Boolean
+    Public Shared Function PushSuccess(ByVal i_WorkingDir As String, ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal i_wait As Boolean = True, Optional ByVal iSetUpstream As Boolean = False) As Boolean
         Dim client As New GitBashFascade(i_WorkingDir, i_wait)
         Return client.PushSuccess(iRemote, Common.unix_path(iBranch))
     End Function
 
-    Public Shared Sub Push(ByVal i_WorkingDir As String, ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal i_wait As Boolean = True)
+    Public Shared Sub Push(ByVal i_WorkingDir As String, ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal i_wait As Boolean = True, Optional ByVal iSetUpstream As Boolean = False)
         Dim success As Boolean = PushSuccess(i_WorkingDir, iRemote, iBranch, iTags, i_wait)
     End Sub
 

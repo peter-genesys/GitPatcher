@@ -396,7 +396,7 @@ Module Globals
 
     Public Function currentLongBranch() As String
 
-        Return GitOp.CurrentBranch()
+        Return GitOp.CurrentFriendlyBranch()
     End Function
 
     Public Function currentBranch() As String
@@ -628,6 +628,17 @@ Module Globals
         Return extrasDirCol
 
     End Function
+
+    Public Sub confirmNonVMTarget(ByVal cancellationMessage As String)
+        'Confirm run against non-VM target
+        If Globals.getDB <> "VM" Then
+            Dim result As Integer = MessageBox.Show("Confirm target is " & Globals.getDB &
+        Chr(10) & "The current database is " & Globals.getDB & ".", "Confirm Target", MessageBoxButtons.OKCancel)
+            If result = DialogResult.Cancel Then
+                Throw New Exception(cancellationMessage)
+            End If
+        End If
+    End Sub
 
 
 End Module

@@ -313,7 +313,7 @@ Public Class GitOp
     ' Return True
     ' End Function
 
-    Shared Function CurrentBranch() As String
+    Shared Function CurrentFriendlyBranch() As String
         'Return the name of the branch at the head.
 
         Try
@@ -356,6 +356,34 @@ Public Class GitOp
 
 
     End Sub
+
+
+    'Shared Sub CheckoutBranch(ByVal branchName As String)
+    'Checkout a remote branch
+
+    '    Const String localBranchName = "theBranch";
+
+    '// The local branch doesn't exist yet
+    'Assert.Null(repo.Branches[localBranchName]);
+
+    '// Let's get a reference on the remote tracking branch...
+    'Const String trackedBranchName = "origin/theBranch";
+    'Branch trackedBranch = repo.Branches[trackedBranchName];
+
+    '// ...And create a local branch pointing at the same Commit
+    'Branch branch = repo.CreateBranch(localBranchName, trackedBranch.Tip);
+
+    '// The local branch Is Not configured to track anything
+    'Assert.False(branch.IsTracking);
+
+    '// So, let's configure the local branch to track the remote one.
+    'Branch updatedBranch = repo.Branches.Update(branch,
+    '    b >= b.TrackedBranch = trackedBranch.CanonicalName);
+
+    '// Bam! It's done.
+    'Assert.True(updatedBranch.IsTracking);
+    'Assert.Equal(trackedBranchName, updatedBranch.TrackedBranch.Name);
+    'End Sub
 
 
 
@@ -609,7 +637,7 @@ Public Class GitOp
 
 
 
-    Shared Sub pushBranch(ByVal ibranch_name As String, Optional ByVal iremote_name As String = "origin")
+    Shared Sub pushBranch(ByVal ibranch_name As String, Optional ByVal iremote_name As String = "origin", Optional ByVal iSetUpstream As Boolean = False)
         Logger.Dbg("GitOp.pushBranch(" & ibranch_name & "," & iremote_name & ")")
 
         Dim theSetting As String = My.Settings.PushTool
@@ -624,7 +652,7 @@ Public Class GitOp
                 'MsgBox(ToolName + " TortoiseGit not currently implimented")
                     Case "BGIT"
                         Try
-                            If Not GitBash.PushSuccess(Globals.getRepoPath, iremote_name, ibranch_name, True) Then
+                            If Not GitBash.PushSuccess(Globals.getRepoPath, iremote_name, ibranch_name, True, True, iSetUpstream) Then
                                 MsgBox("Push has failed.  The Synchronisation screen may help you resolve the issue.")
                                 'If push fails show the synch screen.
                                 Tortoise.Sync(Globals.getRepoPath)
@@ -674,10 +702,10 @@ Public Class GitOp
 
     End Sub
 
-    Shared Sub pushCurrentBranch()
+    Shared Sub pushCurrentBranch(Optional ByVal iremote_name As String = "origin", Optional ByVal iSetUpstream As Boolean = False)
         'push current branch
         Logger.Dbg("GitOp.pushCurrentBranch")
-        pushBranch(CurrentBranch)
+        pushBranch(CurrentFriendlyBranch, iremote_name, iSetUpstream)
 
     End Sub
 
@@ -774,7 +802,7 @@ Public Class GitOp
     Shared Sub pullCurrentBranch()
         'pull current branch
 
-        pullBranch(CurrentBranch())
+        pullBranch(CurrentFriendlyBranch())
 
     End Sub
 

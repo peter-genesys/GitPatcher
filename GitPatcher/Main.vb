@@ -111,14 +111,6 @@
     End Sub
 
 
-    Private Sub HotFixToolStripComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles HotFixToolStripComboBox.SelectedIndexChanged
-        NewHotFixToolStripMenuItem1.Text = "New Hotfix for DB: " & HotFixToolStripComboBox.SelectedItem
-        RebaseHotFixToolStripMenuItem.Text = "Rebase Hotfix on Branch: " & Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem)
-        MergeAndPushHotfixToolStripMenuItem.Text = "Merge Hotfix to Branch: " & Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem) & ", then Push"
-        CreateDBHotFixPatchToolStripMenuItem1.Text = "Create DB Hotfix Patch for DB: " & HotFixToolStripComboBox.SelectedItem
-        MultiDBHotFixPatchToolStripMenuItem.Text = "Multi DB Hotfix Patch: " & HotFixToolStripComboBox.SelectedItem & " and Downwards"
-    End Sub
-
     Public Sub loadHotFixComboBoxDBs()
         Logger.Dbg("Main.loadHotFixComboBoxDBs")
         HotFixToolStripComboBox.Items.Clear()
@@ -413,7 +405,7 @@
         'WF_release.releaseTo("PROD")
     End Sub
 
-    Private Sub NewHotfixToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles NewHotFixToolStripMenuItem1.Click
+    Private Sub NewHotFixMenuItem_Click(sender As Object, e As EventArgs) Handles NewHotFixMenuItem.Click
         WF_newBranch.createNewBranch("hotfix", "release")
     End Sub
 
@@ -727,5 +719,13 @@
 
     Private Sub WipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles WipToolStripMenuItem.Click
         WF_virtual_box.takeSnapshot(PatchRunner.GetlastSuccessfulPatch & "-wip")
+    End Sub
+
+    Private Sub HotfixToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles HotfixToolStripMenuItem1.Click
+        WF_newBranch.createHotFixBranch()
+    End Sub
+
+    Private Sub HotfixToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles HotfixToolStripMenuItem2.Click
+        WF_createPatch.createPatchProcess("hotfix", "UAT", "release")
     End Sub
 End Class

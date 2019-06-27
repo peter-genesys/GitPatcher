@@ -56,7 +56,7 @@ Friend Class WF_rebase
         End If
 
 
-        Dim currentBranchLong As String = GitOp.CurrentBranch()
+        Dim currentBranchLong As String = GitOp.CurrentFriendlyBranch()
         Dim currentBranchShort As String = Globals.currentBranch
         Dim callStashPop As Boolean = False
 
@@ -470,7 +470,7 @@ Friend Class WF_rebase
         End If
 
 
-        Dim currentBranchLong As String = GitOp.CurrentBranch()
+        Dim currentBranchLong As String = GitOp.CurrentFriendlyBranch()
         Dim currentBranchShort As String = Globals.currentBranch
         Dim callStashPop As Boolean = False
 
