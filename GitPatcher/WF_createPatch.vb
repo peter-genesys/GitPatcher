@@ -1,6 +1,7 @@
 ﻿Friend Class WF_createPatch
     Shared Sub createPatchProcess(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String,
-                                  Optional ByVal iRebasePatch As Boolean = False,
+                                  Optional ByVal iRebaseHotfix As Boolean = False,
+                                  Optional ByVal iRebaseFeature As Boolean = False,
                                   Optional ByVal iFeatureTipSHA As String = "",
                                   Optional ByVal ipreMasterSHA As String = "",
                                   Optional ByVal ipostMasterSHA As String = "")
@@ -23,29 +24,32 @@
         Dim currentBranch As String = Globals.currentLongBranch()
 
         Dim title As String = "Create " & iBranchType & " Patch"
-        If iRebasePatch Then
-            title = "Rebasing and Updating " & iBranchType & " Patch"
+        If iRebaseHotfix Then
+            title = "Rebased Hotfix as Feature Patch"
         End If
+        If iRebaseFeature Then
+            title = "Rebasing and Updating Feature Patch"
+        End If
+
 
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue(title)
         createPatchProgress.MdiParent = GitPatcher
 
         ' "Regenerate: Menu (new pages, menu changes), Security (new pages, security changes), Tapis (table or view column changes), Domains (new or changed tables or views, new domains or domain ussage changed)")
         'CHOOSE-RELEASE-BRANCH
-        createPatchProgress.addStep("Choose Release Branch", True, "Choose the Patch Version Release branch that this hotfix was branched from.", iRebaseBranchOn = "release")
+        createPatchProgress.addStep("Choose Release Branch", True, "Choose the Patch Version Release branch that this hotfix was branched from.", iBranchType = "hotfix")
 
         'REBASE-FEATURE
-        createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow")
+        createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow", Not iRebaseHotfix)
         'REVIEW-TAGS
-        createPatchProgress.addStep("Review tags on Branch: " & currentBranch, True, "Check that the tags have been assigned to the correct commits.", Not iRebasePatch)
+        createPatchProgress.addStep("Review tags on Branch: " & currentBranch, True, "Check that the tags have been assigned to the correct commits.", Not iRebaseFeature And Not iRebaseHotfix)
         'CREATE-PATCH
-        createPatchProgress.addStep("Create edit, test", True, "Now is a great time to smoke test my work before i commit the patch.", Not iRebasePatch)
+        createPatchProgress.addStep("Create edit, test", True, "Now is a great time to smoke test my work before i commit the patch.", Not iRebaseFeature And Not iRebaseHotfix)
         'UPDATE-PATCH
         createPatchProgress.addStep("Update my patches", True,
-                                    "If there are changed files in common between master and feature the these files must be updated in the patches.", iRebasePatch)
+                                    "If there are changed files in common between master and feature the these files must be updated in the patches.", iRebaseFeature And Not iRebaseHotfix)
         'EXECUTE-PATCHES
-        createPatchProgress.addStep("Execute my patches", True,
-                                    "My patches need to be executed, changed or not.", iRebasePatch)
+        createPatchProgress.addStep("Execute my patches", True, "My patches need to be executed, changed or not.", iRebaseFeature Or iRebaseHotfix)
         'EXTRA-COMMIT
         createPatchProgress.addStep("Commit to Branch: " & currentBranch, False)
         'IMPORT-QUEUED-APPS
@@ -72,8 +76,31 @@
         'SNAPSHOT-CLEAN
         createPatchProgress.addStep("Clean VM Snapshot", True, "Create a clean snapshot of your current VM state, to use as your next restore point.")
 
-        'STEPS FOR HOTFIX ONLY
-        '---------------------
+
+        'HOTFIX ONLY
+        '-----------
+
+        'SUB-FLOW: CREATE-FEATURE-BRANCH-FOR-HOTFIX
+        createPatchProgress.addStep("Create a new feature branch to rebase " & shortBranch, True, "Create a new feature branch to rebase the hotfix on master.", iBranchType = "hotfix")
+
+        'MERGE-BASE-RELEASE-TO-FEATURE
+        createPatchProgress.addStep("Merge " & iRebaseBranchOn & " to new feature", True, "Merge " & iRebaseBranchOn & " to the new feature.  This merges in the new hotfix patches.", iBranchType = "hotfix")
+
+        'COPY-HOTFIX-PATCHES
+        createPatchProgress.addStep("Copy and rebase " & shortBranch & " patches to new feature patches", True,
+        "Loop thru patches and copy them" & Chr(10) &
+        " + Copy the patch folders And files" & Chr(10) &
+        " + Update scripts with the latest versions" & Chr(10) &
+        " + Modify install.sql And install_lite.sql with New patch_name And patch_patch.",
+         iBranchType = "hotfix")
+
+        'May actually be able to use STEP UPDATE-PATCH to + Update scripts with the latest versions
+
+        'SUB-FLOW: CREATE-PATCH-START-AT-EXECUTE-PATCHES
+        createPatchProgress.addStep("Execute Patches, Merge to master, Release to DEV ", True, "Start the Create Feature Patch workflow midway to complete the rebased hotfix patch as a feature patch.", iBranchType = "hotfix")
+
+
+
 
         'Need to create a new feature 
         'Eg if we just did hotfix/QHIDS-1234-HF then need to now create feature/QHIDS-1234-RB
@@ -84,16 +111,6 @@
         ' must also change VM's to the DEV VM
         ' shutdown the HOTFIX VM and start the DEV VM - need to remember 2 VM's now.
         ' then need to identify and copy each patch, and update the install script and files.
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -142,7 +159,7 @@
             'REBASE-FEATURE
             If createPatchProgress.toDoNextStep() Then
                 'Rebase branch
-                l_tag_base = WF_rebase.rebaseBranch(iBranchType, iDBtarget, rebaseBranchOn, True, True, True, iRebasePatch)
+                l_tag_base = WF_rebase.rebaseBranch(iBranchType, iDBtarget, rebaseBranchOn, True, True, True, iRebaseFeature)
                 If String.IsNullOrEmpty(l_tag_base) Then
                     Throw New Exception("Invalid tag - cancelling patch.")
                 End If
@@ -219,7 +236,7 @@
 
             'EXTRA-COMMIT
             Dim lCommitComment As String = Nothing
-            If iRebasePatch Then
+            If iRebaseFeature Then
                 lCommitComment = "Rebased Patch: " & shortBranch & "." & l_tag_base
             End If
 
@@ -300,8 +317,8 @@
 
                     'switch back to the feature
                     GitOp.SwitchBranch(currentBranch)
-                    'restart the createPatchProcess in rebase patch mode.
-                    WF_createPatch.createPatchProcess(iBranchType, iDBtarget, rebaseBranchOn, True, FeatureTipSHA, preMasterSHA, postMasterSHA)
+                    'restart the createPatchProcess in rebase feature mode.
+                    WF_createPatch.createPatchProcess(iBranchType, iDBtarget, rebaseBranchOn, False, True, FeatureTipSHA, preMasterSHA, postMasterSHA)
 
                 End If
 
@@ -344,6 +361,71 @@
                     WF_virtual_box.takeSnapshot(shortBranch & "." & l_tag_base & "-clean")
                 End If
 
+            End If
+
+            'HOTFIX ONLY
+            '-----------
+
+            'SUB-FLOW:CREATE-FEATURE-BRANCH-FOR-HOTFIX
+
+
+            If createPatchProgress.toDoNextStep() Then
+                'Create and Switch to new branch
+
+                Need to check that target Is VM_DEV And / Or that the VM has changed to VM_DEV
+
+                Dim RebasedHotfixBranch As String = Replace(shortBranch, "-HF", "-RB")
+                WF_newBranch.createNewBranch("feature", "master", True, RebasedHotfixBranch)
+
+            End If
+
+            'MERGE-BASE-RELEASE-TO-FEATURE
+            If createPatchProgress.toDoNextStep() Then
+                'Merge from base branch
+                GitOp.Merge(iRebaseBranchOn)
+
+            End If
+
+
+            'COPY-HOTFIX-PATCHES
+            'May actually be able to use STEP UPDATE-PATCH
+
+
+            If createPatchProgress.toDoNextStep() Then
+                'Loop thru patches and copy them
+                ' + Copy the patch folders And files
+                ' + Update scripts with the latest versions
+                ' + Modify install.sql And install_lite.sql with New patch_name And patch_patch.
+
+
+                'Create dir feature/JIRA-123-HF - if not exists
+
+                'Get a list of Hotfix patches
+                'hotfix/JIRA-123-HF/JIRA-123-HF.01.QHOWN
+                'hotfix/JIRA-123-HF/JIRA-123-HF.01.QHOWN
+
+                'Create a set of Rebased Hotfix patches
+                'feature/JIRA-123-RB/JIRA-123-RB.01.QHOWN
+                'feature/JIRA-123-RB/JIRA-123-RB.01.QHOWN
+                Dim HotFixPatchList As Collection = FileIO.FolderList(ByVal strPath As String, ByVal strPattern As String, ByVal removePath As String, Optional ByVal popKey As Boolean = False) As Collection
+                For Each HotFixPatch In HotFixPatchList
+                    'Copy the patch to the new location
+                    FileIO.CopyDir(ifrompath As String, itopath As String) 'Copy dir and contents
+                Next
+
+                'Modify the installs in each patch.
+
+                hopefully will be able to pass SHA's back into this routine to get the updates done simply.
+
+            End If
+
+            NB what happens to the merge from releae branch if there Is an extra rebase?
+
+
+            'SUB-FLOW: CREATE-PATCH-START-AT-EXECUTE-PATCHES
+            If createPatchProgress.toDoNextStep() Then
+                'restart the createPatchProcess in rebase hotfix mode.
+                WF_createPatch.createPatchProcess("feature", "DEV", "master", True)
             End If
 
             'Finish

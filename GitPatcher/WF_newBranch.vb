@@ -1,6 +1,6 @@
 ﻿Friend Class WF_newBranch
 
-    Shared Sub createNewBranch(iBranchType As String, iBranchFrom As String, Optional ByRef ipull As Boolean = True)
+    Shared Sub createNewBranch(iBranchType As String, iBranchFrom As String, Optional ByRef ipull As Boolean = True, Optional ByRef iBranchName As String = "")
 
         Dim newFeature As ProgressDialogue = New ProgressDialogue("Create new " & iBranchType & " branch", "Create a new " & iBranchType & " Branch with the standardised naming " & iBranchType & "/" & (Globals.deriveFeatureCode & "/").TrimStart("/") & "ISSUE_ID.")
         newFeature.MdiParent = GitPatcher
@@ -77,45 +77,53 @@
 
             If newFeature.toDoNextStep() Then
                 'Create and Switch to new branch
-                Dim branchName As String = InputBox("Enter the Jira Number for the new " & iBranchType, "Jira Number for new " & iBranchType & " Branch", Globals.getJira).ToUpper 'Ensure UPPERCASE
+                Dim branchName As String = Nothing
+                If String.IsNullOrEmpty(iBranchName) Then
+                    branchName = InputBox("Enter the Jira Number for the new " & iBranchType, "Jira Number for new " & iBranchType & " Branch", Globals.getJira).ToUpper() 'Ensure UPPERCASE
+                Else
+                    'branchName is passed when rebasing a hotfix as a new feature
+                    branchName = iBranchName
+                End If
 
                 If Not String.IsNullOrEmpty(branchName) Then
 
-                    If iBranchType = "hotfix" Then
-                        branchName = branchName & "-HF" 'hotfix branches will have the suffix HF added to the JiraId
+                    If iBranchType = "hotfix" And Not branchName Like "*-HF" Then
+                        'Add -HF suffix
+                        'branchName = Replace(branchName, "-HF", "") & "-HF" 'hotfix branches will have the suffix HF added to the JiraId
+                        branchName = branchName & "-HF"
                     End If
 
                     Dim newBranch As String = iBranchType
 
-                    'Derive the feature code from app and org codes.
-                    Dim featureCode As String = Globals.deriveFeatureCode
-                    If Not String.IsNullOrEmpty(featureCode) Then
-                        'Confirm the feature code if not null
-                        featureCode = InputBox("Feature Code", "Confirm Feature Code", featureCode)
+                        'Derive the feature code from app and org codes.
+                        Dim featureCode As String = Globals.deriveFeatureCode
+                        If Not String.IsNullOrEmpty(featureCode) Then
+                            'Confirm the feature code if not null
+                            featureCode = InputBox("Feature Code", "Confirm Feature Code", featureCode)
+                        End If
+
+
+                        If String.IsNullOrEmpty(featureCode) Then
+                            'No feature code needed.
+                            newBranch = newBranch & "/" & branchName
+                        Else
+                            'Use the feature code if not null
+                            newBranch = newBranch & "/" & featureCode & "/" & branchName
+                        End If
+
+                        newFeature.updateTitle("Create new " & iBranchType & " branch:  " & branchName)
+                        newFeature.updateStepDescription(1, "Create and switch to " & iBranchType & " branch: " & newBranch)
+
+                        GitOp.createAndSwitchBranch(newBranch)
+
                     End If
 
 
-                    If String.IsNullOrEmpty(featureCode) Then
-                        'No feature code needed.
-                        newBranch = newBranch & "/" & branchName
-                    Else
-                        'Use the feature code if not null
-                        newBranch = newBranch & "/" & featureCode & "/" & branchName
-                    End If
-
-                    newFeature.updateTitle("Create new " & iBranchType & " branch:  " & branchName)
-                    newFeature.updateStepDescription(1, "Create and switch to " & iBranchType & " branch: " & newBranch)
-
-                    GitOp.createAndSwitchBranch(newBranch)
 
                 End If
 
-
-
-            End If
-
-            'Done
-            newFeature.toDoNextStep()
+                'Done
+                newFeature.toDoNextStep()
 
         Catch ex As Exception
             'Finish workflow if an error occurs

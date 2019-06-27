@@ -445,6 +445,9 @@ Friend Class WF_rebase
             MsgBox(ex.Message)
             rebasing.setToCompleted()
             rebasing.Close()
+
+            '@TODO should be parameterised to throw the exception to caller.
+
         End Try
 
         Return l_tag_base

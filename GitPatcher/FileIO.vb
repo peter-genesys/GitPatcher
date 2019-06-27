@@ -286,6 +286,41 @@
 
     End Sub
 
+    Public Shared Function FolderList(ByVal strPath As String, ByVal strPattern As String, ByVal removePath As String, Optional ByVal popKey As Boolean = False) As Collection
+
+        Dim lstrPath As String = Common.dos_path(strPath)
+        Dim lremovePath As String = Common.dos_path(removePath)
+        Dim lstrPattern As String = Common.dos_path(strPattern)
+
+        FileIO.createFolderIfNotExists(lstrPath)
+
+        Dim Foldernames As Collection = New Collection
+        Try
+
+            Dim strFolders() As String = System.IO.Directory.GetDirectories(lstrPath, lstrPattern)
+
+            'Add the files
+            For Each strFolder As String In strFolders
+                If popKey Then
+                    Foldernames.Add(strFolder.Substring(lremovePath.Length), strFolder.Substring(lremovePath.Length).ToString)
+                Else
+                    Foldernames.Add(strFolder.Substring(lremovePath.Length))
+                End If
+
+                Logger.Note("Added File", strFolder.Substring(lremovePath.Length))
+            Next
+
+
+        Catch e As System.IO.DirectoryNotFoundException
+            MsgBox("Path does not exist: " & lstrPath, MsgBoxStyle.Critical, "Dir does not exist")
+
+        End Try
+
+
+        Return Foldernames
+
+    End Function
+
 
 
 
@@ -372,6 +407,10 @@
 
     End Sub
 
+    Public Shared Sub CopyDir(ifrompath As String, itopath As String)
+        Logger.Dbg("CopyDir frompath " & Common.dos_path(ifrompath) & " topath " & Common.dos_path(itopath))
+        My.Computer.FileSystem.CopyDirectory(Common.dos_path(ifrompath), Common.dos_path(itopath), True)
+    End Sub
 
     Public Shared Sub CopyFile(ifrompath As String, itopath As String)
         Logger.Dbg("CopyFile frompath " & Common.dos_path(ifrompath) & " topath " & Common.dos_path(itopath))
