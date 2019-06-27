@@ -88,10 +88,12 @@ Public Class GitBashFascade
             ltags = " --tags "
         End If
         If iSetUpstream Then
-            lsetupstream = "--set-upstream " '-u 
+            lsetupstream = "-u " '"--set-upstream " '-u 
         End If
 
+
         GitBashSetup.Arguments = "push " & lsetupstream & iRemote & " " & iBranch & ltags 'git push --set-upstream origin master --tags
+        Logger.Note("GitBashSetup.Arguments", GitBashSetup.Arguments)
 
         Return executeSuccess()
 
