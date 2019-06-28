@@ -9,6 +9,7 @@ Class Halt
 End Class 'Halt
 
 
+
 Public Class GitOp
     Dim halt As Exception
 
@@ -396,7 +397,6 @@ Public Class GitOp
 
     Shared Sub SwitchBranch(ByVal branchName As String)
         'Switch to an existing local branch
-
         Logger.Note("SwitchBranch(branchName)", branchName)
 
         Dim theSetting As String = My.Settings.SwitchTool
@@ -417,7 +417,15 @@ Public Class GitOp
                     Case "LGIT"
                         Dim existingBranch As Branch = Globals.getRepo.Branches(branchName)
 
-                        Commands.Checkout(Globals.getRepo, existingBranch)
+                        Try
+                            Commands.Checkout(Globals.getRepo, existingBranch)
+                        Catch ex As Exception
+                            '@TODO If branch is not local, confirm checkout from origin repo
+
+                            MsgBox(ex.Message)
+                            Throw ex
+                        End Try
+
 
 
                 'MsgBox(ToolName + " LibGit2 not currently implimented")
@@ -494,6 +502,18 @@ Public Class GitOp
     End Sub
 
 
+    '    Public void CommitChanges() {
+    '    Try {
+
+    '        repo.Commit("updating files..", New Signature(username, email, DateTimeOffset.Now),
+    '            New Signature(username, email, DateTimeOffset.Now));
+    '    }
+    '    Catch (Exception e) {
+    '        Console.WriteLine("Exception:RepoActions:CommitChanges " + e.Message);
+    '    }
+    '}
+
+
     Shared Sub Merge(ByVal targetBranch As String, Optional ByVal iFastForward As Boolean = False)
         'Merge the targetBranch into the current branch 
         'NB NoFastForward
@@ -520,6 +540,9 @@ Public Class GitOp
                             options.FastForwardStrategy = FastForwardStrategy.NoFastForward
                         End If
 
+                        'To allow for a custom message - set commt on success to false and commit afterwards
+                        options.CommitOnSuccess = False
+
                         Dim UserName As String = Globals.getRepoConfig("user.name")
                         Dim UserEmail As String = Globals.getRepoConfig("user.email")
 
@@ -530,6 +553,8 @@ Public Class GitOp
 
                         Globals.getRepo.Merge(Globals.getRepo.Branches(targetBranch).Tip, mySignature, options)
 
+                        'Now commit with message
+                        Globals.getRepo.Commit("Merge " & targetBranch & " to " & Globals.currentBranch, mySignature, mySignature)
 
                 'MsgBox(ToolName + " LibGit2 not currently implimented")
 
@@ -754,8 +779,10 @@ Public Class GitOp
                         '    })
 
                         'Get signature details from the current repo
-                        Dim UserName As String = Globals.getRepo.Config(10).Value
-                        Dim UserEmail As String = Globals.getRepo.Config(11).Value
+
+                        Dim UserName As String = Globals.getRepoConfig("user.name")
+                        Dim UserEmail As String = Globals.getRepoConfig("user.email")
+
                         Logger.Note("UserName", UserName)
                         Logger.Note("UserEmail", UserEmail)
 
@@ -823,6 +850,51 @@ Public Class GitOp
         ' End If
 
     End Sub
+
+    Shared Sub Checkout(ByVal theBranch As Branch)
+        'Checkout to any existing branch
+
+        'GitBash.Switch(Globals.getRepoPath, branchName)
+        'Tortoise.Switch(ibranch_name, True)
+
+        Try
+
+            Commands.Checkout(Globals.getRepo, theBranch)
+
+        Catch e As Exception
+            MsgBox(e.Message)
+        End Try
+
+        ''Verify that the switch occurred and if not, use tortoise to do it.
+        ''Thus exposing the issue, so the developer can resolve it, before proceeding.
+        'If Globals.currentBranch <> branchName Then
+        '    Tortoise.Switch(Globals.getRepoPath)
+        'End If
+
+    End Sub
+
+    Shared Sub Checkout(ByVal theCommit As Commit)
+        'Checkout any existing commit
+
+        'GitBash.Switch(Globals.getRepoPath, branchName)
+        'Tortoise.Switch(ibranch_name, True)
+
+        Try
+
+            Commands.Checkout(Globals.getRepo, theCommit)
+
+        Catch e As Exception
+            MsgBox(e.Message)
+        End Try
+
+        ''Verify that the switch occurred and if not, use tortoise to do it.
+        ''Thus exposing the issue, so the developer can resolve it, before proceeding.
+        'If Globals.currentBranch <> branchName Then
+        '    Tortoise.Switch(Globals.getRepoPath)
+        'End If
+
+    End Sub
+
 
     Shared Sub getIndexedChanges()
         'NOT CURRENTLY USED - LINKED TO HIDDEN MENU ITEM "ShowIndex"

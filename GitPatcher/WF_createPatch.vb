@@ -372,7 +372,7 @@
             If createPatchProgress.toDoNextStep() Then
                 'Create and Switch to new branch
 
-                Need to check that target Is VM_DEV And / Or that the VM has changed to VM_DEV
+                '@TODO Need to check that target Is VM_DEV And / Or that the VM has changed to VM_DEV
 
                 Dim RebasedHotfixBranch As String = Replace(shortBranch, "-HF", "-RB")
                 WF_newBranch.createNewBranch("feature", "master", True, RebasedHotfixBranch)
@@ -407,19 +407,26 @@
                 'Create a set of Rebased Hotfix patches
                 'feature/JIRA-123-RB/JIRA-123-RB.01.QHOWN
                 'feature/JIRA-123-RB/JIRA-123-RB.01.QHOWN
-                Dim HotFixPatchList As Collection = FileIO.FolderList(ByVal strPath As String, ByVal strPattern As String, ByVal removePath As String, Optional ByVal popKey As Boolean = False) As Collection
+                Dim HotFixPatchList As Collection = FileIO.FolderList(Globals.RootPatchDir, shortBranch & "." & l_tag_base, "", True)
                 For Each HotFixPatch In HotFixPatchList
                     'Copy the patch to the new location
-                    FileIO.CopyDir(ifrompath As String, itopath As String) 'Copy dir and contents
+                    Dim RebasePatch As String = Replace(HotFixPatch, "hotfix", "feature")
+
+                    FileIO.CopyDir(HotFixPatch, Replace(HotFixPatch, "-HF", "-RB")) 'Copy dir and contents
                 Next
+
+                '@TODO ADD new folder and files.
+                '@TODO COMMIT
+
+
 
                 'Modify the installs in each patch.
 
-                hopefully will be able to pass SHA's back into this routine to get the updates done simply.
+                '@TODO hopefully will be able to pass SHA's back into this routine to get the updates done simply.
 
             End If
 
-            NB what happens to the merge from releae branch if there Is an extra rebase?
+            '@TODO NB what happens to the merge from releae branch if there Is an extra rebase?
 
 
             'SUB-FLOW: CREATE-PATCH-START-AT-EXECUTE-PATCHES
