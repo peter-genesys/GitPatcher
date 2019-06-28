@@ -288,11 +288,18 @@
 
     Public Shared Function FolderList(ByVal strPath As String, ByVal strPattern As String, ByVal removePath As String, Optional ByVal popKey As Boolean = False) As Collection
 
+
+        Logger.Dbg("FileIO.FolderList")
+        Logger.Note("strPath", strPath)
+        Logger.Note("strPattern", strPattern)
+        Logger.Note("removePath", removePath)
+        Logger.Note("popKey", popKey.ToString)
+
         Dim lstrPath As String = Common.dos_path(strPath)
         Dim lremovePath As String = Common.dos_path(removePath)
         Dim lstrPattern As String = Common.dos_path(strPattern)
 
-        FileIO.createFolderIfNotExists(lstrPath)
+        'FileIO.createFolderIfNotExists(lstrPath)
 
         Dim Foldernames As Collection = New Collection
         Try
@@ -301,13 +308,20 @@
 
             'Add the files
             For Each strFolder As String In strFolders
-                If popKey Then
-                    Foldernames.Add(strFolder.Substring(lremovePath.Length), strFolder.Substring(lremovePath.Length).ToString)
+                Dim folder As String = Nothing
+                If String.IsNullOrEmpty(lremovePath) Then
+                    folder = strFolder
                 Else
-                    Foldernames.Add(strFolder.Substring(lremovePath.Length))
+                    folder = strFolder.Substring(lremovePath.Length)
                 End If
 
-                Logger.Note("Added File", strFolder.Substring(lremovePath.Length))
+                If popKey Then
+                    Foldernames.Add(folder, folder)
+                Else
+                    Foldernames.Add(folder)
+                End If
+
+                Logger.Note("Added File", folder)
             Next
 
 
@@ -316,6 +330,7 @@
 
         End Try
 
+        Logger.Note("Foldernames.count", Foldernames.Count)
 
         Return Foldernames
 

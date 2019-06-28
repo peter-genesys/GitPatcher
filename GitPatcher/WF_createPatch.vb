@@ -368,14 +368,15 @@
 
             'SUB-FLOW:CREATE-FEATURE-BRANCH-FOR-HOTFIX
 
+            Dim RebasedHotfixFeatureBranch As String = Replace(Globals.currentBranch, "-HF", "-RB")
 
             If createPatchProgress.toDoNextStep() Then
                 'Create and Switch to new branch
 
                 '@TODO Need to check that target Is VM_DEV And / Or that the VM has changed to VM_DEV
 
-                Dim RebasedHotfixBranch As String = Replace(shortBranch, "-HF", "-RB")
-                WF_newBranch.createNewBranch("feature", "master", True, RebasedHotfixBranch)
+
+                WF_newBranch.createNewBranch("feature", "master", True, RebasedHotfixFeatureBranch)
 
             End If
 
@@ -387,6 +388,9 @@
             End If
 
 
+            'In case we parachute in at this point.
+            RebasedHotfixFeatureBranch = Globals.currentBranch
+            Dim originalHotfixBranch = Replace(RebasedHotfixFeatureBranch, "-RB", "-HF")
             'COPY-HOTFIX-PATCHES
             'May actually be able to use STEP UPDATE-PATCH
 
@@ -399,6 +403,7 @@
 
 
                 'Create dir feature/JIRA-123-HF - if not exists
+                FileIO.createFolderIfNotExists(Globals.RootPatchDir & "feature\" & RebasedHotfixFeatureBranch & "." & l_tag_base)
 
                 'Get a list of Hotfix patches
                 'hotfix/JIRA-123-HF/JIRA-123-HF.01.QHOWN
@@ -407,18 +412,32 @@
                 'Create a set of Rebased Hotfix patches
                 'feature/JIRA-123-RB/JIRA-123-RB.01.QHOWN
                 'feature/JIRA-123-RB/JIRA-123-RB.01.QHOWN
-                Dim HotFixPatchList As Collection = FileIO.FolderList(Globals.RootPatchDir, shortBranch & "." & l_tag_base, "", True)
+                Dim HotFixPatchList As Collection = FileIO.FolderList(Globals.RootPatchDir & "hotfix\" & originalHotfixBranch, "*" & originalHotfixBranch & "." & l_tag_base & "*", "", True)
+                'Dim HotFixPatchList As Collection = FileIO.FolderList(Globals.RootPatchDir & "hotfix\" & originalHotfixBranch, "*", "", True)
                 For Each HotFixPatch In HotFixPatchList
                     'Copy the patch to the new location
                     Dim RebasePatch As String = Replace(HotFixPatch, "hotfix", "feature")
+                    RebasePatch = Replace(RebasePatch, "-HF", "-RB")
 
-                    FileIO.CopyDir(HotFixPatch, Replace(HotFixPatch, "-HF", "-RB")) 'Copy dir and contents
+                    FileIO.CopyDir(HotFixPatch, RebasePatch) 'Copy dir and contents
                 Next
 
-                '@TODO ADD new folder and files.
-                '@TODO COMMIT
+                'Add new folder and files.
+
+                'Use GitBash to silently add files prior committing
+                Try
+                    GitBash.Add(Globals.getRepoPath, Globals.getPatchRelPath & "feature\" & RebasedHotfixFeatureBranch & "\" & RebasedHotfixFeatureBranch & "." & l_tag_base & "*", True)
+                    'GitBash.Add(Globals.getRepoPath, Globals.RootPatchDir & "feature\" & RebasedHotfixFeatureBranch & "\" & RebasedHotfixFeatureBranch & "." & l_tag_base & "*", True)
+                Catch ex As Exception
+                    MsgBox(ex.Message)
+                    MsgBox("Unable to Add Files with GitBash. Check GitBash configuration.")
+                    'If GitBash.Push fails just let the process continue.
+                    'User will add files via the commit dialog
+                End Try
 
 
+                'Commit step 1. copy patch folders and files
+                Tortoise.Commit(Globals.getRepoPath, "Rebase patches " & originalHotfixBranch & "." & l_tag_base & " - step 1. copy patch folders and files.", True)
 
                 'Modify the installs in each patch.
 
