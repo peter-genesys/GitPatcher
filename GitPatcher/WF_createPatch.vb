@@ -48,12 +48,8 @@
         'UPDATE-FEATURE-PATCH
         createPatchProgress.addStep("Update my " & iBranchType & " patches", True,
                                     "If there are changed files in common between master and feature branches, then these files must be updated in the feature patches.", iRebaseFeature)
-        'UPDATE-REBASED-HOTFIX-PATCH
-        createPatchProgress.addStep("Update my rebased hotfix patches", True,
-                                    "If there are changed files in common between master and hotfix branches, then these files must be updated in the rebased hotfix patches.", iRebaseHotfix)
-
         'EXECUTE-PATCHES
-        createPatchProgress.addStep("Execute my patches", True, "My patches need to be executed, changed or not.", iRebaseFeature Or iRebaseHotfix)
+        createPatchProgress.addStep("Execute my patches", True, "My patches need to be executed, changed or not.  If a patch fails, fix it and retry.", iRebaseFeature Or iRebaseHotfix)
         'EXTRA-COMMIT
         createPatchProgress.addStep("Commit to Branch: " & currentBranch, False)
         'IMPORT-QUEUED-APPS
@@ -90,18 +86,25 @@
         'MERGE-BASE-RELEASE-TO-FEATURE
         createPatchProgress.addStep("Merge " & iRebaseBranchOn & " to new feature", True, "Merge " & iRebaseBranchOn & " to the new feature.  This merges in the new hotfix patches.", iBranchType = "hotfix")
 
-        'COPY-HOTFIX-PATCHES
-        createPatchProgress.addStep("Copy and rebase " & shortBranch & " patches to new feature patches", True,
+        'REBASE-HOTFIX-PATCHES
+        '---------------------
+        'STEP1-COPY-HOTFIX-PATCHES
+        createPatchProgress.addStep("Rebase Hotfix Patches - Step 1.", True,
+        "Copy " & shortBranch & " patches to create new feature patches" & Chr(10) &
         "Loop thru patches and copy them" & Chr(10) &
-        " + Copy the patch folders And files" & Chr(10) &
-        " + Update scripts with the latest versions" & Chr(10) &
-        " + Modify install.sql And install_lite.sql with New patch_name And patch_patch.",
+        " + Copy each patch folders with its files",
          iBranchType = "hotfix")
 
-        'May actually be able to use STEP UPDATE-PATCH to + Update scripts with the latest versions
+        'STEP2-UPDATE-INSTALLS-AND-FILES
+        createPatchProgress.addStep("Rebase Hotfix Patches - Step 2", True,
+                                    "Update new feature patches" & Chr(10) &
+      " + Modify install.sql And install_lite.sql with New patch_name And patch_patch" & Chr(10) &
+      " + Update all other scripts with the latest versions",
+         iBranchType = "hotfix")
 
         'SUB-FLOW: CREATE-PATCH-START-AT-EXECUTE-PATCHES
-        createPatchProgress.addStep("Execute Patches, Merge to master, Release to DEV ", True, "Start the Create Feature Patch workflow midway to complete the rebased hotfix patch as a feature patch.", iBranchType = "hotfix")
+        createPatchProgress.addStep("Execute Patches, Merge to master, Release to DEV ", True,
+           "Start the Create Feature Patch workflow midway to execute the rebased hotfix patch as a feature patch.", iBranchType = "hotfix")
 
 
 
@@ -231,46 +234,6 @@
                 Common.MsgBoxCollection(commonChanges, "Updated patch files", "The following patched files have been updated with rebased versions." & Chr(10))
 
             End If
-
-            'UPDATE-REBASED-HOTFIX-PATCH
-            If createPatchProgress.toDoNextStep() Then
-
-                'If no database files shared in the 2 sets of changes, then we only need to update the install.sql and install_lite.sql
-                'But if database files have been changed in common, then those in our patches must be updated from the source again.
-
-                'More changes have been pulled.
-                'Get a list of database changes between preMasterSHA and postMasterSHA
-
-                GitOp.setCommitsFromSHA(ipreMasterSHA, ipostMasterSHA)
-                Logger.Note("DBRepoPathMask", Globals.DBRepoPathMask)
-                Dim masterDBChanges As Collection = GitOp.getChanges(Globals.DBRepoPathMask, False, True, False)
-                'Common.MsgBoxCollection(masterDBChanges, "masterDBChanges")
-
-
-                'Compare this to the list of changes patched in the feature since the previous rebase.
-                GitOp.setCommitsFromSHA(ipreMasterSHA, iFeatureTipSHA)
-
-                Dim featurePatchChanges As Collection = GitOp.getChanges(Globals.getPatchRelPath, False, True, False)
-                'Common.MsgBoxCollection(featurePatchChanges, "featurePatchChanges")
-
-                'Find common changed files on feature and master branches
-                Dim commonChanges As Collection = New Collection()
-                For Each change In featurePatchChanges
-                    Dim filename As String = Common.getLastSegment(change, "/")
-                    If masterDBChanges.Contains(filename) Then
-                        'Copy master merged file into patch
-                        Logger.Dbg("Update patched file " & change & " from merged database file " & masterDBChanges(filename))
-                        FileIO.CopyFile(Globals.getRepoPath & masterDBChanges(filename), Globals.getRepoPath & change)
-                        commonChanges.Add(change, filename)
-                    End If
-                Next
-                Common.MsgBoxCollection(commonChanges, "Updated patch files", "The following patched files have been updated with rebased versions." & Chr(10))
-
-            End If
-
-
-
-
 
 
 
@@ -417,34 +380,39 @@
 
             'SUB-FLOW:CREATE-FEATURE-BRANCH-FOR-HOTFIX
 
-            Dim RebasedHotfixFeatureBranch As String = Replace(Globals.currentBranch, "-HF", "-RB")
-
             If createPatchProgress.toDoNextStep() Then
                 'Create and Switch to new branch
 
                 '@TODO Need to check that target Is VM_DEV And / Or that the VM has changed to VM_DEV
 
-
+                Dim RebasedHotfixFeatureBranch As String = Replace(Globals.currentBranch, "-HF", "-RB")
                 WF_newBranch.createNewBranch("feature", "master", True, RebasedHotfixFeatureBranch)
+
 
             End If
 
+            Dim preMergeHotfixSHA As String = Nothing
+            Dim postMergeHotfixSHA As String = Nothing
+
+
             'MERGE-BASE-RELEASE-TO-FEATURE
             If createPatchProgress.toDoNextStep() Then
+                'Store Tip of new branch before merge
+                preMergeHotfixSHA = GitOp.getTipSHA()
                 'Merge from base branch
                 GitOp.Merge(iRebaseBranchOn)
+                'Store Tip of new branch before merge
+                postMergeHotfixSHA = GitOp.getTipSHA()
 
             End If
 
 
             'In case we parachute in at this point.
-            RebasedHotfixFeatureBranch = Globals.currentBranch
-            Dim originalHotfixBranch = Replace(RebasedHotfixFeatureBranch, "-RB", "-HF")
-            'COPY-HOTFIX-PATCHES
-            'May actually be able to use STEP UPDATE-PATCH
 
 
+            'STEP1-COPY-HOTFIX-PATCHES
             If createPatchProgress.toDoNextStep() Then
+                Dim RebasedHotfixFeatureBranch As String = Globals.currentBranch
                 'Loop thru patches and copy them
                 ' + Copy the patch folders And files
                 ' + Update scripts with the latest versions
@@ -461,6 +429,8 @@
                 'Create a set of Rebased Hotfix patches
                 'feature/JIRA-123-RB/JIRA-123-RB.01.QHOWN
                 'feature/JIRA-123-RB/JIRA-123-RB.01.QHOWN
+                'Find the hotfix patches specifically related to the hotfix branch and the tag base sequence
+                Dim originalHotfixBranch = Replace(RebasedHotfixFeatureBranch, "-RB", "-HF")
                 Dim HotFixPatchList As Collection = FileIO.FolderList(Globals.RootPatchDir & "hotfix\" & originalHotfixBranch, "*" & originalHotfixBranch & "." & l_tag_base & "*", "", True)
                 'Dim HotFixPatchList As Collection = FileIO.FolderList(Globals.RootPatchDir & "hotfix\" & originalHotfixBranch, "*", "", True)
                 For Each HotFixPatch In HotFixPatchList
@@ -485,17 +455,81 @@
                 End Try
 
 
-                'Commit step 1. copy patch folders and files
+                'Commit step 1. copy patch folders and files with original install files.
                 Tortoise.Commit(Globals.getRepoPath, "Rebase Hotfix Patches: " & RebasedHotfixFeatureBranch & "." & l_tag_base & " - Step 1. Copy hotfix patch folders and files.", True)
-
-                'Modify the installs in each patch.
-
-                '@TODO hopefully will be able to pass SHA's back into this routine to get the updates done simply.
 
             End If
 
-            '@TODO NB what happens to the merge from releae branch if there Is an extra rebase?
 
+
+            'STEP2-UPDATE-INSTALLS-AND-FILES
+            If createPatchProgress.toDoNextStep() Then
+                Dim RebasedHotfixFeatureBranch As String = Globals.currentBranch
+                Dim originalHotfixBranch = Replace(RebasedHotfixFeatureBranch, "-RB", "-HF")
+                Dim HotFixPatchList As Collection = FileIO.FolderList(Globals.RootPatchDir & "hotfix\" & originalHotfixBranch, "*" & originalHotfixBranch & "." & l_tag_base & "*", "", True)
+
+                'Modify the install files of each patch.
+                '---------------------------------------
+                For Each HotFixPatch In HotFixPatchList
+                    'Update the install.sql and install_lite.sql
+                    Dim RebasePatch As String = Replace(HotFixPatch, "hotfix", "feature")
+                    RebasePatch = Replace(RebasePatch, "-HF", "-RB")
+
+                    'Update install.sql
+                    FileIO.ReplaceWithinFile(RebasePatch & "\install.sql", Common.getLastSegment(HotFixPatch, "\"), Common.getLastSegment(RebasePatch, "\"))
+                    'Update install.sql
+                    FileIO.ReplaceWithinFile(RebasePatch & "\install_lite.sql", Common.getLastSegment(HotFixPatch, "\"), Common.getLastSegment(RebasePatch, "\"))
+
+                Next
+
+                'Update the other scripts with the latest versions.
+                '--------------------------------------------------
+
+                'Find all database files changed by the merge of hotfix into the new feature branch.
+                '  NB this method will not detect Extra Files added to a hotfix patch, so that will not be automatically updated. 
+                '  Do i need to filter these for the patch id or just assume all changes are relevant? 
+
+                'This is effectively the source of each file that is included in a hotfix patch (except for extra files as mentioned above).
+                'We don't need to figure out whether these files have changed or not.  
+                'Just copy the current version of the feature's source area to the new rebased patch.
+
+                'Get a list of database changes between preMergeHotfixSHA and postMergeHotfixSHA
+
+                GitOp.setCommitsFromSHA(preMergeHotfixSHA, postMergeHotfixSHA)
+                Logger.Note("DBRepoPathMask", Globals.DBRepoPathMask)
+                Dim hotfixDBChanges As Collection = GitOp.getChanges(Globals.DBRepoPathMask, False, True, False)
+                Common.MsgBoxCollection(hotfixDBChanges, "hotfixDBChanges")
+
+                'Compare this to the list of files included in the patches created in Step 1.
+                'GitOp.setCommitsFromSHA(ipreMasterSHA, iFeatureTipSHA)
+
+                'Dim featurePatchChanges As Collection = GitOp.getChanges(Globals.getPatchRelPath, False, True, False)
+                'Common.MsgBoxCollection(featurePatchChanges, "featurePatchChanges")
+
+                Dim featurePatchFiles As Collection = New Collection()
+                FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir & "feature\" & RebasedHotfixFeatureBranch, "*" & RebasedHotfixFeatureBranch & "." & l_tag_base & "*", featurePatchFiles, Globals.RootPatchDir)
+
+                'Find common changed files on feature and master branches
+                Dim updatedFiles As Collection = New Collection()
+                For Each filepath In featurePatchFiles
+                    Dim filename As String = Common.getLastSegment(filepath, "/")
+                    If hotfixDBChanges.Contains(filename) Then
+                        'Copy current source file into patch
+                        Logger.Dbg("Update patched file " & filepath & " from current database source file " & hotfixDBChanges(filename))
+                        FileIO.CopyFile(Globals.getRepoPath & hotfixDBChanges(filename), Globals.getRepoPath & filepath)
+                        updatedFiles.Add(filepath, filename)
+                    End If
+                Next
+                Common.MsgBoxCollection(updatedFiles, "Updated patch files", "The following patched files have been updated with potentially merged versions." & Chr(10))
+
+                'Commit step 2. Modify the patch name within each install file.  Update all other scripts with the latest versions.
+
+                Tortoise.Commit(Globals.getRepoPath, "Rebase Hotfix Patches: " & RebasedHotfixFeatureBranch & "." & l_tag_base & " - Step 2. Modify the patch name within each install file.  Update all other scripts with the latest versions.", True)
+
+
+            End If
+
+            '@TODO NB what happens to the merge from release branch if the feature branch is rebased again?
 
             'SUB-FLOW: CREATE-PATCH-START-AT-EXECUTE-PATCHES
             If createPatchProgress.toDoNextStep() Then

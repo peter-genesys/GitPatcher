@@ -371,7 +371,8 @@
 
 
     'Not currently used, - but good generic routine, that may come in handy
-    Private Sub ReplaceWithinFile(ByVal i_filename As String, ByVal i_label As String, ByVal i_value As String)
+    'Now used by hotfix rebase.
+    Public Shared Sub ReplaceWithinFile(ByVal i_filename As String, ByVal i_label As String, ByVal i_value As String)
         Logger.Dbg("i_filename: " & i_filename)
         Logger.Dbg("i_label: " & i_label)
         Logger.Dbg("i_value: " & i_value)
@@ -396,7 +397,7 @@
     End Sub
 
     'Not currently used, - but good generic routine, that may come in handy
-    Private Sub ReplaceWithinFilesRecursive(ByVal i_dir As String, ByVal i_label As String, ByVal i_value As String)
+    Public Sub ReplaceWithinFilesRecursive(ByVal i_dir As String, ByVal i_label As String, ByVal i_value As String)
 
         Logger.Dbg("i_dir: " & i_dir)
         Logger.Dbg("i_label: " & i_label)
