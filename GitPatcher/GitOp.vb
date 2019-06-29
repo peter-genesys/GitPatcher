@@ -554,7 +554,7 @@ Public Class GitOp
                         Globals.getRepo.Merge(Globals.getRepo.Branches(targetBranch).Tip, mySignature, options)
 
                         'Now commit with message
-                        Globals.getRepo.Commit("Merge " & targetBranch & " to " & Globals.currentBranch, mySignature, mySignature)
+                        Globals.getRepo.Commit("Merge " & targetBranch & " to " & Globals.currentLongBranch, mySignature, mySignature)
 
                 'MsgBox(ToolName + " LibGit2 not currently implimented")
 
@@ -570,7 +570,7 @@ Public Class GitOp
                 MsgBox(e.Message)
 
                 'Confirm retry or use tortoiseGIT
-                If Not Retry("Merge of " & targetBranch & "Failed.", "Retry Merge") Then
+                If Not Retry("Merge of " & targetBranch & " Failed.", "Retry Merge") Then
                     theSetting = "TGIT"
                 End If
 

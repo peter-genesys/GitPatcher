@@ -21,7 +21,7 @@
         End If
 
 
-        Dim currentBranch As String = Globals.currentLongBranch()
+        Dim featureLongBranch As String = Globals.currentLongBranch()
 
         Dim title As String = "Create " & iBranchType & " Patch"
         If iRebaseHotfix Then
@@ -40,9 +40,9 @@
         createPatchProgress.addStep("Choose Release Branch", True, "Choose the Patch Version Release branch that this hotfix was branched from.", iBranchType = "hotfix")
 
         'REBASE-FEATURE
-        createPatchProgress.addStep("Rebase branch: " & currentBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow", Not iRebaseHotfix)
+        createPatchProgress.addStep("Rebase branch: " & featureLongBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow", Not iRebaseHotfix)
         'REVIEW-TAGS
-        createPatchProgress.addStep("Review tags on Branch: " & currentBranch, True, "Check that the tags have been assigned to the correct commits.", Not iRebaseFeature And Not iRebaseHotfix)
+        createPatchProgress.addStep("Review tags on Branch: " & featureLongBranch, True, "Check that the tags have been assigned to the correct commits.", Not iRebaseFeature And Not iRebaseHotfix)
         'CREATE-PATCH
         createPatchProgress.addStep("Create edit, test", True, "Now is a great time to smoke test my work before i commit the patch.", Not iRebaseFeature And Not iRebaseHotfix)
         'UPDATE-FEATURE-PATCH
@@ -51,9 +51,9 @@
         'EXECUTE-PATCHES
         createPatchProgress.addStep("Execute my patches", True, "My patches need to be executed, changed or not.  If a patch fails, fix it and retry.", iRebaseFeature Or iRebaseHotfix)
         'EXTRA-COMMIT
-        createPatchProgress.addStep("Commit to Branch: " & currentBranch, False)
+        createPatchProgress.addStep("Commit to Branch: " & featureLongBranch, False)
         'IMPORT-QUEUED-APPS
-        createPatchProgress.addStep("Import any queued apps: " & currentBranch, True, "Any Apex Apps that were included in a patch, must be reinstalled now. ")
+        createPatchProgress.addStep("Import any queued apps: " & featureLongBranch, True, "Any Apex Apps that were included in a patch, must be reinstalled now. ")
         'SWITCH-TO-MASTER
         createPatchProgress.addStep("Switch to " & iRebaseBranchOn & " branch", True)
 
@@ -61,7 +61,7 @@
         createPatchProgress.addStep("Pull " & iRebaseBranchOn & " branch", True, "Double-check that the " & iRebaseBranchOn & " is still on the latest commit.")
 
         'MERGE-FEATURE
-        createPatchProgress.addStep("Merge from Branch: " & currentBranch, True, "Please select the Branch:" & currentBranch & " from the Tortoise Merge Dialogue")
+        createPatchProgress.addStep("Merge from Branch: " & featureLongBranch, True, "Please select the Branch:" & featureLongBranch & " from the Tortoise Merge Dialogue")
         'PUSH-MASTER
         createPatchProgress.addStep("Push to Origin", True,
                                     "If the push is not successful, the TortoiseGIT Synchronisation dialog will be raised." & Chr(10) &
@@ -72,7 +72,7 @@
         'RELEASE-TO-TARGET
         createPatchProgress.addStep("Release to " & iDBtarget, True)
         'RETURN-FEATURE
-        createPatchProgress.addStep("Return to Branch: " & currentBranch, True)
+        createPatchProgress.addStep("Return to Branch: " & featureLongBranch, True)
         'SNAPSHOT-CLEAN
         createPatchProgress.addStep("Clean VM Snapshot", True, "Create a clean snapshot of your current VM state, to use as your next restore point.")
 
@@ -328,7 +328,7 @@
                     createPatchProgress.Close()
 
                     'switch back to the feature
-                    GitOp.SwitchBranch(currentBranch)
+                    GitOp.SwitchBranch(featureLongBranch)
                     'restart the createPatchProcess in rebase feature mode.
                     WF_createPatch.createPatchProcess(iBranchType, iDBtarget, rebaseBranchOn, False, True, FeatureTipSHA, preMasterSHA, postMasterSHA)
 
@@ -342,7 +342,7 @@
                 'Merge from Feature branch
 
                 'Tortoise.Merge(Globals.getRepoPath)
-                GitOp.Merge(currentBranch)
+                GitOp.Merge(featureLongBranch)
 
             End If
 
@@ -361,7 +361,7 @@
             'RETURN-FEATURE
             If createPatchProgress.toDoNextStep() Then
                 'GitSharpFascade.switchBranch(Globals.currentRepo, currentBranch)
-                GitOp.SwitchBranch(currentBranch)
+                GitOp.SwitchBranch(featureLongBranch)
             End If
 
             'SNAPSHOT-CLEAN
@@ -400,7 +400,7 @@
                 'Store Tip of new branch before merge
                 preMergeHotfixSHA = GitOp.getTipSHA()
                 'Merge from base branch
-                GitOp.Merge(iRebaseBranchOn)
+                GitOp.Merge(rebaseBranchOn)
                 'Store Tip of new branch before merge
                 postMergeHotfixSHA = GitOp.getTipSHA()
 
