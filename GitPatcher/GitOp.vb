@@ -551,10 +551,17 @@ Public Class GitOp
 
                         Dim mySignature As Signature = New Signature(UserName, UserEmail, New DateTimeOffset(DateTime.Now))
 
-                        Globals.getRepo.Merge(Globals.getRepo.Branches(targetBranch).Tip, mySignature, options)
+                        Dim result As MergeResult = Globals.getRepo.Merge(Globals.getRepo.Branches(targetBranch).Tip, mySignature, options)
+                        If result.Status = MergeStatus.Conflicts Then
+                            Tortoise.Resolve(Globals.getRepoPath)
+                            Tortoise.Commit(Globals.getRepoPath, "Merge " & targetBranch & " to " & Globals.currentLongBranch, True)
+                        Else
 
-                        'Now commit with message
-                        Globals.getRepo.Commit("Merge " & targetBranch & " to " & Globals.currentLongBranch, mySignature, mySignature)
+
+                            'Now commit with message
+                            Globals.getRepo.Commit("Merge " & targetBranch & " to " & Globals.currentLongBranch, mySignature, mySignature)
+
+                        End If
 
                 'MsgBox(ToolName + " LibGit2 not currently implimented")
 

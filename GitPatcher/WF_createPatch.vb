@@ -397,21 +397,34 @@
 
             'MERGE-BASE-RELEASE-TO-FEATURE
             If createPatchProgress.toDoNextStep() Then
+
+                'If at this stage the rebase (release) branch is unknown, then ask it.
+                If String.IsNullOrEmpty(rebaseBranchOn) Or rebaseBranchOn = "release" Then
+                    Dim releaseBranches As Collection = GitOp.getPatchVersionReleaseList(Globals.currentAppCode)
+
+                    rebaseBranchOn = ChoiceDialog.Ask("This hotfix was branched from a Patch Version Release branch." & Chr(10) &
+                                                  "Please identify the original Patch Version Release branch on which to rebase this hotfix",
+                                                  releaseBranches, "", "Choose original Patch Version Release branch", False, False, False)
+                End If
+
+
+
+
                 'Store Tip of new branch before merge
                 preMergeHotfixSHA = GitOp.getTipSHA()
-                'Merge from base branch
-                GitOp.Merge(rebaseBranchOn)
-                'Store Tip of new branch before merge
-                postMergeHotfixSHA = GitOp.getTipSHA()
+                    'Merge from base branch
+                    GitOp.Merge(rebaseBranchOn)
+                    'Store Tip of new branch before merge
+                    postMergeHotfixSHA = GitOp.getTipSHA()
 
-            End If
-
-
-            'In case we parachute in at this point.
+                End If
 
 
-            'STEP1-COPY-HOTFIX-PATCHES
-            If createPatchProgress.toDoNextStep() Then
+                'In case we parachute in at this point.
+
+
+                'STEP1-COPY-HOTFIX-PATCHES
+                If createPatchProgress.toDoNextStep() Then
                 Dim RebasedHotfixFeatureBranch As String = Globals.currentBranch
                 'Loop thru patches and copy them
                 ' + Copy the patch folders And files
@@ -467,6 +480,7 @@
                 Dim RebasedHotfixFeatureBranch As String = Globals.currentBranch
                 Dim originalHotfixBranch = Replace(RebasedHotfixFeatureBranch, "-RB", "-HF")
                 Dim HotFixPatchList As Collection = FileIO.FolderList(Globals.RootPatchDir & "hotfix\" & originalHotfixBranch, "*" & originalHotfixBranch & "." & l_tag_base & "*", "", True)
+                Dim featurePatchFiles As Collection = New Collection()
 
                 'Modify the install files of each patch.
                 '---------------------------------------
@@ -479,6 +493,9 @@
                     FileIO.ReplaceWithinFile(RebasePatch & "\install.sql", Common.getLastSegment(HotFixPatch, "\"), Common.getLastSegment(RebasePatch, "\"))
                     'Update install.sql
                     FileIO.ReplaceWithinFile(RebasePatch & "\install_lite.sql", Common.getLastSegment(HotFixPatch, "\"), Common.getLastSegment(RebasePatch, "\"))
+
+                    FileIO.AppendFileList(RebasePatch, "*", Globals.RootPatchDir, featurePatchFiles, True)
+
 
                 Next
 
@@ -506,17 +523,22 @@
                 'Dim featurePatchChanges As Collection = GitOp.getChanges(Globals.getPatchRelPath, False, True, False)
                 'Common.MsgBoxCollection(featurePatchChanges, "featurePatchChanges")
 
-                Dim featurePatchFiles As Collection = New Collection()
-                FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir & "feature\" & RebasedHotfixFeatureBranch, "*" & RebasedHotfixFeatureBranch & "." & l_tag_base & "*", featurePatchFiles, Globals.RootPatchDir)
+
+
+
+
+
+                'Dim featurePatchFiles As Collection = New Collection()
+                'FileIO.RecursiveSearchContainingFolder(Globals.RootPatchDir & "feature\" & RebasedHotfixFeatureBranch, "*" & RebasedHotfixFeatureBranch & "." & l_tag_base & "*", featurePatchFiles, Globals.RootPatchDir)
 
                 'Find common changed files on feature and master branches
                 Dim updatedFiles As Collection = New Collection()
                 For Each filepath In featurePatchFiles
-                    Dim filename As String = Common.getLastSegment(filepath, "/")
-                    If hotfixDBChanges.Contains(filename) Then
+                    Dim filename As String = Common.getLastSegment(filepath, "\")
+                    If hotfixDBChanges.Contains(filename) And filename <> "install.sql" And filename <> "install_lite.sql" Then
                         'Copy current source file into patch
                         Logger.Dbg("Update patched file " & filepath & " from current database source file " & hotfixDBChanges(filename))
-                        FileIO.CopyFile(Globals.getRepoPath & hotfixDBChanges(filename), Globals.getRepoPath & filepath)
+                        FileIO.CopyFile(Globals.getRepoPath & hotfixDBChanges(filename), Globals.RootPatchDir & filepath)
                         updatedFiles.Add(filepath, filename)
                     End If
                 Next

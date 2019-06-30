@@ -73,6 +73,11 @@
         Execute()
     End Sub
 
+    Public Sub Resolve(ByVal i_path)
+        tortoiseSetup.Arguments = "/command:resolve /path:""" & i_path & """ /closeonend:1"
+        Execute()
+    End Sub
+
     Public Sub Revert(ByVal i_path)
         tortoiseSetup.Arguments = "/command:revert /path:""" & i_path & """ /closeonend:1"
         Execute()
