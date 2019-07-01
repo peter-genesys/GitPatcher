@@ -1,27 +1,12 @@
 ﻿Friend Class WF_createPatch
-    Shared Sub createPatchProcess(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String,
+    Shared Sub createPatchProcess(iBranchType As String,
+                                  iDBtarget As String,
+                                  iRebaseBranchOn As String,
                                   Optional ByVal iRebaseHotfix As Boolean = False,
                                   Optional ByVal iRebaseFeature As Boolean = False,
                                   Optional ByVal iFeatureTipSHA As String = "",
                                   Optional ByVal ipreMasterSHA As String = "",
                                   Optional ByVal ipostMasterSHA As String = "")
-
-        Dim rebaseBranchOn As String = iRebaseBranchOn
-
-        Common.checkBranch(iBranchType)
-
-        Dim l_tag_base As String = Nothing
-
-        Dim shortBranch As String = Globals.currentBranch()
-        Dim shortBranchUpper As String = shortBranch.ToUpper
-
-        If Not shortBranch.Equals(shortBranchUpper) Then
-            MsgBox("Please rename " & iBranchType & " " & shortBranch & " in uppercase " & shortBranchUpper, MsgBoxStyle.Exclamation, "Non-standard feature name")
-            Exit Sub
-        End If
-
-
-        Dim featureLongBranch As String = Globals.currentLongBranch()
 
         Dim title As String = "Create " & iBranchType & " Patch"
         If iRebaseHotfix Then
@@ -31,61 +16,90 @@
             title = "Rebasing and Updating Feature Patch"
         End If
 
-
         Dim createPatchProgress As ProgressDialogue = New ProgressDialogue(title)
         createPatchProgress.MdiParent = GitPatcher
 
-        ' "Regenerate: Menu (new pages, menu changes), Security (new pages, security changes), Tapis (table or view column changes), Domains (new or changed tables or views, new domains or domain ussage changed)")
-        'CHOOSE-RELEASE-BRANCH
-        createPatchProgress.addStep("Choose Release Branch", True, "Choose the Patch Version Release branch that this hotfix was branched from.", iBranchType = "hotfix")
+        Try
+            Dim rebaseBranchOn As String = iRebaseBranchOn
 
-        'REBASE-FEATURE
-        createPatchProgress.addStep("Rebase branch: " & featureLongBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow", Not iRebaseHotfix)
-        'REVIEW-TAGS
-        createPatchProgress.addStep("Review tags on Branch: " & featureLongBranch, True, "Check that the tags have been assigned to the correct commits.", Not iRebaseFeature And Not iRebaseHotfix)
-        'CREATE-PATCH
-        createPatchProgress.addStep("Create edit, test", True, "Now is a great time to smoke test my work before i commit the patch.", Not iRebaseFeature And Not iRebaseHotfix)
-        'UPDATE-FEATURE-PATCH
-        createPatchProgress.addStep("Update my " & iBranchType & " patches", True,
+            Common.checkBranch(iBranchType)
+            'Globals.checkBranchTypeList("hotfix,feature")
+
+            Globals.checkBranchNameCase()
+
+
+            Dim l_tag_base As String = Nothing
+
+            Dim shortBranch As String = Globals.currentBranch()
+            Dim shortBranchUpper As String = shortBranch.ToUpper
+
+            If Not shortBranch.Equals(shortBranchUpper) Then
+                MsgBox("Please rename " & iBranchType & " " & shortBranch & " in uppercase " & shortBranchUpper, MsgBoxStyle.Exclamation, "Non-standard feature name")
+                Exit Sub
+            End If
+
+
+            Dim featureLongBranch As String = Globals.currentLongBranch()
+            Dim originalHotfixBranch As String = Globals.currentBranch
+            Dim rebasedHotfixFeatureBranch As String = Replace(originalHotfixBranch, "-HF", "-RB")
+            Dim lBranchType As String = Globals.currentBranchType
+
+            ' "Regenerate: Menu (new pages, menu changes), Security (new pages, security changes), Tapis (table or view column changes), Domains (new or changed tables or views, new domains or domain ussage changed)")
+            'CHOOSE-RELEASE-BRANCH
+            createPatchProgress.addStep("Choose Release Branch", True, "Choose the Patch Version Release branch that this hotfix was branched from.", iBranchType = "hotfix")
+
+            'REBASE-FEATURE
+            createPatchProgress.addStep("Rebase branch: " & featureLongBranch & " on branch: " & iRebaseBranchOn, True, "Using the Rebase workflow", Not iRebaseHotfix)
+            'REVIEW-TAGS
+            createPatchProgress.addStep("Review tags on Branch: " & featureLongBranch, True, "Check that the tags have been assigned to the correct commits.", Not iRebaseFeature And Not iRebaseHotfix)
+            'CREATE-PATCH
+            createPatchProgress.addStep("Create edit, test", True, "Now is a great time to smoke test my work before i commit the patch.", Not iRebaseFeature And Not iRebaseHotfix)
+            'UPDATE-FEATURE-PATCH
+            createPatchProgress.addStep("Update my " & iBranchType & " patches", True,
                                     "If there are changed files in common between master and feature branches, then these files must be updated in the feature patches.", iRebaseFeature)
-        'EXECUTE-PATCHES
-        createPatchProgress.addStep("Execute my patches", True, "My patches need to be executed, changed or not.  If a patch fails, fix it and retry.", iRebaseFeature Or iRebaseHotfix)
-        'EXTRA-COMMIT
-        createPatchProgress.addStep("Commit to Branch: " & featureLongBranch, False)
-        'IMPORT-QUEUED-APPS
-        createPatchProgress.addStep("Import any queued apps: " & featureLongBranch, True, "Any Apex Apps that were included in a patch, must be reinstalled now. ")
-        'SWITCH-TO-MASTER
-        createPatchProgress.addStep("Switch to " & iRebaseBranchOn & " branch", True)
+            'EXECUTE-PATCHES
+            createPatchProgress.addStep("Execute my patches", True, "My patches need to be executed, changed or not.  If a patch fails, fix it and retry.", iRebaseFeature Or iRebaseHotfix)
+            'EXTRA-COMMIT
+            createPatchProgress.addStep("Commit to Branch: " & featureLongBranch, False)
+            'IMPORT-QUEUED-APPS
+            createPatchProgress.addStep("Import any queued apps: " & featureLongBranch, True, "Any Apex Apps that were included in a patch, must be reinstalled now. ")
+            'SWITCH-TO-MASTER
+            createPatchProgress.addStep("Switch to " & iRebaseBranchOn & " branch", True)
 
-        'PULL-MASTER-AGAIN
-        createPatchProgress.addStep("Pull " & iRebaseBranchOn & " branch", True, "Double-check that the " & iRebaseBranchOn & " is still on the latest commit.")
+            'PULL-MASTER-AGAIN
+            createPatchProgress.addStep("Pull " & iRebaseBranchOn & " branch", True, "Double-check that the " & iRebaseBranchOn & " is still on the latest commit.")
 
-        'MERGE-FEATURE
-        createPatchProgress.addStep("Merge from Branch: " & featureLongBranch, True, "Please select the Branch:" & featureLongBranch & " from the Tortoise Merge Dialogue")
-        'PUSH-MASTER
-        createPatchProgress.addStep("Push to Origin", True,
+            'MERGE-FEATURE
+            createPatchProgress.addStep("Merge from Branch: " & featureLongBranch, True, "Please select the Branch:" & featureLongBranch & " from the Tortoise Merge Dialogue")
+            'PUSH-MASTER
+            createPatchProgress.addStep("Push to Origin", True,
                                     "If the push is not successful, the TortoiseGIT Synchronisation dialog will be raised." & Chr(10) &
                                     "Should say '0 commits ahead orgin/" & iRebaseBranchOn & "'." & Chr(10) &
                                     "If NOT, then your " & iRebaseBranchOn & " branch may now out of date, and also your rebase from it.  So any patches you created COULD BE stale. " &
                                     "In this situation, it is safest to restart the Create Patch process to ensure you are patching the lastest merged files. ")
 
-        'RELEASE-TO-TARGET
-        createPatchProgress.addStep("Release to " & iDBtarget, True)
-        'RETURN-FEATURE
-        createPatchProgress.addStep("Return to Branch: " & featureLongBranch, True)
-        'SNAPSHOT-CLEAN
-        createPatchProgress.addStep("Clean VM Snapshot", True, "Create a clean snapshot of your current VM state, to use as your next restore point.")
+            'RELEASE-TO-TARGET
+            createPatchProgress.addStep("Release to " & iDBtarget, True)
+            'RETURN-FEATURE
+            createPatchProgress.addStep("Return to Branch: " & featureLongBranch, True)
+            'SNAPSHOT-CLEAN
+            createPatchProgress.addStep("Clean VM Snapshot", True, "Create a clean snapshot of your current VM state, to use as your next restore point.")
 
-        'REBASE-HOTFIX-PATCH
-        createPatchProgress.addStep("Rebase hotfix patch", True, "Merge the hotfix and rebase the hotfix patch.", iBranchType = "hotfix")
 
-        createPatchProgress.Show()
+            'SUB-FLOW: CREATE-FEATURE-BRANCH-FOR-HOTFIX
+            createPatchProgress.addStep("Create a new feature branch " & rebasedHotfixFeatureBranch & " to rebase hotfix branch " & originalHotfixBranch, True, "Create a new feature branch to rebase the hotfix before merging to master.", iBranchType = "hotfix")
 
-        Do Until createPatchProgress.isStarted
-            Common.Wait(1000)
-        Loop
 
-        Try
+            'SUB-FLOW:REBASE-HOTFIX-PATCH
+            createPatchProgress.addStep("Rebase hotfix patch", True, "Merge the hotfix and rebase the hotfix patch.", iBranchType = "hotfix")
+
+            createPatchProgress.Show()
+
+            Do Until createPatchProgress.isStarted
+                Common.Wait(1000)
+            Loop
+
+
 
             'CHOOSE-RELEASE-BRANCH
             If createPatchProgress.toDoNextStep() Then
@@ -327,11 +341,21 @@
 
             End If
 
-
             'SUB-FLOW:CREATE-FEATURE-BRANCH-FOR-HOTFIX
 
             If createPatchProgress.toDoNextStep() Then
+                'Create and Switch to new branch
 
+                '@TODO Need to check that target Is VM_DEV And / Or that the VM has changed to VM_DEV
+
+                WF_newBranch.createNewBranch("feature", "master", True, rebasedHotfixFeatureBranch)
+
+
+            End If
+
+            'SUB-FLOW:REBASE-HOTFIX-PATCH
+
+            If createPatchProgress.toDoNextStep() Then
 
                 WF_createPatch.rebaseHotfixPatch("DEV", rebaseBranchOn, l_tag_base)
 
@@ -371,34 +395,25 @@
             'lBranchList.Add("feature", "feature")
             'Common.checkBranchInList(ByVal iBranchList As Collection)
 
-            Globals.checkBranchTypeList("hotfix,feature")
-
+            Globals.checkBranchTypeList("feature")
             Globals.checkBranchNameCase()
 
-            Dim l_tag_base As String = iTagBase
-            If String.IsNullOrEmpty(l_tag_base) Then
-                l_tag_base = InputBox("Please enter the tag base", "Enter Tag Base", "01") '@TODO need logic to calculate this.
-            End If
-
             Dim featureLongBranch As String = Globals.currentLongBranch()
-
-            Dim originalHotfixBranch As String = Nothing
-            Dim rebasedHotfixFeatureBranch As String = Nothing
+            Dim rebasedHotfixFeatureBranch As String = Globals.currentBranch
+            Dim originalHotfixBranch As String = Replace(rebasedHotfixFeatureBranch, "-RB", "-HF")
             Dim lBranchType As String = Globals.currentBranchType
 
-            If lBranchType = "hotfix" Then
-                originalHotfixBranch = Globals.currentBranch
-                rebasedHotfixFeatureBranch = Replace(originalHotfixBranch, "-HF", "-RB")
-            ElseIf lBranchType = "feature" Then
-                rebasedHotfixFeatureBranch = Globals.currentBranch
-                originalHotfixBranch = Replace(rebasedHotfixFeatureBranch, "-RB", "-HF")
+            Dim l_tag_base As String = iTagBase
+            Dim tag_num_padding As Integer = 2
+            If String.IsNullOrEmpty(l_tag_base) Then
+                l_tag_base = GitOp.getMaxTag(originalHotfixBranch)
+                l_tag_base = l_tag_base.PadLeft(tag_num_padding, "0")
+                l_tag_base = InputBox("Please enter the tag base", "Enter Tag Base", l_tag_base)
             End If
 
             Dim l_tagA As String = rebasedHotfixFeatureBranch & "." & l_tag_base & "A"
             Dim l_tagB As String = rebasedHotfixFeatureBranch & "." & l_tag_base & "B"
 
-            'SUB-FLOW: CREATE-FEATURE-BRANCH-FOR-HOTFIX
-            rebasePatchProgress.addStep("Create a new feature branch " & rebasedHotfixFeatureBranch & " to rebase hotfix branch " & originalHotfixBranch, True, "Create a new feature branch to rebase the hotfix before merging to master.", lBranchType = "hotfix")
 
             'CHOOSE-RELEASE-BRANCH
             rebasePatchProgress.addStep("Choose Release Branch", True, "Choose the Patch Version Release branch that this hotfix was branched from.", mergeBranch = "release")
@@ -446,19 +461,6 @@
                 Common.Wait(1000)
             Loop
 
-
-
-            'SUB-FLOW:CREATE-FEATURE-BRANCH-FOR-HOTFIX
-
-            If rebasePatchProgress.toDoNextStep() Then
-                'Create and Switch to new branch
-
-                '@TODO Need to check that target Is VM_DEV And / Or that the VM has changed to VM_DEV
-
-                WF_newBranch.createNewBranch("feature", "master", True, rebasedHotfixFeatureBranch)
-
-
-            End If
 
             'CHOOSE-RELEASE-BRANCH
             If rebasePatchProgress.toDoNextStep() Then

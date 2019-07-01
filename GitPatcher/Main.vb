@@ -156,8 +156,7 @@
         HotfixMenuItem.Visible = My.Settings.Developer And (Globals.currentBranchType = "hotfix" Or Globals.currentBranch Like "*-RB")
         CreateHotFixPatchMenuItem.Visible = Globals.currentBranchType = "hotfix"
         RebaseHotFixMenuItem.Visible = Globals.currentBranchType = "hotfix"
-        '@TODO Need a way to only show the REBASE  RebaseHotfixPatch when there is a patch to rebase.
-        RebaseHotfixPatchMenuItem.Visible = Globals.currentBranch Like "*-RB" Or Globals.currentBranch Like "*-HF"
+        RebaseHotfixPatchMenuItem.Visible = Globals.currentBranchType = "feature" And Globals.currentBranch Like "*-RB"
 
         'Show Feature Menu
         FeatureMenuItem.Visible = My.Settings.Developer And Globals.currentBranchType = "feature"
@@ -684,13 +683,7 @@
 
     End Sub
 
-    Private Sub TestSQLclToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestSQLclToolStripMenuItem.Click
-        Try
-            Host.executeSQLplus(Globals.getRepoPath, Main.get_connect_string(Globals.getSchema, Globals.getTNS, Globals.getDATASOURCE), False)
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Sub
+
 
     Private Sub ExportDataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportDataToolStripMenuItem.Click
         WF_rebase.exportData()
@@ -730,9 +723,7 @@
         WF_createPatch.createPatchProcess("hotfix", "UAT", "release")
     End Sub
 
-    Private Sub TestJdbcToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestJdbcToolStripMenuItem.Click
-        MsgBox("Last succesful patch is " & PatchRunner.GetlastSuccessfulPatch)
-    End Sub
+
 
     Private Sub FeatureToolStripMenuItem1_Click(sender As Object, e As EventArgs)
         'Call worksflow
@@ -833,5 +824,17 @@
 
     Private Sub RefreshButton_Click(sender As Object, e As EventArgs) Handles RefreshButton.Click
         SetMenuItems()
+    End Sub
+
+    Private Sub ToolStripMenuItem8_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem8.Click
+        Try
+            Host.executeSQLplus(Globals.getRepoPath, Main.get_connect_string(Globals.getSchema, Globals.getTNS, Globals.getDATASOURCE), False)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub ToolStripMenuItem9_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem9.Click
+        MsgBox("Last successful patch was " & PatchRunner.GetlastSuccessfulPatch)
     End Sub
 End Class

@@ -325,6 +325,67 @@ Public Class GitOp
     End Function
 
 
+    Shared Function getTagList_00A_00B(ByVal tagBranch As String, Optional ByVal tagBase As String = "", Optional ByVal cleanupTags As Boolean = True) As Collection
+
+        'Input tagBranch      - short branch name that will match tags
+        'Output outTags       - a collection of tags, initialised with an empty set of tags
+        '  tagBranch is mandatory
+        '  If tagBase is null then all tags matching the tagBranch will be returned.
+
+        Dim outTags As Collection = New Collection
+        Dim tag_num_padding As Integer = 2
+
+        For Each thisTag As Tag In GitOp.getTagList(tagBranch & "." & tagBase)
+            Try
+                Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
+                outTags.Add(thisTag)
+
+            Catch ex As Exception
+                'MsgBox(ex.Message)
+                'MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
+                If cleanupTags Then
+                    Logger.Dbg("Bad tag found: " & thisTag.FriendlyName)
+                    Dim result As Integer = MessageBox.Show(ex.Message & Environment.NewLine &
+                                                        "Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted." & Environment.NewLine & Environment.NewLine &
+                                                        "Confirm delete of tag " & thisTag.FriendlyName, "Confirm Target", MessageBoxButtons.OKCancel)
+                    If result = DialogResult.OK Then
+                        GitOp.deleteTag(thisTag.FriendlyName)
+                    End If
+                Else
+                    Logger.Dbg("Bad tag ignored: " & thisTag.FriendlyName)
+                End If
+
+
+            End Try
+        Next
+
+        Return outTags
+
+    End Function
+
+    Shared Function getMaxTag(ByVal tagBranch As String, Optional ByVal tagBase As String = "", Optional ByVal cleanupTags As Boolean = True) As Integer
+
+        Dim l_max_tag As Integer = 0
+        Dim tag_num_padding As Integer = 2
+
+        For Each thisTag As Tag In GitOp.getTagList_00A_00B(tagBranch, tagBase, cleanupTags)
+            Try
+                Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
+
+                If tag_no > l_max_tag Then
+                    l_max_tag = tag_no
+                End If
+
+            Catch ex As Exception
+                Throw New Exception("getMaxTag: " & ex.Message & "  Unexpected error")
+            End Try
+
+        Next
+
+        Return l_max_tag
+
+    End Function
+
     'Shared Function isRepo(ByVal path) As Boolean
     ' ' Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
     ' Return True

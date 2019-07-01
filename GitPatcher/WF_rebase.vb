@@ -77,24 +77,7 @@ Friend Class WF_rebase
 
         Dim rebasing As ProgressDialogue = New ProgressDialogue(title & " - branch " & currentBranchLong)
 
-        Dim l_max_tag As Integer = 0
-
-
-        For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch & ".")
-            Try
-                Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
-
-                If tag_no > l_max_tag Then
-                    l_max_tag = tag_no
-                End If
-
-            Catch ex As Exception
-                MsgBox(ex.Message)
-                MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
-            End Try
-
-        Next
-
+        Dim l_max_tag As Integer = GitOp.getMaxTag(Globals.currentBranch)
 
         Dim l_tag_base As String = l_max_tag + 1
         If iPatching Then
@@ -467,10 +450,10 @@ Friend Class WF_rebase
         Dim tag_num_padding As Integer = 2
         Common.checkBranch(iBranchType)
 
-        Dim l_tag_prefix As String = Nothing
-        If iBranchType = "hotfix" Then
-            l_tag_prefix = iDBtarget.Substring(0, 1)
-        End If
+        Dim l_tag_prefix As String = Nothing 'DEPRECATED CONCEPT
+        'If iBranchType = "hotfix" Then
+        '    l_tag_prefix = iDBtarget.Substring(0, 1)
+        'End If
 
 
         Dim currentBranchLong As String = GitOp.CurrentFriendlyBranch()
@@ -491,24 +474,7 @@ Friend Class WF_rebase
 
         Dim rebasing As ProgressDialogue = New ProgressDialogue(title & " - branch " & currentBranchLong)
 
-        Dim l_max_tag As Integer = 0
-
-
-        For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch & ".")
-            Try
-                Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
-
-                If tag_no > l_max_tag Then
-                    l_max_tag = tag_no
-                End If
-
-            Catch ex As Exception
-                MsgBox(ex.Message)
-                MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
-            End Try
-
-        Next
-
+        Dim l_max_tag As Integer = GitOp.getMaxTag(Globals.currentBranch)
 
         Dim l_tag_base As String = l_max_tag + 1
         If True Then
