@@ -156,11 +156,13 @@
             'REIMPORT-CLEAN-APP
             If ExportProgress.toDoNextStep() Then
                 ReimportApp(iSchema, iAppId)
-            ElseIf Not ExportProgress.IsDisposed Then 'ignore if form has been closed.
-                If raisedRevertDialog Then
-                    'User chose NOT to REIMPORT, but the revert dialog was used, so it is likely that they reverted some changes, so start the import.  
-                    ReimportApp(iSchema, iAppId)
-                End If
+
+                'Disabled temp at Janeens request.
+                'ElseIf Not ExportProgress.IsDisposed Then 'ignore if form has been closed.
+                '    If raisedRevertDialog Then
+                '        'User chose NOT to REIMPORT, but the revert dialog was used, so it is likely that they reverted some changes, so start the import.  
+                '        ReimportApp(iSchema, iAppId)
+                '    End If
 
             End If
 
