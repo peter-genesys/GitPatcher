@@ -749,4 +749,8 @@
     Private Sub FeatureToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles FeatureToolStripMenuItem2.Click
         WF_createPatch.createPatchProcess("feature", "DEV", "master")
     End Sub
+
+    Private Sub RebaseHotfixPatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseHotfixPatchToolStripMenuItem.Click
+        WF_createPatch.rebaseHotfixPatch("DEV", "release", "")
+    End Sub
 End Class

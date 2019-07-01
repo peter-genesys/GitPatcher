@@ -195,15 +195,39 @@
     End Function
 
 
-    Public Shared Sub checkBranch(i_searchString)
+
+
+
+
+    Public Shared Sub checkBranch(i_searchString) 'deprecated - @TODO change to using globals.checkBranchTypeList(byval iBranchList As string)
         Dim currentBranch As String = GitOp.CurrentFriendlyBranch()
 
         If Not currentBranch.Contains(i_searchString) Then
-            MsgBox("Current Branch: " & currentBranch & " is not of type " & i_searchString & Environment.NewLine & Environment.NewLine & "Please change branch manually NOW, or CANCEL this workflow.")
-
+            Throw New System.Exception("Current Branch " & currentBranch & " is not of branch type " & i_searchString & Environment.NewLine & Environment.NewLine &
+                                       "Please switch to an appropriate branch.")
         End If
 
     End Sub
+
+    'Public Shared Sub checkBranchInList(ByVal iBranchList As Collection) 'deprecated - see similar function in globals
+    '    Dim currentBranch As String = Globals.currentBranch()
+
+    '    Dim currentBranchType As String = Globals.currentBranchType
+
+    '    Dim branchTypeOk As Boolean = False
+    '    For Each branchType In iBranchList
+    '        If currentBranch.Contains(branchType) Then
+    '            branchTypeOk = True
+    '        End If
+    '    Next
+
+    '    If Not branchTypeOk Then
+    '        Throw New System.Exception("Current Branch: " & currentBranch & " is not of types: " & CollectionToText(iBranchList) & Environment.NewLine & Environment.NewLine &
+    '                                   "Please switch to an appropriate branch.")
+
+    '    End If
+
+    'End Sub
 
 
     Public Shared Sub listCollection(ByVal i_collection As Collection, iTitle As String)

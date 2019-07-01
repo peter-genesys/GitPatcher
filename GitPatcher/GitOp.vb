@@ -555,9 +555,9 @@ Public Class GitOp
                         If result.Status = MergeStatus.Conflicts Then
                             Tortoise.Resolve(Globals.getRepoPath)
                             Tortoise.Commit(Globals.getRepoPath, "Merge " & targetBranch & " to " & Globals.currentLongBranch, True)
+                        ElseIf result.Status = MergeStatus.UpToDate Then
+                            MsgBox("Nothing to merge.  Perhaps this step has already been done.")
                         Else
-
-
                             'Now commit with message
                             Globals.getRepo.Commit("Merge " & targetBranch & " to " & Globals.currentLongBranch, mySignature, mySignature)
 

@@ -640,5 +640,14 @@ Module Globals
         End If
     End Sub
 
+    Public Sub checkBranchTypeList(ByVal iBranchList As String)
+
+        If Not iBranchList.Contains(Globals.currentBranchType) Then
+            Throw New System.Exception("Current Branch " & Globals.currentBranch & " is not of branch type " & iBranchList & Environment.NewLine & Environment.NewLine &
+                                       "Please switch to an appropriate branch.")
+        End If
+
+    End Sub
+
 
 End Module
