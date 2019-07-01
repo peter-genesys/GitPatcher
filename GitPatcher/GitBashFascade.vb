@@ -29,23 +29,29 @@ Public Class GitBashFascade
 
     Private Function executeSuccess() As Boolean
         Logger.Dbg("GitBashFascade.execute_success")
-        GitBash.StartInfo = GitBashSetup
-        GitBash.Start()
+        Try
+            GitBash.StartInfo = GitBashSetup
+            GitBash.Start()
 
-        Dim stdErrMessage As String = GitBash.StandardError.ReadToEnd()
+            Dim stdErrMessage As String = GitBash.StandardError.ReadToEnd()
 
-        If (BashWait) Then
-            GitBash.WaitForExit()
-        End If
-        Dim ExitCode As Integer = GitBash.ExitCode
-        Logger.Note("ExitCode", ExitCode)
-        Dim Success As Boolean = (ExitCode = 0)
+            If (BashWait) Then
+                GitBash.WaitForExit()
+            End If
+            Dim ExitCode As Integer = GitBash.ExitCode
+            Logger.Note("ExitCode", ExitCode)
+            Dim Success As Boolean = (ExitCode = 0)
 
-        If Not Success Then
-            MsgBox(stdErrMessage)
-        End If
+            If Not Success Then
+                MsgBox(stdErrMessage)
+            End If
 
-        Return Success
+            Return Success
+
+        Catch ex As Exception
+            Throw New Exception(ex.Message & Chr(10) & "Check GitBash configuration.")
+        End Try
+
     End Function
 
 

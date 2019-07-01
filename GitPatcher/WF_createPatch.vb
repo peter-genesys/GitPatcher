@@ -356,103 +356,97 @@
                                  iMergeBranch As String,
                                  iTagBase As String)
 
-        '@TODO Need to check that target Is VM_DEV And / Or that the VM has changed to VM_DEV
-
-        Dim mergeBranch As String = iMergeBranch
-
-        'Dim lBranchList As Collection = New Collection()
-        'lBranchList.Add("hotfix", "hotfix")
-        'lBranchList.Add("feature", "feature")
-        'Common.checkBranchInList(ByVal iBranchList As Collection)
-
-        Globals.checkBranchTypeList("hotfix,feature")
-
-        Dim l_tag_base As String = iTagBase
-        If String.IsNullOrEmpty(l_tag_base) Then
-            l_tag_base = InputBox("Please enter the tag base", "Enter Tag Base", "01") '@TODO need logic to calculate this.
-        End If
-
-        Dim lBranchType As String = Globals.currentBranchType
-        Dim shortBranch As String = Globals.currentBranch()
-        Dim shortBranchUpper As String = shortBranch.ToUpper
-
-        If Not shortBranch.Equals(shortBranchUpper) Then
-            MsgBox("Please rename " & lBranchType & " " & shortBranch & " in uppercase " & shortBranchUpper, MsgBoxStyle.Exclamation, "Non-standard feature name")
-            Exit Sub
-        End If
-
-        Dim featureLongBranch As String = Globals.currentLongBranch()
-
-        Dim originalHotfixBranch As String = Nothing
-        Dim rebasedHotfixFeatureBranch As String = Nothing
-
-        If lBranchType = "hotfix" Then
-            originalHotfixBranch = Globals.currentBranch
-            rebasedHotfixFeatureBranch = Replace(originalHotfixBranch, "-HF", "-RB")
-        ElseIf lBranchType = "feature" Then
-            rebasedHotfixFeatureBranch = Globals.currentBranch
-            originalHotfixBranch = Replace(rebasedHotfixFeatureBranch, "-RB", "-HF")
-        End If
-
-        Dim l_tagA As String = rebasedHotfixFeatureBranch & "." & l_tag_base & "A"
-        Dim l_tagB As String = rebasedHotfixFeatureBranch & "." & l_tag_base & "B"
-
         Dim title As String = "Merging hotfix and rebasing hotfix patches."
-
-
         Dim rebasePatchProgress As ProgressDialogue = New ProgressDialogue(title)
         rebasePatchProgress.MdiParent = GitPatcher
 
-        'SUB-FLOW: CREATE-FEATURE-BRANCH-FOR-HOTFIX
-        rebasePatchProgress.addStep("Create a new feature branch " & rebasedHotfixFeatureBranch & " to rebase hotfix branch " & originalHotfixBranch, True, "Create a new feature branch to rebase the hotfix before merging to master.", lBranchType = "hotfix")
-
-        'CHOOSE-RELEASE-BRANCH
-        rebasePatchProgress.addStep("Choose Release Branch", True, "Choose the Patch Version Release branch that this hotfix was branched from.", mergeBranch = "release")
-
-        'MERGE-BASE-RELEASE-TO-FEATURE
-        rebasePatchProgress.addStep("Merge " & iMergeBranch & " to new feature branch " & rebasedHotfixFeatureBranch, True, "Merge " & iMergeBranch & " to the new feature branch " & rebasedHotfixFeatureBranch & ".  This merges in the new hotfix patches.", True)
-
-        'REBASE-HOTFIX-PATCHES
-        '---------------------
-        'STEP1-COPY-HOTFIX-PATCHES
-        rebasePatchProgress.addStep("Rebase Hotfix Patches - Step 1.", True,
-        "Copy " & originalHotfixBranch & " patches to create new feature patches" & Chr(10) &
-        "Loop thru patches and copy them" & Chr(10) &
-        " + Copy each patch folders with its files", True)
-
-        'STEP2-UPDATE-INSTALLS-AND-FILES
-        rebasePatchProgress.addStep("Rebase Hotfix Patches - Step 2", True,
-                                    "Update new feature patches" & Chr(10) &
-      " + Modify install.sql And install_lite.sql with New patch_name And patch_patch" & Chr(10) &
-      " + Update all other scripts with the latest versions", True)
-
-        'SUB-FLOW: CREATE-PATCH-START-AT-EXECUTE-PATCHES
-        rebasePatchProgress.addStep("Execute Patches, Merge to master, Release to DEV ", True,
-           "Start the Create Feature Patch workflow midway to execute the rebased hotfix patch as a feature patch.", True)
-
-
-
-
-        'Need to create a new feature 
-        'Eg if we just did hotfix/QHIDS-1234-HF then need to now create feature/QHIDS-1234-RB
-
-        'Need to use the Create New Branch workflow
-        ' passing - new feature name feature/QHIDS-1234-RB
-        '         - name of the Patch Version Release to be merged in.  (or may come back here to do that?)
-        ' must also change VMs to the DEV VM
-        ' shutdown the HOTFIX VM and start the DEV VM - need to remember 2 VMs now.
-        ' then need to identify and copy each patch, and 
-        ' update the install script And files.
-
-        rebasePatchProgress.Show()
-
-
-
-        Do Until rebasePatchProgress.isStarted
-            Common.Wait(1000)
-        Loop
-
         Try
+
+            '@TODO Need to check that target Is VM_DEV And / Or that the VM has changed to VM_DEV
+
+            Dim mergeBranch As String = iMergeBranch
+
+            'Dim lBranchList As Collection = New Collection()
+            'lBranchList.Add("hotfix", "hotfix")
+            'lBranchList.Add("feature", "feature")
+            'Common.checkBranchInList(ByVal iBranchList As Collection)
+
+            Globals.checkBranchTypeList("hotfix,feature")
+
+            Globals.checkBranchNameCase()
+
+            Dim l_tag_base As String = iTagBase
+            If String.IsNullOrEmpty(l_tag_base) Then
+                l_tag_base = InputBox("Please enter the tag base", "Enter Tag Base", "01") '@TODO need logic to calculate this.
+            End If
+
+            Dim featureLongBranch As String = Globals.currentLongBranch()
+
+            Dim originalHotfixBranch As String = Nothing
+            Dim rebasedHotfixFeatureBranch As String = Nothing
+            Dim lBranchType As String = Globals.currentBranchType
+
+            If lBranchType = "hotfix" Then
+                originalHotfixBranch = Globals.currentBranch
+                rebasedHotfixFeatureBranch = Replace(originalHotfixBranch, "-HF", "-RB")
+            ElseIf lBranchType = "feature" Then
+                rebasedHotfixFeatureBranch = Globals.currentBranch
+                originalHotfixBranch = Replace(rebasedHotfixFeatureBranch, "-RB", "-HF")
+            End If
+
+            Dim l_tagA As String = rebasedHotfixFeatureBranch & "." & l_tag_base & "A"
+            Dim l_tagB As String = rebasedHotfixFeatureBranch & "." & l_tag_base & "B"
+
+            'SUB-FLOW: CREATE-FEATURE-BRANCH-FOR-HOTFIX
+            rebasePatchProgress.addStep("Create a new feature branch " & rebasedHotfixFeatureBranch & " to rebase hotfix branch " & originalHotfixBranch, True, "Create a new feature branch to rebase the hotfix before merging to master.", lBranchType = "hotfix")
+
+            'CHOOSE-RELEASE-BRANCH
+            rebasePatchProgress.addStep("Choose Release Branch", True, "Choose the Patch Version Release branch that this hotfix was branched from.", mergeBranch = "release")
+
+            'MERGE-BASE-RELEASE-TO-FEATURE
+            rebasePatchProgress.addStep("Merge " & iMergeBranch & " to new feature branch " & rebasedHotfixFeatureBranch, True, "Merge " & iMergeBranch & " to the new feature branch " & rebasedHotfixFeatureBranch & ".  This merges in the new hotfix patches.", True)
+
+            'REBASE-HOTFIX-PATCHES
+            '---------------------
+            'STEP1-COPY-HOTFIX-PATCHES
+            rebasePatchProgress.addStep("Rebase Hotfix Patches - Step 1.", True,
+            "Copy " & originalHotfixBranch & " patches to create new feature patches" & Chr(10) &
+            "Loop thru patches and copy them" & Chr(10) &
+            " + Copy each patch folders with its files", True)
+
+            'STEP2-UPDATE-INSTALLS-AND-FILES
+            rebasePatchProgress.addStep("Rebase Hotfix Patches - Step 2", True,
+                                        "Update new feature patches" & Chr(10) &
+          " + Modify install.sql And install_lite.sql with New patch_name And patch_patch" & Chr(10) &
+          " + Update all other scripts with the latest versions", True)
+
+            'SUB-FLOW: CREATE-PATCH-START-AT-EXECUTE-PATCHES
+            rebasePatchProgress.addStep("Execute Patches, Merge to master, Release to DEV ", True,
+               "Start the Create Feature Patch workflow midway to execute the rebased hotfix patch as a feature patch.", True)
+
+
+
+
+            'Need to create a new feature 
+            'Eg if we just did hotfix/QHIDS-1234-HF then need to now create feature/QHIDS-1234-RB
+
+            'Need to use the Create New Branch workflow
+            ' passing - new feature name feature/QHIDS-1234-RB
+            '         - name of the Patch Version Release to be merged in.  (or may come back here to do that?)
+            ' must also change VMs to the DEV VM
+            ' shutdown the HOTFIX VM and start the DEV VM - need to remember 2 VMs now.
+            ' then need to identify and copy each patch, and 
+            ' update the install script And files.
+
+            rebasePatchProgress.Show()
+
+
+
+            Do Until rebasePatchProgress.isStarted
+                Common.Wait(1000)
+            Loop
+
+
 
             'SUB-FLOW:CREATE-FEATURE-BRANCH-FOR-HOTFIX
 
@@ -461,7 +455,7 @@
 
                 '@TODO Need to check that target Is VM_DEV And / Or that the VM has changed to VM_DEV
 
-                WF_newBranch.createNewBranch("feature", "master", True, RebasedHotfixFeatureBranch)
+                WF_newBranch.createNewBranch("feature", "master", True, rebasedHotfixFeatureBranch)
 
 
             End If
@@ -641,6 +635,9 @@
 
                 Tortoise.Commit(Globals.getRepoPath, "Rebase Hotfix Patches: " & rebasedHotfixFeatureBranch & "." & l_tag_base & " - Step 2. Modify the patch name within each install file.  Update all other scripts with the latest versions.", True)
 
+
+                GitOp.deleteTag(l_tagA)
+                GitOp.deleteTag(l_tagB)
 
             End If
 

@@ -690,16 +690,16 @@ Public Class GitOp
                         Tortoise.Push(Globals.getRepoPath)
                 'MsgBox(ToolName + " TortoiseGit not currently implimented")
                     Case "BGIT"
-                        Try
-                            If Not GitBash.PushSuccess(Globals.getRepoPath, iremote_name, ibranch_name, True, True, iSetUpstream) Then
+                        'Try
+                        If Not GitBash.PushSuccess(Globals.getRepoPath, iremote_name, ibranch_name, True, True, iSetUpstream) Then
                                 MsgBox("Push has failed.  The Synchronisation screen may help you resolve the issue.")
                                 'If push fails show the synch screen.
                                 Tortoise.Sync(Globals.getRepoPath)
                             End If
-                        Catch ex As Exception
-                            MsgBox(ex.Message)
-                            Throw New System.Exception("Check GitBash configuration.")
-                        End Try
+                        'Catch ex As Exception
+                        '    MsgBox(ex.Message)
+                        '    Throw New System.Exception("Check GitBash configuration.")
+                        'End Try
 
                 'MsgBox(ToolName + " GitBash not currently implimented")
                     Case "LGIT"

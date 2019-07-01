@@ -24,94 +24,14 @@ Partial Class Main
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Me.MainMenuStrip = New System.Windows.Forms.MenuStrip()
-        Me.FEATUREToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NewFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateDBFeaturePatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.RebaseFeatureFullToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FullRebaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DBChangesOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ApexChangesOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ShowindexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TestworkflowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TestrevertToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TestCreatePatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HOTFIXToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NewHotFixMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateDBHotFixPatchToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.RebaseHotFixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HotFixToolStripComboBox = New System.Windows.Forms.ToolStripComboBox()
-        Me.MultiDBHotFixPatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MergeAndPushHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.VersionMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateVersionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateVersionPatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.VersionsMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripComboBox = New System.Windows.Forms.ToolStripComboBox()
-        Me.NewVersionReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NewMajorVersionReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NewMinorVersionReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NewPatchVersionReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PATCHToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FeaturePatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.VersionPatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateDBReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateDBPatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateDBMinorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateDBMajorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
-        Me.PatchRunnerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.UnappliedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.UninstalledToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AllPatchesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.APEXToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Import1PageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ApexAppInstallerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.QueuedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AllApexAppsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SinglePageImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ApexAppExporterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RELEASEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ReleaseToPRODMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ReleaseToUATMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ReleaseToTESTMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ReleaseToDEVMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ReleaseToVMMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.LogViewerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TestSQLclToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TestJdbcToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExportDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.VirtualBoxToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.VBoxNameToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ChooseVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.StartVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.StartVMNormalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.StartVMHeadleassToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SaveVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RestoreStateVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateSnapshotToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CleanToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.WipToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.BranchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FeatureToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HotfixToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.VersionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PatchToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FeatureToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HotfixToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.VersionToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ReleaseToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MajorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MinorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PatchToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.VersionToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.NewMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FeatureToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HotfixToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReleaseToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem4 = New System.Windows.Forms.ToolStripMenuItem()
         Me.RepoComboBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -157,604 +77,131 @@ Partial Class Main
         Me.MergeButton = New System.Windows.Forms.Button()
         Me.TextBoxReleaseId = New System.Windows.Forms.TextBox()
         Me.Label20 = New System.Windows.Forms.Label()
-        Me.RebaseHotfixPatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FeatureMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateDBFeaturePatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.RebaseFeatureFullToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FullRebaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DBChangesOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ApexChangesOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MergeAndPushFeatureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowindexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TestworkflowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TestrevertToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TestCreatePatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HotfixMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateHotFixPatchMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RebaseHotfixPatchMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.RebaseHotFixMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.NewHotFixMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HotFixToolStripComboBox = New System.Windows.Forms.ToolStripComboBox()
+        Me.MultiDBHotFixPatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MergeAndPushHotfixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RunMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem5 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem6 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem7 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
+        Me.FeaturePatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.VersionPatchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateDBReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateDBPatchSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateDBMinorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateDBMajorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ApexMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ApexAppInstallerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.QueuedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AllApexAppsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SinglePageImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ApexAppExporterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReleaseMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReleaseToPRODMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReleaseToUATMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReleaseToTESTMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReleaseToDEVMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReleaseToVMMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolsMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LogViewerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TestSQLclToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TestJdbcToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.VirtualBoxMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.VBoxNameToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ChooseVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.StartVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.StartVMNormalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.StartVMHeadleassToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RestoreStateVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateSnapshotToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CleanToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.WipToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RefreshButton = New System.Windows.Forms.Button()
         Me.MainMenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'MainMenuStrip
         '
-        Me.MainMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FEATUREToolStripMenuItem, Me.HOTFIXToolStripMenuItem, Me.VersionMenu, Me.VersionsMenu, Me.PATCHToolStripMenuItem, Me.APEXToolStripMenuItem, Me.RELEASEToolStripMenuItem, Me.ToolsToolStripMenuItem, Me.VirtualBoxToolStripMenuItem, Me.CreateToolStripMenuItem})
+        Me.MainMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewMenuItem, Me.FeatureMenuItem, Me.HotfixMenuItem, Me.RunMenuItem, Me.ApexMenuItem, Me.ReleaseMenuItem, Me.ToolsMenuItem, Me.VirtualBoxMenuItem})
         Me.MainMenuStrip.Location = New System.Drawing.Point(0, 0)
         Me.MainMenuStrip.Name = "MainMenuStrip"
-        Me.MainMenuStrip.Size = New System.Drawing.Size(770, 24)
+        Me.MainMenuStrip.Size = New System.Drawing.Size(484, 24)
         Me.MainMenuStrip.TabIndex = 0
         Me.MainMenuStrip.Text = "MenuStrip1"
         '
-        'FEATUREToolStripMenuItem
+        'NewMenuItem
         '
-        Me.FEATUREToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewFeatureToolStripMenuItem, Me.CreateDBFeaturePatchToolStripMenuItem, Me.ToolStripSeparator2, Me.RebaseFeatureFullToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem, Me.TestworkflowToolStripMenuItem, Me.TestrevertToolStripMenuItem, Me.TestCreatePatchSetToolStripMenuItem})
-        Me.FEATUREToolStripMenuItem.Name = "FEATUREToolStripMenuItem"
-        Me.FEATUREToolStripMenuItem.Size = New System.Drawing.Size(58, 20)
-        Me.FEATUREToolStripMenuItem.Text = "Feature"
-        Me.FEATUREToolStripMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Developer
+        Me.NewMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FeatureToolStripMenuItem3, Me.HotfixToolStripMenuItem3, Me.ReleaseToolStripMenuItem2})
+        Me.NewMenuItem.Name = "NewMenuItem"
+        Me.NewMenuItem.Size = New System.Drawing.Size(43, 20)
+        Me.NewMenuItem.Text = "New"
+        Me.NewMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Developer
         '
-        'NewFeatureToolStripMenuItem
+        'FeatureToolStripMenuItem3
         '
-        Me.NewFeatureToolStripMenuItem.Name = "NewFeatureToolStripMenuItem"
-        Me.NewFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.NewFeatureToolStripMenuItem.Text = "Start New Feature"
-        Me.NewFeatureToolStripMenuItem.ToolTipText = "Branch Feature from master branch"
+        Me.FeatureToolStripMenuItem3.Name = "FeatureToolStripMenuItem3"
+        Me.FeatureToolStripMenuItem3.Size = New System.Drawing.Size(180, 22)
+        Me.FeatureToolStripMenuItem3.Text = "Feature"
         '
-        'CreateDBFeaturePatchToolStripMenuItem
+        'HotfixToolStripMenuItem3
         '
-        Me.CreateDBFeaturePatchToolStripMenuItem.Name = "CreateDBFeaturePatchToolStripMenuItem"
-        Me.CreateDBFeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.CreateDBFeaturePatchToolStripMenuItem.Text = "Create Feature Patch"
-        Me.CreateDBFeaturePatchToolStripMenuItem.ToolTipText = "Create patch includes Rebase, Merge and Push to master"
+        Me.HotfixToolStripMenuItem3.Name = "HotfixToolStripMenuItem3"
+        Me.HotfixToolStripMenuItem3.Size = New System.Drawing.Size(180, 22)
+        Me.HotfixToolStripMenuItem3.Text = "Hotfix"
         '
-        'ToolStripSeparator2
+        'ReleaseToolStripMenuItem2
         '
-        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(199, 6)
+        Me.ReleaseToolStripMenuItem2.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1, Me.ToolStripMenuItem2, Me.ToolStripMenuItem3, Me.ToolStripMenuItem4})
+        Me.ReleaseToolStripMenuItem2.Name = "ReleaseToolStripMenuItem2"
+        Me.ReleaseToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToolStripMenuItem2.Text = "Release"
+        Me.ReleaseToolStripMenuItem2.Visible = Global.GitPatcher.My.MySettings.Default.Admin
         '
-        'RebaseFeatureFullToolStripMenuItem
+        'ToolStripMenuItem1
         '
-        Me.RebaseFeatureFullToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FullRebaseToolStripMenuItem, Me.DBChangesOnlyToolStripMenuItem, Me.ApexChangesOnlyToolStripMenuItem})
-        Me.RebaseFeatureFullToolStripMenuItem.Name = "RebaseFeatureFullToolStripMenuItem"
-        Me.RebaseFeatureFullToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.RebaseFeatureFullToolStripMenuItem.Text = "Rebase Feature"
-        Me.RebaseFeatureFullToolStripMenuItem.ToolTipText = "Full rebase of the feature for DB and Apex changes"
+        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem1.Text = "Major"
         '
-        'FullRebaseToolStripMenuItem
+        'ToolStripMenuItem2
         '
-        Me.FullRebaseToolStripMenuItem.Name = "FullRebaseToolStripMenuItem"
-        Me.FullRebaseToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.FullRebaseToolStripMenuItem.Text = "Full Rebase"
+        Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem2.Text = "Minor"
         '
-        'DBChangesOnlyToolStripMenuItem
+        'ToolStripMenuItem3
         '
-        Me.DBChangesOnlyToolStripMenuItem.Name = "DBChangesOnlyToolStripMenuItem"
-        Me.DBChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.DBChangesOnlyToolStripMenuItem.Text = "DB changes only"
-        Me.DBChangesOnlyToolStripMenuItem.ToolTipText = "I've made only DB changes since my last rebase."
+        Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
+        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem3.Text = "Patch"
         '
-        'ApexChangesOnlyToolStripMenuItem
+        'ToolStripMenuItem4
         '
-        Me.ApexChangesOnlyToolStripMenuItem.Name = "ApexChangesOnlyToolStripMenuItem"
-        Me.ApexChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.ApexChangesOnlyToolStripMenuItem.Text = "Apex changes only"
-        Me.ApexChangesOnlyToolStripMenuItem.ToolTipText = "I've made only Apex App changes since my last rebase."
-        '
-        'MergeAndPushFeatureToolStripMenuItem
-        '
-        Me.MergeAndPushFeatureToolStripMenuItem.Name = "MergeAndPushFeatureToolStripMenuItem"
-        Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature"
-        Me.MergeAndPushFeatureToolStripMenuItem.ToolTipText = "Merge Feature branch to master branch"
-        Me.MergeAndPushFeatureToolStripMenuItem.Visible = False
-        '
-        'ShowindexToolStripMenuItem
-        '
-        Me.ShowindexToolStripMenuItem.Name = "ShowindexToolStripMenuItem"
-        Me.ShowindexToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.ShowindexToolStripMenuItem.Text = "showindex"
-        Me.ShowindexToolStripMenuItem.Visible = False
-        '
-        'TestworkflowToolStripMenuItem
-        '
-        Me.TestworkflowToolStripMenuItem.Name = "TestworkflowToolStripMenuItem"
-        Me.TestworkflowToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.TestworkflowToolStripMenuItem.Text = "testworkflow"
-        Me.TestworkflowToolStripMenuItem.ToolTipText = "This is for testing the workflow engine."
-        Me.TestworkflowToolStripMenuItem.Visible = False
-        '
-        'TestrevertToolStripMenuItem
-        '
-        Me.TestrevertToolStripMenuItem.Name = "TestrevertToolStripMenuItem"
-        Me.TestrevertToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.TestrevertToolStripMenuItem.Text = "testrevert"
-        Me.TestrevertToolStripMenuItem.Visible = False
-        '
-        'TestCreatePatchSetToolStripMenuItem
-        '
-        Me.TestCreatePatchSetToolStripMenuItem.Name = "TestCreatePatchSetToolStripMenuItem"
-        Me.TestCreatePatchSetToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
-        Me.TestCreatePatchSetToolStripMenuItem.Text = "testCreatePatchSet"
-        Me.TestCreatePatchSetToolStripMenuItem.Visible = False
-        '
-        'HOTFIXToolStripMenuItem
-        '
-        Me.HOTFIXToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewHotFixMenuItem, Me.CreateDBHotFixPatchToolStripMenuItem1, Me.RebaseHotfixPatchToolStripMenuItem, Me.ToolStripSeparator1, Me.RebaseHotFixToolStripMenuItem, Me.HotFixToolStripComboBox, Me.MultiDBHotFixPatchToolStripMenuItem, Me.MergeAndPushHotfixToolStripMenuItem})
-        Me.HOTFIXToolStripMenuItem.Name = "HOTFIXToolStripMenuItem"
-        Me.HOTFIXToolStripMenuItem.Size = New System.Drawing.Size(51, 20)
-        Me.HOTFIXToolStripMenuItem.Text = "Hotfix"
-        Me.HOTFIXToolStripMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Admin
-        '
-        'NewHotFixMenuItem
-        '
-        Me.NewHotFixMenuItem.Name = "NewHotFixMenuItem"
-        Me.NewHotFixMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.NewHotFixMenuItem.Text = "Start New HotFix"
-        '
-        'CreateDBHotFixPatchToolStripMenuItem1
-        '
-        Me.CreateDBHotFixPatchToolStripMenuItem1.Name = "CreateDBHotFixPatchToolStripMenuItem1"
-        Me.CreateDBHotFixPatchToolStripMenuItem1.Size = New System.Drawing.Size(195, 22)
-        Me.CreateDBHotFixPatchToolStripMenuItem1.Text = "Create HotFix Patch"
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(192, 6)
-        '
-        'RebaseHotFixToolStripMenuItem
-        '
-        Me.RebaseHotFixToolStripMenuItem.Name = "RebaseHotFixToolStripMenuItem"
-        Me.RebaseHotFixToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.RebaseHotFixToolStripMenuItem.Text = "Rebase HotFix"
-        '
-        'HotFixToolStripComboBox
-        '
-        Me.HotFixToolStripComboBox.Name = "HotFixToolStripComboBox"
-        Me.HotFixToolStripComboBox.Size = New System.Drawing.Size(121, 23)
-        Me.HotFixToolStripComboBox.Tag = ""
-        Me.HotFixToolStripComboBox.Visible = False
-        '
-        'MultiDBHotFixPatchToolStripMenuItem
-        '
-        Me.MultiDBHotFixPatchToolStripMenuItem.Name = "MultiDBHotFixPatchToolStripMenuItem"
-        Me.MultiDBHotFixPatchToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.MultiDBHotFixPatchToolStripMenuItem.Text = "Multi DB HotFix Patch"
-        Me.MultiDBHotFixPatchToolStripMenuItem.Visible = False
-        '
-        'MergeAndPushHotfixToolStripMenuItem
-        '
-        Me.MergeAndPushHotfixToolStripMenuItem.Name = "MergeAndPushHotfixToolStripMenuItem"
-        Me.MergeAndPushHotfixToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.MergeAndPushHotfixToolStripMenuItem.Text = "Merge and Push Hotfix"
-        Me.MergeAndPushHotfixToolStripMenuItem.Visible = False
-        '
-        'VersionMenu
-        '
-        Me.VersionMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CreateVersionToolStripMenuItem, Me.CreateVersionPatchToolStripMenuItem})
-        Me.VersionMenu.Name = "VersionMenu"
-        Me.VersionMenu.Size = New System.Drawing.Size(58, 20)
-        Me.VersionMenu.Text = "Version"
-        Me.VersionMenu.Visible = Global.GitPatcher.My.MySettings.Default.Admin
-        '
-        'CreateVersionToolStripMenuItem
-        '
-        Me.CreateVersionToolStripMenuItem.Name = "CreateVersionToolStripMenuItem"
-        Me.CreateVersionToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.CreateVersionToolStripMenuItem.Text = "Start New Version"
-        '
-        'CreateVersionPatchToolStripMenuItem
-        '
-        Me.CreateVersionPatchToolStripMenuItem.Name = "CreateVersionPatchToolStripMenuItem"
-        Me.CreateVersionPatchToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.CreateVersionPatchToolStripMenuItem.Text = "Create Version Patch"
-        '
-        'VersionsMenu
-        '
-        Me.VersionsMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripComboBox, Me.NewVersionReleaseToolStripMenuItem, Me.NewMajorVersionReleaseToolStripMenuItem, Me.NewMinorVersionReleaseToolStripMenuItem, Me.NewPatchVersionReleaseToolStripMenuItem})
-        Me.VersionsMenu.Name = "VersionsMenu"
-        Me.VersionsMenu.Size = New System.Drawing.Size(63, 20)
-        Me.VersionsMenu.Text = "Versions"
-        '
-        'ToolStripComboBox
-        '
-        Me.ToolStripComboBox.Items.AddRange(New Object() {"Major", "Minor", "Patch", "Full"})
-        Me.ToolStripComboBox.Name = "ToolStripComboBox"
-        Me.ToolStripComboBox.Size = New System.Drawing.Size(121, 23)
-        Me.ToolStripComboBox.Tag = "Version Type"
-        Me.ToolStripComboBox.Text = "Minor"
-        Me.ToolStripComboBox.ToolTipText = "Version Type"
-        '
-        'NewVersionReleaseToolStripMenuItem
-        '
-        Me.NewVersionReleaseToolStripMenuItem.Name = "NewVersionReleaseToolStripMenuItem"
-        Me.NewVersionReleaseToolStripMenuItem.Size = New System.Drawing.Size(217, 22)
-        Me.NewVersionReleaseToolStripMenuItem.Text = "New Version Release"
-        '
-        'NewMajorVersionReleaseToolStripMenuItem
-        '
-        Me.NewMajorVersionReleaseToolStripMenuItem.Name = "NewMajorVersionReleaseToolStripMenuItem"
-        Me.NewMajorVersionReleaseToolStripMenuItem.Size = New System.Drawing.Size(217, 22)
-        Me.NewMajorVersionReleaseToolStripMenuItem.Text = "New Major Version Release"
-        '
-        'NewMinorVersionReleaseToolStripMenuItem
-        '
-        Me.NewMinorVersionReleaseToolStripMenuItem.Name = "NewMinorVersionReleaseToolStripMenuItem"
-        Me.NewMinorVersionReleaseToolStripMenuItem.Size = New System.Drawing.Size(217, 22)
-        Me.NewMinorVersionReleaseToolStripMenuItem.Text = "New Minor Version Release"
-        '
-        'NewPatchVersionReleaseToolStripMenuItem
-        '
-        Me.NewPatchVersionReleaseToolStripMenuItem.Name = "NewPatchVersionReleaseToolStripMenuItem"
-        Me.NewPatchVersionReleaseToolStripMenuItem.Size = New System.Drawing.Size(217, 22)
-        Me.NewPatchVersionReleaseToolStripMenuItem.Text = "New Patch Version Release"
-        '
-        'PATCHToolStripMenuItem
-        '
-        Me.PATCHToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FeaturePatchToolStripMenuItem, Me.VersionPatchToolStripMenuItem, Me.CreateDBReleaseToolStripMenuItem, Me.CreateDBPatchSetToolStripMenuItem, Me.CreateDBMinorReleaseToolStripMenuItem, Me.CreateDBMajorReleaseToolStripMenuItem, Me.ToolStripSeparator4, Me.PatchRunnerToolStripMenuItem})
-        Me.PATCHToolStripMenuItem.Name = "PATCHToolStripMenuItem"
-        Me.PATCHToolStripMenuItem.Size = New System.Drawing.Size(49, 20)
-        Me.PATCHToolStripMenuItem.Text = "Patch"
-        Me.PATCHToolStripMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Developer
-        '
-        'FeaturePatchToolStripMenuItem
-        '
-        Me.FeaturePatchToolStripMenuItem.Name = "FeaturePatchToolStripMenuItem"
-        Me.FeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.FeaturePatchToolStripMenuItem.Text = "Feature Patch"
-        '
-        'VersionPatchToolStripMenuItem
-        '
-        Me.VersionPatchToolStripMenuItem.Name = "VersionPatchToolStripMenuItem"
-        Me.VersionPatchToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.VersionPatchToolStripMenuItem.Text = "Version Patch"
-        '
-        'CreateDBReleaseToolStripMenuItem
-        '
-        Me.CreateDBReleaseToolStripMenuItem.Name = "CreateDBReleaseToolStripMenuItem"
-        Me.CreateDBReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.CreateDBReleaseToolStripMenuItem.Text = "Release Patch"
-        '
-        'CreateDBPatchSetToolStripMenuItem
-        '
-        Me.CreateDBPatchSetToolStripMenuItem.Name = "CreateDBPatchSetToolStripMenuItem"
-        Me.CreateDBPatchSetToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.CreateDBPatchSetToolStripMenuItem.Text = "Create DB Patch Set"
-        Me.CreateDBPatchSetToolStripMenuItem.Visible = False
-        '
-        'CreateDBMinorReleaseToolStripMenuItem
-        '
-        Me.CreateDBMinorReleaseToolStripMenuItem.Name = "CreateDBMinorReleaseToolStripMenuItem"
-        Me.CreateDBMinorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.CreateDBMinorReleaseToolStripMenuItem.Text = "Create DB Minor Release"
-        Me.CreateDBMinorReleaseToolStripMenuItem.Visible = False
-        '
-        'CreateDBMajorReleaseToolStripMenuItem
-        '
-        Me.CreateDBMajorReleaseToolStripMenuItem.Name = "CreateDBMajorReleaseToolStripMenuItem"
-        Me.CreateDBMajorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.CreateDBMajorReleaseToolStripMenuItem.Text = "Create DB Major Release"
-        Me.CreateDBMajorReleaseToolStripMenuItem.Visible = False
-        '
-        'ToolStripSeparator4
-        '
-        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(200, 6)
-        '
-        'PatchRunnerToolStripMenuItem
-        '
-        Me.PatchRunnerToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UnappliedToolStripMenuItem, Me.UninstalledToolStripMenuItem, Me.AllPatchesToolStripMenuItem})
-        Me.PatchRunnerToolStripMenuItem.Name = "PatchRunnerToolStripMenuItem"
-        Me.PatchRunnerToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.PatchRunnerToolStripMenuItem.Text = "Run Patches"
-        '
-        'UnappliedToolStripMenuItem
-        '
-        Me.UnappliedToolStripMenuItem.Name = "UnappliedToolStripMenuItem"
-        Me.UnappliedToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
-        Me.UnappliedToolStripMenuItem.Text = "Unapplied Patches"
-        Me.UnappliedToolStripMenuItem.ToolTipText = "Ordered set to be applied."
-        '
-        'UninstalledToolStripMenuItem
-        '
-        Me.UninstalledToolStripMenuItem.Name = "UninstalledToolStripMenuItem"
-        Me.UninstalledToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
-        Me.UninstalledToolStripMenuItem.Text = "Uninstalled Patches"
-        Me.UninstalledToolStripMenuItem.ToolTipText = "Not installed, but may not need to be."
-        '
-        'AllPatchesToolStripMenuItem
-        '
-        Me.AllPatchesToolStripMenuItem.Name = "AllPatchesToolStripMenuItem"
-        Me.AllPatchesToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
-        Me.AllPatchesToolStripMenuItem.Text = "All Patches"
-        Me.AllPatchesToolStripMenuItem.ToolTipText = "Installed or otherwise."
-        '
-        'APEXToolStripMenuItem
-        '
-        Me.APEXToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportToolStripMenuItem, Me.ExportToolStripMenuItem, Me.Import1PageToolStripMenuItem, Me.ToolStripSeparator3, Me.ApexAppInstallerToolStripMenuItem, Me.ApexAppExporterToolStripMenuItem})
-        Me.APEXToolStripMenuItem.Name = "APEXToolStripMenuItem"
-        Me.APEXToolStripMenuItem.Size = New System.Drawing.Size(45, 20)
-        Me.APEXToolStripMenuItem.Text = "Apex"
-        Me.APEXToolStripMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Developer
-        '
-        'ImportToolStripMenuItem
-        '
-        Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
-        Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
-        Me.ImportToolStripMenuItem.Text = "Import Full"
-        Me.ImportToolStripMenuItem.Visible = False
-        '
-        'ExportToolStripMenuItem
-        '
-        Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
-        Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
-        Me.ExportToolStripMenuItem.Text = "Export Full"
-        Me.ExportToolStripMenuItem.Visible = False
-        '
-        'Import1PageToolStripMenuItem
-        '
-        Me.Import1PageToolStripMenuItem.Name = "Import1PageToolStripMenuItem"
-        Me.Import1PageToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
-        Me.Import1PageToolStripMenuItem.Text = "Import 1 page"
-        Me.Import1PageToolStripMenuItem.Visible = False
-        '
-        'ToolStripSeparator3
-        '
-        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(168, 6)
-        '
-        'ApexAppInstallerToolStripMenuItem
-        '
-        Me.ApexAppInstallerToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.QueuedToolStripMenuItem, Me.AllApexAppsToolStripMenuItem, Me.SinglePageImportToolStripMenuItem})
-        Me.ApexAppInstallerToolStripMenuItem.Name = "ApexAppInstallerToolStripMenuItem"
-        Me.ApexAppInstallerToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
-        Me.ApexAppInstallerToolStripMenuItem.Text = "Apex App Installer"
-        '
-        'QueuedToolStripMenuItem
-        '
-        Me.QueuedToolStripMenuItem.Name = "QueuedToolStripMenuItem"
-        Me.QueuedToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
-        Me.QueuedToolStripMenuItem.Text = "Queued Apex Apps"
-        '
-        'AllApexAppsToolStripMenuItem
-        '
-        Me.AllApexAppsToolStripMenuItem.Name = "AllApexAppsToolStripMenuItem"
-        Me.AllApexAppsToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
-        Me.AllApexAppsToolStripMenuItem.Text = "All Apex Apps"
-        '
-        'SinglePageImportToolStripMenuItem
-        '
-        Me.SinglePageImportToolStripMenuItem.Name = "SinglePageImportToolStripMenuItem"
-        Me.SinglePageImportToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
-        Me.SinglePageImportToolStripMenuItem.Text = "Restore Single Page"
-        '
-        'ApexAppExporterToolStripMenuItem
-        '
-        Me.ApexAppExporterToolStripMenuItem.Name = "ApexAppExporterToolStripMenuItem"
-        Me.ApexAppExporterToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
-        Me.ApexAppExporterToolStripMenuItem.Text = "Apex App Exporter"
-        '
-        'RELEASEToolStripMenuItem
-        '
-        Me.RELEASEToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ReleaseToPRODMenuItem, Me.ReleaseToUATMenuItem, Me.ReleaseToTESTMenuItem, Me.ReleaseToDEVMenuItem, Me.ReleaseToVMMenuItem})
-        Me.RELEASEToolStripMenuItem.Name = "RELEASEToolStripMenuItem"
-        Me.RELEASEToolStripMenuItem.Size = New System.Drawing.Size(58, 20)
-        Me.RELEASEToolStripMenuItem.Text = "Release"
-        Me.RELEASEToolStripMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Releaser
-        '
-        'ReleaseToPRODMenuItem
-        '
-        Me.ReleaseToPRODMenuItem.Name = "ReleaseToPRODMenuItem"
-        Me.ReleaseToPRODMenuItem.Size = New System.Drawing.Size(161, 22)
-        Me.ReleaseToPRODMenuItem.Text = "Release to PROD"
-        '
-        'ReleaseToUATMenuItem
-        '
-        Me.ReleaseToUATMenuItem.Name = "ReleaseToUATMenuItem"
-        Me.ReleaseToUATMenuItem.Size = New System.Drawing.Size(161, 22)
-        Me.ReleaseToUATMenuItem.Text = "Release to UAT"
-        '
-        'ReleaseToTESTMenuItem
-        '
-        Me.ReleaseToTESTMenuItem.Name = "ReleaseToTESTMenuItem"
-        Me.ReleaseToTESTMenuItem.Size = New System.Drawing.Size(161, 22)
-        Me.ReleaseToTESTMenuItem.Text = "Release to TEST"
-        '
-        'ReleaseToDEVMenuItem
-        '
-        Me.ReleaseToDEVMenuItem.Name = "ReleaseToDEVMenuItem"
-        Me.ReleaseToDEVMenuItem.Size = New System.Drawing.Size(161, 22)
-        Me.ReleaseToDEVMenuItem.Text = "Release to DEV"
-        '
-        'ReleaseToVMMenuItem
-        '
-        Me.ReleaseToVMMenuItem.Name = "ReleaseToVMMenuItem"
-        Me.ReleaseToVMMenuItem.Size = New System.Drawing.Size(161, 22)
-        Me.ReleaseToVMMenuItem.Text = "Release to VM"
-        '
-        'ToolsToolStripMenuItem
-        '
-        Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LogViewerToolStripMenuItem, Me.TestSQLclToolStripMenuItem, Me.TestJdbcToolStripMenuItem, Me.ExportDataToolStripMenuItem})
-        Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
-        Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(48, 20)
-        Me.ToolsToolStripMenuItem.Text = "Tools"
-        Me.ToolsToolStripMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Developer
-        '
-        'LogViewerToolStripMenuItem
-        '
-        Me.LogViewerToolStripMenuItem.Name = "LogViewerToolStripMenuItem"
-        Me.LogViewerToolStripMenuItem.Size = New System.Drawing.Size(169, 22)
-        Me.LogViewerToolStripMenuItem.Text = "Log Viewer"
-        '
-        'TestSQLclToolStripMenuItem
-        '
-        Me.TestSQLclToolStripMenuItem.Name = "TestSQLclToolStripMenuItem"
-        Me.TestSQLclToolStripMenuItem.Size = New System.Drawing.Size(169, 22)
-        Me.TestSQLclToolStripMenuItem.Text = "Test SQLcl"
-        '
-        'TestJdbcToolStripMenuItem
-        '
-        Me.TestJdbcToolStripMenuItem.Name = "TestJdbcToolStripMenuItem"
-        Me.TestJdbcToolStripMenuItem.Size = New System.Drawing.Size(169, 22)
-        Me.TestJdbcToolStripMenuItem.Text = "Test JDBC to ARM"
-        '
-        'ExportDataToolStripMenuItem
-        '
-        Me.ExportDataToolStripMenuItem.Name = "ExportDataToolStripMenuItem"
-        Me.ExportDataToolStripMenuItem.Size = New System.Drawing.Size(169, 22)
-        Me.ExportDataToolStripMenuItem.Text = "Export Data"
-        '
-        'VirtualBoxToolStripMenuItem
-        '
-        Me.VirtualBoxToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.VBoxNameToolStripMenuItem, Me.ChooseVMToolStripMenuItem, Me.StartVMToolStripMenuItem, Me.SaveVMToolStripMenuItem, Me.RestoreStateVMToolStripMenuItem, Me.CreateSnapshotToolStripMenuItem})
-        Me.VirtualBoxToolStripMenuItem.Name = "VirtualBoxToolStripMenuItem"
-        Me.VirtualBoxToolStripMenuItem.Size = New System.Drawing.Size(72, 20)
-        Me.VirtualBoxToolStripMenuItem.Text = "VirtualBox"
-        Me.VirtualBoxToolStripMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.VirtualBoxer
-        '
-        'VBoxNameToolStripMenuItem
-        '
-        Me.VBoxNameToolStripMenuItem.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.VBoxNameToolStripMenuItem.Name = "VBoxNameToolStripMenuItem"
-        Me.VBoxNameToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.VBoxNameToolStripMenuItem.Text = "No VM"
-        '
-        'ChooseVMToolStripMenuItem
-        '
-        Me.ChooseVMToolStripMenuItem.Name = "ChooseVMToolStripMenuItem"
-        Me.ChooseVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.ChooseVMToolStripMenuItem.Text = "Choose VM"
-        '
-        'StartVMToolStripMenuItem
-        '
-        Me.StartVMToolStripMenuItem.BackColor = System.Drawing.Color.PaleGreen
-        Me.StartVMToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartVMNormalToolStripMenuItem, Me.StartVMHeadleassToolStripMenuItem})
-        Me.StartVMToolStripMenuItem.Name = "StartVMToolStripMenuItem"
-        Me.StartVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.StartVMToolStripMenuItem.Text = "Start VM"
-        '
-        'StartVMNormalToolStripMenuItem
-        '
-        Me.StartVMNormalToolStripMenuItem.BackColor = System.Drawing.Color.PaleGreen
-        Me.StartVMNormalToolStripMenuItem.Name = "StartVMNormalToolStripMenuItem"
-        Me.StartVMNormalToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
-        Me.StartVMNormalToolStripMenuItem.Text = "Normal (gui)"
-        '
-        'StartVMHeadleassToolStripMenuItem
-        '
-        Me.StartVMHeadleassToolStripMenuItem.BackColor = System.Drawing.Color.PaleGreen
-        Me.StartVMHeadleassToolStripMenuItem.Name = "StartVMHeadleassToolStripMenuItem"
-        Me.StartVMHeadleassToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
-        Me.StartVMHeadleassToolStripMenuItem.Text = "Headless"
-        '
-        'SaveVMToolStripMenuItem
-        '
-        Me.SaveVMToolStripMenuItem.BackColor = System.Drawing.Color.LightCoral
-        Me.SaveVMToolStripMenuItem.Name = "SaveVMToolStripMenuItem"
-        Me.SaveVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.SaveVMToolStripMenuItem.Text = "Stop VM (Save State)"
-        '
-        'RestoreStateVMToolStripMenuItem
-        '
-        Me.RestoreStateVMToolStripMenuItem.BackColor = System.Drawing.Color.LightSkyBlue
-        Me.RestoreStateVMToolStripMenuItem.Name = "RestoreStateVMToolStripMenuItem"
-        Me.RestoreStateVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.RestoreStateVMToolStripMenuItem.Text = "Restore State VM"
-        '
-        'CreateSnapshotToolStripMenuItem
-        '
-        Me.CreateSnapshotToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CleanToolStripMenuItem, Me.WipToolStripMenuItem})
-        Me.CreateSnapshotToolStripMenuItem.Name = "CreateSnapshotToolStripMenuItem"
-        Me.CreateSnapshotToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.CreateSnapshotToolStripMenuItem.Text = "Create Snapshot"
-        '
-        'CleanToolStripMenuItem
-        '
-        Me.CleanToolStripMenuItem.Name = "CleanToolStripMenuItem"
-        Me.CleanToolStripMenuItem.Size = New System.Drawing.Size(156, 22)
-        Me.CleanToolStripMenuItem.Text = "Clean Snapshot"
-        '
-        'WipToolStripMenuItem
-        '
-        Me.WipToolStripMenuItem.Name = "WipToolStripMenuItem"
-        Me.WipToolStripMenuItem.Size = New System.Drawing.Size(156, 22)
-        Me.WipToolStripMenuItem.Text = "WIP Snapshot"
-        '
-        'CreateToolStripMenuItem
-        '
-        Me.CreateToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.BranchToolStripMenuItem, Me.PatchToolStripMenuItem1, Me.ReleaseToolStripMenuItem1})
-        Me.CreateToolStripMenuItem.Name = "CreateToolStripMenuItem"
-        Me.CreateToolStripMenuItem.Size = New System.Drawing.Size(53, 20)
-        Me.CreateToolStripMenuItem.Text = "Create"
-        '
-        'BranchToolStripMenuItem
-        '
-        Me.BranchToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FeatureToolStripMenuItem1, Me.HotfixToolStripMenuItem1, Me.VersionToolStripMenuItem})
-        Me.BranchToolStripMenuItem.Name = "BranchToolStripMenuItem"
-        Me.BranchToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.BranchToolStripMenuItem.Text = "Branch"
-        '
-        'FeatureToolStripMenuItem1
-        '
-        Me.FeatureToolStripMenuItem1.Name = "FeatureToolStripMenuItem1"
-        Me.FeatureToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
-        Me.FeatureToolStripMenuItem1.Text = "Feature"
-        Me.FeatureToolStripMenuItem1.ToolTipText = "Create a feature for master"
-        '
-        'HotfixToolStripMenuItem1
-        '
-        Me.HotfixToolStripMenuItem1.Name = "HotfixToolStripMenuItem1"
-        Me.HotfixToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
-        Me.HotfixToolStripMenuItem1.Text = "Hotfix"
-        Me.HotfixToolStripMenuItem1.ToolTipText = "Create a hotfix for a release"
-        '
-        'VersionToolStripMenuItem
-        '
-        Me.VersionToolStripMenuItem.Name = "VersionToolStripMenuItem"
-        Me.VersionToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.VersionToolStripMenuItem.Text = "Full Version"
-        Me.VersionToolStripMenuItem.ToolTipText = "Create a full version for master"
-        '
-        'PatchToolStripMenuItem1
-        '
-        Me.PatchToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FeatureToolStripMenuItem2, Me.HotfixToolStripMenuItem2, Me.VersionToolStripMenuItem2})
-        Me.PatchToolStripMenuItem1.Name = "PatchToolStripMenuItem1"
-        Me.PatchToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
-        Me.PatchToolStripMenuItem1.Text = "Patch"
-        '
-        'FeatureToolStripMenuItem2
-        '
-        Me.FeatureToolStripMenuItem2.Name = "FeatureToolStripMenuItem2"
-        Me.FeatureToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
-        Me.FeatureToolStripMenuItem2.Text = "Feature"
-        '
-        'HotfixToolStripMenuItem2
-        '
-        Me.HotfixToolStripMenuItem2.Name = "HotfixToolStripMenuItem2"
-        Me.HotfixToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
-        Me.HotfixToolStripMenuItem2.Text = "Hotfix"
-        '
-        'VersionToolStripMenuItem2
-        '
-        Me.VersionToolStripMenuItem2.Name = "VersionToolStripMenuItem2"
-        Me.VersionToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
-        Me.VersionToolStripMenuItem2.Text = "Full Version"
-        '
-        'ReleaseToolStripMenuItem1
-        '
-        Me.ReleaseToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MajorToolStripMenuItem, Me.MinorToolStripMenuItem, Me.PatchToolStripMenuItem2, Me.VersionToolStripMenuItem1})
-        Me.ReleaseToolStripMenuItem1.Name = "ReleaseToolStripMenuItem1"
-        Me.ReleaseToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
-        Me.ReleaseToolStripMenuItem1.Text = "Release"
-        '
-        'MajorToolStripMenuItem
-        '
-        Me.MajorToolStripMenuItem.Name = "MajorToolStripMenuItem"
-        Me.MajorToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.MajorToolStripMenuItem.Text = "Major"
-        '
-        'MinorToolStripMenuItem
-        '
-        Me.MinorToolStripMenuItem.Name = "MinorToolStripMenuItem"
-        Me.MinorToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.MinorToolStripMenuItem.Text = "Minor"
-        '
-        'PatchToolStripMenuItem2
-        '
-        Me.PatchToolStripMenuItem2.Name = "PatchToolStripMenuItem2"
-        Me.PatchToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
-        Me.PatchToolStripMenuItem2.Text = "Patch"
-        '
-        'VersionToolStripMenuItem1
-        '
-        Me.VersionToolStripMenuItem1.Name = "VersionToolStripMenuItem1"
-        Me.VersionToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
-        Me.VersionToolStripMenuItem1.Text = "Full Version"
+        Me.ToolStripMenuItem4.Name = "ToolStripMenuItem4"
+        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem4.Text = "Full Version TODO"
+        Me.ToolStripMenuItem4.Visible = False
         '
         'RepoComboBox
         '
@@ -1122,6 +569,7 @@ Partial Class Main
         Me.RebaseButton.TabIndex = 44
         Me.RebaseButton.Text = "Rebase"
         Me.RebaseButton.UseVisualStyleBackColor = True
+        Me.RebaseButton.Visible = False
         '
         'MergeButton
         '
@@ -1131,6 +579,7 @@ Partial Class Main
         Me.MergeButton.TabIndex = 45
         Me.MergeButton.Text = "Merge"
         Me.MergeButton.UseVisualStyleBackColor = True
+        Me.MergeButton.Visible = False
         '
         'TextBoxReleaseId
         '
@@ -1150,18 +599,431 @@ Partial Class Main
         Me.Label20.TabIndex = 46
         Me.Label20.Text = "GP Release"
         '
-        'RebaseHotfixPatchToolStripMenuItem
+        'FeatureMenuItem
         '
-        Me.RebaseHotfixPatchToolStripMenuItem.Name = "RebaseHotfixPatchToolStripMenuItem"
-        Me.RebaseHotfixPatchToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.RebaseHotfixPatchToolStripMenuItem.Text = "Rebase Hotfix Patch"
+        Me.FeatureMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CreateDBFeaturePatchToolStripMenuItem, Me.ToolStripSeparator2, Me.RebaseFeatureFullToolStripMenuItem, Me.MergeAndPushFeatureToolStripMenuItem, Me.ShowindexToolStripMenuItem, Me.TestworkflowToolStripMenuItem, Me.TestrevertToolStripMenuItem, Me.TestCreatePatchSetToolStripMenuItem})
+        Me.FeatureMenuItem.Name = "FeatureMenuItem"
+        Me.FeatureMenuItem.Size = New System.Drawing.Size(58, 20)
+        Me.FeatureMenuItem.Text = "Feature"
+        '
+        'CreateDBFeaturePatchToolStripMenuItem
+        '
+        Me.CreateDBFeaturePatchToolStripMenuItem.Name = "CreateDBFeaturePatchToolStripMenuItem"
+        Me.CreateDBFeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.CreateDBFeaturePatchToolStripMenuItem.Text = "Create Patch"
+        Me.CreateDBFeaturePatchToolStripMenuItem.ToolTipText = "Create patch includes Rebase, Merge and Push to master"
+        '
+        'ToolStripSeparator2
+        '
+        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(199, 6)
+        '
+        'RebaseFeatureFullToolStripMenuItem
+        '
+        Me.RebaseFeatureFullToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FullRebaseToolStripMenuItem, Me.DBChangesOnlyToolStripMenuItem, Me.ApexChangesOnlyToolStripMenuItem})
+        Me.RebaseFeatureFullToolStripMenuItem.Name = "RebaseFeatureFullToolStripMenuItem"
+        Me.RebaseFeatureFullToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.RebaseFeatureFullToolStripMenuItem.Text = "Rebase Feature"
+        Me.RebaseFeatureFullToolStripMenuItem.ToolTipText = "Full rebase of the feature for DB and Apex changes"
+        '
+        'FullRebaseToolStripMenuItem
+        '
+        Me.FullRebaseToolStripMenuItem.Name = "FullRebaseToolStripMenuItem"
+        Me.FullRebaseToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.FullRebaseToolStripMenuItem.Text = "Full Rebase"
+        '
+        'DBChangesOnlyToolStripMenuItem
+        '
+        Me.DBChangesOnlyToolStripMenuItem.Name = "DBChangesOnlyToolStripMenuItem"
+        Me.DBChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.DBChangesOnlyToolStripMenuItem.Text = "DB changes only"
+        Me.DBChangesOnlyToolStripMenuItem.ToolTipText = "I've made only DB changes since my last rebase."
+        '
+        'ApexChangesOnlyToolStripMenuItem
+        '
+        Me.ApexChangesOnlyToolStripMenuItem.Name = "ApexChangesOnlyToolStripMenuItem"
+        Me.ApexChangesOnlyToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.ApexChangesOnlyToolStripMenuItem.Text = "Apex changes only"
+        Me.ApexChangesOnlyToolStripMenuItem.ToolTipText = "I've made only Apex App changes since my last rebase."
+        '
+        'MergeAndPushFeatureToolStripMenuItem
+        '
+        Me.MergeAndPushFeatureToolStripMenuItem.Name = "MergeAndPushFeatureToolStripMenuItem"
+        Me.MergeAndPushFeatureToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.MergeAndPushFeatureToolStripMenuItem.Text = "Merge and Push Feature"
+        Me.MergeAndPushFeatureToolStripMenuItem.ToolTipText = "Merge Feature branch to master branch"
+        Me.MergeAndPushFeatureToolStripMenuItem.Visible = False
+        '
+        'ShowindexToolStripMenuItem
+        '
+        Me.ShowindexToolStripMenuItem.Name = "ShowindexToolStripMenuItem"
+        Me.ShowindexToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.ShowindexToolStripMenuItem.Text = "showindex"
+        Me.ShowindexToolStripMenuItem.Visible = False
+        '
+        'TestworkflowToolStripMenuItem
+        '
+        Me.TestworkflowToolStripMenuItem.Name = "TestworkflowToolStripMenuItem"
+        Me.TestworkflowToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.TestworkflowToolStripMenuItem.Text = "testworkflow"
+        Me.TestworkflowToolStripMenuItem.ToolTipText = "This is for testing the workflow engine."
+        Me.TestworkflowToolStripMenuItem.Visible = False
+        '
+        'TestrevertToolStripMenuItem
+        '
+        Me.TestrevertToolStripMenuItem.Name = "TestrevertToolStripMenuItem"
+        Me.TestrevertToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.TestrevertToolStripMenuItem.Text = "testrevert"
+        Me.TestrevertToolStripMenuItem.Visible = False
+        '
+        'TestCreatePatchSetToolStripMenuItem
+        '
+        Me.TestCreatePatchSetToolStripMenuItem.Name = "TestCreatePatchSetToolStripMenuItem"
+        Me.TestCreatePatchSetToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
+        Me.TestCreatePatchSetToolStripMenuItem.Text = "testCreatePatchSet"
+        Me.TestCreatePatchSetToolStripMenuItem.Visible = False
+        '
+        'HotfixMenuItem
+        '
+        Me.HotfixMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CreateHotFixPatchMenuItem, Me.RebaseHotfixPatchMenuItem, Me.ToolStripSeparator1, Me.RebaseHotFixMenuItem, Me.NewHotFixMenuItem, Me.HotFixToolStripComboBox, Me.MultiDBHotFixPatchToolStripMenuItem, Me.MergeAndPushHotfixToolStripMenuItem})
+        Me.HotfixMenuItem.Name = "HotfixMenuItem"
+        Me.HotfixMenuItem.Size = New System.Drawing.Size(51, 20)
+        Me.HotfixMenuItem.Text = "Hotfix"
+        Me.HotfixMenuItem.Visible = False
+        '
+        'CreateHotFixPatchMenuItem
+        '
+        Me.CreateHotFixPatchMenuItem.Name = "CreateHotFixPatchMenuItem"
+        Me.CreateHotFixPatchMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.CreateHotFixPatchMenuItem.Text = "Create Patch"
+        Me.CreateHotFixPatchMenuItem.ToolTipText = "Create a Hotfix Patch"
+        '
+        'RebaseHotfixPatchMenuItem
+        '
+        Me.RebaseHotfixPatchMenuItem.Name = "RebaseHotfixPatchMenuItem"
+        Me.RebaseHotfixPatchMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.RebaseHotfixPatchMenuItem.Text = "Rebase Patch"
+        Me.RebaseHotfixPatchMenuItem.ToolTipText = "Rebase Hotfix Patch"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(192, 6)
+        '
+        'RebaseHotFixMenuItem
+        '
+        Me.RebaseHotFixMenuItem.Name = "RebaseHotFixMenuItem"
+        Me.RebaseHotFixMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.RebaseHotFixMenuItem.Text = "Rebase HotFix"
+        Me.RebaseHotFixMenuItem.ToolTipText = "Rebase Hotfix branch on its Patch Version Release branch"
+        '
+        'NewHotFixMenuItem
+        '
+        Me.NewHotFixMenuItem.Name = "NewHotFixMenuItem"
+        Me.NewHotFixMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.NewHotFixMenuItem.Text = "Start New HotFix"
+        Me.NewHotFixMenuItem.Visible = False
+        '
+        'HotFixToolStripComboBox
+        '
+        Me.HotFixToolStripComboBox.Name = "HotFixToolStripComboBox"
+        Me.HotFixToolStripComboBox.Size = New System.Drawing.Size(121, 23)
+        Me.HotFixToolStripComboBox.Tag = ""
+        Me.HotFixToolStripComboBox.Visible = False
+        '
+        'MultiDBHotFixPatchToolStripMenuItem
+        '
+        Me.MultiDBHotFixPatchToolStripMenuItem.Name = "MultiDBHotFixPatchToolStripMenuItem"
+        Me.MultiDBHotFixPatchToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.MultiDBHotFixPatchToolStripMenuItem.Text = "Multi DB HotFix Patch"
+        Me.MultiDBHotFixPatchToolStripMenuItem.Visible = False
+        '
+        'MergeAndPushHotfixToolStripMenuItem
+        '
+        Me.MergeAndPushHotfixToolStripMenuItem.Name = "MergeAndPushHotfixToolStripMenuItem"
+        Me.MergeAndPushHotfixToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.MergeAndPushHotfixToolStripMenuItem.Text = "Merge and Push Hotfix"
+        Me.MergeAndPushHotfixToolStripMenuItem.Visible = False
+        '
+        'RunMenuItem
+        '
+        Me.RunMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem5, Me.ToolStripMenuItem6, Me.ToolStripMenuItem7, Me.ToolStripSeparator4, Me.FeaturePatchToolStripMenuItem, Me.VersionPatchToolStripMenuItem, Me.CreateDBReleaseToolStripMenuItem, Me.CreateDBPatchSetToolStripMenuItem, Me.CreateDBMinorReleaseToolStripMenuItem, Me.CreateDBMajorReleaseToolStripMenuItem})
+        Me.RunMenuItem.Name = "RunMenuItem"
+        Me.RunMenuItem.Size = New System.Drawing.Size(40, 20)
+        Me.RunMenuItem.Text = "Run"
+        Me.RunMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Developer
+        '
+        'ToolStripMenuItem5
+        '
+        Me.ToolStripMenuItem5.Name = "ToolStripMenuItem5"
+        Me.ToolStripMenuItem5.Size = New System.Drawing.Size(203, 22)
+        Me.ToolStripMenuItem5.Text = "Unapplied Patches"
+        Me.ToolStripMenuItem5.ToolTipText = "Ordered set to be applied."
+        '
+        'ToolStripMenuItem6
+        '
+        Me.ToolStripMenuItem6.Name = "ToolStripMenuItem6"
+        Me.ToolStripMenuItem6.Size = New System.Drawing.Size(203, 22)
+        Me.ToolStripMenuItem6.Text = "Uninstalled Patches"
+        Me.ToolStripMenuItem6.ToolTipText = "Not installed, but may not need to be."
+        '
+        'ToolStripMenuItem7
+        '
+        Me.ToolStripMenuItem7.Name = "ToolStripMenuItem7"
+        Me.ToolStripMenuItem7.Size = New System.Drawing.Size(203, 22)
+        Me.ToolStripMenuItem7.Text = "All Patches"
+        Me.ToolStripMenuItem7.ToolTipText = "Installed or otherwise."
+        '
+        'ToolStripSeparator4
+        '
+        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(200, 6)
+        Me.ToolStripSeparator4.Visible = False
+        '
+        'FeaturePatchToolStripMenuItem
+        '
+        Me.FeaturePatchToolStripMenuItem.Name = "FeaturePatchToolStripMenuItem"
+        Me.FeaturePatchToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.FeaturePatchToolStripMenuItem.Text = "Feature Patch"
+        Me.FeaturePatchToolStripMenuItem.Visible = False
+        '
+        'VersionPatchToolStripMenuItem
+        '
+        Me.VersionPatchToolStripMenuItem.Name = "VersionPatchToolStripMenuItem"
+        Me.VersionPatchToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.VersionPatchToolStripMenuItem.Text = "Version Patch"
+        Me.VersionPatchToolStripMenuItem.Visible = False
+        '
+        'CreateDBReleaseToolStripMenuItem
+        '
+        Me.CreateDBReleaseToolStripMenuItem.Name = "CreateDBReleaseToolStripMenuItem"
+        Me.CreateDBReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.CreateDBReleaseToolStripMenuItem.Text = "Release Patch"
+        Me.CreateDBReleaseToolStripMenuItem.Visible = False
+        '
+        'CreateDBPatchSetToolStripMenuItem
+        '
+        Me.CreateDBPatchSetToolStripMenuItem.Name = "CreateDBPatchSetToolStripMenuItem"
+        Me.CreateDBPatchSetToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.CreateDBPatchSetToolStripMenuItem.Text = "Create DB Patch Set"
+        Me.CreateDBPatchSetToolStripMenuItem.Visible = False
+        '
+        'CreateDBMinorReleaseToolStripMenuItem
+        '
+        Me.CreateDBMinorReleaseToolStripMenuItem.Name = "CreateDBMinorReleaseToolStripMenuItem"
+        Me.CreateDBMinorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.CreateDBMinorReleaseToolStripMenuItem.Text = "Create DB Minor Release"
+        Me.CreateDBMinorReleaseToolStripMenuItem.Visible = False
+        '
+        'CreateDBMajorReleaseToolStripMenuItem
+        '
+        Me.CreateDBMajorReleaseToolStripMenuItem.Name = "CreateDBMajorReleaseToolStripMenuItem"
+        Me.CreateDBMajorReleaseToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.CreateDBMajorReleaseToolStripMenuItem.Text = "Create DB Major Release"
+        Me.CreateDBMajorReleaseToolStripMenuItem.Visible = False
+        '
+        'ApexMenuItem
+        '
+        Me.ApexMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ApexAppInstallerToolStripMenuItem, Me.ApexAppExporterToolStripMenuItem})
+        Me.ApexMenuItem.Name = "ApexMenuItem"
+        Me.ApexMenuItem.Size = New System.Drawing.Size(45, 20)
+        Me.ApexMenuItem.Text = "Apex"
+        Me.ApexMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Developer
+        '
+        'ApexAppInstallerToolStripMenuItem
+        '
+        Me.ApexAppInstallerToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.QueuedToolStripMenuItem, Me.AllApexAppsToolStripMenuItem, Me.SinglePageImportToolStripMenuItem})
+        Me.ApexAppInstallerToolStripMenuItem.Name = "ApexAppInstallerToolStripMenuItem"
+        Me.ApexAppInstallerToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ApexAppInstallerToolStripMenuItem.Text = "Apex App Installer"
+        '
+        'QueuedToolStripMenuItem
+        '
+        Me.QueuedToolStripMenuItem.Name = "QueuedToolStripMenuItem"
+        Me.QueuedToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.QueuedToolStripMenuItem.Text = "Queued Apex Apps"
+        '
+        'AllApexAppsToolStripMenuItem
+        '
+        Me.AllApexAppsToolStripMenuItem.Name = "AllApexAppsToolStripMenuItem"
+        Me.AllApexAppsToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.AllApexAppsToolStripMenuItem.Text = "All Apex Apps"
+        '
+        'SinglePageImportToolStripMenuItem
+        '
+        Me.SinglePageImportToolStripMenuItem.Name = "SinglePageImportToolStripMenuItem"
+        Me.SinglePageImportToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.SinglePageImportToolStripMenuItem.Text = "Restore Single Page"
+        '
+        'ApexAppExporterToolStripMenuItem
+        '
+        Me.ApexAppExporterToolStripMenuItem.Name = "ApexAppExporterToolStripMenuItem"
+        Me.ApexAppExporterToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ApexAppExporterToolStripMenuItem.Text = "Apex App Exporter"
+        '
+        'ReleaseMenuItem
+        '
+        Me.ReleaseMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ReleaseToPRODMenuItem, Me.ReleaseToUATMenuItem, Me.ReleaseToTESTMenuItem, Me.ReleaseToDEVMenuItem, Me.ReleaseToVMMenuItem})
+        Me.ReleaseMenuItem.Name = "ReleaseMenuItem"
+        Me.ReleaseMenuItem.Size = New System.Drawing.Size(58, 20)
+        Me.ReleaseMenuItem.Text = "Release"
+        Me.ReleaseMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Releaser
+        '
+        'ReleaseToPRODMenuItem
+        '
+        Me.ReleaseToPRODMenuItem.Name = "ReleaseToPRODMenuItem"
+        Me.ReleaseToPRODMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToPRODMenuItem.Text = "Release to PROD"
+        '
+        'ReleaseToUATMenuItem
+        '
+        Me.ReleaseToUATMenuItem.Name = "ReleaseToUATMenuItem"
+        Me.ReleaseToUATMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToUATMenuItem.Text = "Release to UAT"
+        '
+        'ReleaseToTESTMenuItem
+        '
+        Me.ReleaseToTESTMenuItem.Name = "ReleaseToTESTMenuItem"
+        Me.ReleaseToTESTMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToTESTMenuItem.Text = "Release to TEST"
+        '
+        'ReleaseToDEVMenuItem
+        '
+        Me.ReleaseToDEVMenuItem.Name = "ReleaseToDEVMenuItem"
+        Me.ReleaseToDEVMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToDEVMenuItem.Text = "Release to DEV"
+        '
+        'ReleaseToVMMenuItem
+        '
+        Me.ReleaseToVMMenuItem.Name = "ReleaseToVMMenuItem"
+        Me.ReleaseToVMMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToVMMenuItem.Text = "Release to VM"
+        '
+        'ToolsMenuItem
+        '
+        Me.ToolsMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LogViewerToolStripMenuItem, Me.TestSQLclToolStripMenuItem, Me.TestJdbcToolStripMenuItem, Me.ExportDataToolStripMenuItem})
+        Me.ToolsMenuItem.Name = "ToolsMenuItem"
+        Me.ToolsMenuItem.Size = New System.Drawing.Size(48, 20)
+        Me.ToolsMenuItem.Text = "Tools"
+        Me.ToolsMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Developer
+        '
+        'LogViewerToolStripMenuItem
+        '
+        Me.LogViewerToolStripMenuItem.Name = "LogViewerToolStripMenuItem"
+        Me.LogViewerToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.LogViewerToolStripMenuItem.Text = "Log Viewer"
+        '
+        'TestSQLclToolStripMenuItem
+        '
+        Me.TestSQLclToolStripMenuItem.Name = "TestSQLclToolStripMenuItem"
+        Me.TestSQLclToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.TestSQLclToolStripMenuItem.Text = "Test SQLcl"
+        '
+        'TestJdbcToolStripMenuItem
+        '
+        Me.TestJdbcToolStripMenuItem.Name = "TestJdbcToolStripMenuItem"
+        Me.TestJdbcToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.TestJdbcToolStripMenuItem.Text = "Test JDBC to ARM"
+        '
+        'ExportDataToolStripMenuItem
+        '
+        Me.ExportDataToolStripMenuItem.Name = "ExportDataToolStripMenuItem"
+        Me.ExportDataToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExportDataToolStripMenuItem.Text = "Export Data"
+        Me.ExportDataToolStripMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Developer
+        '
+        'VirtualBoxMenuItem
+        '
+        Me.VirtualBoxMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.VBoxNameToolStripMenuItem, Me.ChooseVMToolStripMenuItem, Me.StartVMToolStripMenuItem, Me.SaveVMToolStripMenuItem, Me.RestoreStateVMToolStripMenuItem, Me.CreateSnapshotToolStripMenuItem})
+        Me.VirtualBoxMenuItem.Name = "VirtualBoxMenuItem"
+        Me.VirtualBoxMenuItem.Size = New System.Drawing.Size(72, 20)
+        Me.VirtualBoxMenuItem.Text = "VirtualBox"
+        Me.VirtualBoxMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.VirtualBoxer
+        '
+        'VBoxNameToolStripMenuItem
+        '
+        Me.VBoxNameToolStripMenuItem.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.VBoxNameToolStripMenuItem.Name = "VBoxNameToolStripMenuItem"
+        Me.VBoxNameToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.VBoxNameToolStripMenuItem.Text = "No VM"
+        '
+        'ChooseVMToolStripMenuItem
+        '
+        Me.ChooseVMToolStripMenuItem.Name = "ChooseVMToolStripMenuItem"
+        Me.ChooseVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.ChooseVMToolStripMenuItem.Text = "Choose VM"
+        '
+        'StartVMToolStripMenuItem
+        '
+        Me.StartVMToolStripMenuItem.BackColor = System.Drawing.Color.PaleGreen
+        Me.StartVMToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartVMNormalToolStripMenuItem, Me.StartVMHeadleassToolStripMenuItem})
+        Me.StartVMToolStripMenuItem.Name = "StartVMToolStripMenuItem"
+        Me.StartVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.StartVMToolStripMenuItem.Text = "Start VM"
+        '
+        'StartVMNormalToolStripMenuItem
+        '
+        Me.StartVMNormalToolStripMenuItem.BackColor = System.Drawing.Color.PaleGreen
+        Me.StartVMNormalToolStripMenuItem.Name = "StartVMNormalToolStripMenuItem"
+        Me.StartVMNormalToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
+        Me.StartVMNormalToolStripMenuItem.Text = "Normal (gui)"
+        '
+        'StartVMHeadleassToolStripMenuItem
+        '
+        Me.StartVMHeadleassToolStripMenuItem.BackColor = System.Drawing.Color.PaleGreen
+        Me.StartVMHeadleassToolStripMenuItem.Name = "StartVMHeadleassToolStripMenuItem"
+        Me.StartVMHeadleassToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
+        Me.StartVMHeadleassToolStripMenuItem.Text = "Headless"
+        '
+        'SaveVMToolStripMenuItem
+        '
+        Me.SaveVMToolStripMenuItem.BackColor = System.Drawing.Color.LightCoral
+        Me.SaveVMToolStripMenuItem.Name = "SaveVMToolStripMenuItem"
+        Me.SaveVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.SaveVMToolStripMenuItem.Text = "Stop VM (Save State)"
+        '
+        'RestoreStateVMToolStripMenuItem
+        '
+        Me.RestoreStateVMToolStripMenuItem.BackColor = System.Drawing.Color.LightSkyBlue
+        Me.RestoreStateVMToolStripMenuItem.Name = "RestoreStateVMToolStripMenuItem"
+        Me.RestoreStateVMToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.RestoreStateVMToolStripMenuItem.Text = "Restore State VM"
+        '
+        'CreateSnapshotToolStripMenuItem
+        '
+        Me.CreateSnapshotToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CleanToolStripMenuItem, Me.WipToolStripMenuItem})
+        Me.CreateSnapshotToolStripMenuItem.Name = "CreateSnapshotToolStripMenuItem"
+        Me.CreateSnapshotToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.CreateSnapshotToolStripMenuItem.Text = "Create Snapshot"
+        '
+        'CleanToolStripMenuItem
+        '
+        Me.CleanToolStripMenuItem.Name = "CleanToolStripMenuItem"
+        Me.CleanToolStripMenuItem.Size = New System.Drawing.Size(156, 22)
+        Me.CleanToolStripMenuItem.Text = "Clean Snapshot"
+        '
+        'WipToolStripMenuItem
+        '
+        Me.WipToolStripMenuItem.Name = "WipToolStripMenuItem"
+        Me.WipToolStripMenuItem.Size = New System.Drawing.Size(156, 22)
+        Me.WipToolStripMenuItem.Text = "WIP Snapshot"
+        '
+        'RefreshButton
+        '
+        Me.RefreshButton.Location = New System.Drawing.Point(401, 112)
+        Me.RefreshButton.Name = "RefreshButton"
+        Me.RefreshButton.Size = New System.Drawing.Size(75, 23)
+        Me.RefreshButton.TabIndex = 48
+        Me.RefreshButton.Text = "Refresh"
+        Me.RefreshButton.UseVisualStyleBackColor = True
         '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
-        Me.ClientSize = New System.Drawing.Size(770, 561)
+        Me.ClientSize = New System.Drawing.Size(484, 561)
+        Me.Controls.Add(Me.RefreshButton)
         Me.Controls.Add(Me.TextBoxReleaseId)
         Me.Controls.Add(Me.Label20)
         Me.Controls.Add(Me.MergeButton)
@@ -1218,19 +1080,16 @@ Partial Class Main
 
     End Sub
     Friend WithEvents MainMenuStrip As System.Windows.Forms.MenuStrip
-    Friend WithEvents PATCHToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents RunMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents RepoComboBox As System.Windows.Forms.ComboBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents CurrentBranchTextBox As System.Windows.Forms.TextBox
     Friend WithEvents RootPatchDirTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents PatchRunnerToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents DBComboBox As System.Windows.Forms.ComboBox
-    Friend WithEvents APEXToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ImportToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ExportToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ApexMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents ApplicationListComboBox As System.Windows.Forms.ComboBox
     Friend WithEvents RootApexDirTextBox As System.Windows.Forms.TextBox
@@ -1241,9 +1100,8 @@ Partial Class Main
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents BranchPathTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents FEATUREToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents FeatureMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MergeAndPushFeatureToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents NewFeatureToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MinPatchTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents CreateDBPatchSetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
@@ -1255,28 +1113,23 @@ Partial Class Main
     Friend WithEvents ShowindexToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestworkflowToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestrevertToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents RELEASEToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ReleaseMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ReleaseToDEVMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ReleaseToTESTMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ReleaseToUATMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ReleaseToPRODMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents HOTFIXToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents HotfixMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents HotFixToolStripComboBox As System.Windows.Forms.ToolStripComboBox
     Friend WithEvents NewHotFixMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents RebaseHotFixToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents RebaseHotFixMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MergeAndPushHotfixToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents CreateDBHotFixPatchToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents CreateHotFixPatchMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CreateDBFeaturePatchToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestCreatePatchSetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MultiDBHotFixPatchToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents UnappliedToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents UninstalledToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents AllPatchesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents Import1PageToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripSeparator4 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents CreateDBMajorReleaseToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents RepoPathTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label12 As System.Windows.Forms.Label
@@ -1307,7 +1160,7 @@ Partial Class Main
     Friend WithEvents RebaseFeatureFullToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents DBChangesOnlyToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ApexChangesOnlyToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents VirtualBoxToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents VirtualBoxMenuItem As ToolStripMenuItem
     Friend WithEvents ChooseVMToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents StartVMToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SaveVMToolStripMenuItem As ToolStripMenuItem
@@ -1320,36 +1173,25 @@ Partial Class Main
     Friend WithEvents SinglePageImportToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents VersionPatchToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents FeaturePatchToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ToolsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolsMenuItem As ToolStripMenuItem
     Friend WithEvents LogViewerToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents TestSQLclToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExportDataToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents VersionMenu As ToolStripMenuItem
-    Friend WithEvents CreateVersionToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents CreateVersionPatchToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents VersionsMenu As ToolStripMenuItem
-    Friend WithEvents NewVersionReleaseToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ToolStripComboBox As ToolStripComboBox
-    Friend WithEvents NewMajorVersionReleaseToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents NewMinorVersionReleaseToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents NewPatchVersionReleaseToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CreateSnapshotToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CleanToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents WipToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents CreateToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents BranchToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents FeatureToolStripMenuItem1 As ToolStripMenuItem
-    Friend WithEvents HotfixToolStripMenuItem1 As ToolStripMenuItem
-    Friend WithEvents VersionToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents PatchToolStripMenuItem1 As ToolStripMenuItem
-    Friend WithEvents FeatureToolStripMenuItem2 As ToolStripMenuItem
-    Friend WithEvents HotfixToolStripMenuItem2 As ToolStripMenuItem
-    Friend WithEvents VersionToolStripMenuItem2 As ToolStripMenuItem
-    Friend WithEvents ReleaseToolStripMenuItem1 As ToolStripMenuItem
-    Friend WithEvents MajorToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents MinorToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents PatchToolStripMenuItem2 As ToolStripMenuItem
-    Friend WithEvents VersionToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents TestJdbcToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents RebaseHotfixPatchToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents RebaseHotfixPatchMenuItem As ToolStripMenuItem
+    Friend WithEvents NewMenuItem As ToolStripMenuItem
+    Friend WithEvents FeatureToolStripMenuItem3 As ToolStripMenuItem
+    Friend WithEvents HotfixToolStripMenuItem3 As ToolStripMenuItem
+    Friend WithEvents ReleaseToolStripMenuItem2 As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem2 As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem3 As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem4 As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem5 As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem6 As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem7 As ToolStripMenuItem
+    Friend WithEvents RefreshButton As Button
 End Class

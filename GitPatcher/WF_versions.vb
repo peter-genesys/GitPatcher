@@ -1412,11 +1412,16 @@
     End Sub
 
     Shared Sub newFullVersionRelease(ByVal iVersionType As String, iTargetDB As String)
+        'This will be a series of workflows that build the version branch and patches and then creates a release.
+
 
         'switch master
         'pull
         'switch to commit on master
         'create a version branch
+
+        'createVersionPatch(iBranchType As String, iDBtarget As String, iRebaseBranchOn As String)
+
         'create a version patch
         'merge version to master 
         '  (mergeReleaseToMaster(iVersionType, newBranch)

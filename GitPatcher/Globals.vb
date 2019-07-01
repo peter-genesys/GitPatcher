@@ -650,4 +650,15 @@ Module Globals
     End Sub
 
 
+    Public Sub checkBranchNameCase()
+        Dim lBranchType As String = Globals.currentBranchType
+        Dim shortBranch As String = Globals.currentBranch()
+        Dim shortBranchUpper As String = shortBranch.ToUpper
+
+        If Not shortBranch.Equals(shortBranchUpper) Then
+            Throw New System.Exception("Please rename " & lBranchType & " " & shortBranch & " in uppercase " & shortBranchUpper)
+        End If
+
+    End Sub
+
 End Module
