@@ -7,6 +7,10 @@
         '    VBoxNameToolStripMenuItem.Font.Strikeout
         'End If
 
+        If Not My.Settings.VirtualBoxer Then
+            Exit Sub
+        End If
+
         If String.IsNullOrEmpty(My.Settings.VBoxDir) Then
             VBoxNameToolStripMenuItem.Text = "Virtual Box path not set"
             StartVMToolStripMenuItem.Visible = False
@@ -149,14 +153,14 @@
         'VersionPatchToolStripMenuItem.Visible = Globals.currentLongBranch.Contains("version")
 
         'Show Hotfix Menu
-        HotfixMenuItem.Visible = Globals.currentBranchType = "hotfix" Or Globals.currentBranch Like "*-RB"
+        HotfixMenuItem.Visible = My.Settings.Developer And (Globals.currentBranchType = "hotfix" Or Globals.currentBranch Like "*-RB")
         CreateHotFixPatchMenuItem.Visible = Globals.currentBranchType = "hotfix"
         RebaseHotFixMenuItem.Visible = Globals.currentBranchType = "hotfix"
         '@TODO Need a way to only show the REBASE  RebaseHotfixPatch when there is a patch to rebase.
         RebaseHotfixPatchMenuItem.Visible = Globals.currentBranch Like "*-RB" Or Globals.currentBranch Like "*-HF"
 
         'Show Feature Menu
-        FeatureMenuItem.Visible = Globals.currentBranchType = "feature"
+        FeatureMenuItem.Visible = My.Settings.Developer And Globals.currentBranchType = "feature"
 
     End Sub
 
@@ -396,19 +400,19 @@
     '    WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, True)
     'End Sub
     Private Sub ReleaseToISDEVLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToDEVMenuItem.Click
-        'WF_release.releaseTo("DEV")
+        WF_release.releaseTo("DEV", "master", "feature", True)
     End Sub
 
     Private Sub ReleaseToISTESTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToTESTMenuItem.Click
-        'WF_release.releaseTo("TEST")
+        WF_release.releaseTo("TEST", "master", "feature", True)
     End Sub
 
     Private Sub ReleaseToISUATToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToUATMenuItem.Click
-        'WF_release.releaseTo("UAT")
+        WF_release.releaseTo("UAT", "release", "release", True)
     End Sub
 
     Private Sub ReleaseToISPRODToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToPRODMenuItem.Click
-        'WF_release.releaseTo("PROD")
+        WF_release.releaseTo("PROD", "release", "release", True)
     End Sub
 
     Private Sub NewHotFixMenuItem_Click(sender As Object, e As EventArgs) Handles NewHotFixMenuItem.Click

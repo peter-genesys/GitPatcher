@@ -1,6 +1,8 @@
 ﻿Friend Class WF_release
     Shared Sub releaseTo(ByVal iTargetDB As String, ByVal ireleaseFromBranch As String, ByVal iBranchType As String, ByVal iPull As Boolean)
 
+
+
         Dim InstallStatus As String = "Unapplied"
 
         Dim lcurrentDB As String = Globals.getDB()
@@ -55,13 +57,22 @@
 
             'SWITCH-BRANCH
             If releasing.toDoNextStep() Then
+                If ireleaseFromBranch = "release" Then
+                    Dim releaseBranches As Collection = GitOp.getReleaseList(Globals.currentAppCode)
+
+                    ireleaseFromBranch = ChoiceDialog.Ask("Identify the release branch that contains the required releases." & Environment.NewLine &
+                                                          "Please choose the latest Major, Minor or Patch Version Release branch.",
+                                                          releaseBranches, "", "Choose Release branch", False, False, False, releaseBranches.Count - 1)
+
+                End If
+
                 'Switch to develop branch
                 GitOp.SwitchBranch(ireleaseFromBranch)
 
-            End If
+                End If
 
-            'PULL-BRANCH
-            If releasing.toDoNextStep() Then
+                'PULL-BRANCH
+                If releasing.toDoNextStep() Then
                 'Pull from origin/develop
                 GitOp.pullBranch(ireleaseFromBranch)
 

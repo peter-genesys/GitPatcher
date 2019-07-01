@@ -25,14 +25,12 @@ Partial Class PatchRunner
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PatchRunner))
         Me.PatchRunnerTabControl = New System.Windows.Forms.TabControl()
         Me.PatchSelectorTabPage = New System.Windows.Forms.TabPage()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.PatchTypeComboBox = New System.Windows.Forms.ComboBox()
         Me.AvailablePatchesTreeView = New TreeViewEnhanced.TreeViewEnhanced()
         Me.ComboBoxPatchesFilter = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.RadioButtonAll2 = New System.Windows.Forms.RadioButton()
-        Me.RadioButtonFeature = New System.Windows.Forms.RadioButton()
-        Me.RadioButtonPatchSet = New System.Windows.Forms.RadioButton()
-        Me.RadioButtonHotfix = New System.Windows.Forms.RadioButton()
         Me.SearchPatchesButton = New System.Windows.Forms.Button()
         Me.OrderTabPage = New System.Windows.Forms.TabPage()
         Me.UsePatchAdminCheckBox = New System.Windows.Forms.CheckBox()
@@ -50,7 +48,6 @@ Partial Class PatchRunner
         Me.Label5 = New System.Windows.Forms.Label()
         Me.PatchRunnerTabControl.SuspendLayout()
         Me.PatchSelectorTabPage.SuspendLayout()
-        Me.GroupBox1.SuspendLayout()
         Me.OrderTabPage.SuspendLayout()
         Me.RunTabPage.SuspendLayout()
         Me.ExportTabPage.SuspendLayout()
@@ -66,38 +63,67 @@ Partial Class PatchRunner
         Me.PatchRunnerTabControl.MaximumSize = New System.Drawing.Size(1000, 1000)
         Me.PatchRunnerTabControl.Name = "PatchRunnerTabControl"
         Me.PatchRunnerTabControl.SelectedIndex = 0
-        Me.PatchRunnerTabControl.Size = New System.Drawing.Size(458, 738)
+        Me.PatchRunnerTabControl.Size = New System.Drawing.Size(453, 738)
         Me.PatchRunnerTabControl.TabIndex = 0
         '
         'PatchSelectorTabPage
         '
+        Me.PatchSelectorTabPage.Controls.Add(Me.Label7)
+        Me.PatchSelectorTabPage.Controls.Add(Me.Label2)
+        Me.PatchSelectorTabPage.Controls.Add(Me.PatchTypeComboBox)
         Me.PatchSelectorTabPage.Controls.Add(Me.AvailablePatchesTreeView)
         Me.PatchSelectorTabPage.Controls.Add(Me.ComboBoxPatchesFilter)
         Me.PatchSelectorTabPage.Controls.Add(Me.Label1)
-        Me.PatchSelectorTabPage.Controls.Add(Me.GroupBox1)
         Me.PatchSelectorTabPage.Controls.Add(Me.SearchPatchesButton)
         Me.PatchSelectorTabPage.Location = New System.Drawing.Point(4, 22)
         Me.PatchSelectorTabPage.Name = "PatchSelectorTabPage"
         Me.PatchSelectorTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.PatchSelectorTabPage.Size = New System.Drawing.Size(450, 712)
+        Me.PatchSelectorTabPage.Size = New System.Drawing.Size(445, 712)
         Me.PatchSelectorTabPage.TabIndex = 0
         Me.PatchSelectorTabPage.Text = "Selection"
         Me.PatchSelectorTabPage.UseVisualStyleBackColor = True
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(224, 63)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(62, 13)
+        Me.Label7.TabIndex = 65
+        Me.Label7.Text = "Patch Type"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(224, 36)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(67, 13)
+        Me.Label2.TabIndex = 64
+        Me.Label2.Text = "Install Status"
+        '
+        'PatchTypeComboBox
+        '
+        Me.PatchTypeComboBox.FormattingEnabled = True
+        Me.PatchTypeComboBox.Items.AddRange(New Object() {"Feature", "Hotfix", "Version", "Release", "All"})
+        Me.PatchTypeComboBox.Location = New System.Drawing.Point(297, 60)
+        Me.PatchTypeComboBox.Name = "PatchTypeComboBox"
+        Me.PatchTypeComboBox.Size = New System.Drawing.Size(139, 21)
+        Me.PatchTypeComboBox.TabIndex = 63
         '
         'AvailablePatchesTreeView
         '
         Me.AvailablePatchesTreeView.BackColor = System.Drawing.Color.Wheat
         Me.AvailablePatchesTreeView.CheckBoxes = True
-        Me.AvailablePatchesTreeView.Location = New System.Drawing.Point(9, 129)
+        Me.AvailablePatchesTreeView.Location = New System.Drawing.Point(7, 87)
         Me.AvailablePatchesTreeView.Name = "AvailablePatchesTreeView"
-        Me.AvailablePatchesTreeView.Size = New System.Drawing.Size(429, 577)
+        Me.AvailablePatchesTreeView.Size = New System.Drawing.Size(429, 615)
         Me.AvailablePatchesTreeView.TabIndex = 62
         '
         'ComboBoxPatchesFilter
         '
         Me.ComboBoxPatchesFilter.FormattingEnabled = True
         Me.ComboBoxPatchesFilter.Items.AddRange(New Object() {"Unapplied", "Uninstalled", "All"})
-        Me.ComboBoxPatchesFilter.Location = New System.Drawing.Point(8, 6)
+        Me.ComboBoxPatchesFilter.Location = New System.Drawing.Point(297, 33)
         Me.ComboBoxPatchesFilter.Name = "ComboBoxPatchesFilter"
         Me.ComboBoxPatchesFilter.Size = New System.Drawing.Size(139, 21)
         Me.ComboBoxPatchesFilter.TabIndex = 61
@@ -105,66 +131,11 @@ Partial Class PatchRunner
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(6, 113)
+        Me.Label1.Location = New System.Drawing.Point(6, 71)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(92, 13)
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "Available Patches"
-        '
-        'GroupBox1
-        '
-        Me.GroupBox1.Controls.Add(Me.RadioButtonAll2)
-        Me.GroupBox1.Controls.Add(Me.RadioButtonFeature)
-        Me.GroupBox1.Controls.Add(Me.RadioButtonPatchSet)
-        Me.GroupBox1.Controls.Add(Me.RadioButtonHotfix)
-        Me.GroupBox1.Location = New System.Drawing.Point(296, 6)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(139, 117)
-        Me.GroupBox1.TabIndex = 38
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Filter"
-        '
-        'RadioButtonAll2
-        '
-        Me.RadioButtonAll2.AutoSize = True
-        Me.RadioButtonAll2.Location = New System.Drawing.Point(27, 88)
-        Me.RadioButtonAll2.Name = "RadioButtonAll2"
-        Me.RadioButtonAll2.Size = New System.Drawing.Size(36, 17)
-        Me.RadioButtonAll2.TabIndex = 38
-        Me.RadioButtonAll2.Text = "All"
-        Me.RadioButtonAll2.UseVisualStyleBackColor = True
-        '
-        'RadioButtonFeature
-        '
-        Me.RadioButtonFeature.AutoSize = True
-        Me.RadioButtonFeature.Checked = True
-        Me.RadioButtonFeature.Location = New System.Drawing.Point(27, 19)
-        Me.RadioButtonFeature.Name = "RadioButtonFeature"
-        Me.RadioButtonFeature.Size = New System.Drawing.Size(61, 17)
-        Me.RadioButtonFeature.TabIndex = 35
-        Me.RadioButtonFeature.TabStop = True
-        Me.RadioButtonFeature.Text = "Feature"
-        Me.RadioButtonFeature.UseVisualStyleBackColor = True
-        '
-        'RadioButtonPatchSet
-        '
-        Me.RadioButtonPatchSet.AutoSize = True
-        Me.RadioButtonPatchSet.Location = New System.Drawing.Point(27, 65)
-        Me.RadioButtonPatchSet.Name = "RadioButtonPatchSet"
-        Me.RadioButtonPatchSet.Size = New System.Drawing.Size(67, 17)
-        Me.RadioButtonPatchSet.TabIndex = 37
-        Me.RadioButtonPatchSet.Text = "Patchset"
-        Me.RadioButtonPatchSet.UseVisualStyleBackColor = True
-        '
-        'RadioButtonHotfix
-        '
-        Me.RadioButtonHotfix.AutoSize = True
-        Me.RadioButtonHotfix.Location = New System.Drawing.Point(27, 42)
-        Me.RadioButtonHotfix.Name = "RadioButtonHotfix"
-        Me.RadioButtonHotfix.Size = New System.Drawing.Size(52, 17)
-        Me.RadioButtonHotfix.TabIndex = 36
-        Me.RadioButtonHotfix.Text = "Hotfix"
-        Me.RadioButtonHotfix.UseVisualStyleBackColor = True
         '
         'SearchPatchesButton
         '
@@ -184,7 +155,7 @@ Partial Class PatchRunner
         Me.OrderTabPage.Location = New System.Drawing.Point(4, 22)
         Me.OrderTabPage.Name = "OrderTabPage"
         Me.OrderTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.OrderTabPage.Size = New System.Drawing.Size(450, 712)
+        Me.OrderTabPage.Size = New System.Drawing.Size(445, 712)
         Me.OrderTabPage.TabIndex = 2
         Me.OrderTabPage.Text = "Order"
         Me.OrderTabPage.UseVisualStyleBackColor = True
@@ -234,7 +205,7 @@ Partial Class PatchRunner
         Me.RunTabPage.Location = New System.Drawing.Point(4, 22)
         Me.RunTabPage.Name = "RunTabPage"
         Me.RunTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.RunTabPage.Size = New System.Drawing.Size(450, 712)
+        Me.RunTabPage.Size = New System.Drawing.Size(445, 712)
         Me.RunTabPage.TabIndex = 1
         Me.RunTabPage.Text = "Run"
         Me.RunTabPage.UseVisualStyleBackColor = True
@@ -274,7 +245,7 @@ Partial Class PatchRunner
         Me.ExportTabPage.Location = New System.Drawing.Point(4, 22)
         Me.ExportTabPage.Name = "ExportTabPage"
         Me.ExportTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.ExportTabPage.Size = New System.Drawing.Size(450, 712)
+        Me.ExportTabPage.Size = New System.Drawing.Size(445, 712)
         Me.ExportTabPage.TabIndex = 3
         Me.ExportTabPage.Text = "Export"
         Me.ExportTabPage.UseVisualStyleBackColor = True
@@ -319,7 +290,7 @@ Partial Class PatchRunner
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(476, 756)
+        Me.ClientSize = New System.Drawing.Size(475, 756)
         Me.Controls.Add(Me.PatchRunnerTabControl)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "PatchRunner"
@@ -327,8 +298,6 @@ Partial Class PatchRunner
         Me.PatchRunnerTabControl.ResumeLayout(False)
         Me.PatchSelectorTabPage.ResumeLayout(False)
         Me.PatchSelectorTabPage.PerformLayout()
-        Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
         Me.OrderTabPage.ResumeLayout(False)
         Me.OrderTabPage.PerformLayout()
         Me.RunTabPage.ResumeLayout(False)
@@ -344,11 +313,6 @@ Partial Class PatchRunner
     Friend WithEvents ExecutePatchButton As System.Windows.Forms.Button
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents MasterScriptListBox As System.Windows.Forms.ListBox
-    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents RadioButtonAll2 As System.Windows.Forms.RadioButton
-    Friend WithEvents RadioButtonFeature As System.Windows.Forms.RadioButton
-    Friend WithEvents RadioButtonPatchSet As System.Windows.Forms.RadioButton
-    Friend WithEvents RadioButtonHotfix As System.Windows.Forms.RadioButton
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents SearchPatchesButton As System.Windows.Forms.Button
     Friend WithEvents OrderTabPage As System.Windows.Forms.TabPage
@@ -363,4 +327,7 @@ Partial Class PatchRunner
     Friend WithEvents PatchListBox As System.Windows.Forms.ListBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents PatchTypeComboBox As ComboBox
+    Friend WithEvents Label2 As Label
+    Friend WithEvents Label7 As Label
 End Class

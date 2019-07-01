@@ -136,7 +136,7 @@ Public Class GitOp
     End Function
 
 
-    Shared Function getBranchNameList(ByVal inNames As Collection, Optional ByVal nameFilter As String = Nothing) As Collection
+    Shared Function getBranchNameList(ByVal inNames As Collection, Optional ByVal nameFilter As String = Nothing, Optional ByVal noDups As Boolean = True) As Collection
         'Input inNames         - a collection of Names
         'Input nameFilter      - search for matching names
         'Output outNames       - a collection of Names, initialised with inNames
@@ -147,10 +147,13 @@ Public Class GitOp
         Dim outNames As Collection = inNames
 
         For Each branch In Globals.getRepo.Branches
-            If String.IsNullOrEmpty(nameFilter) Then
-                outNames.Add(branch.FriendlyName)
-            ElseIf branch.FriendlyName.Contains(nameFilter) Then
-                outNames.Add(branch.FriendlyName)
+            Dim ReleaseId As String = Common.getLastSegment(branch.FriendlyName, "/")
+            If String.IsNullOrEmpty(nameFilter) Or branch.FriendlyName.Contains(nameFilter) Then
+
+                If Not noDups Or Not outNames.Contains(ReleaseId) Then
+
+                    outNames.Add(branch.FriendlyName, ReleaseId)
+                End If
             End If
 
         Next
@@ -178,7 +181,13 @@ Public Class GitOp
 
     Shared Function getReleaseList(ByVal appCode As String) As Collection
 
-        Return getBranchNameList("release/" & appCode & "/")
+        Dim ReleaseList As Collection = getBranchNameList("release/" & appCode & "/")
+
+        If ReleaseList.Count = 0 Then
+            Throw New System.Exception("No release branches found!")
+        End If
+
+        Return ReleaseList
 
     End Function
 

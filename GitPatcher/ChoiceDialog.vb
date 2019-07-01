@@ -12,7 +12,7 @@ Public Class ChoiceDialog
         Me.Close()
     End Sub
 
-    Shared Function Ask(ByVal i_question As String, ByVal i_Choices As Collection, ByVal i_default As String, ByVal i_title As String, Optional ByVal i_reorder As Boolean = True, Optional ByVal i_hideCancelButton As Boolean = False, Optional ByVal i_returnIndex As Boolean = False)
+    Shared Function Ask(ByVal i_question As String, ByVal i_Choices As Collection, ByVal i_default As String, ByVal i_title As String, Optional ByVal i_reorder As Boolean = True, Optional ByVal i_hideCancelButton As Boolean = False, Optional ByVal i_returnIndex As Boolean = False, Optional ByVal i_defaultIndex As Integer = -1)
 
         Logger.Dbg("Ask(" & i_question & "," & i_default & "," & i_title & ")")
 
@@ -43,6 +43,8 @@ Public Class ChoiceDialog
             l_reordered = i_Choices
         End If
 
+
+
         For Each line In l_reordered
             ChoiceDialog.ChoiceComboBox.Items.Add(line)
             If line = i_default Then
@@ -50,6 +52,11 @@ Public Class ChoiceDialog
                 ChoiceDialog.ChoiceComboBox.SelectedIndex = ChoiceDialog.ChoiceComboBox.Items.Count - 1
             End If
         Next
+
+        If i_defaultIndex > -1 Then
+            l_default_found = True
+            ChoiceDialog.ChoiceComboBox.SelectedIndex = i_defaultIndex
+        End If
 
 
         ' Set the listbox to the default answer if it's there
