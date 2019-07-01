@@ -22,22 +22,12 @@
         Try
             Dim rebaseBranchOn As String = iRebaseBranchOn
 
-            Common.checkBranch(iBranchType)
+            Globals.checkBranchTypeList(iBranchType)
             'Globals.checkBranchTypeList("hotfix,feature")
 
             Globals.checkBranchNameCase()
 
-
             Dim l_tag_base As String = Nothing
-
-            Dim shortBranch As String = Globals.currentBranch()
-            Dim shortBranchUpper As String = shortBranch.ToUpper
-
-            If Not shortBranch.Equals(shortBranchUpper) Then
-                MsgBox("Please rename " & iBranchType & " " & shortBranch & " in uppercase " & shortBranchUpper, MsgBoxStyle.Exclamation, "Non-standard feature name")
-                Exit Sub
-            End If
-
 
             Dim featureLongBranch As String = Globals.currentLongBranch()
             Dim originalHotfixBranch As String = Globals.currentBranch
