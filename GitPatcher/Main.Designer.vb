@@ -93,6 +93,7 @@ Partial Class Main
         Me.CreateSnapshotToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CleanToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.WipToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ConfigToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RepoComboBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -139,7 +140,6 @@ Partial Class Main
         Me.TextBoxReleaseId = New System.Windows.Forms.TextBox()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.RefreshButton = New System.Windows.Forms.Button()
-        Me.ConfigToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MainMenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -163,45 +163,45 @@ Partial Class Main
         'FeatureToolStripMenuItem3
         '
         Me.FeatureToolStripMenuItem3.Name = "FeatureToolStripMenuItem3"
-        Me.FeatureToolStripMenuItem3.Size = New System.Drawing.Size(113, 22)
+        Me.FeatureToolStripMenuItem3.Size = New System.Drawing.Size(180, 22)
         Me.FeatureToolStripMenuItem3.Text = "Feature"
         '
         'HotfixToolStripMenuItem3
         '
         Me.HotfixToolStripMenuItem3.Name = "HotfixToolStripMenuItem3"
-        Me.HotfixToolStripMenuItem3.Size = New System.Drawing.Size(113, 22)
+        Me.HotfixToolStripMenuItem3.Size = New System.Drawing.Size(180, 22)
         Me.HotfixToolStripMenuItem3.Text = "Hotfix"
         '
         'ReleaseToolStripMenuItem2
         '
         Me.ReleaseToolStripMenuItem2.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1, Me.ToolStripMenuItem2, Me.ToolStripMenuItem3, Me.ToolStripMenuItem4})
         Me.ReleaseToolStripMenuItem2.Name = "ReleaseToolStripMenuItem2"
-        Me.ReleaseToolStripMenuItem2.Size = New System.Drawing.Size(113, 22)
+        Me.ReleaseToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
         Me.ReleaseToolStripMenuItem2.Text = "Release"
         Me.ReleaseToolStripMenuItem2.Visible = Global.GitPatcher.My.MySettings.Default.Admin
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(148, 22)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
         Me.ToolStripMenuItem1.Text = "Major Version"
         '
         'ToolStripMenuItem2
         '
         Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(148, 22)
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
         Me.ToolStripMenuItem2.Text = "Minor Version"
         '
         'ToolStripMenuItem3
         '
         Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
-        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(148, 22)
+        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(180, 22)
         Me.ToolStripMenuItem3.Text = "Patch Version"
         '
         'ToolStripMenuItem4
         '
         Me.ToolStripMenuItem4.Name = "ToolStripMenuItem4"
-        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(148, 22)
+        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(180, 22)
         Me.ToolStripMenuItem4.Text = "Full Version"
         Me.ToolStripMenuItem4.Visible = False
         '
@@ -620,6 +620,12 @@ Partial Class Main
         Me.WipToolStripMenuItem.Size = New System.Drawing.Size(156, 22)
         Me.WipToolStripMenuItem.Text = "WIP Snapshot"
         '
+        'ConfigToolStripMenuItem
+        '
+        Me.ConfigToolStripMenuItem.Name = "ConfigToolStripMenuItem"
+        Me.ConfigToolStripMenuItem.Size = New System.Drawing.Size(55, 20)
+        Me.ConfigToolStripMenuItem.Text = "Config"
+        '
         'RepoComboBox
         '
         Me.RepoComboBox.FormattingEnabled = True
@@ -1024,12 +1030,6 @@ Partial Class Main
         Me.RefreshButton.TabIndex = 48
         Me.RefreshButton.Text = "Refresh"
         Me.RefreshButton.UseVisualStyleBackColor = True
-        '
-        'ConfigToolStripMenuItem
-        '
-        Me.ConfigToolStripMenuItem.Name = "ConfigToolStripMenuItem"
-        Me.ConfigToolStripMenuItem.Size = New System.Drawing.Size(55, 20)
-        Me.ConfigToolStripMenuItem.Text = "Config"
         '
         'Main
         '

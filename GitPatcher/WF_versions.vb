@@ -1,6 +1,11 @@
 ﻿Public Class WF_versions
 
 
+
+    Shared Function isReleaseBuilt(iReleaseBranch, iAppVersion) As Boolean
+        Return FileIO.fileExists(Globals.RootPatchDir & iReleaseBranch & "\" & iAppVersion & "\install.sql")
+    End Function
+
     Shared Sub checkAppVersion(ByVal appVersion As String, ByVal appcode As String, ByRef MajorId As Integer, ByRef MinorId As Integer, ByRef PatchId As Integer)
 
         Logger.Note("checkAppVersion(appVersion,appcode)", appVersion & "," & appcode)
@@ -432,7 +437,7 @@
 
                 lAppCode = ChoiceDialog.Ask("Please choose the app to be released.", appCodeList, lAppCode, "Identify the app", True, False, False)
 
-                Dim releaseBranches As Collection = GitOp.getPatchVersionReleaseList(lAppCode)
+                Dim releaseBranches As Collection = GitOp.getPatchVersionReleaseList(lAppCode, True)
 
                 newReleaseBranch = ChoiceDialog.Ask("Please identify the Patch Version Release to be built.",
                                                   releaseBranches, "", "Choose existing Patch Version Release branch", False, False, False, releaseBranches.Count - 1)
@@ -671,7 +676,8 @@
                     'Has the patch version release been created.
                     'Test patch dir exists in current checkout.
 
-                    If FileIO.fileExists(Globals.RootPatchDir & lastReleaseBranch & "\" & lAppVersion & "\install.sql") Then
+                    If isReleaseBuilt(lastReleaseBranch, lAppVersion) Then
+
                         createNewReleaseBranch = True
                         MsgBox("A CLOSED Patch Version Release Branch was selected." & Chr(10) &
                                "A new Patch Version Release branch will be branched from here.")
@@ -682,13 +688,13 @@
                     End If
 
                 ElseIf lMinorId > 0 Then
-                    'Minor version release branch
-                    createNewReleaseBranch = True
-                    MsgBox("A Minor Version Release Branch was selected." & Chr(10) &
+                        'Minor version release branch
+                        createNewReleaseBranch = True
+                        MsgBox("A Minor Version Release Branch was selected." & Chr(10) &
                            "A new Patch Version Release branch will be branched from here.")
-                ElseIf lMajorId > 0 Then
-                    'Major version release branch
-                    createNewReleaseBranch = True
+                    ElseIf lMajorId > 0 Then
+                        'Major version release branch
+                        createNewReleaseBranch = True
                     MsgBox("A Major Version Release Branch was selected." & Chr(10) &
                            "A new Patch Version Release branch will be branched from here.")
                 End If

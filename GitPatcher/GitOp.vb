@@ -192,22 +192,27 @@ Public Class GitOp
     End Function
 
 
-    Shared Function getPatchVersionReleaseList(ByVal appCode As String) As Collection
+    Shared Function getPatchVersionReleaseList(ByVal appCode As String, Optional ByVal onlyOpen As Boolean = False) As Collection
 
         Dim PatchVersionReleaseList As Collection = New Collection
         For Each release In getBranchNameList("release/" & appCode & "/")
 
-            Dim PatchId As Integer
-            Try
-                PatchId = Common.getLastSegment(release, ".")
-            Catch ex As Exception
-                MsgBox(ex.Message)
-                Throw New System.Exception("Unable to read patch version id")
-            End Try
 
-            If PatchId > 0 Then
+            Dim lMajorId As Integer
+            Dim lMinorId As Integer
+            Dim lPatchId As Integer
+            Dim lAppVersion As String = Nothing
+
+            WF_versions.checkReleaseAppVersion(release, appCode, lMajorId, lMinorId, lPatchId, lAppVersion)
+
+            If lPatchId > 0 Then
                 'Patch version release branch
-                PatchVersionReleaseList.Add(release, release)
+
+                If Not onlyOpen Or Not WF_versions.isReleaseBuilt(release, lAppVersion) Then
+                    'Either any allow, or this one is not built
+                    'Add it to the list.
+                    PatchVersionReleaseList.Add(release, release)
+                End If
             End If
 
         Next
