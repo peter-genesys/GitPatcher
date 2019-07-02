@@ -20,7 +20,7 @@
 
     Public Shared Sub runInteractive(ByVal command As String, ByRef message As String, ByVal workingDir As String, Optional ByVal wait As Boolean = True)
 
-        Logger.Dbg(command)
+        Logger.Debug(command)
 
         Dim starter As New ProcessStartInfo("c:\windows\system32\cmd", "/k " & command)
 
@@ -52,7 +52,7 @@
 
     Public Shared Sub check_StdOut(ByVal command As String, ByRef message As String, ByVal workingDir As String, Optional ByVal oneline As Boolean = False)
 
-        Logger.Dbg(command)
+        Logger.Debug(command)
 
         Dim starter As New ProcessStartInfo("c:\windows\system32\cmd", "/k " & command)
 
@@ -79,8 +79,8 @@
  
         myProcess.WaitForExit()
 
-        Logger.Dbg("check_StdOut:" & Chr(10) & message)
-        Logger.Dbg("Error (if any):" & Chr(10) & myProcess.StandardError.ReadToEnd())
+        Logger.Debug("check_StdOut:" & Chr(10) & message)
+        Logger.Debug("Error (if any):" & Chr(10) & myProcess.StandardError.ReadToEnd())
 
     End Sub
 
@@ -91,7 +91,7 @@
 
         Dim tempFilename As String = "c:\temp\gitpatcherOutput.txt"
 
-        Logger.Dbg(command)
+        Logger.Debug(command)
 
         Dim starter As New ProcessStartInfo("c:\windows\system32\cmd", "/k " & command & " > " & tempFilename)
 
@@ -119,7 +119,7 @@
         l_output = FileIO.readFileLine1(tempFilename)
 
         'Logger.Dbg("check_StdOut:" & Chr(10) & Message)
-        Logger.Dbg("Error (if any):" & Chr(10) & myProcess.StandardError.ReadToEnd())
+        Logger.Debug("Error (if any):" & Chr(10) & myProcess.StandardError.ReadToEnd())
 
         Return l_output
 
@@ -130,7 +130,7 @@
 
     Public Shared Sub check_StdErr(ByVal command, ByRef message, ByVal workingDir)
 
-        Logger.Dbg(command)
+        Logger.Debug(command)
 
         Dim starter As New ProcessStartInfo("c:\windows\system32\cmd", "/k " & command)
 
@@ -152,7 +152,7 @@
 
         myProcess.WaitForExit()
 
-        Logger.Dbg("check_StdErr:" & Chr(10) & message)
+        Logger.Debug("check_StdErr:" & Chr(10) & message)
 
     End Sub
 
@@ -199,15 +199,15 @@
 
         check_StdOut(command, l_message, workingDir)
 
-        Logger.Dbg("command: " & command)
-        Logger.Dbg("l_message: " & l_message)
+        Logger.Debug("command: " & command)
+        Logger.Debug("l_message: " & l_message)
 
 
         Clipboard.Clear()
         Clipboard.SetText(l_message)
 
         If i_output_file <> "" Then
-            Logger.Dbg("Writing output to: " & i_output_file)
+            Logger.Debug("Writing output to: " & i_output_file)
             Dim l_output_file As New System.IO.StreamWriter(i_output_file)
 
             l_output_file.Write(l_message)

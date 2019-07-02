@@ -197,7 +197,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("GitHubFlow")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("OneFlow")>  _
         Public ReadOnly Property Flow() As String
             Get
                 Return CType(Me("Flow"),String)
@@ -242,7 +242,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.18.0")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("GP-0.19.0")>  _
         Public ReadOnly Property ReleaseId() As String
             Get
                 Return CType(Me("ReleaseId"),String)
@@ -390,6 +390,63 @@ Namespace My
             End Get
             Set
                 Me("VirtualBoxer") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property CreateVersion() As Boolean
+            Get
+                Return CType(Me("CreateVersion"),Boolean)
+            End Get
+            Set
+                Me("CreateVersion") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property RunRelease() As Boolean
+            Get
+                Return CType(Me("RunRelease"),Boolean)
+            End Get
+            Set
+                Me("RunRelease") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Minor")>  _
+        Public ReadOnly Property DefaultVersionType() As String
+            Get
+                Return CType(Me("DefaultVersionType"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property LogViewerShow() As Boolean
+            Get
+                Return CType(Me("LogViewerShow"),Boolean)
+            End Get
+            Set
+                Me("LogViewerShow") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("No VM")>  _
+        Public Property VBoxNameHF() As String
+            Get
+                Return CType(Me("VBoxNameHF"),String)
+            End Get
+            Set
+                Me("VBoxNameHF") = value
             End Set
         End Property
     End Class

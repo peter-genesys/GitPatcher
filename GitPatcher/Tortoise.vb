@@ -35,6 +35,11 @@
         client.Switch(i_WorkingDir)
     End Sub
 
+    Public Shared Sub Resolve(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
+        Dim client As New TortoiseFascade(i_wait)
+        client.Resolve(i_WorkingDir)
+    End Sub
+
     Public Shared Sub Revert(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
         Dim client As New TortoiseFascade(i_wait)
         client.Revert(i_WorkingDir)

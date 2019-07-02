@@ -133,7 +133,7 @@ Public Class OrgSettings
                     VMARMpwordTextBox.Text = l_OrgNode.Attributes.GetNamedItem("VMARMPWORD").Value
 
                 Catch ex As Exception
-                    Logger.Dbg("New XML vars missing - these will be written when file is saved.")
+                    Logger.Debug("New XML vars missing - these will be written when file is saved.")
                 End Try
 
 

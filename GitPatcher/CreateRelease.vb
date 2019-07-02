@@ -1,32 +1,39 @@
 ﻿Imports LibGit2Sharp
 Public Class CreateRelease
+    Private pAppCode As String = Nothing
+    Private pAppVersion As String = Nothing
     Private pPatchName As String = Nothing
     Private pCreatePatchType As String = Nothing
+    Private pVersionType As String = Nothing
     Private pFindPatchTypes As String = Nothing
     Private pFindPatchFilters As String = Nothing
     Private pPrereqPatchTypes As String = Nothing
-    Private pSupPatchTypes As String = Nothing
+
 
     Dim AvailablePatches As Collection = New Collection
 
     Private waiting As Boolean
 
-    Public Sub New(ByVal iPatchName As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String, ByVal iSupPatchTypes As String)
+    Public Sub New(ByVal iAppCode As String, ByVal iAppMajorMinorVersion As String, ByVal iVersionType As String, ByVal iCreatePatchType As String, ByVal iFindPatchTypes As String, ByVal iFindPatchFilters As String, ByVal iPrereqPatchTypes As String)
 
-        If String.IsNullOrEmpty(iPatchName) Then
-            Dim l_app_version = InputBox("Please enter a new version for " & Globals.currentAppCode & " in the format: 2.17.01", "New " & Globals.getAppName & " Version")
+        'If String.IsNullOrEmpty(iAppMajorMinorVersion) Then
+        '    Dim l_app_version = InputBox("Please enter a new version for " & Globals.currentAppCode & " in the format: 2.17.01", "New " & Globals.getAppName & " Version")
 
-            pPatchName = Globals.currentAppCode & "-" & l_app_version
-        Else
-            pPatchName = iPatchName
-        End If
+        '    pPatchName = Globals.currentAppCode & "-" & l_app_version
+        'Else
+        '    pPatchName = iPatchName
+        'End If
 
+        pPatchName = iAppMajorMinorVersion
 
+        pAppCode = iAppCode
+        pAppVersion = iAppMajorMinorVersion
         pCreatePatchType = iCreatePatchType
+        pVersionType = iVersionType
         pFindPatchTypes = iFindPatchTypes
         pFindPatchFilters = iFindPatchFilters
         pPrereqPatchTypes = iPrereqPatchTypes
-        pSupPatchTypes = iSupPatchTypes
+
 
         InitializeComponent()
 
@@ -42,20 +49,30 @@ Public Class CreateRelease
         Next
 
 
+        'HidePatchesTab()
+        HideTabs()
 
-        FindTagsButton.Text = "Find Tags like " & Globals.currentAppCode & "-X.XX.XX"
-
-        Findtags()
+        FindReleasesButton.Text = "Find Releases for " & pAppCode
+        FindReleaseBranches(pAppCode)
 
         TagFilterCheckBox.Checked = True
-        ComboBoxPatchesFilter.SelectedItem = "All" '"Unapplied"
+        ComboBoxPatchesFilter.SelectedItem = "Unapplied" '"Unapplied"
 
-        Me.Text = "CreatePatchSet - Creating a " & iCreatePatchType & " for " & Globals.currentTNS
+        Me.Text = "CreateRelease - Creating a " & iVersionType & " Version Release for " & Globals.currentTNS
 
         AvailablePatchesLabel.Text = "Available" & Chr(10) & iFindPatchTypes & Chr(10) & "Patches"
 
+
+        ExecutePatchButton.Text = "Execute Patch on " & Globals.currentTNS
+
+        RevertVMButton.Visible = My.Settings.VBoxName <> "No VM"
+
+
         Me.MdiParent = GitPatcher
         Me.Show()
+
+        ShowHidePatchesTab()
+
         Wait()
 
     End Sub
@@ -72,25 +89,98 @@ Public Class CreateRelease
         waiting = False
     End Sub
 
+
+    Private Sub HidePatchesTab()
+        PatchTabControl.TabPages.Remove(TabPagePatches)
+    End Sub
+
+    Private Sub ShowPatchesTab()
+        PatchTabControl.TabPages.Remove(TabPagePatches)
+        PatchTabControl.TabPages.Insert(1, TabPagePatches)
+    End Sub
+
+    Private Sub ShowHidePatchesTab()
+        If BranchesCheckedListBox.CheckedItems.Count > 1 Then
+            ShowPatchesTab()
+        Else
+            HidePatchesTab()
+            HideTabs()
+        End If
+    End Sub
+
+    Private Sub HideTabs()
+        PatchTabControl.TabPages.Remove(TabPagePreReqs)
+        PatchTabControl.TabPages.Remove(TabPageBuildPatch)
+        'FindButton.Visible = False
+        'CopyChangesButton.Visible = False
+
+    End Sub
+    Private Sub ShowTabs()
+
+        PatchTabControl.TabPages.Insert(2, TabPagePreReqs)
+        PatchTabControl.TabPages.Insert(3, TabPageBuildPatch)
+    End Sub
+
+
+
+    Private Sub FindReleaseBranches(ByVal appCode As String)
+
+        Dim branchSearch As String = "release/" & appCode & "/"
+
+        BranchesCheckedListBox.Items.Clear()
+        For Each branchName In GitOp.getBranchNameList(branchSearch)
+
+            BranchesCheckedListBox.Items.Add(branchName)
+            If branchName = "release/" & appCode & "/" & pAppVersion Then
+                Try
+                    'Tick branches
+                    BranchesCheckedListBox.SetItemChecked(BranchesCheckedListBox.Items.Count - 2, True)
+                Catch ex As Exception
+                    MsgBox(ex.Message & Chr(10) &
+                           "Unable to tick last release")
+                End Try
+                Try
+                    'Tick branches
+                    BranchesCheckedListBox.SetItemChecked(BranchesCheckedListBox.Items.Count - 1, True)
+                Catch ex As Exception
+                    MsgBox(ex.Message & Chr(10) &
+                           "Unable to tick this release")
+                End Try
+            End If
+
+        Next
+
+        ShowHidePatchesTab()
+
+        'Tick last 2 tags
+        'TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 2, True)
+        'TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
+
+    End Sub
+
+
     Private Sub Findtags()
 
-        Dim tagsearch As String = Replace(RTrim(Globals.currentAppCode), Chr(13), "")
+        Dim tagsearch As String = Replace(RTrim(pAppVersion), Chr(13), "")
         Dim tagseg As String = Nothing
 
-        TagsCheckedListBox.Items.Clear()
-        For Each thisTag As Tag In GitOp.getTagList()
-            tagseg = Common.getFirstSegment(thisTag.FriendlyName, "-")
+        BranchesCheckedListBox.Items.Clear()
+        For Each thisTag As Tag In GitOp.getTagList(tagsearch)
+            'tagseg = Common.getFirstSegment(thisTag.FriendlyName, "-")
             'Looks like this used to search for tags by appCode, but not doing this ATM.
             'If tagseg = tagsearch Then
-            TagsCheckedListBox.Items.Add(thisTag.FriendlyName)
+            BranchesCheckedListBox.Items.Add(thisTag.FriendlyName)
             'End If
         Next
 
-        TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
+        'Tick last 2 tags
+        'TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 2, True)
+        'TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
 
-        TagsCheckedListBox.Items.Add("HEAD")
 
-        TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
+        'TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
+        'TagsCheckedListBox.Items.Add("HEAD")
+        'TagsCheckedListBox.SetItemChecked(TagsCheckedListBox.Items.Count - 1, True)
     End Sub
 
 
@@ -115,83 +205,135 @@ Public Class CreateRelease
 
 
     Private Sub FindPatches()
+        'Refactor
+        'Too many filters, too complex.
+        'Lets simply find all patches between the selected tags and automatically tick those that are unapplied to the current database.
 
-        'Dim AvailablePatches As Collection = New Collection
-        Dim taggedPatches As Collection = New Collection
+        'Get list of unapplied patches
+        Dim UnappliedPatches As Collection = New Collection
+        Try
+            PatchRunner.FindUnappliedPatches(UnappliedPatches)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
 
-        'First use the Filter box to find available patches from the file system and with reference to the current DB.
-        If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
-            PatchRunner.FindUnappliedPatches(AvailablePatches)
-        Else
-            PatchRunner.FindPatches(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Uninstalled")
-        End If
 
         Cursor.Current = Cursors.WaitCursor
-        'Next get a list of patches between the 2 tags and filter the orginal list by this.
-        If String.IsNullOrEmpty(Tag1TextBox.Text) Or String.IsNullOrEmpty(Tag2TextBox.Text) Then
-            TagFilterCheckBox.Checked = False
-        End If
 
-        GitOp.setCommitsFromTags(Tag1TextBox.Text, Tag2TextBox.Text)
+        GitOp.setCommitsFromBranches(Branch1TextBox.Text, Branch2TextBox.Text)
 
-        If TagFilterCheckBox.Checked Then
+        'Get list of tagged patches
+        Dim taggedPatches As Collection = New Collection
+        'Find patches between 2 tags
+        For Each change In GitOp.getChanges("patch/", False)
+            'Apply Filters
+            If change.contains("install.sql") Then
+                'Other filters
+                'And Common.stringContainsSetMember(change, pFindPatchTypes, ",") And Common.stringContainsSetMember(change, pFindPatchFilters, ",") Then
 
-            'Find patches between 2 tags
-            For Each change In GitOp.getChanges("patch/", False)
-                'Apply Filters
-                If change.contains("install.sql") And Common.stringContainsSetMember(change, pFindPatchTypes, ",") And Common.stringContainsSetMember(change, pFindPatchFilters, ",") Then
-
-                    taggedPatches.Add(Replace(Common.dropLastSegment(Common.dropFirstSegment(change, "/"), "/"), "/", "\"))
-
-                End If
-
-            Next
-
-
-        End If
-
-        Dim patchMatch As Boolean = False
-        Dim patchTagged As Boolean = True
-
-        'process in reverse order, because removing items from the list, changes the indexes.  reverse order will not be affected.
-        For i As Integer = AvailablePatches.Count To 1 Step -1
-            Dim availablePatch As String = AvailablePatches(i)
-            'Check patch matches filter
-            patchMatch = False
-
-            If (String.IsNullOrEmpty(pFindPatchTypes) Or Common.stringContainsSetMember(availablePatch, pFindPatchTypes, ",")) And
-                (Not Me.AppFilterCheckBox.Checked Or Common.stringContainsSetMember(availablePatch, pFindPatchFilters, ",")) Then
-                patchMatch = True
-            End If
-
-            If TagFilterCheckBox.Checked Then
-                patchTagged = False
-
-                For Each change In taggedPatches
-                    If change = availablePatch Then
-                        patchTagged = True
-                    End If
-                Next
-            End If
-
-
-            If Not patchMatch Or Not patchTagged Then
-                'patch is to be filtered from the list.
-                AvailablePatches.Remove(i)
+                taggedPatches.Add(Replace(Common.dropLastSegment(Common.dropFirstSegment(change, "/"), "/"), "/", "\"))
 
             End If
-
         Next
 
-        'Populate the treeview, tick unapplied by default
-        AvailablePatchesTreeView.populateTreeFromCollection(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Unapplied")
+        'Populate the treeview with all tagged patches, unticked default
+        TreeViewTaggedPatches.populateTreeFromCollection(taggedPatches, False)
+        'Tick those that are unapplied.
+        TreeViewTaggedPatches.TickNodes(UnappliedPatches)
 
         Cursor.Current = Cursors.Default
 
-        If AvailablePatches.Count = 0 Then
-            MsgBox("No " & pFindPatchTypes & " patches are " & ComboBoxPatchesFilter.SelectedItem & " to " & Globals.getDB)
+        If taggedPatches.Count = 0 Then
+            HideTabs()
+            MsgBox("No patches were tagged")
+        Else
+            HideTabs()
+            ShowTabs()
 
         End If
+
+        AvailablePatches = UnappliedPatches
+
+        'Done
+
+        ''OLD CODE
+        ''--------
+        ''Dim AvailablePatches As Collection = New Collection
+        'Dim taggedPatches As Collection = New Collection
+
+        ''First use the Filter box to find available patches from the file system and with reference to the current DB.
+        'If ComboBoxPatchesFilter.SelectedItem = "Unapplied" Then
+        '    PatchRunner.FindUnappliedPatches(AvailablePatches)
+        'Else
+        '    PatchRunner.FindPatches(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Uninstalled")
+        'End If
+
+        'Cursor.Current = Cursors.WaitCursor
+        ''Next get a list of patches between the 2 tags and filter the orginal list by this.
+        'If String.IsNullOrEmpty(Tag1TextBox.Text) Or String.IsNullOrEmpty(Tag2TextBox.Text) Then
+        '    TagFilterCheckBox.Checked = False
+        'End If
+
+        'GitOp.setCommitsFromTags(Tag1TextBox.Text, Tag2TextBox.Text)
+
+        'If TagFilterCheckBox.Checked Then
+
+        '    'Find patches between 2 tags
+        '    For Each change In GitOp.getChanges("patch/", False)
+        '        'Apply Filters
+        '        If change.contains("install.sql") And Common.stringContainsSetMember(change, pFindPatchTypes, ",") And Common.stringContainsSetMember(change, pFindPatchFilters, ",") Then
+
+        '            taggedPatches.Add(Replace(Common.dropLastSegment(Common.dropFirstSegment(change, "/"), "/"), "/", "\"))
+
+        '        End If
+
+        '    Next
+
+
+        'End If
+
+        'Dim patchMatch As Boolean = False
+        'Dim patchTagged As Boolean = True
+
+        ''process in reverse order, because removing items from the list, changes the indexes.  reverse order will not be affected.
+        'For i As Integer = AvailablePatches.Count To 1 Step -1
+        '    Dim availablePatch As String = AvailablePatches(i)
+        '    'Check patch matches filter
+        '    patchMatch = False
+
+        '    If (String.IsNullOrEmpty(pFindPatchTypes) Or Common.stringContainsSetMember(availablePatch, pFindPatchTypes, ",")) And
+        '        (Not Me.AppFilterCheckBox.Checked Or Common.stringContainsSetMember(availablePatch, pFindPatchFilters, ",")) Then
+        '        patchMatch = True
+        '    End If
+
+        '    If TagFilterCheckBox.Checked Then
+        '        patchTagged = False
+
+        '        For Each change In taggedPatches
+        '            If change = availablePatch Then
+        '                patchTagged = True
+        '            End If
+        '        Next
+        '    End If
+
+
+        '    If Not patchMatch Or Not patchTagged Then
+        '        'patch is to be filtered from the list.
+        '        AvailablePatches.Remove(i)
+
+        '    End If
+
+        'Next
+
+        ''Populate the treeview, tick unapplied by default
+        'TreeViewTaggedPatches.populateTreeFromCollection(AvailablePatches, ComboBoxPatchesFilter.SelectedItem = "Unapplied")
+
+        'Cursor.Current = Cursors.Default
+
+        'If AvailablePatches.Count = 0 Then
+        '    MsgBox("No " & pFindPatchTypes & " patches are " & ComboBoxPatchesFilter.SelectedItem & " to " & Globals.getDB)
+
+        'End If
 
 
 
@@ -237,8 +379,8 @@ Public Class CreateRelease
                            pCreatePatchType,
                            "APEXRM",
                            Globals.currentLongBranch,
-                           Tag1TextBox.Text,
-                           Tag2TextBox.Text,
+                           Branch1TextBox.Text,
+                           Branch2TextBox.Text,
                            SupIdTextBox.Text,
                            PatchDescTextBox.Text,
                            NoteTextBox.Text,
@@ -258,8 +400,8 @@ Public Class CreateRelease
                            pCreatePatchType,
                            "APEXRM",
                            Globals.currentLongBranch,
-                           Tag1TextBox.Text,
-                           Tag2TextBox.Text,
+                           Branch1TextBox.Text,
+                           Branch2TextBox.Text,
                            SupIdTextBox.Text,
                            PatchDescTextBox.Text,
                            NoteTextBox.Text,
@@ -280,9 +422,14 @@ Public Class CreateRelease
 
     End Sub
 
+    Private Sub derivePatchDir()
+        PatchDirTextBox.Text = Common.dos_path_trailing_slash(Globals.RootPatchDir & PatchPathTextBox.Text & PatchNameTextBox.Text)
+    End Sub
+
+
     Private Sub PatchNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchNameTextBox.TextChanged
 
-        PatchDirTextBox.Text = Globals.RootPatchDir & Replace(PatchNameTextBox.Text, "/", "\") & "\"
+        derivePatchDir()
     End Sub
 
 
@@ -574,16 +721,13 @@ Public Class CreateRelease
 
 
         'Prepopulate Tree with default category nodes.
-        'This should become a method on TreeViewDraggableNodes2Levels
         Dim l_patches_category As String = "Patches"
-        'GPTrees.AddCategory(TreeViewPatchOrder.Nodes, l_patches_category)
         TreeViewPatchOrder.AddCategory(l_patches_category)
 
         Dim ChosenChanges As Collection = New Collection
         'Repo changes
         'Retrieve checked node items from the TreeViewChanges as a collection of files.
-        'GPTrees.ReadCheckedLeafNodes(AvailablePatchesTreeView.Nodes, ChosenChanges)
-        AvailablePatchesTreeView.ReadCheckedLeafNodes(ChosenChanges)
+        TreeViewTaggedPatches.ReadCheckedLeafNodes(ChosenChanges)
 
         If ChosenChanges.Count = 0 Then
             MsgBox("No patches selected.")
@@ -623,7 +767,7 @@ Public Class CreateRelease
     Private Sub PatchTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles PatchTabControl.SelectedIndexChanged
 
         If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageTags" Then
-            If TagsCheckedListBox.Items.Count = 0 Then
+            If BranchesCheckedListBox.Items.Count = 0 Then
                 Findtags()
             End If
 
@@ -634,7 +778,7 @@ Public Class CreateRelease
             Application.DoEvents()
             deriveTags()
 
-            If AvailablePatchesTreeView.Nodes.Count = 0 Then
+            If TreeViewTaggedPatches.Nodes.Count = 0 Then
                 FindPatches()
             End If
 
@@ -651,24 +795,25 @@ Public Class CreateRelease
 
 
 
-        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPagePatchDefn" Then
+        If (PatchTabControl.SelectedTab.Name.ToString) = "TabPageBuildPatch" Then
             'Copy Patchable items to the next list.
 
             'PatchPathTextBox.Text = pCreatePatchType & "\" & Globals.currentAppCode & "\" 'Replace(Globals.currentLongBranch, "/", "\") & "\"
 
             'PatchPathTextBox.Text = pCreatePatchType
-            PatchPathTextBox.Text = "release\"
-            If Globals.getAppInFeature() = "Y" Then
-                PatchPathTextBox.Text = PatchPathTextBox.Text & Globals.currentAppCode & "\"
-            End If
+            PatchPathTextBox.Text = Common.dos_path_trailing_slash(Globals.currentLongBranch)
+
+            'If Globals.getAppInFeature() = "Y" Then
+            '    PatchPathTextBox.Text = PatchPathTextBox.Text & Globals.currentAppCode & "\"
+            'End If
             'PatchPathTextBox.Text = PatchPathTextBox.Text & Globals.currentAppCode
 
 
 
 
             derivePatchName()
-
-            PatchDirTextBox.Text = Globals.RootPatchDir & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
+            derivePatchDir()
+            'PatchDirTextBox.Text = Globals.RootPatchDir & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
 
             UsePatchAdminCheckBox.Checked = Globals.getUseARM
 
@@ -759,31 +904,31 @@ Public Class CreateRelease
         CopySelectedChanges()
     End Sub
 
-    Private Sub FindTagsButton_Click(sender As Object, e As EventArgs) Handles FindTagsButton.Click
-        Findtags()
+    Private Sub FindTagsButton_Click(sender As Object, e As EventArgs) Handles FindReleasesButton.Click
+        FindReleaseBranches(pAppCode)
     End Sub
 
     Private Sub deriveTags()
 
 
-        If TagsCheckedListBox.CheckedItems.Count = 0 Then
+        If BranchesCheckedListBox.CheckedItems.Count = 0 Then
             'Nothing checked so select no tags
-            Tag1TextBox.Text = ""
-            Tag2TextBox.Text = ""
-            If TagsCheckedListBox.Items.Count > 0 Then
+            Branch1TextBox.Text = ""
+            Branch2TextBox.Text = ""
+            If BranchesCheckedListBox.Items.Count > 0 Then
                 'But select the last available tag as the tag2, to be used as patch_name
-                Tag2TextBox.Text = TagsCheckedListBox.Items(TagsCheckedListBox.Items.Count - 1)
+                Branch2TextBox.Text = BranchesCheckedListBox.Items(BranchesCheckedListBox.Items.Count - 1)
             End If
 
-        ElseIf TagsCheckedListBox.CheckedItems.Count = 1 Then
+        ElseIf BranchesCheckedListBox.CheckedItems.Count = 1 Then
             'Only 1 tag selected set as the tag2, to be used as patch_name
-            Tag1TextBox.Text = ""
-            Tag2TextBox.Text = TagsCheckedListBox.CheckedItems.Item(0)
+            Branch1TextBox.Text = ""
+            Branch2TextBox.Text = BranchesCheckedListBox.CheckedItems.Item(0)
 
-        ElseIf TagsCheckedListBox.CheckedItems.Count > 1 Then
+        ElseIf BranchesCheckedListBox.CheckedItems.Count > 1 Then
             'Select 1st and 2nd checked tags as tag1 and tag2
-            Tag1TextBox.Text = TagsCheckedListBox.CheckedItems.Item(0)
-            Tag2TextBox.Text = TagsCheckedListBox.CheckedItems.Item(1)
+            Branch1TextBox.Text = BranchesCheckedListBox.CheckedItems.Item(0)
+            Branch2TextBox.Text = BranchesCheckedListBox.CheckedItems.Item(1)
         End If
 
     End Sub
@@ -823,7 +968,7 @@ Public Class CreateRelease
         TreeViewPatchOrder.ReadTags(patchableFiles, False, True, True, False)
 
         'Add the PatchSet itself to the list.
-        patchableFiles.Add(PatchPathTextBox.Text & PatchNameTextBox.Text, _
+        patchableFiles.Add(PatchPathTextBox.Text & PatchNameTextBox.Text,
                            PatchPathTextBox.Text & PatchNameTextBox.Text)
 
 
@@ -833,8 +978,8 @@ Public Class CreateRelease
                            pCreatePatchType,
                            "APEXRM",
                            Globals.currentLongBranch,
-                           Tag1TextBox.Text,
-                           Tag2TextBox.Text,
+                           Branch1TextBox.Text,
+                           Branch2TextBox.Text,
                            SupIdTextBox.Text,
                            PatchDescTextBox.Text,
                            NoteTextBox.Text,
@@ -856,13 +1001,24 @@ Public Class CreateRelease
 
     End Sub
 
-   
-  
+
+
     Private Sub ComitButton_Click(sender As Object, e As EventArgs) Handles ComitButton.Click
+
+        'Use GitBash to silently add files prior to calling commit dialog.
+        Try
+            GitBash.Add(Globals.getRepoPath, PatchDirTextBox.Text & "/*", True)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            MsgBox("Unable to Add Files with GitBash. Check GitBash configuration.")
+            'If GitBash.Push fails just let the process continue.
+            'User will add files via the commit dialog
+        End Try
+
 
         Tortoise.Commit(PatchDirTextBox.Text, "NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
 
-        Mail.SendNotification("NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, pCreatePatchType & " created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
+        'Mail.SendNotification("NEW " & pCreatePatchType & ": " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, pCreatePatchType & " created.", PatchDirTextBox.Text & "install.sql," & Globals.RootPatchDir & PatchNameTextBox.Text & ".log")
 
         'user
         'branch
@@ -873,5 +1029,18 @@ Public Class CreateRelease
 
     End Sub
 
-  
+    Private Sub RevertVMButton_Click(sender As Object, e As EventArgs) Handles RevertVMButton.Click
+        WF_virtual_box.revertVM("Reverting", False, "post-rebase")
+    End Sub
+
+    Private Sub TagsCheckedListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles BranchesCheckedListBox.SelectedIndexChanged
+        'If tags are changed then we will clear the selected patches
+        'SchemaCountTextBox.Text = "0"
+        'SchemaComboBox.Text = ""
+        TreeViewTaggedPatches.Nodes.Clear()
+        HideTabs()
+        ShowHidePatchesTab()
+
+    End Sub
+
 End Class

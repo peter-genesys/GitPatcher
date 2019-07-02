@@ -7,6 +7,10 @@
         '    VBoxNameToolStripMenuItem.Font.Strikeout
         'End If
 
+        If Not My.Settings.VirtualBoxer Then
+            Exit Sub
+        End If
+
         If String.IsNullOrEmpty(My.Settings.VBoxDir) Then
             VBoxNameToolStripMenuItem.Text = "Virtual Box path not set"
             StartVMToolStripMenuItem.Visible = False
@@ -86,7 +90,6 @@
 
         Next
 
-
         'SelectedIndex = 4 'Default to VM
 
         loadRepos()
@@ -109,16 +112,8 @@
     End Sub
 
 
-    Private Sub HotFixToolStripComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles HotFixToolStripComboBox.SelectedIndexChanged
-        NewHotFixToolStripMenuItem1.Text = "New Hotfix for DB: " & HotFixToolStripComboBox.SelectedItem
-        RebaseHotFixToolStripMenuItem.Text = "Rebase Hotfix on Branch: " & Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem)
-        MergeAndPushHotfixToolStripMenuItem.Text = "Merge Hotfix to Branch: " & Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem) & ", then Push"
-        CreateDBHotFixPatchToolStripMenuItem1.Text = "Create DB Hotfix Patch for DB: " & HotFixToolStripComboBox.SelectedItem
-        MultiDBHotFixPatchToolStripMenuItem.Text = "Multi DB Hotfix Patch: " & HotFixToolStripComboBox.SelectedItem & " and Downwards"
-    End Sub
-
     Public Sub loadHotFixComboBoxDBs()
-        Logger.Dbg("Main.loadHotFixComboBoxDBs")
+        Logger.Debug("Main.loadHotFixComboBoxDBs")
         HotFixToolStripComboBox.Items.Clear()
 
         HotFixToolStripComboBox.Items.Add("PROD")
@@ -146,24 +141,32 @@
 
     End Sub
 
-    Private Sub SetFeatureMenuItems()
+    Private Sub SetMenuItems()
 
         Dim showMenuItems As Boolean = Globals.currentLongBranch.Contains("feature")
 
-        CreateDBFeaturePatchToolStripMenuItem.Visible = showMenuItems
-        FeaturePatchToolStripMenuItem.Visible = showMenuItems
-        RebaseFeatureFullToolStripMenuItem.Visible = showMenuItems
-        MergeAndPushFeatureToolStripMenuItem.Visible = showMenuItems
+        'CreateDBFeaturePatchToolStripMenuItem.Visible = showMenuItems
+        'FeaturePatchToolStripMenuItem.Visible = showMenuItems
+        'RebaseFeatureFullToolStripMenuItem.Visible = showMenuItems
+        'MergeAndPushFeatureToolStripMenuItem.Visible = showMenuItems
 
+        'VersionPatchToolStripMenuItem.Visible = Globals.currentLongBranch.Contains("version")
 
-        VersionPatchToolStripMenuItem.Visible = Globals.currentLongBranch.Contains("version")
+        'Show Hotfix Menu
+        HotfixMenuItem.Visible = My.Settings.Developer And (Globals.currentBranchType = "hotfix" Or Globals.currentBranch Like "*-RB")
+        CreateHotFixPatchMenuItem.Visible = Globals.currentBranchType = "hotfix"
+        RebaseHotFixMenuItem.Visible = Globals.currentBranchType = "hotfix"
+        RebaseHotfixPatchMenuItem.Visible = Globals.currentBranchType = "feature" And Globals.currentBranch Like "*-RB"
+
+        'Show Feature Menu
+        FeatureMenuItem.Visible = My.Settings.Developer And Globals.currentBranchType = "feature"
 
     End Sub
 
 
 
     Private Sub showRepoSettings()
-        Logger.Dbg("Main.showRepoSettings")
+        Logger.Debug("Main.showRepoSettings")
         RepoSettings.checkRepo(Globals.getRepoName)
         RepoPathTextBox.Text = Globals.getRepoPath()
 
@@ -172,7 +175,7 @@
         RootPatchDirTextBox.Text = Globals.RootPatchDir
         RootApexDirTextBox.Text = Globals.RootApexDir
 
-        SetFeatureMenuItems()
+        SetMenuItems()
         SetMergeRebaseButtons()
 
         loadOrgs()
@@ -184,7 +187,7 @@
 
     Public Sub loadRepos()
 
-        Logger.Dbg("Main.loadRepos")
+        Logger.Debug("Main.loadRepos")
         RepoSettings.readGitRepos(RepoComboBox, My.Settings.CurrentRepo)
         'showRepoSettings()
 
@@ -318,7 +321,7 @@
     End Function
 
 
-    Private Sub ImportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportToolStripMenuItem.Click
+    Private Sub ImportToolStripMenuItem_Click(sender As Object, e As EventArgs)
 
 
         WF_Apex.ApexImportFromTag()
@@ -326,7 +329,7 @@
 
     End Sub
 
-    Private Sub ExportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportToolStripMenuItem.Click
+    Private Sub ExportToolStripMenuItem_Click(sender As Object, e As EventArgs)
 
 
         WF_Apex.ApexExportCommit()
@@ -336,16 +339,16 @@
 
     Private Sub MergeAndPushFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MergeAndPushFeatureToolStripMenuItem.Click
 
-        WF_mergeAndPush.mergeAndPushBranch("feature", Globals.deriveHotfixBranch("DEV"))
+        WF_mergeAndPush.mergeAndPushBranch("feature", "master")
 
     End Sub
 
 
 
-    Private Sub NewFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewFeatureToolStripMenuItem.Click
+    Private Sub NewFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs)
 
         'Call worksflow
-        WF_newBranch.createNewBranch("feature", Globals.deriveHotfixBranch("DEV"))
+        WF_newBranch.createNewBranch("feature", "master")
 
         'Close and Open Main window to refresh it.
         Me.Close()
@@ -395,45 +398,45 @@
     'Private Sub RebaseFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureToolStripMenuItem.Click
     '    WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, True)
     'End Sub
-    Private Sub ReleaseToISDEVLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToDEVMenuItem.Click
-        WF_release.releaseTo("DEV")
+    Private Sub ReleaseToDEVMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToDEVMenuItem.Click
+        WF_release.releaseTo("DEV", "master", "feature", True)
     End Sub
 
-    Private Sub ReleaseToISTESTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToTESTMenuItem.Click
-        WF_release.releaseTo("TEST")
+    Private Sub ReleaseToTESTMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToTESTMenuItem.Click
+        WF_release.releaseTo("TEST", "master", "feature", True)
     End Sub
 
-    Private Sub ReleaseToISUATToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToUATMenuItem.Click
-        WF_release.releaseTo("UAT")
+    Private Sub ReleaseToUATMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToUATMenuItem.Click
+        WF_release.releaseTo("UAT", "release", "release", True, "Uninstalled")
     End Sub
 
-    Private Sub ReleaseToISPRODToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToPRODMenuItem.Click
-        WF_release.releaseTo("PROD")
+    Private Sub ReleaseToPRODMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToPRODMenuItem.Click
+        WF_release.releaseTo("PROD", "release", "release", True)
     End Sub
 
-    Private Sub NewHotfixToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles NewHotFixToolStripMenuItem1.Click
-        WF_newBranch.createNewBranch("hotfix", Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
+    Private Sub NewHotFixMenuItem_Click(sender As Object, e As EventArgs) Handles NewHotFixMenuItem.Click
+        WF_newBranch.createNewBranch("hotfix", "release")
     End Sub
 
     Private Sub MergeAndPushHotfixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MergeAndPushHotfixToolStripMenuItem.Click
         WF_mergeAndPush.mergeAndPushBranch("hotfix", Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
     End Sub
 
-    Private Sub RebaseHotFixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseHotFixToolStripMenuItem.Click
+    Private Sub RebaseHotFixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseHotFixMenuItem.Click
         WF_rebase.rebaseBranch("hotfix", HotFixToolStripComboBox.SelectedItem, Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
     End Sub
 
-    Private Sub CreateDBHotFixPatchToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CreateDBHotFixPatchToolStripMenuItem1.Click
-        WF_createPatch.createPatchProcess("hotfix", HotFixToolStripComboBox.SelectedItem, Globals.deriveHotfixBranch(HotFixToolStripComboBox.SelectedItem))
+    Private Sub CreateDBHotFixPatchToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CreateHotFixPatchMenuItem.Click
+        WF_createPatch.createPatchProcess("hotfix", "UAT", "release")
     End Sub
 
     Private Sub CreateDBFeaturePatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBFeaturePatchToolStripMenuItem.Click
-        WF_createPatch.createPatchProcess("feature", "DEV", Globals.deriveHotfixBranch("DEV"))
+        WF_createPatch.createPatchProcess("feature", "DEV", "master")
     End Sub
 
     Private Sub TestCreatePatchSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestCreatePatchSetToolStripMenuItem.Click
         'Create, edit And test collection
-        Dim Wizard As New CreateRelease("prism-2.17.04", "patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL", "patchset,feature,hotfix,ALL")
+        Dim Wizard As New CreateRelease("prism", "prism-2.17.04", "", "patchset", "feature,hotfix", Me.AppCodeTextBox.Text, "patchset,feature,hotfix,ALL")
         Wizard.ShowDialog() 'WAITING HERE!!
     End Sub
 
@@ -441,7 +444,7 @@
         WF_hotFixRelease.hotFixRelease(HotFixToolStripComboBox)
     End Sub
 
-    Private Sub UnappliedToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UnappliedToolStripMenuItem.Click
+    Private Sub UnappliedToolStripMenuItem_Click(sender As Object, e As EventArgs)
 
         'Pull
         GitOp.pullWhenMasterBranch()
@@ -455,7 +458,7 @@
 
     End Sub
 
-    Private Sub UninstalledToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UninstalledToolStripMenuItem.Click
+    Private Sub UninstalledToolStripMenuItem_Click(sender As Object, e As EventArgs)
 
         'Pull
         GitOp.pullWhenMasterBranch()
@@ -468,7 +471,7 @@
 
     End Sub
 
-    Private Sub AllPatchesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllPatchesToolStripMenuItem.Click
+    Private Sub AllPatchesToolStripMenuItem_Click(sender As Object, e As EventArgs)
 
         'Pull
         GitOp.pullWhenMasterBranch()
@@ -483,9 +486,7 @@
 
     End Sub
 
-    Private Sub GITToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PATCHToolStripMenuItem.Click
 
-    End Sub
 
     Private Sub CreateDBMajorReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreateDBMajorReleaseToolStripMenuItem.Click
         WF_release.createReleaseProcess("major", "minor", Me.AppCodeTextBox.Text, "major,minor,patchset,feature,hotfix,ALL", "major,minor,patchset,feature,hotfix,ALL", "TEST")
@@ -496,7 +497,7 @@
         Tortoise.Switch(Globals.getRepoPath)
         BranchPathTextBox.Text = Globals.currentLongBranch()
         CurrentBranchTextBox.Text = Globals.currentBranch
-        SetFeatureMenuItems()
+        SetMenuItems()
         SetMergeRebaseButtons()
     End Sub
 
@@ -650,8 +651,8 @@
         displayVBoxName()
     End Sub
 
-    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ReleaseToVMMenuItem.Click
-        WF_release.releaseTo("VM")
+    Private Sub ReleaseToVMMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToVMMenuItem.Click
+        WF_release.releaseTo("VM", "master", "feature", True)
     End Sub
 
     Private Sub ExportDataMenuItem_Click(sender As Object, e As EventArgs)
@@ -677,9 +678,155 @@
 
     Private Sub LogViewerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LogViewerToolStripMenuItem.Click
         LogViewer.Show()
+        My.Settings.LogViewerShow = True
+        My.Settings.Save()
+
     End Sub
 
-    Private Sub TestSQLclToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestSQLclToolStripMenuItem.Click
+
+
+    Private Sub ExportDataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportDataToolStripMenuItem.Click
+        WF_rebase.exportData()
+    End Sub
+
+
+
+    Private Sub NewMajorVersionReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs)
+        WF_versions.newVersionRelease("Major", "VM")
+    End Sub
+
+    Private Sub NewMinorVersionReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs)
+        WF_versions.newVersionRelease("Minor", "VM")
+    End Sub
+
+    Private Sub NewPatchVersionReleaseToolStripMenuItem_Click(sender As Object, e As EventArgs)
+        WF_versions.newVersionRelease("Patch", "VM")
+    End Sub
+
+    Private Sub CleanToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CleanToolStripMenuItem.Click
+        WF_virtual_box.takeSnapshot(PatchRunner.GetlastSuccessfulPatch & "-clean")
+    End Sub
+
+    Private Sub WipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles WipToolStripMenuItem.Click
+        WF_virtual_box.takeSnapshot(PatchRunner.GetlastSuccessfulPatch & "-wip")
+    End Sub
+
+    Private Sub HotfixToolStripMenuItem1_Click(sender As Object, e As EventArgs)
+        'Call worksflow
+        WF_newBranch.createHotFixBranch()
+        'Close and Open Main window to refresh it.
+        Me.Close()
+        GitPatcher.newMainWindow()
+    End Sub
+
+    Private Sub HotfixToolStripMenuItem2_Click(sender As Object, e As EventArgs)
+        WF_createPatch.createPatchProcess("hotfix", "UAT", "release")
+    End Sub
+
+
+
+    Private Sub FeatureToolStripMenuItem1_Click(sender As Object, e As EventArgs)
+        'Call worksflow
+        WF_newBranch.createNewBranch("feature", "master")
+
+        'Close and Open Main window to refresh it.
+        Me.Close()
+        GitPatcher.newMainWindow()
+    End Sub
+
+    Private Sub FeatureToolStripMenuItem2_Click(sender As Object, e As EventArgs)
+        WF_createPatch.createPatchProcess("feature", "DEV", "master")
+    End Sub
+
+    Private Sub RebaseHotfixPatchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseHotfixPatchMenuItem.Click
+        WF_createPatch.rebaseHotfixPatch("DEV", "release", "")
+    End Sub
+
+    Private Sub FeatureToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles FeatureToolStripMenuItem3.Click
+        'Call worksflow
+        WF_newBranch.createNewBranch("feature", "master")
+
+        'Close and Open Main window to refresh it.
+        Me.Close()
+        GitPatcher.newMainWindow()
+    End Sub
+
+    Private Sub HotfixToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles HotfixToolStripMenuItem3.Click
+        'Call worksflow
+        WF_newBranch.createHotFixBranch()
+        'Close and Open Main window to refresh it.
+        Me.Close()
+        GitPatcher.newMainWindow()
+    End Sub
+
+    Private Sub ToolStripMenuItem1_Click_1(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
+        WF_versions.newVersionRelease("Major", "VM")
+    End Sub
+
+    Private Sub ToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem2.Click
+        WF_versions.newVersionRelease("Minor", "VM")
+    End Sub
+
+    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
+        WF_versions.newVersionRelease("Patch", "VM")
+    End Sub
+
+    Private Sub ToolStripMenuItem4_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem4.Click
+        WF_versions.newVersionRelease("Version", "VM") '??
+    End Sub
+
+    Private Sub UnappliedToolStripMenuItem_Click_1(sender As Object, e As EventArgs)
+
+    End Sub
+
+    Private Sub UninstalledToolStripMenuItem_Click_1(sender As Object, e As EventArgs)
+
+    End Sub
+
+    Private Sub AllPatchesToolStripMenuItem_Click_1(sender As Object, e As EventArgs)
+
+    End Sub
+
+    Private Sub ToolStripMenuItem5_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem5.Click
+        'Pull
+        GitOp.pullWhenMasterBranch()
+        Dim l_no_unapplied_patches As Boolean = True
+        Dim GitPatcherChild As PatchRunner = New PatchRunner(l_no_unapplied_patches, "Unapplied")
+        If Not l_no_unapplied_patches Then
+            Dim l_no_queued_apps As Boolean = True
+            Dim GitPatcherChild2 As ApexAppInstaller = New ApexAppInstaller(l_no_queued_apps, "Queued")
+        End If
+
+    End Sub
+
+    Private Sub ToolStripMenuItem6_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem6.Click
+        'Pull
+        GitOp.pullWhenMasterBranch()
+        Dim l_no_uninstalled_patches As Boolean = True
+        Dim GitPatcherChild As PatchRunner = New PatchRunner(l_no_uninstalled_patches, "Uninstalled")
+        If Not l_no_uninstalled_patches Then
+            Dim l_no_queued_apps As Boolean = True
+            Dim GitPatcherChild2 As ApexAppInstaller = New ApexAppInstaller(l_no_queued_apps, "Queued")
+        End If
+    End Sub
+
+    Private Sub ToolStripMenuItem7_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem7.Click
+        'Pull
+        GitOp.pullWhenMasterBranch()
+
+        Dim l_no_patches As Boolean = True
+        Dim GitPatcherChild As PatchRunner = New PatchRunner(l_no_patches, "All")
+        If Not l_no_patches Then
+            Dim l_no_queued_apps As Boolean = True
+            Dim GitPatcherChild2 As ApexAppInstaller = New ApexAppInstaller(l_no_queued_apps, "Queued")
+        End If
+    End Sub
+
+    Private Sub RefreshButton_Click(sender As Object, e As EventArgs) Handles RefreshButton.Click
+        SetMenuItems()
+    End Sub
+
+    Private Sub ToolStripMenuItem8_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem8.Click
         Try
             Host.executeSQLplus(Globals.getRepoPath, Main.get_connect_string(Globals.getSchema, Globals.getTNS, Globals.getDATASOURCE), False)
         Catch ex As Exception
@@ -687,7 +834,12 @@
         End Try
     End Sub
 
-    Private Sub ExportDataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportDataToolStripMenuItem.Click
-        WF_rebase.exportData()
+    Private Sub ToolStripMenuItem9_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem9.Click
+        MsgBox("Last successful patch was " & PatchRunner.GetlastSuccessfulPatch)
+    End Sub
+
+    Private Sub ConfigToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ConfigToolStripMenuItem.Click
+        Me.Close()
+        GitPatcher.newConfigWindow()
     End Sub
 End Class

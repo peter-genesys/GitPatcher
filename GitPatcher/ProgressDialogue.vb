@@ -180,8 +180,9 @@
                 Return False
 
             End If
+
         Catch ex As System.IndexOutOfRangeException
-            Logger.Dbg("Steps completed.")
+            Logger.Debug("Steps completed.")
             Logger.Note("activeStep", activeStep)
             Return False
 
@@ -296,6 +297,13 @@
     Private Sub ProgressCheckedListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ProgressCheckedListBox.SelectedIndexChanged
         If ProgressCheckedListBox.SelectedIndex > -1 Then
             NotesTextBox.Text = storedProcessSteps(getProcessStep(ProgressCheckedListBox.SelectedIndex)).notes
+        End If
+
+    End Sub
+
+    Private Sub ProgressCheckedListBox_ItemCheck(sender As Object, e As EventArgs) Handles ProgressCheckedListBox.ItemCheck
+        If ProgressCheckedListBox.SelectedIndex > -1 Then
+            Logger.Note("Checked", ProgressCheckedListBox.SelectedIndex)
         End If
 
     End Sub

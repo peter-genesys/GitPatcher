@@ -195,15 +195,39 @@
     End Function
 
 
-    Public Shared Sub checkBranch(i_searchString)
-        Dim currentBranch As String = GitOp.CurrentBranch()
+
+
+
+
+    Public Shared Sub checkBranch(i_searchString) 'deprecated - @TODO change to using globals.checkBranchTypeList(byval iBranchList As string)
+        Dim currentBranch As String = GitOp.CurrentFriendlyBranch()
 
         If Not currentBranch.Contains(i_searchString) Then
-            MsgBox("Current Branch: " & currentBranch & " is not of type " & i_searchString & Environment.NewLine & Environment.NewLine & "Please change branch manually NOW, or CANCEL this workflow.")
-
+            Throw New System.Exception("Current Branch " & currentBranch & " is not of branch type " & i_searchString & Environment.NewLine & Environment.NewLine &
+                                       "Please switch to an appropriate branch.")
         End If
 
     End Sub
+
+    'Public Shared Sub checkBranchInList(ByVal iBranchList As Collection) 'deprecated - see similar function in globals
+    '    Dim currentBranch As String = Globals.currentBranch()
+
+    '    Dim currentBranchType As String = Globals.currentBranchType
+
+    '    Dim branchTypeOk As Boolean = False
+    '    For Each branchType In iBranchList
+    '        If currentBranch.Contains(branchType) Then
+    '            branchTypeOk = True
+    '        End If
+    '    Next
+
+    '    If Not branchTypeOk Then
+    '        Throw New System.Exception("Current Branch: " & currentBranch & " is not of types: " & CollectionToText(iBranchList) & Environment.NewLine & Environment.NewLine &
+    '                                   "Please switch to an appropriate branch.")
+
+    '    End If
+
+    'End Sub
 
 
     Public Shared Sub listCollection(ByVal i_collection As Collection, iTitle As String)
@@ -244,7 +268,7 @@
             Dim l_command_filename As String = "C:\PROGRA~1\7-Zip\7z.exe"
             Dim l_path As String = Nothing
             Dim l_arguments As String = " a " & i_zip_file & " " & i_zip_dir
-            Logger.Dbg(l_arguments)
+            Logger.Debug(l_arguments)
             Dim l_workingDir As String = Nothing
 
             Host.run_shell(l_command_filename, l_path, l_arguments, l_workingDir)
@@ -268,7 +292,7 @@
             Dim l_command_filename As String = "C:\PROGRA~1\7-Zip\7z.exe"
             Dim l_path As String = Nothing
             Dim l_arguments As String = " x " & i_zip_file & " -o" & i_tag_dir
-            Logger.Dbg(l_arguments)
+            Logger.Debug(l_arguments)
             Dim l_workingDir As String = Nothing
 
             Host.run_shell(l_command_filename, l_path, l_arguments, l_workingDir)

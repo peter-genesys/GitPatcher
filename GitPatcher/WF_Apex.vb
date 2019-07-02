@@ -68,7 +68,7 @@
             Common.Wait(1000)
         Loop
 
-        Logger.Dbg("Apex app_id " & fapp_id, "Check app id")
+        Logger.Debug("Apex app_id " & fapp_id, "Check app id")
 
         Dim app_id As String = fapp_id.Split("f")(1)
 
@@ -107,7 +107,7 @@
             'ADD-NEW-FILES
             If ExportProgress.toDoNextStep() Then
                 If GitOp.IsDirty() Then
-                    Logger.Dbg("User chose to add And the checkout Is also dirty")
+                    Logger.Debug("User chose to add And the checkout Is also dirty")
                     'Add new files to GIT repository 
                     Tortoise.Add(appDir, True)
                 End If
@@ -129,7 +129,7 @@
                 'User chose to commit, but don't bother unless the checkout has staged changes (added, modified or deleted files)
                 'Committing changed files to GIT"
                 If GitOp.ChangedFiles() > 0 Then
-                    Logger.Dbg("User chose to commit and the checkout has staged changes")
+                    Logger.Debug("User chose to commit and the checkout has staged changes")
 
                     'Find the application name in the init.sql file.
                     Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
@@ -146,7 +146,7 @@
             'User chose to revert, but don't bother unless the checkout has staged changes (added, modified or deleted files)
             If ExportProgress.toDoNextStep() Then
                 If GitOp.ChangedFiles() > 0 Then
-                    Logger.Dbg("User chose to revert and the checkout has staged changes")
+                    Logger.Debug("User chose to revert and the checkout has staged changes")
                     raisedRevertDialog = True
                     'Revert invalid changes from your checkout
                     Tortoise.Revert(appDir)
@@ -156,11 +156,13 @@
             'REIMPORT-CLEAN-APP
             If ExportProgress.toDoNextStep() Then
                 ReimportApp(iSchema, iAppId)
-            ElseIf Not ExportProgress.IsDisposed Then 'ignore if form has been closed.
-                If raisedRevertDialog Then
-                    'User chose NOT to REIMPORT, but the revert dialog was used, so it is likely that they reverted some changes, so start the import.  
-                    ReimportApp(iSchema, iAppId)
-                End If
+
+                'Disabled temp at Janeens request.
+                'ElseIf Not ExportProgress.IsDisposed Then 'ignore if form has been closed.
+                '    If raisedRevertDialog Then
+                '        'User chose NOT to REIMPORT, but the revert dialog was used, so it is likely that they reverted some changes, so start the import.  
+                '        ReimportApp(iSchema, iAppId)
+                '    End If
 
             End If
 
@@ -235,7 +237,7 @@
 
     Public Shared Sub ApexRestoreSinglePage() 'Current
 
-        Dim currentBranch As String = GitOp.CurrentBranch()
+        Dim currentBranch As String = GitOp.CurrentFriendlyBranch()
         Dim lSchema As String = Nothing
         Dim lAppId As String = Nothing
         Dim applicationDir As String = Nothing
@@ -420,7 +422,7 @@
         End If
 
 
-        Logger.Dbg("Apex app_id " + fapp_id, "Check app id")
+        Logger.Debug("Apex app_id " + fapp_id, "Check app id")
 
         Dim app_id As String = fapp_id.Split("f")(1)
         Dim fapp_sql As String = fapp_id & ".sql"
@@ -438,7 +440,7 @@
                       , message, apex_dir)
 
 
-            Logger.Dbg(message, "Apex Export Error")
+            Logger.Debug(message, "Apex Export Error")
 
             'write-host "Remove the application directory apex_dir\fapp_id" 
 
@@ -457,7 +459,7 @@
             'java oracle.apex.APEXExportSplitter $APP_SQL 
             Host.check_StdErr("java oracle.apex.APEXExportSplitter " & fapp_sql, message, apex_dir)
 
-            Logger.Dbg(message, "Apex Export Splitter Error")
+            Logger.Debug(message, "Apex Export Splitter Error")
 
         End If
 
@@ -493,7 +495,7 @@
         Dim l_skip_reports_DBs As String = "DEV"
         Dim fapp_id As String = Globals.currentApex
 
-        Dim currentBranch As String = GitOp.CurrentBranch()
+        Dim currentBranch As String = GitOp.CurrentFriendlyBranch()
         Dim runOnlyDBs As String = "DEV,TEST,UAT,PROD"
 
         Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import APEX application " & fapp_id & " into DB " & Globals.currentTNS,
@@ -620,7 +622,7 @@
 
         Dim fapp_id As String = Globals.currentApex
 
-        Dim currentBranch As String = GitOp.CurrentBranch()
+        Dim currentBranch As String = GitOp.CurrentFriendlyBranch()
 
         Dim ImportProgress As ProgressDialogue = New ProgressDialogue("Import 1 APEX page " & fapp_id & " into DB " & Globals.currentTNS,
         "Importing 1 APEX page of Application " & Globals.currentApex & " into parsing schema " & Globals.currentParsingSchema & " in DB " & Globals.currentTNS & Environment.NewLine &

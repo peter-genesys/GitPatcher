@@ -84,4 +84,8 @@
         theRepoSettings.Show()
     End Sub
 
+    Private Sub MainToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MainToolStripMenuItem.Click
+        Me.Close()
+        GitPatcher.newMainWindow()
+    End Sub
 End Class

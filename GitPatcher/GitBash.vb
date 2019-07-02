@@ -10,7 +10,7 @@
     ' End Sub
     '
     Public Shared Sub Add(ByVal i_WorkingDir As String, ByVal i_files As String, Optional ByVal i_wait As Boolean = True)
-        Logger.Dbg("GitBash.Add(" & i_WorkingDir & "," & i_files)
+        Logger.Debug("GitBash.Add(" & i_WorkingDir & "," & i_files)
         Dim client As New GitBashFascade(i_WorkingDir, i_wait)
         client.Add(i_files)
     End Sub
@@ -19,15 +19,17 @@
         Dim client As New GitBashFascade(i_WorkingDir, i_wait)
         client.Pull(iRemote, Common.unix_path(iBranch))
     End Sub
-    Public Shared Sub Push(ByVal i_WorkingDir As String, ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal i_wait As Boolean = True)
+
+    Public Shared Function PushSuccess(ByVal i_WorkingDir As String, ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal i_wait As Boolean = True, Optional ByVal iSetUpstream As Boolean = False) As Boolean
         Dim client As New GitBashFascade(i_WorkingDir, i_wait)
-        client.Push(iRemote, Common.unix_path(iBranch))
+        Return client.PushSuccess(iRemote, Common.unix_path(iBranch))
+    End Function
+
+    Public Shared Sub Push(ByVal i_WorkingDir As String, ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal i_wait As Boolean = True, Optional ByVal iSetUpstream As Boolean = False)
+        Dim success As Boolean = PushSuccess(i_WorkingDir, iRemote, iBranch, iTags, i_wait)
     End Sub
-    '
-    ' Public Shared Sub Push(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
-    '     Dim client As New TortoiseFascade(i_wait)
-    '     client.Push(i_WorkingDir)
-    ' End Sub
+
+
     '
     ' Public Shared Sub Merge(ByVal i_WorkingDir As String, Optional ByVal i_wait As Boolean = True)
     '     Dim client As New TortoiseFascade(i_wait)

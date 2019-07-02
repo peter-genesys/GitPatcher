@@ -37,9 +37,7 @@ Public Class OracleSQL
 
         Catch ex As Exception ' catches any error
             MessageBox.Show(ex.Message.ToString())
-        Finally
-            ' In a real application, put cleanup code here.
-
+            Throw ex
         End Try
 
         Cursor.Current = cursorRevert
@@ -81,12 +79,12 @@ Public Class OracleSQL
 
         Catch ex As Exception ' catches any error
             MessageBox.Show(ex.Message.ToString())
-        Finally
-            ' In a real application, put cleanup code here.
+            Throw ex
+
 
         End Try
 
-        Logger.Dbg(result.Count & " records found.")
+        Logger.Debug(result.Count & " records found.")
 
         Cursor.Current = cursorRevert
 

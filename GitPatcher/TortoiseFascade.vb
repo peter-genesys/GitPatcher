@@ -24,11 +24,16 @@
 
 
     Private Sub Execute()
-        tortoise.StartInfo = tortoiseSetup
-        tortoise.Start()
-        If (tortoiseWait) Then
-            tortoise.WaitForExit()
-        End If
+        Try
+            tortoise.StartInfo = tortoiseSetup
+            tortoise.Start()
+            If (tortoiseWait) Then
+                tortoise.WaitForExit()
+            End If
+        Catch ex As Exception
+            Throw New Exception(ex.Message & Chr(10) & "Check TortoiseGitProc path.")
+        End Try
+
     End Sub
 
 
@@ -70,6 +75,11 @@
 
     Public Sub Switch(ByVal i_path)
         tortoiseSetup.Arguments = "/command:switch /path:""" & i_path & """ /closeonend:1"
+        Execute()
+    End Sub
+
+    Public Sub Resolve(ByVal i_path)
+        tortoiseSetup.Arguments = "/command:resolve /path:""" & i_path & """ /closeonend:1"
         Execute()
     End Sub
 

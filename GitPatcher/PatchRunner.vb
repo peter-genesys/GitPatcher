@@ -10,7 +10,7 @@ Public Class PatchRunner
 
     Dim hotFixTargetDBFilter As String = Nothing
 
-    Public Sub New(ByRef foundNone As Boolean, Optional ByVal iInstallStatus As String = "All", Optional ByVal iBranchType As String = "")
+    Public Sub New(ByRef foundNone As Boolean, Optional ByVal iInstallStatus As String = "All", Optional ByVal iDefaultPatchType As String = "", Optional ByVal iCloseWhenNoneFound As Boolean = True)
         InitializeComponent()
         foundNone = False
 
@@ -27,24 +27,42 @@ Public Class PatchRunner
             hotFixTargetDBFilter = "DEV"
         End If
 
-        RadioButtonHotfix.Text = "Hotfixes for " & hotFixTargetDBFilter
-
-        If iBranchType = "" Then
-            iBranchType = Globals.getPatchRunnerFilter
+        If iDefaultPatchType = "" Then
+            iDefaultPatchType = Globals.getPatchRunnerFilter
         End If
 
-        Logger.Note("iBranchType", iBranchType)
-        Select Case iBranchType
+
+
+        'Dim index As Int = 0
+
+        'For Each i As DataRowView In ComboBox.Items
+
+        '    If i("Name").ToString = "Nick" Then
+        '        ComboBox.SelectedIndex = selectedCount
+        '        index = selectedCount
+        '        Exit For
+        '    End If
+
+        '    selectedCount = selectedCount + 1
+        'Next
+
+        Logger.Note("iDefaultPatchType", iDefaultPatchType)
+        PatchTypeComboBox.SelectedValue = "Release" 'iDefaultPatchType
+
+
+        Select Case iDefaultPatchType
             Case "feature"
-                RadioButtonFeature.Checked = True
+                PatchTypeComboBox.SelectedIndex = 0
             Case "hotfix"
-                RadioButtonHotfix.Checked = True
-            Case "patchset"
-                RadioButtonPatchSet.Checked = True
+                PatchTypeComboBox.SelectedIndex = 1
+            Case "version"
+                PatchTypeComboBox.SelectedIndex = 2
+            Case "release"
+                PatchTypeComboBox.SelectedIndex = 3
             Case "all"
-                RadioButtonAll2.Checked = True
+                PatchTypeComboBox.SelectedIndex = 4
             Case Else
-                RadioButtonAll2.Checked = True
+                PatchTypeComboBox.SelectedIndex = 4
         End Select
 
         UsePatchAdminCheckBox.Checked = Globals.getUseARM
@@ -59,13 +77,15 @@ Public Class PatchRunner
 
 
         Me.MdiParent = GitPatcher
-        If doSearch() > 0 Then
-            Me.Show()
-            Wait()
-        Else
+        If doSearch() = 0 And iCloseWhenNoneFound Then
             foundNone = True
             Me.Close()
+        Else
+            Me.Show()
+            Wait()
         End If
+
+
 
 
     End Sub
@@ -89,7 +109,7 @@ Public Class PatchRunner
 
         lastSuccessfulPatch = OracleSQL.QueryToString("select patch_name from arm_patch where success_yn = 'Y' order by log_datetime desc", "patch_name")
 
-        Logger.Dbg(lastSuccessfulPatch)
+        Logger.Debug(lastSuccessfulPatch)
 
         Return lastSuccessfulPatch
 
@@ -98,8 +118,8 @@ Public Class PatchRunner
 
 
     Shared Function GetUnappliedAppCode(ByVal iPatchName As String) As String
-    'get the app_code from the relevant Unapplied/Unpromoted view
-        Logger.Dbg("GetUnappliedAppCode(" & iPatchName & ")")
+        'get the app_code from the relevant Unapplied/Unpromoted view
+        Logger.Debug("GetUnappliedAppCode(" & iPatchName & ")")
 
         Dim lAppCode As String = Nothing
 
@@ -119,7 +139,7 @@ Public Class PatchRunner
             lAppCode = OracleSQL.QueryToString("select app_code from ARM_UNAPPLIED_V where patch_name = '" & iPatchName & "'", "app_code")
         End If
 
-        Logger.Dbg("lAppCode=" & lAppCode)
+        Logger.Debug("lAppCode=" & lAppCode)
         Return lAppCode
 
     End Function
@@ -355,28 +375,15 @@ Public Class PatchRunner
     Private Sub filterPatchType(ByRef foundPatches As Collection)
 
 
-        Dim searchTerm As String = "all"
-        If Not RadioButtonAll2.Checked And foundPatches.Count > 0 Then
+        Dim searchTerm As String = PatchTypeComboBox.SelectedItem.ToLower
 
-
-            If RadioButtonFeature.Checked Then
-                searchTerm = "feature"
-            ElseIf RadioButtonHotfix.Checked Then
-                searchTerm = "hotfix"
-            ElseIf RadioButtonPatchSet.Checked Then
-                searchTerm = "patchset"
-            End If
+        If searchTerm <> "all" And foundPatches.Count > 0 Then
 
             For i As Integer = foundPatches.Count To 1 Step -1
                 If Not foundPatches(i).contains(searchTerm) Then
-                    'This patch does not match the filter and will be removed from the list
-                    foundPatches.Remove(i)
-
-                ElseIf foundPatches(i).contains("hotfix") And Not foundPatches(i).contains("_" & hotFixTargetDBFilter) Then
-                    'Filter out hotfixes that do not match the current database
+                    'This patch does not match the PatchType filter and will be removed from the list
                     foundPatches.Remove(i)
                 End If
-
 
             Next
 
@@ -394,7 +401,7 @@ Public Class PatchRunner
 
 
     Private Function doSearch() As Integer
-        Logger.Dbg("Searching")
+        Logger.Debug("Searching")
 
         'Dim AvailablePatches As Collection = New Collection
 
@@ -417,11 +424,11 @@ Public Class PatchRunner
         If AvailablePatches.Count = 0 Then
             MsgBox("No " & ComboBoxPatchesFilter.SelectedItem & " patches were found.", MsgBoxStyle.Information, "No Patches Found")
         Else
-            Logger.Dbg("Filtering")
+            Logger.Debug("Filtering")
             filterPatchType(AvailablePatches)
             If AvailablePatches.Count > 0 Then
 
-                Logger.Dbg("Populate Tree")
+                Logger.Debug("Populate Tree")
 
                 'Populate the treeview, tick unapplied by default
                 'Once in the tree view patches are no longer ordered, because they are grouped in paths.
@@ -552,7 +559,7 @@ Public Class PatchRunner
             masterLoadLogs = masterLoadLogs & Environment.NewLine & "commit;"
             masterLoadLogs = masterLoadLogs & Environment.NewLine & "exit;"
 
-            Logger.Dbg(masterLoadLogs, "MasterLoadLogs script")
+            Logger.Debug(masterLoadLogs, "MasterLoadLogs script")
 
             'Use Host class to execute with a master script.
             Host.RunMasterScript(masterLoadLogs, Globals.RootPatchDir)
@@ -824,4 +831,6 @@ Public Class PatchRunner
         'PatchRunnerTabControl.TabPages.Remove(OrderTabPage)
         PatchRunnerTabControl.TabPages.Remove(RunTabPage)
     End Sub
+
+
 End Class

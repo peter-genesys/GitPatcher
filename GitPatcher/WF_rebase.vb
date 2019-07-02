@@ -51,12 +51,12 @@ Friend Class WF_rebase
         Common.checkBranch(iBranchType)
 
         Dim l_tag_prefix As String = Nothing
-        If iBranchType = "hotfix" Then
-            l_tag_prefix = iDBtarget.Substring(0, 1)
-        End If
+        'If iBranchType = "hotfix" Then
+        ' l_tag_prefix = iDBtarget.Substring(0, 1)
+        ' End If
 
 
-        Dim currentBranchLong As String = GitOp.CurrentBranch()
+        Dim currentBranchLong As String = GitOp.CurrentFriendlyBranch()
         Dim currentBranchShort As String = Globals.currentBranch
         Dim callStashPop As Boolean = False
 
@@ -77,24 +77,7 @@ Friend Class WF_rebase
 
         Dim rebasing As ProgressDialogue = New ProgressDialogue(title & " - branch " & currentBranchLong)
 
-        Dim l_max_tag As Integer = 0
-
-
-        For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch & ".")
-            Try
-                Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
-
-                If tag_no > l_max_tag Then
-                    l_max_tag = tag_no
-                End If
-
-            Catch ex As Exception
-                MsgBox(ex.Message)
-                MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
-            End Try
-
-        Next
-
+        Dim l_max_tag As Integer = GitOp.getMaxTag(Globals.currentBranch)
 
         Dim l_tag_base As String = l_max_tag + 1
         If iPatching Then
@@ -237,7 +220,7 @@ Friend Class WF_rebase
             If rebasing.toDoNextStep() Then
                 'User chooses to commit, but don't bother unless the checkout is also dirty (meaning there is at least 1 staged or unstaged change)
                 If GitOp.IsDirty() Then
-                    Logger.Dbg("User chose to commit and the checkout is also dirty")
+                    Logger.Debug("User chose to commit and the checkout is also dirty")
 
                     'Committing changed files to GIT
                     'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
@@ -249,7 +232,7 @@ Friend Class WF_rebase
                 'User chooses to NOT to commit, but commit anyway if there is at least 1 staged change
                 'Committing changed files to GIT"
                 If GitOp.ChangedFiles() > 0 Then
-                    Logger.Dbg("User chose NOT to commit but the checkout has staged changes")
+                    Logger.Debug("User chose NOT to commit but the checkout has staged changes")
 
                     MsgBox("Files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
                     '"Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes."
@@ -264,7 +247,7 @@ Friend Class WF_rebase
             If rebasing.toDoNextStep() Then
                 'User chooses to StashSave, but don't bother unless the checkout is also dirty (meaning there is at least 1 staged or unstaged change)
                 If GitOp.IsDirty() Then
-                    Logger.Dbg("User chose to commit and the checkout is also dirty")
+                    Logger.Debug("User chose to commit and the checkout is also dirty")
 
                     'StashSave changes
                     'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
@@ -277,7 +260,7 @@ Friend Class WF_rebase
                 'User chooses to NOT to StashSave, but commit anyway if there is at least 1 staged change
                 'Committing changed files to GIT"
                 If GitOp.ChangedFiles() > 0 Then
-                    Logger.Dbg("User chose NOT to commit but the checkout has staged changes")
+                    Logger.Debug("User chose NOT to commit but the checkout has staged changes")
 
                     MsgBox("Files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
                     Tortoise.StashSave(Globals.getRepoPath, "Stash Save to ensure the current branch [" & currentBranchShort & "] contains no staged changes.", True)
@@ -445,6 +428,9 @@ Friend Class WF_rebase
             MsgBox(ex.Message)
             rebasing.setToCompleted()
             rebasing.Close()
+
+            '@TODO should be parameterised to throw the exception to caller.
+
         End Try
 
         Return l_tag_base
@@ -464,13 +450,13 @@ Friend Class WF_rebase
         Dim tag_num_padding As Integer = 2
         Common.checkBranch(iBranchType)
 
-        Dim l_tag_prefix As String = Nothing
-        If iBranchType = "hotfix" Then
-            l_tag_prefix = iDBtarget.Substring(0, 1)
-        End If
+        Dim l_tag_prefix As String = Nothing 'DEPRECATED CONCEPT
+        'If iBranchType = "hotfix" Then
+        '    l_tag_prefix = iDBtarget.Substring(0, 1)
+        'End If
 
 
-        Dim currentBranchLong As String = GitOp.CurrentBranch()
+        Dim currentBranchLong As String = GitOp.CurrentFriendlyBranch()
         Dim currentBranchShort As String = Globals.currentBranch
         Dim callStashPop As Boolean = False
 
@@ -488,24 +474,7 @@ Friend Class WF_rebase
 
         Dim rebasing As ProgressDialogue = New ProgressDialogue(title & " - branch " & currentBranchLong)
 
-        Dim l_max_tag As Integer = 0
-
-
-        For Each thisTag As Tag In GitOp.getTagList(Globals.currentBranch & ".")
-            Try
-                Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
-
-                If tag_no > l_max_tag Then
-                    l_max_tag = tag_no
-                End If
-
-            Catch ex As Exception
-                MsgBox(ex.Message)
-                MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
-            End Try
-
-        Next
-
+        Dim l_max_tag As Integer = GitOp.getMaxTag(Globals.currentBranch)
 
         Dim l_tag_base As String = l_max_tag + 1
         If True Then

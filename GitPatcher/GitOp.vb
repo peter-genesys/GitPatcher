@@ -9,6 +9,7 @@ Class Halt
 End Class 'Halt
 
 
+
 Public Class GitOp
     Dim halt As Exception
 
@@ -20,6 +21,30 @@ Public Class GitOp
     '    repo = New Repository(path)
     '
     'End Sub
+
+    Shared Sub Confirm(ByVal Message, ByVal Title)
+        Dim button As MsgBoxResult
+        button = MsgBox(Message, MsgBoxStyle.OkCancel, Title)
+        If button = MsgBoxResult.Cancel Then
+            Throw New System.Exception("User Cancelled Operation")
+        End If
+
+    End Sub
+
+    Shared Function Retry(ByVal Message, ByVal Title, Optional ByVal buttonMeaning = "Yes to Retry, No to use TortoiseGit, or Cancel to abort process.") As Boolean
+        Dim button As MsgBoxResult
+        button = MsgBox(Message & Environment.NewLine & Environment.NewLine &
+                        buttonMeaning,
+                        MsgBoxStyle.YesNoCancel, Title)
+        If button = MsgBoxResult.Cancel Then
+            Throw New System.Exception("User Cancelled Operation")
+        End If
+
+        Return button = MsgBoxResult.Yes
+
+    End Function
+
+
 
     Shared Function GetCommitFromSHA(ByVal SHA As String, Optional ByVal shaAlias As String = Nothing) As Commit
 
@@ -74,12 +99,159 @@ Public Class GitOp
     End Function
 
 
+    Shared Function GetCommitFromBranchName(ByVal branchName As String, Optional ByVal branchAlias As String = Nothing) As Commit
+
+        Dim theBranch As Branch
+        Dim theCommit As Commit
+
+        If branchName = "" Then
+            Throw New System.Exception(branchAlias & "Branch is required")
+        End If
+
+        If branchName = "HEAD" Then
+            'If branch is HEAD, find the tip commit of the HEAD branch 
+            theBranch = Globals.getRepo().Head
+
+        Else
+            theBranch = Globals.getRepo.Branches(branchName)
+
+            If theBranch Is Nothing Then
+                Throw New System.Exception(branchAlias & "Branch (" & branchName & ") is unrecognised.")
+            End If
+
+        End If
+
+        theCommit = theBranch.Tip
+
+        Return theCommit
+
+    End Function
+
+
     Shared Function getTipSHA() As String
 
         Dim theBranch As Branch = Globals.getRepo().Head
         Return theBranch.Tip.Sha
 
     End Function
+
+
+    Shared Function getBranchNameList(ByVal inNames As Collection, Optional ByVal nameFilter As String = Nothing, Optional ByVal noDups As Boolean = True) As Collection
+        'Input inNames         - a collection of Names
+        'Input nameFilter      - search for matching names
+        'Output outNames       - a collection of Names, initialised with inNames
+        '  If nameFilter is null - then all branches found in the repo are appended to outNames.
+        '  If nameFilter is NOT null then only branches with branches name that contain the filter will be appended to outNames.
+        Logger.Note("getBranchNameList(inNames,nameFilter)", nameFilter)
+
+        Dim outNames As Collection = inNames
+
+        For Each branch In Globals.getRepo.Branches
+            Dim ReleaseId As String = Common.getLastSegment(branch.FriendlyName, "/")
+            If String.IsNullOrEmpty(nameFilter) Or branch.FriendlyName.Contains(nameFilter) Then
+
+                If Not noDups Or Not outNames.Contains(ReleaseId) Then
+
+                    outNames.Add(branch.FriendlyName, ReleaseId)
+                End If
+            End If
+
+        Next
+
+        Return outNames
+
+    End Function
+
+    Shared Function getBranchNameList(Optional ByVal nameFilter As String = Nothing) As Collection
+        'Overloaded
+        'Input nameFilter      - search for matching names
+        'Output outNames       - a collection of Names, initialised with inNames
+        '  If nameFilter is null - then all branches found in the repo are appended to outNames.
+        '  If nameFilter is NOT null then only branches with branches name that contain the filter will be appended to outNames.
+        Logger.Note("getBranchNameList(nameFilter)", nameFilter)
+
+        Dim outNames As Collection = New Collection
+
+        Return getBranchNameList(outNames, nameFilter)
+
+    End Function
+
+
+
+
+    Shared Function getReleaseList(ByVal appCode As String) As Collection
+
+        Dim ReleaseList As Collection = getBranchNameList("release/" & appCode & "/")
+
+        If ReleaseList.Count = 0 Then
+            Throw New System.Exception("No release branches found!")
+        End If
+
+        Return ReleaseList
+
+    End Function
+
+
+    Shared Function getPatchVersionReleaseList(ByVal appCode As String, Optional ByVal onlyOpen As Boolean = False) As Collection
+
+        Dim PatchVersionReleaseList As Collection = New Collection
+        For Each release In getBranchNameList("release/" & appCode & "/")
+
+
+            Dim lMajorId As Integer
+            Dim lMinorId As Integer
+            Dim lPatchId As Integer
+            Dim lAppVersion As String = Nothing
+
+            WF_versions.checkReleaseAppVersion(release, appCode, lMajorId, lMinorId, lPatchId, lAppVersion)
+
+            If lPatchId > 0 Then
+                'Patch version release branch
+
+                If Not onlyOpen Or Not WF_versions.isReleaseBuilt(release, lAppVersion) Then
+                    'Either any allow, or this one is not built
+                    'Add it to the list.
+                    PatchVersionReleaseList.Add(release, release)
+                End If
+            End If
+
+        Next
+
+        If PatchVersionReleaseList.Count = 0 Then
+            Throw New System.Exception("No release branches found!")
+        End If
+
+        Return PatchVersionReleaseList
+
+    End Function
+
+
+
+
+
+    Shared Function getReleaseAppCodeList(Optional ByVal nameFilter As String = Nothing) As Collection
+        Logger.Note("getReleaseAppCodeList(nameFilter)", nameFilter)
+
+        Dim releaseBranches As Collection = getBranchNameList("release/" & nameFilter)
+
+        Dim appCodeList As Collection = New Collection
+
+        For Each branch In releaseBranches
+            Dim lAppCode As String = Common.getNthSegment(branch, "/", 2)
+            If lAppCode = "release" Then
+                lAppCode = Common.getNthSegment(branch, "/", 3)
+            End If
+
+            If Not appCodeList.Contains(lAppCode) Then
+                appCodeList.Add(lAppCode, lAppCode)
+            End If
+
+        Next
+
+        Return appCodeList
+
+    End Function
+
 
 
 
@@ -108,7 +280,7 @@ Public Class GitOp
 
 
     Shared Function getTagNameList(Optional ByVal tagNameFilter As String = Nothing) As Collection
-
+        'Overloaded
         'Input tagNameFilter  - search for matching tag names
         'Output outTagNames       - a collection of tagNames, initialised with an empty set of tagNames
         '  If tagNameFilter is null then all tags found in the repo are appended to outTagNames.
@@ -158,12 +330,73 @@ Public Class GitOp
     End Function
 
 
+    Shared Function getTagList_00A_00B(ByVal tagBranch As String, Optional ByVal tagBase As String = "", Optional ByVal cleanupTags As Boolean = True) As Collection
+
+        'Input tagBranch      - short branch name that will match tags
+        'Output outTags       - a collection of tags, initialised with an empty set of tags
+        '  tagBranch is mandatory
+        '  If tagBase is null then all tags matching the tagBranch will be returned.
+
+        Dim outTags As Collection = New Collection
+        Dim tag_num_padding As Integer = 2
+
+        For Each thisTag As Tag In GitOp.getTagList(tagBranch & "." & tagBase)
+            Try
+                Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
+                outTags.Add(thisTag)
+
+            Catch ex As Exception
+                'MsgBox(ex.Message)
+                'MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
+                If cleanupTags Then
+                    Logger.Debug("Bad tag found: " & thisTag.FriendlyName)
+                    Dim result As Integer = MessageBox.Show(ex.Message & Environment.NewLine &
+                                                        "Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted." & Environment.NewLine & Environment.NewLine &
+                                                        "Confirm delete of tag " & thisTag.FriendlyName, "Confirm Target", MessageBoxButtons.OKCancel)
+                    If result = DialogResult.OK Then
+                        GitOp.deleteTag(thisTag.FriendlyName)
+                    End If
+                Else
+                    Logger.Debug("Bad tag ignored: " & thisTag.FriendlyName)
+                End If
+
+
+            End Try
+        Next
+
+        Return outTags
+
+    End Function
+
+    Shared Function getMaxTag(ByVal tagBranch As String, Optional ByVal tagBase As String = "", Optional ByVal cleanupTags As Boolean = True) As Integer
+
+        Dim l_max_tag As Integer = 0
+        Dim tag_num_padding As Integer = 2
+
+        For Each thisTag As Tag In GitOp.getTagList_00A_00B(tagBranch, tagBase, cleanupTags)
+            Try
+                Dim tag_no As String = Common.getLastSegment(thisTag.FriendlyName, ".").Substring(0, tag_num_padding)
+
+                If tag_no > l_max_tag Then
+                    l_max_tag = tag_no
+                End If
+
+            Catch ex As Exception
+                Throw New Exception("getMaxTag: " & ex.Message & "  Unexpected error")
+            End Try
+
+        Next
+
+        Return l_max_tag
+
+    End Function
+
     'Shared Function isRepo(ByVal path) As Boolean
     ' ' Dim repo As GitSharp.Repository = New GitSharp.Repository(path)
     ' Return True
     ' End Function
 
-    Shared Function CurrentBranch() As String
+    Shared Function CurrentFriendlyBranch() As String
         'Return the name of the branch at the head.
 
         Try
@@ -171,7 +404,7 @@ Public Class GitOp
             Return Globals.getRepo.Head.FriendlyName
         Catch
             MsgBox("Cannot determine current branch")
-            Logger.Dbg(Globals.getRepo.ToString)
+            Logger.Debug(Globals.getRepo.ToString)
             Return "Oops"
         End Try
 
@@ -179,6 +412,7 @@ Public Class GitOp
 
     Shared Sub createBranch(ByVal branchName As String)
         'Create a new local branch
+        Logger.Note("createBranch(branchName)", branchName)
 
         Dim newBranch As Branch = Globals.getRepo.CreateBranch(branchName)
 
@@ -207,46 +441,100 @@ Public Class GitOp
     End Sub
 
 
+    'Shared Sub CheckoutBranch(ByVal branchName As String)
+    'Checkout a remote branch
+
+    '    Const String localBranchName = "theBranch";
+
+    '// The local branch doesn't exist yet
+    'Assert.Null(repo.Branches[localBranchName]);
+
+    '// Let's get a reference on the remote tracking branch...
+    'Const String trackedBranchName = "origin/theBranch";
+    'Branch trackedBranch = repo.Branches[trackedBranchName];
+
+    '// ...And create a local branch pointing at the same Commit
+    'Branch branch = repo.CreateBranch(localBranchName, trackedBranch.Tip);
+
+    '// The local branch Is Not configured to track anything
+    'Assert.False(branch.IsTracking);
+
+    '// So, let's configure the local branch to track the remote one.
+    'Branch updatedBranch = repo.Branches.Update(branch,
+    '    b >= b.TrackedBranch = trackedBranch.CanonicalName);
+
+    '// Bam! It's done.
+    'Assert.True(updatedBranch.IsTracking);
+    'Assert.Equal(trackedBranchName, updatedBranch.TrackedBranch.Name);
+    'End Sub
+
+
 
     Shared Sub SwitchBranch(ByVal branchName As String)
         'Switch to an existing local branch
+        Logger.Note("SwitchBranch(branchName)", branchName)
 
         Dim theSetting As String = My.Settings.SwitchTool
         Dim ToolName As String = "SwitchTool"
 
-        Select Case theSetting
-            Case "TGIT"
-                Tortoise.Switch(Globals.getRepoPath)
+        ' Loop until swiched to correct branch
+        While Globals.currentLongBranch <> branchName
+
+            Try
+
+                Select Case theSetting
+                    Case "TGIT"
+                        Tortoise.Switch(Globals.getRepoPath)
                 'MsgBox(ToolName + " TortoiseGit not currently implimented")
-            Case "BGIT"
-                GitBash.Switch(Globals.getRepoPath, branchName)
+                    Case "BGIT"
+                        GitBash.Switch(Globals.getRepoPath, branchName)
                 'MsgBox(ToolName + " GitBash not currently implimented")
-            Case "LGIT"
-                Dim existingBranch As Branch = Globals.getRepo.Branches(branchName)
+                    Case "LGIT"
+                        Dim existingBranch As Branch = Globals.getRepo.Branches(branchName)
 
-                Try
-                    Commands.Checkout(Globals.getRepo, existingBranch)
+                        Try
+                            Commands.Checkout(Globals.getRepo, existingBranch)
+                        Catch ex As Exception
+                            '@TODO If branch is not local, confirm checkout from origin repo
 
-                Catch e As Exception
-                    MsgBox(e.Message)
-                End Try
+                            MsgBox(ex.Message)
+                            Throw ex
+                        End Try
 
-                Logger.Note("Globals.currentLongBranch ", Globals.currentLongBranch)
-                Logger.Note("Globals.currentBranch ", Globals.currentBranch)
 
-                'Verify that the switch occurred and if not, use tortoise to do it.
-                'Thus exposing the issue, so the developer can resolve it, before proceeding.
-                If Globals.currentLongBranch <> branchName Then
-                    Tortoise.Switch(Globals.getRepoPath)
-                End If
 
                 'MsgBox(ToolName + " LibGit2 not currently implimented")
 
-            Case "SGIT"
-                MsgBox(ToolName + " GitSharp not currently implimented")
-            Case Else
-                MsgBox("Unknown " + ToolName + " setting " + theSetting)
-        End Select
+                    Case "SGIT"
+                        MsgBox(ToolName + " GitSharp not currently implimented")
+                    Case Else
+                        Throw New System.Exception("Unknown " + ToolName + " setting " + theSetting)
+                End Select
+
+            Catch e As Exception
+                MsgBox(e.Message)
+            End Try
+
+            Logger.Note("Globals.currentLongBranch ", Globals.currentLongBranch)
+            Logger.Note("Globals.currentBranch ", Globals.currentBranch)
+
+            'Verify that the switch occurred
+            If Globals.currentLongBranch = branchName Then
+                Exit While
+            End If
+
+            'Confirm retry or use tortoiseGIT
+            If Not Retry("Switch to " & branchName & "Failed." & Environment.NewLine & Environment.NewLine &
+                        "Before continuing, please remove locks on files or folders at this path: " & Globals.getRepoPath &
+                        "Eg close these programs:" & Environment.NewLine &
+                        "+ Text editors: Sublime, Notepad++, WinMerge" & Environment.NewLine &
+                        "+ Executables : SQL, Powershell",
+                        "Retry Switch") Then
+                theSetting = "TGIT"
+            End If
+
+        End While
+
 
     End Sub
 
@@ -280,57 +568,98 @@ Public Class GitOp
     Shared Sub createAndSwitchBranch(ByVal branchName As String)
         'Create then switch to a local branch
         'GitBash.createBranch(Globals.getRepoPath, newBranch)
-
+        Logger.Note("createAndSwitchBranch(branchName)", branchName)
 
         createBranch(branchName)
+
         SwitchBranch(branchName)
 
     End Sub
 
 
-    Shared Sub Merge(ByVal targetBranch As String)
+    '    Public void CommitChanges() {
+    '    Try {
+
+    '        repo.Commit("updating files..", New Signature(username, email, DateTimeOffset.Now),
+    '            New Signature(username, email, DateTimeOffset.Now));
+    '    }
+    '    Catch (Exception e) {
+    '        Console.WriteLine("Exception:RepoActions:CommitChanges " + e.Message);
+    '    }
+    '}
+
+
+    Shared Sub Merge(ByVal targetBranch As String, Optional ByVal iFastForward As Boolean = False)
         'Merge the targetBranch into the current branch 
         'NB NoFastForward
 
         Dim theSetting As String = My.Settings.MergeTool
         Dim ToolName As String = "MergeTool"
 
-        Select Case theSetting
-            Case "TGIT"
-                Tortoise.Merge(Globals.getRepoPath)
+        Do
+            Try
+
+                Select Case theSetting
+                    Case "TGIT"
+                        Tortoise.Merge(Globals.getRepoPath)
                 'MsgBox(ToolName + " TortoiseGit not currently implimented")
-            Case "BGIT"
-                'GitBash.Merge(Globals.getRepoPath, branchName)
-                MsgBox(ToolName + " GitBash not currently implimented")
-            Case "LGIT"
-                Try
-                    Dim options As MergeOptions = New MergeOptions()
-                    options.FastForwardStrategy = FastForwardStrategy.NoFastForward
+                    Case "BGIT"
+                        'GitBash.Merge(Globals.getRepoPath, branchName)
+                        MsgBox(ToolName + " GitBash not currently implimented")
+                    Case "LGIT"
 
-                    Dim UserName As String = Globals.getRepoConfig("user.name")
-                    Dim UserEmail As String = Globals.getRepoConfig("user.email")
+                        Dim options As MergeOptions = New MergeOptions()
+                        If iFastForward Then
+                            options.FastForwardStrategy = FastForwardStrategy.FastForwardOnly
+                        Else
+                            options.FastForwardStrategy = FastForwardStrategy.NoFastForward
+                        End If
 
-                    Logger.Note("UserName", UserName)
-                    Logger.Note("UserEmail", UserEmail)
+                        'To allow for a custom message - set commt on success to false and commit afterwards
+                        options.CommitOnSuccess = False
 
-                    Dim mySignature As Signature = New Signature(UserName, UserEmail, New DateTimeOffset(DateTime.Now))
+                        Dim UserName As String = Globals.getRepoConfig("user.name")
+                        Dim UserEmail As String = Globals.getRepoConfig("user.email")
 
-                    Globals.getRepo.Merge(Globals.getRepo.Branches(targetBranch).Tip, mySignature, options)
+                        Logger.Note("UserName", UserName)
+                        Logger.Note("UserEmail", UserEmail)
 
-                Catch e As Exception
-                    MsgBox(e.Message)
-                    'If GitOp.Merge fails try Tortoise.Merge instead.
-                    Tortoise.Merge(Globals.getRepoPath)
-                End Try
+                        Dim mySignature As Signature = New Signature(UserName, UserEmail, New DateTimeOffset(DateTime.Now))
+
+                        Dim result As MergeResult = Globals.getRepo.Merge(Globals.getRepo.Branches(targetBranch).Tip, mySignature, options)
+                        If result.Status = MergeStatus.Conflicts Then
+                            Tortoise.Resolve(Globals.getRepoPath)
+                            Tortoise.Commit(Globals.getRepoPath, "Merge " & targetBranch & " to " & Globals.currentLongBranch, True)
+                        ElseIf result.Status = MergeStatus.UpToDate Then
+                            MsgBox("Nothing to merge.  Perhaps this step has already been done.")
+                        Else
+                            'Now commit with message
+                            Globals.getRepo.Commit("Merge " & targetBranch & " to " & Globals.currentLongBranch, mySignature, mySignature)
+
+                        End If
 
                 'MsgBox(ToolName + " LibGit2 not currently implimented")
 
-            Case "SGIT"
-                MsgBox(ToolName + " GitSharp not currently implimented")
-            Case Else
-                MsgBox("Unknown " + ToolName + " setting " + theSetting)
-        End Select
+                    Case "SGIT"
+                        MsgBox(ToolName + " GitSharp not currently implimented")
+                    Case Else
+                        Throw New System.Exception("Unknown " + ToolName + " setting " + theSetting)
+                End Select
 
+                Exit Do
+
+            Catch e As Exception
+                MsgBox(e.Message)
+
+                'Confirm retry or use tortoiseGIT
+                If Not Retry("Merge of " & targetBranch & " Failed.", "Retry Merge") Then
+                    theSetting = "TGIT"
+                End If
+
+            End Try
+
+
+        Loop
 
     End Sub
 
@@ -341,7 +670,7 @@ Public Class GitOp
         Try
 
             Globals.getRepo.Tags.Remove(tagName)
-            Logger.Dbg("Tag " & tagName & " deleted.")
+            Logger.Debug("Tag " & tagName & " deleted.")
 
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -364,7 +693,7 @@ Public Class GitOp
         Catch ex As LibGit2SharpException
 
             If Not force Then
-                Logger.Dbg(ex.Message)
+                Logger.Debug(ex.Message)
                 'Confirm move of tag
                 Dim result As Integer = MessageBox.Show("Update existing Tag " & tagName &
                     Chr(10) & "The tag will be moved to the head of the current branch " & Globals.currentBranch & ".", "Confirm Tag Update", MessageBoxButtons.OKCancel)
@@ -398,7 +727,7 @@ Public Class GitOp
         Catch ex As LibGit2SharpException
 
             If Not force Then
-                Logger.Dbg(ex.Message)
+                Logger.Debug(ex.Message)
                 'Confirm move of tag
                 Dim result As Integer = MessageBox.Show("Update existing Tag " & tagName &
                     Chr(10) & "The tag will be moved to the SHA " & tagSHA & ".", "Confirm Tag Update", MessageBoxButtons.OKCancel)
@@ -422,133 +751,180 @@ Public Class GitOp
 
 
 
-
-
-
-    Shared Sub pushBranch(ByVal ibranch_name As String)
+    Shared Sub pushBranch(ByVal ibranch_name As String, Optional ByVal iremote_name As String = "origin", Optional ByVal iSetUpstream As Boolean = False)
+        Logger.Debug("GitOp.pushBranch(" & ibranch_name & "," & iremote_name & ")")
 
         Dim theSetting As String = My.Settings.PushTool
         Dim ToolName As String = "PushTool"
 
-        Select Case theSetting
-            Case "TGIT"
-                Tortoise.Push(Globals.getRepoPath)
-                'MsgBox(ToolName + " TortoiseGit not currently implimented")
-            Case "BGIT"
-                Try
-                    GitBash.Push(Globals.getRepoPath, "origin", ibranch_name, True)
+        Do
+            Try
 
-                Catch ex As Exception
-                    MsgBox(ex.Message)
-                    MsgBox("Unable to Push Branch with GitBash. Check GitBash configuration.")
-                    'If GitBash.Push fails try Tortoise.Push instead.
-                    Tortoise.Push(Globals.getRepoPath)
-                End Try
+                Select Case theSetting
+                    Case "TGIT"
+                        Tortoise.Push(Globals.getRepoPath)
+                'MsgBox(ToolName + " TortoiseGit not currently implimented")
+                    Case "BGIT"
+                        'Try
+                        If Not GitBash.PushSuccess(Globals.getRepoPath, iremote_name, ibranch_name, True, True, iSetUpstream) Then
+                                MsgBox("Push has failed.  The Synchronisation screen may help you resolve the issue.")
+                                'If push fails show the synch screen.
+                                Tortoise.Sync(Globals.getRepoPath)
+                            End If
+                        'Catch ex As Exception
+                        '    MsgBox(ex.Message)
+                        '    Throw New System.Exception("Check GitBash configuration.")
+                        'End Try
 
                 'MsgBox(ToolName + " GitBash not currently implimented")
-            Case "LGIT"
-                ''push any branch
-                ''? Does this push tags
-                ''? Is it synchronous /  asynchronous
-                ''Dim thePushOptions As PushOptions = New PushOptions()
+                    Case "LGIT"
+                        ''push any branch
+                        ''? Does this push tags
+                        ''? Is it synchronous /  asynchronous
+                        ''Dim thePushOptions As PushOptions = New PushOptions()
 
-                ''BUG - THE CODE BELOW SEEMED TO WORK - BUT CORRUPTS the INDEX or PACKFILES
-                ''Resulting PackFile Index mismatch errors that "infect" the repo
+                        ''BUG - THE CODE BELOW SEEMED TO WORK - BUT CORRUPTS the INDEX or PACKFILES
+                        ''Resulting PackFile Index mismatch errors that "infect" the repo
 
-                'Dim existingBranch As Branch = Globals.getRepo.Branches(ibranch_name)
-                'Globals.getRepo().Network.Push(existingBranch)
+                        'Dim existingBranch As Branch = Globals.getRepo.Branches(ibranch_name)
+                        'Globals.getRepo().Network.Push(existingBranch)
 
-                MsgBox(ToolName + " LibGit2 not currently implimented")
+                        MsgBox(ToolName + " LibGit2 not currently used - contains bug")
 
-            Case "SGIT"
-                MsgBox(ToolName + " GitSharp not currently implimented")
-            Case Else
-                MsgBox("Unknown " + ToolName + " setting " + theSetting)
-        End Select
+                    Case "SGIT"
+                        MsgBox(ToolName + " GitSharp not currently implimented")
+                    Case Else
+                        Throw New System.Exception("Unknown " + ToolName + " setting " + theSetting)
+                End Select
+
+                Exit Do
+
+            Catch e As Exception
+                MsgBox(e.Message)
+
+                'Confirm retry or use tortoiseGIT
+                If Not Retry("Push of " & ibranch_name & " to " & iremote_name & " Failed.", "Retry Push") Then
+                    theSetting = "TGIT"
+                End If
+
+            End Try
+
+
+        Loop
+
 
 
     End Sub
 
-    Shared Sub pushCurrentBranch()
+    Shared Sub pushCurrentBranch(Optional ByVal iremote_name As String = "origin", Optional ByVal iSetUpstream As Boolean = False)
         'push current branch
-
-        pushBranch(CurrentBranch)
+        Logger.Debug("GitOp.pushCurrentBranch")
+        pushBranch(CurrentFriendlyBranch, iremote_name, iSetUpstream)
 
     End Sub
 
-    Shared Sub pullBranch(ByVal ibranch_name As String)
+    Shared Sub pullBranch(ByVal ibranch_name As String, Optional ByVal iremote_name As String = "origin")
 
 
         Dim theSetting As String = My.Settings.PullTool
         Dim ToolName As String = "PullTool"
 
-        Select Case theSetting
-            Case "TGIT"
-                Tortoise.Pull(Globals.getRepoPath)
+        Do
+            Try
+
+                Select Case theSetting
+                    Case "TGIT"
+                        Tortoise.Pull(Globals.getRepoPath)
                 'MsgBox(ToolName + " TortoiseGit not currently implimented")
-            Case "BGIT"
-                GitBash.Pull(Globals.getRepoPath, "origin", ibranch_name)
+                    Case "BGIT"
+                        GitBash.Pull(Globals.getRepoPath, iremote_name, ibranch_name)
                 'MsgBox(ToolName + " GitBash not currently implimented")
-            Case "LGIT"
-                'LGIT pulls from current upstream
-                Try
-                    'pull any branch
-                    Dim options As PullOptions = New PullOptions()
+                    Case "LGIT"
+                        'LGIT pulls from current upstream
 
-                    options.MergeOptions = New MergeOptions()
-                    options.MergeOptions.FailOnConflict = True
+                        'pull any branch
+                        Dim options As PullOptions = New PullOptions()
 
-                    'May need this later to embed credential details..
+                        options.MergeOptions = New MergeOptions()
+                        options.MergeOptions.FailOnConflict = True
 
-                    'options.FetchOptions.CredentialsProvider = New LibGit2Sharp.Credentials(CredentialsProvider()
-                    'options.FetchOptions.CredentialsProvider = New CredentialsProvider(DefaultCredentials)
-                    'options.FetchOptions.CredentialsProvider() = New CredentialsProvider(
-                    '(url, usernameFromUrl, types) >=
-                    '    New UsernamePasswordCredentials()
-                    '    {
-                    '        Username = "",
-                    '        Password = ""
-                    '    })
+                        'May need this later to embed credential details..
 
-                    'Get signature details from the current repo
-                    Dim UserName As String = Globals.getRepo.Config(10).Value
-                    Dim UserEmail As String = Globals.getRepo.Config(11).Value
-                    Logger.Note("UserName", UserName)
-                    Logger.Note("UserEmail", UserEmail)
+                        'options.FetchOptions.CredentialsProvider = New LibGit2Sharp.Credentials(CredentialsProvider()
+                        'options.FetchOptions.CredentialsProvider = New CredentialsProvider(DefaultCredentials)
+                        'options.FetchOptions.CredentialsProvider() = New CredentialsProvider(
+                        '(url, usernameFromUrl, types) >=
+                        '    New UsernamePasswordCredentials()
+                        '    {
+                        '        Username = "",
+                        '        Password = ""
+                        '    })
 
-                    Dim mySignature As Signature = New Signature(UserName, UserEmail, New DateTimeOffset(DateTime.Now))
+                        'Get signature details from the current repo
 
-                    'Pull the branch
-                    Dim myMergeResult As MergeResult = Commands.Pull(Globals.getRepo, mySignature, options)
+                        Dim UserName As String = Globals.getRepoConfig("user.name")
+                        Dim UserEmail As String = Globals.getRepoConfig("user.email")
 
-                    'MsgBox(ToolName + " LibGit2 not currently implimented")
-                Catch e As Exception
-                    MsgBox(e.Message)
-                    'If GitOp.Merge fails try Tortoise.Pull instead.
-                    If Globals.currentBranchType = "feature" Then
-                        MsgBox("Looks like you are on a feature branch.  This pull may have failed because your feature does not exist on the remote.  If so, just ignore this error and cancel the following Pull Dialog.")
+                        Logger.Note("UserName", UserName)
+                        Logger.Note("UserEmail", UserEmail)
+
+                        Dim mySignature As Signature = New Signature(UserName, UserEmail, New DateTimeOffset(DateTime.Now))
+
+                        'Pull the branch
+                        Dim myMergeResult As MergeResult = Commands.Pull(Globals.getRepo, mySignature, options)
+
+                            'MsgBox(ToolName + " LibGit2 not currently implimented")
+
+                    Case "SGIT"
+                        MsgBox(ToolName + " GitSharp not currently implimented")
+                    Case Else
+                        Throw New System.Exception("Unknown " + ToolName + " setting " + theSetting)
+                End Select
+
+                Exit Do
+
+            Catch e As Exception
+                MsgBox(e.Message)
+
+                'If GitOp.Merge fails try Tortoise.Pull instead.
+                If Globals.currentBranchType = "feature" Then
+
+                    Try
+                        'Confirm retry or use tortoiseGIT on feature branch
+                        If Not Retry("Pull of " & ibranch_name & " from " & iremote_name & " Failed." & Environment.NewLine & Environment.NewLine &
+                                 "Looks like you are on a feature branch.  This pull may have failed because your feature does not exist on the remote. ",
+                                 "Yes to Retry, No to use TortoiseGit, or Cancel to skip this Pull.") Then
+                            theSetting = "TGIT"
+                        End If
+                    Catch ex As Exception
+                        MsgBox("User cancelled Pull")
+                    End Try
+
+                Else
+
+                    'Confirm retry or use tortoiseGIT
+                    If Not Retry("Pull of " & ibranch_name & " from " & iremote_name & " Failed.", "Retry Pull") Then
+                        theSetting = "TGIT"
                     End If
 
-                    Tortoise.Pull(Globals.getRepoPath)
-                End Try
-            Case "SGIT"
-                MsgBox(ToolName + " GitSharp not currently implimented")
-            Case Else
-                MsgBox("Unknown " + ToolName + " setting " + theSetting)
-        End Select
+                End If
+
+            End Try
+
+        Loop
 
     End Sub
 
     Shared Sub pullCurrentBranch()
         'pull current branch
 
-        pullBranch(CurrentBranch())
+        pullBranch(CurrentFriendlyBranch())
 
     End Sub
 
 
     Shared Sub pullWhenMasterBranch()
-        Logger.Dbg("pullWhenMasterBranch is disabled")
+        Logger.Debug("pullWhenMasterBranch is disabled")
         'pull current branch - but only when it is master, or at least does not contain feature
         ' If CurrentBranch() = "master" Or Not CurrentBranch().Contains("feature") Then
         ' Logger.Dbg("Pulling " & CurrentBranch())
@@ -556,6 +932,51 @@ Public Class GitOp
         ' End If
 
     End Sub
+
+    Shared Sub Checkout(ByVal theBranch As Branch)
+        'Checkout to any existing branch
+
+        'GitBash.Switch(Globals.getRepoPath, branchName)
+        'Tortoise.Switch(ibranch_name, True)
+
+        Try
+
+            Commands.Checkout(Globals.getRepo, theBranch)
+
+        Catch e As Exception
+            MsgBox(e.Message)
+        End Try
+
+        ''Verify that the switch occurred and if not, use tortoise to do it.
+        ''Thus exposing the issue, so the developer can resolve it, before proceeding.
+        'If Globals.currentBranch <> branchName Then
+        '    Tortoise.Switch(Globals.getRepoPath)
+        'End If
+
+    End Sub
+
+    Shared Sub Checkout(ByVal theCommit As Commit)
+        'Checkout any existing commit
+
+        'GitBash.Switch(Globals.getRepoPath, branchName)
+        'Tortoise.Switch(ibranch_name, True)
+
+        Try
+
+            Commands.Checkout(Globals.getRepo, theCommit)
+
+        Catch e As Exception
+            MsgBox(e.Message)
+        End Try
+
+        ''Verify that the switch occurred and if not, use tortoise to do it.
+        ''Thus exposing the issue, so the developer can resolve it, before proceeding.
+        'If Globals.currentBranch <> branchName Then
+        '    Tortoise.Switch(Globals.getRepoPath)
+        'End If
+
+    End Sub
+
 
     Shared Sub getIndexedChanges()
         'NOT CURRENTLY USED - LINKED TO HIDDEN MENU ITEM "ShowIndex"
@@ -615,6 +1036,18 @@ Public Class GitOp
 
         Dim commit1 As Commit = GetCommitFromTagName(tag1_name, "1st ")
         Dim commit2 As Commit = GetCommitFromTagName(tag2_name, "2nd ")
+
+        Globals.setCommits(commit1, commit2)
+
+    End Sub
+
+
+    Shared Sub setCommitsFromBranches(ByVal branch1_name As String, ByVal branch2_name As String)
+
+        'Find the commits referred to by tip of Branch 1 and tip of Branch 2 and store them in persistent variables in the Globals module
+
+        Dim commit1 As Commit = GetCommitFromBranchName(branch1_name, "1st ")
+        Dim commit2 As Commit = GetCommitFromBranchName(branch2_name, "2nd ")
 
         Globals.setCommits(commit1, commit2)
 
@@ -864,7 +1297,7 @@ Public Class GitOp
 
         Dim repoStatus As RepositoryStatus = Globals.getRepo.RetrieveStatus()
 
-        Logger.Dbg("repoStatus.IsDirty " & repoStatus.IsDirty.ToString)
+        Logger.Debug("repoStatus.IsDirty " & repoStatus.IsDirty.ToString)
 
         Return repoStatus.IsDirty
 
@@ -878,13 +1311,13 @@ Public Class GitOp
 
     Public Shared Function ChangedFiles() As Integer
 
-        Logger.Dbg("Globals.getRepoPath " & Globals.getRepoPath)
+        Logger.Debug("Globals.getRepoPath " & Globals.getRepoPath)
         Dim repoStatus As RepositoryStatus = Globals.getRepo.RetrieveStatus()
-        Logger.Dbg("repoStatus.Missing.Count " & repoStatus.Missing.Count)
-        Logger.Dbg("repoStatus.Removed.Count " & repoStatus.Removed.Count)
-        Logger.Dbg("repoStatus.Modified.Count " & repoStatus.Modified.Count)
-        Logger.Dbg("repoStatus.Added.Count " & repoStatus.Added.Count)
-        Logger.Dbg("repoStatus.Staged.Count " & repoStatus.Staged.Count)
+        Logger.Debug("repoStatus.Missing.Count " & repoStatus.Missing.Count)
+        Logger.Debug("repoStatus.Removed.Count " & repoStatus.Removed.Count)
+        Logger.Debug("repoStatus.Modified.Count " & repoStatus.Modified.Count)
+        Logger.Debug("repoStatus.Added.Count " & repoStatus.Added.Count)
+        Logger.Debug("repoStatus.Staged.Count " & repoStatus.Staged.Count)
         Dim changedFilesCount As Integer = repoStatus.Missing.Count + repoStatus.Modified.Count + repoStatus.Removed.Count + repoStatus.Added.Count + repoStatus.Staged.Count
 
         Return changedFilesCount

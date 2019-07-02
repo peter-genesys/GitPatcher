@@ -39,7 +39,7 @@ Public Class RepoSettings
 
 
     Function checkRepo(ByVal iRepoName) As Boolean
-        Logger.Dbg("RepoSettings.checkRepo")
+        Logger.Debug("RepoSettings.checkRepo")
 
         Dim l_GitReposXML As XmlDocument = New XmlDocument()
         Dim l_RepoNodeList As XmlNodeList
@@ -89,7 +89,7 @@ Public Class RepoSettings
 
         Next
 
-        Logger.Dbg("DONE-RepoSettings.checkRepo")
+        Logger.Debug("DONE-RepoSettings.checkRepo")
 
         Return l_found
 
@@ -99,7 +99,7 @@ Public Class RepoSettings
 
 
     Sub readGitRepos(ByRef aRepoComboBox As Windows.Forms.ComboBox, ByVal currentValue As String)
-        Logger.Dbg("RepoSettings.readGitRepos")
+        Logger.Debug("RepoSettings.readGitRepos")
         Try
             Dim l_GitReposXML As XmlDocument = New XmlDocument()
 
@@ -149,7 +149,7 @@ Public Class RepoSettings
             End If
 
             If Not l_found Then
-                Logger.Dbg("No repo set")
+                Logger.Debug("No repo set")
                 Logger.Note("RepoComboBox.Items.Count", aRepoComboBox.Items.Count)
 
             End If
@@ -159,7 +159,7 @@ Public Class RepoSettings
             Logger.ShowError(errorVariable.ToString())
             Console.Write(errorVariable.ToString())
         End Try
-        Logger.Dbg("DONE-RepoSettings.readGitRepos")
+        Logger.Debug("DONE-RepoSettings.readGitRepos")
 
     End Sub
 

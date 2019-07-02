@@ -98,6 +98,10 @@ Public Class GitPatcher
 
         End Try
 
+        If My.Settings.LogViewerShow Then
+            LogViewer.Show()
+        End If
+
 
     End Sub
 

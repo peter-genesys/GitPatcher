@@ -1,6 +1,9 @@
-﻿Public Class GitBashFascade
+﻿Imports System.IO
 
-    ' This class is designed to shield the Tortoise logic in other classes from the SharpSVN implemenation classes.
+Public Class GitBashFascade
+
+    'Used by the class GitBash.  Abstracts implementation of GitBash operations.
+    'This class executes GitBash via command line.
     Private GitBashSetup As ProcessStartInfo = Nothing
     Private GitBash As Process = Nothing
     Private BashWait As Boolean = Nothing
@@ -11,6 +14,7 @@
         GitBashSetup.FileName = My.Settings.GITpath
         GitBashSetup.UseShellExecute = False
         GitBashSetup.WorkingDirectory = i_GitDir
+        GitBashSetup.RedirectStandardError = True
         BashWait = i_wait
     End Sub
 
@@ -23,15 +27,38 @@
         End Set
     End Property
 
+    Private Function executeSuccess() As Boolean
+        Logger.Debug("GitBashFascade.execute_success")
+        Try
+            GitBash.StartInfo = GitBashSetup
+            GitBash.Start()
+
+            Dim stdErrMessage As String = GitBash.StandardError.ReadToEnd()
+
+            If (BashWait) Then
+                GitBash.WaitForExit()
+            End If
+            Dim ExitCode As Integer = GitBash.ExitCode
+            Logger.Note("ExitCode", ExitCode)
+            Dim Success As Boolean = (ExitCode = 0)
+
+            If Not Success Then
+                MsgBox(stdErrMessage)
+            End If
+
+            Return Success
+
+        Catch ex As Exception
+            Throw New Exception(ex.Message & Chr(10) & "Check GitBash configuration.")
+        End Try
+
+    End Function
+
 
     Private Sub execute()
-        GitBash.StartInfo = GitBashSetup
-        GitBash.Start()
-        If (BashWait) Then
-            GitBash.WaitForExit()
-        End If
+        Logger.Debug("GitBashFascade.execute")
+        Dim success As Boolean = executeSuccess()
     End Sub
-
 
     ' Add files to GIT with GitBash
     Public Sub Add(ByVal i_files)
@@ -58,15 +85,34 @@
         execute()
     End Sub
 
-    Public Sub Push(ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False)
+    Public Function PushSuccess(ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal iSetUpstream As Boolean = False)
+        Logger.Debug("GitBashFascade.PushSuccess( " & iRemote & "," & iBranch & "," & iTags.ToString & ")")
+        Dim ltags As String = Nothing
+        Dim lsetupstream As String = Nothing
+
         If iTags Then
-            GitBashSetup.Arguments = "push " & iRemote & " " & iBranch & " --tags " 'git push origin develop --tags
-        Else
-            GitBashSetup.Arguments = "push " & iRemote & " " & iBranch ' 'git push origin develop
+            ltags = " --tags "
+        End If
+        If iSetUpstream Then
+            lsetupstream = "-u " '"--set-upstream " '-u 
         End If
 
-        execute()
+
+        GitBashSetup.Arguments = "push " & lsetupstream & iRemote & " " & iBranch & ltags 'git push --set-upstream origin master --tags
+        Logger.Note("GitBashSetup.Arguments", GitBashSetup.Arguments)
+
+        Return executeSuccess()
+
+    End Function
+
+
+    Public Sub Push(ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal iSetUpstream As Boolean = False)
+        Logger.Debug("GitBashFascade.Push( " & iRemote & "," & iBranch & "," & iTags.ToString & ")")
+        Dim success As Boolean = PushSuccess(iRemote, iBranch, iTags)
+
     End Sub
+
+
     '
     '   Public Sub Push(ByVal i_path)
     '       GitBashSetup.Arguments = "/command:push /path:""" & i_path & """ /closeonend:1"
@@ -83,7 +129,7 @@
         GitBashSetup.Arguments = "checkout " & iBranch  'git checkout iss53
         execute()
     End Sub
- 
+
     Public Sub createBranch(ByVal iBranch As String)
         GitBashSetup.Arguments = "checkout -b " & iBranch  'git checkout -b iss53
         execute()

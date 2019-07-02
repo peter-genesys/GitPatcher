@@ -2,7 +2,7 @@
     Shared Sub mergeAndPushBranch(iBranchType As String, iBranchTo As String)
         'THIS ONE
         Common.checkBranch(iBranchType)
-        Dim currentBranch As String = GitOp.CurrentBranch()
+        Dim currentBranch As String = GitOp.CurrentFriendlyBranch()
 
         Dim mergeAndPush As ProgressDialogue = New ProgressDialogue("Merge and Push branch:  " & currentBranch)
         mergeAndPush.MdiParent = GitPatcher
