@@ -422,9 +422,14 @@ Public Class CreateRelease
 
     End Sub
 
+    Private Sub derivePatchDir()
+        PatchDirTextBox.Text = Common.dos_path_trailing_slash(Globals.RootPatchDir & PatchPathTextBox.Text & PatchNameTextBox.Text)
+    End Sub
+
+
     Private Sub PatchNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PatchNameTextBox.TextChanged
 
-        PatchDirTextBox.Text = Globals.RootPatchDir & Replace(PatchNameTextBox.Text, "/", "\") & "\"
+        derivePatchDir()
     End Sub
 
 
@@ -796,18 +801,19 @@ Public Class CreateRelease
             'PatchPathTextBox.Text = pCreatePatchType & "\" & Globals.currentAppCode & "\" 'Replace(Globals.currentLongBranch, "/", "\") & "\"
 
             'PatchPathTextBox.Text = pCreatePatchType
-            PatchPathTextBox.Text = "release\"
-            If Globals.getAppInFeature() = "Y" Then
-                PatchPathTextBox.Text = PatchPathTextBox.Text & Globals.currentAppCode & "\"
-            End If
+            PatchPathTextBox.Text = Common.dos_path_trailing_slash(Globals.currentLongBranch)
+
+            'If Globals.getAppInFeature() = "Y" Then
+            '    PatchPathTextBox.Text = PatchPathTextBox.Text & Globals.currentAppCode & "\"
+            'End If
             'PatchPathTextBox.Text = PatchPathTextBox.Text & Globals.currentAppCode
 
 
 
 
             derivePatchName()
-
-            PatchDirTextBox.Text = Globals.RootPatchDir & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
+            derivePatchDir()
+            'PatchDirTextBox.Text = Globals.RootPatchDir & PatchPathTextBox.Text & PatchNameTextBox.Text & "\"
 
             UsePatchAdminCheckBox.Checked = Globals.getUseARM
 

@@ -45,13 +45,16 @@
 
     Shared Function fileExists(ByVal i_path) As Boolean
 
-        Logger.Debug("fileExists(" & i_path & ")")
+        i_path = Common.dos_path(i_path)
+
+        Logger.Debug("fileExists(ByVal i_path)")
+        Logger.Note("i_path", i_path)
 
         ' Create the File System Object
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
 
         ' Check that the file exists
-        Return objFSO.FileExists(Common.dos_path(i_path))
+        Return objFSO.FileExists(i_path)
 
 
     End Function

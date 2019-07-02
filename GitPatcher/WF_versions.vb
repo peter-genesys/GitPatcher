@@ -37,11 +37,11 @@
 
     End Sub
 
-    Shared Sub checkReleaseAppVersion(ByVal ReleaseBranch As String, ByVal appcode As String, ByRef MajorId As Integer, ByRef MinorId As Integer, ByRef PatchId As Integer)
+    Shared Sub checkReleaseAppVersion(ByVal ReleaseBranch As String, ByVal appcode As String, ByRef MajorId As Integer, ByRef MinorId As Integer, ByRef PatchId As Integer, ByRef AppVersion As String)
 
         Logger.Note("checkReleaseAppVersion(appVersion,appcode)", ReleaseBranch & "," & appcode)
 
-        Dim AppVersion As String = Common.getLastSegment(ReleaseBranch, "/")
+        AppVersion = Common.getLastSegment(ReleaseBranch, "/")
 
         checkAppVersion(AppVersion, appcode, MajorId, MinorId, PatchId)
 
@@ -54,8 +54,9 @@
         Dim lMajorId As Integer
         Dim lMinorId As Integer
         Dim lPatchId As Integer
+        Dim lAppVersion As String = Nothing
 
-        checkReleaseAppVersion(lastReleaseBranch, appcode, lMajorId, lMinorId, lPatchId)
+        checkReleaseAppVersion(lastReleaseBranch, appcode, lMajorId, lMinorId, lPatchId, lAppVersion)
 
         'Increment the version
         If versionType = "Major" Then
@@ -296,11 +297,9 @@
         'SUBFLOW:RELEASE-NEW-VERSION
         VersionRelease.addStep("Release versions from new Release branch", True, "Release versions from new Release branch", iVersionType = "Patch")
 
-
         '-------------------
         'CREATE PATCH  - 2 steps
         '-------------------
-
 
         'CREATE RELEASE PATCH WIZARD
         VersionRelease.addStep("Build " & iVersionType & " Version Release", True, "Select Patches" &
@@ -317,6 +316,9 @@
         'MERGE NEW-RELEASE BRANCH INTO INTO MASTER - sub-workflow
         '-------------------
         VersionRelease.addStep("Merge new release branch to master", True, "Merge new release to master branch, no-fastforward-only")
+
+        'CLEAN-VM-SNAPSHOT
+        VersionRelease.addStep("Clean VM Snapshot", True, "Create a clean snapshot of your current VM state, to use as your next restore point.", iTargetDB = "VM")
 
         VersionRelease.Show()
 
@@ -511,6 +513,18 @@
             End If
 
 
+            'CLEAN-VM-SNAPSHOT
+            If VersionRelease.toDoNextStep() Then
+                'Snapshot VM
+                If My.Settings.VBoxName = "No VM" Then
+                    MsgBox("Create a clean snapshot of your current VM state, to use as your next restore point.", MsgBoxStyle.Exclamation, "Snapshot VM")
+                Else
+                    WF_virtual_box.takeSnapshot(lAppVersion & "-clean")
+                End If
+
+            End If
+
+
             'Done
             VersionRelease.toDoNextStep()
 
@@ -634,7 +648,7 @@
 
                 Dim releaseBranches As Collection = GitOp.getReleaseList(lAppCode)
 
-                lastReleaseBranch = ChoiceDialog.Ask("Please identify the current release branch for the app: " & lAppCode, releaseBranches, "", "Identify current release branch", False, False, False)
+                lastReleaseBranch = ChoiceDialog.Ask("Please identify the current release branch for the app: " & lAppCode, releaseBranches, "", "Identify current release branch", False, False, False, releaseBranches.Count - 1)
 
                 'Determine whether to start a new release branch
 
@@ -647,8 +661,8 @@
                 Dim lMajorId As Integer
                 Dim lMinorId As Integer
                 Dim lPatchId As Integer
-
-                checkReleaseAppVersion(lastReleaseBranch, lAppCode, lMajorId, lMinorId, lPatchId)
+                'Dim lAppVersion As String = Nothing
+                checkReleaseAppVersion(lastReleaseBranch, lAppCode, lMajorId, lMinorId, lPatchId, lAppVersion)
 
 
                 If lPatchId > 0 Then
@@ -657,7 +671,7 @@
                     'Has the patch version release been created.
                     'Test patch dir exists in current checkout.
 
-                    If FileIO.fileExists(Globals.RootPatchDir & "/" & lastReleaseBranch & "/install.sql") Then
+                    If FileIO.fileExists(Globals.RootPatchDir & lastReleaseBranch & "\" & lAppVersion & "\install.sql") Then
                         createNewReleaseBranch = True
                         MsgBox("A CLOSED Patch Version Release Branch was selected." & Chr(10) &
                                "A new Patch Version Release branch will be branched from here.")
@@ -979,8 +993,8 @@
 
                     'Has the patch version release been created.
                     'Test patch dir exists in current checkout.
-
-                    If FileIO.fileExists(Globals.RootPatchDir & "/" & lastReleaseBranch & "/install.sql") Then
+                    lAppVersion = Common.getLastSegment(lastReleaseBranch, "/")
+                    If FileIO.fileExists(Globals.RootPatchDir & "/" & lastReleaseBranch & "/" & lAppVersion & "/install.sql") Then
                         createNewReleaseBranch = True
                     Else
                         createNewReleaseBranch = False
