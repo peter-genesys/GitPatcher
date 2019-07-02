@@ -14,7 +14,7 @@ Public Class ChoiceDialog
 
     Shared Function Ask(ByVal i_question As String, ByVal i_Choices As Collection, ByVal i_default As String, ByVal i_title As String, Optional ByVal i_reorder As Boolean = True, Optional ByVal i_hideCancelButton As Boolean = False, Optional ByVal i_returnIndex As Boolean = False, Optional ByVal i_defaultIndex As Integer = -1)
 
-        Logger.Dbg("Ask(" & i_question & "," & i_default & "," & i_title & ")")
+        Logger.Debug("Ask(" & i_question & "," & i_default & "," & i_title & ")")
 
         '!Cannot attach to GitPatcher as MdiParent! 
         '  Form that is not a Top-Level form cannot be displayed as a modal dialog box.

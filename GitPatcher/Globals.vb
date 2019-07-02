@@ -50,7 +50,7 @@ Module Globals
 
 
     Public Sub setRepo(repoPath As String)
-        Logger.Dbg("Globals.setRepo(" & repoPath & ")")
+        Logger.Debug("Globals.setRepo(" & repoPath & ")")
         gRepo = New Repository(repoPath)
         gRepoConfig = New Dictionary(Of String, String)
 
@@ -60,7 +60,7 @@ Module Globals
                 gRepoConfig.Add(gRepo.Config(i).Key, gRepo.Config(i).Value)
             Catch ex As Exception
                 'Ignore duplicate entries
-                Logger.Dbg(ex.Message & gRepo.Config(i).Key)
+                Logger.Debug(ex.Message & gRepo.Config(i).Key)
             End Try
         Next
 
@@ -91,7 +91,7 @@ Module Globals
     End Function
 
     Public Sub setRepoName(RepoName As String)
-        Logger.Dbg("Globals.setRepoName(" & RepoName & ")")
+        Logger.Debug("Globals.setRepoName(" & RepoName & ")")
         gRepoName = RepoName
 
         My.Settings.CurrentRepo = gRepoName
@@ -107,7 +107,7 @@ Module Globals
     Private gRepoPath As String
 
     Public Sub setRepoPath(RepoPath As String)
-        Logger.Dbg("Globals.setRepoPath(" & RepoPath & ")")
+        Logger.Debug("Globals.setRepoPath(" & RepoPath & ")")
         setRepo(RepoPath) 'Set the repository (before adding trailing slash
         gRepoPath = Common.dos_path_trailing_slash(RepoPath)
 
@@ -124,7 +124,7 @@ Module Globals
     Private gApexRelPath As String
 
     Public Sub setApexRelPath(ApexRelPath As String)
-        Logger.Dbg("Globals.setApexRelPath(" & ApexRelPath & ")")
+        Logger.Debug("Globals.setApexRelPath(" & ApexRelPath & ")")
         gApexRelPath = Common.dos_path_trailing_slash(ApexRelPath)
     End Sub
 
@@ -136,7 +136,7 @@ Module Globals
     Private gODBCjavaRelPath As String
 
     Public Sub setODBCjavaRelPath(ODBCjavaRelPath As String)
-        Logger.Dbg("Globals.setODBCjavaRelPath(" & ODBCjavaRelPath & ")")
+        Logger.Debug("Globals.setODBCjavaRelPath(" & ODBCjavaRelPath & ")")
         gODBCjavaRelPath = Common.dos_path(ODBCjavaRelPath)
     End Sub
 
@@ -155,7 +155,7 @@ Module Globals
     Private gDatabaseRelPath As String
 
     Public Sub setDatabaseRelPath(DatabaseRelPath As String)
-        Logger.Dbg("Globals.setDatabaseRelPath(" & DatabaseRelPath & ")")
+        Logger.Debug("Globals.setDatabaseRelPath(" & DatabaseRelPath & ")")
         gDatabaseRelPath = Common.dos_path_trailing_slash(DatabaseRelPath)
     End Sub
 
@@ -167,7 +167,7 @@ Module Globals
     Private gExtrasRelPath As String
 
     Public Sub setExtrasRelPath(ExtrasRelPath As String)
-        Logger.Dbg("Globals.setExtrasRelPath(" & ExtrasRelPath & ")")
+        Logger.Debug("Globals.setExtrasRelPath(" & ExtrasRelPath & ")")
         gExtrasRelPath = Common.dos_path(ExtrasRelPath)
     End Sub
 
@@ -178,7 +178,7 @@ Module Globals
     Private gPatchRelPath As String
 
     Public Sub setPatchRelPath(PatchRelPath As String)
-        Logger.Dbg("Globals.setPatchRelPath(" & PatchRelPath & ")")
+        Logger.Debug("Globals.setPatchRelPath(" & PatchRelPath & ")")
         gPatchRelPath = Common.dos_path_trailing_slash(PatchRelPath)
     End Sub
 
@@ -190,7 +190,7 @@ Module Globals
     Private gPatchExportPath As String
 
     Public Sub setPatchExportPath(PatchExportPath As String)
-        Logger.Dbg("Globals.setPatchExportPath(" & PatchExportPath & ")")
+        Logger.Debug("Globals.setPatchExportPath(" & PatchExportPath & ")")
         gPatchExportPath = Common.dos_path_trailing_slash(PatchExportPath)
     End Sub
 
@@ -202,7 +202,7 @@ Module Globals
     Private gOrgCode As String
 
     Public Sub setOrgCode(OrgCode As String)
-        Logger.Dbg("Globals.setOrgCode(" & OrgCode & ")")
+        Logger.Debug("Globals.setOrgCode(" & OrgCode & ")")
         gOrgCode = OrgCode
 
     End Sub
@@ -215,7 +215,7 @@ Module Globals
     Private gOrgName As String = My.Settings.CurrentOrg
 
     Public Sub setOrgName(OrgName As String)
-        Logger.Dbg("Globals.setOrgName(" & OrgName & ")")
+        Logger.Debug("Globals.setOrgName(" & OrgName & ")")
         gOrgName = OrgName
 
         If Not String.IsNullOrEmpty(OrgName) Then
@@ -243,7 +243,7 @@ Module Globals
     Private gTNS As String
 
     Public Sub setTNS(TNS As String)
-        Logger.Dbg("Globals.setTNS(" & TNS & ")")
+        Logger.Debug("Globals.setTNS(" & TNS & ")")
         gTNS = TNS
     End Sub
 
@@ -254,7 +254,7 @@ Module Globals
     Private gCONNECT As String
 
     Public Sub setCONNECT(CONNECT As String)
-        Logger.Dbg("Globals.setCONNECT(" & CONNECT & ")")
+        Logger.Debug("Globals.setCONNECT(" & CONNECT & ")")
         gCONNECT = CONNECT
     End Sub
 
@@ -271,7 +271,7 @@ Module Globals
     Private gARMuser As String
 
     Public Sub setARMuser(ARMuser As String)
-        Logger.Dbg("Globals.setARMuser(" & ARMuser & ")")
+        Logger.Debug("Globals.setARMuser(" & ARMuser & ")")
         gARMuser = ARMuser
     End Sub
 
@@ -283,7 +283,7 @@ Module Globals
     Private gARMpword As String
 
     Public Sub setARMpword(ARMpword As String)
-        Logger.Dbg("Globals.setARMpword(" & ARMpword & ")")
+        Logger.Debug("Globals.setARMpword(" & ARMpword & ")")
         gARMpword = ARMpword
     End Sub
 
@@ -293,7 +293,7 @@ Module Globals
 
 
     Public Function getARMconnection() As String
-        Logger.Dbg("Data Source=" & Globals.getDATASOURCE & ";User Id=" & Globals.getARMuser & ";Password=" & Globals.getARMpword & ";")
+        Logger.Debug("Data Source=" & Globals.getDATASOURCE & ";User Id=" & Globals.getARMuser & ";Password=" & Globals.getARMpword & ";")
         Return "Data Source=" & Globals.getDATASOURCE & ";User Id=" & Globals.getARMuser & ";Password=" & Globals.getARMpword & ";"
     End Function
 
@@ -301,7 +301,7 @@ Module Globals
     Private gAppCode As String
 
     Public Sub setAppCode(AppCode As String)
-        Logger.Dbg("Globals.setAppCode(" & AppCode & ")")
+        Logger.Debug("Globals.setAppCode(" & AppCode & ")")
         gAppCode = AppCode
     End Sub
 
@@ -312,7 +312,7 @@ Module Globals
     Private gAppId As String
 
     Public Sub setAppId(AppId As String)
-        Logger.Dbg("Globals.setAppId(" & AppId & ")")
+        Logger.Debug("Globals.setAppId(" & AppId & ")")
         gAppId = AppId
     End Sub
 
@@ -324,7 +324,7 @@ Module Globals
     Private gJira As String
 
     Public Sub setJira(Jira As String)
-        Logger.Dbg("Globals.setJira(" & Jira & ")")
+        Logger.Debug("Globals.setJira(" & Jira & ")")
         gJira = Jira
     End Sub
 
@@ -336,7 +336,7 @@ Module Globals
     Private gSchema As String
 
     Public Sub setSchema(Schema As String)
-        Logger.Dbg("Globals.setSchema(" & Schema & ")")
+        Logger.Debug("Globals.setSchema(" & Schema & ")")
         gSchema = Schema
     End Sub
 
@@ -347,7 +347,7 @@ Module Globals
     Private gOrgInFeature As String
 
     Public Sub setOrgInFeature(OrgInFeature As String)
-        Logger.Dbg("Globals.setOrgInFeature(" & OrgInFeature & ")")
+        Logger.Debug("Globals.setOrgInFeature(" & OrgInFeature & ")")
         gOrgInFeature = OrgInFeature
     End Sub
 
@@ -358,7 +358,7 @@ Module Globals
     Private gAppInFeature As String
 
     Public Sub setAppInFeature(AppInFeature As String)
-        Logger.Dbg("Globals.setAppInFeature(" & AppInFeature & ")")
+        Logger.Debug("Globals.setAppInFeature(" & AppInFeature & ")")
         gAppInFeature = AppInFeature
     End Sub
 
@@ -456,7 +456,7 @@ Module Globals
     Private gAppName As String
 
     Public Sub setAppName(AppName As String)
-        Logger.Dbg("Globals.setAppName(" & AppName & ")")
+        Logger.Debug("Globals.setAppName(" & AppName & ")")
         gAppName = AppName
     End Sub
 
@@ -503,7 +503,7 @@ Module Globals
     Private gUsePatchAdmin As Boolean
 
     Public Sub setUsePatchAdmin(UsePatchAdmin As Boolean)
-        Logger.Dbg("Globals.setUsePatchAdmin(" & UsePatchAdmin & ")")
+        Logger.Debug("Globals.setUsePatchAdmin(" & UsePatchAdmin & ")")
         gUsePatchAdmin = UsePatchAdmin
     End Sub
 
@@ -527,7 +527,7 @@ Module Globals
         gAppCollection = New Collection
     End Sub
     Public Sub appendAppCollection(app As String)
-        Logger.Dbg("Globals.appendAppCollection(" & app & ")")
+        Logger.Debug("Globals.appendAppCollection(" & app & ")")
         gAppCollection.Add(app)
     End Sub
 

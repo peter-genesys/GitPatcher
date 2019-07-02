@@ -10,7 +10,7 @@ Public Class PatchRunner
 
     Dim hotFixTargetDBFilter As String = Nothing
 
-    Public Sub New(ByRef foundNone As Boolean, Optional ByVal iInstallStatus As String = "All", Optional ByVal iDefaultPatchType As String = "")
+    Public Sub New(ByRef foundNone As Boolean, Optional ByVal iInstallStatus As String = "All", Optional ByVal iDefaultPatchType As String = "", Optional ByVal iCloseWhenNoneFound As Boolean = True)
         InitializeComponent()
         foundNone = False
 
@@ -77,13 +77,15 @@ Public Class PatchRunner
 
 
         Me.MdiParent = GitPatcher
-        If doSearch() > 0 Then
-            Me.Show()
-            Wait()
-        Else
+        If doSearch() = 0 And iCloseWhenNoneFound Then
             foundNone = True
             Me.Close()
+        Else
+            Me.Show()
+            Wait()
         End If
+
+
 
 
     End Sub
@@ -107,7 +109,7 @@ Public Class PatchRunner
 
         lastSuccessfulPatch = OracleSQL.QueryToString("select patch_name from arm_patch where success_yn = 'Y' order by log_datetime desc", "patch_name")
 
-        Logger.Dbg(lastSuccessfulPatch)
+        Logger.Debug(lastSuccessfulPatch)
 
         Return lastSuccessfulPatch
 
@@ -116,8 +118,8 @@ Public Class PatchRunner
 
 
     Shared Function GetUnappliedAppCode(ByVal iPatchName As String) As String
-    'get the app_code from the relevant Unapplied/Unpromoted view
-        Logger.Dbg("GetUnappliedAppCode(" & iPatchName & ")")
+        'get the app_code from the relevant Unapplied/Unpromoted view
+        Logger.Debug("GetUnappliedAppCode(" & iPatchName & ")")
 
         Dim lAppCode As String = Nothing
 
@@ -137,7 +139,7 @@ Public Class PatchRunner
             lAppCode = OracleSQL.QueryToString("select app_code from ARM_UNAPPLIED_V where patch_name = '" & iPatchName & "'", "app_code")
         End If
 
-        Logger.Dbg("lAppCode=" & lAppCode)
+        Logger.Debug("lAppCode=" & lAppCode)
         Return lAppCode
 
     End Function
@@ -399,7 +401,7 @@ Public Class PatchRunner
 
 
     Private Function doSearch() As Integer
-        Logger.Dbg("Searching")
+        Logger.Debug("Searching")
 
         'Dim AvailablePatches As Collection = New Collection
 
@@ -422,11 +424,11 @@ Public Class PatchRunner
         If AvailablePatches.Count = 0 Then
             MsgBox("No " & ComboBoxPatchesFilter.SelectedItem & " patches were found.", MsgBoxStyle.Information, "No Patches Found")
         Else
-            Logger.Dbg("Filtering")
+            Logger.Debug("Filtering")
             filterPatchType(AvailablePatches)
             If AvailablePatches.Count > 0 Then
 
-                Logger.Dbg("Populate Tree")
+                Logger.Debug("Populate Tree")
 
                 'Populate the treeview, tick unapplied by default
                 'Once in the tree view patches are no longer ordered, because they are grouped in paths.
@@ -557,7 +559,7 @@ Public Class PatchRunner
             masterLoadLogs = masterLoadLogs & Environment.NewLine & "commit;"
             masterLoadLogs = masterLoadLogs & Environment.NewLine & "exit;"
 
-            Logger.Dbg(masterLoadLogs, "MasterLoadLogs script")
+            Logger.Debug(masterLoadLogs, "MasterLoadLogs script")
 
             'Use Host class to execute with a master script.
             Host.RunMasterScript(masterLoadLogs, Globals.RootPatchDir)

@@ -28,7 +28,7 @@ Public Class GitBashFascade
     End Property
 
     Private Function executeSuccess() As Boolean
-        Logger.Dbg("GitBashFascade.execute_success")
+        Logger.Debug("GitBashFascade.execute_success")
         Try
             GitBash.StartInfo = GitBashSetup
             GitBash.Start()
@@ -56,7 +56,7 @@ Public Class GitBashFascade
 
 
     Private Sub execute()
-        Logger.Dbg("GitBashFascade.execute")
+        Logger.Debug("GitBashFascade.execute")
         Dim success As Boolean = executeSuccess()
     End Sub
 
@@ -86,7 +86,7 @@ Public Class GitBashFascade
     End Sub
 
     Public Function PushSuccess(ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal iSetUpstream As Boolean = False)
-        Logger.Dbg("GitBashFascade.PushSuccess( " & iRemote & "," & iBranch & "," & iTags.ToString & ")")
+        Logger.Debug("GitBashFascade.PushSuccess( " & iRemote & "," & iBranch & "," & iTags.ToString & ")")
         Dim ltags As String = Nothing
         Dim lsetupstream As String = Nothing
 
@@ -107,7 +107,7 @@ Public Class GitBashFascade
 
 
     Public Sub Push(ByVal iRemote As String, ByVal iBranch As String, Optional ByVal iTags As Boolean = False, Optional ByVal iSetUpstream As Boolean = False)
-        Logger.Dbg("GitBashFascade.Push( " & iRemote & "," & iBranch & "," & iTags.ToString & ")")
+        Logger.Debug("GitBashFascade.Push( " & iRemote & "," & iBranch & "," & iTags.ToString & ")")
         Dim success As Boolean = PushSuccess(iRemote, iBranch, iTags)
 
     End Sub

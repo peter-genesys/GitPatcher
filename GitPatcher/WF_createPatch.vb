@@ -33,6 +33,7 @@
             Dim originalHotfixBranch As String = Globals.currentBranch
             Dim rebasedHotfixFeatureBranch As String = Replace(originalHotfixBranch, "-HF", "-RB")
             Dim lBranchType As String = Globals.currentBranchType
+            Dim shortBranch As String = Globals.currentBranch
 
             ' "Regenerate: Menu (new pages, menu changes), Security (new pages, security changes), Tapis (table or view column changes), Domains (new or changed tables or views, new domains or domain ussage changed)")
             'CHOOSE-RELEASE-BRANCH
@@ -182,7 +183,7 @@
                     Dim filename As String = Common.getLastSegment(change, "/")
                     If masterDBChanges.Contains(filename) Then
                         'Copy master merged file into patch
-                        Logger.Dbg("Update patched file " & change & " from merged database file " & masterDBChanges(filename))
+                        Logger.Debug("Update patched file " & change & " from merged database file " & masterDBChanges(filename))
                         FileIO.CopyFile(Globals.getRepoPath & masterDBChanges(filename), Globals.getRepoPath & change)
                         commonChanges.Add(change, filename)
                     End If
@@ -211,7 +212,7 @@
             If createPatchProgress.toDoNextStep() Then
                 'User chooses to commit, but don't bother unless the checkout is also dirty (meaning there is at least 1 staged or unstaged change)
                 If GitOp.IsDirty() Then
-                    Logger.Dbg("User chose to commit and the checkout is also dirty")
+                    Logger.Debug("User chose to commit and the checkout is also dirty")
 
                     'Committing changed files to GIT
                     'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
@@ -223,7 +224,7 @@
                 'User chooses to NOT to commit, but commit anyway if there is at least 1 staged change
                 'Committing changed files to GIT"
                 If GitOp.ChangedFiles() > 0 Then
-                    Logger.Dbg("User chose NOT to commit but the checkout has staged changes")
+                    Logger.Debug("User chose NOT to commit but the checkout has staged changes")
 
                     MsgBox("Files have been changed. Please commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
                     Tortoise.Commit(Globals.getRepoPath, lCommitComment, True)
@@ -616,7 +617,7 @@
                     Dim filename As String = Common.getLastSegment(filepath, "\")
                     If hotfixDBChanges.Contains(filename) And filename <> "install.sql" And filename <> "install_lite.sql" Then
                         'Copy current source file into patch
-                        Logger.Dbg("Update patched file " & filepath & " from current database source file " & hotfixDBChanges(filename))
+                        Logger.Debug("Update patched file " & filepath & " from current database source file " & hotfixDBChanges(filename))
                         FileIO.CopyFile(Globals.getRepoPath & hotfixDBChanges(filename), Globals.RootPatchDir & filepath)
                         updatedFiles.Add(filepath, filename)
                     End If
@@ -743,7 +744,7 @@
             If createVersion.toDoNextStep() Then
                 'User chooses to commit, but don't bother unless the checkout is also dirty (meaning there is at least 1 staged or unstaged change)
                 If GitOp.IsDirty() Then
-                    Logger.Dbg("User chose to commit and the checkout is also dirty")
+                    Logger.Debug("User chose to commit and the checkout is also dirty")
 
                     'Committing changed files to GIT
                     'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
@@ -755,7 +756,7 @@
                 'User chooses to NOT to commit, but commit anyway if there is at least 1 staged change
                 'Committing changed files to GIT"
                 If GitOp.ChangedFiles() > 0 Then
-                    Logger.Dbg("User chose NOT to commit but the checkout has staged changes")
+                    Logger.Debug("User chose NOT to commit but the checkout has staged changes")
 
                     MsgBox("Files have been changed. Please commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
                     Tortoise.Commit(Globals.getRepoPath, "Commit any patches, or changes made while patching, that you've not yet committed", True)

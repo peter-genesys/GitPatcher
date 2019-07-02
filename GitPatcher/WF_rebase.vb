@@ -220,7 +220,7 @@ Friend Class WF_rebase
             If rebasing.toDoNextStep() Then
                 'User chooses to commit, but don't bother unless the checkout is also dirty (meaning there is at least 1 staged or unstaged change)
                 If GitOp.IsDirty() Then
-                    Logger.Dbg("User chose to commit and the checkout is also dirty")
+                    Logger.Debug("User chose to commit and the checkout is also dirty")
 
                     'Committing changed files to GIT
                     'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
@@ -232,7 +232,7 @@ Friend Class WF_rebase
                 'User chooses to NOT to commit, but commit anyway if there is at least 1 staged change
                 'Committing changed files to GIT"
                 If GitOp.ChangedFiles() > 0 Then
-                    Logger.Dbg("User chose NOT to commit but the checkout has staged changes")
+                    Logger.Debug("User chose NOT to commit but the checkout has staged changes")
 
                     MsgBox("Files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
                     '"Commit or Revert to ensure the current branch [" & currentBranchShort & "] contains no uncommitted changes."
@@ -247,7 +247,7 @@ Friend Class WF_rebase
             If rebasing.toDoNextStep() Then
                 'User chooses to StashSave, but don't bother unless the checkout is also dirty (meaning there is at least 1 staged or unstaged change)
                 If GitOp.IsDirty() Then
-                    Logger.Dbg("User chose to commit and the checkout is also dirty")
+                    Logger.Debug("User chose to commit and the checkout is also dirty")
 
                     'StashSave changes
                     'MsgBox("Checkout is dirty, files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout is dirty")
@@ -260,7 +260,7 @@ Friend Class WF_rebase
                 'User chooses to NOT to StashSave, but commit anyway if there is at least 1 staged change
                 'Committing changed files to GIT"
                 If GitOp.ChangedFiles() > 0 Then
-                    Logger.Dbg("User chose NOT to commit but the checkout has staged changes")
+                    Logger.Debug("User chose NOT to commit but the checkout has staged changes")
 
                     MsgBox("Files have been changed. Please stash, commit or revert changes before proceding", MsgBoxStyle.Exclamation, "Checkout has changes")
                     Tortoise.StashSave(Globals.getRepoPath, "Stash Save to ensure the current branch [" & currentBranchShort & "] contains no staged changes.", True)

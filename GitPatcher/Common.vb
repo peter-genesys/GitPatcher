@@ -268,7 +268,7 @@
             Dim l_command_filename As String = "C:\PROGRA~1\7-Zip\7z.exe"
             Dim l_path As String = Nothing
             Dim l_arguments As String = " a " & i_zip_file & " " & i_zip_dir
-            Logger.Dbg(l_arguments)
+            Logger.Debug(l_arguments)
             Dim l_workingDir As String = Nothing
 
             Host.run_shell(l_command_filename, l_path, l_arguments, l_workingDir)
@@ -292,7 +292,7 @@
             Dim l_command_filename As String = "C:\PROGRA~1\7-Zip\7z.exe"
             Dim l_path As String = Nothing
             Dim l_arguments As String = " x " & i_zip_file & " -o" & i_tag_dir
-            Logger.Dbg(l_arguments)
+            Logger.Debug(l_arguments)
             Dim l_workingDir As String = Nothing
 
             Host.run_shell(l_command_filename, l_path, l_arguments, l_workingDir)

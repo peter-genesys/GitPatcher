@@ -344,7 +344,7 @@ Public Class GitOp
                 'MsgBox(ex.Message)
                 'MsgBox("Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted.")
                 If cleanupTags Then
-                    Logger.Dbg("Bad tag found: " & thisTag.FriendlyName)
+                    Logger.Debug("Bad tag found: " & thisTag.FriendlyName)
                     Dim result As Integer = MessageBox.Show(ex.Message & Environment.NewLine &
                                                         "Problem with formatting of tagname: " & thisTag.FriendlyName & "  This tag may need to be deleted." & Environment.NewLine & Environment.NewLine &
                                                         "Confirm delete of tag " & thisTag.FriendlyName, "Confirm Target", MessageBoxButtons.OKCancel)
@@ -352,7 +352,7 @@ Public Class GitOp
                         GitOp.deleteTag(thisTag.FriendlyName)
                     End If
                 Else
-                    Logger.Dbg("Bad tag ignored: " & thisTag.FriendlyName)
+                    Logger.Debug("Bad tag ignored: " & thisTag.FriendlyName)
                 End If
 
 
@@ -399,7 +399,7 @@ Public Class GitOp
             Return Globals.getRepo.Head.FriendlyName
         Catch
             MsgBox("Cannot determine current branch")
-            Logger.Dbg(Globals.getRepo.ToString)
+            Logger.Debug(Globals.getRepo.ToString)
             Return "Oops"
         End Try
 
@@ -665,7 +665,7 @@ Public Class GitOp
         Try
 
             Globals.getRepo.Tags.Remove(tagName)
-            Logger.Dbg("Tag " & tagName & " deleted.")
+            Logger.Debug("Tag " & tagName & " deleted.")
 
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -688,7 +688,7 @@ Public Class GitOp
         Catch ex As LibGit2SharpException
 
             If Not force Then
-                Logger.Dbg(ex.Message)
+                Logger.Debug(ex.Message)
                 'Confirm move of tag
                 Dim result As Integer = MessageBox.Show("Update existing Tag " & tagName &
                     Chr(10) & "The tag will be moved to the head of the current branch " & Globals.currentBranch & ".", "Confirm Tag Update", MessageBoxButtons.OKCancel)
@@ -722,7 +722,7 @@ Public Class GitOp
         Catch ex As LibGit2SharpException
 
             If Not force Then
-                Logger.Dbg(ex.Message)
+                Logger.Debug(ex.Message)
                 'Confirm move of tag
                 Dim result As Integer = MessageBox.Show("Update existing Tag " & tagName &
                     Chr(10) & "The tag will be moved to the SHA " & tagSHA & ".", "Confirm Tag Update", MessageBoxButtons.OKCancel)
@@ -747,7 +747,7 @@ Public Class GitOp
 
 
     Shared Sub pushBranch(ByVal ibranch_name As String, Optional ByVal iremote_name As String = "origin", Optional ByVal iSetUpstream As Boolean = False)
-        Logger.Dbg("GitOp.pushBranch(" & ibranch_name & "," & iremote_name & ")")
+        Logger.Debug("GitOp.pushBranch(" & ibranch_name & "," & iremote_name & ")")
 
         Dim theSetting As String = My.Settings.PushTool
         Dim ToolName As String = "PushTool"
@@ -813,7 +813,7 @@ Public Class GitOp
 
     Shared Sub pushCurrentBranch(Optional ByVal iremote_name As String = "origin", Optional ByVal iSetUpstream As Boolean = False)
         'push current branch
-        Logger.Dbg("GitOp.pushCurrentBranch")
+        Logger.Debug("GitOp.pushCurrentBranch")
         pushBranch(CurrentFriendlyBranch, iremote_name, iSetUpstream)
 
     End Sub
@@ -919,7 +919,7 @@ Public Class GitOp
 
 
     Shared Sub pullWhenMasterBranch()
-        Logger.Dbg("pullWhenMasterBranch is disabled")
+        Logger.Debug("pullWhenMasterBranch is disabled")
         'pull current branch - but only when it is master, or at least does not contain feature
         ' If CurrentBranch() = "master" Or Not CurrentBranch().Contains("feature") Then
         ' Logger.Dbg("Pulling " & CurrentBranch())
@@ -1292,7 +1292,7 @@ Public Class GitOp
 
         Dim repoStatus As RepositoryStatus = Globals.getRepo.RetrieveStatus()
 
-        Logger.Dbg("repoStatus.IsDirty " & repoStatus.IsDirty.ToString)
+        Logger.Debug("repoStatus.IsDirty " & repoStatus.IsDirty.ToString)
 
         Return repoStatus.IsDirty
 
@@ -1306,13 +1306,13 @@ Public Class GitOp
 
     Public Shared Function ChangedFiles() As Integer
 
-        Logger.Dbg("Globals.getRepoPath " & Globals.getRepoPath)
+        Logger.Debug("Globals.getRepoPath " & Globals.getRepoPath)
         Dim repoStatus As RepositoryStatus = Globals.getRepo.RetrieveStatus()
-        Logger.Dbg("repoStatus.Missing.Count " & repoStatus.Missing.Count)
-        Logger.Dbg("repoStatus.Removed.Count " & repoStatus.Removed.Count)
-        Logger.Dbg("repoStatus.Modified.Count " & repoStatus.Modified.Count)
-        Logger.Dbg("repoStatus.Added.Count " & repoStatus.Added.Count)
-        Logger.Dbg("repoStatus.Staged.Count " & repoStatus.Staged.Count)
+        Logger.Debug("repoStatus.Missing.Count " & repoStatus.Missing.Count)
+        Logger.Debug("repoStatus.Removed.Count " & repoStatus.Removed.Count)
+        Logger.Debug("repoStatus.Modified.Count " & repoStatus.Modified.Count)
+        Logger.Debug("repoStatus.Added.Count " & repoStatus.Added.Count)
+        Logger.Debug("repoStatus.Staged.Count " & repoStatus.Staged.Count)
         Dim changedFilesCount As Integer = repoStatus.Missing.Count + repoStatus.Modified.Count + repoStatus.Removed.Count + repoStatus.Added.Count + repoStatus.Staged.Count
 
         Return changedFilesCount

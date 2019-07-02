@@ -113,7 +113,7 @@
 
 
     Public Sub loadHotFixComboBoxDBs()
-        Logger.Dbg("Main.loadHotFixComboBoxDBs")
+        Logger.Debug("Main.loadHotFixComboBoxDBs")
         HotFixToolStripComboBox.Items.Clear()
 
         HotFixToolStripComboBox.Items.Add("PROD")
@@ -166,7 +166,7 @@
 
 
     Private Sub showRepoSettings()
-        Logger.Dbg("Main.showRepoSettings")
+        Logger.Debug("Main.showRepoSettings")
         RepoSettings.checkRepo(Globals.getRepoName)
         RepoPathTextBox.Text = Globals.getRepoPath()
 
@@ -187,7 +187,7 @@
 
     Public Sub loadRepos()
 
-        Logger.Dbg("Main.loadRepos")
+        Logger.Debug("Main.loadRepos")
         RepoSettings.readGitRepos(RepoComboBox, My.Settings.CurrentRepo)
         'showRepoSettings()
 
@@ -398,19 +398,19 @@
     'Private Sub RebaseFeatureToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebaseFeatureToolStripMenuItem.Click
     '    WF_rebase.rebaseBranch("feature", "DEV", Globals.deriveHotfixBranch("DEV"), False, True, True)
     'End Sub
-    Private Sub ReleaseToISDEVLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToDEVMenuItem.Click
+    Private Sub ReleaseToDEVMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToDEVMenuItem.Click
         WF_release.releaseTo("DEV", "master", "feature", True)
     End Sub
 
-    Private Sub ReleaseToISTESTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToTESTMenuItem.Click
+    Private Sub ReleaseToTESTMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToTESTMenuItem.Click
         WF_release.releaseTo("TEST", "master", "feature", True)
     End Sub
 
-    Private Sub ReleaseToISUATToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToUATMenuItem.Click
-        WF_release.releaseTo("UAT", "release", "release", True)
+    Private Sub ReleaseToUATMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToUATMenuItem.Click
+        WF_release.releaseTo("UAT", "release", "release", True, "Uninstalled")
     End Sub
 
-    Private Sub ReleaseToISPRODToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToPRODMenuItem.Click
+    Private Sub ReleaseToPRODMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToPRODMenuItem.Click
         WF_release.releaseTo("PROD", "release", "release", True)
     End Sub
 
@@ -651,7 +651,7 @@
         displayVBoxName()
     End Sub
 
-    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ReleaseToVMMenuItem.Click
+    Private Sub ReleaseToVMMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseToVMMenuItem.Click
         WF_release.releaseTo("VM", "master", "feature", True)
     End Sub
 

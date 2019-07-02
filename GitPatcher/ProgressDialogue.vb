@@ -182,7 +182,7 @@
             End If
 
         Catch ex As System.IndexOutOfRangeException
-            Logger.Dbg("Steps completed.")
+            Logger.Debug("Steps completed.")
             Logger.Note("activeStep", activeStep)
             Return False
 

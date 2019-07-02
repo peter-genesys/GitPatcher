@@ -115,12 +115,12 @@ Public Class PatchFromTags
 
                 If PatchTabControl.TabPages.Contains(TabPageTags) Then
                     'Tags
-                    Logger.Dbg("Load schemas from Tags")
+                    Logger.Debug("Load schemas from Tags")
 
                     GitOp.setCommitsFromTags(Tag1TextBox.Text, Tag2TextBox.Text)
 
                 Else
-                    Logger.Dbg("Load schemas from SHA1s")
+                    Logger.Debug("Load schemas from SHA1s")
 
                     GitOp.setCommitsFromSHA(SHA1TextBox1.Text, SHA1TextBox2.Text)
 
@@ -160,10 +160,10 @@ Public Class PatchFromTags
                     CreateObject("WScript.Shell").Popup("There are changes across " & SchemaComboBox.Items.Count.ToString & " schemas.", 0.5, "Multiple Schemas")
 
                     'MsgBox("There are changes across " & SchemaComboBox.Items.Count.ToString & " schemas.")
-                    Logger.Dbg("Multiple schemas")
+                    Logger.Debug("Multiple schemas")
                 End If
             Catch ex As Exception
-                Logger.Dbg(ex.Message)
+                Logger.Debug(ex.Message)
                 MsgBox("Unable to find Changes" & vbCrLf & ex.Message)
             End Try
 
@@ -219,7 +219,7 @@ Public Class PatchFromTags
                     FileIO.CopyFileToDir(FilePath, patch_dir)
                     filenames.Add(Filename)
                 Catch ex As Exception
-                    Logger.Dbg(ex.Message)
+                    Logger.Debug(ex.Message)
                     MsgBox("Warning: File " & FilePath & " could not be exported, but will be in the install file.  It may be a folder.  Deselect, then recreate Patch.")
 
                 End Try
@@ -346,7 +346,7 @@ Public Class PatchFromTags
 
             Host.RunExplorer(PatchDirTextBox.Text)
         Catch ex As ArgumentException
-            Logger.Dbg(ex.Message)
+            Logger.Debug(ex.Message)
             MsgBox("There are duplicated filenames in the patch.  You may have selected an Extra File that is already in the Patch.")
 
         End Try
@@ -627,7 +627,7 @@ Public Class PatchFromTags
 
 
             For Each App In queueApexApps
-                Logger.Dbg("Enqueue " & App.ToString)
+                Logger.Debug("Enqueue " & App.ToString)
                 Dim l_parsing_schema As String = Common.getNthSegment(App, "/", 1)        '1st componant
                 Dim l_app_id As String = Common.getNthSegment(App, "/", 2).TrimStart("f") '2nd componant, and trim off the "f"
 
@@ -1163,7 +1163,7 @@ Public Class PatchFromTags
     End Sub
 
     Private Sub deriveTags()
-        Logger.Dbg("deriveTags")
+        Logger.Debug("deriveTags")
 
         If TagsCheckedListBox.CheckedItems.Count > 0 Then
             Tag1TextBox.Text = TagsCheckedListBox.CheckedItems.Item(0)
@@ -1205,7 +1205,7 @@ Public Class PatchFromTags
 
         'Extra commit, if there are still changed files
         If GitOp.ChangedFiles() > 0 Then
-            Logger.Dbg("Changes still exist, so offer to commit them.")
+            Logger.Debug("Changes still exist, so offer to commit them.")
             Tortoise.Commit(lSchemaDir, "FIXED For: " & PatchNameTextBox.Text & " - " & PatchDescTextBox.Text, True)
         End If
 
@@ -1246,10 +1246,10 @@ Public Class PatchFromTags
                 Next
             End If
         Catch ex As UnauthorizedAccessException
-            Logger.Dbg(ex.Message)
+            Logger.Debug(ex.Message)
             parentNode.Nodes.Add(folder & ": Access Denied")
         Catch ex As System.IO.DirectoryNotFoundException
-            Logger.Dbg(ex.Message)
+            Logger.Debug(ex.Message)
             parentNode.Nodes.Add(dir & ": Path Not Found")
         End Try
     End Sub
@@ -1287,11 +1287,11 @@ Public Class PatchFromTags
             Dim patch_component As String = Common.getLastSegment(change.ToString(), "/")
             Dim LastPatch As String = PatchRunner.FindLastPatch(patch_component)
             If String.IsNullOrEmpty(LastPatch) Then
-                Logger.Dbg("No previous patch for Change: " & patch_component)
+                Logger.Debug("No previous patch for Change: " & patch_component)
             ElseIf LastPatch = "TIMEOUT" Then
                 Exit Sub
             Else
-                Logger.Dbg("Change: " & patch_component & " LastPatch: " & LastPatch)
+                Logger.Debug("Change: " & patch_component & " LastPatch: " & LastPatch)
                 Dim l_found As Boolean = False
                 PreReqPatchesTreeViewA.TickNode(LastPatch, l_found)
 
@@ -1401,7 +1401,7 @@ Public Class PatchFromTags
         Try
             FileIO.CopyFile(Globals.RootPatchDir & "README.txt", l_patchExportDir & "\README.txt")
         Catch ex As Exception
-            Logger.Dbg(ex.Message)
+            Logger.Debug(ex.Message)
             MsgBox("No README.txt found, to copy to the patchset.")
 
         End Try
@@ -1531,7 +1531,7 @@ Public Class PatchFromTags
             MsgBox("Please select a Tag first.", MsgBoxStyle.Information, "No Tag Selected")
 
         Else
-            Logger.Dbg(TagsCheckedListBox.SelectedItem)
+            Logger.Debug(TagsCheckedListBox.SelectedItem)
 
             GitOp.createTagHead(TagsCheckedListBox.SelectedItem)
 
@@ -1545,7 +1545,7 @@ Public Class PatchFromTags
             MsgBox("Please select a Tag first.", MsgBoxStyle.Information, "No Tag Selected")
 
         Else
-            Logger.Dbg(TagsCheckedListBox.SelectedItem)
+            Logger.Debug(TagsCheckedListBox.SelectedItem)
 
 
             Tortoise.Log(Globals.getRepoPath, False) 'do not wait.

@@ -84,7 +84,7 @@ Public Class OracleSQL
 
         End Try
 
-        Logger.Dbg(result.Count & " records found.")
+        Logger.Debug(result.Count & " records found.")
 
         Cursor.Current = cursorRevert
 

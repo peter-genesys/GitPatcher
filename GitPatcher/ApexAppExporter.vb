@@ -45,7 +45,7 @@ Public Class ApexAppExporter
         End If
 
         foundApps = availableApps
-        Logger.Dbg(foundApps.Count & " Apps found.")
+        Logger.Debug(foundApps.Count & " Apps found.")
 
         If foundApps.Count = 0 Then
             MsgBox("No Apex Apps found in Apex Dir " & Globals.RootApexDir, MsgBoxStyle.Information, "No Apps found")
@@ -58,23 +58,23 @@ Public Class ApexAppExporter
 
 
     Private Sub DoSearch(iRestrict As Boolean)
-        Logger.Dbg("Searching")
+        Logger.Debug("Searching")
 
         Dim AvailableApps As Collection = New Collection
 
         If iRestrict Then
-            Logger.Dbg("look for apps in checkout")
+            Logger.Debug("look for apps in checkout")
             FindApps(AvailableApps)             'look for apps in checkout - limited to this repo
         Else
-            Logger.Dbg("look for apps in workspaces")
+            Logger.Debug("look for apps in workspaces")
             AvailableApps = OracleSQL.GetApps() 'look for apps in DB       - any apps from any repo
         End If
 
-        Logger.Dbg("Populate Tree")
+        Logger.Debug("Populate Tree")
         KnownAppsTreeView.populateTreeFromCollection(AvailableApps, False)
 
         'Get a list of modified apps
-        Logger.Dbg("look for modified apps in workspaces")
+        Logger.Debug("look for modified apps in workspaces")
         Dim modifiedApps As Collection = OracleSQL.GetModifiedApps()
 
         'Tick the modified apps in the treeview

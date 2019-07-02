@@ -4,8 +4,7 @@
         Return GitPatcher.LoggingToolStripMenuItem.Checked
     End Function
 
-
-    Shared Sub Dbg(ByVal iString As String, Optional ByVal iTitle As String = "Debug")
+    Shared Sub Debug(ByVal iString As String, Optional ByVal iTitle As String = "Debug")
         If Not String.IsNullOrEmpty(iString) Then
             'Debug.WriteLine(iString)
             Console.WriteLine(iString)  'Write logging to console - which may be redirected to the LogViewer.
@@ -17,11 +16,11 @@
     End Sub
 
     Shared Sub Note(ByVal iName As String, ByVal iValue As String, Optional ByVal iTitle As String = "Note")
-        Dbg(iName & ":" & iValue, iTitle)
+        Debug(iName & ":" & iValue, iTitle)
     End Sub
 
     Shared Sub ShowError(ByVal iString As String, Optional ByVal iTitle As String = "Error")
-        Dbg(iString, iTitle)
+        Debug(iString, iTitle)
     End Sub
 
 

@@ -45,7 +45,7 @@
 
     Shared Function fileExists(ByVal i_path) As Boolean
 
-        Logger.Dbg("fileExists(" & i_path & ")")
+        Logger.Debug("fileExists(" & i_path & ")")
 
         ' Create the File System Object
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
@@ -57,7 +57,7 @@
     End Function
 
     Shared Function folderExists(ByVal i_path) As Boolean
-        Logger.Dbg("folderExists(" & i_path & ")")
+        Logger.Debug("folderExists(" & i_path & ")")
 
         ' Create the File System Object
         Dim objFSO = CreateObject("Scripting.FileSystemObject")
@@ -289,7 +289,7 @@
     Public Shared Function FolderList(ByVal strPath As String, ByVal strPattern As String, ByVal removePath As String, Optional ByVal popKey As Boolean = False) As Collection
 
 
-        Logger.Dbg("FileIO.FolderList")
+        Logger.Debug("FileIO.FolderList")
         Logger.Note("strPath", strPath)
         Logger.Note("strPattern", strPattern)
         Logger.Note("removePath", removePath)
@@ -357,7 +357,7 @@
         Dim l_dos_text As String = l_dos_file.ReadToEnd
         l_dos_file.Close()
         'Delete the dos file
-        Logger.Dbg("Delete dos file: " & lfilename)
+        Logger.Debug("Delete dos file: " & lfilename)
         System.IO.File.Delete(lfilename)
 
         'Convert to unix and add an extra EOL
@@ -373,9 +373,9 @@
     'Not currently used, - but good generic routine, that may come in handy
     'Now used by hotfix rebase.
     Public Shared Sub ReplaceWithinFile(ByVal i_filename As String, ByVal i_label As String, ByVal i_value As String)
-        Logger.Dbg("i_filename: " & i_filename)
-        Logger.Dbg("i_label: " & i_label)
-        Logger.Dbg("i_value: " & i_value)
+        Logger.Debug("i_filename: " & i_filename)
+        Logger.Debug("i_label: " & i_label)
+        Logger.Debug("i_value: " & i_value)
 
         Dim lfilename As String = Common.dos_path(i_filename)
 
@@ -384,7 +384,7 @@
         Dim l_orig_text As String = l_orig_file.ReadToEnd
         l_orig_file.Close()
         'Delete the original file
-        Logger.Dbg("Delete orig file: " & lfilename)
+        Logger.Debug("Delete orig file: " & lfilename)
         System.IO.File.Delete(lfilename)
 
         'Create the replacement text for the replacement file 
@@ -399,9 +399,9 @@
     'Not currently used, - but good generic routine, that may come in handy
     Public Sub ReplaceWithinFilesRecursive(ByVal i_dir As String, ByVal i_label As String, ByVal i_value As String)
 
-        Logger.Dbg("i_dir: " & i_dir)
-        Logger.Dbg("i_label: " & i_label)
-        Logger.Dbg("i_value: " & i_value)
+        Logger.Debug("i_dir: " & i_dir)
+        Logger.Debug("i_label: " & i_label)
+        Logger.Debug("i_value: " & i_value)
 
         Dim objfso = CreateObject("Scripting.FileSystemObject")
         Dim objFolder As Object
@@ -424,17 +424,17 @@
     End Sub
 
     Public Shared Sub CopyDir(ifrompath As String, itopath As String)
-        Logger.Dbg("CopyDir frompath " & Common.dos_path(ifrompath) & " topath " & Common.dos_path(itopath))
+        Logger.Debug("CopyDir frompath " & Common.dos_path(ifrompath) & " topath " & Common.dos_path(itopath))
         My.Computer.FileSystem.CopyDirectory(Common.dos_path(ifrompath), Common.dos_path(itopath), True)
     End Sub
 
     Public Shared Sub CopyFile(ifrompath As String, itopath As String)
-        Logger.Dbg("CopyFile frompath " & Common.dos_path(ifrompath) & " topath " & Common.dos_path(itopath))
+        Logger.Debug("CopyFile frompath " & Common.dos_path(ifrompath) & " topath " & Common.dos_path(itopath))
         My.Computer.FileSystem.CopyFile(Common.dos_path(ifrompath), Common.dos_path(itopath), True)
     End Sub
 
     Public Shared Sub CopyFileToDir(ifrompath As String, itodir As String)
-        Logger.Dbg("CopyFileToDir frompath " & Common.dos_path(ifrompath) & " todir " & itodir)
+        Logger.Debug("CopyFileToDir frompath " & Common.dos_path(ifrompath) & " todir " & itodir)
         Dim Filename As String = Common.getLastSegment(Common.dos_path(ifrompath), "\")
 
         CopyFile(ifrompath, itodir & "\" & Filename)

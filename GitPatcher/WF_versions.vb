@@ -231,9 +231,13 @@
 
 
 
-    Shared Sub createVersionRelease(ByVal iVersionType As String, ByVal iTargetDB As String, ByVal useReleasesBranch As Boolean)
+    Shared Sub createVersionRelease(ByVal iVersionType As String, ByVal iTargetDB As String)
 
-        Dim currentBranch As String = GitOp.CurrentFriendlyBranch()
+        Logger.Debug("createVersionRelease")
+        Logger.Note("iVersionType", iVersionType)
+        Logger.Note("iTargetDB", iTargetDB)
+
+        Dim currentBranch As String = Globals.currentLongBranch()
         Dim lcurrentDB As String = Globals.getDB
         Dim lAppVersion As String = Nothing
         Dim newReleaseBranch As String = "release"
@@ -251,14 +255,21 @@
         'PREPARE BRANCH - 7 steps
         '-------------------
 
+
+        'SET DB TARGET
+        VersionRelease.addStep("Change current DB to : " & iTargetDB, lcurrentDB <> iTargetDB)
+
         'IDENTIFY-LAST-RELEASE-BRANCH
         VersionRelease.addStep("Identify the Last Release branch", True, "Identify the release branch.", iVersionType <> "Patch")
 
         'PULL-LAST-RELEASE-BRANCH
-        VersionRelease.addStep("Pull the Last Release branch", False, "Switch to the Last Release branch and Pull", iVersionType <> "Patch")
+        'VersionRelease.addStep("Pull the Last Release branch", False, "Switch to the Last Release branch and Pull", iVersionType <> "Patch")
+
+        'SUBFLOW:RELEASE-LAST-VERSION
+        VersionRelease.addStep("Release versions from last Release branch", True, "Release versions from last Release branch", iVersionType <> "Patch")
 
         'PULL-MASTER-BRANCH
-        VersionRelease.addStep("Pull the master branch", False, "Switch to the master branch and Pull", iVersionType <> "Patch")
+        VersionRelease.addStep("Pull the master branch", True, "Switch to the master branch and Pull", iVersionType <> "Patch")
 
         'SWITCH-TO-MASTER-RELEASE-CANDIDATE
         VersionRelease.addStep("Switch to the master release candidate", True,
@@ -273,28 +284,6 @@
         VersionRelease.addStep("Push the new release Branch", True, "Ensure new release Branch exists, before building patch, so that other developers can see.", iVersionType <> "Patch")
 
 
-        ''TAG-A
-        'MajorMinorVersion.addStep("Tag previous release HEAD with Tag A", True)
-
-
-        ''BRANCH-TO-NEW-RELEASE
-        'MajorMinorVersion.addStep("Create and Switch to new release Branch", True, "")
-        ''LGIT - automatic.
-
-
-
-        ''MERGE(NOFF)-FROM-MASTER-CHOOSE-SHA
-        'MajorMinorVersion.addStep("Merge some commit from the master branch history", True,
-        '                          "Please choose the HEAD or some other commit on the master branch that includes all patches to be included in the version release.")
-        ''TGIT - Let user choose any commit, but should be a commit from the master branch, and usually a merge commit of a feature branch.
-
-        ''TAG-B
-        'MajorMinorVersion.addStep("Tag new release HEAD with Tag B", True)
-
-        ''PUSH-NEW-RELEASE
-        'MajorMinorVersion.addStep("Push the new release Branch", True, "Ensure new release Branch exists, before building patch, so that other developers can see.")
-
-
         '-------------------
         'PATCH-VERSION-RELEASE  - 2 steps
         '-------------------
@@ -302,14 +291,16 @@
         VersionRelease.addStep("Choose Patch Version Release Branch", True, "Choose the Patch Version Release to be built.", iVersionType = "Patch")
 
         'PULL-PATCH-VERSION-RELEASE
-        VersionRelease.addStep("Pull the Patch Version Release branch", True, "Switch to the Patch Version Release branch and Pull", iVersionType = "Patch")
+        'VersionRelease.addStep("Pull the Patch Version Release branch", True, "Switch to the Patch Version Release branch and Pull", iVersionType = "Patch")
+
+        'SUBFLOW:RELEASE-NEW-VERSION
+        VersionRelease.addStep("Release versions from new Release branch", True, "Release versions from new Release branch", iVersionType = "Patch")
+
 
         '-------------------
-        'CREATE PATCH  - 3 steps
+        'CREATE PATCH  - 2 steps
         '-------------------
 
-        'SET DB TARGET
-        VersionRelease.addStep("Change current DB to : " & iTargetDB, lcurrentDB <> iTargetDB)
 
         'CREATE RELEASE PATCH WIZARD
         VersionRelease.addStep("Build " & iVersionType & " Version Release", True, "Select Patches" &
@@ -341,8 +332,18 @@
             Dim lastReleaseBranch As String = Nothing
             Dim lAppCode As String = Globals.currentAppCode
 
+            'SET-DB-TARGET
+            If VersionRelease.toDoNextStep() Then
+                Logger.Debug("SET-DB-TARGET")
+                'Change current DB to release DB
+                Globals.setDB(iTargetDB.ToUpper)
+
+            End If
+
+
             'IDENTIFY-LAST-RELEASE-BRANCH
             If VersionRelease.toDoNextStep() Then
+                Logger.Debug("IDENTIFY-LAST-RELEASE-BRANCH")
 
                 Dim appCodeList As Collection = GitOp.getReleaseAppCodeList()
 
@@ -364,34 +365,27 @@
 
             End If
 
-            'CHOOSE-PATCH-VERSION-RELEASE
+
+            ''PULL-LAST-RELEASE-BRANCH
+            'If VersionRelease.toDoNextStep() Then
+            '    Logger.Debug("PULL-LAST-RELEASE-BRANCH")
+            '    'Switch to master branch
+            '    GitOp.SwitchBranch(lastReleaseBranch)
+            '    'Pull from origin/master
+            '    GitOp.pullBranch(lastReleaseBranch)
+            'End If
+
+
+            'SUBFLOW:RELEASE-LAST-VERSION
             If VersionRelease.toDoNextStep() Then
-
-                Dim appCodeList As Collection = GitOp.getReleaseAppCodeList()
-
-                lAppCode = ChoiceDialog.Ask("Please choose the app to be released.", appCodeList, lAppCode, "Identify the app", True, False, False)
-
-                Dim releaseBranches As Collection = GitOp.getPatchVersionReleaseList(lAppCode)
-
-                newReleaseBranch = ChoiceDialog.Ask("Please identify the Patch Version Release to be built.",
-                                                  releaseBranches, "", "Choose existing Patch Version Release branch", False, False, False, releaseBranches.Count - 1)
-
-
-            End If
-
-
-            'PULL-LAST-RELEASE-BRANCH
-            If VersionRelease.toDoNextStep() Then
-                'Switch to master branch
-                GitOp.SwitchBranch(lastReleaseBranch)
-                'Pull from origin/master
-                GitOp.pullBranch(lastReleaseBranch)
+                WF_release.releaseTo(iTargetDB, lastReleaseBranch, "release", True)
             End If
 
 
 
             'PULL-MASTER-BRANCH
             If VersionRelease.toDoNextStep() Then
+                Logger.Debug("PULL-MASTER-BRANCH")
                 'Switch to master branch
                 GitOp.SwitchBranch("master")
                 'Pull from origin/master
@@ -401,12 +395,14 @@
 
             'SWITCH-TO-MASTER-RELEASE-CANDIDATE
             If VersionRelease.toDoNextStep() Then
+                Logger.Debug("SWITCH-TO-MASTER-RELEASE-CANDIDATE")
                 'Switch to candidate commit
                 Tortoise.Switch(Globals.getRepoPath)
             End If
 
             'BRANCH-TO-NEW-RELEASE
             If VersionRelease.toDoNextStep() Then
+                Logger.Debug("BRANCH-TO-NEW-RELEASE")
                 'Create and Switch to new release branch
                 GitOp.createAndSwitchBranch(newReleaseBranch)
             End If
@@ -415,167 +411,12 @@
 
             'PUSH-NEW-RELEASE
             If VersionRelease.toDoNextStep() Then
+                Logger.Debug("PUSH-NEW-RELEASE")
                 'Push release to origin with tags
                 'GitOp.pushBranch(newReleaseBranch)
                 GitOp.pushCurrentBranch()
             End If
 
-
-
-            ''SWITCH-TO-LAST-RELEASE
-            'If MajorMinorVersion.toDoNextStep() Then
-            '    'Switch to last release branch
-            '    Tortoise.Switch(Globals.getRepoPath)
-            'End If
-
-            ''PULL-LAST-RELEASE
-            'If MajorMinorVersion.toDoNextStep() Then
-            '    'Pull 
-            '    GitOp.pullBranch("") 'LGIT does not use the branch param. BGIT does.
-            'End If
-
-            ''DERIVE-NEXT-MAJOR/MINOR-VERSION 
-            'If MajorMinorVersion.toDoNextStep() Then
-
-            '    Dim lastReleaseBranch As String = GitOp.CurrentBranch()
-
-            '    Dim lrelease As String = Common.getFirstSegment(lastReleaseBranch, "/")
-            '    If lrelease <> "release" Then
-            '        Throw New System.Exception("Current branch is NOT a release branch: " & lastReleaseBranch & "  Aborting Operation.")
-            '    End If
-
-            '    Dim lAppCode As String = Common.getNthSegment(lastReleaseBranch, "/", 2)
-
-            '    Dim lLastReleaseId As String = Common.getLastSegment(lastReleaseBranch, "/")
-
-            '    Dim lMajorId As Integer
-            '    Try
-            '        lMajorId = Common.getFirstSegment(Replace(lLastReleaseId, lAppCode & "-", ""), ".")
-            '    Catch ex As Exception
-            '        MsgBox(ex.Message)
-            '        Throw New System.Exception("Unable to determine MajorId from last release id: " & lLastReleaseId & "  Last release id should be in the format APPCODE-MAJID.MINID")
-            '    End Try
-
-            '    Dim lMinorId As Integer
-            '    Try
-            '        lMinorId = Common.getLastSegment(Replace(lLastReleaseId, lAppCode & "-", ""), ".")
-
-            '    Catch ex As Exception
-            '        MsgBox(ex.Message)
-            '        Throw New System.Exception("Unable to determine MinorId from last release id: " & lLastReleaseId & "  Last release id should be in the format APPCODE-MAJID.MINID")
-            '    End Try
-
-            '    If iVersionType = "Major" Then
-            '        lMajorId = lMajorId + 1
-            '        lMinorId = 0
-            '    ElseIf iVersionType = "Minor" Then
-            '        lMinorId = lMinorId + 1
-            '    Else
-            '        Throw New System.Exception("Unexpected Version Type : " & iVersionType)
-            '    End If
-
-            '    lAppVersion = InputBox("Please confirm new semantic release id for " & lAppCode & "", "New " & Globals.getAppName & " Version", lAppCode & "-" & lMajorId & "." & lMinorId)
-            '    If String.IsNullOrEmpty(lAppVersion) Then
-            '        Throw New System.Exception("User Cancelled Operation")
-            '    End If
-
-            '    Dim lConfirmAppCode As String = Common.getFirstSegment(lAppVersion, "-")
-
-            '    If lConfirmAppCode <> lAppCode Then
-            '        Throw New System.Exception("Current branch is NOT a release branch for " & lConfirmAppCode & "  Aborting Operation.")
-            '    End If
-
-            '    Dim lConfirmMajorId As Integer
-            '    Try
-            '        lConfirmMajorId = Common.getFirstSegment(Replace(lAppVersion, lAppCode & "-", ""), ".")
-            '    Catch ex As Exception
-            '        MsgBox(ex.Message)
-            '        Throw New System.Exception("Unable to determine MajorId from new release id: " & lAppVersion & "  New release id should be in the format APPCODE-MAJID.MINID")
-            '    End Try
-
-            '    Dim lConfirmMinorId As Integer
-            '    Try
-            '        lConfirmMinorId = Common.getLastSegment(Replace(lAppVersion, lAppCode & "-", ""), ".")
-
-            '    Catch ex As Exception
-            '        MsgBox(ex.Message)
-            '        Throw New System.Exception("Unable to determine MinorId from new release id: " & lAppVersion & "  New release id should be in the format APPCODE-MAJID.MINID")
-            '    End Try
-
-            '    If lConfirmMajorId > lMajorId Then
-            '        MsgBox("Major Id is greater than expected.", MsgBoxStyle.Exclamation, "Unexpected Major Id")
-            '    End If
-            '    If lConfirmMajorId < lMajorId Then
-            '        MsgBox("Major Id is less than expected.", MsgBoxStyle.Exclamation, "Unexpected Major Id")
-            '    End If
-            '    If lConfirmMinorId > lMinorId Then
-            '        MsgBox("Minor Id is greater than expected.", MsgBoxStyle.Exclamation, "Unexpected Minor Id")
-            '    End If
-            '    If lConfirmMinorId < lMinorId Then
-            '        MsgBox("Minor Id is less than expected.", MsgBoxStyle.Exclamation, "Unexpected Minor Id")
-            '    End If
-
-            '    If iVersionType = "Major" Then
-            '        If lMinorId > 0 Then
-            '            Throw New System.Exception("A Major Version Release Id must have 0 as the Minor Version Id.  Aborting Operation.")
-            '        End If
-
-            '    ElseIf iVersionType = "Minor" Then
-            '        If lConfirmMajorId <> lMajorId Then
-            '            Throw New System.Exception("A Minor Version Release Id must have the same Major Version Id as last Release Id.  Aborting Operation.")
-            '        End If
-            '    Else
-            '        Throw New System.Exception("Unexpected Version Type : " & iVersionType)
-            '    End If
-
-
-            '    'If Globals.getAppInFeature() = "Y" Then
-            '    newReleaseBranch = newReleaseBranch & "/" & lAppCode
-            '    'End If
-
-            '    newReleaseBranch = newReleaseBranch & "/" & lAppVersion
-
-            'End If
-
-
-            'Dim l_tag_base As String = "00"
-
-            ''TAG-A
-            'If MajorMinorVersion.toDoNextStep() Then
-            '    'Write the A Tag
-            '    Dim l_tagA As String = lAppVersion & "." & l_tag_base & "A"
-            '    'MajorMinorVersion.updateStepDescription(7, "Tag " & iRebaseBranchOn & " HEAD with " & l_tagA)
-            '    GitOp.createTagHead(l_tagA)
-
-            'End If
-
-
-            ''BRANCH-TO-NEW-RELEASE
-            'If MajorMinorVersion.toDoNextStep() Then
-            '    'Create and Switch to new release branch
-            '    GitOp.createAndSwitchBranch(newReleaseBranch)
-            'End If
-
-            ''MERGE(NOFF)-FROM-MASTER-CHOOSE-SHA
-            'If MajorMinorVersion.toDoNextStep() Then
-            '    'Merge from master branch
-            '    Tortoise.Merge(Globals.getRepoPath)
-            'End If
-
-            ''TAG-B
-            'If MajorMinorVersion.toDoNextStep() Then
-            '    'Write the B Tag
-            '    Dim l_tagB As String = lAppVersion & "." & l_tag_base & "B"
-            '    GitOp.createTagHead(l_tagB)
-
-            'End If
-
-            ''PUSH-NEW-RELEASE
-            'If MajorMinorVersion.toDoNextStep() Then
-            '    'Push release to origin with tags
-            '    'GitOp.pushBranch(newReleaseBranch)
-            '    GitOp.pushCurrentBranch()
-            'End If
 
             '-------------------
             'PATCH-VERSION-RELEASE  - 2 steps
@@ -583,6 +424,7 @@
 
             'CHOOSE-PATCH-VERSION-RELEASE
             If VersionRelease.toDoNextStep() Then
+                Logger.Debug("CHOOSE-PATCH-VERSION-RELEASE")
 
                 Dim appCodeList As Collection = GitOp.getReleaseAppCodeList()
 
@@ -593,35 +435,37 @@
                 newReleaseBranch = ChoiceDialog.Ask("Please identify the Patch Version Release to be built.",
                                                   releaseBranches, "", "Choose existing Patch Version Release branch", False, False, False, releaseBranches.Count - 1)
 
-
             End If
 
+            ''PULL-PATCH-VERSION-RELEASE
+            'If VersionRelease.toDoNextStep() Then
+            '    Logger.Debug("PULL-PATCH-VERSION-RELEASE")
+            '    'Switch to release branch
+            '    GitOp.SwitchBranch(newReleaseBranch)
+            '    'Pull from origin/release
+            '    GitOp.pullBranch(newReleaseBranch)
+            'End If
 
-            'PULL-PATCH-VERSION-RELEASE
+            'SUBFLOW:RELEASE-NEW-VERSION
             If VersionRelease.toDoNextStep() Then
-                'Switch to release branch
-                GitOp.SwitchBranch(newReleaseBranch)
-                'Pull from origin/release
-                GitOp.pullBranch(newReleaseBranch)
+                WF_release.releaseTo(iTargetDB, newReleaseBranch, "release", True)
             End If
+
+
+
 
 
             '-------------------
-            'CREATE PATCH  - 3 steps
+            'CREATE PATCH  - 2 steps
             '-------------------
 
-            'SET DB TARGET
-            If VersionRelease.toDoNextStep() Then
-                'Change current DB to release DB
-                Globals.setDB(iTargetDB.ToUpper)
 
-            End If
 
 
             'In case we are starting part way through the workflow.
             If String.IsNullOrEmpty(lAppVersion) Then
                 'Derive the app version from the current branch
-                Logger.Dbg("Derive the newReleaseBranch, appCode, and appVersion from the current branch")
+                Logger.Debug("Derive the newReleaseBranch, appCode, and appVersion from the current branch")
 
                 newReleaseBranch = GitOp.CurrentFriendlyBranch()
                 Logger.Note("newReleaseBranch", newReleaseBranch)
@@ -636,9 +480,9 @@
             End If
 
 
-            'CREATE RELEASE PATCH WIZARD
+            'CREATE-RELEASE-PATCH-WIZARD
             If VersionRelease.toDoNextStep() Then
-
+                Logger.Debug("CREATE-RELEASE-PATCH-WIZARD")
                 'Create, edit And test collection
                 If iVersionType = "Patch" Then
                     Dim Wizard As New CreateRelease(lAppCode, lAppVersion, iVersionType, "release", "hotfix", "hotfix", "release, feature, version, hotfix, ALL")
@@ -650,6 +494,7 @@
 
             'PUSH-NEW-RELEASE
             If VersionRelease.toDoNextStep() Then
+                Logger.Debug("PUSH-NEW-RELEASE")
                 'Push release to origin with tags
                 GitOp.pushCurrentBranch()
             End If
@@ -661,6 +506,7 @@
 
             'MERGE-RELEASE
             If VersionRelease.toDoNextStep() Then
+                Logger.Debug("MERGE-RELEASE")
                 mergeBranchAndPush(iVersionType, "master", newReleaseBranch, False)
             End If
 
@@ -1474,11 +1320,15 @@
 
 
     Shared Sub newVersionRelease(ByVal iVersionType As String, iTargetDB As String)
+        Logger.Debug("newVersionRelease")
         Logger.Note("iVersionType", iVersionType)
+        Logger.Note("iTargetDB", iTargetDB)
+
+
         If iVersionType = "Major" Or iVersionType = "Minor" Then
-            createVersionRelease(iVersionType, iTargetDB, False)
+            createVersionRelease(iVersionType, iTargetDB)
         ElseIf iVersionType = "Patch" Then
-            createVersionRelease(iVersionType, iTargetDB, False)
+            createVersionRelease(iVersionType, iTargetDB)
             'newPatchVersionRelease(iVersionType, iTargetDB)
         ElseIf iVersionType = "Full" Then
             newFullVersionRelease(iVersionType, iTargetDB)

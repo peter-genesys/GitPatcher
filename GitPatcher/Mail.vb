@@ -171,13 +171,13 @@ Public Class Mail
 
         Next
 
-        Logger.Dbg(Sender)
+        Logger.Debug(Sender)
 
-        Logger.Dbg(Recipients)
+        Logger.Debug(Recipients)
 
-        Logger.Dbg(i_MailSubject)
+        Logger.Debug(i_MailSubject)
 
-        Logger.Dbg(i_MessageBody)
+        Logger.Debug(i_MessageBody)
 
         'SendEmailOutlook(Sender, Recipients, i_MailSubject, i_MessageBody, i_attachments)
         SendEmailSMTP(Sender, Recipients, i_MailSubject, i_MessageBody)

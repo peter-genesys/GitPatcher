@@ -68,7 +68,7 @@
             Common.Wait(1000)
         Loop
 
-        Logger.Dbg("Apex app_id " & fapp_id, "Check app id")
+        Logger.Debug("Apex app_id " & fapp_id, "Check app id")
 
         Dim app_id As String = fapp_id.Split("f")(1)
 
@@ -107,7 +107,7 @@
             'ADD-NEW-FILES
             If ExportProgress.toDoNextStep() Then
                 If GitOp.IsDirty() Then
-                    Logger.Dbg("User chose to add And the checkout Is also dirty")
+                    Logger.Debug("User chose to add And the checkout Is also dirty")
                     'Add new files to GIT repository 
                     Tortoise.Add(appDir, True)
                 End If
@@ -129,7 +129,7 @@
                 'User chose to commit, but don't bother unless the checkout has staged changes (added, modified or deleted files)
                 'Committing changed files to GIT"
                 If GitOp.ChangedFiles() > 0 Then
-                    Logger.Dbg("User chose to commit and the checkout has staged changes")
+                    Logger.Debug("User chose to commit and the checkout has staged changes")
 
                     'Find the application name in the init.sql file.
                     Dim lAppIdAndName As String = Common.cleanString(FileIO.getTextBetween(appDir & "\application\init.sql", "prompt APPLICATION ", "--"))
@@ -146,7 +146,7 @@
             'User chose to revert, but don't bother unless the checkout has staged changes (added, modified or deleted files)
             If ExportProgress.toDoNextStep() Then
                 If GitOp.ChangedFiles() > 0 Then
-                    Logger.Dbg("User chose to revert and the checkout has staged changes")
+                    Logger.Debug("User chose to revert and the checkout has staged changes")
                     raisedRevertDialog = True
                     'Revert invalid changes from your checkout
                     Tortoise.Revert(appDir)
@@ -422,7 +422,7 @@
         End If
 
 
-        Logger.Dbg("Apex app_id " + fapp_id, "Check app id")
+        Logger.Debug("Apex app_id " + fapp_id, "Check app id")
 
         Dim app_id As String = fapp_id.Split("f")(1)
         Dim fapp_sql As String = fapp_id & ".sql"
@@ -440,7 +440,7 @@
                       , message, apex_dir)
 
 
-            Logger.Dbg(message, "Apex Export Error")
+            Logger.Debug(message, "Apex Export Error")
 
             'write-host "Remove the application directory apex_dir\fapp_id" 
 
@@ -459,7 +459,7 @@
             'java oracle.apex.APEXExportSplitter $APP_SQL 
             Host.check_StdErr("java oracle.apex.APEXExportSplitter " & fapp_sql, message, apex_dir)
 
-            Logger.Dbg(message, "Apex Export Splitter Error")
+            Logger.Debug(message, "Apex Export Splitter Error")
 
         End If
 

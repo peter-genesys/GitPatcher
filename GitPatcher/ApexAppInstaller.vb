@@ -164,7 +164,7 @@ Public Class ApexAppInstaller
 
 
     Private Function doSearch() As Integer
-        Logger.Dbg("Searching")
+        Logger.Debug("Searching")
 
         Dim AvailableApps As Collection = New Collection
 
@@ -214,7 +214,7 @@ Public Class ApexAppInstaller
         'Logger.Dbg("Filtering")
         'filterQueuedBy(AvailableApps)
 
-        Logger.Dbg("Populate Tree")
+        Logger.Debug("Populate Tree")
 
         If AvailableApps.Count = 0 Then
             MsgBox("No " & ComboBoxAppsFilter.SelectedItem & " apps were found.", MsgBoxStyle.Information, "No Apps Found")

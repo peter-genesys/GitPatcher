@@ -26,19 +26,19 @@ Public Class WF_virtual_box
         Dim result As String = Nothing
         Host.check_StdOut("VBoxManage snapshot """ & My.Settings.VBoxName & """ take """ &
                   newSnapshotName & """", result, Globals.getVBoxDir, True)
-        Logger.Dbg(result)
+        Logger.Debug(result)
     End Sub
 
     Shared Sub startVM(ByRef type As String)
         Dim result As String = Nothing
         Host.check_StdOut("VBoxManage startvm """ & My.Settings.VBoxName & """ --type " & type, result, Globals.getVBoxDir, True)
-        Logger.Dbg(result)
+        Logger.Debug(result)
     End Sub
 
     Shared Sub controlVM(switch)
         Dim result As String = Nothing
         Host.check_StdOut("VBoxManage controlvm """ & My.Settings.VBoxName & """ " & switch, result, Globals.getVBoxDir, True)
-        Logger.Dbg(result)
+        Logger.Debug(result)
     End Sub
 
 
@@ -91,7 +91,7 @@ Public Class WF_virtual_box
         'Restore a clean snapshot
         If reverting.toDoNextStep() Then
             Host.check_StdOut("VBoxManage snapshot """ & My.Settings.VBoxName & """ list --machinereadable", snapshotResult, Globals.getVBoxDir, False)
-            Logger.Dbg(snapshotResult)
+            Logger.Debug(snapshotResult)
 
             Dim snapshotNames As Collection = New Collection
             Dim snapshotUUIDs As Collection = New Collection
@@ -118,7 +118,7 @@ Public Class WF_virtual_box
 
                     currentUUID = uuid
 
-                    Logger.Dbg("currentUUID =" & currentUUID)
+                    Logger.Debug("currentUUID =" & currentUUID)
 
                 End If
             Next
@@ -156,7 +156,7 @@ Public Class WF_virtual_box
                         snapshotNames.Add(indent & name)
                     End If
 
-                    Logger.Dbg(name & "=" & uuid)
+                    Logger.Debug(name & "=" & uuid)
 
                 End If
             Next
@@ -166,11 +166,11 @@ Public Class WF_virtual_box
                 Dim SnapshotIndex As Integer
                 SnapshotIndex = ChoiceDialog.Ask("Please choose a " & revertType & " snapshot from the list of available snapshots for " & My.Settings.VBoxName, snapshotNames, lCurrentSnapshotName, "Choose a " & revertType & " snapshot", False, False, True)
 
-                Logger.Dbg("Chosen: " & snapshotNames(SnapshotIndex) & "=" & snapshotUUIDs(SnapshotIndex))
+                Logger.Debug("Chosen: " & snapshotNames(SnapshotIndex) & "=" & snapshotUUIDs(SnapshotIndex))
 
                 Host.check_StdOut("VBoxManage snapshot """ & My.Settings.VBoxName & """ restore " &
             snapshotUUIDs(SnapshotIndex), snapshotResult, Globals.getVBoxDir, True)
-                Logger.Dbg(snapshotResult)
+                Logger.Debug(snapshotResult)
             Catch ex As Exception
                 MsgBox(ex.Message)
             End Try

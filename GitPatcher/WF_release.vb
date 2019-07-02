@@ -1,9 +1,6 @@
 ﻿Friend Class WF_release
-    Shared Sub releaseTo(ByVal iTargetDB As String, ByVal ireleaseFromBranch As String, ByVal iBranchType As String, ByVal iPull As Boolean)
+    Shared Sub releaseTo(ByVal iTargetDB As String, ByVal ireleaseFromBranch As String, ByVal iBranchType As String, ByVal iPull As Boolean, Optional ByVal iInstallStatus As String = "Unapplied")
 
-
-
-        Dim InstallStatus As String = "Unapplied"
 
         Dim lcurrentDB As String = Globals.getDB()
 
@@ -26,7 +23,7 @@
         releasing.addStep("Restore to a clean VM snapshot", True, "GitPatcher will restore your VM to a clean VM snapshot." &
                          Environment.NewLine & "Before releasing patches to the VM, restore to a clean VM snapshot.", iTargetDB = "VM")
         'PATCH-RUNNER
-        releasing.addStep("Use PatchRunner to run " & InstallStatus & " " & iBranchType & " Patches", True, "")
+        releasing.addStep("Use PatchRunner to run " & iInstallStatus & " " & iBranchType & " Patches", True, "")
 
         'IMPORT-APPS
         releasing.addStep("Import any queued apps from branch " & ireleaseFromBranch, True, "Any Apex Apps that were included in a patch, must be reinstalled now. ")
@@ -69,10 +66,10 @@
                 'Switch to develop branch
                 GitOp.SwitchBranch(ireleaseFromBranch)
 
-                End If
+            End If
 
-                'PULL-BRANCH
-                If releasing.toDoNextStep() Then
+            'PULL-BRANCH
+            If releasing.toDoNextStep() Then
                 'Pull from origin/develop
                 GitOp.pullBranch(ireleaseFromBranch)
 
@@ -112,7 +109,7 @@
             If releasing.toDoNextStep() Then
                 'Use PatchRunner to run  Uninstalled/Unapplied Patches
 
-                Dim GitPatcherChild As PatchRunner = New PatchRunner(l_no_patches, InstallStatus, iBranchType)
+                Dim GitPatcherChild As PatchRunner = New PatchRunner(l_no_patches, iInstallStatus, iBranchType, False)
 
             End If
 
@@ -326,7 +323,7 @@
             'RELEASE UAT
             If createPatchSetProgress.toDoNextStep() Then
                 'Release to UAT
-                WF_release.releaseTo("UAT", "release", "", True)
+                WF_release.releaseTo("UAT", "release", "", True, "Uninstalled")
             End If
 
             'RELEASE PROD
