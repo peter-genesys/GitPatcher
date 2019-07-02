@@ -44,6 +44,7 @@ Partial Class Configuration
         Me.SQLpathTextBox = New System.Windows.Forms.TextBox()
         Me.ConfigTabs = New System.Windows.Forms.TabControl()
         Me.RoleTabPage = New System.Windows.Forms.TabPage()
+        Me.CheckBoxVirtualBoxer = New System.Windows.Forms.CheckBox()
         Me.CheckBoxMailer = New System.Windows.Forms.CheckBox()
         Me.CheckBoxAdmin = New System.Windows.Forms.CheckBox()
         Me.CheckBoxReleaser = New System.Windows.Forms.CheckBox()
@@ -54,8 +55,9 @@ Partial Class Configuration
         Me.SMTPportTextBox = New System.Windows.Forms.TextBox()
         Me.SMTPhostTextBox = New System.Windows.Forms.TextBox()
         Me.RecipientTextBox = New System.Windows.Forms.TextBox()
-        Me.CheckBoxVirtualBoxer = New System.Windows.Forms.CheckBox()
         Me.MySettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.MainToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Label4 = New System.Windows.Forms.Label()
         Label18 = New System.Windows.Forms.Label()
         Label24 = New System.Windows.Forms.Label()
@@ -71,6 +73,7 @@ Partial Class Configuration
         Me.RoleTabPage.SuspendLayout()
         Me.MailTabPage.SuspendLayout()
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label4
@@ -262,6 +265,16 @@ Partial Class Configuration
         Me.RoleTabPage.Text = "Roles"
         Me.RoleTabPage.UseVisualStyleBackColor = True
         '
+        'CheckBoxVirtualBoxer
+        '
+        Me.CheckBoxVirtualBoxer.AutoSize = True
+        Me.CheckBoxVirtualBoxer.Location = New System.Drawing.Point(47, 168)
+        Me.CheckBoxVirtualBoxer.Name = "CheckBoxVirtualBoxer"
+        Me.CheckBoxVirtualBoxer.Size = New System.Drawing.Size(103, 17)
+        Me.CheckBoxVirtualBoxer.TabIndex = 4
+        Me.CheckBoxVirtualBoxer.Text = "Using VirtualBox"
+        Me.CheckBoxVirtualBoxer.UseVisualStyleBackColor = True
+        '
         'CheckBoxMailer
         '
         Me.CheckBoxMailer.AutoSize = True
@@ -360,19 +373,24 @@ Partial Class Configuration
         Me.RecipientTextBox.Size = New System.Drawing.Size(397, 104)
         Me.RecipientTextBox.TabIndex = 9
         '
-        'CheckBoxVirtualBoxer
-        '
-        Me.CheckBoxVirtualBoxer.AutoSize = True
-        Me.CheckBoxVirtualBoxer.Location = New System.Drawing.Point(47, 168)
-        Me.CheckBoxVirtualBoxer.Name = "CheckBoxVirtualBoxer"
-        Me.CheckBoxVirtualBoxer.Size = New System.Drawing.Size(103, 17)
-        Me.CheckBoxVirtualBoxer.TabIndex = 4
-        Me.CheckBoxVirtualBoxer.Text = "Using VirtualBox"
-        Me.CheckBoxVirtualBoxer.UseVisualStyleBackColor = True
-        '
         'MySettingsBindingSource
         '
         Me.MySettingsBindingSource.DataSource = GetType(System.Configuration.ApplicationSettingsBase)
+        '
+        'MenuStrip1
+        '
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MainToolStripMenuItem})
+        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.MenuStrip1.Name = "MenuStrip1"
+        Me.MenuStrip1.Size = New System.Drawing.Size(560, 24)
+        Me.MenuStrip1.TabIndex = 1
+        Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'MainToolStripMenuItem
+        '
+        Me.MainToolStripMenuItem.Name = "MainToolStripMenuItem"
+        Me.MainToolStripMenuItem.Size = New System.Drawing.Size(46, 20)
+        Me.MainToolStripMenuItem.Text = "Main"
         '
         'Configuration
         '
@@ -380,7 +398,9 @@ Partial Class Configuration
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(560, 391)
         Me.Controls.Add(Me.ConfigTabs)
+        Me.Controls.Add(Me.MenuStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "Configuration"
         Me.Text = "Config"
         Me.PatchTabPage.ResumeLayout(False)
@@ -391,7 +411,10 @@ Partial Class Configuration
         Me.MailTabPage.ResumeLayout(False)
         Me.MailTabPage.PerformLayout()
         CType(Me.MySettingsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents MySettingsBindingSource As System.Windows.Forms.BindingSource
@@ -416,4 +439,6 @@ Partial Class Configuration
     Friend WithEvents CheckBoxDeveloper As CheckBox
     Friend WithEvents CheckBoxMailer As CheckBox
     Friend WithEvents CheckBoxVirtualBoxer As CheckBox
+    Friend WithEvents MenuStrip1 As MenuStrip
+    Friend WithEvents MainToolStripMenuItem As ToolStripMenuItem
 End Class

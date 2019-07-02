@@ -837,4 +837,9 @@
     Private Sub ToolStripMenuItem9_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem9.Click
         MsgBox("Last successful patch was " & PatchRunner.GetlastSuccessfulPatch)
     End Sub
+
+    Private Sub ConfigToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ConfigToolStripMenuItem.Click
+        Me.Close()
+        GitPatcher.newConfigWindow()
+    End Sub
 End Class

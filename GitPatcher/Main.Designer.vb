@@ -65,11 +65,11 @@ Partial Class Main
         Me.CreateDBMinorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreateDBMajorReleaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ApexMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ApexAppExporterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ApexAppInstallerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.QueuedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AllApexAppsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SinglePageImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ApexAppExporterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReleaseMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReleaseToPRODMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReleaseToUATMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -79,6 +79,9 @@ Partial Class Main
         Me.ToolsMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LogViewerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TroubleshootToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem8 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem9 = New System.Windows.Forms.ToolStripMenuItem()
         Me.VirtualBoxMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.VBoxNameToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ChooseVMToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -136,15 +139,13 @@ Partial Class Main
         Me.TextBoxReleaseId = New System.Windows.Forms.TextBox()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.RefreshButton = New System.Windows.Forms.Button()
-        Me.TroubleshootToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem8 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem9 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ConfigToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MainMenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'MainMenuStrip
         '
-        Me.MainMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewMenuItem, Me.FeatureMenuItem, Me.HotfixMenuItem, Me.RunMenuItem, Me.ApexMenuItem, Me.ReleaseMenuItem, Me.ToolsMenuItem, Me.VirtualBoxMenuItem})
+        Me.MainMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewMenuItem, Me.FeatureMenuItem, Me.HotfixMenuItem, Me.RunMenuItem, Me.ApexMenuItem, Me.ReleaseMenuItem, Me.ToolsMenuItem, Me.VirtualBoxMenuItem, Me.ConfigToolStripMenuItem})
         Me.MainMenuStrip.Location = New System.Drawing.Point(0, 0)
         Me.MainMenuStrip.Name = "MainMenuStrip"
         Me.MainMenuStrip.Size = New System.Drawing.Size(484, 24)
@@ -162,45 +163,45 @@ Partial Class Main
         'FeatureToolStripMenuItem3
         '
         Me.FeatureToolStripMenuItem3.Name = "FeatureToolStripMenuItem3"
-        Me.FeatureToolStripMenuItem3.Size = New System.Drawing.Size(180, 22)
+        Me.FeatureToolStripMenuItem3.Size = New System.Drawing.Size(113, 22)
         Me.FeatureToolStripMenuItem3.Text = "Feature"
         '
         'HotfixToolStripMenuItem3
         '
         Me.HotfixToolStripMenuItem3.Name = "HotfixToolStripMenuItem3"
-        Me.HotfixToolStripMenuItem3.Size = New System.Drawing.Size(180, 22)
+        Me.HotfixToolStripMenuItem3.Size = New System.Drawing.Size(113, 22)
         Me.HotfixToolStripMenuItem3.Text = "Hotfix"
         '
         'ReleaseToolStripMenuItem2
         '
         Me.ReleaseToolStripMenuItem2.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1, Me.ToolStripMenuItem2, Me.ToolStripMenuItem3, Me.ToolStripMenuItem4})
         Me.ReleaseToolStripMenuItem2.Name = "ReleaseToolStripMenuItem2"
-        Me.ReleaseToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToolStripMenuItem2.Size = New System.Drawing.Size(113, 22)
         Me.ReleaseToolStripMenuItem2.Text = "Release"
         Me.ReleaseToolStripMenuItem2.Visible = Global.GitPatcher.My.MySettings.Default.Admin
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(148, 22)
         Me.ToolStripMenuItem1.Text = "Major Version"
         '
         'ToolStripMenuItem2
         '
         Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(148, 22)
         Me.ToolStripMenuItem2.Text = "Minor Version"
         '
         'ToolStripMenuItem3
         '
         Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
-        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(148, 22)
         Me.ToolStripMenuItem3.Text = "Patch Version"
         '
         'ToolStripMenuItem4
         '
         Me.ToolStripMenuItem4.Name = "ToolStripMenuItem4"
-        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(148, 22)
         Me.ToolStripMenuItem4.Text = "Full Version"
         Me.ToolStripMenuItem4.Visible = False
         '
@@ -434,36 +435,36 @@ Partial Class Main
         Me.ApexMenuItem.Text = "Apex"
         Me.ApexMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Developer
         '
+        'ApexAppExporterToolStripMenuItem
+        '
+        Me.ApexAppExporterToolStripMenuItem.Name = "ApexAppExporterToolStripMenuItem"
+        Me.ApexAppExporterToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.ApexAppExporterToolStripMenuItem.Text = "Apex App Exporter"
+        '
         'ApexAppInstallerToolStripMenuItem
         '
         Me.ApexAppInstallerToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.QueuedToolStripMenuItem, Me.AllApexAppsToolStripMenuItem, Me.SinglePageImportToolStripMenuItem})
         Me.ApexAppInstallerToolStripMenuItem.Name = "ApexAppInstallerToolStripMenuItem"
-        Me.ApexAppInstallerToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ApexAppInstallerToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.ApexAppInstallerToolStripMenuItem.Text = "Apex App Installer"
         '
         'QueuedToolStripMenuItem
         '
         Me.QueuedToolStripMenuItem.Name = "QueuedToolStripMenuItem"
-        Me.QueuedToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.QueuedToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.QueuedToolStripMenuItem.Text = "Queued Apex Apps"
         '
         'AllApexAppsToolStripMenuItem
         '
         Me.AllApexAppsToolStripMenuItem.Name = "AllApexAppsToolStripMenuItem"
-        Me.AllApexAppsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AllApexAppsToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.AllApexAppsToolStripMenuItem.Text = "All Apex Apps"
         '
         'SinglePageImportToolStripMenuItem
         '
         Me.SinglePageImportToolStripMenuItem.Name = "SinglePageImportToolStripMenuItem"
-        Me.SinglePageImportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.SinglePageImportToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.SinglePageImportToolStripMenuItem.Text = "Restore Single Page"
-        '
-        'ApexAppExporterToolStripMenuItem
-        '
-        Me.ApexAppExporterToolStripMenuItem.Name = "ApexAppExporterToolStripMenuItem"
-        Me.ApexAppExporterToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.ApexAppExporterToolStripMenuItem.Text = "Apex App Exporter"
         '
         'ReleaseMenuItem
         '
@@ -476,31 +477,31 @@ Partial Class Main
         'ReleaseToPRODMenuItem
         '
         Me.ReleaseToPRODMenuItem.Name = "ReleaseToPRODMenuItem"
-        Me.ReleaseToPRODMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToPRODMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToPRODMenuItem.Text = "Release to PROD"
         '
         'ReleaseToUATMenuItem
         '
         Me.ReleaseToUATMenuItem.Name = "ReleaseToUATMenuItem"
-        Me.ReleaseToUATMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToUATMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToUATMenuItem.Text = "Release to UAT"
         '
         'ReleaseToTESTMenuItem
         '
         Me.ReleaseToTESTMenuItem.Name = "ReleaseToTESTMenuItem"
-        Me.ReleaseToTESTMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToTESTMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToTESTMenuItem.Text = "Release to TEST"
         '
         'ReleaseToDEVMenuItem
         '
         Me.ReleaseToDEVMenuItem.Name = "ReleaseToDEVMenuItem"
-        Me.ReleaseToDEVMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToDEVMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToDEVMenuItem.Text = "Release to DEV"
         '
         'ReleaseToVMMenuItem
         '
         Me.ReleaseToVMMenuItem.Name = "ReleaseToVMMenuItem"
-        Me.ReleaseToVMMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ReleaseToVMMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.ReleaseToVMMenuItem.Text = "Release to VM"
         '
         'ToolsMenuItem
@@ -514,15 +515,34 @@ Partial Class Main
         'LogViewerToolStripMenuItem
         '
         Me.LogViewerToolStripMenuItem.Name = "LogViewerToolStripMenuItem"
-        Me.LogViewerToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.LogViewerToolStripMenuItem.Size = New System.Drawing.Size(145, 22)
         Me.LogViewerToolStripMenuItem.Text = "Log Viewer"
         '
         'ExportDataToolStripMenuItem
         '
         Me.ExportDataToolStripMenuItem.Name = "ExportDataToolStripMenuItem"
-        Me.ExportDataToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExportDataToolStripMenuItem.Size = New System.Drawing.Size(145, 22)
         Me.ExportDataToolStripMenuItem.Text = "Export Data"
         Me.ExportDataToolStripMenuItem.Visible = Global.GitPatcher.My.MySettings.Default.Developer
+        '
+        'TroubleshootToolStripMenuItem
+        '
+        Me.TroubleshootToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem8, Me.ToolStripMenuItem9})
+        Me.TroubleshootToolStripMenuItem.Name = "TroubleshootToolStripMenuItem"
+        Me.TroubleshootToolStripMenuItem.Size = New System.Drawing.Size(145, 22)
+        Me.TroubleshootToolStripMenuItem.Text = "Troubleshoot"
+        '
+        'ToolStripMenuItem8
+        '
+        Me.ToolStripMenuItem8.Name = "ToolStripMenuItem8"
+        Me.ToolStripMenuItem8.Size = New System.Drawing.Size(169, 22)
+        Me.ToolStripMenuItem8.Text = "Test SQLcl"
+        '
+        'ToolStripMenuItem9
+        '
+        Me.ToolStripMenuItem9.Name = "ToolStripMenuItem9"
+        Me.ToolStripMenuItem9.Size = New System.Drawing.Size(169, 22)
+        Me.ToolStripMenuItem9.Text = "Test JDBC to ARM"
         '
         'VirtualBoxMenuItem
         '
@@ -1005,24 +1025,11 @@ Partial Class Main
         Me.RefreshButton.Text = "Refresh"
         Me.RefreshButton.UseVisualStyleBackColor = True
         '
-        'TroubleshootToolStripMenuItem
+        'ConfigToolStripMenuItem
         '
-        Me.TroubleshootToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem8, Me.ToolStripMenuItem9})
-        Me.TroubleshootToolStripMenuItem.Name = "TroubleshootToolStripMenuItem"
-        Me.TroubleshootToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.TroubleshootToolStripMenuItem.Text = "Troubleshoot"
-        '
-        'ToolStripMenuItem8
-        '
-        Me.ToolStripMenuItem8.Name = "ToolStripMenuItem8"
-        Me.ToolStripMenuItem8.Size = New System.Drawing.Size(180, 22)
-        Me.ToolStripMenuItem8.Text = "Test SQLcl"
-        '
-        'ToolStripMenuItem9
-        '
-        Me.ToolStripMenuItem9.Name = "ToolStripMenuItem9"
-        Me.ToolStripMenuItem9.Size = New System.Drawing.Size(180, 22)
-        Me.ToolStripMenuItem9.Text = "Test JDBC to ARM"
+        Me.ConfigToolStripMenuItem.Name = "ConfigToolStripMenuItem"
+        Me.ConfigToolStripMenuItem.Size = New System.Drawing.Size(55, 20)
+        Me.ConfigToolStripMenuItem.Text = "Config"
         '
         'Main
         '
@@ -1202,4 +1209,5 @@ Partial Class Main
     Friend WithEvents TroubleshootToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem8 As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem9 As ToolStripMenuItem
+    Friend WithEvents ConfigToolStripMenuItem As ToolStripMenuItem
 End Class
